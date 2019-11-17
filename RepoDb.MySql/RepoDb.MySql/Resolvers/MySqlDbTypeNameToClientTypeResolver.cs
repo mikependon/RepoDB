@@ -6,7 +6,7 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class used to resolve the MySql Database Types into its equivalent .NET CLR Types.
     /// </summary>
-    public class SqLiteTypeNameToClientTypeResolver : IResolver<string, Type>
+    public class MySqlDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {
         /// <summary>
         /// Returns the equivalent .NET CLR Types of the Database Type.
@@ -20,24 +20,48 @@ namespace RepoDb.Resolvers
                 throw new NullReferenceException("The DB Type name must not be null.");
             }
             /*
-            Id : System.Int64
-            ColumnBigInt : System.Int64
-            ColumnBlob : System.Byte[]
-            ColumnBoolean : System.Boolean
-            ColumnChar : System.String
-            ColumnDate : System.DateTime
-            ColumnDateTime : System.DateTime
-            ColumnDecimal : System.Decimal
-            ColumnDouble : System.Double
-            ColumnInteger : System.Int64
-            ColumnInt : System.Int32
-            ColumnNone : System.Double
-            ColumnNumeric : System.Decimal
-            ColumnReal : System.Double
-            ColumnString : System.String
-            ColumnText : System.String
-            ColumnTime : System.DateTime
-            ColumnVarChar : System.String
+            Id (System.Int64)
+            ColumnVarchar (System.String)
+            ColumnInt (System.Int32)
+            ColumnDecimal2 (System.Decimal)
+            ColumnDateTime (System.DateTime)
+            ColumnBlob (System.Byte[])
+            ColumnBlobAsArray (System.Byte[])
+            ColumnBinary (System.Byte[])
+            ColumnLongBlob (System.Byte[])
+            ColumnMediumBlob (System.Byte[])
+            ColumnTinyBlob (System.Byte[])
+            ColumnVarBinary (System.Byte[])
+            ColumnDate (System.DateTime)
+            ColumnDateTime2 (System.DateTime)
+            ColumnTime (System.TimeSpan)
+            ColumnTimeStamp (System.DateTime)
+            ColumnYear (System.Int16)
+            ColumnGeometry (System.Byte[])
+            ColumnLineString (System.Byte[])
+            ColumnMultiLineString (System.Byte[])
+            ColumnMultiPoint (System.Byte[])
+            ColumnMultiPolygon (System.Byte[])
+            ColumnPoint (System.Byte[])
+            ColumnPolygon (System.Byte[])
+            ColumnBigint (System.Int64)
+            ColumnDecimal (System.Decimal)
+            ColumnDouble (System.Double)
+            ColumnFloat (System.Single)
+            ColumnInt2 (System.Int32)
+            ColumnMediumInt (System.Int32)
+            ColumnReal (System.Double)
+            ColumnSmallInt (System.Int16)
+            ColumnTinyInt (System.SByte)
+            ColumnChar (System.String)
+            ColumnJson (System.String)
+            ColumnNChar (System.String)
+            ColumnNVarChar (System.String)
+            ColumnLongText (System.String)
+            ColumnMediumText (System.String)
+            ColumText (System.String)
+            ColumnTinyText (System.String)
+            ColumnBit (System.UInt64)
              */
             switch (dbTypeName.ToLower())
             {

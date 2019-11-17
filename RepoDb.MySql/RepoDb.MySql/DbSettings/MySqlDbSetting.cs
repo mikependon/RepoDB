@@ -8,7 +8,7 @@ namespace RepoDb.MySql.DbSettings
     /// <summary>
     /// A setting class used for <see cref="MySqlConnection"/> data provider.
     /// </summary>
-    internal sealed class SqLiteDbSetting : IDbSetting
+    internal sealed class MySqlDbSetting : IDbSetting
     {
         private int? m_hashCode = null;
 
@@ -42,12 +42,12 @@ namespace RepoDb.MySql.DbSettings
         /// <summary>
         /// Gets the character (or string) used for opening quote.
         /// </summary>
-        public string OpeningQuote { get; } = "[";
+        public string OpeningQuote { get; } = "`";
 
         /// <summary>
         /// Gets the character (or string) used for closing quote.
         /// </summary>
-        public string ClosingQuote { get; } = "]";
+        public string ClosingQuote { get; } = "`";
 
         /// <summary>
         /// Gets the character (or string) used for the database command parameter quoting.
@@ -62,7 +62,7 @@ namespace RepoDb.MySql.DbSettings
         /// <summary>
         /// Gets the default schema of the database.
         /// </summary>
-        public string DefaultSchema { get; } = null; // Research the SQLite default schema
+        public string DefaultSchema { get; } = null;
 
         /// <summary>
         /// Gets the default averageable .NET CLR types for the database.
@@ -74,7 +74,7 @@ namespace RepoDb.MySql.DbSettings
         #region Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <see cref="SqLiteDbSetting"/>.
+        /// Returns the hashcode for this <see cref="MySqlDbSetting"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -143,7 +143,7 @@ namespace RepoDb.MySql.DbSettings
         }
 
         /// <summary>
-        /// Compares the <see cref="SqLiteDbSetting"/> object equality against the given target object.
+        /// Compares the <see cref="MySqlDbSetting"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -153,22 +153,22 @@ namespace RepoDb.MySql.DbSettings
         }
 
         /// <summary>
-        /// Compares the <see cref="SqLiteDbSetting"/> object equality against the given target object.
+        /// Compares the <see cref="MySqlDbSetting"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(SqLiteDbSetting other)
+        public bool Equals(MySqlDbSetting other)
         {
             return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <see cref="SqLiteDbSetting"/> objects.
+        /// Compares the equality of the two <see cref="MySqlDbSetting"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="SqLiteDbSetting"/> object.</param>
-        /// <param name="objB">The second <see cref="SqLiteDbSetting"/> object.</param>
+        /// <param name="objA">The first <see cref="MySqlDbSetting"/> object.</param>
+        /// <param name="objB">The second <see cref="MySqlDbSetting"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(SqLiteDbSetting objA, SqLiteDbSetting objB)
+        public static bool operator ==(MySqlDbSetting objA, MySqlDbSetting objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -178,12 +178,12 @@ namespace RepoDb.MySql.DbSettings
         }
 
         /// <summary>
-        /// Compares the inequality of the two <see cref="SqLiteDbSetting"/> objects.
+        /// Compares the inequality of the two <see cref="MySqlDbSetting"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="SqLiteDbSetting"/> object.</param>
-        /// <param name="objB">The second <see cref="SqLiteDbSetting"/> object.</param>
+        /// <param name="objA">The first <see cref="MySqlDbSetting"/> object.</param>
+        /// <param name="objB">The second <see cref="MySqlDbSetting"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(SqLiteDbSetting objA, SqLiteDbSetting objB)
+        public static bool operator !=(MySqlDbSetting objA, MySqlDbSetting objB)
         {
             return (objA == objB) == false;
         }

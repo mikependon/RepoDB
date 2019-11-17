@@ -547,16 +547,16 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            // We used to use the 'using' keyword to wrap the 'DbCommand' object. However, it is actually
+            // failing in 'MySql'. Eventually, the command will be disposed by itself.
+            var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                return command.ExecuteReader();
-            }
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            return command.ExecuteReader();
         }
 
         #endregion
@@ -616,16 +616,16 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            // We used to use the 'using' keyword to wrap the 'DbCommand' object. However, it is actually
+            // failing in 'MySql'. Eventually, the command will be disposed by itself.
+            var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                return await command.ExecuteReaderAsync();
-            }
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            return await command.ExecuteReaderAsync();
         }
 
         #endregion

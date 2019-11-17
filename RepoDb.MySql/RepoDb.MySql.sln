@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql", "RepoDb.MySql\RepoDb.MySql.csproj", "{8666BE62-EB29-4FF7-8F7D-E1704720E5E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "RepoDb.MySql\RepoDb.MySql.csproj", "{8666BE62-EB29-4FF7-8F7D-E1704720E5E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MySql.Tests", "RepoDb.MySql.Tests", "{BC604FB6-F172-46DC-B0D4-852DB7E1E819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql.IntegrationTests", "RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{3C9481E3-0E7E-44C4-9728-A84B03398FC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTests", "RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{3C9481E3-0E7E-44C4-9728-A84B03398FC7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{E24DF442-203B-48CF-9904-E3A0AA723FD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

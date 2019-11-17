@@ -9,7 +9,10 @@ namespace RepoDb.MySql.IntegrationTests.Setup
     {
         #region Properties
 
-        public static string ConnectionString { get; private set; } = @"Data Source=C:\MySql\Databases\RepoDb.db;Version=3;";
+        /// <summary>
+        /// Gets or sets the connection string to be used.
+        /// </summary>
+        public static string ConnectionString { get; private set; } = @"Database=repodb;Data Source=localhost;User Id=user;Password=Password123;";
 
         #endregion
 
@@ -21,9 +24,10 @@ namespace RepoDb.MySql.IntegrationTests.Setup
             var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
 
             // Master connection
-            ConnectionString = (environment == "DEVELOPMENT") ?
-                @"Data Source=C:\MySql\Databases\RepoDb.db;Version=3;" :
-                @"Data Source=C:\MySql\Databases\RepoDb.db;Version=3;";
+            if (environment != "DEVELOPMENT")
+            {
+                ConnectionString = @"Data Source=C:\MySql\Databases\RepoDb.db;Version=3;";
+            }
 
             // Initialize MySql
             Bootstrap.Initialize();
@@ -83,31 +87,52 @@ namespace RepoDb.MySql.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'CompleteTable' AND type = 'table';");
-                if (string.IsNullOrEmpty(result))
-                {
-                    connection.ExecuteNonQuery("CREATE TABLE [CompleteTable] " +
-                        "(" +
-                        "   Id INTEGER PRIMARY KEY AUTOINCREMENT" +
-                        "   , ColumnBigInt BIGINT" +
-                        "   , ColumnBlob BLOB" +
-                        "   , ColumnBoolean BOOLEAN" +
-                        "   , ColumnChar CHAR" +
-                        "   , ColumnDate DATE" +
-                        "   , ColumnDateTime DATETIME" +
-                        "   , ColumnDecimal DECIMAL" +
-                        "   , ColumnDouble DOUBLE" +
-                        "   , ColumnInteger INTEGER" +
-                        "   , ColumnInt INT" +
-                        "   , ColumnNone NONE" +
-                        "   , ColumnNumeric NUMERIC" +
-                        "   , ColumnReal REAL" +
-                        "   , ColumnString STRING" +
-                        "   , ColumnText TEXT" +
-                        "   , ColumnTime TIME" +
-                        "   , ColumnVarChar VARCHAR" +
-                        ");");
-                }
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `completetable`
+                    (
+                        `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+                        `ColumnVarchar` varchar(256) DEFAULT NULL,
+                        `ColumnInt` int(11) DEFAULT NULL,
+                        `ColumnDecimal2` decimal(18,2) DEFAULT NULL,
+                        `ColumnDateTime` datetime DEFAULT NULL,
+                        `ColumnBlob` blob,
+                        `ColumnBlobAsArray` blob,
+                        `ColumnBinary` binary(255) DEFAULT NULL,
+                        `ColumnLongBlob` longblob,
+                        `ColumnMediumBlob` mediumblob,
+                        `ColumnTinyBlob` tinyblob,
+                        `ColumnVarBinary` varbinary(256) DEFAULT NULL,
+                        `ColumnDate` date DEFAULT NULL,
+                        `ColumnDateTime2` datetime(5) DEFAULT NULL,
+                        `ColumnTime` time DEFAULT NULL,
+                        `ColumnTimeStamp` timestamp(5) NULL DEFAULT NULL,
+                        `ColumnYear` year(4) DEFAULT NULL,
+                        `ColumnGeometry` geometry DEFAULT NULL,
+                        `ColumnLineString` linestring DEFAULT NULL,
+                        `ColumnMultiLineString` multilinestring DEFAULT NULL,
+                        `ColumnMultiPoint` multipoint DEFAULT NULL,
+                        `ColumnMultiPolygon` multipolygon DEFAULT NULL,
+                        `ColumnPoint` point DEFAULT NULL,
+                        `ColumnPolygon` polygon DEFAULT NULL,
+                        `ColumnBigint` bigint(64) DEFAULT NULL,
+                        `ColumnDecimal` decimal(10,0) DEFAULT NULL,
+                        `ColumnDouble` double DEFAULT NULL,
+                        `ColumnFloat` float DEFAULT NULL,
+                        `ColumnInt2` int(32) DEFAULT NULL,
+                        `ColumnMediumInt` mediumint(16) DEFAULT NULL,
+                        `ColumnReal` double DEFAULT NULL,
+                        `ColumnSmallInt` smallint(8) DEFAULT NULL,
+                        `ColumnTinyInt` tinyint(4) DEFAULT NULL,
+                        `ColumnChar` char(1) DEFAULT NULL,
+                        `ColumnJson` json DEFAULT NULL,
+                        `ColumnNChar` char(16) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+                        `ColumnNVarChar` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+                        `ColumnLongText` longtext,
+                        `ColumnMediumText` mediumtext,
+                        `ColumText` text,
+                        `ColumnTinyText` tinytext,
+                        `ColumnBit` bit(1) DEFAULT NULL,
+                        PRIMARY KEY (`Id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;");
             }
         }
 
@@ -115,31 +140,52 @@ namespace RepoDb.MySql.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'NonIdentityCompleteTable' AND type = 'table';");
-                if (string.IsNullOrEmpty(result))
-                {
-                    connection.ExecuteNonQuery("CREATE TABLE [NonIdentityCompleteTable] " +
-                        "(" +
-                        "   Id INTEGER PRIMARY KEY" +
-                        "   , ColumnBigInt BIGINT" +
-                        "   , ColumnBlob BLOB" +
-                        "   , ColumnBoolean BOOLEAN" +
-                        "   , ColumnChar CHAR" +
-                        "   , ColumnDate DATE" +
-                        "   , ColumnDateTime DATETIME" +
-                        "   , ColumnDecimal DECIMAL" +
-                        "   , ColumnDouble DOUBLE" +
-                        "   , ColumnInteger INTEGER" +
-                        "   , ColumnInt INT" +
-                        "   , ColumnNone NONE" +
-                        "   , ColumnNumeric NUMERIC" +
-                        "   , ColumnReal REAL" +
-                        "   , ColumnString STRING" +
-                        "   , ColumnText TEXT" +
-                        "   , ColumnTime TIME" +
-                        "   , ColumnVarChar VARCHAR" +
-                        ");");
-                }
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `nonidentitycompletetable`
+                    (
+                        `Id` bigint(20) NOT NULL,
+                        `ColumnVarchar` varchar(256) DEFAULT NULL,
+                        `ColumnInt` int(11) DEFAULT NULL,
+                        `ColumnDecimal2` decimal(18, 2) DEFAULT NULL,
+                        `ColumnDateTime` datetime DEFAULT NULL,
+                        `ColumnBlob` blob,
+                        `ColumnBlobAsArray` blob,
+                        `ColumnBinary` binary(255) DEFAULT NULL,
+                        `ColumnLongBlob` longblob,
+                        `ColumnMediumBlob` mediumblob,
+                        `ColumnTinyBlob` tinyblob,
+                        `ColumnVarBinary` varbinary(256) DEFAULT NULL,
+                        `ColumnDate` date DEFAULT NULL,
+                        `ColumnDateTime2` datetime(5) DEFAULT NULL,
+                        `ColumnTime` time DEFAULT NULL,
+                        `ColumnTimeStamp` timestamp(5) NULL DEFAULT NULL,
+                        `ColumnYear` year(4) DEFAULT NULL,
+                        `ColumnGeometry` geometry DEFAULT NULL,
+                        `ColumnLineString` linestring DEFAULT NULL,
+                        `ColumnMultiLineString` multilinestring DEFAULT NULL,
+                        `ColumnMultiPoint` multipoint DEFAULT NULL,
+                        `ColumnMultiPolygon` multipolygon DEFAULT NULL,
+                        `ColumnPoint` point DEFAULT NULL,
+                        `ColumnPolygon` polygon DEFAULT NULL,
+                        `ColumnBigint` bigint(64) DEFAULT NULL,
+                        `ColumnDecimal` decimal(10, 0) DEFAULT NULL,
+                        `ColumnDouble` double DEFAULT NULL,
+                        `ColumnFloat` float DEFAULT NULL,
+                        `ColumnInt2` int(32) DEFAULT NULL,
+                        `ColumnMediumInt` mediumint(16) DEFAULT NULL,
+                        `ColumnReal` double DEFAULT NULL,
+                        `ColumnSmallInt` smallint(8) DEFAULT NULL,
+                        `ColumnTinyInt` tinyint(4) DEFAULT NULL,
+                        `ColumnChar` char(1) DEFAULT NULL,
+                        `ColumnJson` json DEFAULT NULL,
+                        `ColumnNChar` char(16) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+                        `ColumnNVarChar` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+                        `ColumnLongText` longtext,
+                        `ColumnMediumText` mediumtext,
+                        `ColumText` text,
+                        `ColumnTinyText` tinytext,
+                        `ColumnBit` bit(1) DEFAULT NULL,
+                        PRIMARY KEY(`Id`)
+                    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;");
             }
         }
 

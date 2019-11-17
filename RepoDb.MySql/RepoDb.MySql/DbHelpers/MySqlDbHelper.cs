@@ -14,22 +14,22 @@ namespace RepoDb.DbHelpers
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for MySql.
     /// </summary>
-    internal class SqLiteDbHelper : IDbHelper
+    internal class MySqlDbHelper : IDbHelper
     {
         private IDbSetting m_dbSetting = DbSettingMapper.Get<MySqlConnection>();
 
         /// <summary>
-        /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
+        /// Creates a new instance of <see cref="MySqlDbHelper"/> class.
         /// </summary>
-        public SqLiteDbHelper()
+        public MySqlDbHelper()
         {
-            DbTypeResolver = new SqLiteTypeNameToClientTypeResolver();
+            DbTypeResolver = new MySqlDbTypeNameToClientTypeResolver();
         }
 
         #region Properties
 
         /// <summary>
-        /// Gets the type resolver used by this <see cref="SqLiteDbHelper"/> instance.
+        /// Gets the type resolver used by this <see cref="MySqlDbHelper"/> instance.
         /// </summary>
         public IResolver<string, Type> DbTypeResolver { get; }
 

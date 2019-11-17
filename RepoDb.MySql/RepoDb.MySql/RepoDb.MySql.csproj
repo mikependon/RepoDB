@@ -33,11 +33,14 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.18" />
-    <PackageReference Include="RepoDb" Version="1.10.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,14 +11,14 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for MySql.
     /// </summary>
-    internal sealed class SqLiteStatementBuilder : BaseStatementBuilder
+    internal sealed class MySqlStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> object.
+        /// Creates a new instance of <see cref="MySqlStatementBuilder"/> object.
         /// </summary>
-        public SqLiteStatementBuilder()
+        public MySqlStatementBuilder()
             : base(DbSettingMapper.Get(typeof(MySqlConnection)),
-                  new SqLiteConvertFieldResolver(),
+                  new MySqlConvertFieldResolver(),
                   new ClientTypeToAverageableClientTypeResolver())
         { }
 

@@ -7,7 +7,7 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class used to resolve the <see cref="Field"/> name conversion for MySql.
     /// </summary>
-    public class SqLiteConvertFieldResolver : IResolver<Field, IDbSetting, string>
+    public class MySqlConvertFieldResolver : IResolver<Field, IDbSetting, string>
     {
         #region Properties
 
@@ -19,7 +19,7 @@ namespace RepoDb.Resolvers
         /// <summary>
         /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
         /// </summary>
-        private static DbTypeToSqLiteStringNameResolver StringNameResolver => new DbTypeToSqLiteStringNameResolver();
+        private static DbTypeToMySqlStringNameResolver StringNameResolver => new DbTypeToMySqlStringNameResolver();
 
         #endregion
 
