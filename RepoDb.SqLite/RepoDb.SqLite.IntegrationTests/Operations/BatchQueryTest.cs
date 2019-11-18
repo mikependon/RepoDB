@@ -31,11 +31,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryFirstBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(0,
                     3,
@@ -51,11 +51,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryFirstBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(0,
                     3,
@@ -71,11 +71,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryThirdBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(2,
                     3,
@@ -91,11 +91,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryThirdBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery<CompleteTable>(2,
                     3,
@@ -111,11 +111,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnBatchQueryWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.BatchQuery<CompleteTable>(0,
                     3,
@@ -132,11 +132,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryAsyncFirstBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync<CompleteTable>(0,
                     3,
@@ -152,11 +152,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryAsyncFirstBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync<CompleteTable>(0,
                     3,
@@ -172,11 +172,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryAsyncThirdBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync<CompleteTable>(2,
                     3,
@@ -192,11 +192,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryAsyncThirdBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync<CompleteTable>(2,
                     3,
@@ -212,11 +212,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnBatchQueryAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.BatchQueryAsync<CompleteTable>(0,
                     3,
@@ -237,11 +237,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameFirstBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
@@ -258,11 +258,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameFirstBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
@@ -279,11 +279,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameThirdBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
@@ -300,11 +300,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameThirdBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
@@ -321,11 +321,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnBatchQueryViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
@@ -343,11 +343,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
@@ -364,11 +364,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
@@ -385,11 +385,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
@@ -406,11 +406,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
@@ -427,11 +427,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnBatchQueryAsyncViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,

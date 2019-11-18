@@ -31,11 +31,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAll()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
@@ -65,11 +65,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAllAsync()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
@@ -103,11 +103,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAllViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var queryResult = connection.QueryAll(ClassMappedNameCache.Get<CompleteTable>());
 
@@ -139,11 +139,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAllAsyncViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var queryResult = connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
 

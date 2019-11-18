@@ -28,13 +28,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMaxAllWithoutExpression()
+        public void TestMaxAll()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MaxAll<CompleteTable>(e => e.ColumnInt);
 
@@ -46,11 +46,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMaxAllWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MaxAll<CompleteTable>(e => e.ColumnInt,
                     hints: "WhatEver");
@@ -62,13 +62,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMaxAllAsyncWithoutExpression()
+        public void TestMaxAllAsync()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt).Result;
 
@@ -80,11 +80,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMaxAllAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt,
                     hints: "WhatEver").Wait();
@@ -100,13 +100,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMaxAllViaTableNameWithoutExpression()
+        public void TestMaxAllViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MaxAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt));
@@ -119,11 +119,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMaxAllViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MaxAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
@@ -136,13 +136,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMaxAllAsyncViaTableNameWithoutExpression()
+        public void TestMaxAllAsyncViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
@@ -155,11 +155,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMaxAllAsyncViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),

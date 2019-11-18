@@ -28,13 +28,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMinAllWithoutExpression()
+        public void TestMinAll()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
 
@@ -46,11 +46,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMinAllWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MinAll<CompleteTable>(e => e.ColumnInt,
                     hints: "WhatEver");
@@ -62,13 +62,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMinAllAsyncWithoutExpression()
+        public void TestMinAllAsync()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAllAsync<CompleteTable>(e => e.ColumnInt).Result;
 
@@ -80,11 +80,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMinAllAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MinAllAsync<CompleteTable>(e => e.ColumnInt,
                     hints: "WhatEver").Wait();
@@ -100,13 +100,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMinAllViaTableNameWithoutExpression()
+        public void TestMinAllViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt));
@@ -119,11 +119,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMinAllViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
@@ -136,13 +136,13 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMinAllAsyncViaTableNameWithoutExpression()
+        public void TestMinAllAsyncViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
@@ -155,11 +155,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMinAllAsyncViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),

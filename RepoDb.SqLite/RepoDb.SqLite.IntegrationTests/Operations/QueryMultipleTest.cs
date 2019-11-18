@@ -31,11 +31,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleForT2()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -53,11 +53,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleForT3()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -79,11 +79,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleForT4()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -109,11 +109,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleForT5()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -143,11 +143,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleForT6()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -181,11 +181,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleForT7()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultiple<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -223,11 +223,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionQueryMultipleWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -245,11 +245,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleAsyncForT2()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -267,11 +267,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleAsyncForT3()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -293,11 +293,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleAsyncForT4()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -323,11 +323,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleAsyncForT5()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -357,11 +357,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleAsyncForT6()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -395,11 +395,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryMultipleAsyncForT7()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
@@ -437,11 +437,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionQueryMultipleAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,

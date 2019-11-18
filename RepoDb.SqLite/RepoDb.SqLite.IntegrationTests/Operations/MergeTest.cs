@@ -30,11 +30,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeForIdentityForEmptyTable()
         {
-            // Setup
-            var table = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -48,11 +48,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeForIdentityForNonEmptyTable()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
 
@@ -74,16 +74,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
                 Helper.UpdateCompleteTableProperties(table);
                 table.ColumnInt = 0;
                 table.ColumnChar = "C";
@@ -111,11 +109,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncForIdentityForEmptyTable()
         {
-            // Setup
-            var table = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -129,11 +127,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncForIdentityForNonEmptyTable()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
 
@@ -155,16 +153,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
                 Helper.UpdateCompleteTableProperties(table);
                 table.ColumnInt = 0;
                 table.ColumnChar = "C";
@@ -196,11 +192,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var table = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
@@ -215,12 +211,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -242,16 +236,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
                 Helper.UpdateCompleteTableProperties(table);
                 table.ColumnInt = 0;
                 table.ColumnChar = "C";
@@ -276,11 +268,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsDynamicViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var table = Helper.CreateCompleteTablesAsDynamics(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var table = Helper.CreateCompleteTablesAsDynamics(1).First();
+
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)table);
@@ -300,16 +295,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var obj = new
+                {
+                    table.Id,
+                    ColumnInt = int.MaxValue
+                };
+
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)obj);
@@ -329,20 +324,20 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var obj = new
+                {
+                    table.Id,
+                    ColumnInt = int.MaxValue
+                };
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)obj,
@@ -367,11 +362,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var table = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table).Result;
@@ -386,12 +381,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -413,16 +406,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -445,11 +436,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var table = Helper.CreateCompleteTablesAsDynamics(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var table = Helper.CreateCompleteTablesAsDynamics(1).First();
+
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)table).Result;
@@ -469,16 +463,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var obj = new
+                {
+                    table.Id,
+                    ColumnInt = int.MaxValue
+                };
+
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)obj).Result;
@@ -498,20 +492,20 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var obj = new
+                {
+                    table.Id,
+                    ColumnInt = int.MaxValue
+                };
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)obj,

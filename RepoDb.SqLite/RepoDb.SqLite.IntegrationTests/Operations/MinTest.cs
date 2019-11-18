@@ -31,11 +31,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     (object)null);
@@ -48,12 +48,12 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var ids = new[] { tables.First().Id, tables.Last().Id };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var ids = new[] { tables.First().Id, tables.Last().Id };
+
                 // Act
                 var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id));
@@ -66,11 +66,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id });
@@ -83,11 +83,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id));
@@ -100,16 +100,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     queryFields);
@@ -122,17 +122,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     queryGroup);
@@ -145,11 +145,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMinWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.Min<CompleteTable>(e => e.ColumnInt,
                     (object)null,
@@ -164,11 +164,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null).Result;
@@ -181,12 +181,12 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var ids = new[] { tables.First().Id, tables.Last().Id };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var ids = new[] { tables.First().Id, tables.Last().Id };
+
                 // Act
                 var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id)).Result;
@@ -199,11 +199,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     new { tables.First().Id }).Result;
@@ -216,11 +216,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     new QueryField("Id", tables.First().Id)).Result;
@@ -233,16 +233,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     queryFields).Result;
@@ -255,17 +255,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     queryGroup).Result;
@@ -278,11 +278,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMinAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null,
@@ -301,11 +301,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -319,11 +319,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaTableNameViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -337,11 +337,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaTableNameViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -355,16 +355,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaTableNameViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -378,17 +378,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinViaTableNameViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -402,11 +402,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMinViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -422,11 +422,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -440,11 +440,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaTableNameViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -458,11 +458,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaTableNameViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -476,16 +476,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaTableNameViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -499,17 +499,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMinAsyncViaTableNameViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
@@ -523,11 +523,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMinAsyncViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),

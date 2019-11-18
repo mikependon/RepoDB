@@ -29,11 +29,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestTruncate()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Truncate<CompleteTable>();
                 var countResult = connection.CountAll<CompleteTable>();
@@ -50,11 +50,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestTruncateAsyncWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.TruncateAsync<CompleteTable>().Result;
                 var countResult = connection.CountAll<CompleteTable>();
@@ -75,11 +75,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestTruncateViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Truncate(ClassMappedNameCache.Get<CompleteTable>());
                 var countResult = connection.CountAll<CompleteTable>();
@@ -96,11 +96,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestTruncateAsyncViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
                 var countResult = connection.CountAll<CompleteTable>();

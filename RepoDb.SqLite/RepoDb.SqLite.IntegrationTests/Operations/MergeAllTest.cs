@@ -30,11 +30,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllForIdentityForEmptyTable()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.MergeAll<CompleteTable>(tables);
 
@@ -53,11 +56,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllForIdentityForNonEmptyTable()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -78,15 +81,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -112,11 +115,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsyncForIdentityForEmptyTable()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.MergeAllAsync<CompleteTable>(tables).Result;
 
@@ -135,11 +141,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsyncForIdentityForNonEmptyTable()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -160,15 +166,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -198,11 +204,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
                     tables);
@@ -222,11 +231,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -248,15 +257,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -279,11 +288,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTablesAsDynamics(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsDynamics(10);
+
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
                     tables);
@@ -302,16 +314,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var entities = tables.Select(table => new
-            {
-                Id = table.Id,
-                ColumnInt = int.MaxValue
-            }).AsList();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
                     entities);
@@ -330,20 +342,20 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var entities = tables.Select(table => new
-            {
-                Id = table.Id,
-                ColumnInt = int.MaxValue
-            }).AsList();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
                     entities,
@@ -367,11 +379,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables).Result;
@@ -391,11 +406,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -417,15 +432,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Setup
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
@@ -448,11 +463,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTablesAsDynamics(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsDynamics(10);
+
                 // Act
                 var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables).Result;
@@ -471,16 +489,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var entities = tables.Select(table => new
-            {
-                Id = table.Id,
-                ColumnInt = int.MaxValue
-            }).AsList();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+
                 // Act
                 var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     entities).Result;
@@ -499,20 +517,20 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10).AsList();
-            var entities = tables.Select(table => new
-            {
-                Id = table.Id,
-                ColumnInt = int.MaxValue
-            }).AsList();
-            var qualifiers = new[]
-            {
-                new Field("Id", typeof(long))
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
                 // Act
                 var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     entities,

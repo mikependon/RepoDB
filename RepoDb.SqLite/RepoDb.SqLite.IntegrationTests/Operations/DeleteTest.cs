@@ -30,11 +30,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>((object)null);
 
@@ -46,11 +46,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaPrimaryKey()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(tables.First().Id);
 
@@ -62,11 +62,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaDataEntity()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(tables.First());
 
@@ -78,11 +78,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(e => e.Id == tables.First().Id);
 
@@ -94,11 +94,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(new { Id = tables.First().Id });
 
@@ -110,11 +110,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(new QueryField("Id", tables.First().Id));
 
@@ -126,16 +126,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.Delete<CompleteTable>(queryFields);
 
@@ -147,17 +147,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(queryGroup);
 
@@ -173,11 +173,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>((object)null).Result;
 
@@ -189,11 +189,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaPrimaryKey()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
 
@@ -205,11 +205,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaDataEntity()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(tables.First()).Result;
 
@@ -221,11 +221,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id).Result;
 
@@ -237,11 +237,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id }).Result;
 
@@ -253,11 +253,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
 
@@ -269,16 +269,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(queryFields).Result;
 
@@ -290,17 +290,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(queryGroup).Result;
 
@@ -320,11 +320,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
 
@@ -336,11 +336,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaTableNameViaPrimaryKey()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete<CompleteTable>(tables.First().Id);
 
@@ -352,11 +352,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaTableNameViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
 
@@ -368,11 +368,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaTableNameViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
 
@@ -384,16 +384,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaTableNameViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
 
@@ -405,17 +405,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteViaTableNameViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Delete(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);
 
@@ -431,11 +431,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null).Result;
 
@@ -447,11 +447,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaTableNameViaPrimaryKey()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
 
@@ -463,11 +463,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaTableNameViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id }).Result;
 
@@ -479,11 +479,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaTableNameViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id)).Result;
 
@@ -495,16 +495,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaTableNameViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).Result;
 
@@ -516,17 +516,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestDeleteAsyncViaTableNameViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).Result;
 

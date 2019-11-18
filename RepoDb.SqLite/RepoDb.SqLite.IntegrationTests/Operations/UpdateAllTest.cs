@@ -30,12 +30,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAll()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
@@ -60,12 +58,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAllAsync()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
@@ -94,12 +90,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAllViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
@@ -124,12 +118,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAllAsyncViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act

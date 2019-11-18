@@ -31,11 +31,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Count<CompleteTable>((object)null);
 
@@ -47,12 +47,12 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var ids = new[] { tables.First().Id, tables.Last().Id };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var ids = new[] { tables.First().Id, tables.Last().Id };
+
                 // Act
                 var result = connection.Count<CompleteTable>(e => ids.Contains(e.Id));
 
@@ -64,11 +64,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Count<CompleteTable>(new { tables.First().Id });
 
@@ -80,11 +80,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Count<CompleteTable>(new QueryField("Id", tables.First().Id));
 
@@ -96,16 +96,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
 
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
-            {
                 // Act
                 var result = connection.Count<CompleteTable>(queryFields);
 
@@ -117,17 +117,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
                 new QueryField("Id", Operation.GreaterThan, tables.First().Id),
                 new QueryField("Id", Operation.LessThan, tables.Last().Id)
             };
-            var queryGroup = new QueryGroup(queryFields);
+                var queryGroup = new QueryGroup(queryFields);
 
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
-            {
                 // Act
                 var result = connection.Count<CompleteTable>(queryGroup);
 
@@ -139,11 +139,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnCountWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.Count<CompleteTable>((object)null,
                     hints: "WhatEver");
@@ -157,11 +157,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.CountAsync<CompleteTable>((object)null).Result;
 
@@ -173,12 +173,12 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var ids = new[] { tables.First().Id, tables.Last().Id };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var ids = new[] { tables.First().Id, tables.Last().Id };
+
                 // Act
                 var result = connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id)).Result;
 
@@ -190,11 +190,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.CountAsync<CompleteTable>(new { tables.First().Id }).Result;
 
@@ -206,11 +206,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
 
@@ -222,16 +222,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.CountAsync<CompleteTable>(queryFields).Result;
 
@@ -243,17 +243,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.CountAsync<CompleteTable>(queryGroup).Result;
 
@@ -265,11 +265,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnCountAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.CountAsync<CompleteTable>((object)null,
                     hints: "WhatEver").Wait();
@@ -287,11 +287,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null);
@@ -304,11 +304,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaTableNameViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
                     new { tables.First().Id });
@@ -321,11 +321,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaTableNameViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
                     new QueryField("Id", tables.First().Id));
@@ -338,16 +338,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaTableNameViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
                     queryFields);
@@ -360,17 +360,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountViaTableNameViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
                     queryGroup);
@@ -383,11 +383,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnCountViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.Count(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
@@ -402,11 +402,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaTableNameWithoutExpression()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null).Result;
@@ -419,11 +419,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaTableNameViaDynamic()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new { tables.First().Id }).Result;
@@ -436,11 +436,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaTableNameViaQueryField()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new QueryField("Id", tables.First().Id)).Result;
@@ -453,16 +453,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaTableNameViaQueryFields()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+
                 // Act
                 var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     queryFields).Result;
@@ -475,17 +475,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestCountAsyncViaTableNameViaQueryGroup()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-            var queryFields = new[]
-            {
-                new QueryField("Id", Operation.GreaterThan, tables.First().Id),
-                new QueryField("Id", Operation.LessThan, tables.Last().Id)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+                var queryFields = new[]
+                {
+                    new QueryField("Id", Operation.GreaterThan, tables.First().Id),
+                    new QueryField("Id", Operation.LessThan, tables.Last().Id)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     queryGroup).Result;
@@ -498,11 +498,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnCountAsyncViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,

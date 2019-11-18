@@ -31,11 +31,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaPrimaryKey()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query<CompleteTable>(table.Id).First();
 
@@ -47,11 +47,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaExpression()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query<CompleteTable>(e => e.Id == table.Id).First();
 
@@ -63,11 +63,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query<CompleteTable>(new { table.Id }).First();
 
@@ -79,11 +79,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query<CompleteTable>(new QueryField("Id", table.Id)).First();
 
@@ -95,16 +95,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+
                 // Act
                 var result = connection.Query<CompleteTable>(queryFields).First();
 
@@ -116,17 +116,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Query<CompleteTable>(queryGroup).First();
 
@@ -138,11 +138,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryWithTop()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Query<CompleteTable>((object)null,
                     top: 2);
@@ -156,11 +156,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionQueryWithHints()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 connection.Query<CompleteTable>((object)null,
                     hints: "WhatEver");
@@ -174,11 +174,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaPrimaryKey()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>(table.Id).Result.First();
 
@@ -190,11 +190,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaExpression()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>(e => e.Id == table.Id).Result.First();
 
@@ -206,11 +206,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>(new { table.Id }).Result.First();
 
@@ -222,11 +222,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id)).Result.First();
 
@@ -238,16 +238,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>(queryFields).Result.First();
 
@@ -259,17 +259,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>(queryGroup).Result.First();
 
@@ -281,11 +281,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncWithTop()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryAsync<CompleteTable>((object)null,
                     top: 2).Result;
@@ -299,11 +299,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionQueryAsyncWithHints()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 connection.QueryAsync<CompleteTable>((object)null,
                     hints: "WhatEver").Wait();
@@ -321,11 +321,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaTableNameViaPrimaryKey()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
 
@@ -337,11 +337,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaTableNameViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), new { table.Id }).First();
 
@@ -353,11 +353,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaTableNameViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", table.Id)).First();
 
@@ -369,16 +369,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaTableNameViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), queryFields).First();
 
@@ -390,17 +390,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaTableNameViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).First();
 
@@ -412,11 +412,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryViaTableNameWithTop()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
@@ -431,11 +431,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionQueryViaTableNameWithHints()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 connection.Query(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
@@ -450,11 +450,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaTableNameViaPrimaryKey()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), table.Id).Result.First();
 
@@ -466,11 +466,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaTableNameViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new { table.Id }).Result.First();
 
@@ -482,11 +482,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaTableNameViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", table.Id)).Result.First();
 
@@ -498,16 +498,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaTableNameViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).Result.First();
 
@@ -519,17 +519,17 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaTableNameViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
+
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).Result.First();
 
@@ -541,11 +541,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestQueryAsyncViaTableNameWithTop()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
@@ -560,11 +560,11 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionQueryAsyncViaTableNameWithHints()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+
                 // Act
                 connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,

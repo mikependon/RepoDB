@@ -29,11 +29,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllForIdentity()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAll<CompleteTable>(tables);
 
@@ -55,11 +58,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllForNonIdentity()
         {
-            // Setup
-            var tables = Helper.CreateNonIdentityCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAll<NonIdentityCompleteTable>(tables);
 
@@ -84,11 +90,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllAsyncForIdentity()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAllAsync<CompleteTable>(tables).Result;
 
@@ -110,11 +119,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllAsyncForNonIdentity()
         {
-            // Setup
-            var tables = Helper.CreateNonIdentityCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAllAsync<NonIdentityCompleteTable>(tables).Result;
 
@@ -143,11 +155,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllViaTableNameForIdentity()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
                     tables);
@@ -169,11 +184,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllViaTableNameAsDynamicsForIdentity()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTablesAsDynamics(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsDynamics(10);
+
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
                     tables);
@@ -195,11 +213,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllViaTableNameForNonIdentity()
         {
-            // Setup
-            var tables = Helper.CreateNonIdentityCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables);
@@ -221,11 +242,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllViaTableNameAsDynamicsForNonIdentity()
         {
-            // Setup
-            var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
+
                 // Act
                 var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables);
@@ -251,11 +275,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllViaTableNameAsyncForIdentity()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables).Result;
@@ -277,11 +304,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllAsyncViaTableNameAsDynamicsForIdentity()
         {
-            // Setup
-            var tables = Helper.CreateCompleteTablesAsDynamics(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsDynamics(10);
+
                 // Act
                 var result = connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables).Result;
@@ -303,11 +333,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllViaTableNameAsyncForNonIdentity()
         {
-            // Setup
-            var tables = Helper.CreateNonIdentityCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
                 // Act
                 var result = connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables).Result;
@@ -329,11 +362,14 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
         {
-            // Setup
-            var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
+
                 // Act
                 var result = connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables).Result;

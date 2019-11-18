@@ -28,29 +28,29 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumAllWithoutExpression()
+        public void TestSumAll()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.SumAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), (long)result);
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnSumAllWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.SumAll<CompleteTable>(e => e.ColumnInt,
                     hints: "WhatEver");
@@ -62,29 +62,29 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAllAsyncWithoutExpression()
+        public void TestSumAllAsync()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.SumAllAsync<CompleteTable>(e => e.ColumnInt).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), (long)result);
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSumAllAsyncWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.SumAllAsync<CompleteTable>(e => e.ColumnInt,
                     hints: "WhatEver").Wait();
@@ -100,30 +100,30 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumAllViaTableNameWithoutExpression()
+        public void TestSumAllViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt));
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), (long)result);
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnSumAllViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
@@ -136,30 +136,30 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAllAsyncViaTableNameWithoutExpression()
+        public void TestSumAllAsyncViaTableName()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 var result = connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), (long)result);
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSumAllAsyncViaTableNameWithHints()
         {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
+
                 // Act
                 connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),

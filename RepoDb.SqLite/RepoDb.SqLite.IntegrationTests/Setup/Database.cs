@@ -7,6 +7,15 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 {
     public static class Database
     {
+        static Database()
+        {
+            // Check the connection string
+            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+
+            // Set the property
+            IsInMemory = (environment != "DEVELOPMENT");
+        }
+
         #region Properties
 
         /// <summary>
@@ -14,30 +23,42 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
         /// </summary>
         public static string ConnectionString { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
 
+        /// <summary>
+        /// Gets the value that indicates whether to use the in-memory database.
+        /// </summary>
+        public static bool IsInMemory { get; private set; }
+
         #endregion
 
         #region Methods
 
         public static void Initialize()
         {
-            // Check the connection string
-            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
-
-            // Server connection
-            if (environment != "DEVELOPMENT")
-            {
-                ConnectionString = @"";
-            }
-
             // Initialize SqLite
             Bootstrap.Initialize();
 
-            // Create tables
-            CreateTables();
+            // Check the type of database
+            if (IsInMemory == true)
+            {
+                // Memory
+                ConnectionString = @"Data Source=:memory:;Version=3;";
+            }
+            else
+            {
+                // Local
+                ConnectionString = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+
+                // Create tables
+                CreateTables();
+            }
         }
 
         public static void Cleanup()
         {
+            if (IsInMemory == true)
+            {
+                return;
+            }
             using (var connection = new SQLiteConnection(ConnectionString))
             {
                 connection.DeleteAll<CompleteTable>();
@@ -49,13 +70,27 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #region CompleteTable
 
-        public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
+        public static IEnumerable<CompleteTable> CreateCompleteTables(int count,
+            SQLiteConnection connection = null)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
+            {
+                connection = new SQLiteConnection(ConnectionString);
+            }
+            try
             {
                 var tables = Helper.CreateCompleteTables(count);
+                CreateCompleteTable(connection);
                 connection.InsertAll(tables);
                 return tables;
+            }
+            finally
+            {
+                if (hasConnection == false)
+                {
+                    connection.Dispose();
+                }
             }
         }
 
@@ -63,13 +98,27 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #region NonIdentityCompleteTable
 
-        public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
+        public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count,
+            SQLiteConnection connection = null)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
+            {
+                connection = new SQLiteConnection(ConnectionString);
+            }
+            try
             {
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
+                CreateNonIdentityCompleteTable(connection);
                 connection.InsertAll(tables);
                 return tables;
+            }
+            finally
+            {
+                if (hasConnection == false)
+                {
+                    connection.Dispose();
+                }
             }
         }
 
@@ -77,72 +126,88 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #region CreateTables
 
-        private static void CreateTables()
+        public static void CreateTables(SQLiteConnection connection = null)
         {
-            CreateCompleteTable();
-            CreateNonIdentityCompleteTable();
+            CreateCompleteTable(connection);
+            CreateNonIdentityCompleteTable(connection);
         }
 
-        private static void CreateCompleteTable()
+        public static void CreateCompleteTable(SQLiteConnection connection = null)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
             {
-                var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'CompleteTable' AND type = 'table';");
-                if (string.IsNullOrEmpty(result))
+                connection = new SQLiteConnection(ConnectionString);
+            }
+            try
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [CompleteTable] 
+                    (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT
+                        , ColumnBigInt BIGINT
+                        , ColumnBlob BLOB
+                        , ColumnBoolean BOOLEAN
+                        , ColumnChar CHAR
+                        , ColumnDate DATE
+                        , ColumnDateTime DATETIME
+                        , ColumnDecimal DECIMAL
+                        , ColumnDouble DOUBLE
+                        , ColumnInteger INTEGER
+                        , ColumnInt INT
+                        , ColumnNone NONE
+                        , ColumnNumeric NUMERIC
+                        , ColumnReal REAL
+                        , ColumnString STRING
+                        , ColumnText TEXT
+                        , ColumnTime TIME
+                        , ColumnVarChar VARCHAR
+                    );");
+            }
+            finally
+            {
+                if (hasConnection == false)
                 {
-                    connection.ExecuteNonQuery(@"CREATE TABLE [CompleteTable] 
-                        (
-                           Id INTEGER PRIMARY KEY AUTOINCREMENT
-                           , ColumnBigInt BIGINT
-                           , ColumnBlob BLOB
-                           , ColumnBoolean BOOLEAN
-                           , ColumnChar CHAR
-                           , ColumnDate DATE
-                           , ColumnDateTime DATETIME
-                           , ColumnDecimal DECIMAL
-                           , ColumnDouble DOUBLE
-                           , ColumnInteger INTEGER
-                           , ColumnInt INT
-                           , ColumnNone NONE
-                           , ColumnNumeric NUMERIC
-                           , ColumnReal REAL
-                           , ColumnString STRING
-                           , ColumnText TEXT
-                           , ColumnTime TIME
-                           , ColumnVarChar VARCHAR
-                        );");
+                    connection.Dispose();
                 }
             }
         }
 
-        private static void CreateNonIdentityCompleteTable()
+        public static void CreateNonIdentityCompleteTable(SQLiteConnection connection = null)
         {
-            using (var connection = new SQLiteConnection(ConnectionString))
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
             {
-                var result = connection.ExecuteScalar<string>("SELECT sql FROM [sqlite_master] WHERE name = 'NonIdentityCompleteTable' AND type = 'table';");
-                if (string.IsNullOrEmpty(result))
+                connection = new SQLiteConnection(ConnectionString);
+            }
+            try
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [NonIdentityCompleteTable] 
+                    (
+                        Id INTEGER PRIMARY KEY
+                        , ColumnBigInt BIGINT
+                        , ColumnBlob BLOB
+                        , ColumnBoolean BOOLEAN
+                        , ColumnChar CHAR
+                        , ColumnDate DATE
+                        , ColumnDateTime DATETIME
+                        , ColumnDecimal DECIMAL
+                        , ColumnDouble DOUBLE
+                        , ColumnInteger INTEGER
+                        , ColumnInt INT
+                        , ColumnNone NONE
+                        , ColumnNumeric NUMERIC
+                        , ColumnReal REAL
+                        , ColumnString STRING
+                        , ColumnText TEXT
+                        , ColumnTime TIME
+                        , ColumnVarChar VARCHAR
+                    );");
+            }
+            finally
+            {
+                if (hasConnection == false)
                 {
-                    connection.ExecuteNonQuery(@"CREATE TABLE [NonIdentityCompleteTable] 
-                        (
-                           Id INTEGER PRIMARY KEY
-                           , ColumnBigInt BIGINT
-                           , ColumnBlob BLOB
-                           , ColumnBoolean BOOLEAN
-                           , ColumnChar CHAR
-                           , ColumnDate DATE
-                           , ColumnDateTime DATETIME
-                           , ColumnDecimal DECIMAL
-                           , ColumnDouble DOUBLE
-                           , ColumnInteger INTEGER
-                           , ColumnInt INT
-                           , ColumnNone NONE
-                           , ColumnNumeric NUMERIC
-                           , ColumnReal REAL
-                           , ColumnString STRING
-                           , ColumnText TEXT
-                           , ColumnTime TIME
-                           , ColumnVarChar VARCHAR
-                        );");
+                    connection.Dispose();
                 }
             }
         }

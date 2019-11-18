@@ -29,12 +29,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaDataEntity()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -54,12 +52,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaExpression()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -79,12 +75,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -104,12 +98,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -129,17 +121,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -159,18 +149,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -194,12 +182,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaDataEntity()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -219,12 +205,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaExpression()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -244,12 +228,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -269,12 +251,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -294,17 +274,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -324,18 +302,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -363,12 +339,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaTableNameViaDataEntity()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -388,12 +362,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaTableNameViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -413,12 +385,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaTableNameViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -438,17 +408,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaTableNameViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -468,18 +436,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateViaTableNameViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -503,12 +469,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaTableNameViaDataEntity()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -528,12 +492,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaTableNameViaDynamic()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -553,12 +515,10 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaTableNameViaQueryField()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -578,17 +538,15 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaTableNameViaQueryFields()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
@@ -608,18 +566,16 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestUpdateAsyncViaTableNameViaQueryGroup()
         {
-            // Setup
-            var table = Database.CreateCompleteTables(1).First();
-            var queryFields = new[]
-            {
-                new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
-            };
-            var queryGroup = new QueryGroup(queryFields);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
+                var table = Database.CreateCompleteTables(1, connection).First();
+                var queryFields = new[]
+                {
+                    new QueryField("Id", table.Id),
+                    new QueryField("ColumnInt", table.ColumnInt)
+                };
+                var queryGroup = new QueryGroup(queryFields);
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
