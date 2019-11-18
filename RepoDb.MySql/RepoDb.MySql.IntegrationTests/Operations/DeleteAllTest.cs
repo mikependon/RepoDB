@@ -47,7 +47,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAllAsyncWithoutExpression()
+        public void TestDeleteAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -71,7 +71,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteAllViaTableNameWithoutExpression()
+        public void TestDeleteAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -91,7 +91,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAllAsyncViaTableNameWithoutExpression()
+        public void TestDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

@@ -28,7 +28,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMinAllWithoutExpression()
+        public void TestMinAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -62,7 +62,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMinAllAsyncWithoutExpression()
+        public void TestMinAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -100,7 +100,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMinAllViaTableNameWithoutExpression()
+        public void TestMinAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -136,7 +136,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMinAllAsyncViaTableNameWithoutExpression()
+        public void TestMinAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
