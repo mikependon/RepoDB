@@ -115,10 +115,12 @@ namespace RepoDb.Reflection
         /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader)
+        public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
+            IDbConnection connection)
         {
-            return ToEnumerable(reader, null, null, null);
+            return ToEnumerable(reader, null, connection, null);
         }
 
         /// <summary>
@@ -155,10 +157,12 @@ namespace RepoDb.Reflection
         /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object in an asynchronous way.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        public static Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader)
+        public static Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
+            IDbConnection connection)
         {
-            return ToEnumerableAsync(reader, null, null, null);
+            return ToEnumerableAsync(reader, null, connection, null);
         }
 
         /// <summary>
