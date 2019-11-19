@@ -23,6 +23,7 @@ RepoDb.Core                   | [![Build status](https://ci.appveyor.com/api/pro
 RepoDb.Core.UnitTest	      | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) |
 RepoDb.Core.IntegrationTest   | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
 RepoDb.SqLite                 | [![Build status](https://ci.appveyor.com/api/projects/status/xmk0upvebxiva1ys?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-o6787) |
+RepoDb.SqLite.UnitTest        | [![Build status](https://ci.appveyor.com/api/projects/status/ihfbuacunufan6vx?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4) |
 RepoDb.SqLite.IntegrationTest | [![Build status](https://ci.appveyor.com/api/projects/status/r98i8f440hjs5q68?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-eg27p) |
 
 ## High-Level Architecture
