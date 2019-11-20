@@ -311,17 +311,17 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
             table.ColumnBoolean = true;
             table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.UtcNow.Date;
-            table.ColumnDateTime = DateTime.UtcNow;
-            table.ColumnDecimal = decimal.MaxValue;
-            table.ColumnDouble = double.MaxValue;
-            table.ColumnInt = int.MaxValue;
-            table.ColumnInteger = long.MaxValue;
+            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
+            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
+            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
+            table.ColumnInt = Randomizer.Next(1000000);
+            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
             table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
             table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.UtcNow.TimeOfDay;
+            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
             table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 

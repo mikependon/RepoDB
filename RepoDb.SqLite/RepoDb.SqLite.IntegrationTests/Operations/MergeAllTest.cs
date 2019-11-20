@@ -108,6 +108,86 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestMergeAllForNonIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+                // Act
+                var result = connection.MergeAll<NonIdentityCompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllForNonIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAll<NonIdentityCompleteTable>(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAll<NonIdentityCompleteTable>(tables,
+                    qualifiers);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
         #endregion
 
         #region Async
@@ -187,6 +267,86 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncForNonIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+                // Act
+                var result = connection.MergeAllAsync<NonIdentityCompleteTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncForNonIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAllAsync<NonIdentityCompleteTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAllAsync<NonIdentityCompleteTable>(tables,
+                    qualifiers).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
@@ -372,6 +532,176 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestMergeAllViaTableNameForNonIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllViaTableNameForNonIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables,
+                    qualifiers);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    entities);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    entities,
+                    qualifiers);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
+            }
+        }
+
         #endregion
 
         #region Async
@@ -541,6 +871,176 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTables(10);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
+                // Setup
+                tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables,
+                    qualifiers).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Create the tables
+                Database.CreateTables(connection);
+
+                // Setup
+                var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    entities).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateNonIdentityCompleteTables(10, connection).AsList();
+                var entities = tables.Select(table => new
+                {
+                    Id = table.Id,
+                    ColumnInt = int.MaxValue
+                }).AsList();
+                var qualifiers = new[]
+                {
+                    new Field("Id", typeof(long))
+                };
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    entities,
+                    qualifiers).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
