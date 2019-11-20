@@ -13,7 +13,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
 
             // Set the property
-            IsInMemory = (environment == "DEVELOPMENT");
+            IsInMemory = (environment != "DEVELOPMENT");
         }
 
         #region Properties
