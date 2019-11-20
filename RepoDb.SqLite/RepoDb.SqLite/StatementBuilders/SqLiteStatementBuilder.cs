@@ -429,10 +429,13 @@ namespace RepoDb.StatementBuilders
             var result = (string)null;
 
             // Set the type
-            var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-            if (dbType != null)
+            if (identityField != null)
             {
-                databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
             }
 
             // Clear the builder
@@ -542,7 +545,6 @@ namespace RepoDb.StatementBuilders
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting);
             if (top > 0)

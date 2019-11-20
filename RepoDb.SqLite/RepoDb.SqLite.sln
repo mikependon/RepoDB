@@ -9,7 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SqLite.Tests", "Repo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite.IntegrationTests", "RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj", "{3C9481E3-0E7E-44C4-9728-A84B03398FC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SqLite.UnitTests", "RepoDb.SqLite.UnitTests\RepoDb.SqLite.UnitTests.csproj", "{3DD8F3EA-AB74-4932-9CCA-1BFCC5CDAA9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite.UnitTests", "RepoDb.SqLite.UnitTests\RepoDb.SqLite.UnitTests.csproj", "{3DD8F3EA-AB74-4932-9CCA-1BFCC5CDAA9F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{AF09E5CF-18A4-47BE-9AA1-40468370522E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{3DD8F3EA-AB74-4932-9CCA-1BFCC5CDAA9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD8F3EA-AB74-4932-9CCA-1BFCC5CDAA9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD8F3EA-AB74-4932-9CCA-1BFCC5CDAA9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF09E5CF-18A4-47BE-9AA1-40468370522E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF09E5CF-18A4-47BE-9AA1-40468370522E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF09E5CF-18A4-47BE-9AA1-40468370522E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF09E5CF-18A4-47BE-9AA1-40468370522E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

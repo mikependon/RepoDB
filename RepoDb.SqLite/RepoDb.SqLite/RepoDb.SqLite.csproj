@@ -32,12 +32,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.10.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 
 </Project>
