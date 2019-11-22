@@ -12,7 +12,7 @@ namespace RepoDb.SqLite.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            Bootstrap.Initialize();
+            SqLiteBootstrap.Initialize();
         }
 
         #region CreateBatchQuery
