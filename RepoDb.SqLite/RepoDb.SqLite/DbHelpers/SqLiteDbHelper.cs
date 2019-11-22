@@ -23,7 +23,7 @@ namespace RepoDb.DbHelpers
         /// </summary>
         public SqLiteDbHelper()
         {
-            DbTypeResolver = new SqLiteTypeNameToClientTypeResolver();
+            DbTypeResolver = new SqLiteDbTypeNameToClientTypeResolver();
         }
 
         #region Properties
