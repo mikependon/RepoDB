@@ -3,12 +3,12 @@ using RepoDb.SqLite.DbSettings;
 using RepoDb.StatementBuilders;
 using System.Data.SQLite;
 
-namespace RepoDb.SqLite
+namespace RepoDb
 {
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="SQLiteConnection"/> object.
     /// </summary>
-    public static class Bootstrap
+    public static class SqLiteBootstrap
     {
         #region Properties
 
