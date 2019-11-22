@@ -120,13 +120,14 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
+            value = value
+                .Replace(dbSetting.OpeningQuote, string.Empty)
+                .Replace(dbSetting.ClosingQuote, string.Empty);
             if (trim)
             {
                 value = value.Trim();
             }
-            return value
-                .Replace(dbSetting.OpeningQuote, string.Empty)
-                .Replace(dbSetting.ClosingQuote, string.Empty);
+            return value;
         }
 
         /// <summary>
@@ -210,7 +211,7 @@ namespace RepoDb.Extensions
             {
                 value = string.Concat(value, dbSetting.ClosingQuote);
             }
-            return value;
+            return trim ? value.Trim() : value;
         }
 
         /// <summary>
