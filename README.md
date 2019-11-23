@@ -7,7 +7,13 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb provide the features of micro-ORM and full-ORM. It provides flexibility to the developers to simplify the “switchover” of when to use the “micro” and “full” operations during the development.
+RepoDb provide the features of both micro-ORM and full-ORM. It gives flexibility to the developers to simplify the “switchover” of when to use the “micro” and “full” operations during the development.
+
+**It is high-performant and efficient**
+
+The word “high-performant” refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
+
+The word “efficient” refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the process.
 
 ## Highlights
 
