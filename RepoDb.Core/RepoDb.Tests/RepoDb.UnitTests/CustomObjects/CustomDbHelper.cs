@@ -10,10 +10,9 @@ namespace RepoDb.UnitTests.CustomObjects
     {
         public IResolver<string, Type> DbTypeResolver { get; set; }
 
-        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection,
+        public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
         {
             return new[]
             {
@@ -22,10 +21,9 @@ namespace RepoDb.UnitTests.CustomObjects
             };
         }
 
-        public Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection,
+        public Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
         {
             return Task.FromResult<IEnumerable<DbField>>(new[]
             {
@@ -34,12 +32,14 @@ namespace RepoDb.UnitTests.CustomObjects
             });
         }
 
-        public object GetScopeIdentity<TDbConnection>(TDbConnection connection, IDbTransaction transaction = null) where TDbConnection : IDbConnection
+        public object GetScopeIdentity(IDbConnection connection,
+            IDbTransaction transaction = null)
         {
             return 0;
         }
 
-        public Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection, IDbTransaction transaction = null) where TDbConnection : IDbConnection
+        public Task<object> GetScopeIdentityAsync(IDbConnection connection,
+            IDbTransaction transaction = null)
         {
             return Task.FromResult((object)0);
         }
