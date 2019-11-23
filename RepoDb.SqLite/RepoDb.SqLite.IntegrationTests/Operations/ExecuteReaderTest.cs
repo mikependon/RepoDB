@@ -107,25 +107,25 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
-        //[TestMethod]
-        //public void TestExecuteReaderAsExtractedDynamic()
-        //{
-        //    using (var connection = new SQLiteConnection(Database.ConnectionString))
-        //    {
-        //        // Setup
-        //        var tables = Database.CreateCompleteTables(10, connection);
+        [TestMethod]
+        public void TestExecuteReaderAsExtractedDynamic()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
 
-        //        // Act
-        //        using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
-        //        {
-        //            // Act
-        //            var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
 
-        //            // Assert
-        //            tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
-        //        }
-        //    }
-        //}
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
 
         #endregion
 
@@ -210,25 +210,25 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
             }
         }
 
-        //[TestMethod]
-        //public void TestExecuteReaderAsyncAsExtractedDynamic()
-        //{
-        //    using (var connection = new SQLiteConnection(Database.ConnectionString))
-        //    {
-        //        // Setup
-        //        var tables = Database.CreateCompleteTables(10, connection);
+        [TestMethod]
+        public void TestExecuteReaderAsyncAsExtractedDynamic()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Database.CreateCompleteTables(10, connection);
 
-        //        // Act
-        //        using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
-        //        {
-        //            // Act
-        //            var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
+                // Act
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
 
-        //            // Assert
-        //            tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
-        //        }
-        //    }
-        //}
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
 
         #endregion
     }
