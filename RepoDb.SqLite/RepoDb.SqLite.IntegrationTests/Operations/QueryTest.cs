@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryViaPrimaryKey()
+        public void TestSqLiteConnectionQueryViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -45,7 +45,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaExpression()
+        public void TestSqLiteConnectionQueryViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -61,7 +61,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaDynamic()
+        public void TestSqLiteConnectionQueryViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -77,7 +77,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryField()
+        public void TestSqLiteConnectionQueryViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -93,7 +93,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryFields()
+        public void TestSqLiteConnectionQueryViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -114,7 +114,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryGroup()
+        public void TestSqLiteConnectionQueryViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -136,7 +136,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryWithTop()
+        public void TestSqLiteConnectionQueryWithTop()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -172,7 +172,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncViaPrimaryKey()
+        public void TestSqLiteConnectionQueryAsyncViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -188,7 +188,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaExpression()
+        public void TestSqLiteConnectionQueryAsyncViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -204,7 +204,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaDynamic()
+        public void TestSqLiteConnectionQueryAsyncViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -220,7 +220,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryField()
+        public void TestSqLiteConnectionQueryAsyncViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -236,7 +236,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryFields()
+        public void TestSqLiteConnectionQueryAsyncViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -257,7 +257,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryGroup()
+        public void TestSqLiteConnectionQueryAsyncViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -279,7 +279,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncWithTop()
+        public void TestSqLiteConnectionQueryAsyncWithTop()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -319,7 +319,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryViaTableNameViaPrimaryKey()
+        public void TestSqLiteConnectionQueryViaTableNameViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -335,7 +335,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaDynamic()
+        public void TestSqLiteConnectionQueryViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -351,7 +351,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryField()
+        public void TestSqLiteConnectionQueryViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -367,7 +367,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryFields()
+        public void TestSqLiteConnectionQueryViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -388,7 +388,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryGroup()
+        public void TestSqLiteConnectionQueryViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -410,7 +410,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameWithTop()
+        public void TestSqLiteConnectionQueryViaTableNameWithTop()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -448,7 +448,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaPrimaryKey()
+        public void TestSqLiteConnectionQueryAsyncViaTableNameViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -464,7 +464,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaDynamic()
+        public void TestSqLiteConnectionQueryAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -480,7 +480,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryField()
+        public void TestSqLiteConnectionQueryAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -496,7 +496,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryFields()
+        public void TestSqLiteConnectionQueryAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -517,7 +517,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryGroup()
+        public void TestSqLiteConnectionQueryAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -539,7 +539,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameWithTop()
+        public void TestSqLiteConnectionQueryAsyncViaTableNameWithTop()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

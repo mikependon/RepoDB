@@ -28,7 +28,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteWithoutExpression()
+        public void TestSqLiteConnectionDeleteWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -44,7 +44,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaPrimaryKey()
+        public void TestSqLiteConnectionDeleteViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -60,7 +60,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaDataEntity()
+        public void TestSqLiteConnectionDeleteViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -76,7 +76,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaExpression()
+        public void TestSqLiteConnectionDeleteViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -92,7 +92,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaDynamic()
+        public void TestSqLiteConnectionDeleteViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -108,7 +108,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaQueryField()
+        public void TestSqLiteConnectionDeleteViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -124,7 +124,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaQueryFields()
+        public void TestSqLiteConnectionDeleteViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -145,7 +145,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaQueryGroup()
+        public void TestSqLiteConnectionDeleteViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -171,7 +171,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAsyncWithoutExpression()
+        public void TestSqLiteConnectionDeleteAsyncWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -187,7 +187,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaPrimaryKey()
+        public void TestSqLiteConnectionDeleteAsyncViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -203,7 +203,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaDataEntity()
+        public void TestSqLiteConnectionDeleteAsyncViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -219,7 +219,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaExpression()
+        public void TestSqLiteConnectionDeleteAsyncViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -235,7 +235,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaDynamic()
+        public void TestSqLiteConnectionDeleteAsyncViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -251,7 +251,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaQueryField()
+        public void TestSqLiteConnectionDeleteAsyncViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -267,7 +267,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaQueryFields()
+        public void TestSqLiteConnectionDeleteAsyncViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -288,7 +288,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaQueryGroup()
+        public void TestSqLiteConnectionDeleteAsyncViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -318,7 +318,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteViaTableNameWithoutExpression()
+        public void TestSqLiteConnectionDeleteViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -334,7 +334,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaTableNameViaPrimaryKey()
+        public void TestSqLiteConnectionDeleteViaTableNameViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -350,7 +350,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaTableNameViaDynamic()
+        public void TestSqLiteConnectionDeleteViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -366,7 +366,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaTableNameViaQueryField()
+        public void TestSqLiteConnectionDeleteViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -382,7 +382,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaTableNameViaQueryFields()
+        public void TestSqLiteConnectionDeleteViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -403,7 +403,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteViaTableNameViaQueryGroup()
+        public void TestSqLiteConnectionDeleteViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -429,7 +429,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAsyncViaTableNameWithoutExpression()
+        public void TestSqLiteConnectionDeleteAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -445,7 +445,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaTableNameViaPrimaryKey()
+        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -461,7 +461,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaTableNameViaDynamic()
+        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -477,7 +477,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaTableNameViaQueryField()
+        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -493,7 +493,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaTableNameViaQueryFields()
+        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -514,7 +514,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDeleteAsyncViaTableNameViaQueryGroup()
+        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

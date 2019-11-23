@@ -28,7 +28,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMaxAll()
+        public void TestSqLiteConnectionMaxAll()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -44,7 +44,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnMaxAllWithHints()
+        public void ThrowExceptionOnSqLiteConnectionMaxAllWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -62,7 +62,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMaxAllAsync()
+        public void TestSqLiteConnectionMaxAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -78,7 +78,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMaxAllAsyncWithHints()
+        public void ThrowExceptionOnSqLiteConnectionMaxAllAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -100,7 +100,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMaxAllViaTableName()
+        public void TestSqLiteConnectionMaxAllViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -117,7 +117,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnMaxAllViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionMaxAllViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -136,7 +136,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMaxAllAsyncViaTableName()
+        public void TestSqLiteConnectionMaxAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -153,7 +153,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMaxAllAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionMaxAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

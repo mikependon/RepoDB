@@ -27,7 +27,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteAll()
+        public void TestSqLiteConnectionDeleteAll()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -47,7 +47,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAllAsync()
+        public void TestSqLiteConnectionDeleteAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -71,7 +71,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteAllViaTableName()
+        public void TestSqLiteConnectionDeleteAllViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -91,7 +91,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAllAsyncViaTableName()
+        public void TestSqLiteConnectionDeleteAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

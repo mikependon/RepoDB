@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestAverageWithoutExpression()
+        public void TestSqLiteConnectionAverageWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -46,7 +46,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageWithExpression()
+        public void TestSqLiteConnectionAverageWithExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -64,7 +64,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestAverageWithHints()
+        public void TestSqLiteConnectionAverageWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -83,7 +83,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestAverageAsyncWithoutExpression()
+        public void TestSqLiteConnectionAverageAsyncWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -100,7 +100,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageAsyncWithExpression()
+        public void TestSqLiteConnectionAverageAsyncWithExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -118,7 +118,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestAverageAsyncWithHints()
+        public void TestSqLiteConnectionAverageAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -141,7 +141,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestAverageViaTableNameWithoutExpression()
+        public void TestSqLiteConnectionAverageViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -159,7 +159,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageViaTableNameWithExpression()
+        public void TestSqLiteConnectionAverageViaTableNameWithExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -178,7 +178,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestAverageViaTableNameWithHints()
+        public void TestSqLiteConnectionAverageViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -198,7 +198,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestAverageAsyncViaTableNameWithoutExpression()
+        public void TestSqLiteConnectionAverageAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -216,7 +216,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageAsyncViaTableNameWithExpression()
+        public void TestSqLiteConnectionAverageAsyncViaTableNameWithExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -235,7 +235,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestAverageAsyncViaTableNameWithHints()
+        public void TestSqLiteConnectionAverageAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

@@ -27,7 +27,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestInsertAllForIdentity()
+        public void TestSqLiteConnectionInsertAllForIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -56,7 +56,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllForNonIdentity()
+        public void TestSqLiteConnectionInsertAllForNonIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -88,7 +88,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestInsertAllAsyncForIdentity()
+        public void TestSqLiteConnectionInsertAllAsyncForIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -117,7 +117,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllAsyncForNonIdentity()
+        public void TestSqLiteConnectionInsertAllAsyncForNonIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -153,7 +153,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestInsertAllViaTableNameForIdentity()
+        public void TestSqLiteConnectionInsertAllViaTableNameForIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -182,7 +182,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsDynamicsForIdentity()
+        public void TestSqLiteConnectionInsertAllViaTableNameAsDynamicsForIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -211,7 +211,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameForNonIdentity()
+        public void TestSqLiteConnectionInsertAllViaTableNameForNonIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -240,7 +240,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsDynamicsForNonIdentity()
+        public void TestSqLiteConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -273,7 +273,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsyncForIdentity()
+        public void TestSqLiteConnectionInsertAllViaTableNameAsyncForIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -302,7 +302,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllAsyncViaTableNameAsDynamicsForIdentity()
+        public void TestSqLiteConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -331,7 +331,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsyncForNonIdentity()
+        public void TestSqLiteConnectionInsertAllViaTableNameAsyncForNonIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -360,7 +360,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
+        public void TestSqLiteConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteReader()
+        public void TestSqLiteConnectionExecuteReader()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -57,7 +57,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderWithMultipleStatements()
+        public void TestSqLiteConnectionExecuteReaderWithMultipleStatements()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -88,7 +88,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsExtractedEntity()
+        public void TestSqLiteConnectionExecuteReaderAsExtractedEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -108,7 +108,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsExtractedDynamic()
+        public void TestSqLiteConnectionExecuteReaderAsExtractedDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -132,7 +132,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteReaderAsync()
+        public void TestSqLiteConnectionExecuteReaderAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -160,7 +160,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsyncWithMultipleStatements()
+        public void TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -191,7 +191,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsyncAsExtractedEntity()
+        public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -211,7 +211,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsyncAsExtractedDynamic()
+        public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

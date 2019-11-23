@@ -28,7 +28,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteQueryMultiple()
+        public void TestSqLiteConnectionExecuteQueryMultiple()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -56,7 +56,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleWithParameters()
+        public void TestSqLiteConnectionExecuteQueryMultipleWithParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -88,7 +88,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleWithSharedParameters()
+        public void TestSqLiteConnectionExecuteQueryMultipleWithSharedParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -120,7 +120,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteQueryMultipleAsync()
+        public void TestSqLiteConnectionExecuteQueryMultipleAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -148,7 +148,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleAsyncWithParameters()
+        public void TestSqLiteConnectionExecuteQueryMultipleAsyncWithParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -180,7 +180,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleAsyncWithSharedParameters()
+        public void TestSqLiteConnectionExecuteQueryMultipleAsyncWithSharedParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

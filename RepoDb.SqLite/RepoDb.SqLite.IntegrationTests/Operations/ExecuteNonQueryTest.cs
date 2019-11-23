@@ -24,7 +24,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteNonQuery()
+        public void TestSqLiteConnectionExecuteNonQuery()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -40,7 +40,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryWithParameters()
+        public void TestSqLiteConnectionExecuteNonQueryWithParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -57,7 +57,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryWithMultipleStatement()
+        public void TestSqLiteConnectionExecuteNonQueryWithMultipleStatement()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -77,7 +77,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteNonQueryAsync()
+        public void TestSqLiteConnectionExecuteNonQueryAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -93,7 +93,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryAsyncWithParameters()
+        public void TestSqLiteConnectionExecuteNonQueryAsyncWithParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -110,7 +110,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryAsyncWithMultipleStatement()
+        public void TestSqLiteConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

@@ -28,7 +28,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestCountAll()
+        public void TestSqLiteConnectionCountAll()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -44,7 +44,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCountAllWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountAllWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -61,7 +61,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestCountAllAsync()
+        public void TestSqLiteConnectionCountAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -77,7 +77,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAllAsyncWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountAllAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -98,7 +98,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestCountAllViaTableName()
+        public void TestSqLiteConnectionCountAllViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -114,7 +114,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCountAllViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountAllViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -132,7 +132,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestCountAllAsyncViaTableName()
+        public void TestSqLiteConnectionCountAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -148,7 +148,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAllAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

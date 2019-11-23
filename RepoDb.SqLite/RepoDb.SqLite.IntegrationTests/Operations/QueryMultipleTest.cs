@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryMultipleForT2()
+        public void TestSqLiteConnectionQueryMultipleForT2()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -51,7 +51,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT3()
+        public void TestSqLiteConnectionQueryMultipleForT3()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -77,7 +77,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT4()
+        public void TestSqLiteConnectionQueryMultipleForT4()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -107,7 +107,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT5()
+        public void TestSqLiteConnectionQueryMultipleForT5()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -141,7 +141,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT6()
+        public void TestSqLiteConnectionQueryMultipleForT6()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -179,7 +179,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT7()
+        public void TestSqLiteConnectionQueryMultipleForT7()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -243,7 +243,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT2()
+        public void TestSqLiteConnectionQueryMultipleAsyncForT2()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -265,7 +265,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT3()
+        public void TestSqLiteConnectionQueryMultipleAsyncForT3()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -291,7 +291,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT4()
+        public void TestSqLiteConnectionQueryMultipleAsyncForT4()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -321,7 +321,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT5()
+        public void TestSqLiteConnectionQueryMultipleAsyncForT5()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -355,7 +355,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT6()
+        public void TestSqLiteConnectionQueryMultipleAsyncForT6()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -393,7 +393,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT7()
+        public void TestSqLiteConnectionQueryMultipleAsyncForT7()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestCountWithoutExpression()
+        public void TestSqLiteConnectionCountWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -45,7 +45,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaExpression()
+        public void TestSqLiteConnectionCountViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -62,7 +62,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaDynamic()
+        public void TestSqLiteConnectionCountViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -78,7 +78,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaQueryField()
+        public void TestSqLiteConnectionCountViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -94,7 +94,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaQueryFields()
+        public void TestSqLiteConnectionCountViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -115,7 +115,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaQueryGroup()
+        public void TestSqLiteConnectionCountViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -137,7 +137,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCountWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -155,7 +155,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestCountAsyncWithoutExpression()
+        public void TestSqLiteConnectionCountAsyncWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -171,7 +171,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaExpression()
+        public void TestSqLiteConnectionCountAsyncViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -188,7 +188,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaDynamic()
+        public void TestSqLiteConnectionCountAsyncViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -204,7 +204,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaQueryField()
+        public void TestSqLiteConnectionCountAsyncViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -220,7 +220,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaQueryFields()
+        public void TestSqLiteConnectionCountAsyncViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -241,7 +241,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaQueryGroup()
+        public void TestSqLiteConnectionCountAsyncViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -263,7 +263,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAsyncWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -285,7 +285,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestCountViaTableNameWithoutExpression()
+        public void TestSqLiteConnectionCountViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -302,7 +302,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaTableNameViaDynamic()
+        public void TestSqLiteConnectionCountViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -319,7 +319,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaTableNameViaQueryField()
+        public void TestSqLiteConnectionCountViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -336,7 +336,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaTableNameViaQueryFields()
+        public void TestSqLiteConnectionCountViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -358,7 +358,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountViaTableNameViaQueryGroup()
+        public void TestSqLiteConnectionCountViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -381,7 +381,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCountViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -400,7 +400,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestCountAsyncViaTableNameWithoutExpression()
+        public void TestSqLiteConnectionCountAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -417,7 +417,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaTableNameViaDynamic()
+        public void TestSqLiteConnectionCountAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -434,7 +434,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaTableNameViaQueryField()
+        public void TestSqLiteConnectionCountAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -451,7 +451,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaTableNameViaQueryFields()
+        public void TestSqLiteConnectionCountAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -473,7 +473,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestCountAsyncViaTableNameViaQueryGroup()
+        public void TestSqLiteConnectionCountAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -496,7 +496,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionCountAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

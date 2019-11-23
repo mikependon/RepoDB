@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestBatchQueryFirstBatchAscending()
+        public void TestSqLiteConnectionBatchQueryFirstBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -49,7 +49,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryFirstBatchDescending()
+        public void TestSqLiteConnectionBatchQueryFirstBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -69,7 +69,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryThirdBatchAscending()
+        public void TestSqLiteConnectionBatchQueryThirdBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -89,7 +89,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryThirdBatchDescending()
+        public void TestSqLiteConnectionBatchQueryThirdBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -109,7 +109,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnBatchQueryWithHints()
+        public void ThrowExceptionOnSqLiteConnectionBatchQueryWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -130,7 +130,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestBatchQueryAsyncFirstBatchAscending()
+        public void TestSqLiteConnectionBatchQueryAsyncFirstBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -150,7 +150,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryAsyncFirstBatchDescending()
+        public void TestSqLiteConnectionBatchQueryAsyncFirstBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -170,7 +170,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryAsyncThirdBatchAscending()
+        public void TestSqLiteConnectionBatchQueryAsyncThirdBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -190,7 +190,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryAsyncThirdBatchDescending()
+        public void TestSqLiteConnectionBatchQueryAsyncThirdBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -210,7 +210,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnBatchQueryAsyncWithHints()
+        public void ThrowExceptionOnSqLiteConnectionBatchQueryAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -235,7 +235,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameFirstBatchAscending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameFirstBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -256,7 +256,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameFirstBatchDescending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameFirstBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -277,7 +277,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameThirdBatchAscending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameThirdBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -298,7 +298,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameThirdBatchDescending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameThirdBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -319,7 +319,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnBatchQueryViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionBatchQueryViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -341,7 +341,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncFirstBatchAscending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -362,7 +362,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncFirstBatchDescending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -383,7 +383,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncThirdBatchAscending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -404,7 +404,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncThirdBatchDescending()
+        public void TestSqLiteConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -425,7 +425,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnBatchQueryAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnSqLiteConnectionBatchQueryAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

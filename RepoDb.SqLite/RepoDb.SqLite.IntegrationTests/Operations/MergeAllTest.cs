@@ -28,7 +28,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMergeAllForIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -54,7 +54,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -79,7 +79,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -109,7 +109,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForNonIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllForNonIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -134,7 +134,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForNonIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -159,7 +159,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -193,7 +193,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMergeAllAsyncForIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -219,7 +219,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -244,7 +244,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -274,7 +274,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForNonIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncForNonIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -299,7 +299,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForNonIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -324,7 +324,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -362,7 +362,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -389,7 +389,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -415,7 +415,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -446,7 +446,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -472,7 +472,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -500,7 +500,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -533,7 +533,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -559,7 +559,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -585,7 +585,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -616,7 +616,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -642,7 +642,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -670,7 +670,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -707,7 +707,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMergeAllViaTableNameAsyncForIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -734,7 +734,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -760,7 +760,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -791,7 +791,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -817,7 +817,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -845,7 +845,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -878,7 +878,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -904,7 +904,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -930,7 +930,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -961,7 +961,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -987,7 +987,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -1015,7 +1015,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {

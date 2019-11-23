@@ -28,7 +28,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestUpdateAll()
+        public void TestSqLiteConnectionUpdateAll()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -56,7 +56,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestUpdateAllAsync()
+        public void TestSqLiteConnectionUpdateAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -88,7 +88,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestUpdateAllViaTableName()
+        public void TestSqLiteConnectionUpdateAllViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
@@ -116,7 +116,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestUpdateAllAsyncViaTableName()
+        public void TestSqLiteConnectionUpdateAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
