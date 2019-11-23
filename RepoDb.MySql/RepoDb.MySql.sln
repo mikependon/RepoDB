@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{E24DF442-203B-48CF-9904-E3A0AA723FD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql.UnitTests", "RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +31,17 @@ Global
 		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7} = {BC604FB6-F172-46DC-B0D4-852DB7E1E819}
+		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A} = {BC604FB6-F172-46DC-B0D4-852DB7E1E819}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A29F8AC-5A80-4123-82C6-1BA1EDF67073}
