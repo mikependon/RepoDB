@@ -2,9 +2,7 @@
 [![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20downloads&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20downloads&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 
-## RepoDb
-
-A hybrid ORM library for .NET.
+## RepoDb - a hybrid ORM library for .NET.
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
 
@@ -23,17 +21,6 @@ RepoDb.Core.IntegrationTest   | [![Build status](https://ci.appveyor.com/api/pro
 RepoDb.SqLite                 | [![Build status](https://ci.appveyor.com/api/projects/status/xmk0upvebxiva1ys?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-o6787) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-o6787)](https://ci.appveyor.com/project/mikependon/repodb-o6787/build/tests) |
 RepoDb.SqLite.UnitTest        | [![Build status](https://ci.appveyor.com/api/projects/status/ihfbuacunufan6vx?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) |
 RepoDb.SqLite.IntegrationTest | [![Build status](https://ci.appveyor.com/api/projects/status/r98i8f440hjs5q68?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-eg27p) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
-
-## High-Level Architecture
-
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/HLA.PNG" />
-
-## Why RepoDb?
-
-### Highlights
-
- - RepoDb is the fastest and the most efficient .NET ORM Library (in set-fetches) as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
- - RepoDb is covered by thousand of major business related Unit Tests and Integration Tests.
 
 ### Why RepoDb
 
