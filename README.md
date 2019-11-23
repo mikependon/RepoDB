@@ -3,18 +3,20 @@
 [![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 [![Build status](https://img.shields.io/nuget/dt/repodb.mysql?label=mysql%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySql)
 
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
+
 ## RepoDb - a hybrid ORM library for .NET.
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
+RepoDb provide the features of micro-ORM and full-ORM. It provides flexibility to the developers to simplify the “switchover” of when to use the “micro” and “full” operations during the development.
 
 ## Highlights
 
  - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
 
-## Tests
+## Builds
 
-Project/Solution               | Build                                                                                                                                                    | Results                                                                                                                                                                 |
+Project/Solution               | Status                                                                                                                                                   | Test Results                                                                                                                                                            |
 -------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 RepoDb.Core                    | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw/build/tests) |
 RepoDb.Core.UnitTests	       | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests) |
