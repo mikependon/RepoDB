@@ -39,7 +39,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var result = connection.MinAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -73,7 +73,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                 var result = connection.MinAllAsync<CompleteTable>(e => e.ColumnInt).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -112,7 +112,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt));
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -148,7 +148,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 

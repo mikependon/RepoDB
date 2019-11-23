@@ -41,7 +41,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -59,7 +59,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     e => ids.Contains(e.Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -76,7 +76,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -93,7 +93,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -115,7 +115,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -138,7 +138,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -174,7 +174,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)null).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -192,7 +192,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     e => ids.Contains(e.Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -209,7 +209,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new { tables.First().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -226,7 +226,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -248,7 +248,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryFields).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -271,7 +271,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryGroup).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -312,7 +312,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -330,7 +330,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -348,7 +348,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -371,7 +371,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -395,7 +395,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -433,7 +433,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     (object)null).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -451,7 +451,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new { tables.First().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -469,7 +469,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     new QueryField("Id", tables.First().Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -492,7 +492,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryFields).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -516,7 +516,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                     queryGroup).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
