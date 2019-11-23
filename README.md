@@ -1,4 +1,4 @@
-[![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=ALL%20BUILDS&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
+[![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=solution%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 [![Build status](https://img.shields.io/nuget/dt/repodb.mysql?label=mysql%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySql)
@@ -12,9 +12,9 @@
  - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
 
-## Builds
+## Tests
 
-Project/Solution               | Build Results                                                                                                                                            | Test Results                                                                                                                                                            |
+Project/Solution               | Build                                                                                                                                                    | Results                                                                                                                                                                 |
 -------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 RepoDb.Core                    | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw/build/tests) |
 RepoDb.Core.UnitTests	       | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests) |
@@ -57,14 +57,7 @@ RepoDb.MySql.IntegrationTests  | [![Build status](https://img.shields.io/appveyo
  - It has ADO.NET transaction supports.
  - It is always free!
 
-### Documentation
- - [https://repodb.readthedocs.io/en/latest/index.html](https://repodb.readthedocs.io/en/latest/index.html)
-
-### Project
- - [https://github.com/mikependon/RepoDb](https://github.com/mikependon/RepoDb)
-
-
-## Features
+## Core Features
  
  - Asynchronous Operations
  - Batch Operations
@@ -87,7 +80,7 @@ RepoDb.MySql.IntegrationTests  | [![Build status](https://img.shields.io/appveyo
  - Transaction
  - Type Mapping
 
-## Code Samples
+## Examples
 
 Let us say you have a customer class named `Customer` that has an equivalent table in the database named `[dbo].[Customer]`.
 

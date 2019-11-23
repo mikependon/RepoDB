@@ -5,12 +5,6 @@ VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "RepoDb\RepoDb.csproj", "{848A3476-B319-4BCC-A9CB-572182785B58}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Tests", "RepoDb.Tests", "{23978120-52E6-40DB-8EDA-877308C54DC3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{668D001B-DD5C-4183-ABCC-D7316B298EFB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{0B22F8D2-D059-49B4-8481-46D0C5612C1F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base", "{810FF947-4368-477F-9193-07532892B492}"
 	ProjectSection(SolutionItems) = preProject
 		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
@@ -20,19 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite", "..\RepoDb.SqLite\RepoDb.SqLite\RepoDb.SqLite.csproj", "{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SqLite.Tests", "RepoDb.SqLite.Tests", "{1BCF2DE8-297A-4973-8D9E-027CFFFBF33F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite.UnitTests", "..\RepoDb.SqLite\RepoDb.SqLite.UnitTests\RepoDb.SqLite.UnitTests.csproj", "{537E84C1-BFF9-4648-942E-D082ECC3566A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite.IntegrationTests", "..\RepoDb.SqLite\RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj", "{335E2DE4-DC2A-4B51-B78E-A3C7302D45E5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MySql.Tests", "RepoDb.MySql.Tests", "{FADD3A68-0693-4BB4-A1DC-9B7AE544854A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTests", "..\RepoDb.MySql\RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{FC4455C3-E424-493E-A973-E718CD543FC9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.UnitTests", "..\RepoDb.MySql\RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{C6CA1FAC-C19F-43FA-8895-782178050947}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,49 +26,17 @@ Global
 		{848A3476-B319-4BCC-A9CB-572182785B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{848A3476-B319-4BCC-A9CB-572182785B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{848A3476-B319-4BCC-A9CB-572182785B58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{668D001B-DD5C-4183-ABCC-D7316B298EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{668D001B-DD5C-4183-ABCC-D7316B298EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{668D001B-DD5C-4183-ABCC-D7316B298EFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{668D001B-DD5C-4183-ABCC-D7316B298EFB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B22F8D2-D059-49B4-8481-46D0C5612C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B22F8D2-D059-49B4-8481-46D0C5612C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B22F8D2-D059-49B4-8481-46D0C5612C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B22F8D2-D059-49B4-8481-46D0C5612C1F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{537E84C1-BFF9-4648-942E-D082ECC3566A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{537E84C1-BFF9-4648-942E-D082ECC3566A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{537E84C1-BFF9-4648-942E-D082ECC3566A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{537E84C1-BFF9-4648-942E-D082ECC3566A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{335E2DE4-DC2A-4B51-B78E-A3C7302D45E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{335E2DE4-DC2A-4B51-B78E-A3C7302D45E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{335E2DE4-DC2A-4B51-B78E-A3C7302D45E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{335E2DE4-DC2A-4B51-B78E-A3C7302D45E5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC4455C3-E424-493E-A973-E718CD543FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC4455C3-E424-493E-A973-E718CD543FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC4455C3-E424-493E-A973-E718CD543FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC4455C3-E424-493E-A973-E718CD543FC9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6CA1FAC-C19F-43FA-8895-782178050947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6CA1FAC-C19F-43FA-8895-782178050947}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6CA1FAC-C19F-43FA-8895-782178050947}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6CA1FAC-C19F-43FA-8895-782178050947}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{668D001B-DD5C-4183-ABCC-D7316B298EFB} = {23978120-52E6-40DB-8EDA-877308C54DC3}
-		{0B22F8D2-D059-49B4-8481-46D0C5612C1F} = {23978120-52E6-40DB-8EDA-877308C54DC3}
-		{537E84C1-BFF9-4648-942E-D082ECC3566A} = {1BCF2DE8-297A-4973-8D9E-027CFFFBF33F}
-		{335E2DE4-DC2A-4B51-B78E-A3C7302D45E5} = {1BCF2DE8-297A-4973-8D9E-027CFFFBF33F}
-		{FC4455C3-E424-493E-A973-E718CD543FC9} = {FADD3A68-0693-4BB4-A1DC-9B7AE544854A}
-		{C6CA1FAC-C19F-43FA-8895-782178050947} = {FADD3A68-0693-4BB4-A1DC-9B7AE544854A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
