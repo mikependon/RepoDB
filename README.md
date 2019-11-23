@@ -17,8 +17,9 @@ The word “efficient” refers to “how well-managed” this ORM uses the computer mem
 
 ## Highlights
 
- - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). The actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
+ - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
+ - RepoDb is running various critical applications in Production Environment.
 
 ## Builds
 

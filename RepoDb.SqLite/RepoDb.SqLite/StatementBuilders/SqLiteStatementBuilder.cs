@@ -187,7 +187,7 @@ namespace RepoDb.StatementBuilders
             builder
                 .Select()
                 .WriteText(result)
-                .As("[Result]")
+                .As("Result".AsQuoted(DbSetting))
                 .End();
 
             // Return the query
@@ -360,7 +360,7 @@ namespace RepoDb.StatementBuilders
                 builder
                     .Select()
                     .WriteText(result)
-                    .As("[Result]")
+                    .As("Result".AsQuoted(DbSetting))
                     .End();
             }
 
@@ -476,7 +476,7 @@ namespace RepoDb.StatementBuilders
                     builder
                         .Select()
                         .WriteText(result)
-                        .As("[Result]")
+                        .As("Result".AsQuoted(DbSetting))
                         .End();
                 }
             }

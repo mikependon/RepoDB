@@ -36,7 +36,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Insert<CompleteTable>(table);
+                var result = connection.Insert<CompleteTable, long>(table);
 
                 // Assert
                 Assert.IsTrue(Convert.ToInt64(result) > 0);

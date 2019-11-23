@@ -161,25 +161,25 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnInt = i,
                     ColumnDecimal2 = Convert.ToDecimal(i),
                     ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBlobAsArray = Encoding.Default.GetBytes($"ColumnBlobAsArray:{i}"),
-                    ColumnBinary = Encoding.Default.GetBytes($"ColumnBinary:{i}"),
-                    ColumnLongBlob = Encoding.Default.GetBytes($"ColumnLongBlob:{i}"),
-                    ColumnMediumBlob = Encoding.Default.GetBytes($"ColumnMediumBlob:{i}"),
-                    ColumnTinyBlob = Encoding.Default.GetBytes($"ColumnTinyBlob:{i}"),
-                    ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{i}"),
+                    //ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
+                    //ColumnBlobAsArray = Encoding.Default.GetBytes($"ColumnBlobAsArray:{i}"),
+                    //ColumnBinary = Encoding.Default.GetBytes($"ColumnBinary:{i}"),
+                    //ColumnLongBlob = Encoding.Default.GetBytes($"ColumnLongBlob:{i}"),
+                    //ColumnMediumBlob = Encoding.Default.GetBytes($"ColumnMediumBlob:{i}"),
+                    //ColumnTinyBlob = Encoding.Default.GetBytes($"ColumnTinyBlob:{i}"),
+                    //ColumnVarBinary = Encoding.Default.GetBytes($"ColumnVarBinary:{i}"),
                     ColumnDate = EpocDate,
-                    ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    //ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnTimeStamp = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                    //ColumnTimeStamp = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnYear = Convert.ToInt16(DateTime.UtcNow.Year),
-                    ColumnGeometry = Encoding.Default.GetBytes($"ColumnGeometry:{i}"),
-                    ColumnLineString = Encoding.Default.GetBytes($"ColumnLineString:{i}"),
-                    ColumnMultiLineString = Encoding.Default.GetBytes($"ColumnMultiLineString:{i}"),
-                    ColumnMultiPoint = Encoding.Default.GetBytes($"ColumnMultiPoint:{i}"),
-                    ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}"),
-                    ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{i}"),
-                    ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{i}"),
+                    //ColumnGeometry = Encoding.Default.GetBytes($"ColumnGeometry:{i}"),
+                    //ColumnLineString = Encoding.Default.GetBytes($"ColumnLineString:{i}"),
+                    //ColumnMultiLineString = Encoding.Default.GetBytes($"ColumnMultiLineString:{i}"),
+                    //ColumnMultiPoint = Encoding.Default.GetBytes($"ColumnMultiPoint:{i}"),
+                    //ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}"),
+                    //ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{i}"),
+                    //ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{i}"),
                     ColumnBigint = i,
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
@@ -188,7 +188,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumInt = i,
                     ColumnReal = Convert.ToDouble(i),
                     ColumnSmallInt = Convert.ToInt16(i),
-                    ColumnTinyInt = (SByte)i,
+                    //ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
                     ColumnJson = "{ \"Field\" : \"Value\" }",
                     ColumnNChar = "C",
@@ -197,7 +197,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = (UInt64)i
+                    //ColumnBit = (UInt64)i
                 });
             }
             return tables;
@@ -213,25 +213,25 @@ namespace RepoDb.MySql.IntegrationTests
             table.ColumnInt = 1000000;
             table.ColumnDecimal2 = Convert.ToDecimal(1000000);
             table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnBlob = Encoding.Default.GetBytes($"table.ColumnBlob:{1000000}");
-            table.ColumnBlobAsArray = Encoding.Default.GetBytes($"table.ColumnBlobAsArray:{1000000}");
-            table.ColumnBinary = Encoding.Default.GetBytes($"table.ColumnBinary:{1000000}");
-            table.ColumnLongBlob = Encoding.Default.GetBytes($"table.ColumnLongBlob:{1000000}");
-            table.ColumnMediumBlob = Encoding.Default.GetBytes($"table.ColumnMediumBlob:{1000000}");
-            table.ColumnTinyBlob = Encoding.Default.GetBytes($"table.ColumnTinyBlob:{1000000}");
-            table.ColumnVarBinary = Encoding.Default.GetBytes($"table.ColumnVarBinary:{1000000}");
+            //table.ColumnBlob = Encoding.Default.GetBytes($"table.ColumnBlob:{1000000}");
+            //table.ColumnBlobAsArray = Encoding.Default.GetBytes($"table.ColumnBlobAsArray:{1000000}");
+            //table.ColumnBinary = Encoding.Default.GetBytes($"table.ColumnBinary:{1000000}");
+            //table.ColumnLongBlob = Encoding.Default.GetBytes($"table.ColumnLongBlob:{1000000}");
+            //table.ColumnMediumBlob = Encoding.Default.GetBytes($"table.ColumnMediumBlob:{1000000}");
+            //table.ColumnTinyBlob = Encoding.Default.GetBytes($"table.ColumnTinyBlob:{1000000}");
+            //table.ColumnVarBinary = Encoding.Default.GetBytes($"table.ColumnVarBinary:{1000000}");
             table.ColumnDate = EpocDate;
             table.ColumnDateTime2 = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
             table.ColumnTimeStamp = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             table.ColumnYear = Convert.ToInt16(DateTime.UtcNow.Year);
-            table.ColumnGeometry = Encoding.Default.GetBytes($"table.ColumnGeometry:{1000000}");
-            table.ColumnLineString = Encoding.Default.GetBytes($"table.ColumnLineString:{1000000}");
-            table.ColumnMultiLineString = Encoding.Default.GetBytes($"table.ColumnMultiLineString:{1000000}");
-            table.ColumnMultiPoint = Encoding.Default.GetBytes($"table.ColumnMultiPoint:{1000000}");
-            table.ColumnMultiPolygon = Encoding.Default.GetBytes($"table.ColumnMultiPolygon:{1000000}");
-            table.ColumnPoint = Encoding.Default.GetBytes($"table.ColumnPoint:{1000000}");
-            table.ColumnPolygon = Encoding.Default.GetBytes($"table.ColumnPolygon:{1000000}");
+            //table.ColumnGeometry = Encoding.Default.GetBytes($"table.ColumnGeometry:{1000000}");
+            //table.ColumnLineString = Encoding.Default.GetBytes($"table.ColumnLineString:{1000000}");
+            //table.ColumnMultiLineString = Encoding.Default.GetBytes($"table.ColumnMultiLineString:{1000000}");
+            //table.ColumnMultiPoint = Encoding.Default.GetBytes($"table.ColumnMultiPoint:{1000000}");
+            //table.ColumnMultiPolygon = Encoding.Default.GetBytes($"table.ColumnMultiPolygon:{1000000}");
+            //table.ColumnPoint = Encoding.Default.GetBytes($"table.ColumnPoint:{1000000}");
+            //table.ColumnPolygon = Encoding.Default.GetBytes($"table.ColumnPolygon:{1000000}");
             table.ColumnBigint = 1000000;
             table.ColumnDecimal = Convert.ToDecimal(1000000);
             table.ColumnDouble = Convert.ToDouble(1000000);
@@ -240,7 +240,7 @@ namespace RepoDb.MySql.IntegrationTests
             table.ColumnMediumInt = 1000000;
             table.ColumnReal = Convert.ToDouble(1000000);
             table.ColumnSmallInt = Convert.ToInt16(1000000);
-            table.ColumnTinyInt = (SByte)1;
+            //table.ColumnTinyInt = (SByte)1;
             table.ColumnChar = "C";
             table.ColumnJson = "{ \"Field\" : \"Value\" }";
             table.ColumnNChar = "C";
@@ -249,7 +249,7 @@ namespace RepoDb.MySql.IntegrationTests
             table.ColumnMediumText = $"table.ColumnMediumText:{1000000}";
             table.ColumnText = $"ColumText:{1000000}";
             table.ColumnTinyText = $"table.ColumnTinyText:{1000000}";
-            table.ColumnBit = (UInt64)1000000;
+            //table.ColumnBit = (UInt64)1000000;
         }
 
         /// <summary>
@@ -264,24 +264,6 @@ namespace RepoDb.MySql.IntegrationTests
             {
                 tables.Add(new
                 {
-                    Id = (long)(i + 1),
-                    ColumnBigInt = (long)i,
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBoolean = true,
-                    ColumnChar = "C",
-                    ColumnDate = EpocDate,
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnDouble = Convert.ToDouble(i),
-                    ColumnInt = i,
-                    ColumnInteger = (long)i,
-                    ColumnNone = "N",
-                    ColumnNumeric = Convert.ToDecimal(i),
-                    ColumnReal = (float)i,
-                    ColumnString = $"ColumnString:{i}",
-                    ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
             return tables;
@@ -293,22 +275,6 @@ namespace RepoDb.MySql.IntegrationTests
         /// <param name="table">The instance to be updated.</param>
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = true;
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
-            table.ColumnInt = Randomizer.Next(1000000);
-            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 
         #endregion
@@ -327,24 +293,6 @@ namespace RepoDb.MySql.IntegrationTests
             {
                 tables.Add(new NonIdentityCompleteTable
                 {
-                    Id = (long)(i + 1),
-                    ColumnBigInt = (long)i,
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBoolean = true,
-                    ColumnChar = "C",
-                    ColumnDate = EpocDate,
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnDouble = Convert.ToDouble(i),
-                    ColumnInt = i,
-                    ColumnInteger = (long)i,
-                    ColumnNone = "N",
-                    ColumnNumeric = Convert.ToDecimal(i),
-                    ColumnReal = (float)i,
-                    ColumnString = $"ColumnString:{i}",
-                    ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
             return tables;
@@ -356,22 +304,6 @@ namespace RepoDb.MySql.IntegrationTests
         /// <param name="table">The instance to be updated.</param>
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = true;
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.UtcNow.Date;
-            table.ColumnDateTime = DateTime.UtcNow;
-            table.ColumnDecimal = decimal.MaxValue;
-            table.ColumnDouble = double.MaxValue;
-            table.ColumnInt = int.MaxValue;
-            table.ColumnInteger = long.MaxValue;
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.UtcNow.TimeOfDay;
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 
         /// <summary>

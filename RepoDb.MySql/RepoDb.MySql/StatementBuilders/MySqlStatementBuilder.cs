@@ -181,13 +181,13 @@ namespace RepoDb.StatementBuilders
 
             // Set the return value
             var result = identityField != null ?
-                string.Concat($"CAST(last_insert_rowid() AS {databaseType})") :
+                string.Concat($"LAST_INSERT_ID()") : // string.Concat($"CAST(LAST_INSERT_ID() AS {databaseType})") :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             builder
                 .Select()
                 .WriteText(result)
-                .As("[Result]")
+                .As("Result".AsQuoted(DbSetting))
                 .End();
 
             // Return the query
@@ -250,8 +250,8 @@ namespace RepoDb.StatementBuilders
                 {
                     var line = splitted[index].Trim();
                     var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT last_insert_rowid()" :
-                        $"SELECT CAST(last_insert_rowid() AS {databaseType})";
+                        "SELECT LAST_INSERT_ID()" :
+                        $"SELECT CAST(LAST_INSERT_ID() AS {databaseType})";
                     commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
                 }
 
@@ -324,7 +324,7 @@ namespace RepoDb.StatementBuilders
             // Check both primary and identity
             if (identityField != null)
             {
-                result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
+                result = string.Concat($"CAST(COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
 
                 // Set the type
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
@@ -360,7 +360,7 @@ namespace RepoDb.StatementBuilders
                 builder
                     .Select()
                     .WriteText(result)
-                    .As("[Result]")
+                    .As("Result".AsQuoted(DbSetting))
                     .End();
             }
 
@@ -460,7 +460,7 @@ namespace RepoDb.StatementBuilders
                 // Check both primary and identity
                 if (identityField != null)
                 {
-                    result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
+                    result = string.Concat($"CAST(COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
                 }
                 else
                 {
@@ -473,7 +473,7 @@ namespace RepoDb.StatementBuilders
                     builder
                         .Select()
                         .WriteText(result)
-                        .As("[Result]")
+                        .As("Result".AsQuoted(DbSetting))
                         .End();
                 }
             }

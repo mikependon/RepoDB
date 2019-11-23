@@ -47,7 +47,7 @@ namespace RepoDb.DbHelpers
 	            , CASE WHEN COLUMN_KEY = 'PRI' THEN 1 ELSE 0 END AS IsPrimary
                 , CASE WHEN EXTRA LIKE '%auto_increment%' THEN 1 ELSE 0 END AS IsIdentity
                 , CASE WHEN IS_NULLABLE = 'YES' THEN 1 ELSE 0 END AS IsNullable
-                , COLUMN_TYPE AS ColumnType
+                , DATA_TYPE AS ColumnType /*COLUMN_TYPE AS ColumnType*/
                 , CHARACTER_MAXIMUM_LENGTH AS Size
                 , COALESCE(NUMERIC_PRECISION, DATETIME_PRECISION) AS `Precision`
                 , NUMERIC_SCALE AS Scale
