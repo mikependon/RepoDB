@@ -3,12 +3,12 @@ using RepoDb.DbHelpers;
 using RepoDb.MySql.DbSettings;
 using RepoDb.StatementBuilders;
 
-namespace RepoDb.MySql
+namespace RepoDb
 {
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="MySqlConnection"/> object.
     /// </summary>
-    public static class Bootstrap
+    public static class MySqlBootstrap
     {
         #region Properties
 
