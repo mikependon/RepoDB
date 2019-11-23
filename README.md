@@ -1,9 +1,11 @@
-![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=for-the-badge)
-![Build status](https://img.shields.io/nuget/dt/repodb?style=for-the-badge)
+[![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
+[![Build status](https://img.shields.io/nuget/dt/repodb?label=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 
 ## RepoDb
 
 A hybrid ORM library for .NET.
+
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" title="RepoDb" />
 
 ## Highlights
 
