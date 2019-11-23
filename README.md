@@ -1,5 +1,5 @@
-[Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=for-the-badge)
-[Build status](https://img.shields.io/nuget/dt/repodb?style=for-the-badge)
+![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=for-the-badge)
+![Build status](https://img.shields.io/nuget/dt/repodb?style=for-the-badge)
 
 ## RepoDb
 
