@@ -4,23 +4,23 @@ namespace RepoDb.SqLite.IntegrationTests.Models
 {
     public class CompleteTable
     {
-        public long Id { get; set; }
-        public long ColumnBigInt { get; set; }
-        public byte[] ColumnBlob { get; set; }
-        public bool ColumnBoolean { get; set; }
-        public string ColumnChar { get; set; }
+        public Int64 Id { get; set; }
+        public Int64 ColumnBigInt { get; set; }
+        public Byte[] ColumnBlob { get; set; }
+        public Boolean ColumnBoolean { get; set; }
+        public String ColumnChar { get; set; }
         public DateTime ColumnDate { get; set; }
         public DateTime ColumnDateTime { get; set; }
-        public decimal ColumnDecimal { get; set; }
-        public double ColumnDouble { get; set; }
-        public long ColumnInteger { get; set; }
-        public int ColumnInt { get; set; }
-        public object ColumnNone { get; set; }
-        public decimal ColumnNumeric { get; set; }
-        public float ColumnReal { get; set; }
-        public string ColumnString { get; set; }
-        public string ColumnText { get; set; }
+        public Decimal ColumnDecimal { get; set; }
+        public Double ColumnDouble { get; set; }
+        public Int64 ColumnInteger { get; set; }
+        public Int32 ColumnInt { get; set; }
+        public Object ColumnNone { get; set; }
+        public Decimal ColumnNumeric { get; set; }
+        public Double ColumnReal { get; set; }
+        public String ColumnString { get; set; }
+        public String ColumnText { get; set; }
         public TimeSpan ColumnTime { get; set; }
-        public string ColumnVarChar { get; set; }
+        public String ColumnVarChar { get; set; }
     }
 }
