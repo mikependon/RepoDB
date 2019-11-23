@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -64,12 +65,22 @@ namespace RepoDb.DbHelpers
         /// <returns>The instance of converted <see cref="DbField"/> object.</returns>
         private DbField ReaderToDbField(IDataReader reader)
         {
+            var columnType = reader.GetString(4);
+            var size = (int?)null;
+            if ((new[] { "longtext", "mediumtext", "longblob", "mediumblob" }).Contains(columnType.ToLower()))
+            {
+                size = null;
+            }
+            else
+            {
+                size = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5);
+            }
             return new DbField(reader.GetString(0),
                 reader.GetBoolean(1),
                 reader.GetBoolean(2),
                 reader.GetBoolean(3),
-                DbTypeResolver.Resolve(reader.GetString(4)),
-                reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5),
+                DbTypeResolver.Resolve(columnType),
+                size,
                 reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
                 reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
                 reader.GetString(8));

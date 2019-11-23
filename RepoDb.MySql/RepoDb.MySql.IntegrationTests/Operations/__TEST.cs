@@ -26,20 +26,34 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             var definitions = string.Empty;
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
-                using (var reader = connection.ExecuteReader("SELECT * FROM `completetable`"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM `completetable`;"))
                 {
-                    if (reader.Read())
+                    for (var i = 0; i < reader.FieldCount; i++)
                     {
-                        for (var i = 0; i < reader.FieldCount; i++)
-                        {
-                            var columName = reader.GetName(i);
-                            var type = reader.GetFieldType(i);
-                            definitions = string.Concat(definitions, $"{columName} ({type.FullName.ToString()})");
-                        }
+                        var columName = reader.GetName(i);
+                        var type = reader.GetFieldType(i);
+                        definitions = string.Concat(definitions, $"public {type.FullName.ToString()} {columName} {{ get; set; }}\n");
                     }
                 }
             }
-            Assert.IsNotNull(definitions);
+        }
+
+        [TestMethod]
+        public void ExtractFields()
+        {
+            var definitions = string.Empty;
+            using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                using (var reader = connection.ExecuteReader("SELECT * FROM `completetable`;"))
+                {
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        var columName = reader.GetName(i);
+                        var type = reader.GetFieldType(i);
+                        definitions = string.Concat(definitions, $"{columName} = default({type.FullName.ToString()}),\n");
+                    }
+                }
+            }
         }
     }
 }

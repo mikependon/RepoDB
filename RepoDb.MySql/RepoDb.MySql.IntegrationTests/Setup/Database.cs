@@ -128,7 +128,7 @@ namespace RepoDb.MySql.IntegrationTests.Setup
                         `ColumnNVarChar` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
                         `ColumnLongText` longtext,
                         `ColumnMediumText` mediumtext,
-                        `ColumText` text,
+                        `ColumnText` text,
                         `ColumnTinyText` tinytext,
                         `ColumnBit` bit(1) DEFAULT NULL,
                         PRIMARY KEY (`Id`)
@@ -181,7 +181,7 @@ namespace RepoDb.MySql.IntegrationTests.Setup
                         `ColumnNVarChar` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
                         `ColumnLongText` longtext,
                         `ColumnMediumText` mediumtext,
-                        `ColumText` text,
+                        `ColumnText` text,
                         `ColumnTinyText` tinytext,
                         `ColumnBit` bit(1) DEFAULT NULL,
                         PRIMARY KEY(`Id`)
