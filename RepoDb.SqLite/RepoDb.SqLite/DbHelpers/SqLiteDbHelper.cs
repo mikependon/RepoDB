@@ -170,15 +170,13 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields<TDbConnection>(TDbConnection connection,
+        public IEnumerable<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
         {
             // Variables
             var commandText = GetCommandText(tableName);
@@ -203,13 +201,13 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table in an asychronous way.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public async Task<IEnumerable<DbField>> GetFieldsAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
+        public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
         {
             // Variables
             var commandText = GetCommandText(tableName);
@@ -242,13 +240,11 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the newly generated identity from the database.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
-        public object GetScopeIdentity<TDbConnection>(TDbConnection connection,
+        public object GetScopeIdentity(IDbConnection connection,
             IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
         {
             return connection.ExecuteScalar("SELECT last_insert_rowid();");
         }
@@ -256,13 +252,11 @@ namespace RepoDb.DbHelpers
         /// <summary>
         /// Gets the newly generated identity from the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
-        public async Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection,
+        public async Task<object> GetScopeIdentityAsync(IDbConnection connection,
             IDbTransaction transaction = null)
-            where TDbConnection : IDbConnection
         {
             return await connection.ExecuteScalarAsync("SELECT last_insert_rowid();");
         }
