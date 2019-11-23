@@ -13,7 +13,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestStatementBuilderMapper()
+        public void TestSqLiteStatementBuilderMapper()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -23,7 +23,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestDbHelperMapper()
+        public void TestSqLiteDbHelperMapper()
         {
             // Setup
             var helper = DbHelperMapper.Get<SQLiteConnection>();
@@ -33,7 +33,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestDbSettingMapper()
+        public void TestSqLiteDbSettingMapper()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();

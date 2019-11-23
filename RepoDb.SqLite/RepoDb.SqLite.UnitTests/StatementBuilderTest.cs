@@ -18,7 +18,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateBatchQuery
 
         [TestMethod]
-        public void TestCreateBatchQuery()
+        public void TestSqLiteStatementBuilderCreateBatchQuery()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -37,7 +37,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateBatchQueryWithPage()
+        public void TestSqLiteStatementBuilderCreateBatchQueryWithPage()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -56,7 +56,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnCreateBatchQueryIfThereAreNoFields()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateBatchQueryIfThereAreNoFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -71,7 +71,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(EmptyException))]
-        public void ThrowExceptionOnCreateBatchQueryIfThereAreNoOrderFields()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -86,7 +86,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ThrowExceptionOnCreateBatchQueryIfThePageValueIsNullOrOutOfRange()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateBatchQueryIfThePageValueIsNullOrOutOfRange()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -101,7 +101,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ThrowExceptionOnCreateBatchQueryIfTheRowsPerBatchValueIsNullOrOutOfRange()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateBatchQueryIfTheRowsPerBatchValueIsNullOrOutOfRange()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -120,7 +120,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateExists
 
         [TestMethod]
-        public void TestCreateExists()
+        public void TestSqLiteStatementBuilderCreateExists()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -140,7 +140,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateInsert
 
         [TestMethod]
-        public void TestCreateInsert()
+        public void TestSqLiteStatementBuilderCreateInsert()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -158,7 +158,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateInsertWithPrimary()
+        public void TestSqLiteStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -176,7 +176,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateInsertWithIdentity()
+        public void TestSqLiteStatementBuilderCreateInsertWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -198,7 +198,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateInsertAll
 
         [TestMethod]
-        public void TestCreateInsertAll()
+        public void TestSqLiteStatementBuilderCreateInsertAll()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -219,7 +219,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateInserAlltWithPrimary()
+        public void TestSqLiteStatementBuilderCreateInserAlltWithPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -240,7 +240,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateInsertAllWithIdentity()
+        public void TestSqLiteStatementBuilderCreateInsertAllWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -265,7 +265,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateMerge
 
         [TestMethod]
-        public void TestCreateMerge()
+        public void TestSqLiteStatementBuilderCreateMerge()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -284,7 +284,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateMergeWithPrimaryAsQualifier()
+        public void TestSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -303,7 +303,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateMergeWithIdentity()
+        public void TestSqLiteStatementBuilderCreateMergeWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -322,7 +322,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnCreateMergeIfThereIsNoPrimary()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereIsNoPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -337,7 +337,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnCreateMergeIfThereAreNoFields()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -352,7 +352,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnCreateMergeIfThereAreOtherFieldsAsQualifers()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -371,7 +371,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateMergeAll
 
         [TestMethod]
-        public void TestCreateMergeAll()
+        public void TestSqLiteStatementBuilderCreateMergeAll()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -393,7 +393,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateMergeAllWithPrimaryAsQualifier()
+        public void TestSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -415,7 +415,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateMergeAllWithIdentity()
+        public void TestSqLiteStatementBuilderCreateMergeAllWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -437,7 +437,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnCreateMergeAllIfThereIsNoPrimary()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereIsNoPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -453,7 +453,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnCreateMergeAllIfThereAreNoFields()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreNoFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -469,7 +469,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnCreateMergeAllIfThereAreOtherFieldsAsQualifers()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -489,7 +489,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateQuery
 
         [TestMethod]
-        public void TestCreateQuery()
+        public void TestSqLiteStatementBuilderCreateQuery()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -509,7 +509,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryWithExpression()
+        public void TestSqLiteStatementBuilderCreateQueryWithExpression()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -529,7 +529,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryWithTop()
+        public void TestSqLiteStatementBuilderCreateQueryWithTop()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -549,7 +549,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryOrderBy()
+        public void TestSqLiteStatementBuilderCreateQueryOrderBy()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -569,7 +569,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryOrderByFields()
+        public void TestSqLiteStatementBuilderCreateQueryOrderByFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -589,7 +589,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryOrderByDescending()
+        public void TestSqLiteStatementBuilderCreateQueryOrderByDescending()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -609,7 +609,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryOrderByFieldsDescending()
+        public void TestSqLiteStatementBuilderCreateQueryOrderByFieldsDescending()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -629,7 +629,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestCreateQueryOrderByFieldsMultiDirection()
+        public void TestSqLiteStatementBuilderCreateQueryOrderByFieldsMultiDirection()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -649,7 +649,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnCreateQueryIfOrderFieldsAreNotPresentAtTheFields()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateQueryIfOrderFieldsAreNotPresentAtTheFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -665,7 +665,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCreateQueryIfThereAreHints()
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateQueryIfThereAreHints()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -685,7 +685,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateTruncate
 
         [TestMethod]
-        public void TestCreateTruncate()
+        public void TestSqLiteStatementBuilderCreateTruncate()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();

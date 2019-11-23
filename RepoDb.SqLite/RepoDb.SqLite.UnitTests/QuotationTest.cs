@@ -16,7 +16,7 @@ namespace RepoDb.SqLite.UnitTests
         #region AsQuoted
 
         [TestMethod]
-        public void TestQuotationForQuotedAndTrimmed()
+        public void TestSqLiteQuotationForQuotedAndTrimmed()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForQuotedNonTrimmed()
+        public void TestSqLiteQuotationForQuotedNonTrimmed()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -42,7 +42,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForQuotedForPreQuoted()
+        public void TestSqLiteQuotationForQuotedForPreQuoted()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -55,7 +55,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForQuotedForPreQuotedWithSpace()
+        public void TestSqLiteQuotationForQuotedForPreQuotedWithSpace()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -72,7 +72,7 @@ namespace RepoDb.SqLite.UnitTests
         #region AsUnquoted
 
         [TestMethod]
-        public void TestQuotationForUnquotedAndTrimmed()
+        public void TestSqLiteQuotationForUnquotedAndTrimmed()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -85,7 +85,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForUnquotedNonTrimmed()
+        public void TestSqLiteQuotationForUnquotedNonTrimmed()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -98,7 +98,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForUnquotedForPlain()
+        public void TestSqLiteQuotationForUnquotedForPlain()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -111,7 +111,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForUnquotedForPlainWithSpace()
+        public void TestSqLiteQuotationForUnquotedForPlainWithSpace()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -124,7 +124,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestQuotationForUnquotedAndTrimmedForPlainWithSpace()
+        public void TestSqLiteQuotationForUnquotedAndTrimmedForPlainWithSpace()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
