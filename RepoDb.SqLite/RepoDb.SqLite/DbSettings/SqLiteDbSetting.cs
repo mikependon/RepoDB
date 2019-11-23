@@ -3,7 +3,7 @@ using System;
 using System.Data.Common;
 using System.Data.SQLite;
 
-namespace RepoDb.SqLite.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for <see cref="SQLiteConnection"/> data provider.

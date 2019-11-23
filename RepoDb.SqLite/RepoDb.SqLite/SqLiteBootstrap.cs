@@ -1,5 +1,5 @@
 ﻿using RepoDb.DbHelpers;
-using RepoDb.SqLite.DbSettings;
+using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 using System.Data.SQLite;
 
