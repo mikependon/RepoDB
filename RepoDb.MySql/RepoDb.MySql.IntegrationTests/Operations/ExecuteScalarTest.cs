@@ -25,13 +25,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteScalar()
+        public void TestMySqlConnectionExecuteScalar()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteScalar("SELECT COUNT(*) FROM [CompleteTable];");
 
@@ -41,13 +41,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteScalarWithReturnType()
+        public void TestMySqlConnectionExecuteScalarWithReturnType()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM [CompleteTable];");
 
@@ -61,13 +61,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteScalarAsync()
+        public void TestMySqlConnectionExecuteScalarAsync()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [CompleteTable];").Result;
 
@@ -77,13 +77,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteScalarAsyncWithReturnType()
+        public void TestMySqlConnectionExecuteScalarAsyncWithReturnType()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [CompleteTable];").Result;
 

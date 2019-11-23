@@ -29,7 +29,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestBatchQueryFirstBatchAscending()
+        public void TestMySqlConnectionBatchQueryFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -49,7 +49,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryFirstBatchDescending()
+        public void TestMySqlConnectionBatchQueryFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -69,7 +69,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryThirdBatchAscending()
+        public void TestMySqlConnectionBatchQueryThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -89,7 +89,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryThirdBatchDescending()
+        public void TestMySqlConnectionBatchQueryThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -109,7 +109,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnBatchQueryWithHints()
+        public void ThrowExceptionOnMySqlConnectionBatchQueryWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -130,7 +130,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestBatchQueryAsyncFirstBatchAscending()
+        public void TestMySqlConnectionBatchQueryAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -150,7 +150,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryAsyncFirstBatchDescending()
+        public void TestMySqlConnectionBatchQueryAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -170,7 +170,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryAsyncThirdBatchAscending()
+        public void TestMySqlConnectionBatchQueryAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -190,7 +190,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryAsyncThirdBatchDescending()
+        public void TestMySqlConnectionBatchQueryAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -210,7 +210,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnBatchQueryAsyncWithHints()
+        public void ThrowExceptionOnMySqlConnectionBatchQueryAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -235,7 +235,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameFirstBatchAscending()
+        public void TestMySqlConnectionBatchQueryViaTableNameFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -256,7 +256,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameFirstBatchDescending()
+        public void TestMySqlConnectionBatchQueryViaTableNameFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -277,7 +277,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameThirdBatchAscending()
+        public void TestMySqlConnectionBatchQueryViaTableNameThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -298,7 +298,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameThirdBatchDescending()
+        public void TestMySqlConnectionBatchQueryViaTableNameThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -319,7 +319,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnBatchQueryViaTableNameWithHints()
+        public void ThrowExceptionOnMySqlConnectionBatchQueryViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -341,7 +341,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncFirstBatchAscending()
+        public void TestMySqlConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -362,7 +362,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncFirstBatchDescending()
+        public void TestMySqlConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -383,7 +383,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncThirdBatchAscending()
+        public void TestMySqlConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -404,7 +404,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBatchQueryViaTableNameAsyncThirdBatchDescending()
+        public void TestMySqlConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -425,7 +425,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnBatchQueryAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnMySqlConnectionBatchQueryAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

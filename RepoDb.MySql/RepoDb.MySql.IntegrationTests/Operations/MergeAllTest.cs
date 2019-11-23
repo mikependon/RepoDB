@@ -28,7 +28,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMergeAllForIdentityForEmptyTable()
+        public void TestMySqlConnectionMergeAllForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -51,7 +51,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForIdentityForNonEmptyTable()
+        public void TestMySqlConnectionMergeAllForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -76,7 +76,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMySqlConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -110,7 +110,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMergeAllAsyncForIdentityForEmptyTable()
+        public void TestMySqlConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -133,7 +133,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForIdentityForNonEmptyTable()
+        public void TestMySqlConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -158,7 +158,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMySqlConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -196,7 +196,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForIdentityForEmptyTable()
+        public void TestMySqlConnectionMergeAllViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -220,7 +220,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForIdentityForNonEmptyTable()
+        public void TestMySqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -246,7 +246,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMySqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -277,7 +277,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -300,7 +300,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -328,7 +328,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMySqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -365,7 +365,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMergeAllViaTableNameAsyncForIdentityForEmptyTable()
+        public void TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -389,7 +389,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
+        public void TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -415,7 +415,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -446,7 +446,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -469,7 +469,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -497,7 +497,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestMySqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();

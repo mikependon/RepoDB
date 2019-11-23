@@ -28,7 +28,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumAll()
+        public void TestMySqlConnectionSumAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -44,7 +44,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSumAllWithHints()
+        public void ThrowExceptionOnMySqlConnectionSumAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -62,7 +62,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAllAsync()
+        public void TestMySqlConnectionSumAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -78,7 +78,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAllAsyncWithHints()
+        public void ThrowExceptionOnMySqlConnectionSumAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -100,7 +100,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumAllViaTableName()
+        public void TestMySqlConnectionSumAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -117,7 +117,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSumAllViaTableNameWithHints()
+        public void ThrowExceptionOnMySqlConnectionSumAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -136,7 +136,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAllAsyncViaTableName()
+        public void TestMySqlConnectionSumAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -153,7 +153,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAllAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnMySqlConnectionSumAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

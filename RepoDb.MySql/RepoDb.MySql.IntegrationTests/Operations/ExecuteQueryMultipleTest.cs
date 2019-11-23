@@ -27,13 +27,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteQueryMultiple()
+        public void TestMySqlConnectionExecuteQueryMultiple()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM [CompleteTable];
                     SELECT * FROM [CompleteTable];"))
@@ -55,13 +55,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleWithParameters()
+        public void TestMySqlConnectionExecuteQueryMultipleWithParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM [CompleteTable] WHERE Id = @Id1;
                     SELECT * FROM [CompleteTable] WHERE Id = @Id2;",
@@ -87,13 +87,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleWithSharedParameters()
+        public void TestMySqlConnectionExecuteQueryMultipleWithSharedParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM [CompleteTable] WHERE Id = @Id;
                     SELECT * FROM [CompleteTable] WHERE Id = @Id;",
@@ -119,13 +119,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteQueryMultipleAsync()
+        public void TestMySqlConnectionExecuteQueryMultipleAsync()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [CompleteTable];
                     SELECT * FROM [CompleteTable];").Result)
@@ -147,13 +147,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleAsyncWithParameters()
+        public void TestMySqlConnectionExecuteQueryMultipleAsyncWithParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [CompleteTable] WHERE Id = @Id1;
                     SELECT * FROM [CompleteTable] WHERE Id = @Id2;",
@@ -179,13 +179,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryMultipleAsyncWithSharedParameters()
+        public void TestMySqlConnectionExecuteQueryMultipleAsyncWithSharedParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [CompleteTable] WHERE Id = @Id;
                     SELECT * FROM [CompleteTable] WHERE Id = @Id;",

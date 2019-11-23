@@ -28,13 +28,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteReader()
+        public void TestMySqlConnectionExecuteReader()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];"))
                 {
@@ -56,13 +56,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderWithMultipleStatements()
+        public void TestMySqlConnectionExecuteReaderWithMultipleStatements()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];"))
                 {
@@ -87,13 +87,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsExtractedEntity()
+        public void TestMySqlConnectionExecuteReaderAsExtractedEntity()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
                 {
@@ -106,38 +106,38 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        //[TestMethod]
-        //public void TestExecuteReaderAsExtractedDynamic()
-        //{
-        //    using (var connection = new MySqlConnection(Database.ConnectionString))
-        //    {
-        //        // Setup
-        //        var tables = Database.CreateCompleteTables(10);
+        [TestMethod]
+        public void TestMySqlConnectionExecuteReaderAsExtractedDynamic()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
 
-        //        // Act
-        //        using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
-        //        {
-        //            // Act
-        //            var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
 
-        //            // Assert
-        //            tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
-        //        }
-        //    }
-        //}
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
 
         #endregion
 
         #region Async
 
         [TestMethod]
-        public void TestExecuteReaderAsync()
+        public void TestMySqlConnectionExecuteReaderAsync()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];").Result)
                 {
@@ -159,13 +159,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsyncWithMultipleStatements()
+        public void TestMySqlConnectionExecuteReaderAsyncWithMultipleStatements()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];").Result)
                 {
@@ -190,13 +190,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteReaderAsyncAsExtractedEntity()
+        public void TestMySqlConnectionExecuteReaderAsyncAsExtractedEntity()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
                 {
@@ -209,25 +209,25 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        //[TestMethod]
-        //public void TestExecuteReaderAsyncAsExtractedDynamic()
-        //{
-        //    using (var connection = new MySqlConnection(Database.ConnectionString))
-        //    {
-        //        // Setup
-        //        var tables = Database.CreateCompleteTables(10);
+        [TestMethod]
+        public void TestMySqlConnectionExecuteReaderAsyncAsExtractedDynamic()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
 
-        //        // Act
-        //        using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
-        //        {
-        //            // Act
-        //            var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
+                {
+                    // Act
+                    var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
 
-        //            // Assert
-        //            tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
-        //        }
-        //    }
-        //}
+                    // Assert
+                    tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
+                }
+            }
+        }
 
         #endregion
     }

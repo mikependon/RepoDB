@@ -30,7 +30,7 @@ namespace RepoDb.MySql.IntegrationTests.Setup
             }
 
             // Initialize MySql
-            Bootstrap.Initialize();
+            MySqlBootstrap.Initialize();
 
             // Create tables
             CreateTables();

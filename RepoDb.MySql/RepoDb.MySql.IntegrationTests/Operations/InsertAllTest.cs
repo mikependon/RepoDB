@@ -27,7 +27,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestInsertAllForIdentity()
+        public void TestMySqlConnectionInsertAllForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -53,7 +53,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllForNonIdentity()
+        public void TestMySqlConnectionInsertAllForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -82,7 +82,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestInsertAllAsyncForIdentity()
+        public void TestMySqlConnectionInsertAllAsyncForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -108,7 +108,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllAsyncForNonIdentity()
+        public void TestMySqlConnectionInsertAllAsyncForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -141,7 +141,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestInsertAllViaTableNameForIdentity()
+        public void TestMySqlConnectionInsertAllViaTableNameForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -167,7 +167,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsDynamicsForIdentity()
+        public void TestMySqlConnectionInsertAllViaTableNameAsDynamicsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -193,7 +193,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameForNonIdentity()
+        public void TestMySqlConnectionInsertAllViaTableNameForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -219,7 +219,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsDynamicsForNonIdentity()
+        public void TestMySqlConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
@@ -249,7 +249,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsyncForIdentity()
+        public void TestMySqlConnectionInsertAllViaTableNameAsyncForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -275,7 +275,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllAsyncViaTableNameAsDynamicsForIdentity()
+        public void TestMySqlConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -301,7 +301,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllViaTableNameAsyncForNonIdentity()
+        public void TestMySqlConnectionInsertAllViaTableNameAsyncForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -327,7 +327,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
+        public void TestMySqlConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);

@@ -29,7 +29,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMinWithoutExpression()
+        public void TestMySqlConnectionMinWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -46,7 +46,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaExpression()
+        public void TestMySqlConnectionMinViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -64,7 +64,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaDynamic()
+        public void TestMySqlConnectionMinViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -81,7 +81,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaQueryField()
+        public void TestMySqlConnectionMinViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -98,7 +98,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaQueryFields()
+        public void TestMySqlConnectionMinViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -120,7 +120,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaQueryGroup()
+        public void TestMySqlConnectionMinViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -143,7 +143,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnMinWithHints()
+        public void ThrowExceptionOnMySqlConnectionMinWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -162,7 +162,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMinAsyncWithoutExpression()
+        public void TestMySqlConnectionMinAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +179,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaExpression()
+        public void TestMySqlConnectionMinAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -197,7 +197,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaDynamic()
+        public void TestMySqlConnectionMinAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -214,7 +214,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaQueryField()
+        public void TestMySqlConnectionMinAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -231,7 +231,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaQueryFields()
+        public void TestMySqlConnectionMinAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -253,7 +253,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaQueryGroup()
+        public void TestMySqlConnectionMinAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -276,7 +276,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMinAsyncWithHints()
+        public void ThrowExceptionOnMySqlConnectionMinAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -299,7 +299,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMinViaTableNameWithoutExpression()
+        public void TestMySqlConnectionMinViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -317,7 +317,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaTableNameViaDynamic()
+        public void TestMySqlConnectionMinViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -335,7 +335,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaTableNameViaQueryField()
+        public void TestMySqlConnectionMinViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -353,7 +353,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaTableNameViaQueryFields()
+        public void TestMySqlConnectionMinViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -376,7 +376,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinViaTableNameViaQueryGroup()
+        public void TestMySqlConnectionMinViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -400,7 +400,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnMinViaTableNameWithHints()
+        public void ThrowExceptionOnMySqlConnectionMinViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -420,7 +420,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMinAsyncViaTableNameWithoutExpression()
+        public void TestMySqlConnectionMinAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -438,7 +438,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaTableNameViaDynamic()
+        public void TestMySqlConnectionMinAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -456,7 +456,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaTableNameViaQueryField()
+        public void TestMySqlConnectionMinAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -474,7 +474,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaTableNameViaQueryFields()
+        public void TestMySqlConnectionMinAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -497,7 +497,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMinAsyncViaTableNameViaQueryGroup()
+        public void TestMySqlConnectionMinAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -521,7 +521,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMinAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnMySqlConnectionMinAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

@@ -24,13 +24,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteNonQuery()
+        public void TestMySqlConnectionExecuteNonQuery()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [CompleteTable];");
 
@@ -40,13 +40,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryWithParameters()
+        public void TestMySqlConnectionExecuteNonQueryWithParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [CompleteTable] WHERE Id = @Id;",
                     new { tables.Last().Id });
@@ -57,13 +57,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryWithMultipleStatement()
+        public void TestMySqlConnectionExecuteNonQueryWithMultipleStatement()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteNonQuery("DELETE FROM [CompleteTable]; VACUUM;");
 
@@ -77,13 +77,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteNonQueryAsync()
+        public void TestMySqlConnectionExecuteNonQueryAsync()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteNonQueryAsync("DELETE FROM [CompleteTable];").Result;
 
@@ -93,13 +93,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryAsyncWithParameters()
+        public void TestMySqlConnectionExecuteNonQueryAsyncWithParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteNonQueryAsync("DELETE FROM [CompleteTable] WHERE Id = @Id;",
                     new { tables.Last().Id }).Result;
@@ -110,13 +110,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryAsyncWithMultipleStatement()
+        public void TestMySqlConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteNonQueryAsync("DELETE FROM [CompleteTable]; VACUUM;").Result;
 

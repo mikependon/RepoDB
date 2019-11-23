@@ -29,7 +29,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryMultipleForT2()
+        public void TestMySqlConnectionQueryMultipleForT2()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -51,7 +51,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT3()
+        public void TestMySqlConnectionQueryMultipleForT3()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,7 +77,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT4()
+        public void TestMySqlConnectionQueryMultipleForT4()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -107,7 +107,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT5()
+        public void TestMySqlConnectionQueryMultipleForT5()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -141,7 +141,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT6()
+        public void TestMySqlConnectionQueryMultipleForT6()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +179,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleForT7()
+        public void TestMySqlConnectionQueryMultipleForT7()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -243,7 +243,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT2()
+        public void TestMySqlConnectionQueryMultipleAsyncForT2()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -265,7 +265,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT3()
+        public void TestMySqlConnectionQueryMultipleAsyncForT3()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -291,7 +291,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT4()
+        public void TestMySqlConnectionQueryMultipleAsyncForT4()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -321,7 +321,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT5()
+        public void TestMySqlConnectionQueryMultipleAsyncForT5()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -355,7 +355,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT6()
+        public void TestMySqlConnectionQueryMultipleAsyncForT6()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -393,7 +393,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryMultipleAsyncForT7()
+        public void TestMySqlConnectionQueryMultipleAsyncForT7()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

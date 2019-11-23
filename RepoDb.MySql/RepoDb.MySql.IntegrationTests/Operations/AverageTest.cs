@@ -29,7 +29,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestAverageWithoutExpression()
+        public void TestMySqlConnectionAverageWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -46,7 +46,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageWithExpression()
+        public void TestMySqlConnectionAverageWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -64,7 +64,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestAverageWithHints()
+        public void TestMySqlConnectionAverageWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -83,7 +83,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestAverageAsyncWithoutExpression()
+        public void TestMySqlConnectionAverageAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -100,7 +100,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageAsyncWithExpression()
+        public void TestMySqlConnectionAverageAsyncWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -118,7 +118,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestAverageAsyncWithHints()
+        public void TestMySqlConnectionAverageAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -141,7 +141,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestAverageViaTableNameWithoutExpression()
+        public void TestMySqlConnectionAverageViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -159,7 +159,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageViaTableNameWithExpression()
+        public void TestMySqlConnectionAverageViaTableNameWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -178,7 +178,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void TestAverageViaTableNameWithHints()
+        public void TestMySqlConnectionAverageViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -198,7 +198,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestAverageAsyncViaTableNameWithoutExpression()
+        public void TestMySqlConnectionAverageAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -216,7 +216,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestAverageAsyncViaTableNameWithExpression()
+        public void TestMySqlConnectionAverageAsyncViaTableNameWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -235,7 +235,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestAverageAsyncViaTableNameWithHints()
+        public void TestMySqlConnectionAverageAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

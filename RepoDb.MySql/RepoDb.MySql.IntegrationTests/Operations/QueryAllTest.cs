@@ -29,7 +29,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryAll()
+        public void TestMySqlConnectionQueryAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -63,7 +63,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAllAsync()
+        public void TestMySqlConnectionQueryAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,7 +101,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryAllViaTableName()
+        public void TestMySqlConnectionQueryAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -137,7 +137,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAllAsyncViaTableName()
+        public void TestMySqlConnectionQueryAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

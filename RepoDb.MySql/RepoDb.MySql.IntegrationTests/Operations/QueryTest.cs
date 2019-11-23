@@ -29,7 +29,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryViaPrimaryKey()
+        public void TestMySqlConnectionQueryViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -45,7 +45,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaExpression()
+        public void TestMySqlConnectionQueryViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -61,7 +61,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaDynamic()
+        public void TestMySqlConnectionQueryViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -77,7 +77,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryField()
+        public void TestMySqlConnectionQueryViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -93,7 +93,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryFields()
+        public void TestMySqlConnectionQueryViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -114,7 +114,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryGroup()
+        public void TestMySqlConnectionQueryViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -136,7 +136,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryWithTop()
+        public void TestMySqlConnectionQueryWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -172,7 +172,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncViaPrimaryKey()
+        public void TestMySqlConnectionQueryAsyncViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -188,7 +188,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaExpression()
+        public void TestMySqlConnectionQueryAsyncViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -204,7 +204,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaDynamic()
+        public void TestMySqlConnectionQueryAsyncViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -220,7 +220,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryField()
+        public void TestMySqlConnectionQueryAsyncViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -236,7 +236,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryFields()
+        public void TestMySqlConnectionQueryAsyncViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -257,7 +257,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryGroup()
+        public void TestMySqlConnectionQueryAsyncViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -279,7 +279,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncWithTop()
+        public void TestMySqlConnectionQueryAsyncWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -319,7 +319,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryViaTableNameViaPrimaryKey()
+        public void TestMySqlConnectionQueryViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -335,7 +335,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaDynamic()
+        public void TestMySqlConnectionQueryViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -351,7 +351,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryField()
+        public void TestMySqlConnectionQueryViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -367,7 +367,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryFields()
+        public void TestMySqlConnectionQueryViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -388,7 +388,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryGroup()
+        public void TestMySqlConnectionQueryViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -410,7 +410,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameWithTop()
+        public void TestMySqlConnectionQueryViaTableNameWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -448,7 +448,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaPrimaryKey()
+        public void TestMySqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -464,7 +464,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaDynamic()
+        public void TestMySqlConnectionQueryAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -480,7 +480,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryField()
+        public void TestMySqlConnectionQueryAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -496,7 +496,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryFields()
+        public void TestMySqlConnectionQueryAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -517,7 +517,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryGroup()
+        public void TestMySqlConnectionQueryAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -539,7 +539,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameWithTop()
+        public void TestMySqlConnectionQueryAsyncViaTableNameWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

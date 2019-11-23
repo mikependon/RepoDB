@@ -26,13 +26,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestExecuteQuery()
+        public void TestMySqlConnectionExecuteQuery()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM [CompleteTable];");
 
@@ -43,13 +43,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryWithParameters()
+        public void TestMySqlConnectionExecuteQueryWithParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM [CompleteTable] WHERE Id = @Id;",
                     new { tables.Last().Id });
@@ -65,13 +65,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestExecuteQueryAsync()
+        public void TestMySqlConnectionExecuteQueryAsync()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM [CompleteTable];").Result;
 
@@ -82,13 +82,13 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestExecuteQueryAsyncWithParameters()
+        public void TestMySqlConnectionExecuteQueryAsyncWithParameters()
         {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
-                // Setup
-                var tables = Database.CreateCompleteTables(10);
-
                 // Act
                 var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM [CompleteTable] WHERE Id = @Id;",
                     new { tables.Last().Id }).Result;
