@@ -7,5 +7,7 @@ before_build:
 build:
   project: RepoDb.Core\RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj
   verbosity: normal
+test_script:
+- cmd: vstest.console /logger:Appveyor RepoDb.Core\RepoDb.Tests\RepoDb.IntegrationTests\bin\Release\netcoreapp2.1\RepoDb.IntegrationTests.dll
 services:
   - mssql2017
