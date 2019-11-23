@@ -1,5 +1,6 @@
 [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
-[![Build status](https://img.shields.io/nuget/dt/repodb?label=nuget&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
+[![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20downloads&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
+[![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20downloads&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 
 ## RepoDb
 
