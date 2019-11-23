@@ -1,16 +1,11 @@
+[Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=for-the-badge)
+[Build status](https://img.shields.io/nuget/dt/repodb?style=for-the-badge)
 
 ## RepoDb
 
 A hybrid ORM library for .NET.
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" title="RepoDb" />
-
-Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
-Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
-
-Follow [@mike_pendon](https://twitter.com/mike_pendon) at Twitter.
-
-## Highlight
+## Highlights
 
  - RepoDb is the fastest and the most efficient ORM library in .NET as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). You can see the actual execution result [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
