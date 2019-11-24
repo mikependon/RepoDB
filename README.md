@@ -14,7 +14,7 @@ RepoDb provides the feature of micro and full ORMs. It help the developers to si
 
 The word “high-performance” refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
 
-RepoDb has its owns compiler. It caches the “already-generated” ILs and Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb caches the “already-executed” operation context and reusing it for future calls.
+RepoDb has its own compiler. It caches the “already-generated” ILs and Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb caches the “already-executed” operation context and reusing it for future calls.
 
 **It is efficient**
 
