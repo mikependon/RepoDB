@@ -52,6 +52,36 @@ Practically, RepoDb has supported all RDBMS data-providers. Developers has the f
 
 RepoDb has provided the “Fluent” methods in which the SQL Statements are automatically being constructed as the operations are being executed. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
 
+## Operations
+
+Operation     | Normal<TEntity> | Normal<TEntity> (Async) | TableName | TableName (Async) | Packed Execution | Data Providers |
+--------------|-----------------|-------------------------|-----------|-------------------|------------------|----------------|
+Average       | YES             | YES                     | YES       | YES               | NO               | ALL            |
+AverageAll    | YES             | YES                     | YES       | YES               | NO               | ALL            |
+BatchQuery    | YES             | YES                     | YES       | YES               | NO               | SQL SERVER     |
+BulkInsert    | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Count         | YES             | YES                     | YES       | YES               | NO               | ALL            |
+CountAll      | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Delete        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+DeleteAll     | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Exists        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Insert        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+InsertAll     | YES             | YES                     | YES       | YES               | YES              | ALL            |
+Max           | YES             | YES                     | YES       | YES               | NO               | ALL            |
+MaxAll        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Merge         | YES             | YES                     | YES       | YES               | NO               | ALL            |
+MergeAll      | YES             | YES                     | YES       | YES               | YES              | ALL            |
+Min           | YES             | YES                     | YES       | YES               | NO               | ALL            |
+MinAll        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Query         | YES             | YES                     | YES       | YES               | NO               | ALL            |
+QueryAll      | YES             | YES                     | YES       | YES               | NO               | ALL            |
+QueryMultiple | YES             | YES                     | NO        | NO                | YES              | ALL            |
+Sum           | YES             | YES                     | YES       | YES               | NO               | ALL            |
+SumAll        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Truncate      | YES             | YES                     | YES       | YES               | NO               | ALL            |
+Update        | YES             | YES                     | YES       | YES               | NO               | ALL            |
+UpdateAll     | YES             | YES                     | YES       | YES               | YES              | ALL            |
+
 ## Core Features
  
  - Asynchronous Operations
