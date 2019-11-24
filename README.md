@@ -1,3 +1,4 @@
+
 [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=solution%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
@@ -7,13 +8,19 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb provides the important features of both micro-ORM and full-ORM. It gives flexibility to the developers to simplify the “switchover” of when to use the “micro” and “full” operations during the development.
+RepoDb provides the feature of micro and full ORMs. It help the developers to simplify the “switchover” of when to use the “micro” and “full” operations during the development.
 
-**It is high-performant and efficient**
+**It is high-performance**
 
-The word “high-performant” refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
+The word “high-performance” refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
 
-The word “efficient” refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the process.
+RepoDb has its owns compiler. It caches the “already-generated” ILs and Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb caches the “already-executed” operation context and reusing it for future calls.
+
+**It is efficient**
+
+The word “efficient” refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
+
+RepoDb caches the “already-extracted” object properties and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary class objects.
 
 ## Highlights
 
@@ -35,36 +42,17 @@ RepoDb.MySql                   | [![Build status](https://img.shields.io/appveyo
 RepoDb.MySql.UnitTests         | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests) |
 RepoDb.MySql.IntegrationTests  | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests) |
 
-### Why RepoDb
+## Supported Databases
 
- - It is very fast in CRUD operations.
- - It is very efficient in memory usage.
- - It is highly extensible.
- - It is easy to switch between lightweight and method-based operations.
- - It is simple, fluent and clean.
- - It is easy to write RawSql statements.
- - It is easy to cache the data.
- - It is well covered by Unit/Integration tests.
- - It has Batch operations.
- - It has Bulk-Insert operation.
- - It has massive ORM operations.
- - It has massive reusable extension methods.
- - It has Async operations.
- - It has Enumeration supports.
- - It has Multi-ResultSet query operations.
- - It has Type mapping.
- - It has Query Hints.
- - It has built-in Repositories.
- - It has built-in Resolvers.
- - It has Dynamic Expressions support.
- - It has Linq Expressions support.
- - It has Table-Based call operations.
- - It has an extensible Tracers.
- - It has an extensible DB Helpers.
- - It has an extensible DB Settings.
- - It has an extensible Statement Builders.
- - It has ADO.NET transaction supports.
- - It is always free!
+Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the “Execute” methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
+
+**Full support via Fluent-Methods**
+
+<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SQL%20Server.png?raw=true" height="96px" title="SQL Server" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="96px" title="MySql" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="96px" title="MySql" />
+
+RepoDb has provided the “Fluent” methods in which the SQL Statements are automatically being constructed as the operations are being executed. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
 
 ## Core Features
  
