@@ -8,19 +8,19 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb provides the feature of micro and full ORMs. It help the developers to simplify the ìswitchoverî of when to use the ìmicroî and ìfullî operations during the development.
+RepoDb provides the feature of micro and full ORMs. It help the developers to simplify the ‚Äúswitchover‚Äù of when to use the ‚Äúmicro‚Äù and ‚Äúfull‚Äù operations during the development.
 
 **It is high-performance**
 
-The word ìhigh-performanceî refers to ìhow fastî this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
+The word ‚Äúhigh-performance‚Äù refers to ‚Äúhow fast‚Äù this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
 
-RepoDb has its owns compiler. It caches the ìalready-generatedî ILs and Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb caches the ìalready-executedî operation context and reusing it for future calls.
+RepoDb has its owns compiler. It caches the ‚Äúalready-generated‚Äù ILs and Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb caches the ‚Äúalready-executed‚Äù operation context and reusing it for future calls.
 
 **It is efficient**
 
-The word ìefficientî refers to ìhow well-managedî this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
+The word ‚Äúefficient‚Äù refers to ‚Äúhow well-managed‚Äù this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
-RepoDb caches the ìalready-extractedî object properties and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary class objects.
+RepoDb caches the ‚Äúalready-extracted‚Äù object properties and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary class objects.
 
 ## Highlights
 
@@ -44,13 +44,36 @@ RepoDb.MySql.IntegrationTests  | [![Build status](https://img.shields.io/appveyo
 
 ## Supported Databases
 
-Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the ìExecuteî methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
+Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the ‚ÄúExecute‚Äù methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
 
 **Full support via Fluent-Methods**
 
 <img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="96px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="96px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="96px" title="MySql" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/PostgreSql.png" height="96px" title="PostgreSql" />
 
-RepoDb has provided the ìFluentî methods in which the SQL Statements are automatically being constructed as the operations are being executed. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
+RepoDb has provided the ‚ÄúFluent‚Äù methods in which the SQL Statements are automatically being constructed as the operations are being executed. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
+
+## Core Features
+ 
+ - Asynchronous Operations
+ - Batch Operations
+ - Bulk Operations
+ - Caching
+ - Connection Persistency
+ - Database Helpers
+ - Database Settings
+ - Expression Trees
+ - Extension Methods
+ - Field Mapping
+ - Inline Hints
+ - Massive Operations (Generics/Explicits/MethodCalls/TableBased)
+ - Multi-Resultset Query
+ - Query Builder
+ - Repositories
+ - Resolvers (CLR Types, DB Types)
+ - Statement Builder
+ - Tracing
+ - Transaction
+ - Type Mapping
 
 ## Operations
 
@@ -60,8 +83,8 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
 -------------------------|-----------------|-------------------------|-----------|-------------------|------------------|----------------|
 **Average**              | YES             | YES                     | YES       | YES               | NO               | ALL            |
 **AverageAll**           | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**BatchQuery**           | YES             | YES                     | YES       | YES               | NO               | SQL SERVER     |
-**BulkInsert**           | YES             | YES                     | YES       | YES               | NO               | ALL            |
+**BatchQuery**           | YES             | YES                     | YES       | YES               | NO               | ALL            |
+**BulkInsert**           | YES             | YES                     | YES       | YES               | NO               | SQL SERVER     |
 **Count**                | YES             | YES                     | YES       | YES               | NO               | ALL            |
 **CountAll**             | YES             | YES                     | YES       | YES               | NO               | ALL            |
 **Delete**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
@@ -88,29 +111,6 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
 **Truncate**             | YES             | YES                     | YES       | YES               | NO               | ALL            |
 **Update**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
 **UpdateAll**            | YES             | YES                     | YES       | YES               | YES              | ALL            |
-
-## Core Features
- 
- - Asynchronous Operations
- - Batch Operations
- - Bulk Operations
- - Caching
- - Connection Persistency
- - Database Helpers
- - Database Settings
- - Expression Trees
- - Extension Methods
- - Field Mapping
- - Inline Hints
- - Massive Operations (Generics/Explicits/MethodCalls/TableBased)
- - Multi-Resultset Query
- - Query Builder
- - Repositories
- - Resolvers (CLR Types, DB Types)
- - Statement Builder
- - Tracing
- - Transaction
- - Type Mapping
 
 ## Examples
 
