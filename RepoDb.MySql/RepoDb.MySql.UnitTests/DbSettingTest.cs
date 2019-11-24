@@ -69,7 +69,7 @@ namespace RepoDb.MySql.UnitTests
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.IsTrue(setting.IsDisposeDbCommandAfterExecuteReader);
+            Assert.IsFalse(setting.IsDisposeDbCommandAfterExecuteReader);
         }
 
         [TestMethod]

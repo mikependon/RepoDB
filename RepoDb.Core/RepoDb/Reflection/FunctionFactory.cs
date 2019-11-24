@@ -1546,6 +1546,7 @@ namespace RepoDb.Reflection
             // Variables for type
             var typeOfEntity = typeof(TEntity);
             var typeOfObject = typeof(object);
+            var typeOfObjectConverter = typeof(ObjectConverter);
 
             // Variables for argument
             var entityParameter = Expression.Parameter(typeOfEntity, "entity");
@@ -1554,9 +1555,12 @@ namespace RepoDb.Reflection
             // Get the entity property
             var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetPropertyByMapping(field.Name)?.PropertyInfo)?.SetMethod;
 
+            // Get the converter
+            var toTypeMethod = typeOfObjectConverter.GetMethod("ToType").MakeGenericMethod(field.Type.GetUnderlyingType());
+
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,
-                Expression.Convert(valueParameter, field.Type));
+                Expression.Convert(Expression.Call(toTypeMethod, valueParameter), field.Type));
 
             // Return function
             return Expression.Lambda<Action<TEntity, object>>(propertyAssignment,

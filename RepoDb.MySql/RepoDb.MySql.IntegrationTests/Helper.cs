@@ -64,6 +64,8 @@ namespace RepoDb.MySql.IntegrationTests
                 }
                 else
                 {
+                    value1 = Flatten(value1);
+                    value2 = Flatten(value2);
                     Assert.AreEqual(value1, value2,
                         $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                 }
@@ -136,11 +138,39 @@ namespace RepoDb.MySql.IntegrationTests
                         {
                             value2 = ((DateTime)value2).TimeOfDay;
                         }
+                        value1 = Flatten(value1);
+                        value2 = Flatten(value2);
                         Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }
             });
+        }
+
+        /// <summary>
+        /// Flatten the object value.
+        /// </summary>
+        /// <param name="value">The value to be flattened.</param>
+        /// <returns>The flattened value.</returns>
+        private static object Flatten(object value)
+        {
+            if (value is DateTime)
+            {
+                return ((DateTime)value).Flatten();
+            }
+            else if (value is DateTime?)
+            {
+                return new DateTime?(((DateTime?)value).Value.Flatten());
+            }
+            else if (value is TimeSpan)
+            {
+                return ((TimeSpan)value).Flatten();
+            }
+            else if (value is TimeSpan?)
+            {
+                return new TimeSpan?(((TimeSpan?)value).Value.Flatten());
+            }
+            return value;
         }
 
         #region CompleteTable
@@ -190,7 +220,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnSmallInt = Convert.ToInt16(i),
                     //ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
-                    ColumnJson = "{ \"Field\" : \"Value\" }",
+                    ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
                     ColumnNChar = "C",
                     ColumnNVarChar = $"ColumnNVarChar:{i}",
                     ColumnLongText = $"ColumnLongText:{i}",
