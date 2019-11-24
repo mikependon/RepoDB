@@ -119,11 +119,9 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
 
 ## Community
 
-RepoDb “core-features” is now completed and the library is now open for any contribution from the .NET community.
+RepoDb really requires significant amount of time and effort to maintain and develop. RepoDb is rapidly expanding its capability to support further RDBMS data-providers (in which each implementation differs from each other).
 
-RepoDb is a micro-ORM, and it will always be. However, it really requires significant amount of time and effort to maintain and develop. RepoDb is rapidly expanding its capability to support further RDBMS data-providers *(in which each implementation differs from each other)*.
-
-RepoDb is looking for community contribution for further enhancements and engagements.
+RepoDb is looking for community contribution to further enhance the features and community engagements.
 
 ## Examples
 
