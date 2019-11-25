@@ -732,13 +732,13 @@ namespace RepoDb.Reflection
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
-                propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
-                propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
-                propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
-                propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
-                propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
+                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
+                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
+                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
+                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
@@ -1228,13 +1228,13 @@ namespace RepoDb.Reflection
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
-                propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
-                propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
-                propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
-                propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
-                propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
+                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
+                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
+                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
+                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
+                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
