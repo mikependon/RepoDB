@@ -69,27 +69,60 @@ namespace RepoDb.Resolvers
                 case "integer":
                     return typeof(long);
                 case "blob":
+                case "blobasarray":
+                case "binary":
+                case "longblob":
+                case "mediumblob":
+                case "tinyblob":
+                case "varbinary":
+                case "geometry":
+                case "linestring":
+                case "multilinestring":
+                case "multipoint":
+                case "multipolygon":
+                case "point":
+                case "polygon":
                     return typeof(byte[]);
                 case "boolean":
                     return typeof(bool);
                 case "char":
+                case "json":
+                case "longtext":
+                case "mediumtext":
+                case "nchar":
+                case "nvarchar":
                 case "string":
                 case "text":
+                case "tinytext":
                 case "varchar":
                     return typeof(string);
                 case "date":
                 case "datetime":
+                case "datetime2":
+                case "timestamp":
                     return typeof(DateTime);
                 case "time":
                     return typeof(TimeSpan);
                 case "decimal":
+                case "decimal2":
                 case "numeric":
                     return typeof(decimal);
                 case "double":
                 case "real":
                     return typeof(double);
+                case "float":
+                    return typeof(float);
                 case "int":
+                case "int2":
+                case "mediumint":
+                case "year":
                     return typeof(int);
+                case "smallint":
+                    return typeof(short);
+                case "tinyint":
+                    return typeof(sbyte);
+                case "bit":
+                    return typeof(ulong);
                 case "none":
                     return typeof(object);
                 default:

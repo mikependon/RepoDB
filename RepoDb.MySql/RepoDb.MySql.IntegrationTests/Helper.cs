@@ -191,8 +191,8 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnInt = i,
                     ColumnDecimal2 = Convert.ToDecimal(i),
                     ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    //ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    //ColumnBlobAsArray = Encoding.Default.GetBytes($"ColumnBlobAsArray:{i}"),
+                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
+                    ColumnBlobAsArray = Encoding.Default.GetBytes($"ColumnBlobAsArray:{i}"),
                     //ColumnBinary = Encoding.Default.GetBytes($"ColumnBinary:{i}"),
                     //ColumnLongBlob = Encoding.Default.GetBytes($"ColumnLongBlob:{i}"),
                     //ColumnMediumBlob = Encoding.Default.GetBytes($"ColumnMediumBlob:{i}"),
@@ -203,7 +203,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
                     //ColumnTimeStamp = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnYear = Convert.ToInt16(DateTime.UtcNow.Year),
-                    //ColumnGeometry = Encoding.Default.GetBytes($"ColumnGeometry:{i}"),
+                    //ColumnGeometry = Encoding.Default.GetBytes($"LINESTRING (-122.36 47.656, -122.343 47.656)"),
                     //ColumnLineString = Encoding.Default.GetBytes($"ColumnLineString:{i}"),
                     //ColumnMultiLineString = Encoding.Default.GetBytes($"ColumnMultiLineString:{i}"),
                     //ColumnMultiPoint = Encoding.Default.GetBytes($"ColumnMultiPoint:{i}"),
@@ -218,7 +218,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumInt = i,
                     ColumnReal = Convert.ToDouble(i),
                     ColumnSmallInt = Convert.ToInt16(i),
-                    //ColumnTinyInt = (SByte)i,
+                    ColumnTinyInt = (SByte)i,
                     ColumnChar = "C",
                     ColumnJson = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}",
                     ColumnNChar = "C",
@@ -227,7 +227,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    //ColumnBit = (UInt64)i
+                    ColumnBit = 1
                 });
             }
             return tables;

@@ -1,4 +1,5 @@
-﻿using RepoDb.Extensions;
+﻿using MySql.Data.MySqlClient;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System.Data;
 
@@ -12,14 +13,14 @@ namespace RepoDb.Resolvers
         #region Properties
 
         /// <summary>
-        /// Gets the resolver that is being used to resolve the .NET CLR Type and <see cref="DbType"/>.
+        /// Gets the resolver that is being used to resolve the .NET CLR Type and <see cref="MySqlDbType"/>.
         /// </summary>
-        private static ClientTypeToDbTypeResolver DbTypeResolver => new ClientTypeToDbTypeResolver();
+        private static ClientTypeToMySqlDbTypeResolver DbTypeResolver => new ClientTypeToMySqlDbTypeResolver();
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
         /// </summary>
-        private static DbTypeToMySqlStringNameResolver StringNameResolver => new DbTypeToMySqlStringNameResolver();
+        private static MySqlDbTypeToMySqlStringNameResolver StringNameResolver => new MySqlDbTypeToMySqlStringNameResolver();
 
         #endregion
 
