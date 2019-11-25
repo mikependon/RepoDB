@@ -57,6 +57,14 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 
 The support is not limited to these mentioned RDBMS data-providers. RepoDb is highly extensible to easily support further RDBMS data-providers.
 
+## Community
+
+Though RepoDb is a micro-ORM, it really requires significant amount of time and effort to maintain. Furthermore, RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other).
+
+RepoDb is looking for community contribution to further enhance the features and community engagements.
+
+**Do not hesitate to share yours!**
+
 ## Operations
 
 Below are the list of operations available at RepoDb.
@@ -116,12 +124,6 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
  - Tracing
  - Transaction
  - Type Mapping
-
-## Community
-
-RepoDb really requires significant amount of time and effort to maintain and develop. RepoDb is rapidly expanding its capability to support further RDBMS data-providers (in which each implementation differs from each other).
-
-RepoDb is looking for community contribution to further enhance the features and community engagements.
 
 ## Examples
 
