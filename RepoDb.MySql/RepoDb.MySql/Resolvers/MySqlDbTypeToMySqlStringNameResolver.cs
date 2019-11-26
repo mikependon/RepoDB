@@ -63,8 +63,66 @@ namespace RepoDb.Resolvers
              */
             switch (dbType)
             {
+                case MySqlDbType.Binary:
+                    return "BINARY";
+                case MySqlDbType.Bit:
+                    return "BIT";
+                case MySqlDbType.Blob:
+                    return "BLOB";
+                case MySqlDbType.Byte:
+                    return "TINYINT";
+                case MySqlDbType.Date:
+                    return "DATE";
+                case MySqlDbType.DateTime:
+                    return "DATETIME";
+                case MySqlDbType.Decimal:
+                    return "DECIMAL";
+                case MySqlDbType.Double:
+                    return "DOUBLE";
+                case MySqlDbType.Enum:
+                case MySqlDbType.Guid:
+                case MySqlDbType.Set:
+                case MySqlDbType.Text:
+                    return "TEXT";
+                case MySqlDbType.Float:
+                    return "FLOAT";
+                case MySqlDbType.Geometry:
+                    return "GEOMETRY";
+                case MySqlDbType.Int16:
+                case MySqlDbType.Int24:
+                    return "SMALLINT";
+                case MySqlDbType.Int32:
+                    return "INT";
+                case MySqlDbType.Int64:
+                    return "BIGINT";
+                case MySqlDbType.JSON:
+                    return "JSON";
+                case MySqlDbType.LongBlob:
+                    return "LONGBLOB";
+                case MySqlDbType.LongText:
+                    return "LONGTEXT";
+                case MySqlDbType.MediumBlob:
+                    return "MEDIUMBLOB";
+                case MySqlDbType.MediumText:
+                    return "MEDIUMTEXT";
+                case MySqlDbType.Newdate:
+                    return "DATE";
+                case MySqlDbType.NewDecimal:
+                    return "DECIMAL";
+                case MySqlDbType.String:
+                    return "STRING";
+                case MySqlDbType.Time:
+                    return "TIME";
+                case MySqlDbType.Timestamp:
+                    return "TIMESTAMP";
+                case MySqlDbType.TinyBlob:
+                    return "TINYBLOB";
+                case MySqlDbType.TinyText:
+                    return "TINYTEXT";
+                case MySqlDbType.UByte:
+                    throw new InvalidOperationException();
                 default:
-                    throw new NotImplementedException();
+                    return "TEXT";
             }
         }
     }
