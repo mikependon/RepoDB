@@ -19,7 +19,7 @@ RepoDb provides the feature of micro-ORMs and full-ORMs. It helps the developer 
 
 It refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
 
-RepoDb has its owns compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
+RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
 **It is efficient**
 
@@ -29,11 +29,9 @@ RepoDb caches the “already-extracted” object properties, mappings and SQL st
 
 ## Highlights
 
-**It is fast and efficient.** RepoDb is the fastest and the most efficient ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
-
-**It is high-quality.** RepoDb is covered by thousand of major Unit Tests and Integration Tests.
- 
-**It is production-ready.** RepoDb is running various critical applications in Production Environment.
+ - RepoDb is the fastest and the most efficient ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
+ - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
+ - RepoDb is running various critical applications in Production Environment.
 
 ## Builds
 

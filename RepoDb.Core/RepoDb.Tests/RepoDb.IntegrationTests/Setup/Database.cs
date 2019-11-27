@@ -13,18 +13,15 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Initialize()
         {
-            // Check the connection string
-            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+            // Get the connection string
+            var connectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.User);
+            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.User);
 
             // Master connection
-            ConnectionForMaster = (environment == "DEVELOPMENT") ?
-                @"Server=(local);Database=master;Integrated Security=False;User Id=michael;Password=Password123;" :
-                @"Server=(local)\SQL2017;Database=master;Integrated Security=False;User ID=sa;Password=Password12!;";
+            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=False;User Id=michael;Password=Password123;");
 
             // RepoDb connection
-            ConnectionStringForRepoDb = (environment == "DEVELOPMENT") ?
-                @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;;" :
-                @"Server=(local)\SQL2017;Database=RepoDb;Integrated Security=False;User ID=sa;Password=Password12!;";
+            ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
 
             // Set the proper values for type mapper
             TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
@@ -45,7 +42,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets the connection string for master.
         /// </summary>
-        public static string ConnectionForMaster { get; private set; }
+        public static string ConnectionStringForMaster { get; private set; }
 
         /// <summary>
         /// Gets the connection string for RepoDb.
@@ -63,7 +60,7 @@ namespace RepoDb.IntegrationTests.Setup
                 BEGIN
 	                CREATE DATABASE [RepoDb];
                 END";
-            using (var connection = new SqlConnection(ConnectionForMaster).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionStringForMaster).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
