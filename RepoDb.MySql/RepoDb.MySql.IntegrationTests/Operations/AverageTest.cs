@@ -41,7 +41,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -59,7 +59,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     e => ids.Contains(e.Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -95,7 +95,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -113,7 +113,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     e => ids.Contains(e.Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -154,7 +154,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -173,7 +173,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new QueryField("Id", Operation.In, ids));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -211,7 +211,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     (object)null).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -230,7 +230,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     new QueryField("Id", Operation.In, ids)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 

@@ -10,9 +10,14 @@ namespace RepoDb.MySql.IntegrationTests.Setup
         #region Properties
 
         /// <summary>
+        /// Gets or sets the connection string to be used for sys.
+        /// </summary>
+        public static string ConnectionStringForSys { get; private set; }
+
+        /// <summary>
         /// Gets or sets the connection string to be used.
         /// </summary>
-        public static string ConnectionString { get; private set; } = @"Database=repodb;Data Source=localhost;User Id=user;Password=Password123;";
+        public static string ConnectionString { get; private set; }
 
         #endregion
 
@@ -20,17 +25,19 @@ namespace RepoDb.MySql.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // Check the connection string
-            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+            // Get the connection string
+            var connectionStringForSys = Environment.GetEnvironmentVariable("REPODB_CONSTR_SYS", EnvironmentVariableTarget.Process);
+            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
-            // Master connection
-            if (environment != "DEVELOPMENT")
-            {
-                ConnectionString = @"Data Source=C:\MySql\Databases\RepoDb.db;Version=3;";
-            }
+            // Set the connection string
+            ConnectionStringForSys = (connectionString ?? @"Server=localhost;Database=sys;Uid=user;Pwd=Password123;");
+            ConnectionString = (connectionString ?? @"Server=localhost;Database=RepoDb;Uid=user;Pwd=Password123;");
 
             // Initialize MySql
             MySqlBootstrap.Initialize();
+
+            // Create databases
+            CreateDatabase();
 
             // Create tables
             CreateTables();
@@ -70,6 +77,18 @@ namespace RepoDb.MySql.IntegrationTests.Setup
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
                 return tables;
+            }
+        }
+
+        #endregion
+
+        #region CreateDatabases
+
+        private static void CreateDatabase()
+        {
+            using (var connection = new MySqlConnection(ConnectionStringForSys))
+            {
+                connection.ExecuteNonQuery(@"CREATE SCHEMA IF NOT EXISTS `RepoDb`;");
             }
         }
 

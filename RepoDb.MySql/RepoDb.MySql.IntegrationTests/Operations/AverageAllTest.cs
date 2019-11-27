@@ -39,7 +39,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.AverageAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -73,7 +73,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -112,7 +112,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt));
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -148,7 +148,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 

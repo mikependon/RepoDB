@@ -18,8 +18,8 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         public MySqlStatementBuilder()
             : base(DbSettingMapper.Get(typeof(MySqlConnection)),
-                  new MySqlConvertFieldResolver(),
-                  new ClientTypeToAverageableClientTypeResolver())
+                  null,
+                  null)
         { }
 
         #region CreateBatchQuery
@@ -166,22 +166,9 @@ namespace RepoDb.StatementBuilders
                 primaryField,
                 identityField);
 
-            // Variables needed
-            var databaseType = "BIGINT";
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-
             // Set the return value
             var result = identityField != null ?
-                string.Concat($"LAST_INSERT_ID()") : // string.Concat($"CAST(LAST_INSERT_ID() AS {databaseType})") :
+                string.Concat($"LAST_INSERT_ID()") :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             builder
@@ -226,19 +213,6 @@ namespace RepoDb.StatementBuilders
                 primaryField,
                 identityField);
 
-            // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-
             if (identityField != null)
             {
                 // Variables needed
@@ -249,9 +223,7 @@ namespace RepoDb.StatementBuilders
                 for (var index = 0; index < splitted.Count(); index++)
                 {
                     var line = splitted[index].Trim();
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT LAST_INSERT_ID()" :
-                        $"SELECT CAST(LAST_INSERT_ID() AS {databaseType})";
+                    var returnValue = "SELECT LAST_INSERT_ID()";
                     commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
                 }
 
@@ -261,6 +233,61 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return commandText;
+        }
+
+        #endregion
+
+        #region CreateMax
+
+        /// <summary>
+        /// Creates a SQL Statement for maximum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for maximum operation.</returns>
+        public override string CreateMax(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            var result = base.CreateMax(queryBuilder,
+                tableName,
+                field,
+                where,
+                hints);
+
+            // Return the query
+            return result.Replace("MAX (", "MAX(");
+        }
+
+        #endregion
+
+        #region CreateMaxAll
+
+        /// <summary>
+        /// Creates a SQL Statement for maximum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for maximum-all operation.</returns>
+        public override string CreateMaxAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            var result = base.CreateMaxAll(queryBuilder,
+                tableName,
+                field,
+                hints);
+
+            // Return the query
+            return result.Replace("MAX (", "MAX(");
         }
 
         #endregion
