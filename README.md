@@ -1,27 +1,29 @@
 
 
 
+
 [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Build status](https://img.shields.io/nuget/v/RepoDb?style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
 [![Build status](https://img.shields.io/nuget/dt/repodb.mysql?label=mysql%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySql)
+[![Build status](https://img.shields.io/github/languages/code-size/mikependon/repodb?style=for-the-badge)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb provides the feature of micro and full ORMs. It helps the developer to simplify the “switchover” of when to use the “micro” and “full” operations during the development.
+RepoDb provides the feature of micro-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “simple” and “advance” operations during the development.
 
 **It is high-performance**
 
-The word “high-performance” refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
+It refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
 
-RepoDb has its owns compiler. It caches the “already-generated” ILs and Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb caches the “already-executed” operation context and reusing it for future calls.
+RepoDb has its owns compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
 **It is efficient**
 
-The word “efficient” refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
+It refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
 RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
@@ -61,46 +63,56 @@ The support is not limited to these mentioned RDBMS data-providers. RepoDb is hi
 
 Though RepoDb is a micro-ORM, it really requires significant amount of time and effort to maintain. Furthermore, RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other).
 
-RepoDb is looking for community contribution to further enhance the features and community engagements.
+RepoDb is looking for community contribution to further enhance the features and **community engagements**.
 
-**Do not hesitate to share yours!**
+## Pull-Requests
+
+RepoDb has two code-lines historically (RepoDb and RepoDb.Core).
+
+The folder “RepoDb” is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **OUT-OF-SUPPORT** starting **v1.10.1**.
+
+The folder “RepoDb.Core” is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
+
+## Benchmark
+
+This will be filled soon with detailed information. For now, please refer to [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) tool for the benchmark results.
 
 ## Operations
 
 Below are the list of operations available at RepoDb.
 
-Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName | TableName (Async) | Packed Execution | Data Providers |
--------------------------|-----------------|-------------------------|-----------|-------------------|------------------|----------------|
-**Average**              | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**AverageAll**           | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**BatchQuery**           | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**BulkInsert**           | YES             | YES                     | YES       | YES               | NO               | SQL SERVER     |
-**Count**                | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**CountAll**             | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**Delete**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**DeleteAll**            | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**ExecuteNonQuery**      | YES             | YES                     | NO        | NO                | NO               | ALL            |
-**ExecuteQuery**         | YES             | YES                     | NO        | NO                | NO               | ALL            |
-**ExecuteQueryMultiple** | YES             | YES                     | NO        | NO                | NO               | ALL            |
-**ExecuteReader**        | YES             | YES                     | NO        | NO                | NO               | ALL            |
-**ExecuteScalar**        | YES             | YES                     | NO        | NO                | NO               | ALL            |
-**Exists**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**Insert**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**InsertAll**            | YES             | YES                     | YES       | YES               | YES              | ALL            |
-**Max**                  | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**MaxAll**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**Merge**                | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**MergeAll**             | YES             | YES                     | YES       | YES               | YES              | ALL            |
-**Min**                  | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**MinAll**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**Query**                | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**QueryAll**             | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**QueryMultiple**        | YES             | YES                     | NO        | NO                | YES              | ALL            |
-**Sum**                  | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**SumAll**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**Truncate**             | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**Update**               | YES             | YES                     | YES       | YES               | NO               | ALL            |
-**UpdateAll**            | YES             | YES                     | YES       | YES               | YES              | ALL            |
+Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName | TableName (Async) | Packed Execution | Data Providers         |
+-------------------------|-----------------|-------------------------|-----------|-------------------|------------------|------------------------|
+**Average**              | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**AverageAll**           | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**BatchQuery**           | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**BulkInsert**           | YES             | YES                     | YES       | YES               | NO               | SQLSVR, POSTGRESQL     |
+**Count**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**CountAll**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**Delete**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**DeleteAll**            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**ExecuteNonQuery**      | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+**ExecuteQuery**         | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+**ExecuteQueryMultiple** | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+**ExecuteReader**        | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+**ExecuteScalar**        | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+**Exists**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**Insert**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**InsertAll**            | YES             | YES                     | YES       | YES               | **YES**              | MENTIONED              |
+**Max**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**MaxAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**Merge**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**MergeAll**             | YES             | YES                     | YES       | YES               | **YES**              | MENTIONED              |
+**Min**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**MinAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**Query**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**QueryAll**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**QueryMultiple**        | YES             | YES                     | NO        | NO                | **YES**              | MENTIONED              |
+**Sum**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**SumAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**Truncate**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**Update**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+**UpdateAll**            | YES             | YES                     | YES       | YES               | **YES**              | MENTIONED              |
 
 ## Core Features
  
