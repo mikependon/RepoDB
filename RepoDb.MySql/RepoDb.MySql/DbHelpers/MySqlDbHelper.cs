@@ -59,6 +59,26 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
+        /// Get the list of type names for all blob-types for MySql.
+        /// </summary>
+        /// <returns>The list of column type names.</returns>
+        private IEnumerable<string> GetBlobTypes()
+        {
+            return new[]
+            {
+                "blob",
+                "blobasarray",
+                "binary",
+                "longtext",
+                "mediumtext",
+                "longblob",
+                "mediumblob",
+                "tinyblob",
+                "varbinary"
+            };
+        }
+
+        /// <summary>
         /// Converts the <see cref="IDataReader"/> object into <see cref="DbField"/> object.
         /// </summary>
         /// <param name="reader">The instance of <see cref="IDataReader"/> object.</param>
@@ -66,8 +86,9 @@ namespace RepoDb.DbHelpers
         private DbField ReaderToDbField(IDataReader reader)
         {
             var columnType = reader.GetString(4);
+            var excluded = GetBlobTypes();
             var size = (int?)null;
-            if ((new[] { "longtext", "mediumtext", "longblob", "mediumblob" }).Contains(columnType.ToLower()))
+            if (excluded.Contains(columnType.ToLower()))
             {
                 size = null;
             }

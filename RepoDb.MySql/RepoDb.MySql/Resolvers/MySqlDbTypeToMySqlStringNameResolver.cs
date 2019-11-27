@@ -70,6 +70,7 @@ namespace RepoDb.Resolvers
                 case MySqlDbType.Blob:
                     return "BLOB";
                 case MySqlDbType.Byte:
+                case MySqlDbType.UByte:
                     return "TINYINT";
                 case MySqlDbType.Date:
                     return "DATE";
@@ -90,10 +91,14 @@ namespace RepoDb.Resolvers
                     return "GEOMETRY";
                 case MySqlDbType.Int16:
                 case MySqlDbType.Int24:
+                case MySqlDbType.UInt24:
+                case MySqlDbType.UInt16:
                     return "SMALLINT";
                 case MySqlDbType.Int32:
+                case MySqlDbType.UInt32:
                     return "INT";
                 case MySqlDbType.Int64:
+                case MySqlDbType.UInt64:
                     return "BIGINT";
                 case MySqlDbType.JSON:
                     return "JSON";
@@ -119,8 +124,14 @@ namespace RepoDb.Resolvers
                     return "TINYBLOB";
                 case MySqlDbType.TinyText:
                     return "TINYTEXT";
-                case MySqlDbType.UByte:
-                    throw new InvalidOperationException();
+                case MySqlDbType.VarBinary:
+                    return "VARBINARY";
+                case MySqlDbType.VarChar:
+                    return "VARCHAR";
+                case MySqlDbType.VarString:
+                    return "VARCHAR";
+                case MySqlDbType.Year:
+                    return "YEAR";
                 default:
                     return "TEXT";
             }
