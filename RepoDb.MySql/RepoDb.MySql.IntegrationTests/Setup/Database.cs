@@ -151,7 +151,7 @@ namespace RepoDb.MySql.IntegrationTests.Setup
                         `ColumnTinyText` tinytext,
                         `ColumnBit` bit(1) DEFAULT NULL,
                         PRIMARY KEY (`Id`)
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;");
+                    ) ENGINE=InnoDB;");
             }
         }
 
@@ -204,7 +204,7 @@ namespace RepoDb.MySql.IntegrationTests.Setup
                         `ColumnTinyText` tinytext,
                         `ColumnBit` bit(1) DEFAULT NULL,
                         PRIMARY KEY(`Id`)
-                    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;");
+                    ) ENGINE = InnoDB;");
             }
         }
 
