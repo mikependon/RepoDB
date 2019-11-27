@@ -9,11 +9,11 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
     {
         static Database()
         {
-            // Check the connection string
-            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+            // Get the environment variable
+            var variable = Environment.GetEnvironmentVariable("REPODB_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
 
             // Set the property
-            IsInMemory = (environment != "DEVELOPMENT");
+            IsInMemory = string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
         }
 
         #region Properties

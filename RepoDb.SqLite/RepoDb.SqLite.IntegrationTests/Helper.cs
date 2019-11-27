@@ -54,7 +54,7 @@ namespace RepoDb.SqLite.IntegrationTests
                 {
                     var b1 = (byte[])value1;
                     var b2 = (byte[])value2;
-                    for (var i = 0; i < b1.Length; i++)
+                    for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
                     {
                         var v1 = b1[i];
                         var v2 = b2[i];
@@ -121,7 +121,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     {
                         var b1 = (byte[])value1;
                         var b2 = (byte[])value2;
-                        for (var i = 0; i < b1.Length; i++)
+                        for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
                         {
                             var v1 = b1[i];
                             var v2 = b2[i];
