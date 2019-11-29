@@ -273,6 +273,7 @@ namespace RepoDb.MySql.IntegrationTests
             {
                 tables.Add(new
                 {
+                    Id = (long)(i + 1),
                     ColumnVarchar = $"ColumnVarChar:{i}",
                     ColumnInt = i,
                     ColumnDecimal2 = Convert.ToDecimal(i),

@@ -438,7 +438,7 @@ namespace RepoDb.StatementBuilders
                 var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
                 if (others?.Any() == true)
                 {
-                    throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
+                    throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for merge operation. " +
                         $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
                 }
             }
@@ -446,34 +446,22 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
-            // Variables needed
-            var databaseType = "BIGINT";
-
             // Set the return value
             var result = (string)null;
 
             // Check both primary and identity
             if (identityField != null)
             {
-                result = string.Concat($"CAST(COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
-
-                // Set the type
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
+                result = string.Concat($"COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(DbSetting)})");
             }
             else
             {
-                result = string.Concat($"CAST({primaryField.Name.AsParameter(DbSetting)} AS {databaseType})");
+                result = string.Concat($"{primaryField.Name.AsParameter(DbSetting)}");
             }
 
             // Build the query
             builder.Clear()
                 .Insert()
-                .Or()
-                .Replace()
                 .Into()
                 .TableNameFrom(tableName, DbSetting)
                 .OpenParen()
@@ -483,6 +471,9 @@ namespace RepoDb.StatementBuilders
                 .OpenParen()
                 .ParametersFrom(fields, 0, DbSetting)
                 .CloseParen()
+                .WriteText("ON DUPLICATE KEY")
+                .Update()
+                .FieldsAndParametersFrom(fields, 0, DbSetting)
                 .End();
 
             if (!string.IsNullOrEmpty(result))
@@ -553,18 +544,8 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
-            // Variables needed
-            var databaseType = "BIGINT";
-
             // Set the return value
             var result = (string)null;
-
-            // Set the type
-            var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-            if (dbType != null)
-            {
-                databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-            }
 
             // Clear the builder
             builder.Clear();
@@ -575,8 +556,6 @@ namespace RepoDb.StatementBuilders
                 // Build the query
                 builder
                     .Insert()
-                    .Or()
-                    .Replace()
                     .Into()
                     .TableNameFrom(tableName, DbSetting)
                     .OpenParen()
@@ -586,16 +565,19 @@ namespace RepoDb.StatementBuilders
                     .OpenParen()
                     .ParametersFrom(fields, index, DbSetting)
                     .CloseParen()
+                    .WriteText("ON DUPLICATE KEY")
+                    .Update()
+                    .FieldsAndParametersFrom(fields, index, DbSetting)
                     .End();
 
                 // Check both primary and identity
                 if (identityField != null)
                 {
-                    result = string.Concat($"CAST(COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
+                    result = string.Concat($"COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(index, DbSetting)})");
                 }
                 else
                 {
-                    result = string.Concat($"CAST({primaryField.Name.AsParameter(index, DbSetting)} AS {databaseType})");
+                    result = string.Concat($"{primaryField.Name.AsParameter(index, DbSetting)}");
                 }
 
                 if (!string.IsNullOrEmpty(result))
