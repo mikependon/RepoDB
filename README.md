@@ -1,7 +1,3 @@
-
-
-
-
 [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Build status](https://img.shields.io/nuget/v/RepoDb?style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
 [![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
@@ -13,15 +9,15 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb provides the feature of micro-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “simple” and “advance” operations during the development.
+RepoDb is a hybrid micro-ORM that provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
 
-**It is high-performance**
+#### It is high-performance
 
 It refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
 
 RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
-**It is efficient**
+#### It is efficient
 
 It refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
@@ -29,7 +25,7 @@ RepoDb caches the “already-extracted” object properties, mappings and SQL st
 
 ## Highlights
 
- - RepoDb is the fastest and the most efficient ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
+ - RepoDb is the **fastest** and the **most efficient** ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
  - RepoDb is running various critical applications in Production Environment.
 
@@ -51,13 +47,15 @@ RepoDb.MySql.IntegrationTests  | [![Build status](https://img.shields.io/appveyo
 
 Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the “Execute” methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
 
-**Fully supported databases for fluent-methods**
+#### Fully supported databases for fluent-methods
 
 <img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="96px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="96px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="96px" title="MySql" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/PostgreSql.png" height="96px" title="PostgreSql" />
 
 RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
 
-The support is not limited to these mentioned RDBMS data-providers. RepoDb is highly extensible to easily support further RDBMS data-providers.
+#### Extensibility
+
+RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the author for help.
 
 ## Community
 
@@ -75,7 +73,7 @@ The folder “RepoDb.Core” is the code-line built via NetStandard. **This is t
 
 ## Benchmark
 
-This will be filled soon with detailed information. For now, please refer to [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) tool for the benchmark results.
+This will be filled soon with the detailed benchmark information. For now, please refer to [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool for the benchmark results.
 
 ## Operations
 
@@ -98,21 +96,21 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
 **ExecuteScalar**        | YES             | YES                     | NO        | NO                | NO               | ALL                    |
 **Exists**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **Insert**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**InsertAll**            | YES             | YES                     | YES       | YES               | **YES**              | MENTIONED              |
+**InsertAll**            | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
 **Max**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **MaxAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **Merge**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**MergeAll**             | YES             | YES                     | YES       | YES               | **YES**              | MENTIONED              |
+**MergeAll**             | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
 **Min**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **MinAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **Query**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **QueryAll**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**QueryMultiple**        | YES             | YES                     | NO        | NO                | **YES**              | MENTIONED              |
+**QueryMultiple**        | YES             | YES                     | NO        | NO                | **YES**          | MENTIONED              |
 **Sum**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **SumAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **Truncate**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **Update**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**UpdateAll**            | YES             | YES                     | YES       | YES               | **YES**              | MENTIONED              |
+**UpdateAll**            | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
 
 ## Core Features
  
