@@ -9,7 +9,7 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb is a hybrid micro-ORM that provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
+RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
 
 #### It is high-performance
 
@@ -25,7 +25,7 @@ RepoDb caches the “already-extracted” object properties, mappings and SQL st
 
 ## Highlights
 
- - RepoDb is the **fastest** and the **most efficient** ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
+ - RepoDb is the **fastest** and the **most-efficient** ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
  - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
  - RepoDb is running various critical applications in Production Environment.
 
