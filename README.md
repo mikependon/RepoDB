@@ -11,23 +11,17 @@
 
 RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
 
-#### It is high-performance
+## It is high-performance
 
-It refers to “how fast” this ORM converts the raw data into a class object, and transport the class object as an actual data in the database.
+This refers to “how fast” RepoDb converts the raw data into a class object, and transport the class object as an actual data in the database.
 
 RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
-#### It is efficient
+## It is efficient
 
-It refers to “how well-managed” this ORM uses the computer memory when manipulating the objects all throughout the cycle of the operations.
+This refers to “how well-managed” RepoDb uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
 RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
-
-## Highlights
-
- - RepoDb is the **fastest** and the **most-efficient** ORM library in .NET as per  [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher). See the actual execution results [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
- - RepoDb is covered by thousand of major Unit Tests and Integration Tests.
- - RepoDb is running various critical applications in Production Environment.
 
 ## Builds
 
