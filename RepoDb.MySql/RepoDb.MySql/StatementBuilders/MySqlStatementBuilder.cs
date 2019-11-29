@@ -450,13 +450,15 @@ namespace RepoDb.StatementBuilders
             var result = (string)null;
 
             // Check both primary and identity
-            if (identityField != null)
+            if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
             {
-                result = string.Concat($"COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(DbSetting)})");
+                result = string.Concat($"(CASE WHEN {identityField.Name.AsParameter(DbSetting)} > 0 THEN " +
+                    $"{identityField.Name.AsParameter(DbSetting)} ELSE " +
+                    $"{primaryField.Name.AsParameter(DbSetting)} END)");
             }
             else
             {
-                result = string.Concat($"{primaryField.Name.AsParameter(DbSetting)}");
+                result = string.Concat($"COALESCE({primaryField.Name.AsParameter(DbSetting)}, LAST_INSERT_ID())");
             }
 
             // Build the query
@@ -571,13 +573,15 @@ namespace RepoDb.StatementBuilders
                     .End();
 
                 // Check both primary and identity
-                if (identityField != null)
+                if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    result = string.Concat($"COALESCE(LAST_INSERT_ID(), {primaryField.Name.AsParameter(index, DbSetting)})");
+                    result = string.Concat($"(CASE WHEN {identityField.Name.AsParameter(index, DbSetting)} > 0 THEN " +
+                        $"{identityField.Name.AsParameter(index, DbSetting)} ELSE " +
+                        $"{primaryField.Name.AsParameter(index, DbSetting)} END)");
                 }
                 else
                 {
-                    result = string.Concat($"{primaryField.Name.AsParameter(index, DbSetting)}");
+                    result = string.Concat($"COALESCE({primaryField.Name.AsParameter(index, DbSetting)}, LAST_INSERT_ID())");
                 }
 
                 if (!string.IsNullOrEmpty(result))

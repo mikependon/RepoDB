@@ -480,7 +480,7 @@ namespace RepoDb.MySql.IntegrationTests
             table.ColumnSmallInt = Convert.ToInt16(1);
             table.ColumnTinyInt = (SByte)1;
             table.ColumnChar = "C";
-            table.ColumnJson = "{ \"Field\" : \"Value\" }";
+            table.ColumnJson = "{\"Field\": \"Value\"}";
             table.ColumnNChar = "C";
             table.ColumnNVarChar = $"ColumnNVarChar:{1}";
             table.ColumnLongText = $"ColumnLongText:{1}";
