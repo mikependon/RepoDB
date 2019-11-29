@@ -1,6 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using RepoDb.Interfaces;
-using System;
 using System.Data;
 
 namespace RepoDb.Resolvers

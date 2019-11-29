@@ -341,61 +341,6 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateMin
-
-        /// <summary>
-        /// Creates a SQL Statement for minimum operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for minimum operation.</returns>
-        public override string CreateMin(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            var result = base.CreateMin(queryBuilder,
-                tableName,
-                field,
-                where,
-                hints);
-
-            // Return the query
-            return result.Replace("MIN (", "MIN(");
-        }
-
-        #endregion
-
-        #region CreateMinAll
-
-        /// <summary>
-        /// Creates a SQL Statement for minimum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
-        /// <returns>A sql statement for minimum-all operation.</returns>
-        public override string CreateMinAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            var result = base.CreateMinAll(queryBuilder,
-                tableName,
-                field,
-                hints);
-
-            // Return the query
-            return result.Replace("MIN (", "MIN(");
-        }
-
-        #endregion
-
         #region CreateMerge
 
         /// <summary>
@@ -597,6 +542,61 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return builder.GetString();
+        }
+
+        #endregion
+
+        #region CreateMin
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum operation.</returns>
+        public override string CreateMin(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            var result = base.CreateMin(queryBuilder,
+                tableName,
+                field,
+                where,
+                hints);
+
+            // Return the query
+            return result.Replace("MIN (", "MIN(");
+        }
+
+        #endregion
+
+        #region CreateMinAll
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum-all operation.</returns>
+        public override string CreateMinAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            var result = base.CreateMinAll(queryBuilder,
+                tableName,
+                field,
+                hints);
+
+            // Return the query
+            return result.Replace("MIN (", "MIN(");
         }
 
         #endregion
