@@ -36,7 +36,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];"))
+                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
                 {
                     while (reader.Read())
                     {
@@ -64,7 +64,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];"))
+                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
                 {
                     do
                     {
@@ -95,7 +95,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection).AsList();
@@ -115,7 +115,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [CompleteTable];"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
@@ -139,7 +139,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").Result)
                 {
                     while (reader.Read())
                     {
@@ -167,7 +167,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [CompleteTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").Result)
                 {
                     do
                     {
@@ -198,7 +198,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").Result)
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection).AsList();
@@ -218,7 +218,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [CompleteTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").Result)
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();

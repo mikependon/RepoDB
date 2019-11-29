@@ -39,7 +39,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.SumAll<CompleteTable>(e => e.ColumnInt);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -73,7 +73,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.SumAllAsync<CompleteTable>(e => e.ColumnInt).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -112,7 +112,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt));
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -148,7 +148,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 

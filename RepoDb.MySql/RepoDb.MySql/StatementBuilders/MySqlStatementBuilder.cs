@@ -98,6 +98,55 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateCount
+
+        /// <summary>
+        /// Creates a SQL Statement for count operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for count operation.</returns>
+        public override string CreateCount(QueryBuilder queryBuilder,
+            string tableName,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            var result = base.CreateCount(queryBuilder,
+                tableName,
+                where,
+                hints);
+
+            // Return the query
+            return result.Replace("COUNT (", "COUNT(");
+        }
+
+        #endregion
+
+        #region CreateCountAll
+
+        /// <summary>
+        /// Creates a SQL Statement for count-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for count-all operation.</returns>
+        public override string CreateCountAll(QueryBuilder queryBuilder,
+            string tableName,
+            string hints = null)
+        {
+            var result = base.CreateCountAll(queryBuilder,
+                tableName,
+                hints);
+
+            // Return the query
+            return result.Replace("COUNT (", "COUNT(");
+        }
+
+        #endregion
+
         #region CreateExists
 
         /// <summary>
@@ -125,7 +174,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .WriteText("1 AS [ExistsValue]")
+                .WriteText($"1 AS {("ExistsValue").AsQuoted(DbSetting)}")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -288,6 +337,61 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return result.Replace("MAX (", "MAX(");
+        }
+
+        #endregion
+
+        #region CreateMin
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum operation.</returns>
+        public override string CreateMin(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            var result = base.CreateMin(queryBuilder,
+                tableName,
+                field,
+                where,
+                hints);
+
+            // Return the query
+            return result.Replace("MIN (", "MIN(");
+        }
+
+        #endregion
+
+        #region CreateMinAll
+
+        /// <summary>
+        /// Creates a SQL Statement for minimum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for minimum-all operation.</returns>
+        public override string CreateMinAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            var result = base.CreateMinAll(queryBuilder,
+                tableName,
+                field,
+                hints);
+
+            // Return the query
+            return result.Replace("MIN (", "MIN(");
         }
 
         #endregion
@@ -584,35 +688,57 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateTruncate
+        #region CreateSum
 
         /// <summary>
-        /// Creates a SQL Statement for truncate operation.
+        /// Creates a SQL Statement for sum operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <returns>A sql statement for truncate operation.</returns>
-        public override string CreateTruncate(QueryBuilder queryBuilder,
-            string tableName)
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for sum operation.</returns>
+        public override string CreateSum(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            QueryGroup where = null,
+            string hints = null)
         {
-            // Ensure with guards
-            GuardTableName(tableName);
-
-            // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
-
-            // Build the query
-            builder.Clear()
-                .Clear()
-                .Delete()
-                .From()
-                .TableNameFrom(tableName, DbSetting)
-                .End()
-                .WriteText("VACUUM")
-                .End();
+            var result = base.CreateSum(queryBuilder,
+                tableName,
+                field,
+                where,
+                hints);
 
             // Return the query
-            return builder.GetString();
+            return result.Replace("SUM (", "SUM(");
+        }
+
+        #endregion
+
+        #region CreateSumAll
+
+        /// <summary>
+        /// Creates a SQL Statement for sum-all operation.
+        /// </summary>
+        /// <param name="queryBuilder">The query builder to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="field">The field to be sumd.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <returns>A sql statement for sum-all operation.</returns>
+        public override string CreateSumAll(QueryBuilder queryBuilder,
+            string tableName,
+            Field field,
+            string hints = null)
+        {
+            var result = base.CreateSumAll(queryBuilder,
+                tableName,
+                field,
+                hints);
+
+            // Return the query
+            return result.Replace("SUM (", "SUM(");
         }
 
         #endregion

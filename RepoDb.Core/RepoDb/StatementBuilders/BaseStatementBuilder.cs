@@ -321,7 +321,7 @@ namespace RepoDb.StatementBuilders
             builder.Clear()
                 .Select()
                 .TopFrom(1)
-                .WriteText("1 AS [ExistsValue]")
+                .WriteText($"1 AS {("ExistsValue").AsQuoted(DbSetting)}")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)

@@ -34,7 +34,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM [CompleteTable];");
+                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable`;");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -51,7 +51,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM [CompleteTable] WHERE Id = @Id;",
+                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -73,7 +73,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM [CompleteTable];").Result;
+                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable`;").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -90,7 +90,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM [CompleteTable] WHERE Id = @Id;",
+                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
                     new { tables.Last().Id }).Result;
 
                 // Assert
