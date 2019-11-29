@@ -11,13 +11,13 @@
 
 RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
 
-## It is high-performance
+### It is high-performance
 
 This refers to “how fast” RepoDb converts the raw data into a class object, and transport the class object as an actual data in the database.
 
 RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
-## It is efficient
+### It is efficient
 
 This refers to “how well-managed” RepoDb uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
