@@ -72,7 +72,7 @@ This will be filled soon with the detailed benchmark information. For now, pleas
 
 ## License
 
-[Apache-2.0]([http://apache.org/licenses/LICENSE-2.0.html](http://apache.org/licenses/LICENSE-2.0.html)) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
 
 ## Operations
 
