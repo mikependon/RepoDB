@@ -70,7 +70,7 @@ This will be filled soon with the detailed benchmark information. For now, pleas
 
 ## License
 
-[![Apache-2.0](https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt)](https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt))
+[Apache-2.0](https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt)
 
 Copyright © 2019 - Michael Camara Pendon
 
