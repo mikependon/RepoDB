@@ -6,7 +6,7 @@
     <Version>1.0.0</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
-    <Description>The official RepoDb extented library for MySql.</Description>
+    <Description>A hybrid .NET ORM library for MySql.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</PackageProjectUrl>
