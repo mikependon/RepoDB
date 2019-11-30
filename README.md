@@ -45,9 +45,9 @@ RepoDb is highly extensible and dynamic enough to further support other RDBMS da
 
 ## Community
 
-Though RepoDb is a micro-ORM, it really requires significant amount of time and effort to maintain. Furthermore, RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other).
+RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is a micro-ORM, but it really requires significant amount of time and effort to maintain.
 
-RepoDb is open for *community contributions* to further enhance the features and as well the *community engagements*.
+We are open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
 
 ### Community engagements
 
@@ -57,6 +57,8 @@ We would like to build a healthy and active community that would help fellow .NE
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+
+Any help from the community will be highly appreciated as it helps us eliminate our full-efforts. 
 
 ## Pull-Requests
 
@@ -117,7 +119,7 @@ RepoDb and its extension is available via Nuget as a NetStandard library. Type t
 
 ```
 Install-Package RepoDb
-Install-Package RepoDb.SqLite`
+Install-Package RepoDb.SqLite
 Install-Package RepoDb.MySql
 ```
 
