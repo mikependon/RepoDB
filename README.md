@@ -26,18 +26,6 @@ This refers to “how well-managed” RepoDb uses the computer memory when manip
 
 RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
-## Quality
-
-RepoDb has massive amount of Unit Tests and Integration Tests to cover as much scenarios as possible. As an author of this library, further scenarios are being written adhocly to further cover and guard the codes.
-
-### Test Results
-
-Project/Solution | Unit Tests                                                                                                                                                                 | IntegrationTests                                                                                                                                                                  |
------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-RepoDb.Core	     | [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)   | [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)   |
-RepoDb.SqLite    | [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) | [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
-RepoDb.MySql     | [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)  | [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
-
 ## Supported Databases
 
 Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the “Execute” methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
@@ -51,6 +39,16 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 ### Extensibility
 
 RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the author for help.
+
+## Quality
+
+RepoDb has massive amount of Unit Tests and Integration Tests to cover as much scenarios as possible. As an author of this library, further scenarios are being written adhocly to further cover and guard the codes.
+
+Project/Solution | Unit Tests                                                                                                                                                                 | IntegrationTests                                                                                                                                                                  |
+-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+RepoDb.Core	     | [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)   | [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)   |
+RepoDb.SqLite    | [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) | [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
+RepoDb.MySql     | [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)  | [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
 
 ## Community
 
