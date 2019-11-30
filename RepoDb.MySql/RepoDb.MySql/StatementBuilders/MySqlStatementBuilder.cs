@@ -374,7 +374,7 @@ namespace RepoDb.StatementBuilders
             // Check the primay field
             if (primaryField == null)
             {
-                throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for (INSERT or REPLACE) operation.");
+                throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for merge operation.");
             }
 
             // Check the qualifiers
@@ -474,7 +474,7 @@ namespace RepoDb.StatementBuilders
             // Check the primay field
             if (primaryField == null)
             {
-                throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for (INSERT or REPLACE) operation.");
+                throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for merge operation.");
             }
 
             // Check the qualifiers
@@ -483,7 +483,7 @@ namespace RepoDb.StatementBuilders
                 var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
                 if (others?.Any() == true)
                 {
-                    throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
+                    throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for merge operation. " +
                         $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
                 }
             }
