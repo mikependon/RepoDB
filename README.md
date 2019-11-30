@@ -1,8 +1,5 @@
+
 [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
-[![Build status](https://img.shields.io/nuget/v/RepoDb?style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
-[![Build status](https://img.shields.io/nuget/dt/repodb?label=core%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb)
-[![Build status](https://img.shields.io/nuget/dt/repodb.sqlite?label=sqlite%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.SqLite)
-[![Build status](https://img.shields.io/nuget/dt/repodb.mysql?label=mysql%20dl%28s%29&style=for-the-badge)](https://www.nuget.org/packages/RepoDb.MySql)
 [![Build status](https://img.shields.io/github/languages/code-size/mikependon/repodb?style=for-the-badge)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
@@ -10,6 +7,12 @@
 ## RepoDb - a hybrid ORM library for .NET.
 
 RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
+
+Project/Solution               | Build                                                                                                                                                                | Version                                                                                                                                       | Downloads                                                                                                                          |
+-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+RepoDb.Core                    | [![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?label=core&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)     | [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?label=core&style=flat-square)](https://www.nuget.org/packages/RepoDb)                   | [![CoreDL](https://img.shields.io/nuget/dt/repodb?label=core&style=flat-square)](https://www.nuget.org/packages/RepoDb)            |
+RepoDb.SqLite                  | [![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?label=sqlite&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o6787) | [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?label=sqlite&style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) | [![SqLiteDL](https://img.shields.io/nuget/dt/repodb?label=sqlite&style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) |
+RepoDb.MySql                   | [![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?label=mysql&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)   | [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?label=mysql&style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)     | [![MySqlDL](https://img.shields.io/nuget/dt/repodb?label=mysql&style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    |
 
 ### It is high-performance
 
@@ -23,19 +26,17 @@ This refers to “how well-managed” RepoDb uses the computer memory when manip
 
 RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
-## Builds
+## Quality
 
-Project/Solution               | Status                                                                                                                                                   | Test Results                                                                                                                                                            |
--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-RepoDb.Core                    | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw/build/tests) |
-RepoDb.Core.UnitTests	       | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests) |
-RepoDb.Core.IntegrationTests   | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests) |
-RepoDb.SqLite                  | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o6787) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-o6787?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o6787/build/tests) |
-RepoDb.SqLite.UnitTests        | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) |
-RepoDb.SqLite.IntegrationTests | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
-RepoDb.MySql                   | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4/build/tests) |
-RepoDb.MySql.UnitTests         | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests) |
-RepoDb.MySql.IntegrationTests  | [![Build status](https://img.shields.io/appveyor/ci/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48) | [![Build status](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests) |
+RepoDb has massive amount of Unit Tests and Integration Tests to cover as much scenarios as possible. As an author of this library, further scenarios are being written adhocly to further cover and guard the codes.
+
+### Test Results
+
+Project/Solution | Unit Tests                                                                                                                                                                 | IntegrationTests                                                                                                                                                                  |
+-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+RepoDb.Core	     | [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)   | [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)   |
+RepoDb.SqLite    | [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) | [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
+RepoDb.MySql     | [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)  | [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
 
 ## Supported Databases
 
@@ -68,6 +69,12 @@ The folder “RepoDb” is the code-line that supports the NetFramework solution
 ## Benchmark
 
 This will be filled soon with the detailed benchmark information. For now, please refer to [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool for the benchmark results.
+
+## License
+
+[Apache-2.0]([https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt](https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt))
+
+Copyright © 2019 - Michael Camara Pendon
 
 ## Operations
 
