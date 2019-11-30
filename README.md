@@ -1,3 +1,4 @@
+
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![CodeSize](https://img.shields.io/github/languages/code-size/mikependon/repodb?style=for-the-badge)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?color=orange&style=for-the-badge)](https://gitter.im/RepoDb/community)
@@ -7,12 +8,6 @@
 ## RepoDb - a hybrid ORM library for .NET.
 
 RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
-
-Project/Solution               | Build                                                                                                                                                   | Version                                                                                                                          | Downloads                                                                                                                    |
--------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
-RepoDb.Core                    | [![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)   | [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?style=flat-square)](https://www.nuget.org/packages/RepoDb)                 | [![CoreDL](https://img.shields.io/nuget/dt/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)                 |
-RepoDb.SqLite                  | [![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o6787) | [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) | [![SqLiteDL](https://img.shields.io/nuget/dt/repodb.sqlite?style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) |
-RepoDb.MySql                   | [![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)  | [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    | [![MySqlDL](https://img.shields.io/nuget/dt/repodb.mysql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    |
 
 ### It is high-performance
 
@@ -25,6 +20,14 @@ RepoDb has its own compiler. It caches the “already-generated” compiled-ILs 
 This refers to “how well-managed” RepoDb uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
 RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
+
+## Builds and Tests Result
+
+Project/Solution               | Build                                                                                                                                                   | Version                                                                                                                          | Downloads                                                                                                                    | Unit Tests                                                                                                                                                                 | IntegrationTests                                                                                                                                                                  |
+-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+RepoDb.Core                    | [![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)   | [![CoreVersion](https://img.shields.io/nuget/v/RepoDb?style=flat-square)](https://www.nuget.org/packages/RepoDb)                 | [![CoreDL](https://img.shields.io/nuget/dt/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)                 | [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)   | [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)   |
+RepoDb.SqLite                  | [![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o6787) | [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) | [![SqLiteDL](https://img.shields.io/nuget/dt/repodb.sqlite?style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) | [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) | [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
+RepoDb.MySql                   | [![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)  | [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    | [![MySqlDL](https://img.shields.io/nuget/dt/repodb.mysql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    | [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)  | [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
 
 ## Supported Databases
 
@@ -40,29 +43,28 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 
 RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the author for help.
 
-## Quality
-
-RepoDb has massive amount of Unit Tests and Integration Tests to cover as much scenarios as possible. As an author of this library, further scenarios are being written adhocly to further cover and guard the codes.
-
-Project/Solution | Unit Tests                                                                                                                                                                 | IntegrationTests                                                                                                                                                                  |
------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-RepoDb.Core	     | [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)   | [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)   |
-RepoDb.SqLite    | [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) | [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
-RepoDb.MySql     | [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)  | [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
-
 ## Community
 
 Though RepoDb is a micro-ORM, it really requires significant amount of time and effort to maintain. Furthermore, RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other).
 
-RepoDb is open for community contributions to further enhance the features and as well the **community engagements**.
+RepoDb is open for *community contributions* to further enhance the features and as well the *community engagements*.
+
+### Community engagements
+
+We would like to build a healthy and active community that would help fellow .NET developers when it comes to data accessibility. Please get in touch via:
+
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/serilog) - for any technical questions.
+- [Twitter](https://twitter.com/search?q=%23serilog) - for the latest news.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## Pull-Requests
 
-RepoDb has two code-lines historically (RepoDb and RepoDb.Core).
+The folder ***RepoDb.Core*** is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
 
-The folder “RepoDb.Core” is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
+The folder ***RepoDb*** is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
 
-The folder “RepoDb” is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **OUT-OF-SUPPORT** starting **v1.10.1**.
+To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](https://github.com/mikependon/RepoDb/issues)) tab and filter the list of items with **for grabs** label.
 
 ## Benchmark
 
@@ -70,9 +72,7 @@ This will be filled soon with the detailed benchmark information. For now, pleas
 
 ## License
 
-[Apache-2.0](https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt)
-
-Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0]([http://apache.org/licenses/LICENSE-2.0.html](http://apache.org/licenses/LICENSE-2.0.html)) - Copyright © 2019 - Michael Camara Pendon
 
 ## Operations
 
@@ -111,30 +111,17 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
 **Update**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 **UpdateAll**            | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
 
-## Core Features
- 
- - Asynchronous Operations
- - Batch Operations
- - Bulk Operations
- - Caching
- - Connection Persistency
- - Database Helpers
- - Database Settings
- - Expression Trees
- - Extension Methods
- - Field Mapping
- - Inline Hints
- - Massive Operations (Generics/Explicits/MethodCalls/TableBased)
- - Multi-Resultset Query
- - Query Builder
- - Repositories
- - Resolvers (CLR Types, DB Types)
- - Statement Builder
- - Tracing
- - Transaction
- - Type Mapping
+## Installations
 
-## Examples
+RepoDb and its extension is available via Nuget as a NetStandard library. Type the commands below at the Package Manager Console.
+
+```
+Install-Package RepoDb
+Install-Package RepoDb.SqLite`
+Install-Package RepoDb.MySql
+```
+
+## Snippets and Samples
 
 Let us say you have a customer class named `Customer` that has an equivalent table in the database named `[dbo].[Customer]`.
 
@@ -150,7 +137,7 @@ public class Customer
 }
 ```
 
-### Query<TEntity>
+### Querying a Data
 
 Via PrimaryKey:
 
@@ -188,7 +175,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Query(TableName)
+### Querying via TableName
 
 Via PrimaryKey:
 
@@ -227,7 +214,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Insert<TEntity>
+### Inserting a Data
 
 ```csharp
 var customer = new Customer
@@ -242,7 +229,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Insert(TableName)
+### Inserting via TableName
 
 ```csharp
 var customer = new
@@ -259,7 +246,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Update<TEntity>
+### Updating a Data
 
 Via DataEntity:
 
@@ -321,7 +308,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Update(TableName)
+### Updating via TableName
 
 Via Dynamic Object:
 
@@ -380,7 +367,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Delete<TEntity>
+### Deleting a Data
 
 Via DataEntity:
 
@@ -428,7 +415,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Delete(TableName)
+### Deleting via TableName
 
 Via PrimaryKey:
 
@@ -457,7 +444,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Merge<TEntity>
+### Merging a Data
 
 ```csharp
 var customer = new Customer
@@ -479,7 +466,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Merge(TableName)
+### Merging via TableName
 
 ```csharp
 var customer = new Customer
@@ -499,7 +486,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### ExecuteQuery
+### Executing a Customized-Query
 
 You can create a class with combined properties of different tables or with stored procedures. It does not need to be 100% identical to the schema, as long the property of the class is part of the result set.
 
@@ -563,7 +550,7 @@ The `ExecuteQuery` method is purposely not being supported by `Expression` based
 
 Note: The most optimal when it comes to performance is to used the `Object-Based`.
 
-### StoredProcedure
+### Calling a StoredProcedure
 
 Using the complex type above. If you have a stored procedure like below.
 
