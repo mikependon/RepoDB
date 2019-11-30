@@ -54,7 +54,7 @@ RepoDb is open for *community contributions* to further enhance the features and
 We would like to build a healthy and active community that would help fellow .NET developers when it comes to data accessibility. Please get in touch via:
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/serilog) - for any technical questions.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23serilog) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
