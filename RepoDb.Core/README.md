@@ -23,7 +23,7 @@ After the installation, any library operation can then be called.
 ### Query
 
 ```csharp
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(c => c.Id == 10045);
 }
@@ -38,7 +38,7 @@ var customer = new Customer
 	LastName = "Doe",
 	IsActive = true
 };
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var id = connection.Insert<Customer>(customer);
 }
@@ -47,7 +47,7 @@ using (var connection = new SQLiteConnection(ConnectionString))
 ### Update
 
 ```csharp
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
@@ -59,7 +59,7 @@ using (var connection = new SQLiteConnection(ConnectionString))
 ### Delete
 
 ```csharp
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);
