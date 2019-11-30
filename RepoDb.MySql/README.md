@@ -26,7 +26,7 @@ Install-Package RepoDb.MySql
 
 First, the bootstrapper must be initialized.
 
-```
+```csharp
 RepoDb.MySqlBootstrap.Initialize();
 ```
 
