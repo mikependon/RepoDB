@@ -2,7 +2,7 @@
 [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)
 [![MySqlDL](https://img.shields.io/nuget/dt/repodb.mysql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)
 [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
-[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
+[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
 
 ## RepoDb.MySql - a hybrid .NET ORM library for MySql.
 
@@ -37,7 +37,7 @@ After the bootstrap initialization, any library operation can then be called.
 ### Query
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new MySqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(c => c.Id == 10045);
 }
@@ -52,7 +52,7 @@ var customer = new Customer
 	LastName = "Doe",
 	IsActive = true
 };
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new MySqlConnection(ConnectionString))
 {
 	var id = connection.Insert<Customer>(customer);
 }
@@ -61,7 +61,7 @@ using (var connection = new SqlConnection(ConnectionString))
 ### Update
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new MySqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
@@ -73,7 +73,7 @@ using (var connection = new SqlConnection(ConnectionString))
 ### Delete
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new MySqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);
