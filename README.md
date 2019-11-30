@@ -55,7 +55,7 @@ We would like to build a healthy and active community that would help fellow .NE
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23serilog) - for the latest news.
+- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## Pull-Requests
