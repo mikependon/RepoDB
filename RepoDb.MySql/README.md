@@ -13,6 +13,7 @@ This is the official repository for **RepoDb.MySql** solution.
 - It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) impelentation.
 - It has batch operations; optimized the execution of multiple ***Insert***, ***Merge*** and ***Update***.
 - It is a unique and hybrid solution for ***MySql*** data-provider within ***.NET Technology***.
+- It is well-covered by Unit and Integration Tests.
 
 ## Installation
 
