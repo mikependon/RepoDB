@@ -45,6 +45,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -70,6 +71,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -100,6 +102,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -122,6 +125,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -144,6 +148,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -171,6 +176,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -197,6 +203,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -222,6 +229,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -252,6 +260,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -274,6 +283,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -296,6 +306,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -323,6 +334,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
@@ -354,6 +366,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -372,11 +385,12 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
                     tables);
-                
+
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -405,6 +419,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -425,6 +440,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
             }
         }
@@ -450,6 +466,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -480,6 +497,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -503,6 +521,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -526,6 +545,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -554,6 +574,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -577,6 +598,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
             }
         }
@@ -602,6 +624,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -632,6 +655,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -656,6 +680,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -679,6 +704,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -707,6 +733,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -727,6 +754,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
             }
         }
@@ -752,6 +780,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -782,6 +811,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -802,6 +832,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -825,6 +856,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -853,6 +885,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
             }
         }
@@ -873,6 +906,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
             }
         }
@@ -898,6 +932,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
@@ -928,6 +963,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
+                Assert.AreEqual(tables.Count(), queryResult.Count());
                 entities.ForEach(table => Assert.AreEqual(table.ColumnInt, queryResult.ElementAt((int)entities.IndexOf(table)).ColumnInt));
             }
         }
