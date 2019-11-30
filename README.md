@@ -34,7 +34,7 @@ RepoDb.MySql                   | [![MySqlBuild](https://img.shields.io/appveyor/
 
 This will be filled soon with the detailed benchmark information. For now, please refer to [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool for the benchmark results.
 
- *RepoDb is the fastest and most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.*
+*RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.*
 
 ## Supported Databases
 
