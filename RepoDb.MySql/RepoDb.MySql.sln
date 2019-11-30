@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MySql.Tests", "RepoD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTests", "RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{3C9481E3-0E7E-44C4-9728-A84B03398FC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{E24DF442-203B-48CF-9904-E3A0AA723FD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.UnitTests", "RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.MySql.UnitTests", "RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{5B81E622-71C1-4A8D-9019-2CBE95EC7088}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +27,14 @@ Global
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C9481E3-0E7E-44C4-9728-A84B03398FC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E24DF442-203B-48CF-9904-E3A0AA723FD0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B42BA57C-B9AE-42BD-97FC-D3346BA6166A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B81E622-71C1-4A8D-9019-2CBE95EC7088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B81E622-71C1-4A8D-9019-2CBE95EC7088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B81E622-71C1-4A8D-9019-2CBE95EC7088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B81E622-71C1-4A8D-9019-2CBE95EC7088}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
