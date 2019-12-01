@@ -240,8 +240,8 @@ var customer = new
 	FirstName = "John",
 	LastName = "Doe",
 	IsActive = true,
-	LastUpdatedUtc = DateTime.Utc,
-	CreatedDateUtc = DateTime.Utc
+	LastUpdatedUtc = DateTime.UtcNow,
+	CreatedDateUtc = DateTime.UtcNow
 };
 using (var connection = new SqlConnection(ConnectionString))
 {
