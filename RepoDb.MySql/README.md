@@ -6,7 +6,9 @@
 
 ## RepoDb.MySql - a hybrid .NET ORM library for MySql.
 
-This is the official repository for **RepoDb.MySql** solution. Any contributions (pull-requests) regarding **MySql** solution must be done on this code-line.
+This is the official repository for **RepoDb.MySql** solution.
+
+Any contribution (pull-requests) regarding **MySql** solution must be done on this code-line.
 
 ## What is with this library
 

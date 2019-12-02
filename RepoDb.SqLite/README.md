@@ -6,7 +6,9 @@
 
 ## RepoDb.SqLite - a hybrid .NET ORM library for SqLite.
 
-This is the official repository for **RepoDb.SqLite** solution. Any contribution (pull-requests) regarding **SqLite** solution must be done on this code-line.
+This is the official repository for **RepoDb.SqLite** solution.
+
+Any contribution (pull-requests) regarding **SqLite** solution must be done on this code-line.
 
 ## What is with this library
 

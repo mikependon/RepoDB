@@ -6,7 +6,9 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-This is the official repository for **RepoDb** solution. Any contribution (pull-requests) must be done on this code-line.
+This is the official repository for **RepoDb** solution.
+
+Any contribution (pull-requests) must be done on this code-line.
 
 ## Highlights
 
