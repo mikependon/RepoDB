@@ -8,9 +8,16 @@
 
 This is the official repository for **RepoDb** (NetFramework) solution.
 
-### This code-line will not be supported starting v1.10.1. This must not be pulled request.
+### This code-line will not be supported starting v1.10.1. This must not be pulled-request.
 
 To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) solution instead.
+
+### Community engagements
+
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## License
 
