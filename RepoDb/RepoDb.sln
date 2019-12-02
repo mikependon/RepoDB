@@ -3,74 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb", "RepoDb\RepoDb.csproj", "{A31A38C8-603E-4499-A5C1-4A6366864EA7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Tests", "RepoDb.Tests", "{98D41360-3B1C-408D-A273-DABD2E20DC3B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base", "{728FEBE2-F12A-496A-AF1D-B888CFF53DE9}"
-	ProjectSection(SolutionItems) = preProject
-		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
-		..\LICENSE.txt = ..\LICENSE.txt
-		..\README.md = ..\README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{6837AEC8-8A8C-48EE-9338-62D972BC4DB0}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\index.rst = ..\Docs\index.rst
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\pages\attributes.rst = ..\Docs\pages\attributes.rst
-		..\Docs\pages\cache.rst = ..\Docs\pages\cache.rst
-		..\Docs\pages\connection.rst = ..\Docs\pages\connection.rst
-		..\Docs\pages\contact.rst = ..\Docs\pages\contact.rst
-		..\Docs\pages\dbhelper.rst = ..\Docs\pages\dbhelper.rst
-		..\Docs\pages\enumeration.rst = ..\Docs\pages\enumeration.rst
-		..\Docs\pages\extensibility.rst = ..\Docs\pages\extensibility.rst
-		..\Docs\pages\field.rst = ..\Docs\pages\field.rst
-		..\Docs\pages\hints.rst = ..\Docs\pages\hints.rst
-		..\Docs\pages\installation.rst = ..\Docs\pages\installation.rst
-		..\Docs\pages\introduction.rst = ..\Docs\pages\introduction.rst
-		..\Docs\pages\orderfield.rst = ..\Docs\pages\orderfield.rst
-		..\Docs\pages\performance.rst = ..\Docs\pages\performance.rst
-		..\Docs\pages\persistency.rst = ..\Docs\pages\persistency.rst
-		..\Docs\pages\provideroperation.rst = ..\Docs\pages\provideroperation.rst
-		..\Docs\pages\querygroup.rst = ..\Docs\pages\querygroup.rst
-		..\Docs\pages\rawsql.rst = ..\Docs\pages\rawsql.rst
-		..\Docs\pages\repository.rst = ..\Docs\pages\repository.rst
-		..\Docs\pages\statementbuilder.rst = ..\Docs\pages\statementbuilder.rst
-		..\Docs\pages\support.rst = ..\Docs\pages\support.rst
-		..\Docs\pages\trace.rst = ..\Docs\pages\trace.rst
-		..\Docs\pages\transaction.rst = ..\Docs\pages\transaction.rst
-		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{C88AB92A-52E2-4868-A8CC-8CA41F332281}"
-	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Nuget\build.ps1 = ..\RepoDb.Nuget\build.ps1
-		..\RepoDb.Nuget\documentation.md = ..\RepoDb.Nuget\documentation.md
-		..\RepoDb.Nuget\install.txt = ..\RepoDb.Nuget\install.txt
-		..\RepoDb.Nuget\nuget.exe = ..\RepoDb.Nuget\nuget.exe
-		..\RepoDb.Nuget\Package.nuspec = ..\RepoDb.Nuget\Package.nuspec
-		..\RepoDb.Nuget\readme.txt = ..\RepoDb.Nuget\readme.txt
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{EECB6031-487B-4E8A-9034-71402FF2E5B2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{AE033D7F-CBBE-41EB-A7DA-8CDFAB326A73}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{CB794D5C-68C5-40BD-BF5F-52EF82A63F40}"
-	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Wiki\Files\HLA.pptx = ..\RepoDb.Wiki\Files\HLA.pptx
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{9FADAF02-04D5-4808-8AE3-CFD4E7E50187}"
-	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Wiki\Images\HLA.PNG = ..\RepoDb.Wiki\Images\HLA.PNG
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\RepoDb\RepoDb.csproj", "{B567EBFD-F0DC-40D7-9B09-6695A326E9C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,30 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A31A38C8-603E-4499-A5C1-4A6366864EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A31A38C8-603E-4499-A5C1-4A6366864EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A31A38C8-603E-4499-A5C1-4A6366864EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A31A38C8-603E-4499-A5C1-4A6366864EA7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B567EBFD-F0DC-40D7-9B09-6695A326E9C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B567EBFD-F0DC-40D7-9B09-6695A326E9C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B567EBFD-F0DC-40D7-9B09-6695A326E9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B567EBFD-F0DC-40D7-9B09-6695A326E9C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B} = {6837AEC8-8A8C-48EE-9338-62D972BC4DB0}
-		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
-		{EECB6031-487B-4E8A-9034-71402FF2E5B2} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
-		{CB794D5C-68C5-40BD-BF5F-52EF82A63F40} = {AE033D7F-CBBE-41EB-A7DA-8CDFAB326A73}
-		{9FADAF02-04D5-4808-8AE3-CFD4E7E50187} = {AE033D7F-CBBE-41EB-A7DA-8CDFAB326A73}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A2CDDAD3-7C25-4343-AFC6-0FF7CAD1B560}
+		SolutionGuid = {DB91B409-9CD2-4966-B0F9-802DA2BD02B6}
 	EndGlobalSection
 EndGlobal
