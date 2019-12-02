@@ -4,7 +4,7 @@
 [![UnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-g4ml5?label=unit&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5/build/tests)
 [![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-neg8t?label=integration&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-neg8t/build/tests)
 
-## RepoDb.MySql - a hybrid .NET ORM library for MySql.
+## RepoDb.MySql - a hybrid ORM library for .NET.
 
 This is the official repository for **RepoDb** (NetFramework) solution.
 
