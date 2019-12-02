@@ -44,7 +44,7 @@ Though most ORM represents their own to be fastest and most-efficient. However, 
 
 Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt). Showing only top 15 results.
 
-### Performance
+#### Performance - refers to speed
 
 ORM                                                                   | In Milliseconds   |
 ----------------------------------------------------------------------|-------------------|
@@ -64,7 +64,7 @@ LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 101,00ms
 Dapper v1.60.0.0                                                      | 105,82ms (0,38ms) |	
 ServiceStack OrmLite v5.0.0.0 (v5.5.0.0)                              | 110,44ms (0,46ms) |
 
-### Efficiency
+#### Efficiency - refers to memory-consumptions
 
 ORM                                                                   | In KB (bytes)                |
 ----------------------------------------------------------------------|------------------------------|
@@ -84,9 +84,9 @@ Raw DbDataReader materializer using object arrays                     | 31.048 K
 LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with QuerySpec         | 31.861 KB (32.626.336 bytes) |
 LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 32.471 KB (33.250.640 bytes) |
 
-*RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.*
+***RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.***
 
-**Note**: I will always update this result if there is a new execution result.
+This section will always be updated with the latest official result.
 
 ### Extensibility
 
