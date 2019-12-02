@@ -28,9 +28,21 @@ Project/Solution                                                                
 [RepoDb.SqLite](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite) | [![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o6787) | [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) | [![SqLiteDL](https://img.shields.io/nuget/dt/repodb.sqlite?style=flat-square)](https://www.nuget.org/packages/RepoDb.SqLite) | [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests) | [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests) |
 [RepoDb.MySql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql)   | [![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)  | [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    | [![MySqlDL](https://img.shields.io/nuget/dt/repodb.mysql?style=flat-square)](https://www.nuget.org/packages/RepoDb.MySql)    | [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)  | [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)  |
 
+## Supported Databases
+
+Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the “Execute” methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
+
+### Fully supported databases for fluent-methods
+
+<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="64px" title="MySql" />
+
+RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
+
 ## Benchmark
 
-Though most ORM represents their own to be fastest and most-efficient. However, being the Author to this library and to avoid the bias on the results, the benchmark to be shown on this page will always be referring to the community approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool). Results below is based on the recent official execution result.
+Though most ORM represents their own to be fastest and most-efficient. However, *being the author to this library and to avoid the bias on the results*, the benchmark to be shown on this page will always be referring to the community approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+
+Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt). Showing only top 15 results.
 
 ### Performance
 
@@ -50,11 +62,7 @@ LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with QuerySpec         | 99,45ms 
 Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 100,12ms (0,87ms) |	
 LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 101,00ms (0,71ms) |	
 Dapper v1.60.0.0                                                      | 105,82ms (0,38ms) |	
-ServiceStack OrmLite v5.0.0.0 (v5.5.0.0)                              | 110,44ms (0,46ms) |	
-NPoco v3.9.4.0 (v3.9.4.0)                                             | 119,03ms (1,75ms) |	
-Handcoded materializer using DbDataReader and GetFieldValue<T>        | 125,67ms (0,51ms) |	
-LLBLGen Pro v5.5.0.0 (v5.5.3), DataTable based TypedView              | 174,01ms (1,13ms) |	
-Tortuga Chain v2.1.0.0                                                | 187,43ms (1,08ms) |	
+ServiceStack OrmLite v5.0.0.0 (v5.5.0.0)                              | 110,44ms (0,46ms) |
 
 ### Efficiency
 
@@ -75,24 +83,10 @@ Dapper v1.60.0.0                                                      | 30.834 K
 Raw DbDataReader materializer using object arrays                     | 31.048 KB (31.793.456 bytes) |
 LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with QuerySpec         | 31.861 KB (32.626.336 bytes) |
 LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 32.471 KB (33.250.640 bytes) |
-ServiceStack OrmLite v5.0.0.0 (v5.5.0.0)                              | 33.784 KB (34.595.352 bytes) |
-NPoco v3.9.4.0 (v3.9.4.0)                                             | 41.031 KB (42.016.304 bytes) |
-Tortuga Chain v2.1.0.0                                                | 43.685 KB (44.734.112 bytes) |
-LLBLGen Pro v5.5.0.0 (v5.5.3), DataTable based TypedView              | 56.336 KB (57.688.752 bytes) |
 
 *RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.*
 
 **Note**: I will always update this result if there is a new execution result.
-
-## Supported Databases
-
-Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the “Execute” methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
-
-### Fully supported databases for fluent-methods
-
-<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="64px" title="MySql" />
-
-RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
 
 ### Extensibility
 
