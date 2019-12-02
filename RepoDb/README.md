@@ -8,6 +8,8 @@
 
 This is the official repository for **RepoDb** (NetFramework) solution.
 
+## Contribution
+
 ### This code-line will not be supported starting v1.10.1. This must not be pulled-request.
 
 To contribute, please proceed to [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) solution instead.
