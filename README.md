@@ -52,18 +52,18 @@ RepoDb is highly extensible and dynamic enough to further support other RDBMS da
 
 RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is a micro-ORM, but it really requires significant amount of time and effort to maintain.
 
-We are open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
+It is now open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
 
 ### Community engagements
 
-We would like to build a healthy and active community that would help fellow .NET developers when it comes to data accessibility. Please get in touch via:
+An an author, I would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch via:
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
-Any help from the community will be highly appreciated as it helps us eliminate our full-efforts. 
+Any help from the community will be highly appreciated as it really helps me eliminate my full-efforts. 
 
 ## Pull-Requests
 
@@ -116,7 +116,7 @@ Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName
 
 ## Installations
 
-RepoDb and its extension is available via Nuget as a NetStandard library. Type the commands below at the Package Manager Console.
+RepoDb and its extension is available via Nuget as a NetStandard library. Type the commands below at the ***Package Manager Console*** window.
 
 ```
 Install-Package RepoDb
