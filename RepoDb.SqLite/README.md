@@ -10,8 +10,8 @@ This is the official repository for **RepoDb.SqLite** solution.
 
 ## What is with this library
 
-- It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) impelentation.
-- It has batch operations; optimized the execution of multiple ***Insert***, ***Merge*** and ***Update***.
+- It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) implementation.
+- It has batch operations; optimized the execution of multiple operations(ie: ***QueryMultiple***, ***InsertAll***, ***MergeAll*** and ***UpdateAll***).
 - It is a unique and hybrid solution for ***SqLite*** data-provider within ***.NET Technology***.
 - It is well-covered by Unit and Integration Tests.
 
@@ -80,5 +80,14 @@ using (var connection = new SQLiteConnection(ConnectionString))
 	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
+
+## Dependecies
+
+- [RepoDb (>= 1.10.1)](https://www.nuget.org/packages/RepoDb.SqLite/)
+- [System.Data.SQLite (>= 1.0.112)](https://www.nuget.org/packages/System.Data.SQLite/)
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
 
 Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
