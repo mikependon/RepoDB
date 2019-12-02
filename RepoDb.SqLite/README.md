@@ -83,13 +83,13 @@ using (var connection = new SQLiteConnection(ConnectionString))
 }
 ```
 
-## Dependecies
+## Dependencies
 
 - [RepoDb (>= 1.10.1)](https://www.nuget.org/packages/RepoDb.SqLite/)
 - [System.Data.SQLite (>= 1.0.112)](https://www.nuget.org/packages/System.Data.SQLite/)
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright Â© 2019 - Michael Camara Pendon
 
 Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
