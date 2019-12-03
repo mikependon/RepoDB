@@ -8,8 +8,6 @@
 
 This is the official repository for **RepoDb.MySql** solution.
 
-Any contribution (pull-requests) regarding **MySql** solution must be done on this code-line.
-
 ## What is with this library
 
 - It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) implementation.

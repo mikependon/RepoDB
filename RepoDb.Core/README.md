@@ -8,8 +8,6 @@
 
 This is the official repository for **RepoDb** solution.
 
-Any contribution (pull-requests) must be done on this code-line.
-
 ## Highlights
 
 - RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
