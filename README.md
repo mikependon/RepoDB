@@ -36,13 +36,50 @@ Practically, RepoDb has supported all RDBMS data-providers. Developers has the f
 
 <img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="64px" title="MySql" />
 
-RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
+RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data 
+
+### Extensibility
+
+RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the author for help.
+
+## Community
+
+RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is a micro-ORM, but it really requires significant amount of time and effort to maintain.
+
+It is now open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
+
+### Community engagements
+
+An an author, I would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch via:
+
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+
+Any help from the community will be highly appreciated as it really helps me eliminate my full-efforts. 
+
+## Pull-Requests
+
+The folder ***RepoDb.Core*** is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
+
+The folder ***RepoDb*** is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
+
+To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](https://github.com/mikependon/RepoDb/issues)) tab and filter the list of items with **for grabs** label.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+
+results.
+
+providers.
 
 ## Benchmark
 
 Though most ORM represents their own to be fastest and most-efficient. However, *being the author to this library and to avoid the bias on the results*, the benchmark to be shown on this page will always be referring to the community approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
 
-Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt). Showing only top 15 results.
+Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt). Showing only top 15
 
 #### Performance - refers to speed
 
@@ -87,39 +124,6 @@ LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 32.471 K
 ***RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.***
 
 This section will always be updated with the latest official result.
-
-### Extensibility
-
-RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the author for help.
-
-## Community
-
-RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is a micro-ORM, but it really requires significant amount of time and effort to maintain.
-
-It is now open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
-
-### Community engagements
-
-An an author, I would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch via:
-
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
-
-Any help from the community will be highly appreciated as it really helps me eliminate my full-efforts. 
-
-## Pull-Requests
-
-The folder ***RepoDb.Core*** is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
-
-The folder ***RepoDb*** is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
-
-To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](https://github.com/mikependon/RepoDb/issues)) tab and filter the list of items with **for grabs** label.
-
-## License
-
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
 
 ## Operations
 

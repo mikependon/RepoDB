@@ -83,13 +83,13 @@ using (var connection = new MySqlConnection(ConnectionString))
 }
 ```
 
-## Dependecies
+## Dependencies
 
 - [MySql.Data (>= 8.0.18)](https://www.nuget.org/packages/MySql.Data/)
 - [RepoDb (>= 1.10.1)](https://www.nuget.org/packages/RepoDb.SqLite/)
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright Â© 2019 - Michael Camara Pendon
 
 Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
