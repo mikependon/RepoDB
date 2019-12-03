@@ -15,6 +15,13 @@ Any contribution (pull-requests) must be done on this code-line.
 - RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 - RepoDb is covered by thousand of major business related [Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests) and [Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests).
 
+## Community engagements
+
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+
 ## Core Features
  
 - Asynchronous Operations
@@ -38,12 +45,15 @@ Any contribution (pull-requests) must be done on this code-line.
 - Transaction
 - Type Mapping
 
-### Community engagements
+## Bulk Operations 
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+In the case of SQL Server, the bulk-insert has been implemented through `SqlBulkCopy` class of ADO.Net. Below is the implementation (as extended methods).
+
+`
+BaseRepository<TEntity, TDbConnection>.BulkInsert(...);
+DbRepository<TDbConnection>.BulkInsert<TEntity>(...);
+SqlConnection.BulkInsert<TEntity>(...);
+`
 
 ## Installation
 
