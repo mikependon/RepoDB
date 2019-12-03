@@ -73,11 +73,11 @@ To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](h
 
 ## Benchmark
 
-Though most author represents their own ORM to be fastest and the most-efficient. However, being **the author** to this library and to **avoid the bias** on the results, the benchmark to be shown on this page will always be referring to the community-approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+Being the **author** of this library and to **avoid the bias** on the results, the benchmark to be shown on this page will always be referring to the community-approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
 
 Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/BencherResultForReadMe.PNG" height="350px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/BencherResultForReadMe.PNG" height="400px" />
 
 RepoDb is the **fastest** and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
