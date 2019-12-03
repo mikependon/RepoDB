@@ -71,57 +71,15 @@ To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](h
 
 [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
 
-results.
-
-providers.
-
 ## Benchmark
 
-Though most ORM represents their own to be fastest and most-efficient. However, *being the author to this library and to avoid the bias on the results*, the benchmark to be shown on this page will always be referring to the community approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+Though most author represents their own ORM to be fastest and the most-efficient. However, being **the author** to this library and to **avoid the bias** on the results, the benchmark to be shown on this page will always be referring to the community-approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
 
-Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt). Showing only top 15
+Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-#### Performance - refers to speed
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/BencherResultForReadMe.PNG" height="350px" />
 
-ORM                                                                   | In Milliseconds   |
-----------------------------------------------------------------------|-------------------|
-Handcoded materializer using DbDataReader                             | 79,64ms (0,45ms)  |
-RepoDb (RawSql) v1.9.5.0                                              | 81,73ms (0,47ms)  |
-RepoDb (Poco) v1.9.5.0                                                | 84,50ms (0,57ms)  |
-LINQ to DB v2.7.0.0 (v2.7.0) (compiled)                               | 87,15ms (0,64ms)  |
-LINQ to DB v2.7.0.0 (v2.7.0) (normal)                                 | 87,28ms (0,27ms)  |
-LLBLGen Pro v5.5.0.0 (v5.5.3), Poco with Raw SQL                      | 89,05ms (0,38ms)  |
-Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 93,03ms (0,31ms)  |
-Entity Framework Core v2.2.4.0 (v2.2.4.19081)                         | 93,19ms (1,02ms)  |
-Tortuga Chain, Compiled v2.1.0.0                                      | 97,18ms (0,21ms)  |
-Raw DbDataReader materializer using object arrays                     | 98,84ms (4,41ms)  |
-LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with QuerySpec         | 99,45ms (0,38ms)  |
-Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 100,12ms (0,87ms) |	
-LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 101,00ms (0,71ms) |	
-Dapper v1.60.0.0                                                      | 105,82ms (0,38ms) |	
-ServiceStack OrmLite v5.0.0.0 (v5.5.0.0)                              | 110,44ms (0,46ms) |
-
-#### Efficiency - refers to memory-consumptions
-
-ORM                                                                   | In KB (bytes)                |
-----------------------------------------------------------------------|------------------------------|
-Handcoded materializer using DbDataReader                             | 15.202 KB (15.567.648 bytes) |
-RepoDb (RawSql) v1.9.5.0                                              | 15.205 KB (15.570.656 bytes) |
-LLBLGen Pro v5.5.0.0 (v5.5.3), Poco with Raw SQL                      | 15.206 KB (15.571.696 bytes) |
-RepoDb (Poco) v1.9.5.0                                                | 15.213 KB (15.578.736 bytes) |
-LINQ to DB v2.7.0.0 (v2.7.0) (normal)                                 | 15.989 KB (16.373.344 bytes) |
-LINQ to DB v2.7.0.0 (v2.7.0) (compiled)                               | 15.994 KB (16.378.776 bytes) |
-Tortuga Chain, Compiled v2.1.0.0                                      | 17.182 KB (17.594.448 bytes) |
-Entity Framework Core v2.2.4.0 (v2.2.4.19081)                         | 20.153 KB (20.637.616 bytes) |
-Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 30.833 KB (31.573.912 bytes) |
-Handcoded materializer using DbDataReader and GetFieldValue<T>        | 30.833 KB (31.573.912 bytes) |
-Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 30.834 KB (31.574.144 bytes) |
-Dapper v1.60.0.0                                                      | 30.834 KB (31.574.216 bytes) |
-Raw DbDataReader materializer using object arrays                     | 31.048 KB (31.793.456 bytes) |
-LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with QuerySpec         | 31.861 KB (32.626.336 bytes) |
-LLBLGen Pro v5.5.0.0 (v5.5.3), Poco typed view with Linq              | 32.471 KB (33.250.640 bytes) |
-
-***RepoDb is the fastest and the most-efficient ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.***
+RepoDb is the **fastest** and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
 This section will always be updated with the latest official result.
 
