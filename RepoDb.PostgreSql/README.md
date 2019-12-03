@@ -1,6 +1,6 @@
 ## Disclaimer
 
-#### This code-line is still under-development as [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) v1.10.1.
+#### This code-line is still under-development as of [RepoDb.Core] version (https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) v1.10.1.
 
 [![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
 [![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?style=flat-square)](https://www.nuget.org/packages/RepoDb.PostgreSql)
