@@ -40,7 +40,7 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 
 ### Extensibility
 
-RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the author for help.
+RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the me (as an author) for help.
 
 ## Community
 
@@ -50,7 +50,7 @@ It is now open for *community contributions* to further enhance the features of 
 
 ### Community engagements
 
-An an author, I would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch via:
+As an author, I would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch via:
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
