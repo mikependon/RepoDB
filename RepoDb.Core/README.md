@@ -47,11 +47,11 @@ This is the official repository for **RepoDb** solution.
 
 In the case of SQL Server, the bulk-insert has been implemented through `SqlBulkCopy` class of ADO.Net. Below is the implementation (as extended methods).
 
-`
+```
 BaseRepository<TEntity, TDbConnection>.BulkInsert(...);
 DbRepository<TDbConnection>.BulkInsert<TEntity>(...);
 SqlConnection.BulkInsert<TEntity>(...);
-`
+```
 
 ## Installation
 

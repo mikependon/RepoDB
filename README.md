@@ -61,9 +61,9 @@ Any help from the community will be highly appreciated as it really helps me eli
 
 ## Pull-Requests
 
-The folder ***RepoDb.Core*** is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
+The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
 
-The folder ***RepoDb*** is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
+The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
 
 To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](https://github.com/mikependon/RepoDb/issues)) tab and filter the list of items with **for grabs** label.
 
