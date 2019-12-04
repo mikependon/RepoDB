@@ -88,6 +88,8 @@
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Connection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#average">Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#averageall">AverageAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batchquery">BatchQuery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bulkinsert">BulkInsert</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#count">Count</a></li>
@@ -101,19 +103,30 @@
 <li class="toctree-l2"><a class="reference internal" href="#executequerymultiple">ExecuteQueryMultiple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#executereader">ExecuteReader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#executescalar">ExecuteScalar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exists">Exists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getdbsetting">GetDbSetting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getdbhelper">GetDbHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getstatementbuilder">GetStatementBuilder</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#insert">Insert</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#insertall">InsertAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#max">Max</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maxall">MaxAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#merge">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mergeall">MergeAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#min">Min</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#minall">MinAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#query">Query</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#queryall">QueryAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#querymultiple">QueryMultiple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sum">Sum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sumall">SumAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#truncate">Truncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update">Update</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#updateall">UpdateAll</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
@@ -195,6 +208,78 @@
   <div class="section" id="connection">
 <h1>Connection<a class="headerlink" href="#connection" title="Permalink to this headline">¶</a></h1>
 <p>The library has abstracted everything from <cite>ADO.NET</cite> when it comes to the connection object.</p>
+<p><strong>Note</strong>: All the operations provided has an equivalent <cite>Async</cite> and/or <cite>TableName</cite> methods.</p>
+<div class="section" id="average">
+<h2>Average<a class="headerlink" href="#average" title="Permalink to this headline">¶</a></h2>
+<p>Averages the target field from the database table.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Average</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="n">OrderDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Expression way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Average</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span> <span class="p">&amp;&amp;</span> <span class="n">e</span><span class="p">.</span><span class="n">OrderDate</span> <span class="p">==</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Average</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Records can all also be counted via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Average</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Average</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: By setting the <cite>where</cite> argument to blank would count all the records. Exactly the same as <cite>AverageAll</cite> operation.</p>
+</div>
+<div class="section" id="averageall">
+<h2>AverageAll<a class="headerlink" href="#averageall" title="Permalink to this headline">¶</a></h2>
+<p>Averages the target field from all data of the database table.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">AverageAll</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All records can all also be averaged via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">AverageAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="batchquery">
 <h2>BatchQuery<a class="headerlink" href="#batchquery" title="Permalink to this headline">¶</a></h2>
 <p>Queries a data from the database by batch.</p>
@@ -236,7 +321,8 @@
                 <span class="m">0</span><span class="p">,</span>
                 <span class="m">24</span><span class="p">,</span>
                 <span class="k">new</span> <span class="nf">OrderField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">).</span><span class="n">AsEnumerable</span><span class="p">(),</span>
-                <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+                <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span>
+                <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="s">&quot;Address&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -247,14 +333,15 @@
                 <span class="m">0</span><span class="p">,</span>
                 <span class="m">24</span><span class="p">,</span>
                 <span class="k">new</span> <span class="nf">OrderField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">).</span><span class="n">AsEnumerable</span><span class="p">(),</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="n">fields</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="s">&quot;Address&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="bulkinsert">
 <h2>BulkInsert<a class="headerlink" href="#bulkinsert" title="Permalink to this headline">¶</a></h2>
-<p>Bulk insert a list of data entity objects into the database.</p>
+<p>Bulk insert a list of data entity objects into the database. Only available for SQL Server data provider.</p>
 <p>Create a list to hold the data entities.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
 </pre></div>
@@ -272,7 +359,7 @@
 <p>Call the <cite>BulkInsert</cite> operation to insert the data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">orders</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">orders</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -291,13 +378,14 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Via entity type</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
 
         <span class="c1">// Via table name</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p><strong>Note</strong>: Beware of the <cite>COLLATION</cite> for the cross-database <cite>BulkInsert</cite> operation.</p>
 </div>
 <div class="section" id="count">
 <h2>Count<a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h2>
@@ -305,21 +393,21 @@
 <p>Dynamic way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -327,14 +415,14 @@
 <p>Dynamic way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -345,14 +433,7 @@
 <p>Counts all the table data from the database.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CountAll</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>with hints.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CountAll</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -360,14 +441,7 @@
 <p>Dynamic way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CountAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>with hints.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">counted</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CountAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CountAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -398,35 +472,35 @@
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">10045</span><span class="p">);</span>
         <span class="p">...</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">customer</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">customer</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Via PrimaryKey:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">10045</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">10045</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Via Dynamic:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -434,14 +508,14 @@
 <p>Via Dynamic:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -459,7 +533,7 @@
 <p>All records can also be deleted via table name.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">DeleteAll</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">DeleteAll</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -857,6 +931,92 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="exists">
+<h2>Exists<a class="headerlink" href="#exists" title="Permalink to this headline">¶</a></h2>
+<p>Check whether the records are existing in the table.</p>
+<p>Via DataEntity:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">10045</span><span class="p">);</span>
+        <span class="p">...</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">(</span><span class="n">customer</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Via PrimaryKey:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">10045</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Via Dynamic:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Expression way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Records can also be checked via table name.</p>
+<p>Via Dynamic:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Exists</span><span class="p">(</span><span class="s">&quot;Customer&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getdbsetting">
+<h2>GetDbSetting<a class="headerlink" href="#getdbsetting" title="Permalink to this headline">¶</a></h2>
+<p>Gets the associated <cite>IDbSetting</cite> object that is currently mapped for the target <cite>IDbConnection</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">setting</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">GetDbSetting</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getdbhelper">
+<h2>GetDbHelper<a class="headerlink" href="#getdbhelper" title="Permalink to this headline">¶</a></h2>
+<p>Gets the associated <cite>IDbHelper</cite> object that is currently mapped for the target <cite>IDbConnection</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">helper</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">GetDbHelper</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getstatementbuilder">
+<h2>GetStatementBuilder<a class="headerlink" href="#getstatementbuilder" title="Permalink to this headline">¶</a></h2>
+<p>Gets the associated <cite>IStatementBuilder</cite> object that is currently mapped for the target <cite>IDbConnection</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">GetStatementBuilder</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="insert">
 <h2>Insert<a class="headerlink" href="#insert" title="Permalink to this headline">¶</a></h2>
 <p>Inserts a new data in the database.</p>
@@ -940,6 +1100,77 @@
 <p>This is optional since this is an insert operation. However, by default, the library will use the database columns of the <cite>Order</cite> entity. If the values to that argument is not set, then <cite>InsertAll</cite> operation will set it to <cite>null</cite> in the database.</p>
 <p><strong>Note</strong>: Use the table-name-based calls if the scenario is to only insert targetted columns.</p>
 </div>
+<div class="section" id="max">
+<h2>Max<a class="headerlink" href="#max" title="Permalink to this headline">¶</a></h2>
+<p>Maximizes the target field from the database table.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Max</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="n">OrderDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Expression way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Max</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span> <span class="p">&amp;&amp;</span> <span class="n">e</span><span class="p">.</span><span class="n">OrderDate</span> <span class="p">==</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Max</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Records can all also be counted via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Max</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Max</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: By setting the <cite>where</cite> argument to blank would count all the records. Exactly the same as <cite>MaxAll</cite> operation.</p>
+</div>
+<div class="section" id="maxall">
+<h2>MaxAll<a class="headerlink" href="#maxall" title="Permalink to this headline">¶</a></h2>
+<p>Maximizes the target field from all data of the database table.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">MaxAll</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All records can all also be maximized via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">MaxAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="merge">
 <h2>Merge<a class="headerlink" href="#merge" title="Permalink to this headline">¶</a></h2>
 <p>Merges a data entity or dynamic object into the database.</p>
@@ -1010,6 +1241,77 @@
 <p><strong>Why passing the fields arguments?</strong></p>
 <p>Be aware on this behavior since this is a merge operation. By default, the library will use the database columns of the <cite>Order</cite> entity. If the values to that fields has not been set, then <cite>MergeAll</cite> operation will set it to <cite>null</cite> in the database. By setting the <cite>fields</cite> argument, it will only merge the listed <cite>fields</cite> in the batch operations.</p>
 <p><strong>Note</strong>: Use the table-name-based calls if the scenario is to only merge targetted columns.</p>
+</div>
+<div class="section" id="min">
+<h2>Min<a class="headerlink" href="#min" title="Permalink to this headline">¶</a></h2>
+<p>Minimizes the target field from the database table.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Min</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="n">OrderDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Expression way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Min</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span> <span class="p">&amp;&amp;</span> <span class="n">e</span><span class="p">.</span><span class="n">OrderDate</span> <span class="p">==</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Min</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Records can all also be counted via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: By setting the <cite>where</cite> argument to blank would count all the records. Exactly the same as <cite>MinAll</cite> operation.</p>
+</div>
+<div class="section" id="minall">
+<h2>MinAll<a class="headerlink" href="#minall" title="Permalink to this headline">¶</a></h2>
+<p>Minimizes the target field from all data of the database table.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">MinAll</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All records can all also be minimized via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">MinAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="query">
 <h2>Query<a class="headerlink" href="#query" title="Permalink to this headline">¶</a></h2>
@@ -1214,6 +1516,77 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
 </div>
 <p><strong>Note</strong>: This method does not support the <cite>Object-Based</cite> query tree expression.</p>
 </div>
+<div class="section" id="sum">
+<h2>Sum<a class="headerlink" href="#sum" title="Permalink to this headline">¶</a></h2>
+<p>Summarizes the target field from the database table.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Sum</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="n">OrderDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Expression way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Sum</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span>
+                <span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span> <span class="p">&amp;&amp;</span> <span class="n">e</span><span class="p">.</span><span class="n">OrderDate</span> <span class="p">==</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Sum</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">,</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Records can all also be counted via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Sum</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">queryGroup</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+        <span class="p">(</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">),</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Sum</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">),</span> <span class="n">queryGroup</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: By setting the <cite>where</cite> argument to blank would count all the records. Exactly the same as <cite>SumAll</cite> operation.</p>
+</div>
+<div class="section" id="sumall">
+<h2>SumAll<a class="headerlink" href="#sumall" title="Permalink to this headline">¶</a></h2>
+<p>Summarizes the target field from all data of the database table.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">SumAll</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Price</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All records can all also be summarized via table name.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">SumAll</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Price&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="truncate">
 <h2>Truncate<a class="headerlink" href="#truncate" title="Permalink to this headline">¶</a></h2>
 <p>Truncates a table from the database.</p>
@@ -1246,14 +1619,14 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
 <p>Via DataEntity:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Via PrimaryKey:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">,</span> <span class="m">1002</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">,</span> <span class="m">1002</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1261,21 +1634,21 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
 <p>Via Dynamic:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1002</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1002</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">,</span> <span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">1002</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">,</span> <span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">1002</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="m">1002</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="m">1002</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1289,7 +1662,7 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">UpdateDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">};</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1002</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1002</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1302,7 +1675,7 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">UpdateDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">};</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="m">1002</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">entity</span><span class="p">,</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="m">1002</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>

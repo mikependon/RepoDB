@@ -89,12 +89,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-new-instance">Creating a new Instance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#asenumerable">AsEnumerable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#from">From</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-type">Parse Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-entity">Parse Entity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-object">Parse Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-expression">Parse Expression</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usage-of-field">Usage of Field</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
@@ -211,7 +216,37 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>:  When using this method, the <cite>Type</cite> parameter is not being set. The library will then not set the <cite>DbType</cite> value of the <cite>DbCommand</cite> object. By default, ADO.NET uses the <cite>DbType.String</cite> value.</p>
+<p><strong>Note</strong>:  When using this method, the <cite>Type</cite> parameter is not being set. The library will then not set the <cite>DbType</cite> value of the <cite>DbCommand</cite> object. By default, ADO.NET uses the <cite>DbType.String</cite> value.
+light:: c#</p>
+</div>
+<div class="section" id="parse-type">
+<h2>Parse Type<a class="headerlink" href="#parse-type" title="Permalink to this headline">¶</a></h2>
+<p>Is used to parse a .NET CLR type and convert it back as an enumerable.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Customer</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parse-entity">
+<h2>Parse Entity<a class="headerlink" href="#parse-entity" title="Permalink to this headline">¶</a></h2>
+<p>Is used to parse an entity type and convert it back as an enumerable.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parse-object">
+<h2>Parse Object<a class="headerlink" href="#parse-object" title="Permalink to this headline">¶</a></h2>
+<p>Is used to parse an object and convert it back as an enumerable.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Customer</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">customer</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parse-expression">
+<h2>Parse Expression<a class="headerlink" href="#parse-expression" title="Permalink to this headline">¶</a></h2>
+<p>Is used to parse an expression and convert it back as an enumerable.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">Id</span><span class="p">).</span><span class="n">AsEnumerable</span><span class="p">();</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="usage-of-field">
 <h2>Usage of Field<a class="headerlink" href="#usage-of-field" title="Permalink to this headline">¶</a></h2>

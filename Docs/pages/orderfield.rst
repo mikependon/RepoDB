@@ -67,8 +67,8 @@ Parses a property from the data entity object based on the given `Expression` an
 
 	var orderField = OrderField.Descending<Customer>(c => c.Id);
 
-Parse (via Expression)
-----------------------
+Parse Expression
+----------------
 
 Parses a property from the data entity object based on the given `Expression` and converts the result to `OrderField` object.
 
@@ -86,8 +86,8 @@ Parse descending:
 
 	var orderField = OrderField.Parse<Customer>(c => c.Id, Order.Descending);
 
-Parse (via Object)
-----------------------
+Parse Object
+------------
 
 Parses an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have a value of `Enumerations.Order` enumeration.
 

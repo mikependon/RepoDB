@@ -3,6 +3,101 @@ Connection
 
 The library has abstracted everything from `ADO.NET` when it comes to the connection object.
 
+**Note**: All the operations provided has an equivalent `Async` and/or `TableName` methods.
+
+Average
+-------
+
+Averages the target field from the database table.
+
+.. highlight:: c#
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Average<Order>(e => e.Price,
+			new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Average<Order>(e => e.Price,
+			e => e.CustomerId == 10045 && e.OrderDate == DateTime.UtcNow.Date);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Average<Order>(e => e.Price, queryGroup);
+	}
+
+Records can all also be counted via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Average("Order", new Field("Price"), new { CustomerId = 10045 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Average("Order", new Field("Price"), queryGroup);
+	}
+
+**Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `AverageAll` operation.
+
+AverageAll
+----------
+
+Averages the target field from all data of the database table.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.AverageAll<Order>(e => e.Price);
+	}
+
+All records can all also be averaged via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.AverageAll("Order", new Field("Price"));
+	}
+
 BatchQuery
 ----------
 
@@ -58,7 +153,8 @@ Dynamic way:
 			0,
 			24,
 			new OrderField("Id", Order.Ascending).AsEnumerable(),
-			new { CustomerId = 10045 });
+			new { CustomerId = 10045 },
+			fields: Field.From("Id", "Name", "Address"));
 	}
 
 Explicit way:
@@ -71,13 +167,14 @@ Explicit way:
 			0,
 			24,
 			new OrderField("Id", Order.Ascending).AsEnumerable(),
-			new QueryField(nameof(Order.CustomerId), 10045));
+			new QueryField(nameof(Order.CustomerId), 10045),
+			fields: Field.From("Id", "Name", "Address"));
 	}
 
 BulkInsert
 ----------
 
-Bulk insert a list of data entity objects into the database.
+Bulk insert a list of data entity objects into the database. Only available for SQL Server data provider.
 
 .. highlight:: c#
 
@@ -105,7 +202,7 @@ Call the `BulkInsert` operation to insert the data.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.BulkInsert<Order>(orders);
+		var result = connection.BulkInsert<Order>(orders);
 	}
 
 The result would be the number of rows affected by the `BulkInsert` in the database.
@@ -131,11 +228,13 @@ Call the `BulkInsert` operation by passing the `DbDataReader` object as the para
 	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Via entity type
-		var affectedRows = connection.BulkInsert<Order>(reader);
+		var result = connection.BulkInsert<Order>(reader);
 
 		// Via table name
-		var affectedRows = connection.BulkInsert(reader, nameof(Order));
+		var result = connection.BulkInsert(reader, nameof(Order));
 	}
+
+**Note**: Beware of the `COLLATION` for the cross-database `BulkInsert` operation.
 
 Count
 -----
@@ -150,7 +249,7 @@ Dynamic way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.Count<Order>(new { CustomerId = 10045 });
+		var result = connection.Count<Order>(new { CustomerId = 10045 });
 	}
 
 Expression way:
@@ -159,7 +258,7 @@ Expression way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.Count<Order>(o => o.CustomerId == 10045);
+		var result = connection.Count<Order>(o => o.CustomerId == 10045);
 	}
 
 Explicit way:
@@ -168,7 +267,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.Count<Order>(new QueryField(nameof(Order.CustomerId), 10045));
+		var result = connection.Count<Order>(new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
 Records can all also be counted via table name.
@@ -179,7 +278,7 @@ Dynamic way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.Count("Order", new { CustomerId = 10045 });
+		var result = connection.Count("Order", new { CustomerId = 10045 });
 	}
 
 Explicit way:
@@ -188,7 +287,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.Count("Order", new QueryField(nameof(Order.CustomerId), 10045));
+		var result = connection.Count("Order", new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
 **Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `CountAll` operation.
@@ -204,16 +303,7 @@ Counts all the table data from the database.
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.CountAll<Order>();
-	}
-
-with hints.
-
-::
-
-	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var counted = connection.Count<Order>(SqlTableHints.NoLock);
+		var result = connection.CountAll<Order>();
 	}
 
 All records can all also be counted via table name.
@@ -224,16 +314,7 @@ Dynamic way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var counted = connection.CountAll("Order");
-	}
-
-with hints.
-
-::
-
-	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var counted = connection.CountAll("Order", SqlTableHints.NoLock);
+		var result = connection.CountAll("Order");
 	}
 
 CreateCommand
@@ -273,7 +354,7 @@ Via DataEntity:
 	{
 		var customer = connection.Query<Customer>(10045);
 		...
-		var affectedRows = connection.Delete(customer);
+		var result = connection.Delete(customer);
 	}
 
 Via PrimaryKey:
@@ -282,7 +363,7 @@ Via PrimaryKey:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(10045);
+		var result = connection.Delete<Customer>(10045);
 	}
 
 Via Dynamic:
@@ -291,7 +372,7 @@ Via Dynamic:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(new { Id = 10045 });
+		var result = connection.Delete<Customer>(new { Id = 10045 });
 	}
 	
 Expression way:
@@ -300,7 +381,7 @@ Expression way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(c => c.Id == 10045);
+		var result = connection.Delete<Customer>(c => c.Id == 10045);
 	}
 	
 Explicit way:
@@ -309,7 +390,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(new QueryField(nameof(Order.CustomerId), 10045));
+		var result = connection.Delete<Customer>(new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
 Records can also be deleted via table name.
@@ -320,7 +401,7 @@ Via Dynamic:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete("Customer", new { Id = 10045 });
+		var result = connection.Delete("Customer", new { Id = 10045 });
 	}
 	
 Explicit way:
@@ -329,7 +410,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete("Customer", new QueryField(nameof(Order.CustomerId), 10045));
+		var result = connection.Delete("Customer", new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
 **Note**: By setting the `where` argument to blank would delete all the records. Exactly the same as `DeleteAll` operation.
@@ -354,7 +435,7 @@ All records can also be deleted via table name.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.DeleteAll("Customer");
+		var result = connection.DeleteAll("Customer");
 	}
 	
 EnsureOpen
@@ -759,6 +840,122 @@ A dynamic typed-based call is also provided, see below.
 		var maxId = connection.ExecuteScalar<long>("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
 	}
 
+Exists
+------
+
+Check whether the records are existing in the table.
+
+.. highlight:: c#
+
+Via DataEntity:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = connection.Query<Customer>(10045);
+		...
+		var result = connection.Exists(customer);
+	}
+
+Via PrimaryKey:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Exists<Customer>(10045);
+	}
+
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Exists<Customer>(new { Id = 10045 });
+	}
+	
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Exists<Customer>(c => c.Id == 10045);
+	}
+	
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Exists<Customer>(new QueryField(nameof(Order.CustomerId), 10045));
+	}
+
+Records can also be checked via table name.
+
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Exists("Customer", new { Id = 10045 });
+	}
+	
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Exists("Customer", new QueryField(nameof(Order.CustomerId), 10045));
+	}
+
+GetDbSetting
+------------
+
+Gets the associated `IDbSetting` object that is currently mapped for the target `IDbConnection` object.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var setting = connection.GetDbSetting();
+	}
+
+GetDbHelper
+-----------
+
+Gets the associated `IDbHelper` object that is currently mapped for the target `IDbConnection` object.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var helper = connection.GetDbHelper();
+	}
+
+GetStatementBuilder
+-------------------
+
+Gets the associated `IStatementBuilder` object that is currently mapped for the target `IDbConnection` object.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var builder = connection.GetStatementBuilder();
+	}
+
 Insert
 ------
 
@@ -860,6 +1057,99 @@ This is optional since this is an insert operation. However, by default, the lib
 
 **Note**: Use the table-name-based calls if the scenario is to only insert targetted columns.
 
+Max
+---
+
+Maximizes the target field from the database table.
+
+.. highlight:: c#
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Max<Order>(e => e.Price,
+			new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Max<Order>(e => e.Price,
+			e => e.CustomerId == 10045 && e.OrderDate == DateTime.UtcNow.Date);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Max<Order>(e => e.Price, queryGroup);
+	}
+
+Records can all also be counted via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Max("Order", new Field("Price"), new { CustomerId = 10045 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Max("Order", new Field("Price"), queryGroup);
+	}
+
+**Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `MaxAll` operation.
+
+MaxAll
+------
+
+Maximizes the target field from all data of the database table.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.MaxAll<Order>(e => e.Price);
+	}
+
+All records can all also be maximized via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.MaxAll("Order", new Field("Price"));
+	}
+
 Merge
 -----
 
@@ -948,6 +1238,99 @@ Merges the multiple data entity or dynamic objects into the database.
 Be aware on this behavior since this is a merge operation. By default, the library will use the database columns of the `Order` entity. If the values to that fields has not been set, then `MergeAll` operation will set it to `null` in the database. By setting the `fields` argument, it will only merge the listed `fields` in the batch operations.
 
 **Note**: Use the table-name-based calls if the scenario is to only merge targetted columns.
+
+Min
+---
+
+Minimizes the target field from the database table.
+
+.. highlight:: c#
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Min<Order>(e => e.Price,
+			new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Min<Order>(e => e.Price,
+			e => e.CustomerId == 10045 && e.OrderDate == DateTime.UtcNow.Date);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Min<Order>(e => e.Price, queryGroup);
+	}
+
+Records can all also be counted via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Min("Order", new Field("Price"), new { CustomerId = 10045 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Min("Order", new Field("Price"), queryGroup);
+	}
+
+**Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `MinAll` operation.
+
+MinAll
+------
+
+Minimizes the target field from all data of the database table.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.MinAll<Order>(e => e.Price);
+	}
+
+All records can all also be minimized via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.MinAll("Order", new Field("Price"));
+	}
 
 Query
 -----
@@ -1204,6 +1587,99 @@ Below is a example of how to do a query that returns a 100 customers from `Calif
 
 **Note**: This method does not support the `Object-Based` query tree expression.
 
+Sum
+---
+
+Summarizes the target field from the database table.
+
+.. highlight:: c#
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Sum<Order>(e => e.Price,
+			new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Sum<Order>(e => e.Price,
+			e => e.CustomerId == 10045 && e.OrderDate == DateTime.UtcNow.Date);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Sum<Order>(e => e.Price, queryGroup);
+	}
+
+Records can all also be counted via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.Sum("Order", new Field("Price"), new { CustomerId = 10045 });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup
+		(
+			new QueryField(nameof(Order.CustomerId), 10045),
+			new QueryField(nameof(Order.OrderDate), DateTime.UtcNow.Date)
+		);
+		var result = connection.Sum("Order", new Field("Price"), queryGroup);
+	}
+
+**Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `SumAll` operation.
+
+SumAll
+------
+
+Summarizes the target field from all data of the database table.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.SumAll<Order>(e => e.Price);
+	}
+
+All records can all also be summarized via table name.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.SumAll("Order", new Field("Price"));
+	}
+
 Truncate
 --------
 
@@ -1251,7 +1727,7 @@ Via DataEntity:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update<Order>(order);
+		var result = connection.Update<Order>(order);
 	}
 
 Via PrimaryKey:
@@ -1260,7 +1736,7 @@ Via PrimaryKey:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update<Order>(order, 1002);
+		var result = connection.Update<Order>(order, 1002);
 	}
 
 Note: This call will throw an exception if the data entity does not have a primary key.
@@ -1271,7 +1747,7 @@ Via Dynamic:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update<Order>(order, new { Id = 1002 });
+		var result = connection.Update<Order>(order, new { Id = 1002 });
 	}
 
 Expression way:
@@ -1280,7 +1756,7 @@ Expression way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update<Order>(order, o => o.Id == 1002);
+		var result = connection.Update<Order>(order, o => o.Id == 1002);
 	}
 
 Explicit way:
@@ -1289,7 +1765,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update(order, new QueryField(nameof(Order.Id), 1002));
+		var result = connection.Update(order, new QueryField(nameof(Order.Id), 1002));
 	}
 
 Record can also be updated via table name.
@@ -1306,7 +1782,7 @@ Dynamic way:
 			Quantity = 5,
 			UpdateDate = DateTime.UtcNow
 		};
-		var affectedRows = connection.Update("Order", entity, new { Id = 1002 });
+		var result = connection.Update("Order", entity, new { Id = 1002 });
 	}
 
 Explicit way:
@@ -1321,7 +1797,7 @@ Explicit way:
 			Quantity = 5,
 			UpdateDate = DateTime.UtcNow
 		};
-		var affectedRows = connection.Update("Order", entity, new QueryField("Id", 1002));
+		var result = connection.Update("Order", entity, new QueryField("Id", 1002));
 	}
 
 UpdateAll

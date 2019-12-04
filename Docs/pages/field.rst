@@ -59,6 +59,53 @@ By class property:
 	var fields = Field.From(nameof(Customer.Id), nameof(Customer.Name));
 
 **Note**:  When using this method, the `Type` parameter is not being set. The library will then not set the `DbType` value of the `DbCommand` object. By default, ADO.NET uses the `DbType.String` value.
+light:: c#
+
+Parse Type
+----------
+
+Is used to parse a .NET CLR type and convert it back as an enumerable.
+
+.. highlight:: c#
+
+::
+
+	var fields = Field.Parse(typeof(Customer));
+
+Parse Entity
+------------
+
+Is used to parse an entity type and convert it back as an enumerable.
+
+.. highlight:: c#
+
+::
+
+	var fields = Field.Parse<Customer>();
+
+
+Parse Object
+------------
+
+Is used to parse an object and convert it back as an enumerable.
+
+.. highlight:: c#
+
+::
+
+	var customer = new Customer();
+	var fields = Field.Parse(customer);
+
+Parse Expression
+----------------
+
+Is used to parse an expression and convert it back as an enumerable.
+
+.. highlight:: c#
+
+::
+
+	var fields = Field.Parse<Customer>(e => e.Id).AsEnumerable();
 
 Usage of Field
 --------------

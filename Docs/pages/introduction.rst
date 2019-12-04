@@ -3,16 +3,6 @@ Introduction
 
 A hybrid ORM library for .NET.
 
-Goal
-----
-
-To be the fastest and the easiest-to-use hybrid ORM library for .NET.
-
-Vision
-------
-
-Coding flexibility speeds up the delivery and by writing less and fluent-code improves maintainability, efficiency and performance.
-
 Links
 --------
 
@@ -28,14 +18,16 @@ Features
 * Caching
 * Connection Persistency
 * Database Helpers
-* Database Operation Providers
+* Database Settings
 * Expression Trees
+* Extension Methods
 * Field Mapping
 * Inline Hints
 * Massive Operations (Generics/Explicits/MethodCalls/TableBased)
 * Multi-Resultset Query
 * Query Builder
 * Repositories
+* Resolvers (CLR Types, DB Types)
 * Statement Builder
 * Tracing
 * Transaction

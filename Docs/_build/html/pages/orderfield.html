@@ -91,13 +91,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#asenumerable">AsEnumerable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ascending">Ascending</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#descending">Descending</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parse-via-expression">Parse (via Expression)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parse-via-object">Parse (via Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-expression">Parse Expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parse-object">Parse Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usage-of-orderfield">Usage of OrderField</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
@@ -224,8 +225,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="parse-via-expression">
-<h2>Parse (via Expression)<a class="headerlink" href="#parse-via-expression" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parse-expression">
+<h2>Parse Expression<a class="headerlink" href="#parse-expression" title="Permalink to this headline">¶</a></h2>
 <p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to <cite>OrderField</cite> object.</p>
 <p>Parse ascending:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
@@ -236,8 +237,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="parse-via-object">
-<h2>Parse (via Object)<a class="headerlink" href="#parse-via-object" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parse-object">
+<h2>Parse Object<a class="headerlink" href="#parse-object" title="Permalink to this headline">¶</a></h2>
 <p>Parses an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have a value of <cite>Enumerations.Order</cite> enumeration.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderFields</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span>
 <span class="p">{</span>

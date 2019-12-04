@@ -7,6 +7,7 @@ The following are the execute methods which can be accessed via `DbConnection` e
 
 * `ExecuteNonQuery <https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery>`_
 * `ExecuteQuery <https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery>`_
+* `ExecuteQueryMultiple <https://repodb.readthedocs.io/en/latest/pages/connection.html#executequerymultiple>`_
 * `ExecuteReader <https://repodb.readthedocs.io/en/latest/pages/connection.html#executereader>`_
 * `ExecuteScalar <https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar>`_
 

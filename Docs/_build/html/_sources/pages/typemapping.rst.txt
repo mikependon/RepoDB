@@ -3,12 +3,16 @@ Type Mapping
 
 .. highlight: c#
 
-It is a feature used to map the `.NET CLR Types` into its equivalent `System.Data.DbType` database types.
+Is being used to map the `.NET CLR Types` into its equivalent `System.Data.DbType` database types.
 
 TypeMapper
 ----------
 
 A static class used to map the .NET CLR Types into database types.
+
+::
+
+	TypeMapper.Map(...);
 
 Map
 ---
