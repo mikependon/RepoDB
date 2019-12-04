@@ -112,9 +112,8 @@ namespace RepoDb
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
-        /// <param name="entity">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse<TEntity>(TEntity entity)
+        public static IEnumerable<Field> Parse<TEntity>()
             where TEntity : class
         {
             foreach (var property in PropertyCache.Get<TEntity>())

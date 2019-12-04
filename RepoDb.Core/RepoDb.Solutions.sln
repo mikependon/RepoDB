@@ -23,6 +23,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuge
 		..\RepoDb.Nuget\readme.txt = ..\RepoDb.Nuget\readme.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{C7222746-534E-4D95-9B7E-9593C191FDE2}"
+	ProjectSection(SolutionItems) = preProject
+		..\Docs\index.rst = ..\Docs\index.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5E885481-5BD3-4C86-9DFB-A0BD3F49CBCF}"
+	ProjectSection(SolutionItems) = preProject
+		..\Docs\pages\attributes.rst = ..\Docs\pages\attributes.rst
+		..\Docs\pages\cache.rst = ..\Docs\pages\cache.rst
+		..\Docs\pages\connection.rst = ..\Docs\pages\connection.rst
+		..\Docs\pages\contact.rst = ..\Docs\pages\contact.rst
+		..\Docs\pages\dbhelper.rst = ..\Docs\pages\dbhelper.rst
+		..\Docs\pages\enumeration.rst = ..\Docs\pages\enumeration.rst
+		..\Docs\pages\extensibility.rst = ..\Docs\pages\extensibility.rst
+		..\Docs\pages\field.rst = ..\Docs\pages\field.rst
+		..\Docs\pages\hints.rst = ..\Docs\pages\hints.rst
+		..\Docs\pages\installation.rst = ..\Docs\pages\installation.rst
+		..\Docs\pages\introduction.rst = ..\Docs\pages\introduction.rst
+		..\Docs\pages\orderfield.rst = ..\Docs\pages\orderfield.rst
+		..\Docs\pages\performance.rst = ..\Docs\pages\performance.rst
+		..\Docs\pages\persistency.rst = ..\Docs\pages\persistency.rst
+		..\Docs\pages\provideroperation.rst = ..\Docs\pages\provideroperation.rst
+		..\Docs\pages\querygroup.rst = ..\Docs\pages\querygroup.rst
+		..\Docs\pages\rawsql.rst = ..\Docs\pages\rawsql.rst
+		..\Docs\pages\repository.rst = ..\Docs\pages\repository.rst
+		..\Docs\pages\statementbuilder.rst = ..\Docs\pages\statementbuilder.rst
+		..\Docs\pages\support.rst = ..\Docs\pages\support.rst
+		..\Docs\pages\trace.rst = ..\Docs\pages\trace.rst
+		..\Docs\pages\transaction.rst = ..\Docs\pages\transaction.rst
+		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +76,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5E885481-5BD3-4C86-9DFB-A0BD3F49CBCF} = {C7222746-534E-4D95-9B7E-9593C191FDE2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
