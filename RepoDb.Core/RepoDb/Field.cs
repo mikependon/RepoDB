@@ -109,6 +109,21 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Parses a type and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        public static IEnumerable<Field> Parse(Type type)
+        {
+            if (type != null)
+            {
+                foreach (var property in type.GetProperties())
+                {
+                    yield return property.AsField();
+                }
+            }
+        }
+
+        /// <summary>
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
@@ -116,10 +131,7 @@ namespace RepoDb
         public static IEnumerable<Field> Parse<TEntity>()
             where TEntity : class
         {
-            foreach (var property in PropertyCache.Get<TEntity>())
-            {
-                yield return property.AsField();
-            }
+            return Parse(typeof(TEntity));
         }
 
         /// <summary>
@@ -129,10 +141,7 @@ namespace RepoDb
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse(object obj)
         {
-            foreach (var property in obj?.GetType().GetProperties())
-            {
-                yield return property.AsField();
-            }
+            return Parse(obj?.GetType());
         }
 
         /// <summary>
