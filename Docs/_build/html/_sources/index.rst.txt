@@ -15,13 +15,13 @@ RepoDb Documentation
    pages/enumeration
    pages/dbhelper
    pages/hints
-   pages/provideroperation
    pages/transaction
    pages/querygroup
    pages/repository
    pages/persistency
    pages/cache
    pages/trace
+   pages/dbsetting
    pages/statementbuilder
    pages/performance
    pages/extensibility

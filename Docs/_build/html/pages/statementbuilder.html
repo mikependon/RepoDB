@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Performance" href="performance.html" />
-    <link rel="prev" title="Trace" href="trace.html" /> 
+    <link rel="prev" title="DB Setting" href="dbsetting.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,33 +89,45 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">StatementBuilder</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#querybuilder">QueryBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-a-builder">Customizing a Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#statementbuildermapper">StatementBuilderMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#injecting-to-repository">Injecting to Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basestatementbuilder">BaseStatementBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createaverage">CreateAverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createaverageall">CreateAverageAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createbatchquery">CreateBatchQuery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createcount">CreateCount</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createcountall">CreateCountAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createdelete">CreateDelete</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createdeleteall">CreateDeleteAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createexists">CreateExists</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createinsert">CreateInsert</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createinsertall">CreateInsertAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createmax">CreateMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createmaxall">CreateMaxAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createmerge">CreateMerge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">CreateMerge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createmergeall">CreateMergeAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createmin">CreateMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createminall">CreateMinAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createquery">CreateQuery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createqueryall">CreateQueryAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createsum">CreateSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createsumall">CreateSumAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createtruncate">CreateTruncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createupdate">CreateUpdate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createupdateall">CreateUpdateAll</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cutomizing-a-builder">Cutomizing a Builder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sqldbstatementmapper">SqlDbStatementMapper</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
@@ -188,7 +200,7 @@
             
   <div class="section" id="statementbuilder">
 <h1>StatementBuilder<a class="headerlink" href="#statementbuilder" title="Permalink to this headline">¶</a></h1>
-<p>The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the <cite>SqlDbStatementBuilder</cite> that is only working for SQL Server databases.</p>
+<p>The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the <cite>SqlServerStatementBuilder</cite> that is only working for SQL Server databases.</p>
 <div class="section" id="querybuilder">
 <h2>QueryBuilder<a class="headerlink" href="#querybuilder" title="Permalink to this headline">¶</a></h2>
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
@@ -253,144 +265,357 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="customizing-a-builder">
+<h2>Customizing a Builder<a class="headerlink" href="#customizing-a-builder" title="Permalink to this headline">¶</a></h2>
+<p>The main reason why the library supports the statement builder is to allow the developers to implement or override (the default) statement builder of the DB Provider. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements).</p>
+<p>However, it will fail if the library is being used to access the SqLite, PostgreSql, MySql or any other DB Providers.</p>
+<p><strong>Note</strong>: The support for other DB Provider is available as Nuget Package as (MySql =&gt; RepoDb.MySql, SqLite =&gt; RepoDb.SqLite, PostgreSql =&gt; RepoDb.PostgreSql).</p>
+<p>To create a custom statement builder, simply create a class and implements the <cite>IStatementBuilder</cite> interface.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">PostgreSqlStatementBuilder</span> <span class="p">:</span> <span class="n">IStatementBuilder</span>
+<span class="p">{</span>
+        <span class="c1">// Implements the IStatementBuilder methods here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below injecting a statement builder for PostgreSql DB Provider.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">statementBuilder</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PostgreSqlStatementBuilder</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">NpgsqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">statementBuilder</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>With the code snippets above, everytime the repository operation methods is being called, the <cite>PostgreSqlStatementBuilder</cite> corresponding method will be executed.</p>
+</div>
+<div class="section" id="statementbuildermapper">
+<h2>StatementBuilderMapper<a class="headerlink" href="#statementbuildermapper" title="Permalink to this headline">¶</a></h2>
+<p>This class is used to map an existing <cite>IStatementBuilder</cite> into a specific DB Provider. The mapper is of static class.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">MySqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">MySqlStatementBuilder</span><span class="p">());</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: By default, the library has mapped the <cite>SqlServerStatementBuilder</cite> object for SQL Server DB Provider (via <cite>SqlConnection</cite>).</p>
+<p>Let say, the developers has created the following statement builder:</p>
+<blockquote>
+<div><ul class="simple">
+<li>SqlServerStatementBuilder (for <cite>SqlConnection</cite>)</li>
+<li>SqLiteStatementBuilder (for <cite>SqLiteConnection</cite>)</li>
+<li>MySqlStatementBuilder (for <cite>MySqlConnection</cite>)</li>
+<li>PostgreSqlStatementBuilder (for <cite>NpgsqlConnection</cite>)</li>
+</ul>
+</div></blockquote>
+<p>Then, in order to utilize the mentioned statement builders, the code below must be called.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerStatementBuilder</span><span class="p">());</span>
+<span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqLiteConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqLiteStatementBuilder</span><span class="p">());</span>
+<span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">MySqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">MySqlStatementBuilder</span><span class="p">());</span>
+<span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">NpgsqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">PostgreSqlStatementBuilder</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="injecting-to-repository">
+<h2>Injecting to Repository<a class="headerlink" href="#injecting-to-repository" title="Permalink to this headline">¶</a></h2>
+<p>To inject the statement builder to repository, simply passed the instance of <cite>IStatementBuilder</cite> object when initializing a repository object.</p>
+<p>For DbRepository&lt;TDbConnetion&gt;:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">statementBuider</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MySqlStatementBuilder</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">MySqlConnection</span><span class="p">&gt;(</span><span class="n">ConnectionString</span><span class="p">,</span> <span class="n">statementBuilder</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For BaseRepository&lt;TEntity, TDbConnetion&gt;:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">MySqlConnection</span><span class="p">&gt;</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="nf">CustomerRepository</span><span class="p">(</span><span class="kt">string</span> <span class="n">connectionString</span><span class="p">,</span>
+                <span class="n">IStatementBuilder</span> <span class="n">builder</span><span class="p">)</span>
+                <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">connectionString</span><span class="p">,</span> <span class="n">builder</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+
+        <span class="p">...</span>
+<span class="p">}</span>
+<span class="kt">var</span> <span class="n">statementBuider</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MySqlStatementBuilder</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">&lt;</span><span class="n">MySqlConnection</span><span class="p">&gt;(</span><span class="n">ConnectionString</span><span class="p">,</span> <span class="n">statementBuilder</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="basestatementbuilder">
+<h2>BaseStatementBuilder<a class="headerlink" href="#basestatementbuilder" title="Permalink to this headline">¶</a></h2>
+<p>This class is a pre-implemented abstract class that can be used as a base implementation of the <cite>IStatementBuilder</cite>.</p>
+<p>This is very useful if the developer would like to implement his/her own DB Provider Statement Builder.</p>
+<p>Remember that not all implementations are meant for all DB Providers, so the developer must be aware to <cite>override</cite> certain methods if necessary.</p>
+<p><strong>Example</strong>: The <cite>CreateTruncate()</cite> method is using the <cite>TRUNCATE</cite> keyword when composing a SQL Statement.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="nf">CreateTruncate</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">// Guard the target table</span>
+        <span class="n">GuardTableName</span><span class="p">(</span><span class="n">tableName</span><span class="p">);</span>
+
+        <span class="c1">// Initialize the builder</span>
+        <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="n">queryBuilder</span> <span class="p">??</span> <span class="k">new</span> <span class="n">QueryBuilder</span><span class="p">();</span>
+
+        <span class="c1">// Build the query</span>
+        <span class="n">builder</span><span class="p">.</span><span class="n">Clear</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">Truncate</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">Table</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">TableNameFrom</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="n">DbSetting</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">End</span><span class="p">();</span>
+
+        <span class="c1">// Return the query</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">GetString</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>That code will not work for <cite>SqLite</cite>. The developer must <cite>override</cite> that method if he/she is implementing his/her own statement builder.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">override</span> <span class="kt">string</span> <span class="nf">CreateTruncate</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">// Ensure with guards</span>
+        <span class="n">GuardTableName</span><span class="p">(</span><span class="n">tableName</span><span class="p">);</span>
+
+        <span class="c1">// Initialize the builder</span>
+        <span class="kt">var</span> <span class="n">builder</span> <span class="p">=</span> <span class="n">queryBuilder</span> <span class="p">??</span> <span class="k">new</span> <span class="n">QueryBuilder</span><span class="p">();</span>
+
+        <span class="c1">// Build the query</span>
+        <span class="n">builder</span><span class="p">.</span><span class="n">Clear</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">Clear</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">Delete</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">From</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">TableNameFrom</span><span class="p">(</span><span class="n">tableName</span><span class="p">,</span> <span class="n">DbSetting</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">End</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">WriteText</span><span class="p">(</span><span class="s">&quot;VACUUM&quot;</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">End</span><span class="p">();</span>
+
+        <span class="c1">// Return the query</span>
+        <span class="k">return</span> <span class="n">builder</span><span class="p">.</span><span class="n">GetString</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The <cite>CreateBatchQuery</cite>, <cite>CreateMerge</cite> and <cite>CreateMergeAll</cite> is being implemented as <cite>abstract</cite> method, whereas the others were implemented as <cite>virtual</cite> methods.</p>
+</div>
+<div class="section" id="createaverage">
+<h2>CreateAverage<a class="headerlink" href="#createaverage" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL Statement for <cite>Average</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateAverage</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+<span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+<span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+<span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+<span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createaverageall">
+<h2>CreateAverageAll<a class="headerlink" href="#createaverageall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL Statement for <cite>AverageAll</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateAverageAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+<span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+<span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+<span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="createbatchquery">
 <h2>CreateBatchQuery<a class="headerlink" href="#createbatchquery" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>BatchQuery</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        int page,
-        int rowsPerBatch,
-        IEnumerable&lt;OrderField&gt; orderBy = null,
-        QueryGroup where = null,
-        string hints = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateBatchQuery</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="kt">int?</span> <span class="n">page</span><span class="p">,</span>
+        <span class="kt">int?</span> <span class="n">rowsPerBatch</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">OrderField</span><span class="p">&gt;</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createcount">
 <h2>CreateCount<a class="headerlink" href="#createcount" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Count</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCount(QueryBuilder queryBuilder,
-        string tableName,
-        QueryGroup where = null,
-        string hints = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateCount</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createcountall">
 <h2>CreateCountAll<a class="headerlink" href="#createcountall" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>CountAll</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCountAll(QueryBuilder queryBuilder,
-        string tableName,
-        string hints = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateCountAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createdelete">
 <h2>CreateDelete<a class="headerlink" href="#createdelete" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Delete</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDelete(QueryBuilder queryBuilder,
-        string tableName,
-        QueryGroup where = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateDelete</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createdeleteall">
 <h2>CreateDeleteAll<a class="headerlink" href="#createdeleteall" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>DeleteAll</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDeleteAll(QueryBuilder queryBuilder,
-        string tableName)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateDeleteAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createexists">
+<h2>CreateExists<a class="headerlink" href="#createexists" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>Exists</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateExists</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createinsert">
 <h2>CreateInsert<a class="headerlink" href="#createinsert" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Insert</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields = null,
-        DbField primaryField = null,
-        DbField identityField = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateInsert</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">primaryField</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">identityField</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createinsertall">
 <h2>CreateInsertAll<a class="headerlink" href="#createinsertall" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>InsertAll</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsertAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields = null,
-        int batchSize = Constant.DefaultBatchOperationSize,
-        DbField primaryField = null,
-        DbField identityField = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateInsertAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="n">Constant</span><span class="p">.</span><span class="n">DefaultBatchOperationSize</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">primaryField</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">identityField</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createmax">
+<h2>CreateMax<a class="headerlink" href="#createmax" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>Max</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateMax</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createmaxall">
+<h2>CreateMaxAll<a class="headerlink" href="#createmaxall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>MaxAll</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateMaxAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createmerge">
 <h2>CreateMerge<a class="headerlink" href="#createmerge" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Merge</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        IEnumerable&lt;Field&gt; qualifiers = null,
-        DbField primaryField = null,
-        DbField identityField = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateMerge</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">qualifiers</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">primaryField</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">identityField</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="id1">
-<h2>CreateMerge<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="createmergeall">
+<h2>CreateMergeAll<a class="headerlink" href="#createmergeall" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>MergeAll</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMergeAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        IEnumerable&lt;Field&gt; qualifiers,
-        int batchSize = Constant.DefaultBatchOperationSize,
-        DbField primaryField = null,
-        DbField identityField = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateMergeAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">qualifiers</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="n">Constant</span><span class="p">.</span><span class="n">DefaultBatchOperationSize</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">primaryField</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">identityField</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createmin">
+<h2>CreateMin<a class="headerlink" href="#createmin" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>Min</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateMin</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createminall">
+<h2>CreateMinAll<a class="headerlink" href="#createminall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>MinAll</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateMinAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createquery">
 <h2>CreateQuery<a class="headerlink" href="#createquery" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Query</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        QueryGroup where = null,
-        IEnumerable&lt;OrderField&gt; orderBy = null,
-        int? top = null,
-        string hints = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateQuery</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">OrderField</span><span class="p">&gt;</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">int?</span> <span class="n">top</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -408,88 +633,72 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="createsum">
+<h2>CreateSum<a class="headerlink" href="#createsum" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>Sum</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateSum</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="createsumall">
+<h2>CreateSumAll<a class="headerlink" href="#createsumall" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to compose a SQL statement for <cite>SumAll</cite> operation.</p>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateSumAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">Field</span> <span class="n">field</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="createtruncate">
 <h2>CreateTruncate<a class="headerlink" href="#createtruncate" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Truncate</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateTruncate(QueryBuilder queryBuilder,
-        string tableName)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateTruncate</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createupdate">
 <h2>CreateUpdate<a class="headerlink" href="#createupdate" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>Update</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        QueryGroup where = null,
-        DbField primaryField = null,
-        DbField identityField = null)
-{
-        ...
-}
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateUpdate</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">primaryField</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">identityField</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="createupdateall">
 <h2>CreateUpdateAll<a class="headerlink" href="#createupdateall" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to compose a SQL statement for <cite>UpdateAll</cite> operation.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdateAll(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        IEnumerable&lt;Field&gt; qualifiers,
-        int batchSize = Constant.DefaultBatchOperationSize,
-        DbField primaryField = null,
-        DbField identityField = null)
-{
-        ...
-}
-</pre></div>
-</div>
-</div>
-<div class="section" id="cutomizing-a-builder">
-<h2>Cutomizing a Builder<a class="headerlink" href="#cutomizing-a-builder" title="Permalink to this headline">¶</a></h2>
-<p>The main reason why the library supports the statement builder is to allow the developers override the default statement builder of the library. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements). However, it will fail if the library is being used to access the Oracle, MySql or any other providers.</p>
-<p>To create a custom statement builder, simply create a class and implements the <cite>Interfaces.IStatementBuilder</cite> interface.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">OracleDbStatementBuilder</span> <span class="p">:</span> <span class="n">IStatementBuilder</span>
+<div class="highlight-C# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateUpdateAll</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">qualifiers</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="n">Constant</span><span class="p">.</span><span class="n">DefaultBatchOperationSize</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">primaryField</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">DbField</span> <span class="n">identityField</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
 <span class="p">{</span>
-        <span class="c1">// Implements the IStatementBuilder methods here</span>
+        <span class="p">...</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-<p>Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below injecting a statement builder for Oracle provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">statementBuilder</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OracleDbStatementBuilder</span><span class="p">();</span>
-<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">statementBuilder</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>With the code snippets above, everytime the repository operation methods is being called, the <cite>OracleStatementBuilder</cite> corresponding method will be executed.</p>
-</div>
-<div class="section" id="sqldbstatementmapper">
-<h2>SqlDbStatementMapper<a class="headerlink" href="#sqldbstatementmapper" title="Permalink to this headline">¶</a></h2>
-<p>By default, the library has mapped the <cite>SqlDbStatementBuilder</cite> object for the statement building. This means that library has fully supported the SQL Server DB Provider. With this class, a custom <cite>IStatementBuilder</cite> object can be injected as a statement builder for the <cite>Repositories</cite> and other <cite>DbConnection</cite> extended methods.</p>
-<p>The mapper is of static type <cite>StatementBuilderMapper</cite>.</p>
-<p>Let say for example, the developers created the following repositories:</p>
-<blockquote>
-<div><ul class="simple">
-<li>CustomerRepository (for <cite>SqlConnection</cite>)</li>
-<li>ProductRepository (for <cite>SqlConnection</cite>)</li>
-<li>OrderRepository (for <cite>OracleConnection</cite>)</li>
-<li>CompanyRepository (for <cite>OleDbConnection</cite>)</li>
-</ul>
-</div></blockquote>
-<p>With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).</p>
-<blockquote>
-<div><ul class="simple">
-<li>OracleStatementBuilder</li>
-<li>OleDbStatementBuilder</li>
-</ul>
-</div></blockquote>
-<p>Then, by mapping a custom statement builders, it will enable the library to re-use the instance of the statement builder mapped into the desired DB provider. This feature works to both <cite>Repositories</cite> and <cite>DbConnection</cite> extended methods.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleStatementBuilder</span><span class="p">());</span>
-<span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OleDbConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OleDbStatementBuilder</span><span class="p">());</span>
 </pre></div>
 </div>
 </div>
@@ -506,7 +715,7 @@
         <a href="performance.html" class="btn btn-neutral float-right" title="Performance" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="trace.html" class="btn btn-neutral float-left" title="Trace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="dbsetting.html" class="btn btn-neutral float-left" title="DB Setting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -33,7 +33,7 @@ Below is a scenario to query all the customers from the database that ignores al
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = connection.Query<Customer>(hints: "WITH (INDEX(NCIX_Customer$FirstName$LastName), READPAST)");
+		var customers = connection.QueryAll<Customer>(hints: "WITH (INDEX(NCIX_Customer$FirstName$LastName), READPAST)");
 	}
 
 A default class named `SqlTableHints` is provided to simplify the passing of the parameters. This class only contains the table hints for SQL Server.
@@ -44,14 +44,14 @@ A default class named `SqlTableHints` is provided to simplify the passing of the
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = connection.Query<Customer>(hints: SqlTableHints.NoLock);
-		var customers = connection.Query<Customer>(hints: SqlTableHints.ReadPast);
-		var customers = connection.Query<Customer>(hints: SqlTableHints.ReadCommitted);
+		var customers = connection.QueryAll<Customer>(hints: SqlTableHints.NoLock);
+		var customers = connection.QueryAll<Customer>(hints: SqlTableHints.ReadPast);
+		var customers = connection.QueryAll<Customer>(hints: SqlTableHints.ReadCommitted);
 		...
 	}
 
-The query hints are not limited to SQL Server only, it is also applicable to other data providers. However, the library only supports table hints for SQL Server as of the moment through `SqlStatementBuilder` and `SqlTableHints` class.
+The library only supports table hints for SQL Server through `SqlServerStatementBuilder` and `SqlServerTableHints` class.
 
-In order to support the other data providers, the `IStatementBuilder` must be overriden by the caller's custom statement builder (ie: `OracleStatementBuilder`, `MySqlStatementBuilder`) when calling the `DbConnection` extended method. And also, the caller must specify a class table hints for that data provider (ie: `OracleQueryHints`, `MySqlQueryHints`) to simplify the call (though this can be written statically through explicit literal string).
+If this parameter is specified in `MySql`, `SqLite` and `PostgreSql`, the `NotSupportedException` exception will be thrown.
 
 **Note**: The `hints` are also supported when calling the `BatchQuery`, `Count`, `CountAll`, `QueryAll` and the `QueryMultiple` operations.

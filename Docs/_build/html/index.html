@@ -91,17 +91,17 @@
 <li class="toctree-l1"><a class="reference internal" href="pages/enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/contact.html">Contacts</a></li>
 </ul>
 
@@ -172,7 +172,8 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="pages/introduction.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/introduction.html#links">Links</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/introduction.html#repositories">Repositories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/introduction.html#packages">Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/introduction.html#features">Features</a></li>
 </ul>
 </li>
@@ -270,16 +271,10 @@
 <li class="toctree-l1"><a class="reference internal" href="pages/dbhelper.html">DB Helper</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pages/dbhelper.html#dbhelpermapper">DbHelperMapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/dbhelper.html#idbhelper">IDbHelper</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/dbhelper.html#sqldbhelper">SqlDbHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/dbhelper.html#sqlserverdbhelper">SqlServerDbHelper</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pages/hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/provideroperation.html">Provider Operation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/provideroperation.html#dboperationprovidermapper">DbOperationProviderMapper</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/provideroperation.html#idboperationprovider">IDbOperationProvider</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/provideroperation.html#sqldboperationprovider">SqlDbOperationProvider</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="pages/transaction.html">Transaction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pages/transaction.html#begintransaction">BeginTransaction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/transaction.html#usability">Usability</a></li>
@@ -330,29 +325,47 @@
 <li class="toctree-l2"><a class="reference internal" href="pages/trace.html#cancellation">Cancellation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="pages/dbsetting.html">DB Setting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/dbsetting.html#idbsetting">IDbSetting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/dbsetting.html#dbsettingmapper">DbSettingMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/dbsetting.html#why-dbsetting">Why DbSetting?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/dbsetting.html#creating-a-dbsetting">Creating a DbSetting</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="pages/statementbuilder.html">StatementBuilder</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#querybuilder">QueryBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#customizing-a-builder">Customizing a Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#statementbuildermapper">StatementBuilderMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#injecting-to-repository">Injecting to Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#basestatementbuilder">BaseStatementBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createaverage">CreateAverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createaverageall">CreateAverageAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createbatchquery">CreateBatchQuery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createcount">CreateCount</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createcountall">CreateCountAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createdelete">CreateDelete</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createdeleteall">CreateDeleteAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createexists">CreateExists</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createinsert">CreateInsert</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createinsertall">CreateInsertAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createmax">CreateMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createmaxall">CreateMaxAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createmerge">CreateMerge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#id1">CreateMerge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createmergeall">CreateMergeAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createmin">CreateMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createminall">CreateMinAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createquery">CreateQuery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createqueryall">CreateQueryAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createsum">CreateSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createsumall">CreateSumAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createtruncate">CreateTruncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createupdate">CreateUpdate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#createupdateall">CreateUpdateAll</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#cutomizing-a-builder">Cutomizing a Builder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/statementbuilder.html#sqldbstatementmapper">SqlDbStatementMapper</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pages/performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/contact.html">Contacts</a></li>
 </ul>
 </div>

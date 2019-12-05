@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Hints" href="hints.html" />
-    <link rel="prev" title="Raw SQL" href="rawsql.html" /> 
+    <link rel="prev" title="Enumeration" href="enumeration.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,10 +89,11 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">DB Helper</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dbhelpermapper">DbHelperMapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#idbhelper">IDbHelper</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sqldbhelper">SqlDbHelper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sqlserverdbhelper">SqlServerDbHelper</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
@@ -211,36 +212,38 @@ also be mapped using this class.</p>
 
         <span class="k">public</span> <span class="n">IResolver</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Type</span><span class="p">&gt;</span> <span class="n">DbTypeResolver</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
 
-        <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">DbField</span><span class="p">&gt;</span> <span class="n">GetFields</span><span class="p">(</span><span class="kt">string</span> <span class="n">connectionString</span><span class="p">,</span> <span class="kt">string</span> <span class="n">tableName</span><span class="p">)</span>
+        <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">DbField</span><span class="p">&gt;</span> <span class="n">GetFields</span><span class="p">(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span> <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span> <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">DbField</span><span class="p">&gt;&gt;</span> <span class="n">GetFieldsAsync</span><span class="p">(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span> <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span> <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">object</span> <span class="nf">GetScopeIdentity</span><span class="p">(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span> <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="p">...</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;</span> <span class="n">GetScopeIdentityAsync</span><span class="p">(</span><span class="n">IDbConnection</span> <span class="n">connection</span><span class="p">,</span> <span class="n">IDbTransaction</span> <span class="n">transaction</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="p">...</span>
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Once the class <cite>CustomDbHelper</cite> has been mapped to a specific DB Provider, then the library will automatically use it in most operations.</p>
-</div>
-<div class="section" id="sqldbhelper">
-<h2>SqlDbHelper<a class="headerlink" href="#sqldbhelper" title="Permalink to this headline">¶</a></h2>
-<p>This class is used to retrieve the list of columns from a SQL Server database table. By default, the library has mapped this class into a <cite>SqlConnection</cite> DB provider.</p>
-<p>Below is the implementation of this class.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">SqlDbHelper</span> <span class="p">:</span> <span class="n">IDbHelper</span>
-<span class="p">{</span>
-            <span class="k">public</span> <span class="nf">SqlDbHelper</span><span class="p">()</span>
-            <span class="p">{</span>
-                    <span class="n">DbTypeResolver</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlDbTypeNameToClientTypeResolver</span><span class="p">();</span>
-            <span class="p">}</span>
-
-            <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">DbField</span><span class="p">&gt;</span> <span class="n">GetFields</span><span class="p">(</span><span class="kt">string</span> <span class="n">connectionString</span><span class="p">,</span> <span class="kt">string</span> <span class="n">tableName</span><span class="p">)</span>
-    <span class="p">{</span>
-                    <span class="cm">/* Querying the INFORMATION_SCHEMA and convert it back to DbField objects */</span>
-            <span class="p">}</span>
-
-            <span class="k">public</span> <span class="n">IResolver</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">Type</span><span class="p">&gt;</span> <span class="n">DbTypeResolver</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
+<p>To map the <cite>IDbHelper</cite>, simply call the method below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">CustomDbHelper</span><span class="p">());</span>
 </pre></div>
 </div>
-<p>Click <a class="reference external" href="https://github.com/mikependon/RepoDb/blob/master/RepoDb/RepoDb/DbHelpers/SqlDbHelper.cs">here</a> to see the actual class implementation.</p>
+<p>Once the class <cite>CustomDbHelper</cite> has been mapped to a specific DB Provider, then the library will automatically use it in all operations for that DB Provider.</p>
+</div>
+<div class="section" id="sqlserverdbhelper">
+<h2>SqlServerDbHelper<a class="headerlink" href="#sqlserverdbhelper" title="Permalink to this headline">¶</a></h2>
+<p>This class is pre-registered as a default <cite>IDbHelper</cite> for SQL Server database (via <cite>SqlConnection</cite> object).</p>
+<p>Click <a class="reference external" href="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Core/RepoDb/_SqlServer/DbHelpers/SqlServerDbHelper.cs">here</a> to see the actual class implementation.</p>
 </div>
 </div>
 
@@ -255,7 +258,7 @@ also be mapped using this class.</p>
         <a href="hints.html" class="btn btn-neutral float-right" title="Hints" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="rawsql.html" class="btn btn-neutral float-left" title="Raw SQL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="enumeration.html" class="btn btn-neutral float-left" title="Enumeration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

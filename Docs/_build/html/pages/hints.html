@@ -89,6 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Hints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
@@ -187,22 +188,22 @@
 <p>Below is a scenario to query all the customers from the database that ignores all the data that are under different transactions and with maximizing the index named <cite>NCIX_Customer$FirstName$LastName</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (INDEX(NCIX_Customer$FirstName$LastName), READPAST)&quot;</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (INDEX(NCIX_Customer$FirstName$LastName), READPAST)&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>A default class named <cite>SqlTableHints</cite> is provided to simplify the passing of the parameters. This class only contains the table hints for SQL Server.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadPast</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadCommitted</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadPast</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadCommitted</span><span class="p">);</span>
         <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The query hints are not limited to SQL Server only, it is also applicable to other data providers. However, the library only supports table hints for SQL Server as of the moment through <cite>SqlStatementBuilder</cite> and <cite>SqlTableHints</cite> class.</p>
-<p>In order to support the other data providers, the <cite>IStatementBuilder</cite> must be overriden by the caller’s custom statement builder (ie: <cite>OracleStatementBuilder</cite>, <cite>MySqlStatementBuilder</cite>) when calling the <cite>DbConnection</cite> extended method. And also, the caller must specify a class table hints for that data provider (ie: <cite>OracleQueryHints</cite>, <cite>MySqlQueryHints</cite>) to simplify the call (though this can be written statically through explicit literal string).</p>
+<p>The library only supports table hints for SQL Server through <cite>SqlServerStatementBuilder</cite> and <cite>SqlServerTableHints</cite> class.</p>
+<p>If this parameter is specified in <cite>MySql</cite>, <cite>SqLite</cite> and <cite>PostgreSql</cite>, the <cite>NotSupportedException</cite> exception will be thrown.</p>
 <p><strong>Note</strong>: The <cite>hints</cite> are also supported when calling the <cite>BatchQuery</cite>, <cite>Count</cite>, <cite>CountAll</cite>, <cite>QueryAll</cite> and the <cite>QueryMultiple</cite> operations.</p>
 </div>
 

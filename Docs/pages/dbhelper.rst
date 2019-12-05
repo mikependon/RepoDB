@@ -58,38 +58,40 @@ An interface used to mark the class to become a database helper. Below is a samp
 
 		public IResolver<string, Type> DbTypeResolver { get; }
 
-		public IEnumerable<DbField> GetFields(string connectionString, string tableName)
+		public IEnumerable<DbField> GetFields(IDbConnection connection, string tableName, IDbTransaction transaction = null)
+		{
+			...
+		}
+
+		public Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection, string tableName, IDbTransaction transaction = null)
+		{
+			...
+		}
+
+		public object GetScopeIdentity(IDbConnection connection, IDbTransaction transaction = null)
+		{
+			...
+		}
+
+		public Task<object> GetScopeIdentityAsync(IDbConnection connection, IDbTransaction transaction = null)
 		{
 			...
 		}
 	}
 
-Once the class `CustomDbHelper` has been mapped to a specific DB Provider, then the library will automatically use it in most operations.
-
-SqlDbHelper
------------
-
-This class is used to retrieve the list of columns from a SQL Server database table. By default, the library has mapped this class into a `SqlConnection` DB provider.
-
-Below is the implementation of this class.
+To map the `IDbHelper`, simply call the method below.
 
 .. highlight:: c#
 
 ::
 
-	public class SqlDbHelper : IDbHelper
-    {
-		public SqlDbHelper()
-		{
-			DbTypeResolver = new SqlDbTypeNameToClientTypeResolver();
-		}
+	DbHelperMapper.Map(typeof(SqlConnection), new CustomDbHelper());
 
-		public IEnumerable<DbField> GetFields(string connectionString, string tableName)
-        {
-			/* Querying the INFORMATION_SCHEMA and convert it back to DbField objects */
-		}
+Once the class `CustomDbHelper` has been mapped to a specific DB Provider, then the library will automatically use it in all operations for that DB Provider.
 
-		public IResolver<string, Type> DbTypeResolver { get; }
-	}
+SqlServerDbHelper
+-----------------
 
-Click `here <https://github.com/mikependon/RepoDb/blob/master/RepoDb/RepoDb/DbHelpers/SqlDbHelper.cs>`_ to see the actual class implementation.
+This class is pre-registered as a default `IDbHelper` for SQL Server database (via `SqlConnection` object).
+
+Click `here <https://github.com/mikependon/RepoDb/blob/master/RepoDb.Core/RepoDb/_SqlServer/DbHelpers/SqlServerDbHelper.cs>`_ to see the actual class implementation.

@@ -361,7 +361,7 @@ That is wrong. By calling the `IsForUpdate` method, the returned SQL would be di
 
 In which the value of `@Name` parameter is `John Doe` and the value of `@_Name` parameter is `Jay Doe`.
 
-**Note:** RepoDb is automatically calling this method in all `Update` operation.
+**Note:** The library is automatically calling this method in all `Update` operations.
 
 Reusability
 -----------
