@@ -19,6 +19,18 @@ A query group object is used to group an expression when composing a tree expres
 		Conjunction.And
 	);
 
+QueryField
+----------
+
+A query field is used as a field in the expression tree. It contains the actual field and the value for the equation.
+
+.. highlight:: c#
+
+::
+
+	// A field 'CustomerId' with value >= 10045
+	var queryField = new QueryField("CustomerId", Operation.GreaterThanOrEqual, 10045);
+
 Operations
 ----------
 
@@ -291,6 +303,65 @@ Explicit way:
 ::
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.NotIn, new [] { 10045, 10046, 10047, 10048 } });
+
+IsForUpdate
+-----------
+
+This method is used to make the instance of `QueryGroup` or `QueryField` object to become an expression for `Update` operations.
+
+It is very useful when calling the update via `TableName` in which targetting specific field is conflicting with the actual valued-parameters.
+
+.. highlight:: c#
+
+Let us say the table `Customer` is existing in the database.
+
+::
+
+	CREATE TABLE [dbo].[Customer]
+	(
+		[Id] BIGINT PRIMARY IDENTITY(1, 1),
+		[Name] NVARCHAR(256) NOT NULL
+	)
+
+And the update operation has been called like below.
+
+::
+
+	// Calls
+	var expression = new QueryField("Id", 10045);
+	connection.Update("Customer", new { Name = "John Doe" }, expression);
+
+	// Generated SQL
+	UPDATE [dbo].[Customer] SET Name = @Name WHERE (Id = @Id);
+
+In which the value of `@Name` parameter is `John Doe` and the value of `@Id` parameter is `10045`.
+
+However, what if the expression/condition is based on the `Name` field itself?
+
+::
+
+	// Calls
+	var expression = new QueryField("Name", "Jay Doe");
+	connection.Update("Customer", new { Name = "John Doe" }, expression);
+
+	// Would you expect it like this?
+	UPDATE [dbo].[Customer] SET Name = @Name WHERE (Name = @Name);
+
+That is wrong. By calling the `IsForUpdate` method, the returned SQL would be different.
+
+::
+
+	// Calls
+	var expression = new QueryField("Name", "Jay Doe");
+	expression.IsForUpdate();
+	connection.Update("Customer", new { Name = "John Doe" }, expression);
+
+	// Would you expect it like this?
+	UPDATE [dbo].[Customer] SET Name = @Name WHERE (Name = @_Name);
+
+In which the value of `@Name` parameter is `John Doe` and the value of `@_Name` parameter is `Jay Doe`.
+
+**Note:** RepoDb is automatically calling this method in all `Update` operation.
 
 Reusability
 -----------
