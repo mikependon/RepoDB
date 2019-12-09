@@ -3,15 +3,6 @@ Introduction
 
 A hybrid ORM library for .NET.
 
-Repositories
-------------
-
-* RepoDb (Home): `https://github.com/mikependon/RepoDb <https://github.com/mikependon/RepoDb>`_
-* Core: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core <https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core>`_
-* SqLite: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite <https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite>`_
-* MySql: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql <https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql>`_
-* PostgreSql (in-progress): `https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql <https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql>`_
-
 Packages
 --------
 
@@ -43,3 +34,12 @@ Features
 * Tracing
 * Transaction
 * Type Mapping
+
+Repositories
+------------
+
+* RepoDb (Home): `https://github.com/mikependon/RepoDb <https://github.com/mikependon/RepoDb>`_
+* Core: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core <https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core>`_
+* SqLite: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite <https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite>`_
+* MySql: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql <https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql>`_
+* PostgreSql (in-progress): `https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql <https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql>`_
