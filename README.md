@@ -59,7 +59,7 @@ As an author, I would like to build a healthy and active community that would he
 
 Any help from the community will be highly appreciated as it really helps me eliminate my full-efforts. 
 
-## Pull-Requests
+## Contributions
 
 The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
 
@@ -73,13 +73,13 @@ To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](h
 
 ## Benchmark
 
-Being the **author** of this library and to **avoid the bias** on the results, the benchmark to be shown on this page will always be referring to the community-approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+Being the author of this library and to avoid the bias on the results, the benchmark to be shown on this page will always be referring to the community-approved ORM-bencher ([RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
 
 Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/BencherResultForReadMe.PNG" height="400px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/BencherResultForReadMe.PNG" height="500px" />
 
-RepoDb is the **fastest** and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
+RepoDb is the fastest and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
 This section will always be updated with the latest official result.
 
@@ -87,38 +87,38 @@ This section will always be updated with the latest official result.
 
 Below are the list of operations available at RepoDb.
 
-Operation                | Normal<TEntity> | Normal<TEntity> (Async) | TableName | TableName (Async) | Packed Execution | Data Providers         |
--------------------------|-----------------|-------------------------|-----------|-------------------|------------------|------------------------|
-**Average**              | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**AverageAll**           | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**BatchQuery**           | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**BulkInsert**           | YES             | YES                     | YES       | YES               | NO               | SQLSVR, POSTGRESQL     |
-**Count**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**CountAll**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**Delete**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**DeleteAll**            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**ExecuteNonQuery**      | YES             | YES                     | NO        | NO                | NO               | ALL                    |
-**ExecuteQuery**         | YES             | YES                     | NO        | NO                | NO               | ALL                    |
-**ExecuteQueryMultiple** | YES             | YES                     | NO        | NO                | NO               | ALL                    |
-**ExecuteReader**        | YES             | YES                     | NO        | NO                | NO               | ALL                    |
-**ExecuteScalar**        | YES             | YES                     | NO        | NO                | NO               | ALL                    |
-**Exists**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**Insert**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**InsertAll**            | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
-**Max**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**MaxAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**Merge**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**MergeAll**             | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
-**Min**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**MinAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**Query**                | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**QueryAll**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**QueryMultiple**        | YES             | YES                     | NO        | NO                | **YES**          | MENTIONED              |
-**Sum**                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**SumAll**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**Truncate**             | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**Update**               | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
-**UpdateAll**            | YES             | YES                     | YES       | YES               | **YES**          | MENTIONED              |
+Operation                                                                                                 | Normal<TEntity> | Normal<TEntity> (Async) | TableName | TableName (Async) | Packed Execution | Data Providers         |
+----------------------------------------------------------------------------------------------------------|-----------------|-------------------------|-----------|-------------------|------------------|------------------------|
+[Average](https://repodb.readthedocs.io/en/latest/pages/connection.html#average)                          | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[AverageAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#averageALL)                    | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[BatchQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#batchquery)                    | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[BulkInsert](https://repodb.readthedocs.io/en/latest/pages/connection.html#bulkinsert)                    | YES             | YES                     | YES       | YES               | NO               | SQLSVR, POSTGRESQL     |
+[Count](https://repodb.readthedocs.io/en/latest/pages/connection.html#count)                              | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[CountAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#countall)                        | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[Delete](https://repodb.readthedocs.io/en/latest/pages/connection.html#delete)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[DeleteAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#deleteall)                      | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[ExecuteNonQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery)          | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+[ExecuteQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery)                | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+[ExecuteQueryMultiple](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequerymultiple)| YES             | YES                     | NO        | NO                | NO               | ALL                    |
+[ExecuteReader](https://repodb.readthedocs.io/en/latest/pages/connection.html#executereader)              | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+[ExecuteScalar](https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar)              | YES             | YES                     | NO        | NO                | NO               | ALL                    |
+[Exists](https://repodb.readthedocs.io/en/latest/pages/connection.html#exists)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[Insert](https://repodb.readthedocs.io/en/latest/pages/connection.html#insert)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[InsertAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#insertall)                      | YES             | YES                     | YES       | YES               | YES         	   | MENTIONED              |
+[Max](https://repodb.readthedocs.io/en/latest/pages/connection.html#max)                                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[MaxAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#maxall)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[Merge](https://repodb.readthedocs.io/en/latest/pages/connection.html#merge)                              | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[MergeAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#mergeall)                        | YES             | YES                     | YES       | YES               | YES              | MENTIONED              |
+[Min](https://repodb.readthedocs.io/en/latest/pages/connection.html#min)                                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[MinAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#minall)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[Query](https://repodb.readthedocs.io/en/latest/pages/connection.html#query)                              | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[QueryAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#queryall)                        | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[QueryMultiple](https://repodb.readthedocs.io/en/latest/pages/connection.html#querymultiple)              | YES             | YES                     | NO        | NO                | YES              | MENTIONED              |
+[Sum](https://repodb.readthedocs.io/en/latest/pages/connection.html#sum)                                  | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[SumAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#sumall)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[Truncate](https://repodb.readthedocs.io/en/latest/pages/connection.html#truncate)                        | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
+[UpdateAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#updateall)                      | YES             | YES                     | YES       | YES               | YES              | MENTIONED              |
 
 ## Installations
 
