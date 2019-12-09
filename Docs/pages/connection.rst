@@ -46,7 +46,7 @@ Explicit way:
 		var result = connection.Average<Order>(e => e.Price, queryGroup);
 	}
 
-Records can all also be counted via table name.
+Records can all also be averaged via table name.
 
 Dynamic way:
 
@@ -71,7 +71,7 @@ Explicit way:
 		var result = connection.Average("Order", new Field("Price"), queryGroup);
 	}
 
-**Note**: By setting the `where` argument to blank would count all the records. Exactly the same as `AverageAll` operation.
+**Note**: By setting the `where` argument to blank would average all the records. Exactly the same as `AverageAll` operation.
 
 AverageAll
 ----------
@@ -174,7 +174,7 @@ Explicit way:
 BulkInsert
 ----------
 
-Bulk insert a list of data entity objects into the database. Only available for SQL Server data provider.
+Bulk insert a list of data entity objects into the database. Only available for SQL Server and Postgre SQL data provider.
 
 .. highlight:: c#
 
@@ -209,7 +209,7 @@ The result would be the number of rows affected by the `BulkInsert` in the datab
 
 .. highlight:: c#
 
-Initiate a `DbDataReader` object from the source connection.
+`BulkInsert` can also be done via `DbDataReader`.
 
 ::
 
@@ -227,14 +227,30 @@ Call the `BulkInsert` operation by passing the `DbDataReader` object as the para
 
 	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		// Via entity type
 		var result = connection.BulkInsert<Order>(reader);
-
-		// Via table name
-		var result = connection.BulkInsert(reader, nameof(Order));
 	}
 
-**Note**: Beware of the `COLLATION` for the cross-database `BulkInsert` operation.
+**Note**: Be aware of the `COLLATION` for the cross-database `BulkInsert` operation.
+
+Records can also be bulk-inserted via table name.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.BulkInsert("Order", orders);
+	}
+
+Or, via table name with `DbDataReader`.
+
+::
+
+	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.BulkInsert("Order", reader);
+	}
 
 Count
 -----
@@ -601,7 +617,6 @@ No need for the class to have the exact match of the properties (also applicable
 
 ::
 
-	[Map("[dbo].[Order]")]
 	public class ComplexOrder
 	{
 		// Match properties
@@ -667,7 +682,7 @@ The `ExecuteQuery` method can also return a list of dynamic objects.
 		}
 	}
 
-Note: Calling the `ExecuteQuery` via dynamic is a bit slower compared to a .NET CLR Type-based calls.
+**Note**: Calling the `ExecuteQuery` via dynamic is a bit slower compared to a .NET CLR Type-based calls.
 
 ExecuteQueryMultiple
 --------------------
@@ -682,6 +697,7 @@ Executes a multiple query statement from the database and allows the user to ext
 	{
 		var commandText = @"SELECT * FROM Customer WHERE Id = @CustomerId;
 			SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
+
 		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
 		{
 			// Extract the first result
@@ -702,6 +718,7 @@ The method `Scalar` is used to extract the value of the first column of the firs
 	{
 		var commandText = @"SELECT * FROM Customer WHERE Id = @CustomerId;
 			SELECT COUNT(*) FROM [Order] WHERE CustomerId = @CustomerId;";
+
 		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
 		{
 			// Extract the first result
@@ -984,7 +1001,9 @@ A dynamic typed-based call is also provided when calling this method, see below.
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
 
-**Certain** columns can also be inserted via table name calls.
+**Note**: The first generic type is the type of data entity object, the second generic type is the type of the result.
+
+Certain columns can also be inserted via table name calls.
 
 ::
 
@@ -1029,7 +1048,9 @@ Inserts multiple data in the database.
 		connection.InsertAll(orders);
 	}
 
-**Certain** columns can also be inserted via table-name-based calls.
+**Note**: All data entities `identity` fields will automatically be filled by its newly generated identity values.
+
+Certain columns can also be inserted via table-name-based calls.
 
 ::
 
@@ -1053,7 +1074,7 @@ Inserts multiple data in the database.
 
 **Why passing the fields arguments?**
 
-This is optional since this is an insert operation. However, by default, the library will use the database columns of the `Order` entity. If the values to that argument is not set, then `InsertAll` operation will set it to `null` in the database.
+By default, the library will use the database columns of the `Order` entity. If the values of some fields were not specified, then the `InsertAll` operation will set it to `null` in the database.
 
 **Note**: Use the table-name-based calls if the scenario is to only insert targetted columns.
 
@@ -1098,7 +1119,7 @@ Explicit way:
 		var result = connection.Max<Order>(e => e.Price, queryGroup);
 	}
 
-Records can all also be counted via table name.
+Records can all also be maximized via table name.
 
 Dynamic way:
 
@@ -1167,9 +1188,9 @@ Merges a data entity or dynamic object into the database.
 		connection.Merge(order, Field.Parse<Order>(o => o.Id));
 	}
 
-**Note**: The second parameter (a qualifier) can be omitted if the data entity has a primary key.
+**Note**: The second parameter (a qualifier) can be omitted if the data entity has a primary key. The data entity `identity` field will automatically be filled with identity value after the operation.
 
-**Certain** columns can also be merged via table name calls.
+Certain columns can also be merged via table name calls.
 
 ::
 
@@ -1208,9 +1229,9 @@ Merges the multiple data entity or dynamic objects into the database.
 		connection.MergeAll(orders);
 	}
 
-**Note**: All fields are being merged when calling the typed-based method.
+**Note**: All fields are being merged when calling the typed-based method. The data entities `identity` fields will automatically be filled with its newly generated identity values.
 
-**Certain** columns can also be merged via table name calls.
+Certain columns can also be merged via table name calls.
 
 ::
 
@@ -1235,7 +1256,7 @@ Merges the multiple data entity or dynamic objects into the database.
 
 **Why passing the fields arguments?**
 
-Be aware on this behavior since this is a merge operation. By default, the library will use the database columns of the `Order` entity. If the values to that fields has not been set, then `MergeAll` operation will set it to `null` in the database. By setting the `fields` argument, it will only merge the listed `fields` in the batch operations.
+Be aware on this behavior since this is a merge operation. By default, the library will use the database columns of the `Order` entity. If the values to that fields were not specified, then the `MergeAll` operation will set it to `null` in the database. By setting the `fields` argument, it will only merge the listed `fields` in the batch operations.
 
 **Note**: Use the table-name-based calls if the scenario is to only merge targetted columns.
 
@@ -1280,7 +1301,7 @@ Explicit way:
 		var result = connection.Min<Order>(e => e.Price, queryGroup);
 	}
 
-Records can all also be counted via table name.
+Records can all also be minimized via table name.
 
 Dynamic way:
 
@@ -1397,7 +1418,7 @@ With hint.
 		var customers = connection.Query<Customer>(new { CustomerId = 10045 }, hints: SqlTableHints.NoLock);
 	}
 
-**Certain** columns can also be queried via table-name-based calls.
+Certain columns can also be queried via table-name-based calls.
 
 ::
 
@@ -1451,7 +1472,7 @@ With hint.
 		var customers = connection.QueryAll<Customer>(SqlTableHints.NoLock);
 	}
 
-**Certain** columns can also be queried via table-name-based calls.
+Certain columns can also be queried via table-name-based calls.
 
 ::
 
@@ -1628,7 +1649,7 @@ Explicit way:
 		var result = connection.Sum<Order>(e => e.Price, queryGroup);
 	}
 
-Records can all also be counted via table name.
+Records can all also be summarized via table name.
 
 Dynamic way:
 
@@ -1823,7 +1844,7 @@ Updates existing multiple data in the database.
 
 **Note**: All fields are being updated when calling the typed-based method.
 
-**Certain** columns can also be updated via table name calls.
+Certain columns can also be updated via table name calls.
 
 ::
 
