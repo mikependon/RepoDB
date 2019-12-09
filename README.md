@@ -48,7 +48,7 @@ RepoDb is rapidly expanding its capability to further support other RDBMS data-p
 
 It is now open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
 
-### Community engagements
+### Engagements
 
 As an author, I would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch via:
 
@@ -79,7 +79,7 @@ Results below is based on the recent official execution [result](https://github.
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="500px" />
 
-RepoDb is the fastest and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
+RepoDb is the **fastest** and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
 This section will always be updated with the latest official result.
 
