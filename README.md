@@ -77,7 +77,7 @@ Being the author of this library and to avoid the bias on the results, the bench
 
 Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/BencherResultForReadMe.PNG" height="500px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="500px" />
 
 RepoDb is the fastest and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
