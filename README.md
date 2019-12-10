@@ -34,7 +34,7 @@ Project/Solution                                                                
 
 ## Supported Databases
 
-Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statements and execute it against the database through *Execute* methods mentioned below.
+Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statements and execute it against the database through the *Execute* methods mentioned below.
 
 - [ExecuteQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery)
 - [ExecuteNonQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery)
@@ -50,7 +50,7 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 
 ### Extensibility
 
-RepoDb is highly extensible to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the me (as an author) for help.
+RepoDb is highly extensible to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact me (as an author) for help.
 
 ## Community
 
