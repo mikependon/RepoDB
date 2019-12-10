@@ -5,9 +5,6 @@ The library has abstracted the `ADO.NET` transaction object.
 
 .. highlight:: c#
 
-BeginTransaction
-----------------
-
 ::
 
 	using (var connection = repository.CreateConnection().EnsureOpen())

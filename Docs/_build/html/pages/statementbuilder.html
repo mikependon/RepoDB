@@ -132,7 +132,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -205,63 +205,63 @@
 <h2>QueryBuilder<a class="headerlink" href="#querybuilder" title="Permalink to this headline">¶</a></h2>
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
 <p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provider.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery(QueryBuilder queryBuilder,
-        string tableName,
-        IEnumerable&lt;Field&gt; fields,
-        QueryGroup where = null,
-        IEnumerable&lt;OrderField&gt; orderBy = null,
-        int? top = null,
-        string hints = null)
-{
-        // There should be fields
-        if (fields?.Any() != true)
-        {
-                throw new NullReferenceException($&quot;The list of queryable fields must not be null for &#39;{tableName}&#39;.&quot;);
-        }
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="kt">string</span> <span class="nf">CreateQuery</span><span class="p">(</span><span class="n">QueryBuilder</span> <span class="n">queryBuilder</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">tableName</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Field</span><span class="p">&gt;</span> <span class="n">fields</span><span class="p">,</span>
+        <span class="n">QueryGroup</span> <span class="k">where</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">OrderField</span><span class="p">&gt;</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">int?</span> <span class="n">top</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span>
+        <span class="kt">string</span> <span class="n">hints</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">// There should be fields</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fields</span><span class="p">?.</span><span class="n">Any</span><span class="p">()</span> <span class="p">!=</span> <span class="k">true</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullReferenceException</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="s">&quot;The list of queryable fields must not be null for &#39;&quot;</span><span class="p">,</span> <span class="n">tableName</span><span class="p">,</span> <span class="s">&quot;&#39;.&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        // Build the query
-        queryBuilder
-                .Clear()
-                .Select()
-                .TopFrom(top)
-                .FieldsFrom(fields)
-                .From()
-                .TableNameFrom(tableName);
+        <span class="c1">// Build the query</span>
+        <span class="n">queryBuilder</span>
+                <span class="p">.</span><span class="n">Clear</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">Select</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">TopFrom</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">FieldsFrom</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">From</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">TableNameFrom</span><span class="p">(</span><span class="n">tableName</span><span class="p">);</span>
 
-        // Build the query optimizers
-        if (hints != null)
-        {
-                // Write the hints here like: queryBuilder.WriteText(hints);
-        }
+        <span class="c1">// Build the query optimizers</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">hints</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Write the hints here like: queryBuilder.WriteText(hints);</span>
+        <span class="p">}</span>
 
-        // Add all fields for WHERE
-        if (where != null)
-        {
-                queryBuilder.WhereFrom(where);
-        }
+        <span class="c1">// Add all fields for WHERE</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">where</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="n">queryBuilder</span><span class="p">.</span><span class="n">WhereFrom</span><span class="p">(</span><span class="k">where</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        // Add the ROWNUM (TOP in SQL Server)
-        if (top &gt; 0)
-        {
-                // In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM &lt;=(Rows)
-                if (where != null)
-                {
-                        queryBuilder.WriteText($&quot;AND (ROWNUM &lt;= {top})&quot;);
-                }
-                else
-                {
-                        queryBuilder.WriteText($&quot;(ROWNUM &lt;= {top})&quot;);
-                }
-        }
+        <span class="c1">// Add the ROWNUM (TOP in SQL Server)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">top</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM &lt;=(Rows)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">where</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+                <span class="p">{</span>
+                        <span class="n">queryBuilder</span><span class="p">.</span><span class="n">WriteText</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="s">&quot;AND (ROWNUM &lt;= &quot;</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="s">&quot;)&quot;</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="k">else</span>
+                <span class="p">{</span>
+                        <span class="n">queryBuilder</span><span class="p">.</span><span class="n">WriteText</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Concat</span><span class="p">(</span><span class="s">&quot;(ROWNUM &lt;= &quot;</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="s">&quot;)&quot;</span><span class="p">));</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
 
-        // Build the filter and ordering
-        queryBuilder
-                .OrderByFrom(orderBy)
-                .End();
+        <span class="c1">// Build the filter and ordering</span>
+        <span class="n">queryBuilder</span>
+                <span class="p">.</span><span class="n">OrderByFrom</span><span class="p">(</span><span class="n">orderBy</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">End</span><span class="p">();</span>
 
-        // Return the query
-        return queryBuilder.GetString();
-}
+        <span class="c1">// Return the query</span>
+        <span class="k">return</span> <span class="n">queryBuilder</span><span class="p">.</span><span class="n">GetString</span><span class="p">();</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>

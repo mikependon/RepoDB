@@ -6,7 +6,7 @@ The library supports statement building injection, allowing the developers to ov
 QueryBuilder
 ------------
 
-.. highlight:: none
+.. highlight:: c#
 
 A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.
 
@@ -25,7 +25,7 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 		// There should be fields
 		if (fields?.Any() != true)
 		{
-			throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+			throw new NullReferenceException(string.Concat("The list of queryable fields must not be null for '", tableName, "'."));
 		}
 
 		// Build the query
@@ -55,11 +55,11 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 			// In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM <=(Rows)
 			if (where != null)
 			{
-				queryBuilder.WriteText($"AND (ROWNUM <= {top})");
+				queryBuilder.WriteText(string.Concat("AND (ROWNUM <= ", top, ")"));
 			}
 			else
 			{
-				queryBuilder.WriteText($"(ROWNUM <= {top})");
+				queryBuilder.WriteText(string.Concat("(ROWNUM <= ", top, ")"));
 			}
 		}
 

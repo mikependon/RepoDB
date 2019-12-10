@@ -1188,7 +1188,31 @@ Merges a data entity or dynamic object into the database.
 		connection.Merge(order, Field.Parse<Order>(o => o.Id));
 	}
 
-**Note**: The second parameter (a qualifier) can be omitted if the data entity has a primary key. The data entity `identity` field will automatically be filled with identity value after the operation.
+By default, the `Merge` operation is using the data entity `PrimaryKey` as the qualifier if the second parameter is omitted.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var order = connection.Query<Order>(1);
+		order.Quantity = 5;
+		UpdatedDate = DateTime.UtcNow;
+		connection.Merge(order);
+	}
+
+The qualifiers can also be set with the combination of multiple fields. When using this, please note that the qualifiers are also corresponding with the table index for performance purposes.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var order = connection.Query<Order>(1);
+		order.Quantity = 5;
+		UpdatedDate = DateTime.UtcNow;
+		connection.Merge(order, Field.From("CustomerId", "ProductId"));
+	}
+
+**Note**: The data entity `identity` field will automatically be filled with newly generated identity value if the `Merge` operation has inserted a new record in the database.
 
 Certain columns can also be merged via table name calls.
 
@@ -1203,7 +1227,7 @@ Certain columns can also be merged via table name calls.
 			Quantity = 5,
 			UpdatedDate = DateTime.UtcNow
 		};
-		connection.Merge("Order", entity, Field.From("Id"));
+		connection.Merge("Order", entity);
 	}
 
 **Note**: Use the table-name-based calls if the scenario is to only merge targetted columns.
@@ -1226,7 +1250,39 @@ Merges the multiple data entity or dynamic objects into the database.
 			order.Quantity = 5;
 			order.LastUpdatedUtc = DateTime.UtcNow;
 		}
+		connection.MergeAll(orders, Field.From("Id"));
+	}
+
+Same as `Merge` operation, the `MergeAll` operation is also using the `PrimaryKey` as the default qualifier if the argument is not provided during the calls.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			order.Quantity = 5;
+			order.LastUpdatedUtc = DateTime.UtcNow;
+		}
 		connection.MergeAll(orders);
+	}
+
+Also, multiple columns can be used as the qualifier for `MergeAll` operation.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			order.Quantity = 5;
+			order.LastUpdatedUtc = DateTime.UtcNow;
+		}
+		connection.MergeAll(orders, Field.From("CustomerId", "ProductId"));
 	}
 
 **Note**: All fields are being merged when calling the typed-based method. The data entities `identity` fields will automatically be filled with its newly generated identity values.

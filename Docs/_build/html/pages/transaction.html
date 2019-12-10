@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="QueryGroup" href="querygroup.html" />
-    <link rel="prev" title="Provider Operation" href="provideroperation.html" /> 
+    <link rel="prev" title="Hints" href="hints.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,11 +89,10 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Transaction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#begintransaction">BeginTransaction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usability">Usability</a></li>
 </ul>
 </li>
@@ -102,10 +101,11 @@
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -174,8 +174,6 @@
   <div class="section" id="transaction">
 <h1>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h1>
 <p>The library has abstracted the <cite>ADO.NET</cite> transaction object.</p>
-<div class="section" id="begintransaction">
-<h2>BeginTransaction<a class="headerlink" href="#begintransaction" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">transaction</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BeginTransaction</span><span class="p">();</span>
@@ -193,7 +191,6 @@
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
 </div>
 <div class="section" id="usability">
 <h2>Usability<a class="headerlink" href="#usability" title="Permalink to this headline">¶</a></h2>
@@ -266,7 +263,7 @@
         <a href="querygroup.html" class="btn btn-neutral float-right" title="QueryGroup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="provideroperation.html" class="btn btn-neutral float-left" title="Provider Operation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="hints.html" class="btn btn-neutral float-left" title="Hints" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -42,3 +42,19 @@ Repositories
 * SqLite: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite <https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite>`_
 * MySql: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql <https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql>`_
 * PostgreSql: `https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql <https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql>`_
+
+Learnings (In-Progress)
+-----------------------
+
+* `Getting started with RepoDb <https://www.nuget.org/packages/RepoDb>`_
+* `Implementing a Repository (via DbConnection, DbRepository and BaseRepository) <https://www.nuget.org/packages/RepoDb>`_
+* `Making the Repositories Dependency-Injectable <https://www.nuget.org/packages/RepoDb>`_
+* `Bulk-Operations vs Batch-Operations <https://www.nuget.org/packages/RepoDb>`_
+* `Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple <https://www.nuget.org/packages/RepoDb>`_
+* `Working with Transactions <https://www.nuget.org/packages/RepoDb>`_
+* `Expression Trees <https://www.nuget.org/packages/RepoDb>`_
+* `Advance Field and Type Mapping Implementations <https://www.nuget.org/packages/RepoDb>`_
+* `Customizing a Cache <https://www.nuget.org/packages/RepoDb>`_
+* `Implementing a Trace <https://www.nuget.org/packages/RepoDb>`_
+* `The importance of Connection Persistency <https://www.nuget.org/packages/RepoDb>`_
+* `Extending support for specific DB Provider <https://www.nuget.org/packages/RepoDb>`_
