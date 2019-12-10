@@ -12,9 +12,9 @@
 
 RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
 
-### It is high-performance
+### It is high-performant
 
-This refers to “how fast” RepoDb converts the raw data into a class object, and transport the class object as an actual data in the database.
+This refers to “how fast” RepoDb converts the raw data into a class object and transport the class object as an actual data in the database.
 
 RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
@@ -22,7 +22,7 @@ RepoDb has its own compiler. It caches the “already-generated” compiled-ILs 
 
 This refers to “how well-managed” RepoDb uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
-RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing it all throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
+RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
 ## Builds and Tests Result
 
@@ -34,21 +34,27 @@ Project/Solution                                                                
 
 ## Supported Databases
 
-Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statement and execute it against the database in one-go. The execution of the SQL statements limit only from the “Execute” methods the RepoDb has provided (ie: *ExecuteQuery*, *ExecuteNonQuery*, *ExecuteScalar*, *ExecuteReader* and *ExecuteQueryMultiple*).
+Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statements and execute it against the database through *Execute* methods mentioned below.
+
+- [ExecuteQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery)
+- [ExecuteNonQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery)
+- [ExecuteScalar](https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar)
+- [ExecuteReader](https://repodb.readthedocs.io/en/latest/pages/connection.html#executereader)
+- [ExecuteQueryMultiple](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequerymultiple)
 
 ### Fully supported databases for fluent-methods
 
 <img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="64px" title="MySql" />
 
-RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data 
+RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers. In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
 
 ### Extensibility
 
-RepoDb is highly extensible and dynamic enough to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the me (as an author) for help.
+RepoDb is highly extensible to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. There will be detailed documentation soon. For now, please contact the me (as an author) for help.
 
 ## Community
 
-RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is a micro-ORM, but it really requires significant amount of time and effort to maintain.
+RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is **not** a full-ORM, but it really requires significant amount of time and effort to maintain.
 
 It is now open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
 
@@ -67,7 +73,7 @@ Any help from the community will be highly appreciated as it really helps me eli
 
 The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
 
-The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
+The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated to NetFramework projects. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
 
 To contribute, open the [Issues]([https://github.com/mikependon/RepoDb/issues](https://github.com/mikependon/RepoDb/issues)) tab and filter the list of items with **for grabs** label.
 
