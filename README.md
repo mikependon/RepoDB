@@ -75,7 +75,7 @@ The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb
 
 The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated to NetFramework projects. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
 
-To contribute, open the [Issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new](https://github.com/mikependon/RepoDb/issues/new) issue for us to look-at and discuss.
+To contribute, open the [Issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 ## License
 
@@ -92,24 +92,6 @@ Results below is based on the recent official execution [result](https://github.
 RepoDb is the **fastest** and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
 This section will always be updated with the latest official result.
-
-## Learnings (In-Progress)
-
-Below are the links that would help the developers to do practical implementation when using the library.
-
-- [Read everything about RepoDb](https://repodb.readthedocs.io/en/latest/)
-- [Getting started](https://www.nuget.org/packages/RepoDb)
-- [Implementing a Repository (via DbConnection, DbRepository and BaseRepository)](https://www.nuget.org/packages/RepoDb)
-- [Making the Repositories Dependency-Injectable](https://www.nuget.org/packages/RepoDb)
-- [Bulk-Operations vs Batch-Operations](https://www.nuget.org/packages/RepoDb)
-- [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://www.nuget.org/packages/RepoDb)
-- [Working with Transactions](https://www.nuget.org/packages/RepoDb)
-- [Expression Trees](https://www.nuget.org/packages/RepoDb)
-- [Advance Field and Type Mapping Implementations](https://www.nuget.org/packages/RepoDb)
-- [Customizing a Cache](https://www.nuget.org/packages/RepoDb)
-- [Implementing a Trace](https://www.nuget.org/packages/RepoDb)
-- [The importance of Connection Persistency](https://www.nuget.org/packages/RepoDb)
-- [Extending support for specific DB Provider](https://www.nuget.org/packages/RepoDb)
 
 ## Operations
 
@@ -147,6 +129,26 @@ Operation                                                                       
 [Truncate](https://repodb.readthedocs.io/en/latest/pages/connection.html#truncate)                        | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update)                            | YES             | YES                     | YES       | YES               | NO               | MENTIONED              |
 [UpdateAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#updateall)                      | YES             | YES                     | YES       | YES               | YES              | MENTIONED              |
+
+## Learnings (In-Progress)
+
+Below are the links that would help the developers to do practical implementation when using the library. **Please help yourselves!**
+
+- [Read everything about RepoDb](https://repodb.readthedocs.io/en/latest/)
+- [Getting started](https://www.nuget.org/packages/RepoDb)
+- [Implementing a Repository (via DbConnection, DbRepository and BaseRepository)](https://www.nuget.org/packages/RepoDb)
+- [Making the Repositories Dependency-Injectable](https://www.nuget.org/packages/RepoDb)
+- [Bulk-Operations vs Batch-Operations](https://www.nuget.org/packages/RepoDb)
+- [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://www.nuget.org/packages/RepoDb)
+- [Working with Transactions](https://www.nuget.org/packages/RepoDb)
+- [Expression Trees](https://www.nuget.org/packages/RepoDb)
+- [Advance Field and Type Mapping Implementations](https://www.nuget.org/packages/RepoDb)
+- [Customizing a Cache](https://www.nuget.org/packages/RepoDb)
+- [Implementing a Trace](https://www.nuget.org/packages/RepoDb)
+- [The importance of Connection Persistency](https://www.nuget.org/packages/RepoDb)
+- [Extending support for specific DB Provider](https://www.nuget.org/packages/RepoDb)
+
+I am always here to support, so please do not hesitate to [contact me](https://repodb.readthedocs.io/en/latest/pages/contact.html).
 
 ## Installations
 
