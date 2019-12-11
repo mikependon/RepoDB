@@ -493,6 +493,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+<p><strong>Note</strong>: The library uses the <cite>PrimaryKey</cite> as the default qualifier for <cite>Delete</cite> operation. This also applies when deleting the <cite>data entity</cite> object itself. This call will throw an exception if the data entity does not have a primary key.</p>
 <p>Via Dynamic:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -1044,12 +1045,13 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>The return value would be the newly generated <cite>Identity</cite> value, otherwise the value of <cite>PrimaryKey</cite>. If both are not present, then it will return <cite>null</cite>.</p>
 <p>A dynamic typed-based call is also provided when calling this method, see below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// The first type is the entity type, the second type is the result type</span>
 <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Insert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">,</span> <span class="kt">long</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: The first generic type is the type of data entity object, the second generic type is the type of the result.</p>
+<p><strong>Note</strong>: The first generic type is the type of <cite>data entity</cite> object, the second generic type is the type of the <cite>result</cite>. The <cite>identity</cite> column will automatically be filled with newly generated <cite>identity</cite> value right after the insert.</p>
 <p>Certain columns can also be inserted via table name calls.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -1088,7 +1090,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: All data entities <cite>identity</cite> fields will automatically be filled by its newly generated identity values.</p>
+<p><strong>Note</strong>: All data entities <cite>identity</cite> fields will automatically be filled with its newly generated identity values.</p>
 <p>Certain columns can also be inserted via table-name-based calls.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -1691,7 +1693,7 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Note: This call will throw an exception if the data entity does not have a primary key.</p>
+<p><strong>Note</strong>: The library uses the <cite>PrimaryKey</cite> as the default qualifier for <cite>Update</cite> operation. This also applies when updating the <cite>data entity</cite> object itself. This call will throw an exception if the data entity does not have a <cite>primary key</cite>.</p>
 <p>Via Dynamic:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -1755,6 +1757,25 @@ The result is an instance of a <cite>Tuple</cite> object.</p>
         <span class="p">}</span>
         <span class="n">connection</span><span class="p">.</span><span class="n">UpdateAll</span><span class="p">(</span><span class="n">orders</span><span class="p">);</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The library uses the <cite>PrimaryKey</cite> as the default qualifier for <cite>UpdateAll</cite> operation. This call will throw an exception if the data entity does not have a <cite>primary key</cite> and the <cite>qualifiers</cite> were not provided.</p>
+<p>The qualifiers can also be set when calling the <cite>UpdateAll</cite> operation.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">100</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+        <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">orders</span><span class="p">.</span><span class="n">ElementAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+                <span class="n">order</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
+                <span class="n">order</span><span class="p">.</span><span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">UpdateAll</span><span class="p">(</span><span class="n">orders</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="s">&quot;OrderId&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With the qualifiers above, the <cite>UpdateAll</cite> operation is using both <cite>CustomerId</cite> and <cite>OrderId</cite> fields as the qualifiers. The SQL is something like below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">UPDATE</span> <span class="p">[</span><span class="n">Order</span><span class="p">]</span> <span class="n">SET</span> <span class="n">Quantity</span> <span class="p">=</span> <span class="n">@Quantity</span><span class="p">,</span> <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">@LastUpdatedUtc</span> <span class="n">WHERE</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="n">@CustomerId</span> <span class="n">AND</span> <span class="n">OrderId</span> <span class="p">=</span> <span class="n">@OrderId</span><span class="p">;</span>
 </pre></div>
 </div>
 <p><strong>Note</strong>: All fields are being updated when calling the typed-based method.</p>

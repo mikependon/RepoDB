@@ -382,6 +382,8 @@ Via PrimaryKey:
 		var result = connection.Delete<Customer>(10045);
 	}
 
+**Note**: The library uses the `PrimaryKey` as the default qualifier for `Delete` operation. This also applies when deleting the `data entity` object itself. This call will throw an exception if the data entity does not have a primary key.
+
 Via Dynamic:
 
 ::
@@ -994,6 +996,8 @@ Inserts a new data in the database.
 		var id = Convert.ToInt64(connection.Insert(order));
 	}
 
+The return value would be the newly generated `Identity` value, otherwise the value of `PrimaryKey`. If both are not present, then it will return `null`.
+
 A dynamic typed-based call is also provided when calling this method, see below.
 
 ::
@@ -1001,7 +1005,7 @@ A dynamic typed-based call is also provided when calling this method, see below.
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
 
-**Note**: The first generic type is the type of data entity object, the second generic type is the type of the result.
+**Note**: The first generic type is the type of `data entity` object, the second generic type is the type of the `result`. The `identity` column will automatically be filled with newly generated `identity` value right after the insert.
 
 Certain columns can also be inserted via table name calls.
 
@@ -1048,7 +1052,7 @@ Inserts multiple data in the database.
 		connection.InsertAll(orders);
 	}
 
-**Note**: All data entities `identity` fields will automatically be filled by its newly generated identity values.
+**Note**: All data entities `identity` fields will automatically be filled with its newly generated identity values.
 
 Certain columns can also be inserted via table-name-based calls.
 
@@ -1816,7 +1820,7 @@ Via PrimaryKey:
 		var result = connection.Update<Order>(order, 1002);
 	}
 
-Note: This call will throw an exception if the data entity does not have a primary key.
+**Note**: The library uses the `PrimaryKey` as the default qualifier for `Update` operation. This also applies when updating the `data entity` object itself. This call will throw an exception if the data entity does not have a `primary key`.
 
 Via Dynamic:
 
@@ -1897,6 +1901,30 @@ Updates existing multiple data in the database.
 		}
 		connection.UpdateAll(orders);
 	}
+
+**Note**: The library uses the `PrimaryKey` as the default qualifier for `UpdateAll` operation. This call will throw an exception if the data entity does not have a `primary key` and the `qualifiers` were not provided.
+
+The qualifiers can also be set when calling the `UpdateAll` operation.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var orders = connection.Query<Order>(o => o.CustomerId == 10045);
+		for (var i = 0; i < 100; i++)
+		{
+			var order = orders.ElementAt(i);
+			order.Quantity = 5;
+			order.LastUpdatedUtc = DateTime.UtcNow;
+		}
+		connection.UpdateAll(orders, Field.From("CustomerId", "OrderId"));
+	}
+
+With the qualifiers above, the `UpdateAll` operation is using both `CustomerId` and `OrderId` fields as the qualifiers. The SQL is something like below.
+
+::
+
+	UPDATE [Order] SET Quantity = @Quantity, LastUpdatedUtc = @LastUpdatedUtc WHERE CustomerId = @CustomerId AND OrderId = @OrderId;
 
 **Note**: All fields are being updated when calling the typed-based method.
 
