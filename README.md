@@ -132,7 +132,9 @@ Operation                                                                       
 
 ## Learnings (In-Progress)
 
-Below are the links that would help the developers to do practical and actual implementation when using the library. Consider this as your reference implementation at some cases. Please help yourselves!
+Below are the links that would help the developers to do practical and actual implementation when using the library.
+
+Consider this as your reference implementation at some cases. *Please help yourselves!*
 
 - [Read everything about RepoDb](https://repodb.readthedocs.io/en/latest/)
 - [Getting started](https://www.nuget.org/packages/RepoDb)
@@ -148,7 +150,9 @@ Below are the links that would help the developers to do practical and actual im
 - [The importance of Connection Persistency](https://www.nuget.org/packages/RepoDb)
 - [Extending support for specific DB Provider](https://www.nuget.org/packages/RepoDb)
 
-For further support, please to contact [me](https://repodb.readthedocs.io/en/latest/pages/contact.html) directly or chat us via [Gitter](https://gitter.im/RepoDb/community).
+There will also be high-level implementations and sample code-snippets on the following sections to help you start with.
+
+Otherwise, please to contact [me](https://repodb.readthedocs.io/en/latest/pages/contact.html) directly or chat us via [Gitter](https://gitter.im/RepoDb/community).
 
 ## Installations
 
