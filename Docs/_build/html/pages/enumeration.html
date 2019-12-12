@@ -181,22 +181,37 @@
 <div class="section" id="as-string">
 <h2>As String<a class="headerlink" href="#as-string" title="Permalink to this headline">¶</a></h2>
 <p>This is the default mapping, the value of enum is being saved as <cite>String</cite> in the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
+<div class="highlight-sql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
 <span class="p">(</span>
-<span class="na">        [Id]</span> <span class="n">BIGINT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="n">PRIMARY</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">128</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">8</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="nb">BIGINT</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">PRIMARY</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 <span class="p">);</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
 <span class="p">{</span>
         <span class="n">Male</span><span class="p">,</span>
         <span class="n">Female</span>
 <span class="p">}</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -204,28 +219,43 @@
         <span class="k">public</span> <span class="n">Gender</span> <span class="n">Gender</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>When the operations of like <cite>Query</cite>, <cite>Insert</cite>, <cite>Merge</cite>, <cite>Update</cite> is being invoked, the behavior of the <cite>Gender</cite> property will be passed as <cite>Male</cite> or <cite>Female</cite> in the database.</p>
 </div>
 <div class="section" id="as-numeric">
 <h2>As Numeric<a class="headerlink" href="#as-numeric" title="Permalink to this headline">¶</a></h2>
 <p>The value of enum is being saved as a <cite>Targetted-Typed</cite> in the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
+<div class="highlight-sql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
 <span class="p">(</span>
-<span class="na">        [Id]</span> <span class="n">BIGINT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="n">PRIMARY</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">128</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">INT</span> <span class="cm">/* SMALLINT, BIGINT, BIT */</span>
+        <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="nb">BIGINT</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">PRIMARY</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="nb">INT</span> <span class="cm">/* SMALLINT, BIGINT, BIT */</span>
 <span class="p">);</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
 <span class="p">{</span>
         <span class="n">Male</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
         <span class="n">Female</span> <span class="p">=</span> <span class="m">2</span>
 <span class="p">}</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -233,29 +263,45 @@
         <span class="k">public</span> <span class="n">Gender</span> <span class="n">Gender</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>When the operations of like <cite>Query</cite>, <cite>Insert</cite>, <cite>Merge</cite>, <cite>Update</cite> is being invoked, the behavior of the <cite>Gender</cite> property will be passed as <cite>1 for Male</cite> or <cite>2 for Female</cite> in the database.</p>
 </div>
 <div class="section" id="property-mapping">
 <h2>Property Mapping<a class="headerlink" href="#property-mapping" title="Permalink to this headline">¶</a></h2>
 <p>This feature enables the library to force save the <cite>Enum</cite> on the desired database type, by targetting the specific class properties.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
+<div class="highlight-sql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
 <span class="p">(</span>
-<span class="na">        [Id]</span> <span class="n">BIGINT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="n">PRIMARY</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">128</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">16</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="nb">BIGINT</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">PRIMARY</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
 <span class="p">);</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
 <span class="p">{</span>
         <span class="n">Male</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
         <span class="n">Female</span> <span class="p">=</span> <span class="m">2</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Below is the code to force the <cite>Gender</cite> enumeration to be saved as <cite>INT</cite> in the database, even the <cite>Gender</cite> column is on <cite>NVARCHAR(16)</cite> data type.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -264,32 +310,47 @@
         <span class="k">public</span> <span class="n">Gender</span> <span class="n">Gender</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p><strong>Note</strong>: Enum will only succeed if it is convertible to the target database type.</p>
 </div>
 <div class="section" id="enum-mapping">
 <h2>Enum Mapping<a class="headerlink" href="#enum-mapping" title="Permalink to this headline">¶</a></h2>
 <p>This feature enables the library to force save the <cite>Enum</cite> on the desired database type, by targetting the type of the <cite>Enum</cite>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
+<div class="highlight-sql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span>
 <span class="p">(</span>
-<span class="na">        [Id]</span> <span class="n">BIGINT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="n">PRIMARY</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">128</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span>
-        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="m">16</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="nb">BIGINT</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">PRIMARY</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+        <span class="p">,</span> <span class="p">[</span><span class="n">Gender</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
 <span class="p">);</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">enum</span> <span class="n">Gender</span>
 <span class="p">{</span>
         <span class="n">Male</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
         <span class="n">Female</span> <span class="p">=</span> <span class="m">2</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>To save the enum <cite>Gender</cite> as <cite>INT</cite>, the type level mapping must be called.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Gender</span><span class="p">),</span> <span class="n">DbType</span><span class="p">.</span><span class="n">Int32</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Gender</span><span class="p">),</span> <span class="n">DbType</span><span class="p">.</span><span class="n">Int32</span><span class="p">);</span>
 </pre></div>
-</div>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+</td></tr></table></div>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -297,7 +358,7 @@
         <span class="k">public</span> <span class="n">Gender</span> <span class="n">Gender</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p><strong>Note</strong>: Enum will only succeed if it is convertible to the target database type.</p>
 </div>
 <div class="section" id="unmapped-behaviors">

@@ -96,17 +96,17 @@
 <li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -184,7 +184,19 @@
 <li><a class="reference external" href="https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar">ExecuteScalar</a></li>
 </ul>
 <p>Below is a sample call which uses a <strong>Dynamic</strong> object as a parameter.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;&quot;</span><span class="p">;</span>
@@ -198,12 +210,24 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
 <p>Executing a raw SQL statements support different kind of parameters.</p>
 <p>Via <strong>ExpandoObject</strong> (as <strong>Dynamic</strong> Object).</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;&quot;</span><span class="p">;</span>
@@ -217,9 +241,21 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via <strong>ExpandoObject</strong> as <strong>Dictionary&lt;string, object&gt;</strong>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;&quot;</span><span class="p">;</span>
@@ -233,9 +269,21 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via <strong>Dictionary&lt;string, object&gt;</strong>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;&quot;</span><span class="p">;</span>
@@ -249,9 +297,21 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via explicit <strong>QueryGroup</strong> or <strong>QueryField</strong> or <strong>IEnumerable&lt;QueryField&gt;</strong>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE FirstName = @FirstName AND LastName = @LastName;&quot;</span><span class="p">;</span>
@@ -265,12 +325,20 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="array-values">
 <h2>Array Values<a class="headerlink" href="#array-values" title="Permalink to this headline">¶</a></h2>
 <p>An array values can also be passed a part of the execution.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);&quot;</span><span class="p">;</span>
@@ -280,9 +348,20 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via <strong>ExpandoObject</strong> (as <strong>Dynamic</strong> Object).</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);&quot;</span><span class="p">;</span>
@@ -295,9 +374,20 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via <strong>ExpandoObject</strong> as <strong>Dictionary&lt;string, object&gt;</strong>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);&quot;</span><span class="p">;</span>
@@ -310,9 +400,20 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via <strong>Dictionary&lt;string, object&gt;</strong>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);&quot;</span><span class="p">;</span>
@@ -325,9 +426,17 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Via explicit <strong>QueryGroup</strong> or <strong>QueryField</strong> or <strong>IEnumerable&lt;QueryField&gt;</strong>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Set the values</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM [dbo].[Person] WHERE Id IN (@Keys);&quot;</span><span class="p">;</span>
@@ -337,7 +446,7 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Person</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 </div>
 

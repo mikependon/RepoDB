@@ -95,19 +95,20 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -179,31 +180,42 @@
 <div class="section" id="map">
 <h2>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h2>
 <p>Is used to map an equivalent object from the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>It is also used to map an equivalent column from the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="na">        [Map(&quot;CustomerId&quot;)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="primary">
 <h2>Primary<a class="headerlink" href="#primary" title="Permalink to this headline">¶</a></h2>
 <p>Is used to define a primary key property in the class.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The following primary property identification processed will be used in any case.</p>
 <ol class="arabic simple">
 <li>If the <cite>PrimaryAttribute</cite> is not defined, it then checks for database table primary key.</li>
@@ -215,18 +227,29 @@
 <div class="section" id="identity">
 <h2>Identity<a class="headerlink" href="#identity" title="Permalink to this headline">¶</a></h2>
 <p>Is used to define an identity key property in the class.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="na">        [Identity]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="typemap">
 <h2>TypeMap<a class="headerlink" href="#typemap" title="Permalink to this headline">¶</a></h2>
 <p>Is used to define a property-level mapping of database type.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -235,7 +258,7 @@
         <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p><strong>Note</strong>: Any of the attribute mentioned above is only being used to support the special scenarios and requirements defined by the businesses. <strong>They are really not necessary!</strong> The library is intelligent enough to identify the characteristics of your columns (<cite>Primary</cite>, <cite>Identity</cite>) by touching the database once and caching everything in the memory.</p>
 </div>
 </div>

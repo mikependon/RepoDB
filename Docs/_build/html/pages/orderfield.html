@@ -101,17 +101,17 @@
 <li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -184,75 +184,102 @@
 <h2>Creating a new Instance<a class="headerlink" href="#creating-a-new-instance" title="Permalink to this headline">¶</a></h2>
 <p>The constructor accepts 2 parameters, a <cite>Name</cite> and an <cite>Order</cite> type.</p>
 <p>By literal string:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ascending</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Ascending</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
 
 <span class="c1">// Descending</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>By class property:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ascending</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Ascending</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
 
 <span class="c1">// Descending</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="asenumerable">
 <h2>AsEnumerable<a class="headerlink" href="#asenumerable" title="Permalink to this headline">¶</a></h2>
 <p>Converts an instance of <cite>OrderField</cite> object into an <cite>IEnumerable&lt;OrderField&gt;</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize an order field</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Initialize an order field</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
 
 <span class="c1">// Convert to enumerable</span>
 <span class="kt">var</span> <span class="n">orderFields</span> <span class="p">=</span> <span class="n">orderField</span><span class="p">.</span><span class="n">AsEnumerable</span><span class="p">();</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="ascending">
 <h2>Ascending<a class="headerlink" href="#ascending" title="Permalink to this headline">¶</a></h2>
 <p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to an <cite>OrderField</cite> object with <cite>Order.Ascending</cite> value.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Ascending</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Ascending</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="descending">
 <h2>Descending<a class="headerlink" href="#descending" title="Permalink to this headline">¶</a></h2>
 <p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to an <cite>OrderField</cite> object with <cite>Order.Descending</cite> value.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Descending</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Descending</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="parse-expression">
 <h2>Parse Expression<a class="headerlink" href="#parse-expression" title="Permalink to this headline">¶</a></h2>
 <p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to <cite>OrderField</cite> object.</p>
 <p>Parse ascending:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Parse descending:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="parse-object">
 <h2>Parse Object<a class="headerlink" href="#parse-object" title="Permalink to this headline">¶</a></h2>
 <p>Parses an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have a value of <cite>Enumerations.Order</cite> enumeration.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderFields</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderFields</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span>
 <span class="p">{</span>
         <span class="n">UpdateDate</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span><span class="p">,</span>
         <span class="n">FirstName</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span>
 <span class="p">});</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="usage-of-orderfield">
 <h2>Usage of OrderField<a class="headerlink" href="#usage-of-orderfield" title="Permalink to this headline">¶</a></h2>
 <p>The order field object is useful on certain operations.</p>
 <p>Being the order fields in <cite>BatchQuery</cite> Operation:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">new</span>
         <span class="p">{</span>
@@ -265,9 +292,17 @@
                 <span class="k">new</span> <span class="p">{</span> <span class="n">d</span> <span class="p">&gt;</span> <span class="m">1000</span> <span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Being the order fields in <cite>Query</cite> operation:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">orderBy</span> <span class="p">=</span> <span class="k">new</span>
         <span class="p">{</span>
@@ -277,7 +312,7 @@
                 <span class="n">orderBy</span><span class="p">:</span> <span class="n">orderBy</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 </div>
 

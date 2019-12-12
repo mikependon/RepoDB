@@ -13,9 +13,8 @@ The following are the execute methods which can be accessed via `DbConnection` e
 
 Below is a sample call which uses a **Dynamic** object as a parameter.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -38,7 +37,8 @@ Executing a raw SQL statements support different kind of parameters.
 
 Via **ExpandoObject** (as **Dynamic** Object).
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -56,7 +56,8 @@ Via **ExpandoObject** (as **Dynamic** Object).
 
 Via **ExpandoObject** as **Dictionary<string, object>**.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -74,7 +75,8 @@ Via **ExpandoObject** as **Dictionary<string, object>**.
 
 Via **Dictionary<string, object>**.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -92,7 +94,8 @@ Via **Dictionary<string, object>**.
 
 Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -113,7 +116,8 @@ Array Values
 
 An array values can also be passed a part of the execution.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -127,7 +131,8 @@ An array values can also be passed a part of the execution.
 
 Via **ExpandoObject** (as **Dynamic** Object).
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -144,7 +149,8 @@ Via **ExpandoObject** (as **Dynamic** Object).
 
 Via **ExpandoObject** as **Dictionary<string, object>**.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -161,7 +167,8 @@ Via **ExpandoObject** as **Dictionary<string, object>**.
 
 Via **Dictionary<string, object>**.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -178,7 +185,8 @@ Via **Dictionary<string, object>**.
 
 Via explicit **QueryGroup** or **QueryField** or **IEnumerable<QueryField>**.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{

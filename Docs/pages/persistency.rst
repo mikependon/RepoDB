@@ -1,11 +1,10 @@
 Persistency
 ===========
 
-.. highlight:: c#
-
 A connection persistency is used ensure that only single connection object is used all throughout the lifetime of the repository object.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", ConnectionPersistency.Instance))
 	{
@@ -15,11 +14,10 @@ A connection persistency is used ensure that only single connection object is us
 PerCall
 -------
 
-.. highlight:: c#
-
 A new instance of a connection is being instantiated and disposed on every call of the repository operation. This is the default persistency value of the repository.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
@@ -67,7 +65,8 @@ Instance
 
 A single connection object is being used until the lifetime of the repository. Repository lifetime is of until the `Dispose` method has been called.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", ConnectionPersistency.Instance))
 	{

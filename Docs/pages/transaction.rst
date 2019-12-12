@@ -3,9 +3,8 @@ Transaction
 
 The library has abstracted the `ADO.NET` transaction object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = repository.CreateConnection().EnsureOpen())
 	{
@@ -29,7 +28,8 @@ Usability
 
 Every connection operation accepts a transaction object as an argument. Once the transaction object is passed, the operation execution context will be a part of that transaction.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Creates a connection object first (better to use 'using' keyword)
 	var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen();

@@ -108,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -184,9 +184,9 @@
 <div class="section" id="dbsettingmapper">
 <h2>DbSettingMapper<a class="headerlink" href="#dbsettingmapper" title="Permalink to this headline">¶</a></h2>
 <p>A class used to map the specific DB Provider Setting into the target DB Provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbSettingMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerDbSetting</span><span class="p">());</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DbSettingMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerDbSetting</span><span class="p">());</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="why-dbsetting">
 <h2>Why DbSetting?<a class="headerlink" href="#why-dbsetting" title="Permalink to this headline">¶</a></h2>
@@ -196,26 +196,35 @@
 <div class="section" id="creating-a-dbsetting">
 <h2>Creating a DbSetting<a class="headerlink" href="#creating-a-dbsetting" title="Permalink to this headline">¶</a></h2>
 <p>Below is the code on how to implement a <cite>DbSetting</cite> object for <cite>MySql</cite> DB Provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">MySqlDbSetting</span> <span class="p">:</span> <span class="n">IDbSetting</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">MySqlDbSetting</span> <span class="p">:</span> <span class="n">IDbSetting</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">string</span> <span class="n">ClosingQuote</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">&quot;`&quot;</span><span class="p">;</span>
         <span class="k">public</span> <span class="kt">string</span> <span class="n">OpeningQuote</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">&quot;`&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>And below for <cite>SQL Server</cite> DB Provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">SqlServerDbSetting</span> <span class="p">:</span> <span class="n">IDbSetting</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">SqlServerDbSetting</span> <span class="p">:</span> <span class="n">IDbSetting</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">string</span> <span class="n">ClosingQuote</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">&quot;[&quot;</span><span class="p">;</span>
         <span class="k">public</span> <span class="kt">string</span> <span class="n">OpeningQuote</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> <span class="p">=</span> <span class="s">&quot;]&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Then, specific setting must be injected properly targetting the proper DB Provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbSettingMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">MySqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">MySqlDbSetting</span><span class="p">());</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DbSettingMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">MySqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">MySqlDbSetting</span><span class="p">());</span>
 <span class="n">DbSettingMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerDbSetting</span><span class="p">());</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Click <a class="reference external" href="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Core/RepoDb/_SqlServer/DbSettings/SqlServerDbSetting.cs">here</a> to see the actual class implementation.</p>
 </div>
 </div>

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Provider Operation" href="provideroperation.html" />
+    <link rel="next" title="Transaction" href="transaction.html" />
     <link rel="prev" title="DB Helper" href="dbhelper.html" /> 
 </head>
 
@@ -92,17 +92,17 @@
 <li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -172,28 +172,43 @@
 <h1>Hints<a class="headerlink" href="#hints" title="Permalink to this headline">¶</a></h1>
 <p>This feature is to allow the caller to further optimize the execution of the query when the <cite>Query</cite> operation has been called.</p>
 <p>Below is an example of how to do a query (dirty-read) of customers where name starts with <cite>Joh</cite>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span> <span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The <cite>hints</cite> argument is used define a query-optimizer in the SQL Statement query. It is equivalent to the SQL Server query hints. The caller can also write its own hints via literal string. See below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span> <span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (NOLOCK)&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Below is a scenario to query all the customers from the database that ignores all the data that are under different transactions and with maximizing the index named <cite>NCIX_Customer$FirstName$LastName</cite>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (INDEX(NCIX_Customer$FirstName$LastName), READPAST)&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>A default class named <cite>SqlTableHints</cite> is provided to simplify the passing of the parameters. This class only contains the table hints for SQL Server.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">ReadPast</span><span class="p">);</span>
@@ -201,7 +216,7 @@
         <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The library only supports table hints for SQL Server through <cite>SqlServerStatementBuilder</cite> and <cite>SqlServerTableHints</cite> class.</p>
 <p>If this parameter is specified in <cite>MySql</cite>, <cite>SqLite</cite> and <cite>PostgreSql</cite>, the <cite>NotSupportedException</cite> exception will be thrown.</p>
 <p><strong>Note</strong>: The <cite>hints</cite> are also supported when calling the <cite>BatchQuery</cite>, <cite>Count</cite>, <cite>CountAll</cite>, <cite>QueryAll</cite> and the <cite>QueryMultiple</cite> operations.</p>
@@ -215,7 +230,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="provideroperation.html" class="btn btn-neutral float-right" title="Provider Operation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="transaction.html" class="btn btn-neutral float-right" title="Transaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="dbhelper.html" class="btn btn-neutral float-left" title="DB Helper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -5,9 +5,8 @@ This feature is to allow the caller to further optimize the execution of the que
 
 Below is an example of how to do a query (dirty-read) of customers where name starts with `Joh`.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -16,9 +15,8 @@ Below is an example of how to do a query (dirty-read) of customers where name st
 
 The `hints` argument is used define a query-optimizer in the SQL Statement query. It is equivalent to the SQL Server query hints. The caller can also write its own hints via literal string. See below.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -27,9 +25,8 @@ The `hints` argument is used define a query-optimizer in the SQL Statement query
 
 Below is a scenario to query all the customers from the database that ignores all the data that are under different transactions and with maximizing the index named `NCIX_Customer$FirstName$LastName`.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -38,9 +35,8 @@ Below is a scenario to query all the customers from the database that ignores al
 
 A default class named `SqlTableHints` is provided to simplify the passing of the parameters. This class only contains the table hints for SQL Server.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{

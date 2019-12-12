@@ -10,11 +10,10 @@ Average
 
 Averages the target field from the database table.
 
-.. highlight:: c#
-
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -24,7 +23,8 @@ Dynamic way:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -34,7 +34,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -50,7 +51,8 @@ Records can all also be averaged via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -59,7 +61,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -78,9 +81,8 @@ AverageAll
 
 Averages the target field from all data of the database table.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -91,7 +93,8 @@ All records can all also be averaged via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -103,11 +106,10 @@ BatchQuery
 
 Queries a data from the database by batch.
 
-.. highlight:: c#
-
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -119,7 +121,8 @@ Dynamic way:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -131,7 +134,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -145,7 +149,8 @@ Targetted columns can also be batch-queried via table-name-based calls.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -159,7 +164,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -176,17 +182,17 @@ BulkInsert
 
 Bulk insert a list of data entity objects into the database. Only available for SQL Server and Postgre SQL data provider.
 
-.. highlight:: c#
-
 Create a list to hold the data entities.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var orders = new List<Order>();
 
 Add each item to be bulk-inserted.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	orders.Add(new Order()
 	{
@@ -198,7 +204,8 @@ Add each item to be bulk-inserted.
 
 Call the `BulkInsert` operation to insert the data.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -207,11 +214,10 @@ Call the `BulkInsert` operation to insert the data.
 
 The result would be the number of rows affected by the `BulkInsert` in the database.
 
-.. highlight:: c#
-
 `BulkInsert` can also be done via `DbDataReader`.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var sourceConnection = new SqlConnection(@"Server=.;Database=Northwind_Old;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -223,7 +229,8 @@ The result would be the number of rows affected by the `BulkInsert` in the datab
 
 Call the `BulkInsert` operation by passing the `DbDataReader` object as the parameter.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -234,9 +241,8 @@ Call the `BulkInsert` operation by passing the `DbDataReader` object as the para
 
 Records can also be bulk-inserted via table name.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -245,7 +251,8 @@ Records can also be bulk-inserted via table name.
 
 Or, via table name with `DbDataReader`.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -257,11 +264,10 @@ Count
 
 Counts the number of table data from the database.
 
-.. highlight:: c#
-
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -270,7 +276,8 @@ Dynamic way:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -279,7 +286,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -290,7 +298,8 @@ Records can all also be counted via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -299,7 +308,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -313,9 +323,8 @@ CountAll
 
 Counts all the table data from the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -326,7 +335,8 @@ All records can all also be counted via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -336,11 +346,10 @@ Dynamic way:
 CreateCommand
 -------------
 
-.. highlight:: c#
-
 Creates a command object.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Variables
 	var customers = (IEnumerable<Customer>)null;
@@ -360,11 +369,10 @@ Delete
 
 Deletes an existing data from the database.
 
-.. highlight:: c#
-
 Via DataEntity:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -375,7 +383,8 @@ Via DataEntity:
 
 Via PrimaryKey:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -386,7 +395,8 @@ Via PrimaryKey:
 
 Via Dynamic:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -395,7 +405,8 @@ Via Dynamic:
 	
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -404,7 +415,8 @@ Expression way:
 	
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -415,7 +427,8 @@ Records can also be deleted via table name.
 
 Via Dynamic:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -424,7 +437,8 @@ Via Dynamic:
 	
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -438,9 +452,8 @@ DeleteAll
 
 Deletes all the data from the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -449,7 +462,8 @@ Deletes all the data from the database.
 
 All records can also be deleted via table name.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -459,11 +473,10 @@ All records can also be deleted via table name.
 EnsureOpen
 ----------
 
-.. highlight:: c#
-
 Ensures the connection object is open.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -472,8 +485,6 @@ Ensures the connection object is open.
 	
 ExecuteNonQuery
 ---------------
-
-.. highlight:: c#
 
 Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteNonQuery` and returns the number of affected rows during the execution.
 
@@ -524,7 +535,8 @@ Let us say the stored procedure below exists.
 
 Below is the code on how to execute a stored procedure mentioned above:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -545,9 +557,8 @@ ExecuteQuery
 
 Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteReader` and converts the result back to an enumerable list of dynamic objects.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -576,7 +587,8 @@ Let us say the stored procedure below exists.
 
 Below is the code on how to execute a stored procedure mentioned above:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -587,9 +599,8 @@ Below is the code on how to execute a stored procedure mentioned above:
 
 An `ExecuteQuery` method can directly return an enumerable list of data entity object. No need to use the `ExecuteReader` method.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -614,11 +625,10 @@ The class property accessibility is very dynamic through this method. Let us say
 	);
 	GO
 	
-.. highlight:: c#
-
 No need for the class to have the exact match of the properties (also applicable in `BatchQuery` and `Query` operation).
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public class ComplexOrder
 	{
@@ -639,7 +649,8 @@ No need for the class to have the exact match of the properties (also applicable
 
 Then call the records with the code below.
 	
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -648,7 +659,8 @@ Then call the records with the code below.
 
 Or, if a complex stored procedure is present.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -657,7 +669,8 @@ Or, if a complex stored procedure is present.
 
 The `ExecuteQuery` method can also return a list of dynamic objects.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -671,7 +684,8 @@ The `ExecuteQuery` method can also return a list of dynamic objects.
 		}
 	}
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -692,9 +706,8 @@ ExecuteQueryMultiple
 
 Executes a multiple query statement from the database and allows the user to extract the result to a target data entity.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -713,9 +726,8 @@ Executes a multiple query statement from the database and allows the user to ext
 
 The method `Scalar` is used to extract the value of the first column of the first row of the `DbDataReader` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -748,9 +760,8 @@ This method can also be used to combine the calls with Stored Procedure.
 		WHERE (CustomerId = @CustomerId);
 	END
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -771,9 +782,8 @@ ExecuteReader
 
 Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteReader` and returns the instance of the data reader.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -804,7 +814,8 @@ Let us say the stored procedure below exists.
 
 Below is the code on how to execute a stored procedure mentioned above:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -819,9 +830,8 @@ ExecuteScalar
 
 Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteScalar` and returns the first occurence value (first column of first row) of the execution.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -844,7 +854,8 @@ Let us say the stored procedure below exists.
 
 Below is the code on how to execute a stored procedure mentioned above:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -853,7 +864,8 @@ Below is the code on how to execute a stored procedure mentioned above:
 
 A dynamic typed-based call is also provided, see below.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -865,11 +877,10 @@ Exists
 
 Check whether the records are existing in the table.
 
-.. highlight:: c#
-
 Via DataEntity:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -880,7 +891,8 @@ Via DataEntity:
 
 Via PrimaryKey:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -889,7 +901,8 @@ Via PrimaryKey:
 
 Via Dynamic:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -898,7 +911,8 @@ Via Dynamic:
 	
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -907,7 +921,8 @@ Expression way:
 	
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -918,7 +933,8 @@ Records can also be checked via table name.
 
 Via Dynamic:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -927,7 +943,8 @@ Via Dynamic:
 	
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -939,9 +956,8 @@ GetDbSetting
 
 Gets the associated `IDbSetting` object that is currently mapped for the target `IDbConnection` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -953,9 +969,8 @@ GetDbHelper
 
 Gets the associated `IDbHelper` object that is currently mapped for the target `IDbConnection` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -967,9 +982,8 @@ GetStatementBuilder
 
 Gets the associated `IStatementBuilder` object that is currently mapped for the target `IDbConnection` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -981,9 +995,8 @@ Insert
 
 Inserts a new data in the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1003,7 +1016,8 @@ The return value would be the newly generated `Identity` value, otherwise the va
 
 A dynamic typed-based call is also provided when calling this method, see below.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
@@ -1012,7 +1026,8 @@ A dynamic typed-based call is also provided when calling this method, see below.
 
 Certain columns can also be inserted via table name calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1033,9 +1048,8 @@ InsertAll
 
 Inserts multiple data in the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1059,7 +1073,8 @@ Inserts multiple data in the database.
 
 Certain columns can also be inserted via table-name-based calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1090,11 +1105,10 @@ Max
 
 Maximizes the target field from the database table.
 
-.. highlight:: c#
-
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1104,7 +1118,8 @@ Dynamic way:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1114,7 +1129,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1130,7 +1146,8 @@ Records can all also be maximized via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1139,7 +1156,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1158,9 +1176,8 @@ MaxAll
 
 Maximizes the target field from all data of the database table.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1171,7 +1188,8 @@ All records can all also be maximized via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1183,9 +1201,8 @@ Merge
 
 Merges a data entity or dynamic object into the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1197,7 +1214,8 @@ Merges a data entity or dynamic object into the database.
 
 By default, the `Merge` operation is using the data entity `PrimaryKey` as the qualifier if the second parameter is omitted.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1209,7 +1227,8 @@ By default, the `Merge` operation is using the data entity `PrimaryKey` as the q
 
 The qualifiers can also be set with the combination of multiple fields. When using this, please note that the qualifiers are also corresponding with the table index for performance purposes.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1223,7 +1242,8 @@ The qualifiers can also be set with the combination of multiple fields. When usi
 
 Certain columns can also be merged via table name calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1244,9 +1264,8 @@ MergeAll
 
 Merges the multiple data entity or dynamic objects into the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1262,7 +1281,8 @@ Merges the multiple data entity or dynamic objects into the database.
 
 Same as `Merge` operation, the `MergeAll` operation is also using the `PrimaryKey` as the default qualifier if the argument is not provided during the calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1278,7 +1298,8 @@ Same as `Merge` operation, the `MergeAll` operation is also using the `PrimaryKe
 
 Also, multiple columns can be used as the qualifiers for `MergeAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1296,7 +1317,8 @@ Also, multiple columns can be used as the qualifiers for `MergeAll` operation.
 
 All fields are being merged when calling the typed-based method. However, certain columns can be merged when using the table name calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1328,11 +1350,10 @@ Min
 
 Minimizes the target field from the database table.
 
-.. highlight:: c#
-
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1342,7 +1363,8 @@ Dynamic way:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1352,7 +1374,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1368,7 +1391,8 @@ Records can all also be minimized via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1377,7 +1401,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1396,9 +1421,8 @@ MinAll
 
 Minimizes the target field from all data of the database table.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1409,7 +1433,8 @@ All records can all also be minimized via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1421,11 +1446,10 @@ Query
 
 Queries a data from the database.
 
-.. highlight:: c#
-
 Via PrimaryKey:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1434,7 +1458,8 @@ Via PrimaryKey:
 	
 Via Dynamic:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1443,7 +1468,8 @@ Via Dynamic:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1452,7 +1478,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1461,7 +1488,8 @@ Explicit way:
 	
 With ordering.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1474,7 +1502,8 @@ With ordering.
 
 With hint.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1483,7 +1512,8 @@ With hint.
 
 Certain columns can also be queried via table-name-based calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1504,9 +1534,8 @@ QueryAll
 
 Query all the data from the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1515,7 +1544,8 @@ Query all the data from the database.
 	
 With ordering.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1528,7 +1558,8 @@ With ordering.
 
 With hint.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1537,7 +1568,8 @@ With hint.
 
 Certain columns can also be queried via table-name-based calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1558,9 +1590,8 @@ Query a multiple resultsets from the database.
 Below is an example of how to query a customer where the `Id` field is equals to `10045`, and at the same time, querying all the orders connected to this customer since yesterday.
 The result is an instance of a `Tuple` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1585,9 +1616,8 @@ The result is an instance of a `Tuple` object.
 
 This method has supported until the last tupled dynamic type of the `Tuple` class. The current maximum tupled dynamic type is 7.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	DbConnection.Query<T1, T2, T3, T4, T5, T6, T7>(
 		where1: <Expression for T1>,
@@ -1602,9 +1632,8 @@ Notice above, there were `where<T<Num>>` arguments. These arguments are targetti
 
 Below is an example of how to query the list of customers based on different US states.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1631,9 +1660,8 @@ Notice as well, there are other arguments defined like `orderBy<N>`, `top<N>` an
 
 Below is the implementation of the the 2 target types tupled.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	DbConnection.Query<T1, T2>(
 		where1: <Expression for T1>,
@@ -1647,9 +1675,8 @@ Below is the implementation of the the 2 target types tupled.
 
 Below is a example of how to do a query that returns a 100 customers from `California` ordered by their `SSID` optimized by `NOLOCK` keyword, and also, a list of 1000 customers from `Florida` with `READPAST` query optimizer ordered by their `LastName` followed by `FirstName`.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1676,11 +1703,10 @@ Sum
 
 Summarizes the target field from the database table.
 
-.. highlight:: c#
-
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1690,7 +1716,8 @@ Dynamic way:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1700,7 +1727,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1716,7 +1744,8 @@ Records can all also be summarized via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1725,7 +1754,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1744,9 +1774,8 @@ SumAll
 
 Summarizes the target field from all data of the database table.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1757,7 +1786,8 @@ All records can all also be summarized via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1769,9 +1799,8 @@ Truncate
 
 Truncates a table from the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1780,7 +1809,8 @@ Truncates a table from the database.
 
 Table can also be truncated via table name.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1792,11 +1822,10 @@ Update
 
 Updates an existing data in the database.
 
-.. highlight:: c#
-
 Let us say an `Order` object was queried from the database.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Query a data from the database
 	var order = connection.Query<Order>(1002).FirstOrDefault();
@@ -1807,7 +1836,8 @@ Let us say an `Order` object was queried from the database.
 
 Via DataEntity:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1816,7 +1846,8 @@ Via DataEntity:
 
 Via PrimaryKey:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1827,7 +1858,8 @@ Via PrimaryKey:
 
 Via Dynamic:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1836,7 +1868,8 @@ Via Dynamic:
 
 Expression way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1845,7 +1878,8 @@ Expression way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1856,7 +1890,8 @@ Record can also be updated via table name.
 
 Dynamic way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1871,7 +1906,8 @@ Dynamic way:
 
 Explicit way:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1889,9 +1925,8 @@ UpdateAll
 
 Updates existing multiple data in the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1909,7 +1944,8 @@ Updates existing multiple data in the database.
 
 The qualifiers can also be set when calling the `UpdateAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -1925,7 +1961,8 @@ The qualifiers can also be set when calling the `UpdateAll` operation.
 
 With the qualifiers above, the `UpdateAll` operation is using both `CustomerId` and `OrderId` fields as the qualifiers. The SQL is something like below.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	UPDATE [Order] SET Quantity = @Quantity, LastUpdatedUtc = @LastUpdatedUtc WHERE CustomerId = @CustomerId AND OrderId = @OrderId;
 
@@ -1933,7 +1970,8 @@ With the qualifiers above, the `UpdateAll` operation is using both `CustomerId` 
 
 Certain columns can also be updated via table name calls.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{

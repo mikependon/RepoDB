@@ -19,9 +19,8 @@ By default, the `SqlDbHelper` class is provided by the library which is mainly u
 
 A code below is called in the static constructor of this class.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	static DbHelperMapper()
 	{
@@ -34,7 +33,8 @@ also be mapped using this class.
 
 A code below is a simple call to map a customized `IDbHelper` class named `OracleDbHelper` into an `Oracle` DB provider.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	DbHelperMapper.Add(typeof(OracleConnection), new OracleDbHelper(), true);
 
@@ -45,9 +45,8 @@ IDbHelper
 
 An interface used to mark the class to become a database helper. Below is a sample code that implements this interface.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class CustomDbHelper : IDbHelper
 	{
@@ -81,9 +80,8 @@ An interface used to mark the class to become a database helper. Below is a samp
 
 To map the `IDbHelper`, simply call the method below.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	DbHelperMapper.Map(typeof(SqlConnection), new CustomDbHelper());
 

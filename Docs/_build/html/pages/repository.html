@@ -89,9 +89,9 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Repository</a><ul>
@@ -103,10 +103,11 @@
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -179,51 +180,65 @@
 <h2>DbRepository<a class="headerlink" href="#dbrepository" title="Permalink to this headline">¶</a></h2>
 <p>A base object for all shared-based repositories.</p>
 <p>See sample code below on how to directly create a <cite>DbRepository</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Another way of creating a <cite>DbRepository</cite> is by abstracting it through derived classes. See sample code below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
         <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
 <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Then, call it somewhere.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindRepository</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindRepository</span><span class="p">();</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Since the repository is shared, the operations within this repository is also shared.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Getting a customer record where Id = 10045</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Getting a customer record where Id = 10045</span>
 <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 
 <span class="c1">// Getting all orders of customer 10045</span>
 <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="baserepository">
 <h2>BaseRepository<a class="headerlink" href="#baserepository" title="Permalink to this headline">¶</a></h2>
 <p>An abstract class for all entity-based repositories.</p>
 <p>See sample code below on how to directly create a <cite>DbRepository</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">BaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">BaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>
         <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
 <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Then, call it somewhere.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">();</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Since the repository is only for single entity, then it can only be used the target entity.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Getting all customers</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Getting all customers</span>
 <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">();</span>
 
 <span class="c1">// Getting a customer record where Id = 10045</span>
 <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="operations">
 <h2>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h2>

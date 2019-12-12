@@ -8,17 +8,17 @@ DbRepository
 
 A base object for all shared-based repositories.
 
-.. highlight:: c#
-
 See sample code below on how to directly create a `DbRepository` object.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 
 Another way of creating a `DbRepository` is by abstracting it through derived classes. See sample code below.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public class NorthwindDbRepository : DbRepository<SqlConnection>
 		base(@"Server=.;Database=Northwind;Integrated Security=SSPI;")
@@ -27,13 +27,15 @@ Another way of creating a `DbRepository` is by abstracting it through derived cl
 
 Then, call it somewhere.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var repository = new NorthwindRepository();
 
 Since the repository is shared, the operations within this repository is also shared.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Getting a customer record where Id = 10045
 	var customer = repository.Query<Customer>(c => c.Id == 10045);
@@ -46,11 +48,10 @@ BaseRepository
 
 An abstract class for all entity-based repositories.
 
-.. highlight:: c#
-
 See sample code below on how to directly create a `DbRepository` object.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public class CustomerRepository : BaseRepository<Customer, SqlConnection>
 		base(@"Server=.;Database=Northwind;Integrated Security=SSPI;")
@@ -59,13 +60,15 @@ See sample code below on how to directly create a `DbRepository` object.
 
 Then, call it somewhere.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var repository = new CustomerRepository();
 
 Since the repository is only for single entity, then it can only be used the target entity.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Getting all customers
 	var customers = repository.Query();

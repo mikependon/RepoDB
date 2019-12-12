@@ -8,9 +8,8 @@ As String
 
 This is the default mapping, the value of enum is being saved as `String` in the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: sql
+	:linenos:
 
 	CREATE TABLE [dbo].[Customer]
 	(
@@ -19,7 +18,8 @@ This is the default mapping, the value of enum is being saved as `String` in the
 		, [Gender] NVARCHAR(8)
 	);
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public enum Gender
 	{
@@ -27,7 +27,8 @@ This is the default mapping, the value of enum is being saved as `String` in the
 		Female
 	}
 
-::
+.. code-block:: c#
+	:linenos:
 
 	[Map("[dbo].[Customer]")]
 	public class Customer
@@ -44,9 +45,8 @@ As Numeric
 
 The value of enum is being saved as a `Targetted-Typed` in the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: sql
+	:linenos:
 
 	CREATE TABLE [dbo].[Customer]
 	(
@@ -55,7 +55,8 @@ The value of enum is being saved as a `Targetted-Typed` in the database.
 		, [Gender] INT /* SMALLINT, BIGINT, BIT */
 	);
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public enum Gender
 	{
@@ -63,7 +64,8 @@ The value of enum is being saved as a `Targetted-Typed` in the database.
 		Female = 2
 	}
 
-::
+.. code-block:: c#
+	:linenos:
 
 	[Map("[dbo].[Customer]")]
 	public class Customer
@@ -80,9 +82,8 @@ Property Mapping
 
 This feature enables the library to force save the `Enum` on the desired database type, by targetting the specific class properties.
 
-.. highlight:: c#
-
-::
+.. code-block:: sql
+	:linenos:
 
 	CREATE TABLE [dbo].[Customer]
 	(
@@ -91,7 +92,8 @@ This feature enables the library to force save the `Enum` on the desired databas
 		, [Gender] NVARCHAR(16)
 	);
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public enum Gender
 	{
@@ -101,7 +103,8 @@ This feature enables the library to force save the `Enum` on the desired databas
 
 Below is the code to force the `Gender` enumeration to be saved as `INT` in the database, even the `Gender` column is on `NVARCHAR(16)` data type.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	[Map("[dbo].[Customer]")]
 	public class Customer
@@ -119,9 +122,8 @@ Enum Mapping
 
 This feature enables the library to force save the `Enum` on the desired database type, by targetting the type of the `Enum`.
 
-.. highlight:: c#
-
-::
+.. code-block:: sql
+	:linenos:
 
 	CREATE TABLE [dbo].[Customer]
 	(
@@ -130,7 +132,8 @@ This feature enables the library to force save the `Enum` on the desired databas
 		, [Gender] NVARCHAR(16)
 	);
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public enum Gender
 	{
@@ -140,11 +143,13 @@ This feature enables the library to force save the `Enum` on the desired databas
 
 To save the enum `Gender` as `INT`, the type level mapping must be called.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	TypeMapper.Map(typeof(Gender), DbType.Int32);
 
-::
+.. code-block:: c#
+	:linenos:
 
 	[Map("[dbo].[Customer]")]
 	public class Customer

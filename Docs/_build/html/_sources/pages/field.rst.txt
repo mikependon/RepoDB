@@ -8,17 +8,17 @@ Creating a new Instance
 
 The constructor accepts 2 parameters, a `Name` and a `Type`.
 
-.. highlight:: c#
-
 By literal string:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var field = new Field(nameof(Customer.Id));
 
 Or
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var field = new Field(nameof(Customer.Id), typeof(int));
 
@@ -29,9 +29,8 @@ AsEnumerable
 
 Converts an instance of `Field` object into an `IEnumerable<Field>` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	// Initialize a field
 	var field = new Field(nameof(Customer.Id));
@@ -44,17 +43,17 @@ From
 
 Is used to parse an array of strings and convert it back as an enumerable.
 
-.. highlight:: c#
-
 By literal strings:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var fields = Field.From("Id", "Name");
 
 By class property:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var fields = Field.From(nameof(Customer.Id), nameof(Customer.Name));
 
@@ -66,9 +65,8 @@ Parse Type
 
 Is used to parse a .NET CLR type and convert it back as an enumerable.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var fields = Field.Parse(typeof(Customer));
 
@@ -77,9 +75,8 @@ Parse Entity
 
 Is used to parse an entity type and convert it back as an enumerable.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var fields = Field.Parse<Customer>();
 
@@ -89,9 +86,8 @@ Parse Object
 
 Is used to parse an object and convert it back as an enumerable.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var customer = new Customer();
 	var fields = Field.Parse(customer);
@@ -101,9 +97,8 @@ Parse Expression
 
 Is used to parse an expression and convert it back as an enumerable.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var fields = Field.Parse<Customer>(e => e.Id).AsEnumerable();
 
@@ -114,7 +109,8 @@ The field object is mostly used as a queryable fields and qualifiers at some ope
 
 Being the fields in the `Query` operation via table name:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -123,7 +119,8 @@ Being the fields in the `Query` operation via table name:
 
 Being the qualifers in the `Merge` operation:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -140,7 +137,8 @@ Being the qualifers in the `Merge` operation:
 
 Being the target fields and qualifers in the `MergeAll` operation via table name:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -171,7 +169,8 @@ Being the target fields and qualifers in the `MergeAll` operation via table name
 
 Also, being the target fields and qualifers in the `UpdateAll` operation via table name:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{

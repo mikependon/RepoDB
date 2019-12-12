@@ -1,15 +1,12 @@
 Cache
 =====
 
-.. highlight:: c#
-
 It is a feature used to cache the result set from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. A cache is only working on the `Query` operation.
 
 The caching is of the `pseudo` below.
 
-.. highlight:: none
-
-::
+.. code-block:: none
+	:linenos:
 
 	VAR item = null
 	IF ($cacheKey is not null) THEN
@@ -31,9 +28,8 @@ Creation
 
 To cache a result, simply pass a value in the `cacheKey` argument of the `Query` operation.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
@@ -44,7 +40,8 @@ To cache a result, simply pass a value in the `cacheKey` argument of the `Query`
 
 Codes below will return the same result as above assuming the same repository object is used.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var customers = (IEnumerable<Customer>)repository.Cache.Get("KeyToTheCache").Value;
 
@@ -53,9 +50,8 @@ Contains
 
 Checks whether the key is present in the collection.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var exists = repository.Cache.Contains("KeyToTheCache");
 
@@ -64,9 +60,8 @@ IsExpired
 
 Gets a value whether the cache item is expired.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var isExpired = repository.Cache.Get("KeyToTheCache").IsExpired();
 
@@ -75,9 +70,8 @@ Expiration
 
 Code below is the way on how to set cached item expiration, assuming that a repository object has been created already.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	repository.Cache.Get("KeyToTheCache").Expiration = DateTime.UtcNow.Date.AddHours(5);
 
@@ -86,11 +80,10 @@ The default expiration of the `CacheItem` is 180 minutes. See `Constants.Default
 Iteration
 ---------
 
-.. highlight:: c#
-
 Code below is the way on how to retrieve or iterate all the cached items from the `Cache` object, assuming that a repository object has been created already.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Let`s expect that the repository is meant for Customer data entity
 	foreach (var item in repository.Cache)
@@ -104,15 +97,15 @@ Remove
 
 Removes an item from the cache collection.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	repository.Cache.Clear();
 
 Below is the way to remove specific cache item.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	repository.Cache.Remove("KeyToTheCache");
 
@@ -122,9 +115,8 @@ ICache
 
 Is an interface used to create a cache object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class FileCache : ICache
 	{
@@ -133,7 +125,8 @@ Is an interface used to create a cache object.
 
 Below is the way on how to inject the custom `Cache` object to a repository.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var fileCache = new FileCache();
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", fileCache);

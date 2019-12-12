@@ -6,13 +6,12 @@ The library supports statement building injection, allowing the developers to ov
 QueryBuilder
 ------------
 
-.. highlight:: c#
-
 A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.
 
 Below is a sample code that creates a SQL Statement for the `Query` operation for `Oracle` data provider.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateQuery(QueryBuilder queryBuilder,
 		string tableName,
@@ -75,8 +74,6 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 Customizing a Builder
 ---------------------
 
-.. highlight:: c#
-
 The main reason why the library supports the statement builder is to allow the developers to implement or override (the default) statement builder of the DB Provider. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements).
 
 However, it will fail if the library is being used to access the SqLite, PostgreSql, MySql or any other DB Providers.
@@ -85,7 +82,8 @@ However, it will fail if the library is being used to access the SqLite, Postgre
 
 To create a custom statement builder, simply create a class and implements the `IStatementBuilder` interface.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public class PostgreSqlStatementBuilder : IStatementBuilder
 	{
@@ -94,7 +92,8 @@ To create a custom statement builder, simply create a class and implements the `
 
 Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below injecting a statement builder for PostgreSql DB Provider.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var statementBuilder = new PostgreSqlStatementBuilder();
 	var repository = new DbRepository<NpgsqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", statementBuilder);
@@ -104,11 +103,10 @@ With the code snippets above, everytime the repository operation methods is bein
 StatementBuilderMapper
 ----------------------
 
-.. highlight:: c#
-
 This class is used to map an existing `IStatementBuilder` into a specific DB Provider. The mapper is of static class.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	StatementBuilderMapper.Map(typeof(MySqlConnection), new MySqlStatementBuilder());
 
@@ -123,7 +121,8 @@ Let say, the developers has created the following statement builder:
 
 Then, in order to utilize the mentioned statement builders, the code below must be called.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	StatementBuilderMapper.Map(typeof(OracleConnection), new SqlServerStatementBuilder());
 	StatementBuilderMapper.Map(typeof(SqLiteConnection), new SqLiteStatementBuilder());
@@ -133,20 +132,20 @@ Then, in order to utilize the mentioned statement builders, the code below must 
 Injecting to Repository
 -----------------------
 
-.. highlight:: c#
-
 To inject the statement builder to repository, simply passed the instance of `IStatementBuilder` object when initializing a repository object.
 
 For DbRepository<TDbConnetion>:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var statementBuider = new MySqlStatementBuilder();
 	var repository = new DbRepository<MySqlConnection>(ConnectionString, statementBuilder);
 
 For BaseRepository<TEntity, TDbConnetion>:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public class CustomerRepository : DbRepository<Customer, MySqlConnection>
 	{
@@ -162,8 +161,6 @@ For BaseRepository<TEntity, TDbConnetion>:
 BaseStatementBuilder
 --------------------
 
-.. highlight:: C#
-
 This class is a pre-implemented abstract class that can be used as a base implementation of the `IStatementBuilder`.
 
 This is very useful if the developer would like to implement his/her own DB Provider Statement Builder.
@@ -172,7 +169,8 @@ Remember that not all implementations are meant for all DB Providers, so the dev
 
 **Example**: The `CreateTruncate()` method is using the `TRUNCATE` keyword when composing a SQL Statement.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public virtual string CreateTruncate(QueryBuilder queryBuilder,
 		string tableName)
@@ -196,7 +194,8 @@ Remember that not all implementations are meant for all DB Providers, so the dev
 
 That code will not work for `SqLite`. The developer must `override` that method if he/she is implementing his/her own statement builder.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public override string CreateTruncate(QueryBuilder queryBuilder,
 		string tableName)
@@ -226,11 +225,10 @@ That code will not work for `SqLite`. The developer must `override` that method 
 CreateAverage
 -------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL Statement for `Average` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateAverage(QueryBuilder queryBuilder,
         string tableName,
@@ -244,11 +242,10 @@ This method is used to compose a SQL Statement for `Average` operation.
 CreateAverageAll
 ----------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL Statement for `AverageAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateAverageAll(QueryBuilder queryBuilder,
         string tableName,
@@ -261,11 +258,10 @@ This method is used to compose a SQL Statement for `AverageAll` operation.
 CreateBatchQuery
 ----------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `BatchQuery` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateBatchQuery(QueryBuilder queryBuilder,
 		string tableName,
@@ -282,11 +278,10 @@ This method is used to compose a SQL statement for `BatchQuery` operation.
 CreateCount
 -----------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Count` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateCount(QueryBuilder queryBuilder,
 		string tableName,
@@ -299,11 +294,10 @@ This method is used to compose a SQL statement for `Count` operation.
 CreateCountAll
 --------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `CountAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateCountAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -315,11 +309,10 @@ This method is used to compose a SQL statement for `CountAll` operation.
 CreateDelete
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Delete` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateDelete(QueryBuilder queryBuilder,
 		string tableName,
@@ -331,11 +324,10 @@ This method is used to compose a SQL statement for `Delete` operation.
 CreateDeleteAll
 ---------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `DeleteAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateDeleteAll(QueryBuilder queryBuilder,
 		string tableName)
@@ -346,11 +338,10 @@ This method is used to compose a SQL statement for `DeleteAll` operation.
 CreateExists
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Exists` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateExists(QueryBuilder queryBuilder,
 		string tableName,
@@ -363,11 +354,10 @@ This method is used to compose a SQL statement for `Exists` operation.
 CreateInsert
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Insert` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateInsert(QueryBuilder queryBuilder,
 		string tableName,
@@ -381,11 +371,10 @@ This method is used to compose a SQL statement for `Insert` operation.
 CreateInsertAll
 ---------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `InsertAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateInsertAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -400,11 +389,10 @@ This method is used to compose a SQL statement for `InsertAll` operation.
 CreateMax
 ---------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Max` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateMax(QueryBuilder queryBuilder,
 		string tableName,
@@ -418,11 +406,10 @@ This method is used to compose a SQL statement for `Max` operation.
 CreateMaxAll
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `MaxAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateMaxAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -435,11 +422,10 @@ This method is used to compose a SQL statement for `MaxAll` operation.
 CreateMerge
 -----------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Merge` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateMerge(QueryBuilder queryBuilder,
 		string tableName,
@@ -454,11 +440,10 @@ This method is used to compose a SQL statement for `Merge` operation.
 CreateMergeAll
 --------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `MergeAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateMergeAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -474,11 +459,10 @@ This method is used to compose a SQL statement for `MergeAll` operation.
 CreateMin
 ---------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Min` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateMin(QueryBuilder queryBuilder,
 		string tableName,
@@ -492,11 +476,10 @@ This method is used to compose a SQL statement for `Min` operation.
 CreateMinAll
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `MinAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateMinAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -509,11 +492,10 @@ This method is used to compose a SQL statement for `MinAll` operation.
 CreateQuery
 -----------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Query` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateQuery(QueryBuilder queryBuilder,
 		string tableName,
@@ -529,11 +511,10 @@ This method is used to compose a SQL statement for `Query` operation.
 CreateQueryAll
 --------------
 
-.. highlight:: none
-
 This method is used to compose a SQL statement for `QueryAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateQueryAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -547,11 +528,10 @@ This method is used to compose a SQL statement for `QueryAll` operation.
 CreateSum
 ---------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Sum` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateSum(QueryBuilder queryBuilder,
 		string tableName,
@@ -565,11 +545,10 @@ This method is used to compose a SQL statement for `Sum` operation.
 CreateSumAll
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `SumAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateSumAll(QueryBuilder queryBuilder,
 		string tableName,
@@ -582,11 +561,10 @@ This method is used to compose a SQL statement for `SumAll` operation.
 CreateTruncate
 --------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Truncate` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateTruncate(QueryBuilder queryBuilder,
 		string tableName)
@@ -597,11 +575,10 @@ This method is used to compose a SQL statement for `Truncate` operation.
 CreateUpdate
 ------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `Update` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateUpdate(QueryBuilder queryBuilder,
 		string tableName,
@@ -616,11 +593,10 @@ This method is used to compose a SQL statement for `Update` operation.
 CreateUpdateAll
 ---------------
 
-.. highlight:: C#
-
 This method is used to compose a SQL statement for `UpdateAll` operation.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public string CreateUpdateAll(QueryBuilder queryBuilder,
 		string tableName,

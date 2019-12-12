@@ -8,9 +8,8 @@ Map
 
 Is used to map an equivalent object from the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	[Map("[dbo].[Customer]")]
 	public class Customer
@@ -19,9 +18,8 @@ Is used to map an equivalent object from the database.
 
 It is also used to map an equivalent column from the database.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class Customer
 	{
@@ -34,9 +32,8 @@ Primary
 
 Is used to define a primary key property in the class.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class Customer
 	{
@@ -56,9 +53,8 @@ Identity
 
 Is used to define an identity key property in the class.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class Customer
 	{
@@ -71,9 +67,8 @@ TypeMap
 
 Is used to define a property-level mapping of database type.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class Customer
 	{

@@ -97,17 +97,17 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -185,25 +185,57 @@ is pre-touching the databases to pre-cached all the schemas for performance purp
 <p>This class is used to map the <cite>Type</cite> of database provider into an instance of <cite>IDbHelper</cite> object.</p>
 <p>By default, the <cite>SqlDbHelper</cite> class is provided by the library which is mainly used for SQL Server DB providers.</p>
 <p>A code below is called in the static constructor of this class.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="nf">DbHelperMapper</span><span class="p">()</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="nf">DbHelperMapper</span><span class="p">()</span>
 <span class="p">{</span>
         <span class="c1">// By default, map the Sql</span>
         <span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlDbHelper</span><span class="p">());</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>If however a custom <cite>IDbHelper</cite> has been introduced to be a helper method for other databases, let us say <cite>Oracle</cite>, then it can
 also be mapped using this class.</p>
 <p>A code below is a simple call to map a customized <cite>IDbHelper</cite> class named <cite>OracleDbHelper</cite> into an <cite>Oracle</cite> DB provider.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleDbHelper</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleDbHelper</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The last <cite>boolean</cite> argument is used to override an existing mapping (if present). Otherwise, an exception will be thrown.</p>
 </div>
 <div class="section" id="idbhelper">
 <h2>IDbHelper<a class="headerlink" href="#idbhelper" title="Permalink to this headline">¶</a></h2>
 <p>An interface used to mark the class to become a database helper. Below is a sample code that implements this interface.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomDbHelper</span> <span class="p">:</span> <span class="n">IDbHelper</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomDbHelper</span> <span class="p">:</span> <span class="n">IDbHelper</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="nf">CustomDbHelper</span><span class="p">()</span>
         <span class="p">{</span>
@@ -233,11 +265,11 @@ also be mapped using this class.</p>
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>To map the <cite>IDbHelper</cite>, simply call the method below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">CustomDbHelper</span><span class="p">());</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">CustomDbHelper</span><span class="p">());</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Once the class <cite>CustomDbHelper</cite> has been mapped to a specific DB Provider, then the library will automatically use it in all operations for that DB Provider.</p>
 </div>
 <div class="section" id="sqlserverdbhelper">

@@ -89,9 +89,9 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -107,10 +107,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -180,7 +181,20 @@
 <h1>Cache<a class="headerlink" href="#cache" title="Permalink to this headline">¶</a></h1>
 <p>It is a feature used to cache the result set from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. A cache is only working on the <cite>Query</cite> operation.</p>
 <p>The caching is of the <cite>pseudo</cite> below.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>VAR item = null
+<div class="highlight-none notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span></span>VAR item = null
 IF ($cacheKey is not null) THEN
         set $item = get value from cache where the key equals to $cacheKey
         IF ($item is not null) THEN
@@ -195,82 +209,96 @@ IF ($result is not null AND $cacheKey is not null) THEN
 END IF
 RETURN $result
 </pre></div>
-</div>
+</td></tr></table></div>
 <div class="section" id="creation">
 <h2>Creation<a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <p>To cache a result, simply pass a value in the <cite>cacheKey</cite> argument of the <cite>Query</cite> operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">where</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Anna&quot;</span><span class="p">),</span>
                 <span class="n">cacheKey</span><span class="p">:</span> <span class="s">&quot;KeyToTheCache&quot;</span><span class="p">,</span>
                 <span class="n">expiration</span><span class="p">:</span> <span class="m">1440</span> <span class="cm">/* minutes in 1 day */</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Codes below will return the same result as above assuming the same repository object is used.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">).</span><span class="n">Value</span><span class="p">;</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">).</span><span class="n">Value</span><span class="p">;</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="contains">
 <h2>Contains<a class="headerlink" href="#contains" title="Permalink to this headline">¶</a></h2>
 <p>Checks whether the key is present in the collection.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">exists</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">exists</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="isexpired">
 <h2>IsExpired<a class="headerlink" href="#isexpired" title="Permalink to this headline">¶</a></h2>
 <p>Gets a value whether the cache item is expired.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExpired</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">).</span><span class="n">IsExpired</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExpired</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">).</span><span class="n">IsExpired</span><span class="p">();</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="expiration">
 <h2>Expiration<a class="headerlink" href="#expiration" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to set cached item expiration, assuming that a repository object has been created already.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The default expiration of the <cite>CacheItem</cite> is 180 minutes. See <cite>Constants.DefaultCacheItemExpirationInMinutes</cite>.</p>
 </div>
 <div class="section" id="iteration">
 <h2>Iteration<a class="headerlink" href="#iteration" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to retrieve or iterate all the cached items from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Let`s expect that the repository is meant for Customer data entity</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// Let`s expect that the repository is meant for Customer data entity</span>
 <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">item</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">item</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
         <span class="c1">// Process the item here</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="remove">
 <h2>Remove<a class="headerlink" href="#remove" title="Permalink to this headline">¶</a></h2>
 <p>Removes an item from the cache collection.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Below is the way to remove specific cache item.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="s">&quot;KeyToTheCache&quot;</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="icache">
 <h2>ICache<a class="headerlink" href="#icache" title="Permalink to this headline">¶</a></h2>
 <p>Is an interface used to create a cache object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FileCache</span> <span class="p">:</span> <span class="n">ICache</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FileCache</span> <span class="p">:</span> <span class="n">ICache</span>
 <span class="p">{</span>
         <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Below is the way on how to inject the custom <cite>Cache</cite> object to a repository.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
 <span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">fileCache</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the <cite>Cache</cite> object manager of the <cite>Query</cite> operation.</p>
 <p><strong>Note:</strong> The caller can activate a debugger on the <cite>FileCache</cite> class to enable debugging. When the callers call the <cite>Query</cite> method and passed a <cite>cacheKey</cite> value on it, the breakpoint will be hitted by the debugger.</p>
 </div>

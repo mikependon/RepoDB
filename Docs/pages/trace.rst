@@ -8,9 +8,8 @@ Custom Trace
 
 Below is a sample customized `Trace` object.
  
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class NorthwindDatabaseTrace : ITrace
 	{
@@ -19,7 +18,8 @@ Below is a sample customized `Trace` object.
 
 Below is the way on how to inject a `Trace` class in the connection.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var trace = new NorthwindDatabaseTrace();
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
@@ -29,7 +29,8 @@ Below is the way on how to inject a `Trace` class in the connection.
 
 Below is the way on how to inject a `Trace` class in the repository.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var trace = new NorthwindDatabaseTrace();
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", trace);
@@ -41,9 +42,8 @@ Cancellation
 
 To cancel an operation, simply call the `Cancel` method of type `CancelableTraceLog` in any `Before` operation.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public void BeforeQuery(CancellableTraceLog log)
 	{

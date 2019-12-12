@@ -8,11 +8,10 @@ Creating a new Instance
 
 The constructor accepts 2 parameters, a `Name` and an `Order` type.
 
-.. highlight:: c#
-
 By literal string:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Ascending
 	var orderField = new OrderField("Id", Order.Ascending);
@@ -22,7 +21,8 @@ By literal string:
 
 By class property:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	// Ascending
 	var orderField = new OrderField(nameof(Customer.Id), Order.Ascending);
@@ -35,9 +35,8 @@ AsEnumerable
 
 Converts an instance of `OrderField` object into an `IEnumerable<OrderField>` object.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	// Initialize an order field
 	var orderField = new OrderField(nameof(Customer.Id), Order.Ascending);
@@ -50,9 +49,8 @@ Ascending
 
 Parses a property from the data entity object based on the given `Expression` and converts the result to an `OrderField` object with `Order.Ascending` value.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var orderField = OrderField.Ascending<Customer>(c => c.Id);
 
@@ -61,9 +59,8 @@ Descending
 
 Parses a property from the data entity object based on the given `Expression` and converts the result to an `OrderField` object with `Order.Descending` value.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var orderField = OrderField.Descending<Customer>(c => c.Id);
 
@@ -72,17 +69,17 @@ Parse Expression
 
 Parses a property from the data entity object based on the given `Expression` and converts the result to `OrderField` object.
 
-.. highlight:: c#
-
 Parse ascending:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var orderField = OrderField.Parse<Customer>(c => c.Id, Order.Ascending);
 
 Parse descending:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	var orderField = OrderField.Parse<Customer>(c => c.Id, Order.Descending);
 
@@ -91,9 +88,8 @@ Parse Object
 
 Parses an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have a value of `Enumerations.Order` enumeration.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	var orderFields = OrderField.Parse(new
 	{
@@ -108,7 +104,8 @@ The order field object is useful on certain operations.
 
 Being the order fields in `BatchQuery` Operation:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -125,7 +122,8 @@ Being the order fields in `BatchQuery` Operation:
 
 Being the order fields in `Query` operation:
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{

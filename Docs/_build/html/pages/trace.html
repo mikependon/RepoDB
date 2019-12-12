@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="StatementBuilder" href="statementbuilder.html" />
+    <link rel="next" title="DB Setting" href="dbsetting.html" />
     <link rel="prev" title="Cache" href="cache.html" /> 
 </head>
 
@@ -89,9 +89,9 @@
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rawsql.html">Raw SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -102,10 +102,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#cancellation">Cancellation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -177,31 +178,47 @@
 <div class="section" id="custom-trace">
 <h2>Custom Trace<a class="headerlink" href="#custom-trace" title="Permalink to this headline">¶</a></h2>
 <p>Below is a sample customized <cite>Trace</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDatabaseTrace</span> <span class="p">:</span> <span class="n">ITrace</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDatabaseTrace</span> <span class="p">:</span> <span class="n">ITrace</span>
 <span class="p">{</span>
         <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Below is the way on how to inject a <cite>Trace</cite> class in the connection.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">,</span> <span class="n">trace</span><span class="p">:</span> <span class="n">trace</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Below is the way on how to inject a <cite>Trace</cite> class in the repository.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
 <span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">trace</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>A breakpoint can be placed in any of the methods of the custom <cite>Trace</cite> class, the debugger will hit the breakpoint once the operation has been called.</p>
 </div>
 <div class="section" id="cancellation">
 <h2>Cancellation<a class="headerlink" href="#cancellation" title="Permalink to this headline">¶</a></h2>
 <p>To cancel an operation, simply call the <cite>Cancel</cite> method of type <cite>CancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">filteredKeywords</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span> <span class="s">&quot;TRUNCATE&quot;</span><span class="p">,</span> <span class="s">&quot;CREATE&quot;</span><span class="p">,</span> <span class="s">&quot;ALTER&quot;</span> <span class="p">};</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">filteredKeywords</span><span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">keyword</span> <span class="p">=&gt;</span> <span class="n">log</span><span class="p">.</span><span class="n">Statement</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">keyword</span><span class="p">)))</span>
@@ -211,7 +228,7 @@
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>By passing the value of <cite>true</cite> in the parameter when calling the <cite>Cancel</cite> method, it would signal the library to throw an <cite>Exceptions.CancelledExecutionException</cite> exception object back to the caller.</p>
 </div>
 </div>
@@ -224,7 +241,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="statementbuilder.html" class="btn btn-neutral float-right" title="StatementBuilder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="dbsetting.html" class="btn btn-neutral float-right" title="DB Setting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cache.html" class="btn btn-neutral float-left" title="Cache" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

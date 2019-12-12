@@ -13,9 +13,8 @@ DbSettingMapper
 
 A class used to map the specific DB Provider Setting into the target DB Provider.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	DbSettingMapper.Map(typeof(SqlConnection), new SqlServerDbSetting());
 
@@ -31,9 +30,8 @@ Creating a DbSetting
 
 Below is the code on how to implement a `DbSetting` object for `MySql` DB Provider.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	public class MySqlDbSetting : IDbSetting
 	{
@@ -43,7 +41,8 @@ Below is the code on how to implement a `DbSetting` object for `MySql` DB Provid
 
 And below for `SQL Server` DB Provider.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	public class SqlServerDbSetting : IDbSetting
 	{
@@ -53,9 +52,8 @@ And below for `SQL Server` DB Provider.
 
 Then, specific setting must be injected properly targetting the proper DB Provider.
 
-.. highlight:: c#
-
-::
+.. code-block:: c#
+	:linenos:
 
 	DbSettingMapper.Map(typeof(MySqlConnection), new MySqlDbSetting());
 	DbSettingMapper.Map(typeof(SqlConnection), new SqlServerDbSetting());
