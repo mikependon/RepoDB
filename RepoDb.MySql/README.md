@@ -23,6 +23,12 @@ At the ***Package Manager Console***, write the command below.
 Install-Package RepoDb.MySql
 ```
 
+## Learnings (In-Progress)
+
+This section is specialized for MySql. To read more about the library, please visit the [Learnings](https://github.com/mikependon/RepoDb#learnings-in-progress) section of our [GitHub](https://github.com/mikependon/RepoDb) page.
+
+- Working with Spatial DataTypes (Geometry, LineString, Point and Polygon).
+
 ## Getting Started
 
 First, the bootstrapper must be initialized.
