@@ -27,7 +27,7 @@ Install-Package RepoDb.MySql
 
 This section is specialized for MySql. To read more about the library, please visit the [Learnings](https://github.com/mikependon/RepoDb#learnings-in-progress) section of our [GitHub](https://github.com/mikependon/RepoDb) page.
 
-- Working with Spatial DataTypes (Geometry, LineString, Point and Polygon).
+- [Working with Spatial DataTypes (Geometry, LineString, Point and Polygon)](https://www.nuget.org/packages/RepoDb).
 
 ## Getting Started
 
