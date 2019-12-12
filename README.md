@@ -148,6 +148,7 @@ At most cases, the implementations provided in the articles are standard referen
 - [Customizing a Cache](https://www.nuget.org/packages/RepoDb)
 - [Implementing a Trace](https://www.nuget.org/packages/RepoDb)
 - [The importance of Connection Persistency](https://www.nuget.org/packages/RepoDb)
+- [Working with Enumerations](https://www.nuget.org/packages/RepoDb)
 - [Extending support for specific DB Provider](https://www.nuget.org/packages/RepoDb)
 
 There will also be high-level implementations and sample code-snippets on the following sections to help you start with.

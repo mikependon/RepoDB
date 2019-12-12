@@ -57,4 +57,5 @@ Learnings (In-Progress)
 * `Customizing a Cache <https://www.nuget.org/packages/RepoDb>`_
 * `Implementing a Trace <https://www.nuget.org/packages/RepoDb>`_
 * `The importance of Connection Persistency <https://www.nuget.org/packages/RepoDb>`_
+* `Working with Enumerations <https://www.nuget.org/packages/RepoDb>`_
 * `Extending support for specific DB Provider <https://www.nuget.org/packages/RepoDb>`_
