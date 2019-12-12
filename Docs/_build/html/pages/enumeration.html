@@ -99,17 +99,17 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -305,14 +305,14 @@
 <p>Below are the list of unmapped behaviors.</p>
 <p><strong>Database string values are not a part of the Enum</strong></p>
 <ol class="arabic simple">
-<li>The operation <cite>Query</cite> will <strong>not find</strong> the desired record from the database if the Enum is used as an expression.</li>
+<li>The operation <cite>Query</cite> will <strong>not find</strong> the desired record from the database if the <cite>Enum</cite> is used as an expression.</li>
 <li>The operation <cite>Query</cite> will <strong>fail</strong> if there are rows returned from the database; the value is not convertible.</li>
-<li>The operation <cite>Insert</cite>, <cite>Merge</cite>, <cite>Update</cite> will <strong>succeed</strong> and will passed the Enum value instead; database record is not intact.</li>
+<li>The operation <cite>Insert</cite>, <cite>Merge</cite>, <cite>Update</cite> will <strong>succeed</strong> and will passed the <cite>Enum</cite> value instead; database record is not intact.</li>
 </ol>
 <p><strong>Database numeric values are not a part of the Enum</strong></p>
 <ol class="arabic simple">
-<li>The operation <cite>Query</cite> will <strong>not find</strong> the desired record from the database if the Enum is used as an expression.</li>
-<li>The operation <cite>Query</cite> will <strong>succeed</strong> if there are rows returned from the database; the value is not intact to Enum.</li>
+<li>The operation <cite>Query</cite> will <strong>not find</strong> the desired record from the database if the <cite>Enum</cite> is used as an expression.</li>
+<li>The operation <cite>Query</cite> will <strong>succeed</strong> if there are rows returned from the database; the value is not intact to <cite>Enum</cite>.</li>
 <li>The operation <cite>Insert</cite>, <cite>Merge</cite>, <cite>Update</cite> will <strong>succeed</strong> will always be succeeded.</li>
 </ol>
 </div>

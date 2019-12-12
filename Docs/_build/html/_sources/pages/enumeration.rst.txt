@@ -163,13 +163,13 @@ Below are the list of unmapped behaviors.
 
 **Database string values are not a part of the Enum**
 
-1. The operation `Query` will **not find** the desired record from the database if the Enum is used as an expression.
+1. The operation `Query` will **not find** the desired record from the database if the `Enum` is used as an expression.
 2. The operation `Query` will **fail** if there are rows returned from the database; the value is not convertible.
-3. The operation `Insert`, `Merge`, `Update` will **succeed** and will passed the Enum value instead; database record is not intact.
+3. The operation `Insert`, `Merge`, `Update` will **succeed** and will passed the `Enum` value instead; database record is not intact.
 
 **Database numeric values are not a part of the Enum**
 
-1. The operation `Query` will **not find** the desired record from the database if the Enum is used as an expression.
-2. The operation `Query` will **succeed** if there are rows returned from the database; the value is not intact to Enum.
+1. The operation `Query` will **not find** the desired record from the database if the `Enum` is used as an expression.
+2. The operation `Query` will **succeed** if there are rows returned from the database; the value is not intact to `Enum`.
 3. The operation `Insert`, `Merge`, `Update` will **succeed** will always be succeeded.
 

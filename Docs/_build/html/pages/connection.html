@@ -562,7 +562,25 @@
 <div class="section" id="executenonquery">
 <h2>ExecuteNonQuery<a class="headerlink" href="#executenonquery" title="Permalink to this headline">¶</a></h2>
 <p>Executes a query from the database. It uses the underlying method <cite>IDbCommand.ExecuteNonQuery</cite> and returns the number of affected rows during the execution.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;UPDATE O</span>
 <span class="s">                SET O.Quantity = @Quantity</span>
@@ -582,7 +600,7 @@
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="n">parameters</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Let us say the stored procedure below exists.</p>
 <div class="highlight-sql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -1046,12 +1064,13 @@
 </pre></div>
 </div>
 <p>The return value would be the newly generated <cite>Identity</cite> value, otherwise the value of <cite>PrimaryKey</cite>. If both are not present, then it will return <cite>null</cite>.</p>
+<p><strong>Note</strong>: The <cite>identity</cite> column will automatically be filled with newly generated <cite>identity</cite> value right after the insert.</p>
 <p>A dynamic typed-based call is also provided when calling this method, see below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// The first type is the entity type, the second type is the result type</span>
 <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Insert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">,</span> <span class="kt">long</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: The first generic type is the type of <cite>data entity</cite> object, the second generic type is the type of the <cite>result</cite>. The <cite>identity</cite> column will automatically be filled with newly generated <cite>identity</cite> value right after the insert.</p>
+<p><strong>Note</strong>: The first generic type is the type of <cite>data entity</cite> object, the second generic type is the type of the <cite>result</cite>.</p>
 <p>Certain columns can also be inserted via table name calls.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -1265,7 +1284,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Also, multiple columns can be used as the qualifier for <cite>MergeAll</cite> operation.</p>
+<p>Also, multiple columns can be used as the qualifiers for <cite>MergeAll</cite> operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
@@ -1279,8 +1298,8 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: All fields are being merged when calling the typed-based method. The data entities <cite>identity</cite> fields will automatically be filled with its newly generated identity values.</p>
-<p>Certain columns can also be merged via table name calls.</p>
+<p><strong>Note</strong>: The data entities <cite>identity</cite> fields will automatically be filled with its newly generated identity values.</p>
+<p>All fields are being merged when calling the typed-based method. However, certain columns can be merged when using the table name calls.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>

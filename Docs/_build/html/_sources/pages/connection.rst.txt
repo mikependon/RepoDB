@@ -477,7 +477,8 @@ ExecuteNonQuery
 
 Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteNonQuery` and returns the number of affected rows during the execution.
 
-::
+.. code-block:: c#
+	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
@@ -998,6 +999,8 @@ Inserts a new data in the database.
 
 The return value would be the newly generated `Identity` value, otherwise the value of `PrimaryKey`. If both are not present, then it will return `null`.
 
+**Note**: The `identity` column will automatically be filled with newly generated `identity` value right after the insert.
+
 A dynamic typed-based call is also provided when calling this method, see below.
 
 ::
@@ -1005,7 +1008,7 @@ A dynamic typed-based call is also provided when calling this method, see below.
 	// The first type is the entity type, the second type is the result type
 	var id = connection.Insert<Order, long>(order);
 
-**Note**: The first generic type is the type of `data entity` object, the second generic type is the type of the `result`. The `identity` column will automatically be filled with newly generated `identity` value right after the insert.
+**Note**: The first generic type is the type of `data entity` object, the second generic type is the type of the `result`.
 
 Certain columns can also be inserted via table name calls.
 
@@ -1273,7 +1276,7 @@ Same as `Merge` operation, the `MergeAll` operation is also using the `PrimaryKe
 		connection.MergeAll(orders);
 	}
 
-Also, multiple columns can be used as the qualifier for `MergeAll` operation.
+Also, multiple columns can be used as the qualifiers for `MergeAll` operation.
 
 ::
 
@@ -1289,9 +1292,9 @@ Also, multiple columns can be used as the qualifier for `MergeAll` operation.
 		connection.MergeAll(orders, Field.From("CustomerId", "ProductId"));
 	}
 
-**Note**: All fields are being merged when calling the typed-based method. The data entities `identity` fields will automatically be filled with its newly generated identity values.
+**Note**: The data entities `identity` fields will automatically be filled with its newly generated identity values.
 
-Certain columns can also be merged via table name calls.
+All fields are being merged when calling the typed-based method. However, certain columns can be merged when using the table name calls.
 
 ::
 
