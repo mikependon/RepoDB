@@ -10,7 +10,7 @@
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-RepoDb provide certain features of both lightweight-ORMs and full-ORMs. It helps the developer to simplify the “switchover” of when to use the “lightweight” and “advance” operations during the development.
+RepoDb provide certain features of both micro-ORMs and macro-ORMs. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
 ### It is high-performant
 
@@ -54,9 +54,9 @@ RepoDb is highly extensible to further support other RDBMS data-providers. The d
 
 ## Community
 
-RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is **not** a full-ORM, but it really requires significant amount of time and effort to maintain.
+RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is **not** a macro-ORM, but it really requires significant amount of time and effort to maintain.
 
-It is now open for *community contributions* to further enhance the features of the library and as well the *community engagements*.
+It is now open for *community contributions* to further enhance the features and as well the *community engagements*. Please help me spread the word about this new library and its capability.
 
 ### Engagements
 
@@ -71,9 +71,9 @@ Any help from the community will be highly appreciated as it really helps me eli
 
 ## Contributions
 
-The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via NetStandard. **This is the portable one and any pull-request must be done on this code-line.**
+The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via NetStandard. **This is the active one and any pull-request must be done on this code-line.**
 
-The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated to NetFramework projects. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
+The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated to *NetFramework* projects. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
 
 To contribute, open the [Issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
