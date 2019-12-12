@@ -36,6 +36,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -54,6 +57,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -76,6 +82,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -94,6 +103,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -116,6 +128,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -134,6 +149,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -154,11 +172,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -180,11 +201,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -210,11 +234,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAsyncAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -236,11 +263,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAsyncAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -270,11 +300,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAllAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -296,11 +329,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAllAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -326,11 +362,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAllAsyncAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -352,11 +391,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForDeleteAllAsyncAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -386,11 +428,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -409,11 +454,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -436,11 +484,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAsyncAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -459,11 +510,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAsyncAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -490,11 +544,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAllAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -513,11 +570,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAllAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -540,11 +600,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAllAsyncAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -563,11 +626,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForInsertAllAsyncAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -594,11 +660,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -617,11 +686,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -644,11 +716,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAsyncAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
@@ -666,11 +741,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAsyncAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Prepare
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
@@ -696,11 +774,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAllAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -719,11 +800,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAllAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -746,11 +830,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAllAsyncAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -769,11 +856,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForMergeAllAsyncAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -802,6 +892,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -820,6 +913,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -842,6 +938,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -860,6 +959,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -882,6 +984,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -898,6 +1003,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -915,6 +1023,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -933,6 +1044,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -952,6 +1066,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -972,6 +1089,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -997,6 +1117,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -1013,6 +1136,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -1030,6 +1156,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -1048,6 +1177,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -1067,6 +1199,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -1087,6 +1222,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
                 // Prepare
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
@@ -1122,6 +1260,8 @@ namespace RepoDb.SqLite.IntegrationTests
         //{
         //    using (var connection = new SQLiteConnection(Database.ConnectionString))
         //    {
+        //        // Create the tables
+        //        Database.CreateCompleteTable(connection);
         //        // Prepare
         //        using (var transaction = connection.EnsureOpen().BeginTransaction())
         //        {
@@ -1140,6 +1280,9 @@ namespace RepoDb.SqLite.IntegrationTests
         //{
         //    using (var connection = new SQLiteConnection(Database.ConnectionString))
         //    {
+        //        // Create the tables
+        //        Database.CreateCompleteTable(connection);
+
         //        // Prepare
         //        using (var transaction = connection.EnsureOpen().BeginTransaction())
         //        {
@@ -1160,11 +1303,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -1191,11 +1337,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -1226,11 +1375,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAsyncAsCommitted()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -1257,11 +1409,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAsyncAsRolledBack()
         {
-            // Setup
-            var entity = Helper.CreateCompleteTables(1).First();
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entity = Helper.CreateCompleteTables(1).First();
+
                 // Act
                 connection.Insert<CompleteTable>(entity);
 
@@ -1296,11 +1451,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAllAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -1327,11 +1485,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAllAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -1362,11 +1523,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAllAsyncAsCommitted()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
@@ -1393,11 +1557,14 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestSqlTransactionForUpdateAllAsyncAsRolledBack()
         {
-            // Setup
-            var entities = Helper.CreateCompleteTables(10);
-
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateCompleteTable(connection);
+
+                // Setup
+                var entities = Helper.CreateCompleteTables(10);
+
                 // Act
                 connection.InsertAll<CompleteTable>(entities);
 
