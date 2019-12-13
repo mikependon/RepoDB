@@ -58,7 +58,6 @@ By class property:
 	var fields = Field.From(nameof(Customer.Id), nameof(Customer.Name));
 
 **Note**:  When using this method, the `Type` parameter is not being set. The library will then not set the `DbType` value of the `DbCommand` object. By default, ADO.NET uses the `DbType.String` value.
-light:: c#
 
 Parse Type
 ----------
@@ -132,7 +131,7 @@ Being the qualifers in the `Merge` operation:
 			Quantity = 5,
 			LastUpdatedUtc = DateTime.UtcNow
 		},
-		qualifiers: Field.From(nameof(Order.Id)));
+		qualifiers: Field.From("CustomerId", "ProductId"));
 	}
 
 Being the target fields and qualifers in the `MergeAll` operation via table name:
