@@ -15,7 +15,7 @@ DbHelperMapper
 
 This class is used to map the `Type` of database provider into an instance of `IDbHelper` object.
 
-By default, the `SqlDbHelper` class is provided by the library which is mainly used for SQL Server DB providers.
+By default, the `SqlServerDbHelper` class is provided by the library which is mainly used for SQL Server DB providers.
 
 A code below is called in the static constructor of this class.
 
@@ -25,18 +25,18 @@ A code below is called in the static constructor of this class.
 	static DbHelperMapper()
 	{
 		// By default, map the Sql
-		Add(typeof(SqlConnection), new SqlDbHelper());
+		Add(typeof(SqlConnection), new SqlServerDbHelper());
 	}
 
-If however a custom `IDbHelper` has been introduced to be a helper method for other databases, let us say `Oracle`, then it can
+If however a custom `IDbHelper` has been introduced to be a helper method for other databases, let us say `MySql`, then it can
 also be mapped using this class.
 
-A code below is a simple call to map a customized `IDbHelper` class named `OracleDbHelper` into an `Oracle` DB provider.
+A code below is a simple call to map a customized `IDbHelper` class named `OracleDbHelper` into a `MySql` DB provider.
 
 .. code-block:: c#
 	:linenos:
 
-	DbHelperMapper.Add(typeof(OracleConnection), new OracleDbHelper(), true);
+	DbHelperMapper.Add(typeof(MySqlConnection), new MySqlDbHelper(), true);
 
 The last `boolean` argument is used to override an existing mapping (if present). Otherwise, an exception will be thrown.
 

@@ -220,8 +220,7 @@
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
 </pre></div>
 </td></tr></table></div>
-<p><strong>Note</strong>:  When using this method, the <cite>Type</cite> parameter is not being set. The library will then not set the <cite>DbType</cite> value of the <cite>DbCommand</cite> object. By default, ADO.NET uses the <cite>DbType.String</cite> value.
-light:: c#</p>
+<p><strong>Note</strong>:  When using this method, the <cite>Type</cite> parameter is not being set. The library will then not set the <cite>DbType</cite> value of the <cite>DbCommand</cite> object. By default, ADO.NET uses the <cite>DbType.String</cite> value.</p>
 </div>
 <div class="section" id="parse-type">
 <h2>Parse Type<a class="headerlink" href="#parse-type" title="Permalink to this headline">¶</a></h2>
@@ -288,7 +287,7 @@ light:: c#</p>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">},</span>
-        <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">)));</span>
+        <span class="n">qualifiers</span><span class="p">:</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="s">&quot;ProductId&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>

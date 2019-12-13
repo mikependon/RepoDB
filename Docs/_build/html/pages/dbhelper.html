@@ -183,7 +183,7 @@ is pre-touching the databases to pre-cached all the schemas for performance purp
 <div class="section" id="dbhelpermapper">
 <h2>DbHelperMapper<a class="headerlink" href="#dbhelpermapper" title="Permalink to this headline">¶</a></h2>
 <p>This class is used to map the <cite>Type</cite> of database provider into an instance of <cite>IDbHelper</cite> object.</p>
-<p>By default, the <cite>SqlDbHelper</cite> class is provided by the library which is mainly used for SQL Server DB providers.</p>
+<p>By default, the <cite>SqlServerDbHelper</cite> class is provided by the library which is mainly used for SQL Server DB providers.</p>
 <p>A code below is called in the static constructor of this class.</p>
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -192,14 +192,14 @@ is pre-touching the databases to pre-cached all the schemas for performance purp
 5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="nf">DbHelperMapper</span><span class="p">()</span>
 <span class="p">{</span>
         <span class="c1">// By default, map the Sql</span>
-        <span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlDbHelper</span><span class="p">());</span>
+        <span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerDbHelper</span><span class="p">());</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>If however a custom <cite>IDbHelper</cite> has been introduced to be a helper method for other databases, let us say <cite>Oracle</cite>, then it can
+<p>If however a custom <cite>IDbHelper</cite> has been introduced to be a helper method for other databases, let us say <cite>MySql</cite>, then it can
 also be mapped using this class.</p>
-<p>A code below is a simple call to map a customized <cite>IDbHelper</cite> class named <cite>OracleDbHelper</cite> into an <cite>Oracle</cite> DB provider.</p>
-<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleDbHelper</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+<p>A code below is a simple call to map a customized <cite>IDbHelper</cite> class named <cite>OracleDbHelper</cite> into a <cite>MySql</cite> DB provider.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DbHelperMapper</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">MySqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">MySqlDbHelper</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
 <p>The last <cite>boolean</cite> argument is used to override an existing mapping (if present). Otherwise, an exception will be thrown.</p>
