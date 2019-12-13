@@ -44,7 +44,7 @@ Practically, RepoDb has supported all RDBMS data-providers. Developers has the f
 
 ### Fully supported databases for fluent-methods
 
-<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Wiki/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/SQLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Wiki/Images/MySql.png" height="64px" title="MySql" />
+<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Raw/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/SQLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/MySql.png" height="64px" title="MySql" />
 
 RepoDb has “fluent” methods (see [Operations](https://github.com/mikependon/RepoDb#operations) section) in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers (see *Operation* section). In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
 
