@@ -625,7 +625,7 @@ The class property accessibility is very dynamic through this method. Let us say
 	);
 	GO
 	
-No need for the class to have the exact match of the properties (also applicable in `BatchQuery` and `Query` operation).
+No need for the class to have the exact match of the properties (also applicable in all fetch operations like `BatchQuery`, `ExecuteQueryMultiple`, `Query` and `QueryMultiple` operations).
 
 .. code-block:: c#
 	:linenos:
