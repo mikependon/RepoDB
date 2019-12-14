@@ -46,8 +46,8 @@ Repositories
 Learnings (In-Progress)
 -----------------------
 
-* `Getting started with RepoDb <https://www.nuget.org/packages/RepoDb>`_
-* `Implementing a Repository (via DbConnection, DbRepository and BaseRepository) <https://www.nuget.org/packages/RepoDb>`_
+* `Getting started with RepoDb <https://github.com/mikependon/RepoDb/wiki/Getting-Started>`_
+* `Implementing a Repository <https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository>`_
 * `Making the Repositories Dependency-Injectable <https://www.nuget.org/packages/RepoDb>`_
 * `Bulk-Operations vs Batch-Operations <https://www.nuget.org/packages/RepoDb>`_
 * `Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple <https://www.nuget.org/packages/RepoDb>`_
