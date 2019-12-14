@@ -136,9 +136,8 @@ Below are the links that would help the developers do some practical and actual 
 
 At most cases, the implementations provided in the articles are standard reference implementation. *Please help yourselves!*
 
-- [Read everything about RepoDb](https://repodb.readthedocs.io/en/latest/)
-- [Getting started](https://www.nuget.org/packages/RepoDb)
-- [Implementing a Repository (via DbConnection, DbRepository and BaseRepository)](https://www.nuget.org/packages/RepoDb)
+- [Getting started](https://github.com/mikependon/RepoDb/wiki/Getting-Started)
+- [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository)
 - [Making the Repositories Dependency-Injectable](https://www.nuget.org/packages/RepoDb)
 - [Bulk-Operations vs Batch-Operations](https://www.nuget.org/packages/RepoDb)
 - [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://www.nuget.org/packages/RepoDb)
