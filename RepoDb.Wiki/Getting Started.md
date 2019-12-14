@@ -40,6 +40,7 @@ CREATE TABLE [dbo].[Customer]
 	, [Name] NVARCHAR(128) NOT NULL
 	, [Address] NVARCHAR(MAX)
 	, [DateInsertedUtc] DATETIME2(5) NOT NULL
+	, [DateModifiedUtc] DATETIME2(5) NOT NULL
 	, [ModifiedBy] NVARCHAR(64) NOT NULL
 	, CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED ([Id] ASC )
 )
@@ -75,6 +76,7 @@ public class Customer
 	public string Name { get; set; }
 	public string Address { get; set; }
 	public DateTime DateInsertedUtc { get; set; }
+	public DateTime DateModifiedUtc { get; set; }
 	public string ModifiedBy { get; set; }
 }
 ```
@@ -108,6 +110,7 @@ public void DoInsert()
 			Name = "John Doe",
 			Address = "New York",
 			DateInsertedUtc = DateTime.UtcNow,
+			DateModifiedUtc = DateTime.UtcNow,
 			ModifiedBy = "Me"
 		};
 		connection.Insert(customer);
@@ -190,6 +193,7 @@ public void DoUpdate()
 	{
 		var customer = connection.Query<Customer>(e => e.Name = "John Doe").First();
 		customer.Name = "James Doe";
+		customer.DateModifiedUtc = DateTime.UtcNow;
 		connection.Update(customer);
 		Console.WriteLine("A customer record has been updated.");
 	}
