@@ -269,14 +269,38 @@ To execute a raw-SQL, you can use any of the operations below. Each operation ha
 
 In this tutorial, we will only limit on `ExecuteQuery` operation.
 
-Assuming you have multiple records of `Customer` in the database. The query below will return all the `Customer` records from the database.
+Assuming you have multiple records of `Customer` in the database. Please copy the provided scripts below and paste it in your `Program.cs`, just right after the `DoDelete()` method.
 
 ```
-using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
+public void DoExecuteRawSql()
 {
-	var customers = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer];");
+	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
+	{
+		var customers = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer];");
+		customers
+			.AsList()
+			.ForEach(e => Console.WriteLine($"{e.Name} ({e.Address})"));
+	}
 }
 ```
+
+The query above will return all the `Customer` records from the database.
+
+Inside the `Main()` method, call the `DoExecuteRawSql()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+
+```
+public static void Main(string[] args)
+{
+	DoExecuteRawSql();
+	Console.ReadLine();
+}
+```
+
+Press the `F5` key.
+
+Notice that the `Console` is filled with the list of `Customer` records from the database.
+
+#### Passing of parameters
 
 You can pass any value via *dynamic*, *IDictionary<string, object>*, *ExpandoObject* or object-based (ie: *QueryField* and *QueryGroup*) parameters.
 
@@ -303,7 +327,7 @@ See the [raw-SQL](https://repodb.readthedocs.io/en/latest/pages/rawsql.html) doc
 
 The logic of calling a stored procedure is somewhat similar on the codes sample mentioned at the [*Executing a Raw-SQL*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#executing-a-raw-sql) section. The only difference is, you have to pass the name of the stored procedure and set the *commandType* argument to *CommandType.StoredProcedure*.
 
-Assuming you have this stored procedure below.
+In your `Microsoft SQL Server Management Studio`, open a new query window and execute the scripts provided below.
 
 ```
 DROP PROCEDURE IF EXISTS [dbo].[sp_get_customers];
@@ -316,14 +340,38 @@ BEGIN
 END
 ```
 
-To call that stored procedure, simply use the script below.
+Once executed, the stored procedure named `sp_get_customers` will now be available under `Databases` > `Inventory` > `Programmability` > `Stored Procedures`.
+
+Please copy the provided scripts below and paste it in your `Program.cs`, just right after the `DoExecuteRawSql()` method.
 
 ```
-using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
+public void DoCallStoredProcedure()
 {
-	var customers = connection.ExecuteQuery<Customer>("[dbo].[sp_get_customers]", commandType: CommandType.StoredProcedure);
+	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
+	{
+		var customers = connection.ExecuteQuery<Customer>("[dbo].[sp_get_customers]", commandType: CommandType.StoredProcedure);
+		customers
+			.AsList()
+			.ForEach(e => Console.WriteLine($"{e.Name} ({e.Address})"));
+	}
 }
 ```
+
+Inside the `Main()` method, call the `DoCallStoredProcedure()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+
+```
+public static void Main(string[] args)
+{
+	DoCallStoredProcedure();
+	Console.ReadLine();
+}
+```
+
+Press the `F5` key.
+
+Notice that the `Console` is filled with the list of `Customer` records from the database.
+
+#### Passing a parameter in the Stored Procedure
 
 Assuming that the mentioned stored procedure above is expecting a parameter named *CustomerId* of type *INT*. To pass a parameter in the stored procedure, you can use the script below.
 
@@ -333,6 +381,8 @@ using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrate
 	var customers = connection.ExecuteQuery<Customer>("[dbo].[sp_get_customers]", new { CustomerId = 10045 }, commandType: CommandType.StoredProcedure);
 }
 ```
+
+See the [raw-SQL](https://repodb.readthedocs.io/en/latest/pages/rawsql.html) documentation to read more about passing the parameters.
 
 ## Table-Based calls
 
@@ -379,4 +429,4 @@ To read more about the operations, kindly visit our library documentation at [Re
 
 **Voila! You have completed the basics of RepoDb.**
 
-You can now proceed in [Implementing a Repository (via DbConnection, DbRepository and BaseRepository)](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) tutorial.
+You can now proceed in [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) tutorial.
