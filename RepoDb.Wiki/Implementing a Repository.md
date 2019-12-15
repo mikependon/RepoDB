@@ -336,8 +336,8 @@ Press the `F5` key to run and test the solution.
 
 Same as previous section, we suggest that you place a breakpoint at the *Main()* method and press the `F11` key to see and follow the actual code executions.
 
--------
-
 **Voila! You have completed this tutorial.**
 
-You can now proceed in [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/making-the-repositories-dependeny-injectable) tutorial.
+-------
+
+You can now proceed in [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable) tutorial.

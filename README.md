@@ -138,17 +138,17 @@ At most cases, the implementations provided in the articles are standard referen
 
 - [Getting started](https://github.com/mikependon/RepoDb/wiki/Getting-Started)
 - [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository)
-- [Making the Repositories Dependency-Injectable](https://www.nuget.org/packages/RepoDb)
-- [Bulk-Operations vs Batch-Operations](https://www.nuget.org/packages/RepoDb)
-- [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://www.nuget.org/packages/RepoDb)
-- [Working with Transactions](https://www.nuget.org/packages/RepoDb)
-- [Expression Trees](https://www.nuget.org/packages/RepoDb)
-- [Advance Field and Type Mapping Implementations](https://www.nuget.org/packages/RepoDb)
-- [Customizing a Cache](https://www.nuget.org/packages/RepoDb)
-- [Implementing a Trace](https://www.nuget.org/packages/RepoDb)
-- [The importance of Connection Persistency](https://www.nuget.org/packages/RepoDb)
-- [Working with Enumerations](https://www.nuget.org/packages/RepoDb)
-- [Extending support for specific DB Provider](https://www.nuget.org/packages/RepoDb)
+- [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable)
+- [Bulk-Operations vs Batch-Operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations)
+- [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple)
+- [Working with Transactions](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions)
+- [Expression Trees](https://github.com/mikependon/RepoDb/wiki/Expression-Trees)
+- [Advance Field and Type Mapping Implementations](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation)
+- [Customizing a Cache](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache)
+- [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)
+- [The importance of Connection Persistency](https://github.com/mikependon/RepoDb/wiki/The-importance-of-Connection-Persistency)
+- [Working with Enumerations](https://github.com/mikependon/RepoDb/wiki/Working-with-Enumerations)
+- [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider)
 
 There will also be high-level implementations and sample code-snippets on the following sections to help you start with.
 

@@ -46,16 +46,16 @@ Repositories
 Learnings (In-Progress)
 -----------------------
 
-* `Getting started with RepoDb <https://github.com/mikependon/RepoDb/wiki/Getting-Started>`_
+* `Getting started <https://github.com/mikependon/RepoDb/wiki/Getting-Started>`_
 * `Implementing a Repository <https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository>`_
-* `Making the Repositories Dependency-Injectable <https://www.nuget.org/packages/RepoDb>`_
-* `Bulk-Operations vs Batch-Operations <https://www.nuget.org/packages/RepoDb>`_
-* `Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple <https://www.nuget.org/packages/RepoDb>`_
-* `Working with Transactions <https://www.nuget.org/packages/RepoDb>`_
-* `Expression Trees <https://www.nuget.org/packages/RepoDb>`_
-* `Advance Field and Type Mapping Implementations <https://www.nuget.org/packages/RepoDb>`_
-* `Customizing a Cache <https://www.nuget.org/packages/RepoDb>`_
-* `Implementing a Trace <https://www.nuget.org/packages/RepoDb>`_
-* `The importance of Connection Persistency <https://www.nuget.org/packages/RepoDb>`_
-* `Working with Enumerations <https://www.nuget.org/packages/RepoDb>`_
-* `Extending support for specific DB Provider <https://www.nuget.org/packages/RepoDb>`_
+* `Making the Repositories Dependency-Injectable <https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable>`_
+* `Bulk-Operations vs Batch-Operations <https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations>`_
+* `Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple <https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple>`_
+* `Working with Transactions <https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions>`_
+* `Expression Trees <https://github.com/mikependon/RepoDb/wiki/Expression-Trees>`_
+* `Advance Field and Type Mapping Implementations <https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation>`_
+* `Customizing a Cache <https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache>`_
+* `Implementing a Trace <https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace>`_
+* `The importance of Connection Persistency <https://github.com/mikependon/RepoDb/wiki/The-importance-of-Connection-Persistency>`_
+* `Working with Enumerations <https://github.com/mikependon/RepoDb/wiki/Working-with-Enumerations>`_
+* `Extending the supports for specific DB Provider <https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider>`_

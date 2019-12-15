@@ -429,8 +429,8 @@ The same logic also applied if you are *merging* or *updating* a record.
 
 To read more about the operations, kindly visit our library documentation at [ReadTheDocs](https://repodb.readthedocs.io/en/latest/pages/connection.html).
 
--------
-
 **Voila! You have completed the basics of RepoDb.**
+
+-------
 
 You can now proceed in [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) tutorial.
