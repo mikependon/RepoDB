@@ -232,11 +232,47 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME, data.ColumnDateTime);
                 Assert.AreEqual(entity.COLUMNINT, data.ColumnInt);
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
+
+                // Act Update
+                entity = new
+                {
+                    SESSIONID = entity.SESSIONID,
+                    COLUMNBIGINT = long.MinValue,
+                    COLUMNBIT = true,
+                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569"),
+                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30"),
+                    COLUMNINT = int.MinValue,
+                    COLUMNNVARCHAR = $"{Helper.GetAssemblyDescription()}-Updated"
+                };
+
+                // Act
+                var rows = connection.Update("COMPLETETABLE", entity);
+
+                // Act Query
+                data = connection.Query("COMPLETETABLE", new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.COLUMNBIGINT, data.ColumnBigInt);
+                Assert.AreEqual(entity.COLUMNBIT, data.ColumnBit);
+                Assert.AreEqual(entity.COLUMNDATETIME2, data.ColumnDateTime2);
+                Assert.AreEqual(entity.COLUMNDATETIME, data.ColumnDateTime);
+                Assert.AreEqual(entity.COLUMNINT, data.ColumnInt);
+                Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
+
+                // Act Delete
+                rows = connection.Delete("COMPLETETABLE", entity);
+
+                // Act Query
+                data = connection.Query("COMPLETETABLE", new { SessionId = (Guid)id }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNull(data);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudViaInsertAllWithImproperCasingForClassAndFieldsViaTableName()
+        public void TestSqlConnectionCrudViaBatchOperationsWithImproperCasingForClassAndFieldsViaTableName()
         {
             // Setup
             var entity = new
@@ -268,6 +304,44 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME, data.ColumnDateTime);
                 Assert.AreEqual(entity.COLUMNINT, data.ColumnInt);
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
+
+                // Act Update
+                entity = new
+                {
+                    SESSIONID = entity.SESSIONID,
+                    COLUMNBIGINT = long.MinValue,
+                    COLUMNBIT = true,
+                    COLUMNDATETIME2 = DateTime.Parse("1970-01-02 1:25:00.44569"),
+                    COLUMNDATETIME = DateTime.Parse("1970-01-02 10:30:30"),
+                    COLUMNINT = int.MinValue,
+                    COLUMNNVARCHAR = $"{Helper.GetAssemblyDescription()}-Updated"
+                };
+
+                // Act
+                var rows = connection.UpdateAll("COMPLETETABLE",
+                    new[] { entity },
+                    fields: entity.GetType().GetProperties().AsFields());
+
+                // Act Query
+                data = connection.Query("COMPLETETABLE", new { SessionId = entity.SESSIONID }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(data);
+                Assert.AreEqual(entity.COLUMNBIGINT, data.ColumnBigInt);
+                Assert.AreEqual(entity.COLUMNBIT, data.ColumnBit);
+                Assert.AreEqual(entity.COLUMNDATETIME2, data.ColumnDateTime2);
+                Assert.AreEqual(entity.COLUMNDATETIME, data.ColumnDateTime);
+                Assert.AreEqual(entity.COLUMNINT, data.ColumnInt);
+                Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
+
+                // Act Delete
+                rows = connection.Delete("COMPLETETABLE", entity);
+
+                // Act Query
+                data = connection.Query("COMPLETETABLE", new { SessionId = entity.SESSIONID }).FirstOrDefault();
+
+                // Assert
+                Assert.IsNull(data);
             }
         }
 
