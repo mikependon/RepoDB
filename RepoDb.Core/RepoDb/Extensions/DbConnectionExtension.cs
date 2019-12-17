@@ -1253,6 +1253,70 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Converts the object expression into a <see cref="QueryGroup"/> object with the PrimaryKey value.
+        /// </summary>
+        /// <param name="instance">The object expression instance.</param>
+        /// <param name="defaultPrimaryKey">The default name of primary key to be used.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object with the PrimaryKey value.</returns>
+        private static QueryGroup DataEntityToPrimaryKeyQueryGroup(object instance,
+            string defaultPrimaryKey)
+        {
+            if (instance == null)
+            {
+                return null;
+            }
+
+            // Variables
+            var type = instance?.GetType();
+            var properties = (IEnumerable<ClassProperty>)null;
+
+            // Identify
+            if (type.GetTypeInfo().IsGenericType)
+            {
+                properties = type.GetClassProperties();
+            }
+            else
+            {
+                properties = PropertyCache.Get(type);
+            }
+
+            // Get all the PrimaryKey(s)
+            var primaryProperties = properties.Where(p => p.IsPrimary() == true);
+
+            // Get the PrimaryKey via IsPrimary
+            var property = primaryProperties.FirstOrDefault(p => p.IsPrimary() == true);
+
+            // Check if there is forced [Primary] attribute
+            if (property == null)
+            {
+                property = primaryProperties.FirstOrDefault(p => p.GetPrimaryAttribute() != null);
+            }
+
+            // If it still null, get the first one
+            if (property == null)
+            {
+                property = primaryProperties?.FirstOrDefault();
+            }
+
+            // Otherwise, check the default one
+            if (property == null && !string.IsNullOrEmpty(defaultPrimaryKey))
+            {
+                property = properties.FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), defaultPrimaryKey, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Return the instance
+            if (property != null)
+            {
+                return new QueryGroup(new QueryField(property.AsField(), property.PropertyInfo.GetValue(instance)));
+            }
+            else
+            {
+                throw new PrimaryFieldNotFoundException("The primary field is not found.");
+            }
+        }
+
+        /// <summary>
         /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -1282,7 +1346,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(new Field(primary.Name, primary.Type), whereOrPrimaryKey));
+                    return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
                 }
             }
         }
@@ -1313,7 +1377,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey));
+                    return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
                 }
             }
         }

@@ -261,7 +261,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
 
                 // Act Delete
-                rows = connection.Delete("COMPLETETABLE", entity);
+                rows = connection.Delete("COMPLETETABLE", entity.SESSIONID);
 
                 // Act Query
                 data = connection.Query("COMPLETETABLE", new { SessionId = (Guid)id }).FirstOrDefault();
@@ -335,7 +335,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.ColumnNVarChar);
 
                 // Act Delete
-                rows = connection.Delete("COMPLETETABLE", entity);
+                rows = connection.Delete("COMPLETETABLE", entity.SESSIONID);
 
                 // Act Query
                 data = connection.Query("COMPLETETABLE", new { SessionId = entity.SESSIONID }).FirstOrDefault();

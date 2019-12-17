@@ -222,9 +222,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Append the prefixes
-            where?.PrependAnUnderscoreAtTheParameters();
-
             // Return the result
             return UpdateInternalBase<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -442,9 +439,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Append the prefixes
-            where?.PrependAnUnderscoreAtTheParameters();
-
             // Return the result
             return UpdateAsyncInternalBase<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -484,19 +478,8 @@ namespace RepoDb
             var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(dbField => dbField.IsPrimary);
             var where = (QueryGroup)null;
 
-            // Identity the property via primary
-            if (primary != null)
-            {
-                var property = entity?.GetType().GetProperty(primary.Name, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
-                if (property != null)
-                {
-                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
-                }
-                else
-                {
-                    throw new PrimaryFieldNotFoundException("The primary field is not found.");
-                }
-            }
+            // Identify the property via primary
+            where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
 
             // Execute the proper method
             return UpdateInternal(connection: connection,
@@ -654,9 +637,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Append the prefixes
-            where?.PrependAnUnderscoreAtTheParameters();
-
             // Return the result
             return UpdateInternalBase<object>(connection: connection,
                 tableName: tableName,
@@ -696,19 +676,8 @@ namespace RepoDb
             var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.FirstOrDefault(dbField => dbField.IsPrimary);
             var where = (QueryGroup)null;
 
-            // Identity the property via primary
-            if (primary != null)
-            {
-                var property = entity?.GetType().GetProperty(primary.Name, BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance);
-                if (property != null)
-                {
-                    where = new QueryGroup(new QueryField(new Field(property.Name, property.PropertyType), property.GetValue(entity)));
-                }
-                else
-                {
-                    throw new PrimaryFieldNotFoundException("The primary field is not found.");
-                }
-            }
+            // Identify the property via primary
+            where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
 
             // Execute the proper method
             return await UpdateAsyncInternal(connection: connection,
@@ -866,9 +835,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Append the prefixes
-            where?.PrependAnUnderscoreAtTheParameters();
-
             // Return the result
             return UpdateAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
