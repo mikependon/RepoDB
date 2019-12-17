@@ -29,8 +29,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
             string hints = null,
@@ -62,8 +62,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -95,8 +95,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -128,8 +128,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -161,8 +161,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -194,8 +194,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -227,8 +227,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -260,8 +260,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -293,8 +293,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -326,8 +326,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -359,8 +359,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MaxInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static object MaxInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -400,7 +400,7 @@ namespace RepoDb
         #region MaxAsync<TEntity>
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -411,8 +411,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
             string hints = null,
@@ -433,7 +433,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -444,8 +444,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -466,7 +466,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -477,8 +477,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -499,7 +499,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -510,8 +510,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -532,7 +532,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -543,8 +543,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -565,7 +565,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -576,8 +576,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -598,7 +598,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -609,8 +609,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -631,7 +631,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -642,8 +642,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -664,7 +664,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -675,8 +675,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -697,7 +697,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -708,8 +708,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -730,7 +730,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -741,8 +741,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MaxAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static Task<object> MaxAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
@@ -793,8 +793,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max(this IDbConnection connection,
             string tableName,
             Field field,
             object where = null,
@@ -827,8 +827,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where = null,
@@ -861,8 +861,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -895,8 +895,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Max(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object Max(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -929,8 +929,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MaxInternal(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static object MaxInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -970,7 +970,7 @@ namespace RepoDb
         #region MaxAsync(TableName)
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -981,8 +981,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync(this IDbConnection connection,
             string tableName,
             Field field,
             object where = null,
@@ -1004,7 +1004,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1015,8 +1015,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where = null,
@@ -1038,7 +1038,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1049,8 +1049,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -1072,7 +1072,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1083,8 +1083,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAsync(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -1106,7 +1106,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -1117,8 +1117,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MaxAsyncInternal(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static Task<object> MaxAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -1166,8 +1166,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MaxInternalBase(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static object MaxInternalBase(this IDbConnection connection,
             MaxRequest request,
             object param,
             int? commandTimeout = null,
@@ -1199,7 +1199,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal<long>(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1223,7 +1223,7 @@ namespace RepoDb
         #region MaxAsyncInternalBase
 
         /// <summary>
-        /// Maxs the number of table data from the database in an asynchronous way.
+        /// Maximizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="MaxRequest"/> object.</param>
@@ -1231,8 +1231,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> MaxInternalAsyncBase(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static async Task<object> MaxInternalAsyncBase(this IDbConnection connection,
             MaxRequest request,
             object param,
             int? commandTimeout = null,
@@ -1264,7 +1264,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<long>(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,

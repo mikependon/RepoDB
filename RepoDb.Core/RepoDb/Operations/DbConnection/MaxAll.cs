@@ -26,8 +26,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long MaxAll<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object MaxAll<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -56,8 +56,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long MaxAll<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object MaxAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -86,8 +86,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MaxAllInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static object MaxAllInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -129,8 +129,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAllAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAllAsync<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -159,8 +159,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAllAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
             int? commandTimeout = null,
@@ -189,8 +189,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MaxAllAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static Task<object> MaxAllAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -232,8 +232,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long MaxAll(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static object MaxAll(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -263,8 +263,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MaxAllInternal(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static object MaxAllInternal(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -306,8 +306,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MaxAllAsync(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        public static Task<object> MaxAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -337,8 +337,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MaxAllAsyncInternal(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static Task<object> MaxAllAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -378,8 +378,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MaxAllInternalBase(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static object MaxAllInternalBase(this IDbConnection connection,
             MaxAllRequest request,
             object param,
             int? commandTimeout = null,
@@ -411,7 +411,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal<long>(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -443,8 +443,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> MaxAllInternalAsyncBase(this IDbConnection connection,
+        /// <returns>The maximum value.</returns>
+        internal static async Task<object> MaxAllInternalAsyncBase(this IDbConnection connection,
             MaxAllRequest request,
             object param,
             int? commandTimeout = null,
@@ -476,7 +476,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<long>(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,

@@ -22,15 +22,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
             string hints = null,
@@ -55,15 +55,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -88,15 +88,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -121,15 +121,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -154,15 +154,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -187,15 +187,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -220,15 +220,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -253,15 +253,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -286,15 +286,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -319,15 +319,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -352,15 +352,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        internal static object MinInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -404,15 +404,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             object where = null,
             string hints = null,
@@ -437,15 +437,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -470,15 +470,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryField where = null,
             string hints = null,
@@ -503,15 +503,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -536,15 +536,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             string hints = null,
@@ -569,15 +569,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -602,15 +602,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -635,15 +635,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -668,15 +668,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -701,15 +701,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -730,19 +730,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimizes the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MinAsyncInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        internal static Task<object> MinAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
@@ -786,15 +786,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min(this IDbConnection connection,
             string tableName,
             Field field,
             object where = null,
@@ -820,15 +820,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where = null,
@@ -854,15 +854,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -888,15 +888,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static long Min(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static object Min(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -922,15 +922,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinInternal(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        internal static object MinInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -974,15 +974,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             object where = null,
@@ -1008,15 +1008,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryField where = null,
@@ -1042,15 +1042,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -1076,15 +1076,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        public static Task<long> MinAsync(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        public static Task<object> MinAsync(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -1110,15 +1110,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static Task<long> MinAsyncInternal(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        internal static Task<object> MinAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
             QueryGroup where = null,
@@ -1166,8 +1166,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static long MinInternalBase(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        internal static object MinInternalBase(this IDbConnection connection,
             MinRequest request,
             object param,
             int? commandTimeout = null,
@@ -1199,7 +1199,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal<long>(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1223,7 +1223,7 @@ namespace RepoDb
         #region MinAsyncInternalBase
 
         /// <summary>
-        /// Minimizes the target field from the database table in an asynchronous way.
+        /// Minimizes the target field from the database table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="MinRequest"/> object.</param>
@@ -1231,8 +1231,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
-        internal static async Task<long> MinInternalAsyncBase(this IDbConnection connection,
+        /// <returns>The minimum value.</returns>
+        internal static async Task<object> MinInternalAsyncBase(this IDbConnection connection,
             MinRequest request,
             object param,
             int? commandTimeout = null,
@@ -1264,7 +1264,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal<long>(connection: connection,
+            var result = await ExecuteScalarAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
