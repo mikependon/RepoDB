@@ -19,14 +19,12 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <returns>An array of data entity objects.</returns>
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
-            IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbConnection connection = null)
             where TEntity : class
         {
-            return ToEnumerable<TEntity>(reader, connection, transaction, false);
+            return ToEnumerable<TEntity>(reader, connection, connection?.ConnectionString, false);
         }
 
         /// <summary>
@@ -35,12 +33,12 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
+        /// <param name="connectionString">The connection string that is currently in used.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of data entity objects.</returns>
         internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
             IDbConnection connection,
-            IDbTransaction transaction,
+            string connectionString,
             bool basedOnFields)
             where TEntity : class
         {
@@ -48,7 +46,7 @@ namespace RepoDb.Reflection
             {
                 var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
                     connection,
-                    transaction,
+                    connectionString,
                     basedOnFields);
                 while (reader.Read())
                 {
@@ -67,14 +65,12 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
         /// <returns>An array of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
-            IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbConnection connection = null)
             where TEntity : class
         {
-            return ToEnumerableAsync<TEntity>(reader, connection, transaction, false);
+            return ToEnumerableAsync<TEntity>(reader, connection, connection?.ConnectionString, false);
         }
 
         /// <summary>
@@ -83,12 +79,12 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
+        /// <param name="connectionString">The connection string that is currently in used.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
             IDbConnection connection,
-            IDbTransaction transaction,
+            string connectionString,
             bool basedOnFields)
             where TEntity : class
         {
@@ -97,7 +93,7 @@ namespace RepoDb.Reflection
             {
                 var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
                     connection,
-                    transaction,
+                    connectionString,
                     basedOnFields);
                 while (await reader.ReadAsync())
                 {
@@ -118,9 +114,9 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
-            IDbConnection connection)
+            IDbConnection connection = null)
         {
-            return ToEnumerable(reader, null, connection, null);
+            return ToEnumerable(reader, null, connection, connection?.ConnectionString);
         }
 
         /// <summary>
@@ -129,19 +125,19 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
+        /// <param name="connectionString">The connection string that is currently in used.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
         internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
             string tableName,
             IDbConnection connection,
-            IDbTransaction transaction)
+            string connectionString)
         {
             if (reader != null && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
                     tableName,
                     connection,
-                    transaction);
+                    connectionString);
                 while (reader.Read())
                 {
                     yield return func(reader);
@@ -160,9 +156,9 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
         public static Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
-            IDbConnection connection)
+            IDbConnection connection = null)
         {
-            return ToEnumerableAsync(reader, null, connection, null);
+            return ToEnumerableAsync(reader, null, connection, connection?.ConnectionString);
         }
 
         /// <summary>
@@ -171,12 +167,12 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
+        /// <param name="connectionString">The connection string that is currently in used.</param>
         /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
         internal static async Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
-            IDbTransaction transaction)
+            string connectionString)
         {
             var list = new List<dynamic>();
             if (reader != null && reader.HasRows)
@@ -184,7 +180,7 @@ namespace RepoDb.Reflection
                 var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
                     tableName,
                     connection,
-                    transaction);
+                    connectionString);
                 while (await reader.ReadAsync())
                 {
                     list.Add(func(reader));
