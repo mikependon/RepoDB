@@ -140,12 +140,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
@@ -303,12 +301,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check the primary
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
+                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
