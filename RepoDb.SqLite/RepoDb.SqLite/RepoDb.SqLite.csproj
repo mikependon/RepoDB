@@ -39,7 +39,7 @@ RepoDb v1.10.2:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.10.1" />
+    <PackageReference Include="RepoDb" Version="1.10.2" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
   </ItemGroup>
 
