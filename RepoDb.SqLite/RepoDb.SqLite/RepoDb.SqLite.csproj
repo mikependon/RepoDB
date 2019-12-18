@@ -10,14 +10,20 @@
     <Copyright>Copyright © 2019</Copyright>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm sqlite sqlite-orm</PackageTags>
-    <PackageReleaseNotes>Referenced the updated version of RepoDb core library.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb.MySql v1.0.2:
+- Referenced the updated version of RepoDb core library (v1.10.2).
+
+RepoDb v1.10.2:
+- Bug (Community Request): The primary field is not found' exception when primary key column name is different from Primary attribute property name is different while Connection.Update is called. #356
+- Bug: Set the return value of Max and Min operations to object. #357
+- Performance: Refactor to remove the recurrent calls to DbFieldCache.Get() in the ExecuteQuery method.</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</PackageIconUrl>
   </PropertyGroup>
 
