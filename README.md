@@ -79,7 +79,7 @@ To contribute, open the [issues](https://github.com/mikependon/RepoDb/issues) ta
 
 ### Disclaimer
 
-We expect that you deny any responsibilities of ownership or rights on the source codes you had submitted for pull-request. The full ownership and rights of the source-codes you had submitted for pull-requests will automatically be granted directly to the author (or Michael Camara Pendon) of this library.
+We expect that you *DENY* any responsibilities of *ownership* or *rights* on the source codes you had submitted for pull-request. The full ownership and rights of the source-codes you had submitted for pull-requests will automatically be *GRANTED* directly to the *author* of this library (or *Michael Camara Pendon*).
 
 ## License
 
