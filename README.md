@@ -34,7 +34,7 @@ Project/Solution                                                                
 
 ## Supported Databases
 
-Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statements and execute it against the database through the *Execute* methods mentioned below.
+Practically, RepoDb has supported all RDBMS data-providers. Developers has the freedom to write their own SQL statements and execute it against the database through the *Execute()* methods mentioned below.
 
 - [ExecuteQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequery)
 - [ExecuteNonQuery](https://repodb.readthedocs.io/en/latest/pages/connection.html#executenonquery)
@@ -71,11 +71,15 @@ Any help from the community will be highly appreciated as it really helps me eli
 
 ## Contributions
 
-The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via NetStandard. **This is the active one and any pull-request must be done on this code-line.**
+The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via *NetStandard* (supports both *NetFramework* and *NetCore*). **Any pull-request must be done on this code-line.**
 
-The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the NetFramework solutions. It is very dedicated to *NetFramework* projects. This must **NOT** be pulled-request as this will be **out-of-support** starting **v1.10.1**.
+The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the *NetFramework* solutions. This code-line is already **out-of-support** (since **v1.10.1**).
 
-To contribute, open the [Issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+To contribute, open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+
+### Disclaimer
+
+We expect that you deny any responsibilities of ownership or rights on the source codes you had submitted for pull-request. The full ownership and rights of the source-codes you had submitted for pull-requests will automatically be granted directly to the author (or Michael Camara Pendon) of this library.
 
 ## License
 
@@ -87,7 +91,7 @@ Being the author of this library and to avoid the bias on the results, the bench
 
 Results below is based on the recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="500px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="460px" />
 
 RepoDb is the **fastest** and the **most-efficient** ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
@@ -154,7 +158,7 @@ Otherwise, please contact [me](https://repodb.readthedocs.io/en/latest/pages/con
 
 ## Installations
 
-RepoDb and its extension is available via Nuget as a NetStandard library. Type the commands below at the ***Package Manager Console*** window.
+RepoDb and its extension is available via Nuget as a NetStandard library. Type the commands below at the *Package Manager Console* window.
 
 ```
 Install-Package RepoDb
@@ -164,7 +168,7 @@ Install-Package RepoDb.MySql
 
 ## Snippets and Samples
 
-Let us say you have a customer class named `Customer` that has an equivalent table in the database named `[dbo].[Customer]`.
+Let us say you have a customer class named *Customer* that has an equivalent table in the database named `[dbo].[Customer]`.
 
 ```csharp
 public class Customer
