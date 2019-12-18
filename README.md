@@ -130,11 +130,9 @@ Operation                                                                       
 [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update)                            | YES             | YES                     | YES       | YES               | NO               | SUPPORTED              |
 [UpdateAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#updateall)                      | YES             | YES                     | YES       | YES               | YES              | SUPPORTED              |
 
-## Learnings (In-Progress)
+## Learnings
 
-Below are the links that would help the developers do some practical and actual implementations when using the library.
-
-At most cases, the implementations provided in the articles are standard reference implementation. *Please help yourselves!*
+Below are the links that would help the developers do some *practical* (or *actual*) implementations when using the *RepoDb* library. *Please help yourselves!*
 
 - [Getting started](https://github.com/mikependon/RepoDb/wiki/Getting-Started)
 - [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository)

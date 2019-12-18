@@ -1,6 +1,6 @@
 ## Pre-requisites
 
-Before you proceed with this tutorial we suggest that you first visit our [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page if you have not read it yet.
+Before you proceed with this tutorial, we suggest that you first visit our [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page if you have not read it yet.
 
 ## Introduction
 
@@ -10,21 +10,21 @@ In this page, you will learn the following.
 - [Inheritting the DbRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-dbrepository).
 - [Inheritting the BaseRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-baserepository).
 
-In this tutorial, the programming language we will be using is C# and the database provider we will be using is SQL Server. Please have at least Visual Studio 2017 and SQL Server 2016 installed in your machine.
+The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
 **Note**: The *database*, *table*, *project* and *model* we will be using is the same as what we have created at the [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page. 
 
 ## What is Repository?
 
-*Repository* is a software design pattern and practice in which it is being implemented as an additional layer between your application and your database. Through repository, you are managing how the data is being manipulated from/to the database.
+*Repository* is a software design pattern and practice in which it is being implemented as an additional layer between your application and your database. It is being represented as a class object within the application.Through repository, you are managing how the data is being manipulated from/to the database.
 
-In this class, we usually add the basic database operations/methods like *Insert*, *Delete* and *Update*. In some cases, we also place the advance and reporting operations/methods like *GetTotalOrdersByMonth* or *RecalculateCustomerOrdersByDateRange* here.
+In this class (the *Repository*), we usually add the basic database operations/methods (ie: *Insert*, *Delete* and *Update*). But in most cases, we place the advance and reporting operations/methods here (ie: *GetTotalOrdersByMonth* or *RecalculateCustomerOrdersByDateRange*).
 
 Then, the codes in your application is using the *Repository* object instead of directly accessing the database. Those allow the developers to follow the correct *chain-of calls* and *reusability* when it comes to data-accessibility.
 
 ## Creating a database-level Repository
 
-A database-level repository is a *Repository* that can be used for a database specific purposes. The operations on this repository can be mostly common operations that is usable for the target database.
+A database-level repository is a *Repository* that can be used for a database specific purposes.
 
 To implement a common *Repository*, please follow the steps below.
 
@@ -198,16 +198,16 @@ Press the `F5` key to stat the project.
 
 You will see that the following messages appeared at the *Console*.
 
-- A customer record has been inserted.
-- John Doe (New York)
-- A customer record has been updated.
-- A customer record has been deleted.
+- *A customer record has been inserted.*
+- *John Doe (New York)*
+- *A customer record has been updated.*
+- *A customer record has been deleted.*
 
 This signifies that all operations were succeeded.
 
 ## Inheritting the DbRepository
 
-The *DbRepository* is an embedded class within *RepoDb* library that would allow the developers to inherit the implementation of the common-repository pattern. Practically, the way how we implemented the *InventoryRepository* is somewhat similar to *DbRepository*, however, it does not contain all the rich methods we have in the library.
+The *DbRepository* is an embedded class within *RepoDb* library that would allow the developers to inherit the implementation of the *Common-Repository* pattern. Practically, the way how we implemented the *InventoryRepository* is somewhat similar to *DbRepository*, however, it does not contain all the rich methods we have in the library.
 
 In this section, we will refactor the *InventoryRepository* to utilize the *DbRepository* class.
 

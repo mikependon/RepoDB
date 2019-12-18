@@ -10,7 +10,7 @@ We are glad that you would like to learn RepoDb. In this page, you will learn th
 
 ## Before we begin
 
-In this tutorial, the programming language we will be using is C# and the database provider we will be using is SQL Server. Please have at least Visual Studio 2017 and SQL Server 2016 installed in your machine.
+The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
 Please follow the steps below before proceeding to the next section.
 
@@ -48,7 +48,7 @@ ON [PRIMARY];
 ```
 **Note**: The SQL script above creates a table named `[Customer]` under the schema of `[dbo]`. The field `[Id]` is being set as the **primary** field and is also an **identity**.
 - Press the `F5` key.
-- In the `Object Explorer`, the table named `Customer` is now available under `Databases` > `Inventory` > `Tables`.
+- In the `Object Explorer`, the table named *Customer* is now available under `Databases` > `Inventory` > `Tables`.
 
 ### Create a C# Project
 
@@ -66,7 +66,7 @@ ON [PRIMARY];
 - In the `Solution Explorer`, right-click the project `InventoryProject` and click the `Add` > `New Item...` context-menu.
 - Enter the following values:
   - Type = `Class`
-  - Name = `Customer`
+  - Name = *Customer*
 - Click the `Add` button.
 - The new file named `Customer.cs` will be created. Replace the class implementation with the script below.
 ```
@@ -84,7 +84,7 @@ public class Customer
 
 ## Installation
 
-To install RepoDb, write the script below in the `Package Manager Console` and press the `Enter` key.
+To install *RepoDb*, write the script below in the `Package Manager Console` and press the `Enter` key.
 
 ```
 Install-Package RepoDb
@@ -94,11 +94,11 @@ The installation will only take few seconds to complete.
 
 ## Making a CRUD calls
 
-To make a CRUD calls via RepoDb, kindly follow the steps below.
+To make a *CRUD* calls via *RepoDb*, kindly follow the steps below.
 
 ### Inserting a record
 
-To insert a record, please use the [Insert](https://repodb.readthedocs.io/en/latest/pages/connection.html#insert) operation. Please copy the provided sample script below and paste it in your `Program.cs`, just right after the `Main()` method.
+To insert a record, please use the [Insert](https://repodb.readthedocs.io/en/latest/pages/connection.html#insert) operation. Please copy the provided sample script below and paste it in your *Program.cs*, just right after the `Main()` method.
 
 ```
 public void DoInsert()
@@ -119,7 +119,7 @@ public void DoInsert()
 }
 ```
 
-Inside the `Main()` method, call the `DoInsert()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+Inside the `Main()` method, call the `DoInsert()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
 ```
 public static void Main(string[] args)
@@ -133,17 +133,17 @@ Then press the `F5` key.
 
 You will see a message *A customer record has been inserted*. Press any key to exit!
 
-In your Microsoft SQL Server Management Studio, write the script below in the query window and press the `F5` key.
+In your *Microsoft SQL Server Management Studio*, write the script below in the query window and press the `F5` key.
 
 ```
 SELECT * FROM [dbo].[Customer];
 ```
 
-You will see that a single `Customer` record has been inserted. The field values are corresponding the `Customer` class-properties values you specified at the `DoInsert()` method.
+You will see that a single *Customer* record has been inserted. The field values are corresponding the *Customer* class-properties values you specified at the `DoInsert()` method.
 
 ### Querying a record
 
-To query a record, please use the [Query](https://repodb.readthedocs.io/en/latest/pages/connection.html#query) operation. Please copy the provided sample script below and paste it in your `Program.cs`, just right after the `DoInsert()` method.
+To query a record, please use the [Query](https://repodb.readthedocs.io/en/latest/pages/connection.html#query) operation. Please copy the provided sample script below and paste it in your *Program.cs*, just right after the `DoInsert()` method.
 
 ```
 public void DoQuery()
@@ -156,7 +156,7 @@ public void DoQuery()
 }
 ```
 
-Inside the `Main()` method, call the `DoQuery()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+Inside the `Main()` method, call the `DoQuery()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
 ```
 public static void Main(string[] args)
@@ -184,7 +184,7 @@ The output of the script above is the same as prior sample.
 
 ### Updating a record
 
-To update a record, please use the [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update) operation. Please copy the provided scripts below and paste it in your `Program.cs`, just right after the `DoQuery()` method.
+To update a record, please use the [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update) operation. Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoQuery()` method.
 
 ```
 public void DoUpdate()
@@ -200,7 +200,7 @@ public void DoUpdate()
 }
 ```
 
-Inside the `Main()` method, call the `DoUpdate()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+Inside the `Main()` method, call the `DoUpdate()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
 ```
 public static void Main(string[] args)
@@ -220,12 +220,12 @@ In your Microsoft SQL Server Management Studio, write the script below in the qu
 SELECT * FROM [dbo].[Customer];
 ```
 
-You will see that the existing `Customer` named `John Doe` has been renamed to `James Doe`.
+You will see that the existing *Customer* named `John Doe` has been renamed to `James Doe`.
 
 
 ### Deleting a record
 
-To delete a record, please use the [Delete](https://repodb.readthedocs.io/en/latest/pages/connection.html#delete) operation. Please copy the provided scripts below and paste it in your `Program.cs`, just right after the `DoUpdate()` method.
+To delete a record, please use the [Delete](https://repodb.readthedocs.io/en/latest/pages/connection.html#delete) operation. Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoUpdate()` method.
 
 ```
 public void DoDelete()
@@ -239,7 +239,7 @@ public void DoDelete()
 }
 ```
 
-Inside the `Main()` method, call the `DoDelete()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+Inside the `Main()` method, call the `DoDelete()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
 ```
 public static void Main(string[] args)
@@ -271,9 +271,9 @@ To execute a raw-SQL, you can use any of the operations below. Each operation ha
 - [ExecuteScalar](https://repodb.readthedocs.io/en/latest/pages/connection.html#executescalar)
 - [ExecuteQueryMultiple](https://repodb.readthedocs.io/en/latest/pages/connection.html#executequerymultiple)
 
-In this tutorial, we will only limit on `ExecuteQuery` operation.
+In this tutorial, we will only limit on `ExecuteQuery()` operation.
 
-Assuming you have multiple records of `Customer` in the database. Please copy the provided scripts below and paste it in your `Program.cs`, just right after the `DoDelete()` method.
+Assuming you have multiple records of *Customer* in the database. Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoDelete()` method.
 
 ```
 public void DoExecuteRawSql()
@@ -288,9 +288,9 @@ public void DoExecuteRawSql()
 }
 ```
 
-The query above will return all the `Customer` records from the database.
+The query above will return all the *Customer* records from the database.
 
-Inside the `Main()` method, call the `DoExecuteRawSql()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+Inside the `Main()` method, call the `DoExecuteRawSql()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
 ```
 public static void Main(string[] args)
@@ -302,7 +302,7 @@ public static void Main(string[] args)
 
 Press the `F5` key.
 
-Notice that the `Console` is filled with the list of `Customer` records from the database.
+Notice that the *Console* is filled with the list of *Customer* records from the database.
 
 #### Passing of parameters
 
@@ -331,7 +331,7 @@ See the [raw-SQL](https://repodb.readthedocs.io/en/latest/pages/rawsql.html) doc
 
 The logic of calling a stored procedure is somewhat similar on the codes sample mentioned at the [*Executing a Raw-SQL*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#executing-a-raw-sql) section. The only difference is, you have to pass the name of the stored procedure and set the *commandType* argument to *CommandType.StoredProcedure*.
 
-In your `Microsoft SQL Server Management Studio`, open a new query window and execute the scripts provided below.
+In your *Microsoft SQL Server Management Studio*, open a new query window and execute the scripts provided below.
 
 ```
 DROP PROCEDURE IF EXISTS [dbo].[sp_get_customers];
@@ -346,7 +346,7 @@ END
 
 Once executed, the stored procedure named `sp_get_customers` will now be available under `Databases` > `Inventory` > `Programmability` > `Stored Procedures`.
 
-Please copy the provided scripts below and paste it in your `Program.cs`, just right after the `DoExecuteRawSql()` method.
+Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoExecuteRawSql()` method.
 
 ```
 public void DoCallStoredProcedure()
@@ -361,7 +361,7 @@ public void DoCallStoredProcedure()
 }
 ```
 
-Inside the `Main()` method, call the `DoCallStoredProcedure()` method we have created above. Simply replace the `Main()` method of your `Program.cs` file with the codes below.
+Inside the `Main()` method, call the `DoCallStoredProcedure()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
 ```
 public static void Main(string[] args)
@@ -373,7 +373,7 @@ public static void Main(string[] args)
 
 Press the `F5` key.
 
-Notice that the `Console` is filled with the list of `Customer` records from the database.
+Notice that the *Console* is filled with the list of *Customer* records from the database.
 
 #### Passing a parameter in the Stored Procedure
 

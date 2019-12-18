@@ -12,7 +12,7 @@ In this page, you will learn the following.
 
 ## Before we begin
 
-In this tutorial, the programming language we will be using is C# and the database provider we will be using is SQL Server. Please have at least Visual Studio 2017 and SQL Server 2016 installed in your machine.
+The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
 Also, we will only targetting creating a simple *.NET Core REST API* and have the *Repository* object get injected and being called at the *Controllers*.
 
