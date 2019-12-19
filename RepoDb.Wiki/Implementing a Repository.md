@@ -336,6 +336,8 @@ Press the `F5` key to run and test the solution.
 
 Same as previous section, we suggest that you place a breakpoint at the *Main()* method and press the `F11` key to see and follow the actual code executions.
 
+-------
+
 **Voila! You have completed this tutorial.**
 
 -------

@@ -253,6 +253,8 @@ You will notice that the result is being displayed in the browser as *JSON* file
 - Click the `Debug` tab.
 - Under `Web Server Settings`, you will see the `App URL` field that contains the port.
 
+--------
+
 **Voila! You have completed this tutorial.**
 
 --------

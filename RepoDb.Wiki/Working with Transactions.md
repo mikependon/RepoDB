@@ -406,4 +406,6 @@ orderRepository.Dispose();
 
 Notice that all operations are wrapped with *Transaction* object. In the case of failure in the *EnsureCustomerOrder()* calls, then all operations above will be rolled back.
 
+--------
+
 **Voila! You have completed this tutorial.**
