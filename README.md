@@ -77,10 +77,6 @@ The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is 
 
 To contribute, open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
-### Disclaimer
-
-We expect that you *DENY* any responsibilities of *ownership* or *rights* on the source codes you had submitted for pull-request. The full ownership and rights of the source-codes you had submitted for pull-requests will automatically be *GRANTED* directly to the *author* of this library (or *Michael Camara Pendon*).
-
 ## License
 
 [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
