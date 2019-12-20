@@ -133,12 +133,14 @@ Operation                                                                       
 
 ## Credits
 
-- [GitHub](https://github.com/) - for hosting this project.
 - [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
-- [Shields](https://shields.io/) - for the badges.
-- [Nuget](https://www.nuget.org/) - for the package delivery.
-- [StackEdit](https://stackedit.io) - for being the markdown file editor.
+- [GitHub](https://github.com/) - for hosting this project.
 - [Gitter](https://gitter.im/) - for the community engagements.
+- [Nuget](https://www.nuget.org/) - for the package deliveries.
+- [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) - for measuring the performance and efficiency.
+- [ReadTheDocs](https://readthedocs.org/) - for the library documentations.
+- [Shields](https://shields.io/) - for the awesome badges.
+- [StackEdit](https://stackedit.io) - for being the markdown file editor.
 
 ## License
 
