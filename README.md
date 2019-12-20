@@ -82,10 +82,6 @@ The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is 
 
 To contribute, open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
-## License
-
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
-
 ## Benchmark
 
 The benchmark result to be shown on this page will always be referring to the *community-approved* ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
@@ -134,6 +130,21 @@ Operation                                                                       
 [Truncate](https://repodb.readthedocs.io/en/latest/pages/connection.html#truncate)                        | YES             | YES                     | YES       | YES               | NO               | SUPPORTED              |
 [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update)                            | YES             | YES                     | YES       | YES               | NO               | SUPPORTED              |
 [UpdateAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#updateall)                      | YES             | YES                     | YES       | YES               | YES              | SUPPORTED              |
+
+## Credits
+
+- [GitHub](https://github.com/) - for hosting this project.
+- [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
+- [Shields](https://shields.io/) - for the badges.
+- [Nuget](https://www.nuget.org/) - for the package delivery.
+- [StackEdit](https://stackedit.io) - for being the markdown file editor.
+- [Gitter](https://gitter.im/) - for the community engagements.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+
+-----------------
 
 ## Learnings
 
