@@ -6,6 +6,7 @@
 <p align="center">
 	<b>A hybrid ORM Library for .NET</b>
 </p>
+
 -----------------
 
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
@@ -136,7 +137,7 @@ Operation                                                                       
 
 ## Learnings
 
-Below are the links that would help the developers do some *practical* (or *actual*) implementations when using the *RepoDb* library. *Please help yourselves!*
+Below are the links that would help the developers do some *practical* (or *actual*) implementations when using the *RepoDb* library.
 
 - [Getting started](https://github.com/mikependon/RepoDb/wiki/Getting-Started)
 - [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository)

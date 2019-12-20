@@ -12,12 +12,35 @@
 
 This is the official repository for **RepoDb.PostgreSql** solution.
 
-## What is with this library
+## Introduction
 
 - It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) implementation.
-- It has batch operations; optimized the execution of multiple operations(ie: ***QueryMultiple***, ***InsertAll***, ***MergeAll*** and ***UpdateAll***).
-- It is a unique and hybrid solution for ***PostgreSql*** data-provider within ***.NET Technology***.
+- It has [batch operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations).
+- It is a unique and hybrid solution for ***MySql*** data-provider within ***.NET Technology***.
 - It is well-covered by Unit and Integration Tests.
+
+## Core Features
+ 
+- Asynchronous Operations
+- Batch Operations
+- Bulk Operations
+- Caching
+- Connection Persistency
+- Database Helpers
+- Database Settings
+- Expression Trees
+- Extension Methods
+- Field Mapping
+- Inline Hints
+- Massive Operations (Generics/Explicits/MethodCalls/TableBased)
+- Multi-Resultset Query
+- Query Builder
+- Repositories
+- Resolvers (CLR Types, DB Types)
+- Statement Builder
+- Tracing
+- Transaction
+- Type Mapping
 
 ## Bulk Operations 
 
@@ -28,6 +51,13 @@ BaseRepository<TEntity, TDbConnection>.BulkInsert(...);
 DbRepository<TDbConnection>.BulkInsert<TEntity>(...);
 NpgsqlConnection.BulkInsert<TEntity>(...);
 ```
+
+## Community engagements
+
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## Installation
 
