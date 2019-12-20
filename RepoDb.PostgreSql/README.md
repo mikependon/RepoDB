@@ -127,8 +127,8 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 
 ## Dependencies
 
-- [Npgsql (>= 4.1.2)](https://www.nuget.org/packages/Npgsql/)
-- [RepoDb (>= 1.10.1)](https://www.nuget.org/packages/RepoDb.SqLite/)
+- [Npgsql](https://www.nuget.org/packages/Npgsql/)
+- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/)
 
 ## License
 
