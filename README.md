@@ -1,14 +1,18 @@
+
 <p align="center">
-	<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png" height="128px" />
+	<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
 </p>
 
+<p align="center">
+	<b>A hybrid ORM Library for .NET</b>
+</p>
 -----------------
 
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![CodeSize](https://img.shields.io/github/languages/code-size/mikependon/repodb?style=for-the-badge)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?color=48B293&style=for-the-badge)](https://gitter.im/RepoDb/community)
 
-## RepoDb - a hybrid ORM library for .NET.
+## Introduction
 
 RepoDb provide certain features of both micro-ORMs and macro-ORMs. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
