@@ -27,29 +27,20 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="connectionString">The connection string that is currently in used.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
         public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
             IDbConnection connection,
-            string connectionString)
+            IDbTransaction transaction)
             where TEntity : class
         {
             // Expression variables
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
             var newEntityExpression = Expression.New(typeof(TEntity));
 
-            // Variables needed
-            var dbSetting = connection?.GetDbSetting();
-            var dbFields = (IEnumerable<DbField>)null;
-
-            // Create a new connection via passed connection string
-            if (connection != null && !string.IsNullOrEmpty(connectionString))
-            {
-                using (var separateConnection = (IDbConnection)Activator.CreateInstance(connection.GetType(), new[] { connectionString }))
-                {
-                    dbFields = DbFieldCache.Get(separateConnection, ClassMappedNameCache.Get<TEntity>(), null);
-                }
-            }
+            // DB Variables
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -377,29 +368,20 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="connectionString">The connection string that is currently in used.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
         public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
             string tableName,
             IDbConnection connection,
-            string connectionString)
+            IDbTransaction transaction)
         {
             // Expression variables
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
             var newObjectExpression = Expression.New(typeof(ExpandoObject));
 
-            // Variables needed
-            var dbSetting = connection?.GetDbSetting();
-            var dbFields = (IEnumerable<DbField>)null;
-
-            // Create a new connection via passed connection string
-            if (!string.IsNullOrEmpty(tableName) && connection != null && !string.IsNullOrEmpty(connectionString))
-            {
-                using (var separateConnection = (IDbConnection)Activator.CreateInstance(connection.GetType(), new[] { connectionString }))
-                {
-                    dbFields = DbFieldCache.Get(separateConnection, tableName, null);
-                }
-            }
+            // DB Variables
+            var dbSetting = connection.GetDbSetting();
+            var dbFields = tableName != null ? DbFieldCache.Get(connection, tableName, transaction) : null;
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)

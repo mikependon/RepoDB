@@ -146,9 +146,6 @@ namespace RepoDb
             string tableName,
             bool skipCommandArrayParametersCheck)
         {
-            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
-            var connectionString = connection.ConnectionString;
-
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -160,7 +157,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable(reader, tableName, connection, connectionString).AsList();
+                    return DataReader.ToEnumerable(reader, tableName, connection, transaction).AsList();
                 }
             }
         }
@@ -229,9 +226,6 @@ namespace RepoDb
             string tableName,
             bool skipCommandArrayParametersCheck)
         {
-            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
-            var connectionString = connection.ConnectionString;
-
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -243,7 +237,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return await DataReader.ToEnumerableAsync(reader, tableName, connection, connectionString);
+                    return await DataReader.ToEnumerableAsync(reader, tableName, connection, transaction);
                 }
             }
         }
@@ -316,8 +310,8 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
-            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
-            var connectionString = connection.ConnectionString;
+            // Trigger the cache to void reusing the connection
+            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -330,7 +324,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, connectionString, basedOnFields).AsList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, transaction, basedOnFields).AsList();
                 }
             }
         }
@@ -403,8 +397,8 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
-            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
-            var connectionString = connection.ConnectionString;
+            // Trigger the cache to void reusing the connection
+            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -417,7 +411,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, connectionString, basedOnFields);
+                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction, basedOnFields);
                 }
             }
         }

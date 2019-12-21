@@ -164,7 +164,7 @@ namespace RepoDb
             EnsureSingleCallForDbFieldCacheGet<TEntity>(m_transaction);
 
             // Get the result
-            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, m_connectionString, true).AsList();
+            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, m_transaction, true).AsList();
 
             // Move to next result
             NextResult();
@@ -185,7 +185,7 @@ namespace RepoDb
             await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(m_transaction);
 
             // Get the result
-            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, m_connectionString, true);
+            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, m_transaction, true);
 
             // Move to next result
             await NextResultAsync();
@@ -204,7 +204,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<dynamic> Extract()
         {
-            var result = DataReader.ToEnumerable(m_reader, null, m_connection, m_connectionString).AsList();
+            var result = DataReader.ToEnumerable(m_reader, null, m_connection, m_transaction).AsList();
 
             // Move to next result
             NextResult();
@@ -219,7 +219,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<dynamic>> ExtractAsync()
         {
-            var result = await DataReader.ToEnumerableAsync(m_reader, null, m_connection, m_connectionString);
+            var result = await DataReader.ToEnumerableAsync(m_reader, null, m_connection, m_transaction);
 
             // Move to next result
             await NextResultAsync();
