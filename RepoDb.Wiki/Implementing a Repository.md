@@ -6,9 +6,9 @@ Before you proceed with this tutorial, we suggest that you first visit our [Gett
 
 In this page, you will learn the following.
 
-- [Creating a database-level Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#creating-a-database-level-repository).
-- [Inheritting the DbRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-dbrepository).
-- [Inheritting the BaseRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-baserepository).
+- [Creating a database-level Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#creating-a-database-level-repository)
+- [Inheritting the DbRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-dbrepository)
+- [Inheritting the BaseRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-baserepository)
 
 The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 

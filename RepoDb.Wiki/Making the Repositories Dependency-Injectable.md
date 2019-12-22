@@ -6,9 +6,9 @@ Before you proceed with this tutorial we suggest that you first visit our [Imple
 
 In this page, you will learn the following.
 
-- [Implement a Repository with its own Interface Definition](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable#implement-a-repository-with-its-own-interface-definition).
-- [Injecting a Repository in .NET Core REST API Project](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable#injecting-a-repository-in-net-core-rest-api-project).
-- [Calling the Repository operations from the Controller](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable#calling-the-repository-operations-from-the-controller).
+- [Implement a Repository with its own Interface Definition](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable#implement-a-repository-with-its-own-interface-definition)
+- [Injecting a Repository in .NET Core REST API Project](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable#injecting-a-repository-in-net-core-rest-api-project)
+- [Calling the Repository operations from the Controller](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable#calling-the-repository-operations-from-the-controller)
 
 ## Before we begin
 

@@ -2,11 +2,11 @@
 
 We are glad that you would like to learn RepoDb. In this page, you will learn the following.
 
-- [Installation of *RepoDb*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#installation).
-- [Making a *CRUD* calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#making-a-crud-calls).
-- [Executing a *Raw-SQL*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#executing-a-raw-sql).
-- [Calling a *Stored Procedure*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#calling-a-stored-procedure).
-- [*Table-Based* calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#table-based-calls).
+- [Installation of *RepoDb*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#installation)
+- [Making a *CRUD* calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#making-a-crud-calls)
+- [Executing a *Raw-SQL*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#executing-a-raw-sql)
+- [Calling a *Stored Procedure*](https://github.com/mikependon/RepoDb/wiki/Getting-Started#calling-a-stored-procedure)
+- [*Table-Based* calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#table-based-calls)
 
 ## Before we begin
 

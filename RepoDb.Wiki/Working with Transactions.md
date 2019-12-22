@@ -4,9 +4,9 @@ We will introduce you on how to work with *Transactions* in *RepoDb*. As *RepoDb
 
 In this page you will learn the following:
 
-- [Wrapping the DbConnection object into Transaction](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Wrapping-the-DbConnection-object-into-Transaction).
-- [Using the Transaction object in the Repository](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Using-the-Transaction-object-in-the-Repository).
-- [Transaction for Multiple Operation Calls](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Transaction-for-Multiple-Operation-Calls).
+- [Wrapping the DbConnection object into Transaction](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Wrapping-the-DbConnection-object-into-Transaction)
+- [Using the Transaction object in the Repository](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Using-the-Transaction-object-in-the-Repository)
+- [Transaction for Multiple Operation Calls](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Transaction-for-Multiple-Operation-Calls)
 
 In this tutorial, the programming language we will be using is C# and the database provider we will be using is SQL Server. Please have at least Visual Studio 2017 and SQL Server 2016 installed in your machine.
 
