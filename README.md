@@ -1,4 +1,3 @@
-
 <p align="center">
 	<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
 </p>
@@ -21,13 +20,13 @@ RepoDb provide certain features of both micro-ORMs and macro-ORMs. It helps the 
 
 This refers to “how fast” RepoDb converts the raw data into a class object and transport the class object as an actual data in the database.
 
-RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
+> RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
 
 ### It is efficient
 
 This refers to “how well-managed” RepoDb uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
-RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
+> RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
 ## Builds and Tests Result
 
@@ -51,7 +50,7 @@ Practically, RepoDb has supported all RDBMS data-providers. Developers has the f
 
 <img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Raw/Images/SqlServer.png?raw=true" height="64px" title="SqlServer" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/SqLite.png" height="64px" title="SqLite" /> <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/MySql.png" height="64px" title="MySql" />
 
-RepoDb has “fluent” methods (see [Operations](https://github.com/mikependon/RepoDb#operations) section) in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers (see *Operation* section). In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* data providers.
+RepoDb has “fluent” methods in which the SQL Statements are automatically being constructed as part of the execution context. These methods are the most common operations being used by most developers (*please see the [operations](https://github.com/mikependon/RepoDb#operations) section*). In this regards, RepoDb only fully supported the *SQL Server*, *SQLite*, *MySQL* and *PostgreSQL (soon)* RDBMS data providers.
 
 ### Extensibility
 
@@ -59,7 +58,7 @@ RepoDb is highly extensible to further support other RDBMS data-providers. The d
 
 ## Community
 
-RepoDb is rapidly expanding its capability to further support other RDBMS data-providers (in which each implementation differs from each other). Though it is **not** a macro-ORM, but it really requires significant amount of time and effort to maintain.
+RepoDb is rapidly expanding its capability to further support the  other RDBMS data-providers (in which each implementation differs from each other). Though it is **not** a macro-ORM, but it really requires significant amount of time and effort to maintain.
 
 It is now open for *community contributions* to further enhance the features and as well the *community engagements*. Please help me spread the word about this new library and its capability.
 
@@ -76,9 +75,9 @@ Any help from the community will be highly appreciated as it really helps me eli
 
 ## Contributions
 
-The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via *NetStandard* (supports both *NetFramework* and *NetCore*). **Any pull-request must be done on this code-line.**
+The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via *NetStandard* (supports both *NetFramework* and *NetCore*). *Any pull-request must be done on this code-line.*
 
-The folder [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb) is the code-line that supports the *NetFramework* solutions. This code-line is already **out-of-support** (since **v1.10.1**).
+The folder ~~[RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb)~~ is the code-line that supports the *NetFramework* solutions. This code-line is already *out-of-support* (since *v1.10.1*).
 
 To contribute, open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
@@ -150,21 +149,26 @@ Operation                                                                       
 
 ## Learnings
 
-Below are the links that would help the developers do some *practical* (or *actual*) implementations when using the *RepoDb* library.
+Below are the links that would help the developers do some *practical* implementations when using the *RepoDb* library.
+
+### Practical Topics
 
 - [Getting started](https://github.com/mikependon/RepoDb/wiki/Getting-Started)
 - [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository)
 - [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable)
+- [Customizing a Cache](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache)
+- [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)
+- [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider)
+
+### Other Topics
+
 - [Bulk-Operations vs Batch-Operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations)
 - [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple)
 - [Working with Transactions](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions)
 - [Expression Trees](https://github.com/mikependon/RepoDb/wiki/Expression-Trees)
 - [Advance Field and Type Mapping Implementations](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation)
-- [Customizing a Cache](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache)
-- [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)
 - [The importance of Connection Persistency](https://github.com/mikependon/RepoDb/wiki/The-importance-of-Connection-Persistency)
 - [Working with Enumerations](https://github.com/mikependon/RepoDb/wiki/Working-with-Enumerations)
-- [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider)
 
 There will also be high-level implementations and sample code-snippets on the following sections to help you start with.
 
@@ -662,7 +666,8 @@ using (var connection = new SqlConnection(ConnectionString))
 		new QueryField("CustomerId", 10045),
 		new QueryField("OrderDate", DateTime.UtcNow.Date)
 	});
-	var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup,
+	var customer = connection.ExecuteQuery<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
+		param: queryGroup,
 		commandType: CommandType.StoredProcedure);
 }
 ```
