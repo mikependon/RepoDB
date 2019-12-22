@@ -79,7 +79,7 @@ ON [PRIMARY];
   - Name = `Customer`
 - Click the `Add` button.
 - The new file named `Customer.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class Customer
 {
 	public long Id { get; set; }
@@ -96,7 +96,7 @@ public class Customer
 
 To begin with, you have to initiate the *DbConnection* object and simply call the `BeginTransaction()` method.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var transaction = connection.BeginTransaction();
@@ -107,19 +107,19 @@ The script above returns an instance of *DbTransaction* object.
 
 To *rollback*, simply call the `Rollback()` method of the *DbTransaction* object. See the code snippets below.
 
-```
+```csharp
 transaction.Rollback();
 ```
 
 To *commit*, simply call the `Commit()` method of the *DbTransaction* object. See the code snippets below.
 
-```
+```csharp
 transaction.Commit();
 ```
 
 To ensure that the activity is being rolled-back properly, we suggest that you **always** wrap any transactional activities within the *try-catch* block. See the codes below.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	using (var transaction = connection.BeginTransaction())
@@ -143,7 +143,7 @@ using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrate
 
 In your C# Project, double click the *Program.cs* file. Copy the code snippets below and place it just right after the `Main()` method.
 
-```
+```csharp
 public static void DoTransaction()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -167,7 +167,7 @@ public static void DoTransaction()
 
 Replace the implementation of your `Main()` method with the codes provided below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoTransaction();
@@ -183,7 +183,7 @@ Now, let us check the database.
 
 In your Microsoft SQL Server Management Studio, write the script below in the query window and press the `F5` key.
 
-```
+```csharp
 SELECT * FROM [dbo].[Customer];
 ```
 
@@ -195,7 +195,7 @@ If you are working with multiple relationships (ie: *Order*, *OrderDetail* with 
 
 Now, let us go back to your *C# Project*. Inside the `DoTransaction` method, add the `transaction.Commit()` calls just before the `Console.WriteLine()`. Please see the code snippets below.
 
-```
+```csharp
 using (var transaction = connection.BeginTransaction())
 {
 	var customer = new
@@ -220,7 +220,7 @@ Again, let us check the database.
 
 In your Microsoft SQL Server Management Studio, write the script below in the query window and press the `F5` key.
 
-```
+```csharp
 SELECT * FROM [dbo].[Customer];
 ```
 
@@ -230,7 +230,7 @@ You will see that a single `Customer` record has been inserted.
 
 All operations in *RepoDb* accepts the *DbTransaction* argument. This means that if you passed an instance of *DbTransaction* object in the specific operation, then the execution of that operation will be wrapped inside the *Transaction* object you had passed on. See example code below.
 
-```
+```csharp
 using (var repository = new WhateverRepository())
 {
 	using (var transaction = repository.CreateConnection().BeginTransaction())
@@ -257,7 +257,7 @@ Before we start, let us create the necessary objects needed.
   - Name = `CustomerRepository`
 - Click the `Add` button.
 - The new file named `CustomerRepository.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class CustomerRepository : DbRepository<Customer, SqlConnection>
 {
 	public CustomerRepository()
@@ -273,7 +273,7 @@ The repository we had created above is very simple and is dedicated to only *Cus
 
 In your *Program.cs* file, add the following codes just right after the *DoTransaction()* method.
 
-```
+```csharp
 public static void DoRepositoryTransaction()
 {
 	using (var repository = new CustomerRepository())
@@ -297,7 +297,7 @@ public static void DoRepositoryTransaction()
 
 Replace the implementation of your `Main()` method with the codes provided below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoRepositoryTransaction();
@@ -313,7 +313,7 @@ Again, let us check the database.
 
 In your Microsoft SQL Server Management Studio, write the script below in the query window and press the `F5` key.
 
-```
+```csharp
 SELECT * FROM [dbo].[Customer];
 ```
 
@@ -345,7 +345,7 @@ Then, your goal is to ensure that whatever *Order* the customer has been made is
 
 The solution to this is to use the *Transaction* in 4 activities. Code below will wrapped different repositories into a *Single* transaction.
 
-```
+```csharp
 var customerRepository = new CustomerRepository();
 var productRepository = new ProductRepository();
 var orderRepository = new OrderRepository();
