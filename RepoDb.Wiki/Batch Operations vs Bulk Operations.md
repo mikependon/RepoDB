@@ -14,7 +14,7 @@ The programming language we will be using is *C#* and the database provider we w
 
 ## Batch operation concepts
 
-The batch operation is the process of making the *multiple* single-operations be executed against the database in *one-*go. The execution is *ACID*; an implicit transaction is provided if not present.
+The batch operation is the process of making the *multiple* single-operations be executed against the database in *one-go*. The execution is *ACID*; an implicit transaction is provided if not present.
 
 In *RepoDb* library, the implementation of the batch operation is *flexible*. It allows you (as the developer) to control the number of operations to be batched during the execution. That flexibility helps you manage the performance based on your own situations (ie: *Network Latency*, *Number of Columns*, etc).
 
@@ -28,7 +28,7 @@ Let us say you have a model named *Customer* that corresponds to the *[dbo].[Cus
 
 By calling the *Insert* operation below.
 
-```
+```csharp
 var customer = new Customer
 {
 	Name = "John Doe",
@@ -42,7 +42,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 The following *SQL* script will be executed in the database.
 
-```
+```csharp
 INSERT INTO [Customer] (Name, Address) VALUES (Name, Address);
 ```
 
@@ -50,7 +50,7 @@ INSERT INTO [Customer] (Name, Address) VALUES (Name, Address);
 
 Most developers do it this way.
 
-```
+```csharp
 var customers = new List<Customer>();
 ... codes that add 1000 customers
 using (var connection = new SqlConnection(ConnectionString))
@@ -71,7 +71,7 @@ In the *batch executions*, the way the *SQL* statement is being executed is as f
 
 Let us say you have implemented the code snippets below.
 
-```
+```csharp
 var customers = new List<Customer>();
 ... codes that add 1000 customers
 using (var connection = new SqlConnection(ConnectionString))
@@ -86,7 +86,7 @@ The library will then create the *packed-statements* that is executable in *one-
 
 In the case above, the library will create the following *SQL* statements that is batched by *100*.
 
-```
+```csharp
 INSERT INTO [Customer] (Name, Address) VALUES (Name, Address);
 INSERT INTO [Customer] (Name, Address) VALUES (Name1, Address1);
 ...
@@ -115,14 +115,14 @@ Let us say you would like to copy all the data from one database to another data
 
 In our sample code below, we both have the *[dbo].[Customer]* table exists in both databases.
 
-```
+```csharp
 using (var sourceConnection = new SqlConnection(SourceConnectionString))
 {
 	using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
 		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
 		{
-			connection.BulkInsert<Customer>(reader);
+			destinationConnection.BulkInsert<Customer>(reader);
 		}
 	}
 }
@@ -132,13 +132,13 @@ using (var sourceConnection = new SqlConnection(SourceConnectionString))
 
 You can also do *bulk insert* if you have the array of the *data entity* objects. This feature is *unique* to *RepoDb*.
 
-```
+```csharp
 using (var sourceConnection = new SqlConnection(SourceConnectionString))
 {
 	var customers = sourceConnection.Query<Customer>(e => e.State == State.Valid);
 	using (var destinationConnection = new SqlConnection(DestinationConnectionString))
 	{
-		connection.BulkInsert<Customer>(customers);
+		destinationConnection.BulkInsert<Customer>(customers);
 	}
 }
 ```

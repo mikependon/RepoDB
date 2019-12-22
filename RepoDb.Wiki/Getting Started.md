@@ -69,7 +69,7 @@ ON [PRIMARY];
   - Name = *Customer*
 - Click the `Add` button.
 - The new file named `Customer.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class Customer
 {
 	public long Id { get; set; }
@@ -100,7 +100,7 @@ To make a *CRUD* calls via *RepoDb*, kindly follow the steps below.
 
 To insert a record, please use the [Insert](https://repodb.readthedocs.io/en/latest/pages/connection.html#insert) operation. Please copy the provided sample script below and paste it in your *Program.cs*, just right after the `Main()` method.
 
-```
+```csharp
 public void DoInsert()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -121,7 +121,7 @@ public void DoInsert()
 
 Inside the `Main()` method, call the `DoInsert()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoInsert();
@@ -145,7 +145,7 @@ You will see that a single *Customer* record has been inserted. The field values
 
 To query a record, please use the [Query](https://repodb.readthedocs.io/en/latest/pages/connection.html#query) operation. Please copy the provided sample script below and paste it in your *Program.cs*, just right after the `DoInsert()` method.
 
-```
+```csharp
 public void DoQuery()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -158,7 +158,7 @@ public void DoQuery()
 
 Inside the `Main()` method, call the `DoQuery()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoQuery();
@@ -172,7 +172,7 @@ You will see a message *John Doe (New York)*. The message you seen here is the a
 
 You can as well query a record from the database by passing an `Expression`. See sample code below.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var customer = connection.Query<Customer>(e => e.Name = "John Doe").First();
@@ -186,7 +186,7 @@ The output of the script above is the same as prior sample.
 
 To update a record, please use the [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update) operation. Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoQuery()` method.
 
-```
+```csharp
 public void DoUpdate()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -202,7 +202,7 @@ public void DoUpdate()
 
 Inside the `Main()` method, call the `DoUpdate()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoUpdate();
@@ -227,7 +227,7 @@ You will see that the existing *Customer* named `John Doe` has been renamed to `
 
 To delete a record, please use the [Delete](https://repodb.readthedocs.io/en/latest/pages/connection.html#delete) operation. Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoUpdate()` method.
 
-```
+```csharp
 public void DoDelete()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -241,7 +241,7 @@ public void DoDelete()
 
 Inside the `Main()` method, call the `DoDelete()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoDelete();
@@ -275,7 +275,7 @@ In this tutorial, we will only limit on `ExecuteQuery()` operation.
 
 Assuming you have multiple records of *Customer* in the database. Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoDelete()` method.
 
-```
+```csharp
 public void DoExecuteRawSql()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -292,7 +292,7 @@ The query above will return all the *Customer* records from the database.
 
 Inside the `Main()` method, call the `DoExecuteRawSql()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoExecuteRawSql();
@@ -308,7 +308,7 @@ Notice that the *Console* is filled with the list of *Customer* records from the
 
 You can pass any value via *dynamic*, *IDictionary<string, object>*, *ExpandoObject* or object-based (ie: *QueryField* and *QueryGroup*) parameters.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var customers = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer] WHERE [Id] = @Id;", new { Id = 10045});
@@ -317,7 +317,7 @@ using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrate
 
 You can as well pass an array of values as your parameter. See below.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var keys = new [] { 10045, 11910, 14500, ... };
@@ -348,7 +348,7 @@ Once executed, the stored procedure named `sp_get_customers` will now be availab
 
 Please copy the provided scripts below and paste it in your *Program.cs*, just right after the `DoExecuteRawSql()` method.
 
-```
+```csharp
 public void DoCallStoredProcedure()
 {
 	using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
@@ -363,7 +363,7 @@ public void DoCallStoredProcedure()
 
 Inside the `Main()` method, call the `DoCallStoredProcedure()` method we have created above. Simply replace the `Main()` method of your *Program.cs* file with the codes below.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoCallStoredProcedure();
@@ -379,7 +379,7 @@ Notice that the *Console* is filled with the list of *Customer* records from the
 
 Assuming that the mentioned stored procedure above is expecting a parameter named *CustomerId* of type *INT*. To pass a parameter in the stored procedure, you can use the script below.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var customers = connection.ExecuteQuery<Customer>("[dbo].[sp_get_customers]", new { CustomerId = 10045 }, commandType: CommandType.StoredProcedure);
@@ -394,7 +394,7 @@ Most operations of RepoDb has it own equivalent table-based calls. This allow th
 
 Below is a code the query all *Customer* data from the database.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var customers = connection.Query("Customer");
@@ -405,7 +405,7 @@ Notice that there is no *model* being passed. The return type is *dynamic* (of *
 
 You can also filter the data by passing a dynamic parameter like below.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var customers = connection.Query("Customer", new { Id = 10045 });
@@ -416,7 +416,7 @@ The code above will return the *Customer* record where the value of *Id* field i
 
 In the event of inserting a record, you can actually make a targetted column insertion like below.
 
-```
+```csharp
 using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrated Security=SSPI").EnsureOpen())
 {
 	var id = connection.Insert("Customer", new { Name = "James Doe" });

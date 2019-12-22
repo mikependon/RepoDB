@@ -35,7 +35,7 @@ To implement a common *Repository*, please follow the steps below.
   - Name = `InventoryRepository`
 - Click the `Add` button.
 - The new file named `InventoryRepository.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class InventoryRepository
 {
 	public InventoryRepository()
@@ -56,7 +56,7 @@ Let us add the basic *CRUD* operations on our repository. Let us start by adding
 
 Inside the *InventoryRepository* class, add the code snippets below just below the *ConnectionString* property.
 
-```
+```csharp
 public long Insert<T>(T instance)
 	where T : class
 {
@@ -69,7 +69,7 @@ public long Insert<T>(T instance)
 
 Then, add the following code snippets below to support the *Query* operation.
 
-```
+```csharp
 public Customer Query<T>(object id)
 	where T : class
 {
@@ -82,7 +82,7 @@ public Customer Query<T>(object id)
 
 And then, add the following code snippets below for *Update* operation.
 
-```
+```csharp
 public int Update<T>(T instance)
 	where T : class
 {
@@ -95,7 +95,7 @@ public int Update<T>(T instance)
 
 Finally, add the following code snippets below to support the *Delete* operation.
 
-```
+```csharp
 public int Delete<T>(long id)
 	where T : class
 {
@@ -122,13 +122,13 @@ We will refactor these methods to use our newly created *InventoryRepository* cl
 
 But before doing that, let us implement a variable that will hold an instance of *InventoryRepository* class inside the *Program.cs* file. Please copy the code snippet below and paste it in your *Program.cs* file just right after the class declaration.
 
-```
+```csharp
 private static readonly InventoryRepository inventoryRepository = new InventoryRepository();
 ```
 
 For the *DoInsert* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoInsert()
 {
 	var customer = new Customer
@@ -146,7 +146,7 @@ public void DoInsert()
 
 For the *DoQuery* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoQuery()
 {
 	var customer = inventoryRepository.Query<Customer>(1);
@@ -156,7 +156,7 @@ public void DoQuery()
 
 For the *DoUpdate* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoUpdate()
 {
 	var customer = inventoryRepository.Query<Customer>(1);
@@ -169,7 +169,7 @@ public void DoUpdate()
 
 And for the *DoDelete* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoDelete()
 {
 	inventoryRepository.Delete<Customer>(1);
@@ -181,7 +181,7 @@ public void DoDelete()
 
 We are almost settled on reusing our *InventoryRepository* class within our *Program.cs* file. To test the functionalities, please copy the code snippets below and replace the *Main()* method of your *Program.cs* file.
 
-```
+```csharp
 public static void Main(string[] args)
 {
 	DoInsert();
@@ -215,7 +215,7 @@ Please follow the steps below to achieve this.
 
 - Modify the *InventoryRepository* class declaration with the code snippets below.
 
-```
+```csharp
 public class InventoryRepository : DbRepository<SqlConnection>
 {
 	public InventoryRepository()
@@ -253,7 +253,7 @@ To implement an entity-dedicated *Repository*, please follow the steps below.
   - Name = `CustomerRepository`
 - Click the `Add` button.
 - The new file named `CustomerRepository.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class CustomerRepository : BaseRepository<Customer, SqlConnection>
 {
 	public CustomerRepository()
@@ -273,7 +273,7 @@ Let us target modifying the implementations of the following methods:
 
 But before doing that, let us implement a variable that will hold an instance of *CustomerRepository* class inside the *Program.cs* file. Please copy the code snippet below and paste it in your *Program.cs* file just right after the *inventoryRepository* declaration.
 
-```
+```csharp
 private static readonly CustomerRepository customerRepository = new CustomerRepository();
 ```
 
@@ -281,7 +281,7 @@ Then, let us modify the methods one-by-one.
 
 For *DoInsert()* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoInsert()
 {
 	var customer = new Customer
@@ -299,7 +299,7 @@ public void DoInsert()
 
 For *DoQuery()* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoQuery()
 {
 	var customer = customerRepository.Query(1).FirstOrDefault();
@@ -309,7 +309,7 @@ public void DoQuery()
 
 For *DoUpdate()* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoUpdate()
 {
 	var customer = customerRepository.Query(1).FirstOrDefault();
@@ -322,7 +322,7 @@ public void DoUpdate()
 
 For *DoDelete()* method, replace the implementation with the code snippets below.
 
-```
+```csharp
 public void DoDelete()
 {
 	customerRepository.Delete(1);

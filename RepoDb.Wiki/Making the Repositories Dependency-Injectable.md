@@ -59,7 +59,7 @@ The installation will only take few seconds to complete.
   - Name = `Customer`
 - Click the `Add` button.
 - The new file named `Customer.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class Customer
 {
 	public long Id { get; set; }
@@ -81,7 +81,7 @@ public class Customer
   - Name = `CustomerRepository`
 - Click the `Add` button.
 - The new file named `CustomerRepository.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 public class CustomerRepository : BaseRepository<Customer, SqlConnection>
 {
 	public CustomerRepository()
@@ -100,7 +100,7 @@ public class CustomerRepository : BaseRepository<Customer, SqlConnection>
   - Name = `ICustomerRepository`
 - Click the `Add` button.
 - The new file named `ICustomerRepository.cs` will be created. Replace the interface implementation with the script below.
-```
+```csharp
 public interface ICustomerRepository
 {
 	long Add(Customer customer);
@@ -115,7 +115,7 @@ public interface ICustomerRepository
 
 In this section, we will implement the *ICustomerRepository* we created above into the *CustomerRepository* class. To do this, simply change the *CustomerRepository* class declaration as follows.
 
-```
+```csharp
 public class CustomerRepository : BaseRepository<Customer, SqlConnection>, ICustomerRepository
 {
 	public CustomerRepository()
@@ -128,7 +128,7 @@ The 4 methods we have created at *ICustomerRepository* interface must be impleme
 
 For `Add()` method, copy the code snippets below and paste it inside the *CustomerRepository* class just right after the constructor.
 
-```
+```csharp
 public long Add(Customer customer)
 {
 	return Insert<long>(customer);
@@ -137,7 +137,7 @@ public long Add(Customer customer)
 
 For `Get()` method, copy the code snippets below and paste it inside the *CustomerRepository* class just right after the `Add()` method.
 
-```
+```csharp
 public Customer Get(long id)
 {
 	return Query(id).FirstOrDefault();
@@ -146,7 +146,7 @@ public Customer Get(long id)
 
 For `Modify()` method, copy the code snippets below and paste it inside the *CustomerRepository* class just right after the `Get()` method.
 
-```
+```csharp
 public int Modify(Customer customer)
 {
 	return Update(customer);
@@ -155,7 +155,7 @@ public int Modify(Customer customer)
 
 For `Remove()` method, copy the code snippets below and paste it inside the *CustomerRepository* class just right after the `Modify()` method.
 
-```
+```csharp
 public int Remove(long id)
 {
 	return Delete(id);
@@ -172,7 +172,7 @@ In this section, we will register the *CustomerRepository* as part of the inject
 
 - In your `Solution Explorer`, double-click the `Startup.cs` file.
 - Navigate inside `ConfigureServices` method and paste the code below before the method end.
-```
+```csharp
 services.AddTransient<CustomerRepository, ICustomerRepository>();
 ```
 - Resolve the missing namespaces by placing the mouse inside the *CustomerRepository* and press `Ctrl+Space` > `Enter`.
@@ -196,7 +196,7 @@ To attain this, we need to do the following steps below.
   - Name = `CustomerController`
 - Click the `Add` button.
 - The new file named `CustomerController.cs` will be created. Replace the class implementation with the script below.
-```
+```csharp
 [Route("api/[controller]")]
 [ApiController]
 public class CustomerController
@@ -209,11 +209,11 @@ public class CustomerController
 
 - Double-click the `CustomerController.cs` file.
 - Add a variable that will hold the instance of `CustomerRepository`.
-```
+```csharp
 private CustomerRepository customerRepository;
 ```
 - Add a constructor that accepts the *ICustomerRepository* interface.
-```
+```csharp
 public CustomerController(ICustomerRepository repository)
 {
 	customerRepository = repository;
@@ -225,7 +225,7 @@ public CustomerController(ICustomerRepository repository)
 
 The *Get()* method is the one who will call the *CustomerRepository* operation. Please copy the provided code snippets below and paste it inside *CustomerController* class just right after the *Constructor*.
 
-```
+```csharp
 [HttpGet("{id}")]
 public ActionResult<Customer> Get(long id)
 {
