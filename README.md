@@ -14,7 +14,7 @@
 [![Documentation](https://img.shields.io/badge/docs-library-yellowgreen?style=for-the-badge)](https://repodb.readthedocs.io/en/latest/)
 [![License](https://img.shields.io/badge/license-apache-important?style=for-the-badge)](http://apache.org/licenses/LICENSE-2.0.html)
 
-## Introduction
+## Introduction to RepoDb
 
 RepoDb provide certain features of both micro-ORMs and macro-ORMs. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
@@ -96,8 +96,6 @@ RepoDb is the *fastest* and the *most-efficient* ORM as per the official [result
 This section will always be updated with the latest official result.
 
 ## Operations
-
-Below are the list of operations available at RepoDb.
 
 Operation                                                                                                 | Normal<TEntity> | Normal<TEntity> (Async) | TableName | TableName (Async) | Packed Execution | Data Providers         |
 ----------------------------------------------------------------------------------------------------------|-----------------|-------------------------|-----------|-------------------|------------------|------------------------|
