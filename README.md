@@ -11,6 +11,8 @@
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds&style=for-the-badge)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![CodeSize](https://img.shields.io/github/languages/code-size/mikependon/repodb?style=for-the-badge)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?color=48B293&style=for-the-badge)](https://gitter.im/RepoDb/community)
+[![Documentation](https://img.shields.io/badge/docs-library-yellowgreen?style=for-the-badge)](https://repodb.readthedocs.io/en/latest/)
+[![License](https://img.shields.io/badge/license-apache-important?style=for-the-badge)](http://apache.org/licenses/LICENSE-2.0.html)
 
 ## Introduction
 
