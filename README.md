@@ -91,8 +91,6 @@ Results below is the actual recent official execution [result](https://github.co
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="460px" />
 
-RepoDb is the *fastest* and the *most-efficient* ORM as per the official [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt) of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
-
 This section will always be updated with the latest official result.
 
 ## Operations
