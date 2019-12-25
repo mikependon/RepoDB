@@ -79,8 +79,6 @@ Any help from the community will be highly appreciated as it really helps me eli
 
 The folder [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) is the code-line built via *NetStandard* (supports both *NetFramework* and *NetCore*). *Any pull-request must be done on this code-line.*
 
-The folder ~~[RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb)~~ is the code-line that supports the *NetFramework* solutions. This code-line is already *out-of-support* (since *v1.10.1*).
-
 To contribute, open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 ## Benchmark
