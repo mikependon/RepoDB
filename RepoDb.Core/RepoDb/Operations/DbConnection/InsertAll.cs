@@ -464,8 +464,7 @@ namespace RepoDb
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // Identify the number of entities (performance), get an execution context from cache
-            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, 1, callback) :
-                InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
 
             // Before Execution
             if (trace != null)
@@ -797,8 +796,7 @@ namespace RepoDb
             var context = (InsertAllExecutionContext<TEntity>)null;
 
             // Identify the number of entities (performance), get an execution context from cache
-            context = batchSize == 1 ? InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, 1, callback) :
-                InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
 
             // Before Execution
             if (trace != null)
