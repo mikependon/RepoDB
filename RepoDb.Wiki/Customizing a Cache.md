@@ -6,14 +6,13 @@ In this page, you will learn the following.
 - [Implementing the cache operations](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache#implementing-the-cache-operations)
 - [Injecting a customized cache object](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache#injecting-a-customized-cache-object)
 - [Why always use a singleton cache object?](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache#why-always-use-a-singleton-cache-object)
+- [Thread safeness](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache#thread-safeness)
 
 ## Before we begin
 
 The programming language we will be using is *C#*. Please have at least *Visual Studio 2017* installed in your machine.
 
-This topic is a bit advance, so we expect that you have already experienced using the *RepoDb* library.
-
-We also expect that you already have created your own *Project/Solution* for this tutorial.
+This is an *advance* topic, we expect that you already had experienced using the *RepoDb* library. We also expect that you already have created your own *Project/Solution* for this tutorial.
 
 ## What is Cache?
 
@@ -125,7 +124,11 @@ public void Add(string key,
 	);
 	Add(item, throwException);
 }
+```
 
+And the overloaded method.
+
+```csharp
 public void Add(CacheItem item,
 	bool throwException = true)
 {
@@ -165,7 +168,7 @@ In this method, we will return *True* if the *Key* has exists as file. See the i
 ```csharp
 public bool Contains(string key)
 {
-	var filename = GetFileName(item.Key);
+	var filename = GetFileName(key);
 	return File.Exists(filename);
 }
 ```
@@ -178,7 +181,7 @@ In this method, we will return the actual *CacheItem* object as a deserialized o
 public CacheItem Get(string key,
 	bool throwException = true)
 {
-	var filename = GetFileName(item.Key);
+	var filename = GetFileName(key);
 	if (!File.Exists(filename))
 	{
 		if (throwException)
@@ -201,7 +204,7 @@ In this method, we will delete the actual file if present by *Key*. See the impl
 public void Remove(string key,
 	bool throwException = true)
 {
-	var filename = GetFileName(item.Key);
+	var filename = GetFileName(key);
 	if (!File.Exists(filename))
 	{
 		if (throwException)
@@ -232,7 +235,7 @@ Below is the snippets on how to pass the actual cache object during the call.
 var cache = new FileCache();
 using (var connection = new SqlConnection(ConnectionString))
 {
-	connection.Query<Customer>(e => e.Id == 10045, cacheKey: $"Customer{10045}", cache);
+	connection.QueryAll<Product>(cacheKey: "AllProducts", cache);
 }
 ```
 
@@ -306,7 +309,7 @@ Then pass it every time you call the *Query* method like below.
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	connection.Query<Customer>(e => e.Id == 10045, cacheKey: $"Customer{10045}", FileCache.Instance);
+	connection.QueryAll<Product>(cacheKey: "AllProducts", FileCache.Instance);
 }
 ```
 
@@ -324,16 +327,17 @@ public class InventoryRepository : DbRepository<SqlConnection>
 
 ### Thread Safeness
 
-The cache thread-safeness varies on the cache-store.
+The cache thread-safeness varies on the cache-storage.
 
 - *Database is thread-safe.*
 - *File system is not thread-safe.*
 - *Memory is not thread-safe.*
 
-The latter 2 can be thread-safe if implemented in a different way (with thread-safeness handles).
+The latter 2 can be thread-safe if implemented in a different way (with thread-safeness handles). Mostly, an exception will be thrown if the operation is called in parallel and if the thread-safeness is not handled properly.
 
-Mostly, an exception will be thrown if the operation is called in parallel.
+In *RepoDb*, the implementation of *MemoryCache* is thread safe as it uses the *ConcurrentDictionary* object.
 
 --------
 
 **Voila! You have completed this tutorial.**
+

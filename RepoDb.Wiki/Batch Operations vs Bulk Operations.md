@@ -2,11 +2,11 @@
 
 In this page, you will learn the following.
 
-- [Batch operation concepts](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#Batch-operation-concepts)
-- [Bulk operation concepts](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#Bulk-operation-concepts)
-- [Behind the scene of batch operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#Behind-the-scene-of-batch-operations)
+- [Batch operation concepts](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#batch-operation-concepts)
+- [Bulk operation concepts](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#bulk-operation-concepts)
+- [Behind the scene of the batch operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#behind-the-scene-of-the-batch-operations)
 
-We will give you more insights about the core differences of the *Batch Operations* and *Bulk Operations*. It will help guide you as developer of when to use the proper operations based on your own scenario.
+We will give you more insights about the core differences of the *Batch Operations* and *Bulk Operations*. It will help guide you as a developer of when to use the proper operations based on your own scenario.
 
 ## Before we begin
 
@@ -40,10 +40,10 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-The following *SQL* script will be executed in the database.
+Then the following *SQL* script will be executed in the database.
 
 ```csharp
-INSERT INTO [Customer] (Name, Address) VALUES (Name, Address);
+INSERT INTO [Customer] (Name, Address) VALUES (@Name, @Address);
 ```
 
 **But, what if you would like to insert multiple records?**
@@ -87,25 +87,27 @@ The library will then create the *packed-statements* that is executable in *one-
 In the case above, the library will create the following *SQL* statements that is batched by *100*.
 
 ```csharp
-INSERT INTO [Customer] (Name, Address) VALUES (Name, Address);
-INSERT INTO [Customer] (Name, Address) VALUES (Name1, Address1);
+INSERT INTO [Customer] (Name, Address) VALUES (@Name, @Address);
+INSERT INTO [Customer] (Name, Address) VALUES (@Name1, @Address1);
 ...
-INSERT INTO [Customer] (Name, Address) VALUES (Name99, Address99);
+INSERT INTO [Customer] (Name, Address) VALUES (@Name99, @Address99);
 ```
 
 The packed-statements above *cached* and is being executed *10* times. Without the batch, the executions will be *1000* times.
 
-All parameters will be passed along to its proper *indexes*, depends on the number of *batch-size*. This is way more optimal as it is executing the multiple *SQL* statements in *one-go*.
+All parameters will be passed into its proper *indexes*, depending on the number of batches. This is way more optimal as it is executing the multiple *SQL* statements in *one-go*.
 
-**Note**: The *ADO.NET* maximum parameters is 2100 only. The batch operation will fail if you reach that number (that is intentionally). You can set the batch number by passing the value in the *batchSize* argument.
+**Note**: The *ADO.NET* maximum parameters is 2100. The batch operation will fail if you reach that number and that is an expected behavior. You can set the batch number by passing the value in the *batchSize* argument.
 
-You will learn more in the [what happened behind the scene](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#Behind the scene of batch operations) section.
+You will learn more in the [what happened behind the scene](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations#behind-the-scene-of-the-batch-operations) section.
 
 ## Bulk operation concepts
 
-The *bulk operations* on the other hand is the process to load the data from your *Client* application into the destination database. This process ignores some constraints, data-types and even the audits when loading the data, those give you the maximum performance.
+The *bulk operations* on the other hand is the process of loading the data from your *Client* application into the destination database. This process ignores some *constraints*, *data-types* and even the *audits* when loading the data, those giving you the maximum performance.
 
-In the case of *RepoDb*, it also uses the *SqlBulkCopy* class of *ADO.NET*. This means that it has inheritted all the functionalities of that class. However, the library also allow you to *BulkInsert* the array of the *data entity* objects in which this feature is very *unique* to this library.
+*RepoDb* by default is using the *SqlBulkCopy* class of *ADO.NET* for *bulk-operation*. This means that it has inheritted all the functionalities of that class.
+
+**Note**: The library allow you to *BulkInsert* the array of the *data entity* objects in which this feature is very *unique* to this library.
 
 ### Bulk executions
 
@@ -145,7 +147,7 @@ using (var sourceConnection = new SqlConnection(SourceConnectionString))
 
 To read more about this concepts, you can refer to Microsoft [documentation](https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/bulk-copy-operations-in-sql-server).
 
-## Behind the scene of batch operations
+## Behind the scene of the batch operations
 
 When you call any of the *Push* batch operations (ie: *InsertAll*, *UpdateAll* or *MergeAll*), then the following activities are happening behind the scene.
 
@@ -159,11 +161,11 @@ The properties of your class (or *Model*) is being extracted and is cached in th
 
 #### Caching the SQL statement
 
-The *SQL* statements are being generated and cached automatically by the library. The generated *SQL* statement is a multiple *packed-statements* that varies on the number of *batch-size* you passed in the *batchSize* argument. Let us say, you passed *30*, then the number of packed-statements are *30*.
+The *SQL* statements are being generated and cached automatically by the library. The generated *SQL* statement is a multiple *packed-statements* that varies on the number of batches you passed in the *batchSize* argument. Let us say, you passed *30*, then the number of packed-statements are *30*.
 
 #### Caching the execution context
 
-The execution context and behavior is being cached. This enables the library to reused the existing execution context that has already been executed against the database. The execution context contains the *SQL Statements*, *Parameters*, *Preparations* and even the *Compiled IL or Expressions*. By having this, *RepoDb* does not need to extract same operation every time there is an identity calls, those leads to become more high-performant and efficient.
+The execution context and behavior is being cached. This enables the library to reused the existing execution context that has already been executed against the database. The execution context contains the *SQL Statements*, *Parameters*, *Preparations* and even the *Compiled ILs or Expressions*. By having this, *RepoDb* does not need to extract same operation every time there is an identity calls, those leads to become more high-performant and efficient.
 
 #### Adding an implicit transaction
 
@@ -171,11 +173,11 @@ A new *Transaction* object is being assigned to the *Execution* if the caller do
 
 #### Preparation
 
-Before executing the *DbCommand* object, the `Prepare()` method is being called to pre-define the execution against the database. In the case of *SQL Server*, create an *Execution-Plan* in advance.
+Before executing the *DbCommand* object, the `Prepare()` method is being called to pre-define the execution against the database. In the case of *SQL Server*, it creates an *Execution-Plan* in advance.
 
 #### Batch execution
 
-The generated *packed statements* is being executed against the database once. Though in reality, *RepoDb* is also batching due to the fact that *ADO.NET* is limited only to *2100 parameters*. Also, through this batches, the caller is able to define the *best* batch number based on the situation and scenario (ie: *Number of Columns*, *Network Latency*, etc).
+The generated *packed statements* is being executed against the database only once. Though in reality, *RepoDb* is also batching due to the fact that *ADO.NET* is limited only to *2100 parameters*. Also, through these batches, the caller is able to define the *best* batch number based on the situations and scenarios (ie: *Number of Columns*, *Network Latency*, etc).
 
 --------
 

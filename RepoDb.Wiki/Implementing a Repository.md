@@ -16,7 +16,7 @@ The programming language we will be using is *C#* and the database provider we w
 
 ## What is Repository?
 
-*Repository* is a software design pattern and practice in which it is being implemented as an additional layer between your application and your database. It is being represented as a class object within the application.Through repository, you are managing how the data is being manipulated from/to the database.
+A *Repository* is a software design pattern and practice in which it is being implemented as an additional layer between your application and your database. It is being represented as a class object within the application. Through *Repository*, you are managing how the data is being manipulated *from/to* the database.
 
 In this class (the *Repository*), we usually add the basic database operations/methods (ie: *Insert*, *Delete* and *Update*). But in most cases, we place the advance and reporting operations/methods here (ie: *GetTotalOrdersByMonth* or *RecalculateCustomerOrdersByDateRange*).
 
