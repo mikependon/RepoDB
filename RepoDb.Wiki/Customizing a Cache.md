@@ -26,6 +26,8 @@ In *RepoDb*, by default, the *Cache* is implemented as a storage in computer mem
 
 ## Creating a custom cache object
 
+First, please note that in *RepoDb* library the *Cache* can be implemented in many ways (ie: *File (Binary)*, *Memory*, *Local Database*, *File (XML/JSON)* or etc).
+
 To create a custom *Cache* object, you must inherit from the *ICache* interface. This interface is the contract within the library to mark your class as *Cache* object.
 
 After implementing the *ICache* interface, you have to implementation the required methods for you to be able to manipulate your own caches.
