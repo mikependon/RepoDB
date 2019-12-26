@@ -259,7 +259,8 @@ You will notice that the result is being displayed in the browser as *JSON* file
 
 --------
 
-**Other topics you might be interested:**
+## Other Topics
+
 - [Bulk-Operations vs Batch-Operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations)
 - [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple)
 - [Working with Transactions](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions)

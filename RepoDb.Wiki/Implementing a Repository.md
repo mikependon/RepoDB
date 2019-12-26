@@ -342,4 +342,7 @@ Same as previous section, we suggest that you place a breakpoint at the *Main()*
 
 -------
 
-You can now proceed in [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable) tutorial.
+## Related Topics
+
+- [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable)
+- [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)

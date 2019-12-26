@@ -435,4 +435,8 @@ To read more about the operations, kindly visit our library documentation at [Re
 
 -------
 
-You can now proceed in [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) tutorial.
+## Related Topics
+
+- [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository)
+- [Customizing a Cache](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache)
+- [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)

@@ -343,3 +343,8 @@ In *RepoDb*, the implementation of *MemoryCache* is thread safe as it uses the *
 
 **Voila! You have completed this tutorial.**
 
+--------
+
+## Related Topics
+
+- [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)

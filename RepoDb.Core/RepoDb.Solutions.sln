@@ -62,6 +62,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki"
 		..\RepoDb.Wiki\Getting Started.md = ..\RepoDb.Wiki\Getting Started.md
 		..\RepoDb.Wiki\Home.md = ..\RepoDb.Wiki\Home.md
 		..\RepoDb.Wiki\Implementing a Repository.md = ..\RepoDb.Wiki\Implementing a Repository.md
+		..\RepoDb.Wiki\Implementing a Trace.md = ..\RepoDb.Wiki\Implementing a Trace.md
 		..\RepoDb.Wiki\Making the Repositories Dependency-Injectable.md = ..\RepoDb.Wiki\Making the Repositories Dependency-Injectable.md
 		..\RepoDb.Wiki\Working with Transactions.md = ..\RepoDb.Wiki\Working with Transactions.md
 	EndProjectSection
