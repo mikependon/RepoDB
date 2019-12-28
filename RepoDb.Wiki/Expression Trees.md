@@ -4,7 +4,7 @@ In this page, you will learn the following.
 
 - [Linq Expressions](https://github.com/mikependon/RepoDb/wiki/Expression-Trees#linq-expressions)
 - [Dynamic Expressions](https://github.com/mikependon/RepoDb/wiki/Expression-Trees#dynamic-expressions)
-- [using QueryObject Expressions](https://github.com/mikependon/RepoDb/wiki/Expression-Trees#queryobject-expressions)
+- [QueryObject Expressions](https://github.com/mikependon/RepoDb/wiki/Expression-Trees#queryobject-expressions)
 
 ## Before we begin
 
@@ -180,7 +180,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 **Note**: Do not use this if you wish to use other operations (not just *Equal*). However, using *dynamic* is much more faster than using *Linq* expression due to the fact that it only uses *Reflection* and not doing any *Parsing* like what we are doing in the *Linq* expressions.
 
-## Using QueryObject Expressions
+## QueryObject Expressions
 
 This is the most *optimal* and most *performant* way of using an expression as it does not do any *Linq Expression Parsing* or *Object Properties Reflecting*. What it does is to skip both process and directly proceed with the actual SQL Statements transformation.
 
