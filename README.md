@@ -126,6 +126,11 @@ The folders *[RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/Repo
 
 To contribute, please open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
+### Hints
+
+- [Coding Standards]() - in-progress
+- [Building the Solution]() - in-progress
+
 ## Credits
 
 - [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
@@ -140,6 +145,18 @@ To contribute, please open the [issues](https://github.com/mikependon/RepoDb/iss
 ## License
 
 [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+
+-----------------
+
+## Commonly Asked Questions
+
+Below are the common questions I had received from the community.
+
+- [How it is differed from Dapper?]() - in-progress
+- [Will you support IQueryable?]() - in-progress
+- [Will you support Join Operations?]() - in-progress
+- [Which databases are you supporting?]() - in-progress
+- [How do we generate the models?]() - in-progress
 
 -----------------
 
