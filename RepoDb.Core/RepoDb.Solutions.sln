@@ -57,6 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5E885481
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{A85E6252-09E7-4E7C-904E-0372E728DE41}"
 	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Wiki\Advance Field and Type Mapping Implementation.md = ..\RepoDb.Wiki\Advance Field and Type Mapping Implementation.md
 		..\RepoDb.Wiki\Batch Operations vs Bulk Operations.md = ..\RepoDb.Wiki\Batch Operations vs Bulk Operations.md
 		..\RepoDb.Wiki\Customizing a Cache.md = ..\RepoDb.Wiki\Customizing a Cache.md
 		..\RepoDb.Wiki\Expression Trees.md = ..\RepoDb.Wiki\Expression Trees.md
