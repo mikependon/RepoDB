@@ -225,12 +225,12 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
+	var customer = connection.Query<Customer>(new QueryField("Id", 10045));
 }
 ```
 
@@ -254,21 +254,21 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045));
+	var customer = connection.Query("Customer", new QueryField("Id", 10045));
 }
 ```
 	
-Via Object (targetting few fields):
+Via QueryObject (targetting few fields):
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query("Customer", new QueryField(nameof(Customer.Id), 10045),
+	var customer = connection.Query("Customer", new QueryField("Id", 10045),
 		Field.From("Id", "FirstName", "LastName"));
 }
 ```
@@ -355,7 +355,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 	
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -363,7 +363,7 @@ using (var connection = new SqlConnection(ConnectionString))
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
 	customer.LastUpdatedUtc = DateTime.UtcNow;
-	var affectedRows = connection.Update<Customer>(customer, new QueryField(nameof(Customer.Id), 10045));
+	var affectedRows = connection.Update<Customer>(customer, new QueryField("Id", 10045));
 }
 ```
 
@@ -412,7 +412,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 	
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -465,12 +465,12 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var deletedCount = connection.Delete<Customer>(new QueryField(nameof(Customer.Id), 10045));
+	var deletedCount = connection.Delete<Customer>(new QueryField("Id", 10045));
 }
 ```
 
@@ -494,12 +494,12 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var deletedCount = connection.Delete("Customer", new QueryField(nameof(Customer.Id), 10045));
+	var deletedCount = connection.Delete("Customer", new QueryField("Id", 10045));
 }
 ```
 
@@ -518,8 +518,8 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	var qualifiers = new []
 	{
-		new Field(nameof(Customer.FirstName)),
-		new Field(nameof(Customer.LastName)),
+		new Field("FirstName"),
+		new Field("LastName"),
 	};
 	var mergeCount = connection.Merge<Customer>(customer, qualifiers);
 }
@@ -538,8 +538,8 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	var qualifiers = new []
 	{
-		new Field(nameof(Customer.FirstName)),
-		new Field(nameof(Customer.LastName)),
+		new Field("FirstName"),
+		new Field("LastName"),
 	};
 	var mergeCount = connection.Merge("Customer", customer, qualifiers);
 }
@@ -591,7 +591,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -652,7 +652,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Via Object:
+Via QueryObject:
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
