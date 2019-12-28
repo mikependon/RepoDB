@@ -33,21 +33,29 @@ For full library documentation, please click [here](https://repodb.readthedocs.i
 - Can work *without* the models; everything can be *dynamic*.
 - *Transmission* of the data between different RDBMS DB Providers will only take few lines of codes.
 
+### Differences Diagram
+
 Below is the high-level diagram that shows how *RepoDb* library differs from the other *ORMs*.
 
-TODO: Create a diagram and show it here.
+<p align="center">
+	<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Raw/Images/Differences.PNG" height="360px" />
+</p>
 
 ## High-Level Architecture
 
 The diagram below shows the actual high-level architecture of RepoDb.
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/HLA.PNG" height="480px" />
+<p align="center">
+	<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/Images/HLA.PNG" height="480px" />
+</p>
 
 ## Why it is fast and efficient?
 
 *RepoDb* has its own *compiler* and helper *cache-objects* that helps itself to become more *performant* and *efficient*. Through its own compiler, it is able to transform the actual raw data into a C# class object (vice versa) in a very *fast* manner. Through its helper cache-objects, it is able to *reuse* all *already-executed* and *already-extracted* contexts and objects that helps itself manage the consumption of the computer memory.
 
-TODO: Show the diagram that do compilation and caching of the execution context
+<p align="center">
+	<img src="https://github.com/mikependon/RepoDb/blob/master/RepoDb.Raw/Images/Layers.PNG" height="460px" />
+</p>
 
 ### Preparation
 
@@ -58,8 +66,6 @@ All *push executions* in *RepoDb* are being prepared prior the actual execution.
 ### Batch-operations
 
 *RepoDb* has introduce the *batch-operations* which in many ways understood by most developers as normal single operations. The *batch-operation* is the process in between the layer of your application and your database where all operations are executed (or passed) in a batch. Meaning, multiple statements are *wrapped* and is executed at *once*. The execution is *ACID* as it is being implied by implicit transaction (if not present). Through this feature, the developers can control and optimize the way how the application transmit the data all over the network.
-
-TODO: Show the low-batch for low-network and high-batch for high-network
 
 **Note**: RepoDb is also supporting the **bulk operations** in a separate implementation. You can see the difference of both operations [here](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations).
 
