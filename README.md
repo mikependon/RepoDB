@@ -148,9 +148,7 @@ To contribute, please open the [issues](https://github.com/mikependon/RepoDb/iss
 
 -----------------
 
-## Commonly Asked Questions
-
-Below are the common questions I had received from the community.
+## Frequently Asked Questions
 
 - [How it is differed from Dapper?]() - in-progress
 - [Will you support IQueryable?]() - in-progress
