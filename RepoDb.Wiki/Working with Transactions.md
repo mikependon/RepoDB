@@ -8,7 +8,11 @@ In this page you will learn the following:
 - [Using the Transaction object in the Repository](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Using-the-Transaction-object-in-the-Repository)
 - [Transaction for Multiple Operation Calls](https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions#Transaction-for-Multiple-Operation-Calls)
 
-In this tutorial, the programming language we will be using is C# and the database provider we will be using is SQL Server. Please have at least Visual Studio 2017 and SQL Server 2016 installed in your machine.
+## Before we begin
+
+The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
+
+Please follow the steps at [Creating an Inventory Database and Project](https://github.com/mikependon/RepoDb/wiki/Creating-an-Inventory-Database-and-Project) before proceeding to the next sections.
 
 ## What is Database Transaction
 
@@ -19,78 +23,6 @@ The transaction is being started by initiating the *BEGIN TRANSACTION* command (
 Any failure in the operation or calculation could lead to an invalid data, and therefore the state must be rolled-back. If this happens while within the transaction, you have an opportunity to *Rollback* all activities you have executed within the transaction by calling the *ROLLBACK* command.
 
 If all activities has been completed without any error, then the *COMMIT* command must be called to *Fully-Commit* the activity within the database management system.
-
-## Before we begin
-
-Let us create the *Database*, *Table*, *C# Project* and the *Models* we will gonna use on this tutorial.
-
-### Create a database
-
-- Open the Microsoft SQL Server Management Studio.
-- Click `File` > `Connect Object Explorer...` menu.
-- Enter the following values:
-  - Server name = `.` 
-  - Authentication = `Windows Authentication`
-- Click the `Connect` button.
-- In the `Object Explorer`, expand the top node entry.
-- Right-click in the `Databases` and click the `New Database...` context-menu.
-- Enter the following values:
-  - Database name = `Inventory`.
-  - Owner = `<default>`
-- Click the `OK` button.
-
-### Create a table
-
-- In the `Object Explorer`, under `Databases` section, right-click the `Inventory` database and click the `New Query` context-menu.
-- In the query window, copy the script below.
-```
-CREATE TABLE [dbo].[Order]
-(
-	[Id] BIGINT IDENTITY(1,1) 
-	, [Name] NVARCHAR(128) NOT NULL
-	, [Address] NVARCHAR(MAX)
-	, [DateInsertedUtc] DATETIME2(5) NOT NULL
-	, [DateModifiedUtc] DATETIME2(5) NOT NULL
-	, [ModifiedBy] NVARCHAR(64) NOT NULL
-	, CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED ([Id] ASC )
-)
-ON [PRIMARY];
-```
-**Note**: The SQL script above creates a table named `[Customer]` under the schema of `[dbo]`. The field `[Id]` is being set as the **primary** field and is also an **identity**.
-- Press the `F5` key.
-- In the `Object Explorer`, the table named `Customer` is now available under `Databases` > `Inventory` > `Tables`.
-
-### Create a C# Project
-
-- Open the Microsoft Visual Studio.
-- Click `File` > `New` > `Project...`.
-- Enter the following values:
-  - Project = `Console App (.NET Core)`
-  - Name = `InventoryTransactionProject`
-  - Location = `<Do not change the default>`
-  - Create directory for solution = `checked`
-- Click the `OK` button.
-
-### Create a C# class object
-
-- In the `Solution Explorer`, right-click the project `InventoryProject` and click the `Add` > `New Item...` context-menu.
-- Enter the following values:
-  - Type = `Class`
-  - Name = `Customer`
-- Click the `Add` button.
-- The new file named `Customer.cs` will be created. Replace the class implementation with the script below.
-```csharp
-public class Customer
-{
-	public long Id { get; set; }
-	public string Name { get; set; }
-	public string Address { get; set; }
-	public DateTime DateInsertedUtc { get; set; }
-	public DateTime DateModifiedUtc { get; set; }
-	public string ModifiedBy { get; set; }
-}
-```
-- Press `Ctrl+S` keys to save the changes.
 
 ## Wrapping the DbConnection object into Transaction
 
@@ -177,7 +109,7 @@ public static void Main(string[] args)
 
 Build the solution by pressing the `Alt + R + B` and then press `F5` to run.
 
-A message `A record has been inserted via Transaction.` is shown in the `Console`.
+A message *A record has been inserted via Transaction.* is shown in the *Console*.
 
 Now, let us check the database.
 
@@ -214,7 +146,7 @@ using (var transaction = connection.BeginTransaction())
 
 Build the solution by pressing the `Alt + R + B` and then press `F5` to run.
 
-A message `A record has been inserted via Transaction.` is shown in the `Console`. This indicates that the record has been saved to the database.
+A message *A record has been inserted via Transaction.* is shown in the *Console*. This indicates that the record has been saved to the database.
 
 Again, let us check the database.
 
@@ -307,7 +239,7 @@ public static void Main(string[] args)
 
 Build the solution by pressing the `Alt + R + B` and then press `F5` to run.
 
-A message `A record has been inserted via Transaction.` is shown in the `Console`. This indicates that the record has been saved to the database.
+A message *A record has been inserted via Transaction.* is shown in the *Console*. This indicates that the record has been saved to the database.
 
 Again, let us check the database.
 

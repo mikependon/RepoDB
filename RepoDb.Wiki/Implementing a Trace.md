@@ -1,7 +1,3 @@
-## Pre-requisites
-
-Before you proceed with this tutorial, we suggest that you first visit our [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) page if you have not read it yet.
-
 ## Introduction
 
 In this page, you will learn the following.
@@ -14,7 +10,9 @@ In this page, you will learn the following.
 
 The programming language we will be using is *C#*. Please have at least *Visual Studio 2017* installed in your machine.
 
-This is an *advance* topic, we expect that you already had experienced using the *RepoDb* library. We also expect that you already have created your own *Project/Solution* for this tutorial.
+We suggest that you first visit our [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) page if you have not read it yet.
+
+This is an *advance* topic, we expect that you already had experienced using the *RepoDb* library.
 
 ## What is Trace?
 
@@ -37,7 +35,7 @@ To create a customized-trace object, you must implement the *ITrace* interface. 
 - The new file named `InventoryTrace.cs` will be created. Replace the class implementation with the script below.
 - Press `Ctrl+S` keys to save the changes.
 
-After implementing the *ITrace* interface, you have to implementation the required methods for you to be able to do micro-manage (or *debug*) the library executions. Please see the code snippets below as your reference implementation.
+After implementing the *ITrace* interface, you have to implement the required methods for you to be able to do a tracing (or *debugging*) in the actual executions. Please see the code snippets below as your reference implementation.
 
 ```csharp
 public class InventoryTrace : ITrace
@@ -96,7 +94,7 @@ In *RepoDb*, there are 2 *trace-log* objects.
 
 ### Methods
 
-A method `Cancel()` at *TraceLog* class is provided to allow the developers to cancel the execution on-the-fly. Below is the signature.
+A method `Cancel()` at *CancellableTraceLog* class is provided to allow the developers to cancel the execution on-the-fly. Below is the signature.
 
 ```csharp
 public void Cancel(bool throwException)
@@ -204,14 +202,14 @@ using (var repository = new DbRepository(ConnectionString, new InventoryTrace())
 Or, when inheriting the *BaseRepository*.
 
 ```csharp
-public class CustomeRepository : BaseRepository<Customer, SqlConnection>
+public class CustomerRepository : BaseRepository<Customer, SqlConnection>
 {
-	public CustomeRepository()
+	public CustomerRepository()
 		: base(ConnectionString, new InventoryTrace())
 	{ }
 }
 
-using (var repository = new CustomeRepository())
+using (var repository = new CustomerRepository())
 {
 	repository.Insert(new Customer
 	{
@@ -226,6 +224,8 @@ Once the *InventoryTrace* object has been injected the way it is being injected 
 -------
 
 **Voila! You have completed this tutorial.**
+
+-------
 
 ## Related Topics
 

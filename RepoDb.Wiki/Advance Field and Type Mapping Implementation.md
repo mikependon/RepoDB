@@ -4,7 +4,7 @@ In this page, you will learn the following.
 
 - [Field Mapping](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation#field-mapping)
 - [Type Mapping](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation#type-mapping)
-- [Enumeration Mapping](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation#high-level-mapping)
+- [Enumeration Mapping](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation#enumeration-mapping)
 - [Conversion Type](https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation#conversion-type-auto-mapping)
 
 ## Before we begin

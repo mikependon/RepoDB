@@ -1,90 +1,22 @@
 ## Introduction
 
-We are glad that you would like to learn RepoDb. In this page, you will learn the following.
+We are glad that you would like to learn *RepoDb*. In this page, you will learn the following.
 
 - [Installation of RepoDb](https://github.com/mikependon/RepoDb/wiki/Getting-Started#installation)
-- [Making a CRUD calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#making-a-crud-calls)
-- [Executing a raw-SQLs](https://github.com/mikependon/RepoDb/wiki/Getting-Started#executing-a-raw-sql)
+- [Making a CRUD Calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#making-a-crud-calls)
+- [Executing a Raw-SQLs](https://github.com/mikependon/RepoDb/wiki/Getting-Started#executing-a-raw-sql)
 - [Calling a Stored Procedure](https://github.com/mikependon/RepoDb/wiki/Getting-Started#calling-a-stored-procedure)
-- [Table-Based calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#table-based-calls)
+- [Table-Based Calls](https://github.com/mikependon/RepoDb/wiki/Getting-Started#table-based-calls)
 
 ## Before we begin
 
 The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
-Please follow the steps below before proceeding to the next section.
-
-### Create a database
-
-- Open the Microsoft SQL Server Management Studio.
-- Click `File` > `Connect Object Explorer...` menu.
-- Enter the following values:
-  - Server name = `.` 
-  - Authentication = `Windows Authentication`
-- Click the `Connect` button.
-- In the `Object Explorer`, expand the top node entry.
-- Right-click in the `Databases` and click the `New Database...` context-menu.
-- Enter the following values:
-  - Database name = `Inventory`.
-  - Owner = `<default>`
-- Click the `OK` button.
-
-### Create a table
-
-- In the `Object Explorer`, under `Databases` section, right-click the `Inventory` database and click the `New Query` context-menu.
-- In the query window, copy the script below.
-```
-CREATE TABLE [dbo].[Customer]
-(
-	[Id] BIGINT IDENTITY(1,1) 
-	, [Name] NVARCHAR(128) NOT NULL
-	, [Address] NVARCHAR(MAX)
-	, [DateInsertedUtc] DATETIME2(5) NOT NULL
-	, [DateModifiedUtc] DATETIME2(5) NOT NULL
-	, [ModifiedBy] NVARCHAR(64) NOT NULL
-	, CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED ([Id] ASC )
-)
-ON [PRIMARY];
-```
-**Note**: The SQL script above creates a table named `[Customer]` under the schema of `[dbo]`. The field `[Id]` is being set as the **primary** field and is also an **identity**.
-- Press the `F5` key.
-- In the `Object Explorer`, the table named *Customer* is now available under `Databases` > `Inventory` > `Tables`.
-
-### Create a C# Project
-
-- Open the Microsoft Visual Studio.
-- Click `File` > `New` > `Project...`.
-- Enter the following values:
-  - Project = `Console App (.NET Core)`
-  - Name = `InventoryProject`
-  - Location = `<Do not change the default>`
-  - Create directory for solution = `checked`
-- Click the `OK` button.
-
-### Create a C# class object
-
-- In the `Solution Explorer`, right-click the project `InventoryProject` and click the `Add` > `New Item...` context-menu.
-- Enter the following values:
-  - Type = `Class`
-  - Name = *Customer*
-- Click the `Add` button.
-- The new file named `Customer.cs` will be created. Replace the class implementation with the script below.
-```csharp
-public class Customer
-{
-	public long Id { get; set; }
-	public string Name { get; set; }
-	public string Address { get; set; }
-	public DateTime DateInsertedUtc { get; set; }
-	public DateTime DateModifiedUtc { get; set; }
-	public string ModifiedBy { get; set; }
-}
-```
-- Press `Ctrl+S` keys to save the changes.
+Please follow the steps at [Creating an Inventory Database and Project](https://github.com/mikependon/RepoDb/wiki/Creating-an-Inventory-Database-and-Project) before proceeding to the next section.
 
 ## Installation
 
-To install *RepoDb*, write the script below in the `Package Manager Console` and press the `Enter` key.
+To install *RepoDb*, write the script below in the *Package Manager Console* and press the *Enter* key.
 
 ```
 Install-Package RepoDb
@@ -92,7 +24,7 @@ Install-Package RepoDb
 
 The installation will only take few seconds to complete.
 
-## Making a CRUD calls
+## Making a CRUD Calls
 
 To make a *CRUD* calls via *RepoDb*, kindly follow the steps below.
 
@@ -388,7 +320,7 @@ using (var connection = new SqlConnection("Server=.;Database=Inventory;Integrate
 
 See the [raw-SQL](https://repodb.readthedocs.io/en/latest/pages/rawsql.html) documentation to read more about passing the parameters.
 
-## Table-Based calls
+## Table-Based Calls
 
 Most operations of RepoDb has it own equivalent table-based calls. This allow the developers to make a dynamic calls directly in the database.
 

@@ -151,33 +151,33 @@ To read more about this concepts, you can refer to Microsoft [documentation](htt
 
 When you call any of the *Push* batch operations (ie: *InsertAll*, *UpdateAll* or *MergeAll*), then the following activities are happening behind the scene.
 
-#### Understanding your schema
+- **Understanding your schema**
 
-The first touch to your database will be done to extract the schema definitions. This includes the retrieval of the *PrimaryKey*, *Identity* and *Nullable-Columns* information. The information will be cached in memory with the class (or *Model*) actual name as the key.
+	The first touch to your database will be done to extract the schema definitions. This includes the retrieval of the *PrimaryKey*, *Identity* and *Nullable-Columns* information. The information will be cached in memory with the class (or *Model*) actual name as the key.
 
-#### Caching the class properties
+- **Caching the class properties**
 
-The properties of your class (or *Model*) is being extracted and is cached in the memory. This enables the library to reuse it in any future calls (that is using the same object).
+	The properties of your class (or *Model*) is being extracted and is cached in the memory. This enables the library to reuse it in any future calls (that is using the same object).
 
-#### Caching the SQL statement
+- **Caching the SQL statement**
 
-The *SQL* statements are being generated and cached automatically by the library. The generated *SQL* statement is a multiple *packed-statements* that varies on the number of batches you passed in the *batchSize* argument. Let us say, you passed *30*, then the number of packed-statements are *30*.
+	The *SQL* statements are being generated and cached automatically by the library. The generated *SQL* statement is a multiple *packed-statements* that varies on the number of batches you passed in the *batchSize* argument. Let us say, you passed *30*, then the number of packed-statements are *30*.
 
-#### Caching the execution context
+- **Caching the execution context**
 
-The execution context and behavior is being cached. This enables the library to reused the existing execution context that has already been executed against the database. The execution context contains the *SQL Statements*, *Parameters*, *Preparations* and even the *Compiled ILs or Expressions*. By having this, *RepoDb* does not need to extract same operation every time there is an identity calls, those leads to become more high-performant and efficient.
+	The execution context and behavior is being cached. This enables the library to reused the existing execution context that has already been executed against the database. The execution context contains the *SQL Statements*, *Parameters*, *Preparations* and even the *Compiled ILs or Expressions*. By having this, *RepoDb* does not need to extract same operation every time there is an identity calls, those leads to become more high-performant and efficient.
 
-#### Adding an implicit transaction
+- **Adding an implicit transaction**
 
-A new *Transaction* object is being assigned to the *Execution* if the caller does not passed any explicit transaction.
+	A new *Transaction* object is being assigned to the *Execution* if the caller does not passed any explicit transaction.
 
-#### Preparation
+- **Preparation**
 
-Before executing the *DbCommand* object, the `Prepare()` method is being called to pre-define the execution against the database. In the case of *SQL Server*, it creates an *Execution-Plan* in advance.
+	Before executing the *DbCommand* object, the `Prepare()` method is being called to pre-define the execution against the database. In the case of *SQL Server*, it creates an *Execution-Plan* in advance.
 
-#### Batch execution
+- **Batch execution**
 
-The generated *packed statements* is being executed against the database only once. Though in reality, *RepoDb* is also batching due to the fact that *ADO.NET* is limited only to *2100 parameters*. Also, through these batches, the caller is able to define the *best* batch number based on the situations and scenarios (ie: *Number of Columns*, *Network Latency*, etc).
+	The generated *packed statements* is being executed against the database only once. Though in reality, *RepoDb* is also batching due to the fact that *ADO.NET* is limited only to *2100 parameters*. Also, through these batches, the caller is able to define the *best* batch number based on the situations and scenarios (ie: *Number of Columns*, *Network Latency*, etc).
 
 --------
 

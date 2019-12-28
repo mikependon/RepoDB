@@ -1,7 +1,3 @@
-## Pre-requisites
-
-Before you proceed with this tutorial we suggest that you first visit our [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) page if you have not read it yet.
-
 ## Introduction
 
 In this page, you will learn the following.
@@ -14,14 +10,9 @@ In this page, you will learn the following.
 
 The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
-Also, we will only targetting creating a simple *.NET Core REST API* and have the *Repository* object get injected and being called at the *Controllers*.
+Please follow the steps at [Creating an Inventory Database and Project](https://github.com/mikependon/RepoDb/wiki/Creating-an-Inventory-Database-and-Project) before proceeding to the next sections.
 
-Please follow the steps below before proceeding to the next section.
-
-### Setup the database and table
-
-- Create a database by following the [create a table](https://github.com/mikependon/RepoDb/wiki/Getting-Started#create-a-database) section of [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page.
-- Create a table by following the [create a table](https://github.com/mikependon/RepoDb/wiki/Getting-Started#create-a-table) section of [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page.
+Otherwise, please ignore this step if you already have done it through [Implementing a Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository) page.
 
 ### Create a C# .NET Core REST API Project
 

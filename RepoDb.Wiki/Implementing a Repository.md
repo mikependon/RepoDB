@@ -1,18 +1,18 @@
-## Pre-requisites
-
-Before you proceed with this tutorial, we suggest that you first visit our [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page if you have not read it yet.
-
 ## Introduction
 
 In this page, you will learn the following.
 
-- [Creating a database-level Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#creating-a-database-level-repository)
+- [Creating a Database-Level Repository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#creating-a-database-level-repository)
 - [Inheritting the DbRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-dbrepository)
 - [Inheritting the BaseRepository](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository#inheritting-the-baserepository)
 
+## Before we begin
+
 The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
-**Note**: The *database*, *table*, *project* and *model* we will be using is the same as what we have created at the [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page. 
+Please follow the steps at [Creating an Inventory Database and Project](https://github.com/mikependon/RepoDb/wiki/Creating-an-Inventory-Database-and-Project) before proceeding to the next sections.
+
+Otherwise, please ignore this step if you already have done it through [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page.
 
 ## What is Repository?
 
@@ -22,7 +22,7 @@ In this class (the *Repository*), we usually add the basic database operations/m
 
 Then, the codes in your application is using the *Repository* object instead of directly accessing the database. Those allow the developers to follow the correct *chain-of calls* and *reusability* when it comes to data-accessibility.
 
-## Creating a database-level Repository
+## Creating a Database-Level Repository
 
 A database-level repository is a *Repository* that can be used for a database specific purposes.
 
@@ -345,4 +345,5 @@ Same as previous section, we suggest that you place a breakpoint at the *Main()*
 ## Related Topics
 
 - [Making the Repositories Dependency-Injectable](https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable)
+- [Customizing a Cache](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache)
 - [Implementing a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)

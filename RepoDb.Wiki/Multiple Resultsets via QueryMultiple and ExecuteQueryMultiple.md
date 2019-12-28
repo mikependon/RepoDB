@@ -9,109 +9,11 @@ In this page, you will learn the following.
 
 The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
 
-**Note**: The *database*, *table*, *project* and *model* we will be using is the same as what we have created at the [Getting Started](https://github.com/mikependon/RepoDb/wiki/Getting-Started) page.
-
-At this point in time, we should expect that you have the following:
-- A database named *Inventory*.
-- A table named *[dbo].[Customer]*.
-- A C# project named *InventoryProject.csproj*.
-- A class model named *Customer.cs*.
-
-But, we need to add more entities to cater the relationships of the objects. With this, we need to create the following.
-- A table named *[dbo].[Product]* to hold the product information.
-- A table named *[dbo].[Order]* to hold the order information of the *Customer*.
-- A class named *Product.cs* to hold the *Product* entity.
-- A class named *Order.cs* to hold the *Order* entity.
-
-### Create a Product table
-
-- In the `Object Explorer`, under `Databases` section, right-click the `Inventory` database and click the `New Query` context-menu.
-- In the query window, copy the script below.
-```
-CREATE TABLE [dbo].[Product]
-(
-	[Id] BIGINT IDENTITY(1,1) 
-	, [Name] NVARCHAR(128) NOT NULL
-	, [Price] Decimal(18,2)
-	, [DateInsertedUtc] DATETIME2(5) NOT NULL
-	, [DateModifiedUtc] DATETIME2(5) NOT NULL
-	, [ModifiedBy] NVARCHAR(64) NOT NULL
-	, CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED ([Id] ASC )
-)
-ON [PRIMARY];
-```
-- Press the `F5` key.
-- In the `Object Explorer`, the table named *Product* is now available under `Databases` > `Inventory` > `Tables`.
-
-### Create an Order table
-
-- In the `Object Explorer`, under `Databases` section, right-click the `Inventory` database and click the `New Query` context-menu.
-- In the query window, copy the script below.
-```
-CREATE TABLE [dbo].[Order]
-(
-	[Id] BIGINT IDENTITY(1,1) 
-	, [ProductId] BIGINT NOT NULL
-	, [CustomerId] BIGINT
-	, [OrderDateUtc] DATETIME(5)
-	, [Quantity] INT
-	, [DateInsertedUtc] DATETIME2(5) NOT NULL
-	, [DateModifiedUtc] DATETIME2(5) NOT NULL
-	, [ModifiedBy] NVARCHAR(64) NOT NULL
-	, CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED ([Id] ASC )
-)
-ON [PRIMARY];
-```
-- Press the `F5` key.
-- In the `Object Explorer`, the table named *Order* is now available under `Databases` > `Inventory` > `Tables`.
-
-### Create a Product class object
-
-- In the `Solution Explorer`, right-click the project `InventoryProject` and click the `Add` > `New Item...` context-menu.
-- Enter the following values:
-  - Type = `Class`
-  - Name = *Product*
-- Click the `Add` button.
-- The new file named `Product.cs` will be created. Replace the class implementation with the script below.
-```csharp
-public class Product
-{
-	public long Id { get; set; }
-	public string Name { get; set; }
-	public decimal Price { get; set; }
-	public DateTime DateInsertedUtc { get; set; }
-	public DateTime DateModifiedUtc { get; set; }
-	public string ModifiedBy { get; set; }
-}
-```
-- Press `Ctrl+S` keys to save the changes.
-
-### Create an Order class object
-
-- In the `Solution Explorer`, right-click the project `InventoryProject` and click the `Add` > `New Item...` context-menu.
-- Enter the following values:
-  - Type = `Class`
-  - Name = *Order*
-- Click the `Add` button.
-- The new file named `Order.cs` will be created. Replace the class implementation with the script below.
-```csharp
-public class Order
-{
-	public long Id { get; set; }
-	public long ProductId { get; set; }
-	public long CustomerId { get; set; }
-	public int Quantity { get; set; }
-	public DateTime OrderDateUtc{ get; set; }
-	public DateTime DateInsertedUtc { get; set; }
-	public DateTime DateModifiedUtc { get; set; }
-	public string ModifiedBy { get; set; }
-}
-```
-- Press `Ctrl+S` keys to save the changes.
+Please follow the steps at [Creating an Inventory Database and Project](https://github.com/mikependon/RepoDb/wiki/Creating-an-Inventory-Database-and-Project) before proceeding to the next sections.
 
 ## What is Multiple Resultsets?
 
-A *Multiple Resultsets* is a terminology behind the *results* of multiple-queries execution from the database. It helps maximizes the performance of the query as the *multiple SELECT statements* are being issued to the database engine once and being executed in *one-go*.
+A *Multiple Resultsets* is a terminology behind the *results* of multiple-queries execution from the database. It help maximizes the performance of the query as the *multiple SELECT statements* are being issued to the database engine once and being executed in *one-go*.
 
 In *RepoDb*, there are 2 ways of doing this.
 
