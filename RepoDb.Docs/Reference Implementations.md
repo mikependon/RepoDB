@@ -467,7 +467,7 @@ using (var connection = new SqlConnection(ConnectionString))
 		new QueryField("CustomerId", 10045),
 		new QueryField("OrderDate", DateTime.UtcNow.Date)
 	});
-	var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup);
+	var customer = connection.ExecuteQuery<ComplexClass>(commandText, queryGroup);
 }
 ```
 
