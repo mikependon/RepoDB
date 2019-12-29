@@ -95,7 +95,7 @@ Operation                                                                       
 [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update)                            | YES             | YES                     | YES       | YES               | NO               | SUPPORTED              |
 [UpdateAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#updateall)                      | YES             | YES                     | YES       | YES               | YES              | SUPPORTED              |
 
-Please visit our [sample codes](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Sample%20Codes.md) page for the sample implementations.
+To learn more about these operations, please visit our [reference implementations](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reference%20Implementations.md) page.
 
 ## Benchmark
 
