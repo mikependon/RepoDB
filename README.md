@@ -16,7 +16,7 @@
 
 ## Introduction to RepoDb
 
-RepoDb provide certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development. Read more information from our [wiki](https://github.com/mikependon/RepoDb/wiki) page.
+RepoDb provide certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development. Read more from our [wiki](https://github.com/mikependon/RepoDb/wiki) page.
 
 ### It is high-performant
 
@@ -132,8 +132,8 @@ To contribute, please open the [issues](https://github.com/mikependon/RepoDb/iss
 
 ### Pull-request Hints
 
-- [Building the Solution](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solution.md) - in-progress
-- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - in-progress
+- [Building the Solution](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md)
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md)
 
 ## Credits
 
