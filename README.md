@@ -146,6 +146,7 @@ To contribute, please open the [issues](https://github.com/mikependon/RepoDb/iss
 - [ReadTheDocs](https://readthedocs.org/) - for the library documentations.
 - [Shields](https://shields.io/) - for the awesome badges.
 - [StackEdit](https://stackedit.io) - for being the markdown file editor.
+- [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [Npgsql](https://www.nuget.org/packages/Npgsql/) - for being the extended DB provider drivers.
 
 ## License
 
