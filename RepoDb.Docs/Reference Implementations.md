@@ -1,12 +1,10 @@
 ## Introduction
 
-In this page, we will only show you the reference implementation, not the usual actual implementation.
-
-The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
+In this page, we will only show you the reference implementation, not the usual actual implementation. The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*.
 
 ### Indexes
 
-- [Installation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#installations)
+- [Installations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#installations)
 - [Querying a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#querying-a-data)
 - [Querying via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#querying-via-tablename)
 - [Inserting a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#inserting-a-data)
