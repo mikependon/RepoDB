@@ -1,15 +1,33 @@
 
 ## Installations
 
-RepoDb and its extension is available via Nuget as a NetStandard library. Type the commands below at the *Package Manager Console* window.
+RepoDb and its extension is available via Nuget as a NetStandard library. Type any of the command below at the *Package Manager Console* window.
+
+### For SqlServer
 
 ```
 Install-Package RepoDb
+```
+
+### For SqLite
+
+```
 Install-Package RepoDb.SqLite
+```
+
+### For MySql
+
+```
 Install-Package RepoDb.MySql
 ```
 
-## Snippets and Samples
+### For PostgreSql
+
+```
+Install-Package RepoDb.PostgreSql
+```
+
+## Snippets
 
 Let us say you have a customer class named *Customer* that has an equivalent table in the database named `[dbo].[Customer]`.
 
@@ -436,7 +454,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.
 
-Note: The most optimal when it comes to performance is to used the `Object-Based`.
+**Note**: The most optimal when it comes to performance is to used the `QueryObjects`.
 
 ### Calling a StoredProcedure
 

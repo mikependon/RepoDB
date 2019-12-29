@@ -16,9 +16,7 @@
 
 ## Introduction to RepoDb
 
-RepoDb provide certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
-
-Please visit our [wiki](https://github.com/mikependon/RepoDb/wiki) page for the knowledge base.
+RepoDb provide certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development. Read more information from our [wiki](https://github.com/mikependon/RepoDb/wiki) page.
 
 ### It is high-performant
 
@@ -58,7 +56,9 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 
 ### Extensibility
 
-RepoDb is highly extensible to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work. Please visit our [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider) page for the actual implementation tutorial.
+RepoDb is highly extensible to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work.
+
+For the actual implementation, please visit our [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider) page.
 
 ## Operations
 
@@ -95,7 +95,7 @@ Operation                                                                       
 [Update](https://repodb.readthedocs.io/en/latest/pages/connection.html#update)                            | YES             | YES                     | YES       | YES               | NO               | SUPPORTED              |
 [UpdateAll](https://repodb.readthedocs.io/en/latest/pages/connection.html#updateall)                      | YES             | YES                     | YES       | YES               | YES              | SUPPORTED              |
 
-Please visit our [Sample Codes](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Sample%20Codes.md) page for the referance implementation.
+Please visit our [sample codes](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Sample%20Codes.md) page for the sample implementations.
 
 ## Benchmark
 
@@ -132,8 +132,8 @@ To contribute, please open the [issues](https://github.com/mikependon/RepoDb/iss
 
 ### Pull-request Hints
 
-- [Building the Solution]() - in-progress
-- [Coding Standards]() - in-progress
+- [Building the Solution](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solution.md) - in-progress
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - in-progress
 
 ## Credits
 
