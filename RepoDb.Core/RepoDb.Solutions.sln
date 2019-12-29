@@ -25,10 +25,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuge
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{C7222746-534E-4D95-9B7E-9593C191FDE2}"
 	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Docs\Building the Solutions.md = ..\RepoDb.Docs\Building the Solutions.md
+		..\RepoDb.Docs\Coding Standards.md = ..\RepoDb.Docs\Coding Standards.md
+		..\RepoDb.Docs\Reference Implementations.md = ..\RepoDb.Docs\Reference Implementations.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{A85E6252-09E7-4E7C-904E-0372E728DE41}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Wiki\Advance Field and Type Mapping Implementation.md = ..\RepoDb.Wiki\Advance Field and Type Mapping Implementation.md
+		..\RepoDb.Wiki\Batch Operations vs Bulk Operations.md = ..\RepoDb.Wiki\Batch Operations vs Bulk Operations.md
+		..\RepoDb.Wiki\Creating an Inventory Database and Project.md = ..\RepoDb.Wiki\Creating an Inventory Database and Project.md
+		..\RepoDb.Wiki\Customizing a Cache.md = ..\RepoDb.Wiki\Customizing a Cache.md
+		..\RepoDb.Wiki\Expression Trees.md = ..\RepoDb.Wiki\Expression Trees.md
+		..\RepoDb.Wiki\Getting Started.md = ..\RepoDb.Wiki\Getting Started.md
+		..\RepoDb.Wiki\Home.md = ..\RepoDb.Wiki\Home.md
+		..\RepoDb.Wiki\Implementing a Repository.md = ..\RepoDb.Wiki\Implementing a Repository.md
+		..\RepoDb.Wiki\Implementing a Trace.md = ..\RepoDb.Wiki\Implementing a Trace.md
+		..\RepoDb.Wiki\Making the Repositories Dependency-Injectable.md = ..\RepoDb.Wiki\Making the Repositories Dependency-Injectable.md
+		..\RepoDb.Wiki\Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple.md = ..\RepoDb.Wiki\Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple.md
+		..\RepoDb.Wiki\The importance of Connection Persistency.md = ..\RepoDb.Wiki\The importance of Connection Persistency.md
+		..\RepoDb.Wiki\Working with Transactions.md = ..\RepoDb.Wiki\Working with Transactions.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.ReadTheDocs", "RepoDb.ReadTheDocs", "{D0EB4CFD-A1B1-46F9-BD43-D1B03324FF30}"
+	ProjectSection(SolutionItems) = preProject
 		..\Docs\index.rst = ..\Docs\index.rst
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5E885481-5BD3-4C86-9DFB-A0BD3F49CBCF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{0C8FF83A-9C61-4ABA-B18D-89A3520CC36A}"
 	ProjectSection(SolutionItems) = preProject
 		..\Docs\pages\attributes.rst = ..\Docs\pages\attributes.rst
 		..\Docs\pages\cache.rst = ..\Docs\pages\cache.rst
@@ -55,23 +79,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5E885481
 		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{A85E6252-09E7-4E7C-904E-0372E728DE41}"
-	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Wiki\Advance Field and Type Mapping Implementation.md = ..\RepoDb.Wiki\Advance Field and Type Mapping Implementation.md
-		..\RepoDb.Wiki\Batch Operations vs Bulk Operations.md = ..\RepoDb.Wiki\Batch Operations vs Bulk Operations.md
-		..\RepoDb.Wiki\Creating an Inventory Database and Project.md = ..\RepoDb.Wiki\Creating an Inventory Database and Project.md
-		..\RepoDb.Wiki\Customizing a Cache.md = ..\RepoDb.Wiki\Customizing a Cache.md
-		..\RepoDb.Wiki\Expression Trees.md = ..\RepoDb.Wiki\Expression Trees.md
-		..\RepoDb.Wiki\Getting Started.md = ..\RepoDb.Wiki\Getting Started.md
-		..\RepoDb.Wiki\Home.md = ..\RepoDb.Wiki\Home.md
-		..\RepoDb.Wiki\Implementing a Repository.md = ..\RepoDb.Wiki\Implementing a Repository.md
-		..\RepoDb.Wiki\Implementing a Trace.md = ..\RepoDb.Wiki\Implementing a Trace.md
-		..\RepoDb.Wiki\Making the Repositories Dependency-Injectable.md = ..\RepoDb.Wiki\Making the Repositories Dependency-Injectable.md
-		..\RepoDb.Wiki\Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple.md = ..\RepoDb.Wiki\Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple.md
-		..\RepoDb.Wiki\The importance of Connection Persistency.md = ..\RepoDb.Wiki\The importance of Connection Persistency.md
-		..\RepoDb.Wiki\Working with Transactions.md = ..\RepoDb.Wiki\Working with Transactions.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,7 +102,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5E885481-5BD3-4C86-9DFB-A0BD3F49CBCF} = {C7222746-534E-4D95-9B7E-9593C191FDE2}
+		{0C8FF83A-9C61-4ABA-B18D-89A3520CC36A} = {D0EB4CFD-A1B1-46F9-BD43-D1B03324FF30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
