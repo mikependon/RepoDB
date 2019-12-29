@@ -1,3 +1,24 @@
+## Introduction
+
+In this page, we will only show you the reference implementation, not the usual actual implementation.
+
+The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*. Please have at least *Visual Studio 2017* and *SQL Server 2016* installed in your machine.
+
+### Indexes
+
+- [Installation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#installations)
+- [Querying a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#querying-a-data)
+- [Querying via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#querying-via-tablename)
+- [Inserting a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#inserting-a-data)
+- [Inserting via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#inserting-via-tablename)
+- [Updating a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#updating-a-data)
+- [Updating via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#updating-via-tablename)
+- [Deleting a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#deleting-a-data)
+- [Deleting via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#deleting-via-tablename)
+- [Merging a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#merging-a-data)
+- [Merging via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#merging-via-tablename)
+- [Executing a Customized Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#executing-a-customized-query)
+- [Calling a Stored Procedure](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#calling-a-storedprocedure)
 
 ## Installations
 
