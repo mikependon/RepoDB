@@ -6,7 +6,7 @@ In this page, we will guide you on how to build the *RepoDb* Solutions.
 - [Running the RepoDb.IntegrationTests and RepoDb.UnitTests](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#running-the-repodbintegrationtests-and-repodbunittests)
 - [Building the RepoDb.SqLite](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
 - [Running the RepoDb.SqLite.IntegrationTests and RepoDb.SqLite.UnitTests](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#running-the-repodbsqliteintegrationtests-and-repodbsqliteunittests)
-- [Building the RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
+- [Building the RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysql)
 - [Running the RepoDb.MySql.IntegrationTests and RepoDb.MySql.UnitTests](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#running-the-repodbmysqlintegrationtests-and-repodbmysqlunittests)
 
 ### Pre-requisites
