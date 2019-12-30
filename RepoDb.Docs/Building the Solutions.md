@@ -3,11 +3,11 @@
 In this page, we will guide you on how to build the *RepoDb* Solutions.
 
 - [Building the RepoDb.Core](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbcore)
-- [Running the RepoDb.IntegrationTests and RepoDb.UnitTests]()
+- [Running the RepoDb.IntegrationTests and RepoDb.UnitTests](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#running-the-repodbintegrationtests-and-repodbunittests)
 - [Building the RepoDb.SqLite](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
-- [Running the RepoDb.SqLite.IntegrationTests and RepoDb.SqLite.UnitTests]()
-- [Building the RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysql)
-- [Running the RepoDb.MySql.IntegrationTests and RepoDb.MySql.UnitTests]()
+- [Running the RepoDb.SqLite.IntegrationTests and RepoDb.SqLite.UnitTests](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#running-the-repodbsqliteintegrationtests-and-repodbsqliteunittests)
+- [Building the RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
+- [Running the RepoDb.MySql.IntegrationTests and RepoDb.MySql.UnitTests](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#running-the-repodbmysqlintegrationtests-and-repodbmysqlunittests)
 
 ### Pre-requisites
 
@@ -17,7 +17,6 @@ Atleast, the following softwares must be installed in your local machine.
 - Microsoft SQL Server 2016
 - Microsoft SSMS 2017
 - SQLite and SQLite Studio - see the [download](https://sqlite.org/download.html) page. To install, please follow this [guide](https://www.sqlitetutorial.net/download-install-sqlite/).
-- MySql - see the [download](https://dev.mysql.com/downloads/installer/) page. To install, please follow this [guide](https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html).
 - Git - to install, please follow this [guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 ### Create the 'src' folder
@@ -45,6 +44,8 @@ Atleast, the following softwares must be installed in your local machine.
 	> cd c:\src
 	> git clone https://github.com/mikependon/RepoDb.git
 	```
+
+--------
 
 ### Building the RepoDb.Core
 
@@ -74,6 +75,34 @@ Atleast, the following softwares must be installed in your local machine.
 5. In the *Test Explorer* window, click the *Group By Class*.
 6. In the *Test Explorer* window, right-click the *RepoDb.IntegrationTests* and then click the *Run Selected Tests* context menu.
 7. In the *Test Explorer* window, right-click the *RepoDb.UnitTests* and then click the *Run Selected Tests* context menu.
+
+--------
+
+### Building the RepoDb.SqLite
+
+1. Open the *RepoDb.SqLite* folder.
+2. Double click the *RepoDb.SqLite.sln*.
+3. Right-click the *RepoDb.SqLite* solution and click the *Rebuild Solution* context menu.
+
+### Running the RepoDb.SqLite.IntegrationTests and RepoDb.SqLite.UnitTests
+
+1. Open the SQLite Studio.
+2. Click the *Database* > *Add a Database* menu.
+
+	Database type = *SQLite 3*
+	File = *C:\SqLite\Databases\RepoDb.db*
+	Name (on the list) = *RepoDb*
+	Permanent (keep it in configuration) = *checked*
+
+3. In your Microsoft Visual Studio's, click the *Test* menu and click the *Windows* > *Text Explorer*.
+
+	Alternatively, press the *Ctrl + E, T*.
+
+5. In the *Test Explorer* window, click the *Group By Class*.
+6. In the *Test Explorer* window, right-click the *RepoDb.SqLite.IntegrationTests* and then click the *Run Selected Tests* context menu.
+7. In the *Test Explorer* window, right-click the *RepoDb.SqLite.UnitTests* and then click the *Run Selected Tests* context menu.
+
+--------
 
 ### Building the RepoDb.MySql
 
