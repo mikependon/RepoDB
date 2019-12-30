@@ -144,6 +144,7 @@ To contribute, please open the [issues](https://github.com/mikependon/RepoDb/iss
 - [Nuget](https://www.nuget.org/) - for the package deliveries.
 - [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) - for measuring the performance and efficiency.
 - [ReadTheDocs](https://readthedocs.org/) - for the library documentations.
+- [SharpLab](https://sharplab.io/) - for helping us on our IL coding.
 - [Shields](https://shields.io/) - for the awesome badges.
 - [StackEdit](https://stackedit.io) - for being the markdown file editor.
 - [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [Npgsql](https://www.nuget.org/packages/Npgsql/) - for being the extended DB provider drivers.
