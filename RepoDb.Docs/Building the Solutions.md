@@ -17,6 +17,7 @@ Atleast, the following softwares must be installed in your local machine.
 - Microsoft SQL Server 2016
 - Microsoft SSMS 2017
 - SQLite and SQLite Studio - see the [download](https://sqlite.org/download.html) page. To install, please follow this [guide](https://www.sqlitetutorial.net/download-install-sqlite/).
+- MySql - see the [download](https://dev.mysql.com/downloads/installer/) page. To install, please follow this [guide](https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html).
 - Git - to install, please follow this [guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 ### Create the 'src' folder
