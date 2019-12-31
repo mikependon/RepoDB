@@ -10,125 +10,125 @@ We are listening to any comments you made, please do let us know if you think we
 
 #### ProperCase Class Naming Convention
 
-- Like this:
+Like this:
 
-	```csharp
-	public class QueryField
-	{
-		...
-	}
-	```
+```csharp
+public class QueryField
+{
+	...
+}
+```
 
-- Not like this:
+Not like this:
 
-	```csharp
-	public class queryField
-	{
-		...
-	}
-	```
+```csharp
+public class queryField
+{
+	...
+}
+```
 
 ## Properties Implementation
 
 #### ProperCase Property Naming Convention
 
-- Like this:
+Like this:
 
-	```csharp
-	public IEnumerable<QueryField> QueryFields { get; set; }
-	```
+```csharp
+public IEnumerable<QueryField> QueryFields { get; set; }
+```
 
-- Not like this:
+Not like this:
 	
-	```csharp
-	public IEnumerable<QueryField> queryFields { get; set; }
-	```
+```csharp
+public IEnumerable<QueryField> queryFields { get; set; }
+```
 
 #### Usage of the *get/set* for the Properties
 
-- Like this:
+Like this:
 
-	```csharp
-	public string ConnectionString { get; set; }
-	```
+```csharp
+public string ConnectionString { get; set; }
+```
 
-- Not like this:
+Not like this:
 	
-	```csharp
-	private string m_propertyName;
-	public string propertyName
-	{
-		get { return m_propertyName; }
-		set { m_propertyName = value; }
-	}
-	```
+```csharp
+private string m_propertyName;
+public string propertyName
+{
+	get { return m_propertyName; }
+	set { m_propertyName = value; }
+}
+```
 
 #### Direct assignment for *readonly* Properties
 
 This is not the case always. However, please always consider the usage of direct assignment first (if feasible) before doing any other implementation approach.
 
-	```charp
-	public string ConnectionString => DbRepository.ConnectionString;
-	```
+```charp
+public string ConnectionString => DbRepository.ConnectionString;
+```
 
 ## Variables
 
 #### Usage of `var` keyword when declaring a method-level variables
 
-- Like this:
+Like this:
 
-	```csharp
-	var field = new QueryField("Name", "Value");
-	```
+```csharp
+var field = new QueryField("Name", "Value");
+```
 
-- Not like this:
+Not like this:
 
-	```csharp
-	QueryField field = new QueryField("Name", "Value");
-	```
+```csharp
+QueryField field = new QueryField("Name", "Value");
+```
 
 #### Usage of `camelCase` when declaring the method-level variables
 
-- Like this:
+Like this:
 
-	```csharp
-	var propertyIndex = 0;
-	```
+```csharp
+var propertyIndex = 0;
+```
 
-- Not like this:
+Not like this:
 
-	```csharp
-	var propertyindex = 0;
-	var ProperyIndex = 0;
-	```
+```csharp
+var propertyindex = 0;
+var ProperyIndex = 0;
+```
 
 #### Declare a meaningful variable name
 
-- Like this:
+Like this:
 
-	```csharp
-	var propertiesCount = properties.Count();
-	```
+```csharp
+var propertiesCount = properties.Count();
+```
 
-- Not like this:
+Not like this:
 
-	```csharp
-	var x = properties.Count();
-	```
+```csharp
+var x = properties.Count();
+```
 
 #### Usage of prefix `m_` for private variables
 
-- Like this:
+Like this:
 
-	```csharp
-	private IDbConnection m_activeConnection;
-	```
+```csharp
+private IDbConnection m_activeConnection;
+```
 
-- Not like this:
+Not like this:
 
-	```csharp
-	private IDbConnection _activeConnection;
-	```
+```csharp
+private IDbConnection _activeConnection;
+```
 
 ## Looping
 
@@ -136,23 +136,23 @@ This is not the case always. However, please always consider the usage of direct
 
 Please avoid using the Linq `ForEach()` method.
 
-- Like this:
+Like this:
 
-	```csharp
-	foreach(var queryField in queryFields)
-	{
-		...
-	}
-	```
+```csharp
+foreach(var queryField in queryFields)
+{
+	...
+}
+```
 	
-- Not like this:
+Not like this:
 
-	```csharp
-	queryFields.ForEach(queryField =>
-	{
-		...
-	});
-	```
+```csharp
+queryFields.ForEach(queryField =>
+{
+	...
+});
+```
 
 **Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
@@ -160,91 +160,91 @@ Please avoid using the Linq `ForEach()` method.
 
 #### Always open and close the conditional statements with curly-brackets
 
-- Like this:
+Like this:
 
-	```csharp
-	if (true)
-	{
-		Process();
-	}
-	```
+```csharp
+if (true)
+{
+	Process();
+}
+```
 
-- Not like this:
+Not like this:
 
-	```csharp
-	if (true)
-		Process();
+```csharp
+if (true)
+	Process();
 
-	if (true) Process();
-	```
+if (true) Process();
+```
 
 This must be done in all implementations.
 
 #### Always add an XML-comments in all public implementations
 
-	- *Methods*
-	- *Properties*
-	- *Classes*
-	- *Interfaces*
-	- *Enumerations*
+- *Methods*
+- *Properties*
+- *Classes*
+- *Interfaces*
+- *Enumerations*
 
 #### Always use the `String.Concat()` over `+ Concatenation`
 
-- Like this:
+Like this:
 
-	```csharp
-	var tableName = string.Concat("[dbo].[", entityName, "]");
-	```
+```csharp
+var tableName = string.Concat("[dbo].[", entityName, "]");
+```
 
-	- Not Like this:
+- Not Like this:
 
-	```csharp
-	var tableName = "[dbo].[" + entityName + "]";
-	```
+```csharp
+var tableName = "[dbo].[" + entityName + "]";
+```
 	
-	**Reason**: The author preferred the lowest level implementation as always for performance purposes.
+**Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
 #### Always use the `String.Concat()` or `String.Format()` over the *String Interpolation*
 
-- Like this:
+Like this:
 
-	```csharp
-	var tableName = string.Concat("[dbo].[", entityName, "]");
-	```
+```csharp
+var tableName = string.Concat("[dbo].[", entityName, "]");
+```
 
-	- Not Like this:
+- Not Like this:
 
-	```csharp
-	var tableName = $"[dbo].[{entityName}]");
-	```
+```csharp
+var tableName = $"[dbo].[{entityName}]");
+```
 	
 #### Avoid the usage of `this` and `base` keywords, unless very necesarry
 
-- Like this:
+Like this:
 
-	```csharp
-	var entities = QueryAll<T>();
-	```
+```csharp
+var entities = QueryAll<T>();
+```
 
-	- Not Like this:
+- Not Like this:
 
-	```csharp
-	var entities = this.QueryAll<T>();
-	```
+```csharp
+var entities = this.QueryAll<T>();
+```
 
 #### Always use the `AsList()` over `ToList()`
 
-- Like this:
+Like this:
 
-	```csharp
-	var childQueryFields = queryGroup.QueryFields.AsList();
-	```
+```csharp
+var childQueryFields = queryGroup.QueryFields.AsList();
+```
 
-	- Not Like this:
+- Not Like this:
 
-	```csharp
-	var childQueryFields = queryGroup.QueryFields.ToList();
-	```
+```csharp
+var childQueryFields = queryGroup.QueryFields.ToList();
+```
 
 #### The shorter the better (less then 25 lines of codes per method).
 
@@ -256,34 +256,34 @@ The methods must only contains few lines of codes. We prefer to have it maximum 
 
 This is an author's preference. Always use a new-lined arguments.
 
-- Like this:
+Like this:
 
-	```charp
-	internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
-        string tableName,
-        IEnumerable<TEntity> entities,
-        IEnumerable<Field> qualifiers,
-        int batchSize,
-        IEnumerable<Field> fields,
-        int? commandTimeout = null,
-        IDbTransaction transaction = null,
-        ITrace trace = null,
-        IStatementBuilder statementBuilder = null,
-        bool skipIdentityCheck = false)
-        where TEntity : class
-	{
-		...
-	}
-	```
+```charp
+internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
+    string tableName,
+    IEnumerable<TEntity> entities,
+    IEnumerable<Field> qualifiers,
+    int batchSize,
+    IEnumerable<Field> fields,
+    int? commandTimeout = null,
+    IDbTransaction transaction = null,
+    ITrace trace = null,
+    IStatementBuilder statementBuilder = null,
+    bool skipIdentityCheck = false)
+    where TEntity : class
+{
+	...
+}
+```
 	
-- Not like this:
+Not like this:
 
-	```charp
-	internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection, string tableName, IEnumerable<TEntity> entities, IEnumerable<Field> qualifiers, int batchSize, IEnumerable<Field> fields, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool skipIdentityCheck = false) where TEntity : class
-	{
-		...
-	}
-	```
+```charp
+internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection, string tableName, IEnumerable<TEntity> entities, IEnumerable<Field> qualifiers, int batchSize, IEnumerable<Field> fields, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool skipIdentityCheck = false) where TEntity : class
+{
+	...
+}
+```
 
 ## Regions
 
@@ -291,99 +291,99 @@ The regions are rich in RepoDb.
 
 #### Create a region for the *Properties*
 	
-- Like this:
+Like this:
 
-	```csharp
-	#region Properties
+```csharp
+#region Properties
 
-	public string ConnectionString => DbRepository.ConnectionString;
+public string ConnectionString => DbRepository.ConnectionString;
 
-	#endregion
-	```
+#endregion
+```
 
 #### Create a region for the *Static Properties*
 
-- Like this:
+Like this:
 
-	```csharp
-	#region Static Properties
+```csharp
+#region Static Properties
 
-	public static IDbConnection ActiveConnection { get; private set; }
+public static IDbConnection ActiveConnection { get; private set; }
 
-	#endregion
-	```
+#endregion
+```
 
 #### Create a region for the *Private Variables*
 
-- Like this:
+Like this:
 
-	```csharp
-	#region Privates
+```csharp
+#region Privates
 
-	public int? m_hashCode = null;
+public int? m_hashCode = null;
 
-	#endregion
-	```
+#endregion
+```
 	
 #### Create a region for the *Static Private Variables*
 
-- Like this:
+Like this:
 
-	```csharp
-	#region Statics/Privates
+```csharp
+#region Statics/Privates
 
-	public static IDbConnection m_activeConnection = null;
+public static IDbConnection m_activeConnection = null;
 
-	#endregion
-	```
+#endregion
+```
 
 #### Create a region for the *ConstructorsVariables*
 
-- Like this:
+Like this:
 
-	```csharp
-	#region Constructors
+```csharp
+#region Constructors
 
-	public QueryGroup(QueryField queryField) :
-        this(queryField?.AsEnumerable(),
-            null,
-            Conjunction.And,
-            false)
-        { }
+public QueryGroup(QueryField queryField) :
+    this(queryField?.AsEnumerable(),
+        null,
+        Conjunction.And,
+        false)
+    { }
 
-	public QueryGroup(QueryGroup queryGroup) :
-        this(null,
-            queryGroup?.AsEnumerable(),
-            Conjunction.And,
-            false)
-        { }
+public QueryGroup(QueryGroup queryGroup) :
+    this(null,
+        queryGroup?.AsEnumerable(),
+        Conjunction.And,
+        false)
+    { }
 
-	#endregion
-	```
+#endregion
+```
 
 #### Create a region for the *Instance Methods*
 
-	```csharp
-	#region Methods
+```csharp
+#region Methods
 
-	public void Fix()
-	{
-		...
-	}
+public void Fix()
+{
+	...
+}
 
-	#endregion
-	```
+#endregion
+```
 
 #### Create a region for the *Static Methods*
 
-	```csharp
-	#region Methods
+```csharp
+#region Methods
 
-	public static IEnumerable<Field> Parse<T>(T instance)
-	{
-		...
-	}
+public static IEnumerable<Field> Parse<T>(T instance)
+{
+...
+}
 
-	#endregion
-	```
+#endregion
+```
 
