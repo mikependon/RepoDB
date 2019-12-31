@@ -6,8 +6,6 @@ In this page, we will guide you on how to build the *RepoDb* Solutions.
 - [Building the RepoDb.SqLite](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
 - [Building the RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysql)
 
-Please follow the steps below to proceed.
-
 ## Install the Git
 
 To install, please follow this [guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
