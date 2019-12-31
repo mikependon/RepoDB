@@ -73,7 +73,7 @@ public string ConnectionString => DbRepository.ConnectionString;
 
 ## Variables
 
-### Usage of `var` keyword when declaring a method-level variables
+### Usage of *var* keyword when declaring a method-level variables
 
 Like this:
 
@@ -116,7 +116,7 @@ Not like this:
 var x = properties.Count();
 ```
 
-### Usage of prefix `m_` for private variables
+### Usage of prefix *m_* for private variables
 
 Like this:
 
@@ -132,7 +132,7 @@ private IDbConnection _activeConnection;
 
 ## Looping
 
-### Always use `foreach` or `for (var)`
+### Always use *foreach* or *for (var)*
 
 Please avoid using the Linq `ForEach()` method.
 
@@ -188,7 +188,7 @@ This must be done in all implementations.
 - *Interfaces*
 - *Enumerations*
 
-### Always use the `String.Concat()` over `+ Concatenation`
+### Always use the *String.Concat()* over *+ Concatenation*
 
 Like this:
 
@@ -204,7 +204,7 @@ var tableName = "[dbo].[" + entityName + "]";
 	
 **Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
-### Always use the `String.Concat()` or `String.Format()` over the *String Interpolation*
+### Always use the *String.Concat()* or *String.Format()* over the *String Interpolation*
 
 Like this:
 
@@ -218,7 +218,7 @@ var tableName = string.Concat("[dbo].[", entityName, "]");
 var tableName = $"[dbo].[{entityName}]");
 ```
 	
-### Avoid the usage of `this` and `base` keywords, unless very necesarry
+### Avoid the usage of *this* and *base* keywords, unless very necesarry
 
 Like this:
 
@@ -232,7 +232,7 @@ var entities = QueryAll<T>();
 var entities = this.QueryAll<T>();
 ```
 
-### Always use the `AsList()` over `ToList()`
+### Always use the *AsList()* over *ToList()*
 
 Like this:
 
@@ -246,7 +246,7 @@ var childQueryFields = queryGroup.QueryFields.AsList();
 var childQueryFields = queryGroup.QueryFields.ToList();
 ```
 
-### The shorter the better (less then 25 lines of codes per method).
+### The Shorter The Better
 
 The methods must only contains few lines of codes. We prefer to have it maximum of 25 lines of codes per method.
 
@@ -381,7 +381,7 @@ public void Fix()
 
 public static IEnumerable<Field> Parse<T>(T instance)
 {
-...
+	...
 }
 
 #endregion
