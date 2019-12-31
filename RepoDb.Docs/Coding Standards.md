@@ -1,12 +1,14 @@
-## Coding Standards
+lol## Coding Standards
 
-Below are some of the things the developer needs to consider when doing a code change on the project. Please be noted that this coding standard is not a strict compliance when you are pushing a pull-requests to us. Your codes will be evaluated, further collaborations may be done between the requestor and admin (if there are clarrifications before merging).
+Below are some of the things the developer needs to *consider* when doing a code change on the project.
 
-Some of the written standard here is a preference of the author itself.
+Please be noted that this coding standard is *not* a strict compliance to a developer to *push* a pull-requests to us. Your codes will be evaluated, further collaborations may be done between the requestor and admin (if there are clarrifications before merging).
+
+Some of the written standard here is a *preference* of the author itself.
 
 ### DEV Inputs
 
-We are listening to any comments, therefore please do let us know if you think we need to adjust the way how we do the coding.
+We are listening to any comments, therefore please do let us know if you think we need to *adjust* the way how we do the coding.
 
 ## Class Implementation
 
