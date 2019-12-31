@@ -67,7 +67,7 @@ public string propertyName
 
 This is not the case always. However, please always consider the usage of direct assignment first (if feasible) before doing any other implementation approach.
 
-```charp
+```csharp
 public string ConnectionString => DbRepository.ConnectionString;
 ```
 
@@ -215,8 +215,10 @@ var tableName = string.Concat("[dbo].[", entityName, "]");
 Not like this:
 
 ```csharp
-var tableName = $"[dbo].[{entityName}]");
+var tableName = $"[dbo].[{entityName}]";
 ```
+
+**Reason**: String interpolation is slow and is not efficient.
 	
 ### Avoid the usage of *this* and *base* keywords, unless very necesarry
 
