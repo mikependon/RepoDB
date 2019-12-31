@@ -1,10 +1,10 @@
 ## Coding Standards
 
-Below are the list of things to be considered when doing a code change. Please be noted that this is not a strict compliance we you are pushing a pull-requests to us.
+Below are the list of things to be considered when doing a code change. Please be noted that this standards should be considered but is not a strict compliance we you are pushing a pull-requests to us.
 
 Some of the coding standards here is a preference of the author itself.
 
-We are listening to any comments you made, please do let us know if you think we need to adjust the way on how we do the coding.
+We are listening to any comments you made, therefore please do let us know if you think we need to adjust the way on how we do the coding.
 
 ## Class Implementation
 
@@ -30,7 +30,7 @@ public class queryField
 
 ## Property Implementation
 
-### ProperCase Property Naming Convention
+### Usage of *ProperCase* property naming convention
 
 Like this:
 
@@ -44,7 +44,7 @@ Not like this:
 public IEnumerable<QueryField> queryFields { get; set; }
 ```
 
-### Usage of the *get/set* for the Properties
+### Usage of the *get/set* for the property
 
 Like this:
 
@@ -63,7 +63,7 @@ public string propertyName
 }
 ```
 
-### Direct assignment for *ReadOnly* Properties
+### Direct assignment for *readonly* property
 
 This is not the case always. However, please always consider the usage of direct assignment first (if feasible) before doing any other implementation approach.
 
@@ -87,7 +87,7 @@ Not like this:
 QueryField field = new QueryField("Name", "Value");
 ```
 
-### Usage of `camelCase` when declaring the method-level variables
+### Usage of *camelCase* when declaring the method-level variables
 
 Like this:
 
@@ -196,7 +196,7 @@ Like this:
 var tableName = string.Concat("[dbo].[", entityName, "]");
 ```
 
-- Not Like this:
+Not like this:
 
 ```csharp
 var tableName = "[dbo].[" + entityName + "]";
@@ -212,7 +212,7 @@ Like this:
 var tableName = string.Concat("[dbo].[", entityName, "]");
 ```
 
-- Not Like this:
+Not like this:
 
 ```csharp
 var tableName = $"[dbo].[{entityName}]");
@@ -226,7 +226,7 @@ Like this:
 var entities = QueryAll<T>();
 ```
 
-- Not Like this:
+Not like this:
 
 ```csharp
 var entities = this.QueryAll<T>();
@@ -240,13 +240,13 @@ Like this:
 var childQueryFields = queryGroup.QueryFields.AsList();
 ```
 
-- Not Like this:
+Not like this:
 
 ```csharp
 var childQueryFields = queryGroup.QueryFields.ToList();
 ```
 
-### The Shorter The Better
+### The shorter, the better
 
 The methods must only contains few lines of codes. We prefer to have it maximum of 25 lines of codes per method.
 
