@@ -19,7 +19,8 @@ This page is still in-progress.
 
 1. Use the `var` keyword when declaring the method-level variables.
 2. Use `camelCase` when declaring the method-level variables.
-3. Declare a meaningful variable.
+3. Declare a meaningful variable name (ie: `propertyIndex` over `x`).
+4. Usage of prefix `m_` for private variables.
 
 ## Regions
 
@@ -32,13 +33,15 @@ This page is still in-progress.
 
 ## Looping
 
-1. Always use *foreach* or *for (var i)*. Do not use *Linq ForEach*.
+1. Always use `foreach` or `for (var i)`. Do not use *Linq ForEach*.
 
 ## Coding
 
 1. Always open and close the conditional statements with curly-brackets.
 2. Always add an XML-comments in all public (method, properties, classes, interfaces, enumerations, etc).
 3. The shorter the better (less then 25 lines of codes per method).
+4. Avoid the usage of `this` and `base` keywords, unless very necesarry.
+5. Always use the `AsList()` over `ToList()`.
 
 ## Operations
 
