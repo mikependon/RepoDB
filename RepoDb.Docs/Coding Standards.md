@@ -1,4 +1,4 @@
-lol## Coding Standards
+## Coding Standards
 
 Below are some of the things the developer needs to *consider* when doing a code change on the project.
 
