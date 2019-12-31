@@ -258,7 +258,7 @@ This is an author's preference. Always use a new-lined arguments.
 
 Like this:
 
-```charp
+```csharp
 internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
     string tableName,
     IEnumerable<TEntity> entities,
@@ -278,7 +278,7 @@ internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConne
 	
 Not like this:
 
-```charp
+```csharp
 internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection, string tableName, IEnumerable<TEntity> entities, IEnumerable<Field> qualifiers, int batchSize, IEnumerable<Field> fields, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool skipIdentityCheck = false) where TEntity : class
 {
 	...
