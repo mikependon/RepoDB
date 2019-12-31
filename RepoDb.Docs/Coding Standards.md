@@ -2,13 +2,15 @@
 
 Below are the list of things to be considered when doing a code change. Please be noted that this is not a strict compliance we you are pushing a pull-requests to us.
 
-Some of the coding standards here is a preference of the author itself. We are listening to any comments you made, please do let us know if you think we need to adjust the way on how we do coding.
+Some of the coding standards here is a preference of the author itself.
+
+We are listening to any comments you made, please do let us know if you think we need to adjust the way on how we do the coding.
 
 ## Class Implementation
 
-1. Always use `ProperCase` naming convention.
+#### ProperCase Class Naming Convention
 
-	- Like this:
+- Like this:
 
 	```csharp
 	public class QueryField
@@ -17,7 +19,7 @@ Some of the coding standards here is a preference of the author itself. We are l
 	}
 	```
 
-	- Not like this:
+- Not like this:
 
 	```csharp
 	public class queryField
@@ -28,29 +30,29 @@ Some of the coding standards here is a preference of the author itself. We are l
 
 ## Properties Implementation
 
-1. Always use `ProperCase` naming convention.
+#### ProperCase Property Naming Convention
 
-	- Like this:
+- Like this:
 
 	```csharp
 	public IEnumerable<QueryField> QueryFields { get; set; }
 	```
 
-	- Not like this:
+- Not like this:
 	
 	```csharp
 	public IEnumerable<QueryField> queryFields { get; set; }
 	```
 
-2. Always use the *get/set* directly.
+#### Usage of the *get/set* for the Properties
 
-	- Like this:
+- Like this:
 
 	```csharp
 	public string ConnectionString { get; set; }
 	```
 
-	- Not like this:
+- Not like this:
 	
 	```csharp
 	private string m_propertyName;
@@ -61,7 +63,9 @@ Some of the coding standards here is a preference of the author itself. We are l
 	}
 	```
 
-3. For *get-only* properties, always consider the usage of direct assignment (first) before doing any other implementation.
+#### Direct assignment for *readonly* Properties
+
+This is not the case always. However, please always consider the usage of direct assignment first (if feasible) before doing any other implementation approach.
 
 	```charp
 	public string ConnectionString => DbRepository.ConnectionString;
@@ -69,58 +73,58 @@ Some of the coding standards here is a preference of the author itself. We are l
 
 ## Variables
 
-1. Use the `var` keyword when declaring the method-level variables.
+#### Usage of `var` keyword when declaring a method-level variables
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var field = new QueryField("Name", "Value");
 	```
 
-	- Not like this:
+- Not like this:
 
 	```csharp
 	QueryField field = new QueryField("Name", "Value");
 	```
 
-2. Use `camelCase` when declaring the method-level variables.
+#### Usage of `camelCase` when declaring the method-level variables
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var propertyIndex = 0;
 	```
 
-	- Not like this:
+- Not like this:
 
 	```csharp
 	var propertyindex = 0;
 	var ProperyIndex = 0;
 	```
 
-3. Declare a meaningful variable name.
+#### Declare a meaningful variable name
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var propertiesCount = properties.Count();
 	```
 
-	- Not like this:
+- Not like this:
 
 	```csharp
 	var x = properties.Count();
 	```
 
-4. Usage of prefix `m_` for private variables.
+#### Usage of prefix `m_` for private variables
 
-	- Like this:
+- Like this:
 
 	```csharp
 	private IDbConnection m_activeConnection;
 	```
 
-	- Not like this:
+- Not like this:
 
 	```csharp
 	private IDbConnection _activeConnection;
@@ -128,9 +132,11 @@ Some of the coding standards here is a preference of the author itself. We are l
 
 ## Looping
 
-1. Always use `foreach` or `for (var i)`. Do not use *Linq ForEach*.
+#### Always use `foreach` or `for (var)`
 
-	- Like this:
+Please avoid using the Linq `ForEach()` method.
+
+- Like this:
 
 	```csharp
 	foreach(var queryField in queryFields)
@@ -139,7 +145,7 @@ Some of the coding standards here is a preference of the author itself. We are l
 	}
 	```
 	
-	- Not like this:
+- Not like this:
 
 	```csharp
 	queryFields.ForEach(queryField =>
@@ -148,13 +154,13 @@ Some of the coding standards here is a preference of the author itself. We are l
 	});
 	```
 
-	**Reason**: The author preferred the lowest level implementation as always for performance purposes.
+**Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
 ## Coding Styles
 
-1. Always open and close the conditional statements with curly-brackets.
+#### Always open and close the conditional statements with curly-brackets
 
-	- Like this:
+- Like this:
 
 	```csharp
 	if (true)
@@ -163,7 +169,7 @@ Some of the coding standards here is a preference of the author itself. We are l
 	}
 	```
 
-	- Not Like this:
+- Not like this:
 
 	```csharp
 	if (true)
@@ -172,7 +178,9 @@ Some of the coding standards here is a preference of the author itself. We are l
 	if (true) Process();
 	```
 
-2. Always add an XML-comments in all public implementations.
+This must be done in all implementations.
+
+#### Always add an XML-comments in all public implementations
 
 	- *Methods*
 	- *Properties*
@@ -180,9 +188,9 @@ Some of the coding standards here is a preference of the author itself. We are l
 	- *Interfaces*
 	- *Enumerations*
 
-3. Always use the `String.Concat()` `+ Concatenation`.
+#### Always use the `String.Concat()` over `+ Concatenation`
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var tableName = string.Concat("[dbo].[", entityName, "]");
@@ -196,9 +204,9 @@ Some of the coding standards here is a preference of the author itself. We are l
 	
 	**Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
-3. Always use the `String.Concat()` or `String.Format()` over the *String Interpolation*.
+#### Always use the `String.Concat()` or `String.Format()` over the *String Interpolation*
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var tableName = string.Concat("[dbo].[", entityName, "]");
@@ -210,9 +218,9 @@ Some of the coding standards here is a preference of the author itself. We are l
 	var tableName = $"[dbo].[{entityName}]");
 	```
 	
-4. Avoid the usage of `this` and `base` keywords, unless very necesarry.
+#### Avoid the usage of `this` and `base` keywords, unless very necesarry
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var entities = QueryAll<T>();
@@ -224,9 +232,9 @@ Some of the coding standards here is a preference of the author itself. We are l
 	var entities = this.QueryAll<T>();
 	```
 
-5. Always use the `AsList()` over `ToList()`.
+#### Always use the `AsList()` over `ToList()`
 
-	- Like this:
+- Like this:
 
 	```csharp
 	var childQueryFields = queryGroup.QueryFields.AsList();
@@ -238,7 +246,11 @@ Some of the coding standards here is a preference of the author itself. We are l
 	var childQueryFields = queryGroup.QueryFields.ToList();
 	```
 
-6. The shorter the better (less then 25 lines of codes per method).
+#### The shorter the better (less then 25 lines of codes per method).
+
+The methods must only contains few lines of codes. We prefer to have it maximum of 25 lines of codes per method.
+
+**Note**: It is not always the case. This is not a strict compliance.
 
 ## Arguments
 
@@ -277,9 +289,9 @@ This is an author's preference. Always use a new-lined arguments.
 
 The regions are rich in RepoDb.
 
-1. Create a region for the *Properties*.
+#### Create a region for the *Properties*
 	
-	- Like this:
+- Like this:
 
 	```csharp
 	#region Properties
@@ -289,9 +301,9 @@ The regions are rich in RepoDb.
 	#endregion
 	```
 
-2. Create a region for the *Static Properties*.
+#### Create a region for the *Static Properties*
 
-	- Like this:
+- Like this:
 
 	```csharp
 	#region Static Properties
@@ -301,9 +313,9 @@ The regions are rich in RepoDb.
 	#endregion
 	```
 
-3. Create a region for the *Private Variables*.
+#### Create a region for the *Private Variables*
 
-	- Like this:
+- Like this:
 
 	```csharp
 	#region Privates
@@ -313,9 +325,9 @@ The regions are rich in RepoDb.
 	#endregion
 	```
 	
-4. Create a region for the *Static Private Variables*.
+#### Create a region for the *Static Private Variables*
 
-	- Like this:
+- Like this:
 
 	```csharp
 	#region Statics/Privates
@@ -325,9 +337,9 @@ The regions are rich in RepoDb.
 	#endregion
 	```
 
-5. Create a region for the *ConstructorsVariables*.
+#### Create a region for the *ConstructorsVariables*
 
-	- Like this:
+- Like this:
 
 	```csharp
 	#region Constructors
@@ -349,7 +361,7 @@ The regions are rich in RepoDb.
 	#endregion
 	```
 
-6. Create a region for the *Instance Methods*.
+#### Create a region for the *Instance Methods*
 
 	```csharp
 	#region Methods
@@ -362,7 +374,7 @@ The regions are rich in RepoDb.
 	#endregion
 	```
 
-7. Create a region for the *Static Methods*.
+#### Create a region for the *Static Methods*
 
 	```csharp
 	#region Methods
