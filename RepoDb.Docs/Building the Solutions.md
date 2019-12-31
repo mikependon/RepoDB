@@ -87,7 +87,7 @@ Atleast, the following softwares must be installed in your local machine.
 
 ## Building the RepoDb.SqLite
 
-Please follow the steps below to build and run the *RepoDb.Core* solutions.
+Please follow the steps below to build and run the *RepoDb.SqLite* solutions.
 
 ### Pre-requisites
 
@@ -118,14 +118,14 @@ The *SQLite* and *SQLite Studio* must be installed. To install, please follow th
 
 ### Running the RepoDb.SqLite.UnitTests
 
-1. Do the items *1* to *6* of the previous section.
+1. Do the items *1* to *5* of the previous section.
 2. In the *Test Explorer* window, right-click the *RepoDb.SqLite.UnitTests* and then click the *Run Selected Tests* context menu.
 
 --------
 
 ## Building the RepoDb.MySql
 
-Please follow the steps below to build and run the *RepoDb.Core* solutions.
+Please follow the steps below to build and run the *RepoDb.MySql* solutions.
 
 ### Pre-requisites
 
@@ -166,5 +166,5 @@ The *MySql* and *MySQL WorkBench CE 8.0* must be installed. To install, please f
 
 ### Running the RepoDb.MySql.UnitTests
 
-1. Do the items *1* to *14* of the previous section.
+1. Do the items *1* to *13* of the previous section.
 2. In the *Test Explorer* window, right-click the *RepoDb.MySql.UnitTests* and then click the *Run Selected Tests* context menu.
