@@ -297,7 +297,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Querying a parent and its children (with JOIN)
+### Querying a parent and its children
 
 Let us assumed we have this structure of *Customer* class.
 
@@ -313,7 +313,7 @@ public class Customer
 
 **Dapper**:
 
-Honestly, this is *very impressive*!
+Honestly, this is ***very impressive***!
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -331,11 +331,11 @@ using (var connection = new SqlConnection(ConnectionString))
 
 **RepoDb**:
 
-***Join is purposely not being supported yet. We explained it [here](https://github.com/mikependon/RepoDb/wiki#will-you-support-join-operations).***
+***Join is purposely not being supported yet. We explained it [here](https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple#querying-multiple-resultsets). Also, here is our [answer](https://github.com/mikependon/RepoDb/wiki#will-you-support-join-operations).***
 
 I do not want to hack this on memory processing. The most optimal way is to do the *INNER JOIN* in the actual database itself like what *Dapper* is doing.
 
-However, there is an alternative way to do this. It can be done via *Multi-Query* that executs *2 SELECT Statements* in single-call.
+However, there is an alternative way to do this. It can be done via *Multi-Query* that executes *packed SELECT-statements* in a single-call.
 
 For *join-support*, we are doing a poll-survey for this one (see [here](https://github.com/mikependon/RepoDb/issues/355)). We would like to hear yours!
 
@@ -390,9 +390,9 @@ Raw-SQL:
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var extractor = connection.ExecuteQueryMultiple("SELECT * FROM [dbo].[Customer]; SELECT * FROM [dbo].[Order];");
-	var customer = extractor.Extract<Customer>().AsList();
+	var customers = extractor.Extract<Customer>().AsList();
 	var orders = extractor.Extract<Order>().AsList();
-	customer.ForEach(customer => customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
+	customers.ForEach(customer => customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
 }
 ```
 
@@ -403,9 +403,9 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	var customerId = 10045;
 	var tuple = connection.QueryMultiple<Customer, Order>(customer => customer.Id == customerId, order => order.CustomerId == customerId);
-	var customer = tuple.Item1.FirstOrDefault();
+	var customers = tuple.Item1.FirstOrDefault();
 	var orders = tuple.Item2.AsList();
-	customer.Orders = orders;
+	customers.ForEach(customer => customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
 }
 ```
 
@@ -422,7 +422,7 @@ using (var connection = new SqlConnection(ConnectionString))
 ```
 
 **Actually, this is not clear to me**:
-- Is it doing a magic here to consolidate the *affected rows*?
+- Is it doing a magic to consolidate the *affected rows*?
 - Is it creating an implicit transaction here? What if one row fails?
 - Is it iterating the list and call the *DbCommand.Execute<Method>* multiple times?
 - How should I get the *identity* of the entities?
