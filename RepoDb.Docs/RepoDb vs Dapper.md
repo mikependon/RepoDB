@@ -648,7 +648,7 @@ Almost the same as previous section.
 
 **Dapper**:
 
-	- Dynamic:
+- Dynamic:
 
 	```csharp
 	Query<T>(sql, new { Id = 10045 });
@@ -656,7 +656,7 @@ Almost the same as previous section.
 
 	It is always an *Equal* operation. You control the query through *SQL Statement*.
 
-	- Dynamic Parameters:
+- Dynamic Parameters:
 
 	```csharp
 	var parameters = new DynamicParameters();
@@ -667,7 +667,7 @@ Almost the same as previous section.
 
 **RepoDb**:
 
-	- Dynamic:
+- Dynamic:
 
 	```csharp
 	new { Id = 10045 }
@@ -676,19 +676,19 @@ Almost the same as previous section.
 
 	Same as *Dapper*, it is always referring to an *Equal* operation. You control the query through *SQL Statement*.
 
-	- Linq Expression:
+- Linq Expression:
 
 	```csharp
 	Query<T>(e => e.Id == 10045);
 	```
 	
-	- QueryField:
+- QueryField:
 
 	```csharp
 	Query<T>(new QueryField("Id", 10045));
 	```
 	
-	- QueryField(s) or QueryGroup:
+- QueryField(s) or QueryGroup:
 
 	```csharp
 	var queryFields = new[]
@@ -705,7 +705,7 @@ Almost the same as previous section.
 
 **Dapper**:
 
-	- Query:
+- Query:
 
 	```csharp
 	using (var connection = new SqlConnection(ConnectionString))
@@ -717,7 +717,7 @@ Almost the same as previous section.
 
 **RepoDb**:
 
-	- ExecuteQuery:
+- ExecuteQuery:
 
 	```csharp
 	using (var connection = new SqlConnection(ConnectionString))
@@ -729,7 +729,7 @@ Almost the same as previous section.
 
 	For further explanation, you can visit our [documentation](https://repodb.readthedocs.io/en/latest/pages/rawsql.html#array-values).
 
-	- Query:
+- Query:
 
 	```csharp
 	using (var connection = new SqlConnection(ConnectionString))
