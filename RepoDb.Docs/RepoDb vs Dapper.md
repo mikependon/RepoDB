@@ -89,7 +89,38 @@ public class Order
 
 ## Basic CRUD Differences
 
-### Querying a record
+### Querying multiple rows
+
+**Dapper**:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customers = connection.Query<Customer>("SELECT * FROM [dbo].[Customer];");
+}
+```
+
+**RepoDb**:
+
+Raw-SQL:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customers = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer];");
+}
+```
+
+Fluent:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customers = connection.QueryAll<Customer>();
+}
+```
+
+### Querying a single record
 
 **Dapper**:
 
@@ -266,37 +297,6 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## Advance Calls Differences
 
-### Querying multiple rows
-
-**Dapper**:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customers = connection.Query<Customer>("SELECT * FROM [dbo].[Customer];");
-}
-```
-
-**RepoDb**:
-
-Raw-SQL:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customers = connection.ExecuteQuery<int>("SELECT * FROM [dbo].[Customer];");
-}
-```
-
-Fluent:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customers = connection.QueryAll<Customer>();
-}
-```
-
 ### Querying a parent and its children
 
 Let us assumed we have this structure of *Customer* class.
@@ -441,7 +441,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-**Note**: The *identity* values is automatically set back to the entities.
+**Note**: The *identity* values are automatically set back to the entities.
 
 Bulk operation:
 
@@ -453,7 +453,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-**Note**: The operation is using the *SqlBulkCopy* of *ADO.Net*. This should not compare to *Dapper* performance due to the fact that this is a real *bulk-operation* and is extremely fast.
+**Note**: The operation is using the *SqlBulkCopy* of *ADO.Net*. This should not be compared to *Dapper* performance due to the fact that this is a real *bulk-operation* and is extremely fast.
 
 ### Merging multiple rows
 
