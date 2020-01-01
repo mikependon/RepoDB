@@ -13,6 +13,7 @@ In this page, we will share you the differences and what sets [*RepoDb*](https:/
 - [Basic CRUD Differences](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#basic-crud-differences)
 - [Advance Calls Differences](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#advance-calls-differences)
 - [Passing of Parameters](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#passing-of-parameters)
+- [Array of Parameters](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#array-of-parameters)
 - [Expression Trees](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#expression-trees)
 - [Performance and Efficiency](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#performance-and-efficiency)
 - [Quality](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#quality)
@@ -206,7 +207,7 @@ public class Order
 			Name = "John Doe",
 			Address = "New York"
 		};
-		var id = connection.ExecuteScalar<long>("INSERT INTO [dbo].[Customer] (Name, Address) VALUES (@Name, @Address); SELECT CONVERT(BIGINT, SCOPE_IDENTITY());");
+		var id = connection.ExecuteScalar<long>("INSERT INTO [dbo].[Customer] (Name, Address) VALUES (@Name, @Address); SELECT CONVERT(BIGINT, SCOPE_IDENTITY());", customer);
 	}
 	```
 
@@ -314,17 +315,17 @@ public class Order
 
 ### Querying a parent and its children
 
-Let us assumed we have this structure of *Customer* class.
+Let us assumed we have added the *Orders (of type IEnumerable&lt;Order&gt;)* property on our *Customer* class.
 
-```csharp
-public class Customer
-{
-	public long Id { get; set; }
-	public string Name { get; set; }
-	public string Address { get; set; }
-	public IEnumerable<Order> Orders { get; set; }
-}
-```
+	```csharp
+	public class Customer
+	{
+		public long Id { get; set; }
+		public string Name { get; set; }
+		public string Address { get; set; }
+		public IEnumerable<Order> Orders { get; set; }
+	}
+	```
 
 **Dapper**:
 
@@ -443,7 +444,7 @@ Almost the same as previous section.
 	```
 
 	**Actually, this is not clear to me**:
-	- Is it creating an implicit transaction here? What if one row fails?
+	- Is it creating an implicit transaction? What if one row fails?
 	- Is it iterating the list and call the *DbCommand.Execute<Method>* multiple times?
 
 	Please correct me here so I can update this page right away.
@@ -460,7 +461,7 @@ Almost the same as previous section.
 	}
 	```
 
-	**Note**: You can target specific columns. In addition, the *identity* values are automatically set back to the entities.
+	**Note**: You can target a specific column. In addition, the *identity* values are automatically set back to the entities.
 
 - Bulk operation:
 
@@ -472,7 +473,7 @@ Almost the same as previous section.
 	}
 	```
 
-	**Note**: The operation is using the *SqlBulkCopy* of *ADO.Net*. This should not be compared to *Dapper* performance due to the fact that this is a real *bulk-operation* and is extremely fast.
+	**Note**: This is just an FYI. The operation is using the *SqlBulkCopy* of *ADO.Net*. This should not be compared to *Dapper* performance due to the fact that this is a real *bulk-operation*. This is far (*extremely fast*) when compared to both *Dapper* (multi-inserts) and *RepoDb* (*InsertAll*) operations.
 
 ### Merging multiple rows
 
@@ -645,25 +646,187 @@ Almost the same as previous section.
 
 ## Passing of Parameters
 
+**Dapper**:
+
+	- Dynamic:
+
+	```csharp
+	Query<T>(sql, new { Id = 10045 });
+	```
+
+	It is always an *Equal* operation. You control the query through *SQL Statement*.
+
+	- Dynamic Parameters:
+
+	```csharp
+	var parameters = new DynamicParameters();
+	parameters.Add("Name", "John Doe");
+	parameters.Add("Address", "New York");
+	Query<T>(sql, parameters);
+	```
+
+**RepoDb**:
+
+	- Dynamic:
+
+	```csharp
+	new { Id = 10045 }
+	Query<T>(new { Id = 10045 });
+	```
+
+	Same as *Dapper*, it is always referring to an *Equal* operation. You control the query through *SQL Statement*.
+
+	- Linq Expression:
+
+	```csharp
+	Query<T>(e => e.Id == 10045);
+	```
+	
+	- QueryField:
+
+	```csharp
+	Query<T>(new QueryField("Id", 10045));
+	```
+	
+	- QueryField(s) or QueryGroup:
+
+	```csharp
+	var queryFields = new[]
+	{
+		new QueryField("Name", "John Doe")
+		new QueryField("Address", "New York")
+	};
+	Query<T>(queryFields); // or Query<T>(new QueryGroup(queryFields));
+	```
+
+--------
+
+## Array of Parameters
+
+**Dapper**:
+
+	- Query:
+
+	```csharp
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var addresses = new [] { "New York", "Washington" };
+		var customers = connection.Query<Customer>("SELECT * FROM [dbo].[Customer] WHERE Address IN (@Addresses);", new { Addresses = addresses });
+	}
+	```
+
+**RepoDb**:
+
+	- ExecuteQuery:
+
+	```csharp
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var addresses = new [] { "New York", "Washington" };
+		var customers = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer] WHERE Address IN (@Addresses);", new { Addresses = addresses });
+	}
+	```
+
+	For further explanation, you can visit our [documentation](https://repodb.readthedocs.io/en/latest/pages/rawsql.html#array-values).
+
+	- Query:
+
+	```csharp
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var addresses = new [] { "New York", "Washington" };
+		var customers = connection.Query<Customer>(e => addresses.Contains(e => e.Address));
+	}
+	```
+
 --------
 
 ## Expression Trees
+
+- Dapper do not support *Linq Expressions*, only *dynamics* and *DynamicParameters*.
+- RepoDb supports *Linq Expressions*, *dynamics* and *QueryObjects*.
+
+**Note**: The *Dapper.DynamicParameters* is just a subset of *RepoDb.QueryObjects*. The *QueryObjects* has much more capability that can further support the *Linq Expressions*.
+
+Please visit both documentation.
+
+- [Dapper](https://dapper-tutorial.net/parameter-dynamic)
+- [RepoDb](https://github.com/mikependon/RepoDb/wiki/Expression-Trees)
 
 --------
 
 ## Performance and Efficiency
 
+We only refer to one of the the community-approved ORM bencher, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher).
+
+**Net Core**
+
+Here is our observation the official execution results. The official result can be found [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
+
+Performance:
+
+- RepoDb is the fastest ORM when fetching set-records. Both *raw-SQL* and *Fluent* calls.
+- Dapper and RepoDb speed is identical when fetching single-record.
+- Dapper is faster than RepoDb *Fluent* calls when fetching single-record.
+
+Efficiency:
+
+- RepoDb is the most-efficient ORM when fetching set-records. Both *raw-SQL* and *Fluent* calls.
+- Dapper is must more efficient than RepoDb when fetching single-record.
+
+**NetFramework**:
+
+RepoDb is the *fastest* and the *most-efficient* ORM for both *set* and *single* record(s) fetching. Official results can been found [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netfx.txt).
+
 --------
 
 ## Quality
+
+**Dapper**:
+
+Dapper is already running since 2012 and is being used by *StackOverflow.com*. It has a huge consumer and is hugely backed by the community.
+
+**RepoDb**:
+
+We are stating this to protect ourselves from any library bugs. Many challenges us that the quality of the software does not varies on the number of tests. However, we strongly believe that *spending* so much effort on tests would actually give confidence to the .NET community (*as the library consumers*). Practially, can prevent the library from any surprising bugs.
+
+We have spent so many hours to write our own *Unit Tests* and *Integration Tests*.
+
+- [Core Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests)
+- [Core Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests)
+- [SqLite Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite/RepoDb.SqLite.UnitTests)
+- [SqLite Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite/RepoDb.SqLite.IntegrationTests)
+- [MySql Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.UnitTests)
+- [MySql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
+- We are about to write more on *PostgreSql*.
+
+We did our best to write *one-test per scenario* and we have delivered *thousand of items (approximately 7K)* for both *Unit* and *IntegrationTests*. We would like your help to review it as well.
+
+**Conclusion**:
+
+We will not contest to this. *Dapper* is far matured and with *high-quality* over *RepoDb*.
 
 --------
 
 ## Library Support
 
+**Dapper**:
+
+Proven and is backed by the *.NET Community* and is funded by *StackOverflow.com*.
+
+**RepoDb**:
+
+Backed by *one person* and is *not funded nor sponsored* by any entity. Just starting to expand and gather more supports from the .NET Community.
+
 --------
 
 ## Licensing and Legality
+
+Both is under the [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) license.
+
+**Disclaimer**:
+
+We are not expert in legal, but we are consulting. If any conflict arises on the copyright or trademark in-front of *RepoDb*, then that is not yet addressed.
 
 --------
 
