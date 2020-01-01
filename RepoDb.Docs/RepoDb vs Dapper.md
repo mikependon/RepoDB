@@ -13,6 +13,7 @@ In this page, we will share you the differences and what sets [*RepoDb*](https:/
 - [Passing of Parameters](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#passing-of-parameters)
 - [Array of Parameters](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#array-of-parameters)
 - [Expression Trees](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#expression-trees)
+- [Supported Databases](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#supported-databases)
 - [Performance and Efficiency](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#performance-and-efficiency)
 - [Quality](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#quality)
 - [Library Support](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/RepoDb%20vs%20Dapper.md#library-support)
@@ -777,6 +778,19 @@ Please visit both documentation.
 
 --------
 
+## Supported Databases
+
+**Dapper:**
+
+Supports all RDBMS data providers.
+
+**RepoDb:**
+
+1. Raw-SQLs support all RDBMS data providers.
+2. Fluent calls only supports *SQL Server*, *SqLite*, *MySql* and *PostgreSql*.
+
+--------
+
 ## Performance and Efficiency
 
 We only refer to one of the the community-approved ORM bencher, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher).
@@ -822,7 +836,7 @@ Below are the links to our test suites.
 - [MySql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
 - We are about to write more on *PostgreSql*.
 
-> We have been challenged that the quality of the software does not varies on the number of tests. However, we strongly believe that *spending* so much effort on tests would actually give confidence to the .NET community (*as the library consumers*). Practially, it helps do manual revisits of working features if somebody is doing a *PR* to us; it prevents the library from any surprising bugs.
+> We (or I as an author) have been challenged that the quality of the software does not depends on the number of tests. However, we strongly believe that *spending* much efforts on writing a test will give confidence to the library consumers (ie: *.NET community*). Practially, it helps us to avoid manual revisits on the *already-working* features if somebody is doing a *PR* to us; it prevents the library from any surprising bugs.
 
 **Conclusion:**
 
