@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "RepoDb\RepoDb.csproj", "{848A3476-B319-4BCC-A9CB-572182785B58}"
 EndProject
@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs"
 		..\RepoDb.Docs\Building the Solutions.md = ..\RepoDb.Docs\Building the Solutions.md
 		..\RepoDb.Docs\Coding Standards.md = ..\RepoDb.Docs\Coding Standards.md
 		..\RepoDb.Docs\Reference Implementations.md = ..\RepoDb.Docs\Reference Implementations.md
+		..\RepoDb.Docs\RepoDb vs Dapper.md = ..\RepoDb.Docs\RepoDb vs Dapper.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{A85E6252-09E7-4E7C-904E-0372E728DE41}"
