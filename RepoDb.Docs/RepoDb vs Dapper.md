@@ -1,12 +1,10 @@
-This page is still in-progress.
-
 ## Introduction
 
-In this page, we will share you the differences and what sets [*RepoDb*](https://github.com/mikependon/RepoDb) apart from [*Dapper*](https://github.com/StackExchange/Dapper). We tried our best to make a *1-to-1* operation-calls comparisson. This page will hopefully help you decide as a developer to choose *RepoDb* as your micro-ORM (*with compelling reason*).
+In this page, we will share you the differences and what sets [*RepoDb*](https://github.com/mikependon/RepoDb) apart from [*Dapper*](https://github.com/StackExchange/Dapper). We tried our best to make a *1-to-1* comparisson for most area. This page will hopefully help you decide as a developer to choose *RepoDb* as your micro-ORM (*with compelling reason*).
 
 > All the contents of this page is written by the author itself. Our knowledge to *Dapper* is not that deep enough when compared to our knowledge with *RepoDb*. So, please allow yourselves to *check* or *comments* right away if you think we made this page bias for *RepoDb*. Please do a pull-requests for any change!
 
-**Note**: The programming language and database provider we are using on our samples below are *C#* and *SQL Server*.
+**Note:** The programming language and database provider we are using on our samples below are *C#* and *SQL Server*.
 
 ## Topics
 
@@ -95,7 +93,7 @@ public class Order
 
 ### Querying multiple rows
 
-**Dapper**:
+**Dapper:**
 
 - Query:
 
@@ -106,7 +104,7 @@ public class Order
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Raw-SQL:
 
@@ -128,7 +126,7 @@ public class Order
 
 ### Querying a single record
 
-**Dapper**:
+**Dapper:**
 
 - Query
 
@@ -139,7 +137,7 @@ public class Order
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Raw-SQL:
 
@@ -161,7 +159,7 @@ public class Order
 
 ### Inserting a record
 
-**Dapper**:
+**Dapper:**
 
 - Execute:
 
@@ -195,7 +193,7 @@ public class Order
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Raw-SQL:
 
@@ -227,7 +225,7 @@ public class Order
 
 ### Updating a record
 
-**Dapper**:
+**Dapper:**
 
 - Execute:
 
@@ -244,7 +242,7 @@ public class Order
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Raw-SQL:
 
@@ -278,7 +276,7 @@ public class Order
 
 ### Deleting a record
 
-**Dapper**:
+**Dapper:**
 
 - Execute:
 
@@ -289,7 +287,7 @@ public class Order
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Raw-SQL:
 
@@ -317,6 +315,8 @@ public class Order
 
 Let us assumed we have added the *Orders (of type IEnumerable&lt;Order&gt;)* property on our *Customer* class.
 
+- Customer
+
 	```csharp
 	public class Customer
 	{
@@ -327,7 +327,20 @@ Let us assumed we have added the *Orders (of type IEnumerable&lt;Order&gt;)* pro
 	}
 	```
 
-**Dapper**:
+- Order
+
+	```csharp
+	public class Order
+	{
+		public long Id { get; set; }
+		public long ProductId { get; set; }
+		public long CustomerId { get; set; }
+		public int Quantity { get; set; }
+		public DateTime OrderDateUtc{ get; set; }
+	}
+	```
+
+**Dapper:**
 
 - Query:
 
@@ -347,13 +360,13 @@ Let us assumed we have added the *Orders (of type IEnumerable&lt;Order&gt;)* pro
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 The *JOIN* feature is purposely not being supported yet. We have explained it on our [Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple](https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple#querying-multiple-resultsets) page. Also, we have provided an answer already on our [FAQs](https://github.com/mikependon/RepoDb/wiki#will-you-support-join-operations).
 
-However, the support to this feature will soon to be developed. We are now doing a poll-survey on how to implement this one based on the perusal of the community. The discussion can be seen [here](https://github.com/mikependon/RepoDb/issues/355). We would like to hear yours!
+However, the support to this feature will soon to be developed. We are now doing a poll-survey on how to implement this one based on the perusal of the community. The discussion can be seen [here](https://github.com/mikependon/RepoDb/issues/355) and we would like to hear yours!
 
-> No question to this. The most optimal way is to do the *INNER JOIN* in the actual database itself like what *Dapper* is doing!
+> No question to this. The most optimal way is to do an actual *INNER JOIN* in the database like what *Dapper* is doing!
 
 However, there is an alternative way to do this in *RepoDb*. It can be done via *Multi-Query* that executes *packed SELECT-statements* in a single-call.
 
@@ -402,7 +415,7 @@ Almost the same as previous section.
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Raw-SQL:
 
@@ -431,7 +444,7 @@ Almost the same as previous section.
 
 ### Inserting multiple rows
 
-**Dapper**:
+**Dapper:**
 
 - Query:
 
@@ -443,13 +456,13 @@ Almost the same as previous section.
 	}
 	```
 
-	**Actually, this is not clear to me**:
+	**Actually, this is not clear to me:**
 	- Is it creating an implicit transaction? What if one row fails?
 	- Is it iterating the list and call the *DbCommand.Execute<Method>* multiple times?
 
 	Please correct me here so I can update this page right away.
 
-**RepoDb**:
+**RepoDb:**
 
 - Batch operation:
 
@@ -461,7 +474,9 @@ Almost the same as previous section.
 	}
 	```
 
-	**Note**: You can target a specific column. In addition, the *identity* values are automatically set back to the entities.
+	The above operation can be batched by passing a value on the *batchSize* argument.
+
+	**Note:** You can target a specific column. In addition, the *identity* values are automatically set back to the entities.
 
 - Bulk operation:
 
@@ -472,12 +487,14 @@ Almost the same as previous section.
 		var affectedRows = connection.BulkInsert<Customer>(customers);
 	}
 	```
+	
+	The above operation can be batched by passing a value on the *batchSize* argument.
 
-	**Note**: This is just an FYI. The operation is using the *SqlBulkCopy* of *ADO.Net*. This should not be compared to *Dapper* performance due to the fact that this is a real *bulk-operation*. This is far (*extremely fast*) when compared to both *Dapper* (multi-inserts) and *RepoDb* (*InsertAll*) operations.
+	**Note:** This is just an FYI. The operation is using the *SqlBulkCopy* of *ADO.Net*. This should not be compared to *Dapper* performance due to the fact that this is a real *bulk-operation*. This is far (*extremely fast*) when compared to both *Dapper* (multi-inserts) and *RepoDb* (*InsertAll*) operations.
 
 ### Merging multiple rows
 
-**Dapper**:
+**Dapper:**
 
 - Query:
 
@@ -512,7 +529,7 @@ Almost the same as previous section.
 
 	Here, I have the same question as the previous section.
 
-**RepoDb**:
+**RepoDb:**
 
 - Fluent:
 
@@ -523,12 +540,14 @@ Almost the same as previous section.
 		var affectedRows = connection.MergeAll<Customer>(customers);
 	}
 	```
+	
+	The above operation can be batched by passing a value on the *batchSize* argument.
 
-	**Note**: You can set the *qualifier fields*. In addition, the *identity* values are automatically set back to the entities for the newly inserted records.
+	**Note:** You can set the *qualifier fields*. In addition, the *identity* values are automatically set back to the entities for the newly inserted records.
 
 ### Updating multiple rows
 
-**Dapper**:
+**Dapper:**
 
 - Query:
 
@@ -540,7 +559,7 @@ Almost the same as previous section.
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Fluent:
 
@@ -551,12 +570,14 @@ Almost the same as previous section.
 		var affectedRows = connection.UpdateAll<Customer>(customers);
 	}
 	```
+	
+	The above operation can be batched by passing a value on the *batchSize* argument.
 
-	**Note**: You can set the *qualifier fields*.
+	**Note:** You can set the *qualifier fields*.
 
 ### Bulk-inserting multiple rows
 
-**Dapper**:
+**Dapper:**
 
 - ADO.NET:
 
@@ -573,9 +594,9 @@ Almost the same as previous section.
 	}
 	```
 	
-	**Note**: You can as well pass an instance of *DbDataReader* (instead of *DataTable*).
+	**Note:** You can as well pass an instance of *DbDataReader* (instead of *DataTable*).
 
-**RepoDb**:
+**RepoDb:**
 
 - Fluent:
 
@@ -587,7 +608,7 @@ Almost the same as previous section.
 	}
 	```
 
-	**Note**: You can as well pass an instance of *DbDataReader*.
+	**Note:** You can as well pass an instance of *DbDataReader*.
 	
 - Fluent (Targetted):
 
@@ -601,7 +622,7 @@ Almost the same as previous section.
 
 ### Querying the rows by batch
 
-**Dapper**:
+**Dapper:**
 
 - Query:
 
@@ -617,8 +638,10 @@ Almost the same as previous section.
 			SELECT Id
 				, Name
 				, Address
-			FROM CTE
-			WHERE RowNumber BETWEEN @From AND (@From + @Rows)";
+			FROM
+				CTE
+			WHERE
+				RowNumber BETWEEN @From AND (@From + @Rows);";
 		using (var connection = new SqlConnection(ConnectionString))
 		{
 			var customers = connection.Query<Customer>(sql, new { From = 0, Rows = 100, Address = "New York" });
@@ -626,9 +649,9 @@ Almost the same as previous section.
 	}
 	```
 	
-	**Note**: You can as well execute it via (*LIMIT*) keyword. It is on your preference.
+	**Note:** You can as well execute it via (*LIMIT*) keyword. It is on your preference.
 
-**RepoDb**:
+**RepoDb:**
 
 - Fluent:
 
@@ -646,7 +669,7 @@ Almost the same as previous section.
 
 ## Passing of Parameters
 
-**Dapper**:
+**Dapper:**
 
 - Dynamic:
 
@@ -665,12 +688,11 @@ Almost the same as previous section.
 	Query<T>(sql, parameters);
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - Dynamic:
 
 	```csharp
-	new { Id = 10045 }
 	Query<T>(new { Id = 10045 });
 	```
 
@@ -703,7 +725,7 @@ Almost the same as previous section.
 
 ## Array of Parameters
 
-**Dapper**:
+**Dapper:**
 
 - Query:
 
@@ -715,7 +737,7 @@ Almost the same as previous section.
 	}
 	```
 
-**RepoDb**:
+**RepoDb:**
 
 - ExecuteQuery:
 
@@ -746,7 +768,7 @@ Almost the same as previous section.
 - Dapper do not support *Linq Expressions*, only *dynamics* and *DynamicParameters*.
 - RepoDb supports *Linq Expressions*, *dynamics* and *QueryObjects*.
 
-**Note**: The *Dapper.DynamicParameters* is just a subset of *RepoDb.QueryObjects*. The *QueryObjects* has much more capability that can further support the *Linq Expressions*.
+**Note:** The *Dapper.DynamicParameters* is just a subset of *RepoDb.QueryObjects*. The *QueryObjects* has much more capability that can further support the *Linq Expressions*.
 
 Please visit both documentation.
 
@@ -759,22 +781,22 @@ Please visit both documentation.
 
 We only refer to one of the the community-approved ORM bencher, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher).
 
-**Net Core**
+**Net Core:**
 
-Here is our observation the official execution results. The official result can be found [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
+Here is our observation from the official execution results. The official result can be found [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
 Performance:
 
 - RepoDb is the fastest ORM when fetching set-records. Both *raw-SQL* and *Fluent* calls.
 - Dapper and RepoDb speed is identical when fetching single-record.
-- Dapper is faster than RepoDb *Fluent* calls when fetching single-record.
+- Dapper is faster than RepoDb's *Fluent* calls when fetching single-record.
 
 Efficiency:
 
 - RepoDb is the most-efficient ORM when fetching set-records. Both *raw-SQL* and *Fluent* calls.
 - Dapper is must more efficient than RepoDb when fetching single-record.
 
-**NetFramework**:
+**NetFramework:**
 
 RepoDb is the *fastest* and the *most-efficient* ORM for both *set* and *single* record(s) fetching. Official results can been found [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netfx.txt).
 
@@ -782,15 +804,15 @@ RepoDb is the *fastest* and the *most-efficient* ORM for both *set* and *single*
 
 ## Quality
 
-**Dapper**:
+**Dapper:**
 
-Dapper is already running since 2012 and is being used by *StackOverflow.com*. It has a huge consumer and is hugely backed by the community.
+Dapper is already running since 2012 and is being used by *StackOverflow.com*. It has a huge consumers and is hugely backed by the community.
 
-**RepoDb**:
+**RepoDb:**
 
-We are stating this to protect ourselves from any library bugs. Many challenges us that the quality of the software does not varies on the number of tests. However, we strongly believe that *spending* so much effort on tests would actually give confidence to the .NET community (*as the library consumers*). Practially, can prevent the library from any surprising bugs.
+We did our best to write *one-test per scenario* and we have delivered *thousand of items (approximately 7K)* for both *Unit* and *IntegrationTests*. We would like your help to review it as well.
 
-We have spent so many hours to write our own *Unit Tests* and *Integration Tests*.
+Below are the links to our test suites.
 
 - [Core Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests)
 - [Core Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests)
@@ -800,21 +822,21 @@ We have spent so many hours to write our own *Unit Tests* and *Integration Tests
 - [MySql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
 - We are about to write more on *PostgreSql*.
 
-We did our best to write *one-test per scenario* and we have delivered *thousand of items (approximately 7K)* for both *Unit* and *IntegrationTests*. We would like your help to review it as well.
+> We have been challenged that the quality of the software does not varies on the number of tests. However, we strongly believe that *spending* so much effort on tests would actually give confidence to the .NET community (*as the library consumers*). Practially, it helps do manual revisits of working features if somebody is doing a *PR* to us; it prevents the library from any surprising bugs.
 
-**Conclusion**:
+**Conclusion:**
 
-We will not contest to this. *Dapper* is far matured and with *high-quality* over *RepoDb*.
+*Dapper* is far matured and with *high-quality* over *RepoDb*. We will not contest this!
 
 --------
 
 ## Library Support
 
-**Dapper**:
+**Dapper:**
 
-Proven and is backed by the *.NET Community* and is funded by *StackOverflow.com*.
+Proven and is backed hugely by the .NET Community; funded by *StackOverflow.com*.
 
-**RepoDb**:
+**RepoDb:**
 
 Backed by *one person* and is *not funded nor sponsored* by any entity. Just starting to expand and gather more supports from the .NET Community.
 
@@ -824,7 +846,7 @@ Backed by *one person* and is *not funded nor sponsored* by any entity. Just sta
 
 Both is under the [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) license.
 
-**Disclaimer**:
+**Disclaimer:**
 
 We are not expert in legal, but we are consulting. If any conflict arises on the copyright or trademark in-front of *RepoDb*, then that is not yet addressed.
 
