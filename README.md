@@ -14,7 +14,7 @@
 
 RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
-## What it can do?
+### What it can do?
 
 All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
 
@@ -27,7 +27,7 @@ All [operations](https://github.com/mikependon/RepoDb#operations) were implement
 - Minimizes the round trips with *2nd-Layer cache*.
 - *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
 
-## It is high-performant
+### It is high-performant
 
 This refers to “how fast” RepoDb converts the raw data into a class object and transport the class object as an actual data in the database.
 
