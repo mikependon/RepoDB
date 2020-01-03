@@ -14,9 +14,9 @@
 
 RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
-### What it can do?
-
 All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
+
+### Why use RepoDb? Your benefits!
 
 - *Easy* installation, only takes few seconds.
 - No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
