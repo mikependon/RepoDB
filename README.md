@@ -14,27 +14,25 @@
 [![Documentation](https://img.shields.io/badge/docs-library-yellowgreen?style=for-the-badge)](https://repodb.readthedocs.io/en/latest/)
 [![License](https://img.shields.io/badge/license-apache-important?style=for-the-badge)](http://apache.org/licenses/LICENSE-2.0.html)
 
-All operations were implemented as an extended methods of the IDbConnection object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
-
 # RepoDb
 
-RepoDb provide certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
+RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
 Read more from our [wiki](https://github.com/mikependon/RepoDb/wiki) page.
 
-### Benefits, what can it do for you?
+### What can it do for you?
 
-Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
+Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
 
 **Take full advantage of its *usabilities* and *benefits*.**
 
 - *Easy* installation, only takes few seconds.
-- No controlled layer like *DbContext*, those make the developers *speed-up* the usability just right after the installation.
+- No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
 - Calls to *Query* and *ExecuteQuery* method is just a *dot-notation* away.
 - *Repository* implementation becomes more *simpler* by leveraging the built-in repositories.
 - Can work *without* the models; everything can be *dynamics*.
 - Ease of pain when working with *large* data sets.
-- *Transmission* of the data between the different RDBMS DB Providers will only take few lines of codes.
+- *Transmission* of the data between the *different* RDBMS DB Providers will only take few lines of codes.
 
 ### It is high-performant
 
