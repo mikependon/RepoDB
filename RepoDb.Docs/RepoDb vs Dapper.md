@@ -354,10 +354,7 @@ Let us assumed we have added the *Orders (of type IEnumerable&lt;Order&gt;)* pro
 		var customers = connection.Query<Customer, Order, Customer>(sql,
 		(customer, order) =>
 		{
-			if (customer.Orders == nulll)
-			{
-				customer.Orders = new List<Order>();
-			}
+			customer.Orders = customer.Orders ?? new List<Order>();
 			customer.Orders.Add(order);
 			return customer;
 		},
@@ -429,7 +426,7 @@ Almost the same as previous section.
 		var customers = connection.Query<Customer, Order, Customer>(sql,
 		(customer, order) =>
 		{
-			customer = customers.Where(e => e.Id == customer.Id) ?? customer;
+			customer = customers.Where(e => e.Id == customer.Id).FirstOrDefault() ?? customer;
 			customer.Orders = customer.Orders ?? new List<Order>();
 			customer.Orders.Add(order);
 			return customer;
