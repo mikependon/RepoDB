@@ -1,56 +1,19 @@
-## Disclaimer
-
-#### This code-line is still under-development as of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) version v1.10.1.
-
-[![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
-[![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?style=flat-square)](https://www.nuget.org/packages/RepoDb.PostgreSql)
-[![PostgreSqlDL](https://img.shields.io/nuget/dt/repodb.postgresql?style=flat-square)](https://www.nuget.org/packages/RepoDb.PostgreSql)
-[![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?label=unit&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
-[![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?label=integration&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
+[![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
+[![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql)](https://www.nuget.org/packages/RepoDb.PostgreSql)
+[![PostgreSqlDL](https://img.shields.io/nuget/dt/repodb.postgresql)](https://www.nuget.org/packages/RepoDb.PostgreSql)
+[![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
+[![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
 
 ## RepoDb.PostgreSql - a hybrid .NET ORM library for PostgreSql.
 
-This is the official repository for **RepoDb.PostgreSql** solution.
+RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
-## Introduction
+All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
 
-- It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) implementation.
-- It has [batch operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations).
-- It is a unique and hybrid solution for ***MySql*** data-provider within ***.NET Technology***.
-- It is well-covered by Unit and Integration Tests.
+## Links and Resources
 
-## Core Features
- 
-- Asynchronous Operations
-- Batch Operations
-- Bulk Operations
-- Caching
-- Connection Persistency
-- Database Helpers
-- Database Settings
-- Expression Trees
-- Extension Methods
-- Field Mapping
-- Inline Hints
-- Massive Operations (Generics/Explicits/MethodCalls/TableBased)
-- Multi-Resultset Query
-- Query Builder
-- Repositories
-- Resolvers (CLR Types, DB Types)
-- Statement Builder
-- Tracing
-- Transaction
-- Type Mapping
-
-## Bulk Operations 
-
-IThe bulk-insert has been implemented through `NpgsqlConnection` default implementation. Below is the implementation (as extended methods).
-
-```
-BaseRepository<TEntity, TDbConnection>.BulkInsert(...);
-DbRepository<TDbConnection>.BulkInsert<TEntity>(...);
-NpgsqlConnection.BulkInsert<TEntity>(...);
-```
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
 
 ## Community engagements
 
@@ -59,9 +22,20 @@ NpgsqlConnection.BulkInsert<TEntity>(...);
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
+## Dependencies
+
+- [Npgsql](https://www.nuget.org/packages/Npgsql/) - the data provider used for *PostgreSql*.
+- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of *RepoDb*.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+
+--------
+
 ## Installation
 
-At the ***Package Manager Console***, write the command below.
+At the *Package Manager Console*, write the command below.
 
 ```
 Install-Package RepoDb.PostgreSql
@@ -125,13 +99,4 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 }
 ```
 
-## Dependencies
-
-- [Npgsql](https://www.nuget.org/packages/Npgsql/)
-- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/)
-
-## License
-
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
-
-Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
+To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.

@@ -6,36 +6,14 @@
 
 ## RepoDb.SqLite - a hybrid .NET ORM library for SqLite.
 
-This is the official repository for **RepoDb.SqLite** solution.
+RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
-## Introduction
+All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
 
-- It has all the functionalities of [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) implementation.
-- It has [batch operations](https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations).
-- It is a unique and hybrid solution for ***SqLite*** data-provider within ***.NET Technology***.
-- It is well-covered by Unit and Integration Tests.
+## Links and Resources
 
-## Core Features
- 
-- Asynchronous Operations
-- Batch Operations
-- Caching
-- Connection Persistency
-- Database Helpers
-- Database Settings
-- Expression Trees
-- Extension Methods
-- Field Mapping
-- Inline Hints
-- Massive Operations (Generics/Explicits/MethodCalls/TableBased)
-- Multi-Resultset Query
-- Query Builder
-- Repositories
-- Resolvers (CLR Types, DB Types)
-- Statement Builder
-- Tracing
-- Transaction
-- Type Mapping
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
 
 ## Community engagements
 
@@ -43,6 +21,17 @@ This is the official repository for **RepoDb.SqLite** solution.
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+
+## Dependencies
+
+- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of *RepoDb*.
+- [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/) - the data provider used for *SqLite*.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+
+--------
 
 ## Installation
 
@@ -110,13 +99,4 @@ using (var connection = new SQLiteConnection(ConnectionString))
 }
 ```
 
-## Dependencies
-
-- [RepoDb](https://www.nuget.org/packages/RepoDb/)
-- [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/)
-
-## License
-
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
-
-Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
+To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
