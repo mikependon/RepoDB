@@ -10,27 +10,24 @@
 [![Documentation](https://img.shields.io/badge/docs-library-yellowgreen?style=for-the-badge)](https://repodb.readthedocs.io/en/latest/)
 [![License](https://img.shields.io/badge/license-apache-important?style=for-the-badge)](http://apache.org/licenses/LICENSE-2.0.html)
 
-## RepoDb - A hybrid ORM Library for .NET 
+## RepoDb - a hybrid ORM Library for .NET 
 
 RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
 
-Read more from our [wiki](https://github.com/mikependon/RepoDb/wiki) page.
+## What it can do?
 
-### What can it do for you?
-
-Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
-
-**Take full advantage of its *usabilities* and *benefits*.**
+All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
 
 - *Easy* installation, only takes few seconds.
 - No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
-- Calls to *Query* and *ExecuteQuery* method is just a *dot-notation* away.
+- Calls to *Fluent* and *Raw-SQL* methods is just a *dot* away.
 - *Repository* implementation becomes more *simpler* by leveraging the built-in repositories.
 - Can work *without* the models; everything can be *dynamics*.
 - Ease of pain when working with *large* data sets.
-- *Transmission* of the data between the *different* RDBMS DB Providers will only take few lines of codes.
+- Minimizes the round trips with *2nd-Layer cache*.
+- *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
 
-### It is high-performant
+## It is high-performant
 
 This refers to “how fast” RepoDb converts the raw data into a class object and transport the class object as an actual data in the database.
 
@@ -42,7 +39,7 @@ This refers to “how well-managed” RepoDb uses the computer memory when manip
 
 > RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
-## Builds and Tests Result
+### Builds and Tests Result
 
 Project/Solution                                                                | Build                                                                                                                                                   | Version                                                                                                                          | Downloads                                                                                                                    | Unit Tests                                                                                                                                                                 | IntegrationTests                                                                                                                                                                  |
 --------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
