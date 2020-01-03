@@ -23,7 +23,7 @@ In this page, we will share you the differences and what sets [*RepoDb*](https:/
 
 Both library is an *ORM* framework for *.NET*. They are both lightweight, fast and efficient. The *Dapper* is a full-fledge *micro-ORM* whereas *RepoDb* is a *hybrid-ORM*.
 
-> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension library of *Dapper* (ie: *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
+> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension library of *Dapper* (ie: *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
 
 ### Tables
 
@@ -347,19 +347,35 @@ Let us assumed we have added the *Orders (of type IEnumerable&lt;Order&gt;)* pro
 
 - Query:
 
-	Honestly, this is ***very impressive***!
-
 	```csharp
 	using (var connection = new SqlConnection(ConnectionString))
 	{
 		var sql = "SELECT C.Id, C.Name, C.Address, O.ProductId, O.Quantity, O.OrderDateUtc FROM [dbo].[Customer] C INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id WHERE C.Id = @Id;";
 		var customers = connection.Query<Customer, Order, Customer>(sql,
-		(customer, orders) =>
+		(customer, order) =>
 		{
-			customer.Orders = orders.ToList();
+			if (customer.Orders == nulll)
+			{
+				customer.Orders = new List<Order>();
+			}
+			customer.Orders.Add(order);
 			return customer;
 		},
 		new { Id = 10045 });
+	}
+	```
+	
+- QueryMultiple:
+
+	```csharp
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var sql = "SELECT * FROM [dbo].[Customer] WHERE Id = @CustomerId; SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;";
+		using (var result = connection.QueryMultiple(sql, new { CustomerId = 10045 }))
+		{
+			var customer = result.Read<Customer>().First();
+			var orders = result.Read<Order>().ToList();
+		}
 	}
 	```
 
@@ -406,15 +422,36 @@ Almost the same as previous section.
 - Query:
 
 	```csharp
+	var customers = new List<Customer>();
 	using (var connection = new SqlConnection(ConnectionString))
 	{
 		var sql = "SELECT C.Id, C.Name, C.Address, O.ProductId, O.Quantity, O.OrderDateUtc FROM [dbo].[Customer] C INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id;";
 		var customers = connection.Query<Customer, Order, Customer>(sql,
-		(customer, orders) =>
+		(customer, order) =>
 		{
-			customer.Orders = orders.ToList();
+			customer = customers.Where(e => e.Id == customer.Id) ?? customer;
+			customer.Orders = customer.Orders ?? new List<Order>();
+			customer.Orders.Add(order);
 			return customer;
 		});
+	}
+	```
+
+	**Note:** The hacking technique happens on the developer side, not embedded inside the library.
+	
+- QueryMultiple:
+
+	```csharp
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var sql = "SELECT * FROM [dbo].[Customer]; SELECT * FROM [dbo].[Order];";
+		using (var result = connection.QueryMultiple(sql, new { CustomerId = 10045 }))
+		{
+			var customers = result.Read<Customer>().ToList();
+			var orders = result.Read<Order>().ToList();
+			customers.ForEach(customer =>
+				customer.Orders = orders.Where(o => o.CustomerId == customer.Id).ToList()); // Client memory processing
+		}
 	}
 	```
 
@@ -428,7 +465,8 @@ Almost the same as previous section.
 		var extractor = connection.ExecuteQueryMultiple("SELECT * FROM [dbo].[Customer]; SELECT * FROM [dbo].[Order];");
 		var customers = extractor.Extract<Customer>().AsList();
 		var orders = extractor.Extract<Order>().AsList();
-		customers.ForEach(customer => customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
+		customers.ForEach(customer =>
+			customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
 	}
 	```
 
@@ -441,7 +479,8 @@ Almost the same as previous section.
 		var tuple = connection.QueryMultiple<Customer, Order>(customer => customer.Id == customerId, order => order.CustomerId == customerId);
 		var customers = tuple.Item1.FirstOrDefault();
 		var orders = tuple.Item2.AsList();
-		customers.ForEach(customer => customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
+		customers.ForEach(customer =>
+			customer.Orders = orders.Where(o => o.CustomerId == customer.Id).AsList()); // Client memory processing
 	}
 	```
 
@@ -667,6 +706,71 @@ Almost the same as previous section.
 			orderBy: OrderField.Parse(new { Name = Order.Ascending }));
 	}
 	```
+
+### Replicate records from different database
+
+**Dapper:**
+
+- Query:
+
+	```csharp
+	using (var sourceConnection = new SqlConnection(SourceConnectionString))
+	{
+		var customers = sourceConnection.Query<Customer>("SELECT * FROM [dbo].[Customer];");
+		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
+		{
+			var identities = connection.Query<long>("INSERT INTO [dbo].[Customer] (Name, Address) VALUES (@Name, @Address); SELECT CONVERT(BIGINT, SCOPE_IDENTITY());", customers);
+		}
+	}
+	```
+	
+
+**RepoDb:**
+
+- Fluent (InsertAll):
+
+	```csharp
+	using (var sourceConnection = new SqlConnection(SourceConnectionString))
+	{
+		var customers = sourceConnection.QueryAll<Customer>();
+		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
+		{
+			var affectedRows = connection.InsertAll<Customer>(customers);
+		}
+	}
+	```
+
+- Fluent (BulkInsert):
+
+	```csharp
+	using (var sourceConnection = new SqlConnection(SourceConnectionString))
+	{
+		var customers = sourceConnection.QueryAll<Customer>();
+		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
+		{
+			var affectedRows = connection.BulkInsert<Customer>(customers);
+		}
+	}
+	```
+
+- Fluent (Streaming):
+
+	This is the most optimal and recommended calls for large datasets. We do not bring the data as class objects in the client application.
+
+	```csharp
+	using (var sourceConnection = new SqlConnection(SourceConnectionString))
+	{
+		using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
+		{
+			using (var destinationConnection = new SqlConnection(DestinationConnectionString))
+			{
+				var affectedRows = connection.BulkInsert<Customer>(reader);
+			}
+		}
+	}
+	```
+
+	**Note:** Check for collation constraints. It is an *ADO.NET* thing.
 
 --------
 
