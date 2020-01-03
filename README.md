@@ -5,9 +5,10 @@
 -----------------
 
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
+[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
 [![CodeSize](https://img.shields.io/github/languages/code-size/mikependon/repodb)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?color=48B293)](https://gitter.im/RepoDb/community)
-[![Documentation](https://img.shields.io/badge/docs-library-yellowgreen)](https://repodb.readthedocs.io/en/latest/)
+[![Documentation](https://img.shields.io/badge/docs-library-yellowgreen)](https://repodb.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-apache-important)](http://apache.org/licenses/LICENSE-2.0.html)
 
 ## RepoDb - a hybrid ORM Library for .NET 
