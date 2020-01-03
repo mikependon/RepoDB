@@ -135,16 +135,15 @@ namespace RepoDb.Extensions
         /// <exception cref="NotSupportedException"></exception>
         public static Field GetField(this MemberExpression expression)
         {
-            var member = expression.Member;
-            if (member.IsPropertyInfo())
+            if (expression.Member.IsPropertyInfo())
             {
-                return member.ToPropertyInfo().AsField();
-            } else if (member.IsFieldInfo())
-            {
-                var fieldInfo = member.ToFieldInfo();
-                return new Field(fieldInfo.Name,fieldInfo.FieldType);
+                return expression.Member.ToPropertyInfo().AsField();
             }
-
+            else if (expression.Member.IsFieldInfo())
+            {
+                var fieldInfo = expression.Member.ToFieldInfo();
+                return new Field(fieldInfo.Name, fieldInfo.FieldType);
+            }
             throw new NotSupportedException($"Only fields and properties are currently supported.");
         }
 
