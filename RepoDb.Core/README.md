@@ -1,12 +1,19 @@
-[![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw?style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
-[![CoreVersion](https://img.shields.io/nuget/v/RepoDb?style=flat-square)](https://www.nuget.org/packages/RepoDb)
-[![CoreDL](https://img.shields.io/nuget/dt/repodb?style=flat-square)](https://www.nuget.org/packages/RepoDb)
-[![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?label=unit&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
-[![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?label=integration&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
+[![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
+[![CoreVersion](https://img.shields.io/nuget/v/RepoDb)](https://www.nuget.org/packages/RepoDb)
+[![CoreDL](https://img.shields.io/nuget/dt/repodb)](https://www.nuget.org/packages/RepoDb)
+[![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
+[![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
 
 ## RepoDb - a hybrid ORM library for .NET.
 
-This is the official repository for **RepoDb** solution.
+RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
+
+All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
+
+## Links and Resources
+
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
 
 ## Highlights
 
@@ -36,22 +43,18 @@ This is the official repository for **RepoDb** solution.
 - Transaction
 - Type Mapping
 
-## Bulk Operations 
-
-In the case of SQL Server, the bulk-insert has been implemented through `SqlBulkCopy` class of ADO.Net. Below is the implementation (as extended methods).
-
-```
-BaseRepository<TEntity, TDbConnection>.BulkInsert(...);
-DbRepository<TDbConnection>.BulkInsert<TEntity>(...);
-SqlConnection.BulkInsert<TEntity>(...);
-```
-
 ## Community engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+
+## License
+
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+
+--------
 
 ## Installation
 
@@ -63,7 +66,7 @@ Install-Package RepoDb
 
 ## Getting Started
 
-After the installation, any library operation can then be called.
+After the installation, any library operation can then be called. Please see below for the samples.
 
 ### Query
 
@@ -111,8 +114,4 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-## License
-
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
-
-Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
+To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
