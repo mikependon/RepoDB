@@ -626,9 +626,9 @@ Almost the same as previous section.
 		var customers = GenerateCustomers(1000);
 		var table = ConvertToTable(customers);
 		using (var sqlBulkCopy = new SqlBulkCopy(connection, options, transaction))
-        {
-            sqlBulkCopy.DestinationTableName = "Customer";
-            sqlBulkCopy.WriteToServer(table);
+        	{
+			sqlBulkCopy.DestinationTableName = "Customer";
+			sqlBulkCopy.WriteToServer(table);
 		}
 	}
 	```
@@ -716,7 +716,7 @@ Almost the same as previous section.
 		var customers = sourceConnection.Query<Customer>("SELECT * FROM [dbo].[Customer];");
 		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
 		{
-			var identities = connection.Query<long>("INSERT INTO [dbo].[Customer] (Name, Address) VALUES (@Name, @Address); SELECT CONVERT(BIGINT, SCOPE_IDENTITY());", customers);
+			var identities = destinationConnection.Query<long>("INSERT INTO [dbo].[Customer] (Name, Address) VALUES (@Name, @Address); SELECT CONVERT(BIGINT, SCOPE_IDENTITY());", customers);
 		}
 	}
 	```
@@ -732,7 +732,7 @@ Almost the same as previous section.
 		var customers = sourceConnection.QueryAll<Customer>();
 		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
 		{
-			var affectedRows = connection.InsertAll<Customer>(customers);
+			var affectedRows = destinationConnection.InsertAll<Customer>(customers);
 		}
 	}
 	```
@@ -745,7 +745,7 @@ Almost the same as previous section.
 		var customers = sourceConnection.QueryAll<Customer>();
 		using (var destinationConnection = new SqlConnection(DestinationConnectionString))
 		{
-			var affectedRows = connection.BulkInsert<Customer>(customers);
+			var affectedRows = destinationConnection.BulkInsert<Customer>(customers);
 		}
 	}
 	```
@@ -761,7 +761,7 @@ Almost the same as previous section.
 		{
 			using (var destinationConnection = new SqlConnection(DestinationConnectionString))
 			{
-				var affectedRows = connection.BulkInsert<Customer>(reader);
+				var affectedRows = destinationConnection.BulkInsert<Customer>(reader);
 			}
 		}
 	}
