@@ -4,7 +4,13 @@ In this page, we will share you the differences and what sets [*RepoDb*](https:/
 
 > All the contents of this page is written by the author itself. Our knowledge to *Dapper* is not that deep enough when compared to our knowledge with *RepoDb*. So, please allow yourselves to *check* or *comments* right away if you think we made this page bias for *RepoDb*. Please do a pull-requests for any change!
 
-**Note:** The programming language and database provider we are using on our samples below are *C#* and *SQL Server*. Also, this page may we not be updated (ASAP) if there are new features introduced in *Dapper*.
+**Disclaimer:**
+
+This page may not be updated with the latest features of *Dapper* (ASAP). We are not tracking the *Dapper*, but we know what happened on *RepoDb*. To protect the integrity, we are happy if somebody from the community could immediately take an action (before us) to update this page with *Dapper* updates.
+
+## Before we begin
+
+The programming language and database provider we are using on our samples below are *C#* and *SQL Server*. 
 
 ## Topics
 
