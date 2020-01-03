@@ -35,7 +35,7 @@ All [operations](https://github.com/mikependon/RepoDb#operations) were implement
 
 ## Installation
 
-At the *Package Manager Console*, write the command below.
+At the ***Package Manager Console***, write the command below.
 
 ```
 Install-Package RepoDb.PostgreSql
