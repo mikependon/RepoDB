@@ -4,7 +4,7 @@ In this page, we will share you the differences and what sets [*RepoDb*](https:/
 
 > All the contents of this page is written by the author itself. Our knowledge to *Dapper* is not that deep enough when compared to our knowledge with *RepoDb*. So, please allow yourselves to *check* or *comments* right away if you think we made this page bias for *RepoDb*. Please do a pull-requests for any change!
 
-**Note:** The programming language and database provider we are using on our samples below are *C#* and *SQL Server*.
+**Note:** The programming language and database provider we are using on our samples below are *C#* and *SQL Server*. Also, this page may we not be updated (ASAP) if there are new features introduced in *Dapper*.
 
 ## Topics
 
@@ -955,7 +955,7 @@ Proven and is backed hugely by the .NET Community; funded by *StackOverflow.com*
 
 **RepoDb:**
 
-Backed by *one person* and is *not funded nor sponsored* by any entity. Just starting to expand and gather more supports from the .NET Community.
+Backed by *one person* and is *not funded nor sponsored* by any entity. Just starting to expand and asking for more supports from the .NET Community.
 
 --------
 
@@ -965,7 +965,7 @@ Both is under the [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) lice
 
 **Disclaimer:**
 
-We are not expert in legal, but we are consulting. If any conflict arises on the copyright or trademark in-front of *RepoDb*, then that is not yet addressed.
+We are not an expert in legal but we are consulting. If any conflict arises on the copyright or trademark in-front of *RepoDb*, then that is not yet addressed.
 
 --------
 
