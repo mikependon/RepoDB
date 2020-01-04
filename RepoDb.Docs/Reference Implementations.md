@@ -2,53 +2,31 @@
 
 In this page, we will only show you the reference implementation, not the usual actual implementation. The programming language we will be using is *C#* and the database provider we will be using is *SQL Server*.
 
-### Indexes
+### Operations
 
 - [Installations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#installations)
-- [Querying a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#querying-a-data)
-- [Querying via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#querying-via-tablename)
-- [Inserting a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#inserting-a-data)
-- [Inserting via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#inserting-via-tablename)
-- [Updating a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#updating-a-data)
-- [Updating via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#updating-via-tablename)
-- [Deleting a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#deleting-a-data)
-- [Deleting via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#deleting-via-tablename)
-- [Merging a Data](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#merging-a-data)
-- [Merging via TableName](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#merging-via-tablename)
-- [Executing a Customized Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#executing-a-customized-query)
+- [Delete](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#delete)
+- [Merge](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#merge)
+- [Insert](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#insert)
+- [Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#query)
+- [Update](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#update)
+- [Raw-SQL Execution](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#raw-sql-execution)
 - [Calling a Stored Procedure](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md#calling-a-storedprocedure)
 
 ## Installations
 
 RepoDb and its extension is available via Nuget as a NetStandard library. Type any of the command below at the *Package Manager Console* window.
 
-### For SqlServer
-
 ```
-Install-Package RepoDb
-```
-
-### For SqLite
-
-```
-Install-Package RepoDb.SqLite
-```
-
-### For MySql
-
-```
-Install-Package RepoDb.MySql
-```
-
-### For PostgreSql
-
-```
-Install-Package RepoDb.PostgreSql
+> Install-Package RepoDb
+> Install-Package RepoDb.SqLite
+> Install-Package RepoDb.MySql
+> Install-Package RepoDb.PostgreSql
 ```
 
 ## Snippets
 
-Let us say you have a customer class named *Customer* that has an equivalent table in the database named `[dbo].[Customer]`.
+Let us say you have a customer class named *Customer* that has an equivalent table in the database named *[dbo].[Customer]*.
 
 ```csharp
 public class Customer
@@ -62,7 +40,158 @@ public class Customer
 }
 ```
 
-### Querying a Data
+## Delete
+
+Via DataEntity:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.Query<Customer>(10045);
+	var deletedCount = connection.Delete<Customer>(customer);
+}
+```
+
+Via PrimaryKey:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(10045);
+}
+```
+
+Via Dynamic:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(new { Id = 10045 });
+}
+```
+
+Via Expression:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(c => c.Id == 10045);
+}
+```
+
+Via QueryObject:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete<Customer>(new QueryField("Id", 10045));
+}
+```
+
+### Delete via TableName
+
+Via PrimaryKey:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete("Customer", 10045);
+}
+```
+
+Via Dynamic:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete("Customer", { Id = 10045 });
+}
+```
+
+Via QueryObject:
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var deletedCount = connection.Delete("Customer", new QueryField("Id", 10045));
+}
+```
+
+## Merge
+
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true,
+	LastUpdatedUtc = DateTime.Utc,
+	CreatedDateUtc = DateTime.Utc
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var qualifiers = new []
+	{
+		new Field("FirstName"),
+		new Field("LastName"),
+	};
+	var mergeCount = connection.Merge<Customer>(customer, qualifiers);
+}
+```
+
+### Merge via TableName
+
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var qualifiers = new []
+	{
+		new Field("FirstName"),
+		new Field("LastName"),
+	};
+	var mergeCount = connection.Merge("Customer", customer, qualifiers);
+}
+```
+
+## Insert
+
+```csharp
+var customer = new Customer
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var id = connection.Insert<Customer, int>(customer);
+}
+```
+
+### Inserting via TableName
+
+```csharp
+var customer = new
+{
+	FirstName = "John",
+	LastName = "Doe",
+	IsActive = true,
+	LastUpdatedUtc = DateTime.UtcNow,
+	CreatedDateUtc = DateTime.UtcNow
+};
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var id = connection.Insert<int>("Customer", customer);
+}
+```
+
+## Query
 
 Via PrimaryKey:
 
@@ -100,7 +229,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Querying via TableName
+### Query via TableName
 
 Via PrimaryKey:
 
@@ -139,39 +268,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Inserting a Data
-
-```csharp
-var customer = new Customer
-{
-	FirstName = "John",
-	LastName = "Doe",
-	IsActive = true
-};
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var id = connection.Insert<Customer, int>(customer);
-}
-```
-
-### Inserting via TableName
-
-```csharp
-var customer = new
-{
-	FirstName = "John",
-	LastName = "Doe",
-	IsActive = true,
-	LastUpdatedUtc = DateTime.UtcNow,
-	CreatedDateUtc = DateTime.UtcNow
-};
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var id = connection.Insert<int>("Customer", customer);
-}
-```
-
-### Updating a Data
+## Update
 
 Via DataEntity:
 
@@ -233,7 +330,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Updating via TableName
+### Update via TableName
 
 Via Dynamic Object:
 
@@ -292,126 +389,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-### Deleting a Data
-
-Via DataEntity:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customer = connection.Query<Customer>(10045);
-	var deletedCount = connection.Delete<Customer>(customer);
-}
-```
-
-Via PrimaryKey:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete<Customer>(10045);
-}
-```
-
-Via Dynamic:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete<Customer>(new { Id = 10045 });
-}
-```
-
-Via Expression:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete<Customer>(c => c.Id == 10045);
-}
-```
-
-Via QueryObject:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete<Customer>(new QueryField("Id", 10045));
-}
-```
-
-### Deleting via TableName
-
-Via PrimaryKey:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete("Customer", 10045);
-}
-```
-
-Via Dynamic:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete("Customer", { Id = 10045 });
-}
-```
-
-Via QueryObject:
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var deletedCount = connection.Delete("Customer", new QueryField("Id", 10045));
-}
-```
-
-### Merging a Data
-
-```csharp
-var customer = new Customer
-{
-	FirstName = "John",
-	LastName = "Doe",
-	IsActive = true,
-	LastUpdatedUtc = DateTime.Utc,
-	CreatedDateUtc = DateTime.Utc
-};
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var qualifiers = new []
-	{
-		new Field("FirstName"),
-		new Field("LastName"),
-	};
-	var mergeCount = connection.Merge<Customer>(customer, qualifiers);
-}
-```
-
-### Merging via TableName
-
-```csharp
-var customer = new Customer
-{
-	FirstName = "John",
-	LastName = "Doe",
-	IsActive = true
-};
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var qualifiers = new []
-	{
-		new Field("FirstName"),
-		new Field("LastName"),
-	};
-	var mergeCount = connection.Merge("Customer", customer, qualifiers);
-}
-```
-
-### Executing a Customized-Query
+## Raw-SQL Execution
 
 You can create a class with combined properties of different tables or with stored procedures. It does not need to be 100% identical to the schema, as long the property of the class is part of the result set.
 
@@ -471,11 +449,11 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.
+The *ExecuteQuery* method is purposely not being supported by *Expression* based query as we are avoiding the user to bind the complex-class to its target query text.
 
-**Note**: The most optimal when it comes to performance is to used the `QueryObjects`.
+> The most optimal when it comes to performance is to used the *QueryObjects*.
 
-### Calling a StoredProcedure
+## Calling a StoredProcedure
 
 Using the complex type above. If you have a stored procedure like below.
 
