@@ -54,6 +54,7 @@ CREATE TABLE [dbo].[Product]
 	, CONSTRAINT [PK_Product] PRIMARY KEY CLUSTERED ([Id] ASC )
 )
 ON [PRIMARY];
+GO
 
 CREATE TABLE [dbo].[Order]
 (
@@ -228,7 +229,7 @@ public class Order
 			Name = "John Doe",
 			Address = "New York"
 		};
-		var id = connection.Insert<Customer>(customer); // or connection.Insert<Customer, long>(customer);
+		var id = (long)connection.Insert<Customer>(customer); // or connection.Insert<Customer, long>(customer);
 	}
 	```
 
