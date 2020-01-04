@@ -71,12 +71,7 @@ Your biggest contribution is to be active in our collaborations and to share thi
 
 ### Active code-lines
 
-The pull-requests must be done on the following code-lines.
-
-- [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) - for the Core and SqlServer implementations.
-- [RepoDb.SqLite](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite) - for SqLite implementations.
-- [RepoDb.MySql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql) - for MySql implementations.
-- [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql) - for PostgreSql implementations.
+The pull-requests must be done on the following code-lines ([*RepoDb.Core*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core), [*RepoDb.SqLite*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite), [*RepoDb.MySql*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql) and [*RepoDb.PostgreSql*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql)).
 
 > Please ignore the code-lines from folder named [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb).
 
