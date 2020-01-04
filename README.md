@@ -13,15 +13,15 @@
 
 ## RepoDb - a hybrid ORM Library for .NET.
 
-RepoDb provides certain features of both “micro-ORMs” and “macro-ORMs”. It helps the developer to simplify the “switchover” of when to use the “basic” and “advance” operations during the development.
+RepoDb is an ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development.
 
-All [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of the *IDbConnection* object. Once you hold the opened-state of your database connection object, you can then do all the activities you would like to do with your database through those extended methods.
+Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
 
 ### Why use RepoDb? Your benefits!
 
-- *Easy* installation, only takes few seconds.
+- *Easy* installation! It only takes few seconds and can then be used right-away.
 - No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
-- Calls to *Fluent* and *Raw-SQL* methods is just a *dot* away.
+- Calls to *Fluent* and *Raw-SQL* method is just a *dot* away.
 - *Repository* implementation becomes more *simpler* by leveraging the built-in repositories.
 - Can work *without* the models; everything can be *dynamics*.
 - Ease of pain when working with *large* data sets.
@@ -40,7 +40,47 @@ This refers to “how well-managed” RepoDb uses the computer memory when manip
 
 > RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
-### Builds and Tests Result
+## Community
+
+RepoDb is rapidly expanding its capabilities and features to become the main-stream hybrid-ORM for .NET. Though it is *not* a macro-ORM, it really requires significant amount of time and effort to maintain.
+
+It is always open for community contributions, so please help us build and realize the solution.
+
+### Engagements
+
+We would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch with us via:
+
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+
+> Any help from the community will be highly appreciated as it really helps us eliminate our full-efforts. 
+
+## Contributions
+
+To contribute, please open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+
+Your biggest contribution is to be active in our collaborations and to share this solution. **We really thanked you for that!**
+
+### Pull-request hints
+
+- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md) - let us build your copies.
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - let us be uniformed.
+- [Reporting an Incident](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md) - let us organize for easy tracking and fixing.
+
+### Active code-lines
+
+The pull-requests must be done on the following code-lines.
+
+- [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) - for the Core and SqlServer implementations.
+- [RepoDb.SqLite](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite) - for SqLite implementations.
+- [RepoDb.MySql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql) - for MySql implementations.
+- [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql) - for PostgreSql implementations.
+
+> Please ignore the code-lines from folder named [RepoDb](https://github.com/mikependon/RepoDb/tree/master/RepoDb).
+
+## Builds and Tests Result
 
 Project/Solution                                                                        | Build                                                                                                                                     | Version                                                                                                                    | Downloads                                                                                                              | Unit Tests                                                                                                                                                    | IntegrationTests                                                                                                                                                     |
 ----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -110,41 +150,13 @@ To learn more about these operations, please visit our [reference implementation
 
 ## Benchmark
 
-The benchmark result to be shown on this page will always be referring to the *community-approved* ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+The benchmark result to be shown on this page will always be referring to the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
 
 Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="460px" />
 
 This section will always be updated with the latest official result.
-
-## Community
-
-RepoDb is rapidly expanding its capability to further support the  other RDBMS data-providers (in which each implementation differs from each other). Though it is *not* a macro-ORM, but it really requires significant amount of time and effort to maintain.
-
-It is now open for community *contributions* to further enhance the features and as well the community *engagements*. Please help us spread the word about this new library and its capability.
-
-### Engagements
-
-We would like to build a healthy and active community that would help fellow .NET developers build the knowledge-base when it comes to database accessibility. Please get in touch with us via:
-
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
-- [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
-
-Any help from the community will be highly appreciated as it really helps us eliminate our full-efforts. 
-
-## Contributions
-
-The folders *[RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)*, *[RepoDb.SqLite](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite)*, *[RepoDb.MySql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql)* and *[RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql)* are the code-lines built via *NetStandard* (supports both *NetFramework* and *NetCore* solutions). *Any pull-request must be done on this code-line.*
-
-To contribute, please open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
-
-### Pull-request hints
-
-- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md) - let us build your copies.
-- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - let us be uniformed.
 
 ## Credits
 
