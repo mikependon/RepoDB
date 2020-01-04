@@ -2,7 +2,7 @@
 
 Below are some of the things the developer needs to *consider* when doing a code change on the project. Some of the written standard on this page is a *preference* of the author itself.
 
-> Please be noted that this coding standard is *not* a strict compliance to a developer to *push* a pull-requests to us. Your codes will be evaluated, further collaborations may be done between the requestor and admin (if there are clarrifications before merging).
+> Please be noted that this coding standard is *not* a strict compliance for a developer to *push* a pull-requests to us. Your codes will thoroughly be evaluated, further collaborations may be done between the requestor and admin (if there are clarrifications before merging).
 
 ### DEV Inputs
 
