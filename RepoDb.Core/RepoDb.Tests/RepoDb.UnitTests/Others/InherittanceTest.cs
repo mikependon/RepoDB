@@ -151,7 +151,8 @@ namespace RepoDb.UnitTests.Others
         #region Community Reported
 
         /// <summary>
-        /// Targetting: https://github.com/mikependon/RepoDb/issues/364
+        /// Issue: https://github.com/mikependon/RepoDb/issues/364
+        /// Description: Error: Invalid expression. The property <Id> is not defined on a target type #364
         /// </summary>
         [TestMethod]
         public void TestQueryGroupParseExpressionForRepositoryInterfacePropertyMapping()
