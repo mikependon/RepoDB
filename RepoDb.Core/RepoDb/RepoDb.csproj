@@ -3,26 +3,29 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.10.3</Version>
+    <Version>1.10.4-beta1</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageTags>orm orm-framework orm-library hybrid-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.10.3:
-- Revert the recurrent calls to DbFieldCache.Get() in the ExecuteQuery method.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.10.4-beta1:
+- Error: Invalid expression. The property &lt;Id&gt; is not defined on a target type #364 - MySql Support.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.10.3.0</AssemblyVersion>
-    <FileVersion>1.10.3.0</FileVersion>
+    <AssemblyVersion>1.10.4.1</AssemblyVersion>
+    <FileVersion>1.10.4.1</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <PackageIconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageIcon>RepoDb-64x64.png</PackageIcon>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -56,6 +59,17 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\RepoDb.Icons\RepoDb-64x64.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

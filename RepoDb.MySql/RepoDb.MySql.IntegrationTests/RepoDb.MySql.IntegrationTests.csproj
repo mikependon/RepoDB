@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\RepoDb.MySql\RepoDb.MySql.csproj" />
   </ItemGroup>
 

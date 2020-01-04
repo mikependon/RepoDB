@@ -210,7 +210,26 @@ namespace RepoDb
 
             // Name
             var field = expression.GetField();
-            if (PropertyCache.Get<TEntity>().Any(property => string.Equals(PropertyMappedNameCache.Get(property.PropertyInfo), field.Name, StringComparison.OrdinalIgnoreCase)) == false)
+            var properties = PropertyCache.Get<TEntity>();
+
+            // Failing at some point - for base interfaces
+            var property = properties
+                .FirstOrDefault(p =>
+                    string.Equals(PropertyMappedNameCache.Get(p.PropertyInfo), field.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Matches to the actual class properties
+            if (property == null)
+            {
+                property = properties
+                    .FirstOrDefault(p =>
+                        string.Equals(p.PropertyInfo.Name, field.Name, StringComparison.OrdinalIgnoreCase));
+
+                // Reset the field
+                field = property?.AsField();
+            }
+
+            // Check the existence
+            if (property == null)
             {
                 throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {field.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
