@@ -13,20 +13,39 @@
 
 ## RepoDb - a hybrid ORM Library for .NET.
 
-RepoDb is an ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development.
+RepoDb is a .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development.
 
 Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
 
-### Why use RepoDb? Your benefits!
+<details>
+<summary><b>Why use RepoDb? Your benefits!</b></summary>
 
-- *Easy* installation! It only takes few seconds and can then be used right-away.
-- No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
-- Calls to *Fluent* and *Raw-SQL* method is just a *dot* away.
-- *Repository* implementation becomes more *simpler* by leveraging the built-in repositories.
-- Can work *without* the models; everything can be *dynamics*.
-- Ease of pain when working with *large* data sets.
-- Minimizes the round trips with *2nd-Layer cache*.
-- *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
+- Usabilities and Benefits
+
+	- Easy installation! It only takes few seconds and can then be used right-away.
+	- No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
+	- Calls to *Fluent* and *Raw-SQL* method is just a *dot* away.
+	- *Repository* implementation becomes more *simpler* by leveraging the built-in repositories.
+	- Can work *without* the models; everything can be *dynamics*.
+	- Ease of pain when working with *large* data sets.
+	- Minimizes the round trips with *2nd-Layer cache*.
+	- *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
+
+- Features and Capabilities
+
+	- The *second-layer cache* has been introduced; can be customized.
+	- The *tracing* has been introduced; can be customized.
+	- The support to *dynamics* is rich.
+	- The *batch-operations* were introduced; being executed through *packed-statements* and is *ACID*.
+	- The *bulk-operations* were embedded by reusing the existing ADO.NET implementation.
+	- The usage of *expression* is present in most operations.
+	- The *statement builder* can be customized, developers can create its own and override the default implementation.
+	- The *repositories* were introduced; can be leveraged for actual implementation.
+	- The *hints* were introduced for fetched-operations.
+	- The *asynchronous* operations are present in all operations.
+	- The equivalent *table-based* operations are present for most operations.
+
+</details>
 
 ### It is high-performant
 
@@ -42,25 +61,37 @@ This refers to “how well-managed” RepoDb uses the computer memory when manip
 
 ## Scenarios and Use Cases
 
-Below are the important scenarios and use cases RepoDb is addressing.
+A compelling reason to choose *RepoDb* as your ORM is to understand which real-world scenarios and use cases it is addressing.
 
-#### We usually used a micro-ORM
+<details>
+<summary><b>We usually used a micro-ORM</b></summary>
 
-If the *performance* is a big factor. The drawback is that, we are always required to write raw-SQLs. RepoDb solves this drawback by having a *very-fast* and *efficient* fluent methods.
+- To have *more control* on the lower-level implementations.
 
-> In addition, it can do all the things what a micro-ORM usually do.
+	The drawback is, we ended up writing more codes just to implement lower-level access layers and sometimes cluttered across the solutions. RepoDb solves this through built-in repositories.
 
-#### We usually used a macro-ORM
+- If the *performance* is a big factor.
+	
+	The drawback is, we are always required to write raw-SQLs. RepoDb solves this drawback by having a *very-fast* and *efficient* fluent methods. It also provides what are the capabilities of micro-ORM.
 
-If the *feature* is a big factor. The drawbacks are:
-- Difficult to setup at the beginning.
-- Slow in performance.
-- Inefficient memory management.
-- Uncontrollable SQL generations.
+</details>
 
-RepoDb has the necessary operations from the macro-ORMs, enough for the developers do do what they usually do with macro-ORMs (ie: *Fluent Calls*, *Batch Operations* and *Type-Field Mappings*). The operations' performance and efficiency is identical to micro-ORMs. It can be used right-away after the installation.
+<details>
+<summary><b>We usually used a macro-ORM</b></summary>
 
-> In addition, some special features were introduced (ie: *StatementBuilder*, *Bulk Operations*, *Trace*, *2nd-Layer Cache*) which are very useful in micro-development.
+- If the *feature* is a big factor.
+	
+	The drawbacks are:
+	- Difficult to setup at the beginning.
+	- Slow in performance.
+	- Inefficient memory management.
+	- Uncontrollable SQL generations.
+
+	RepoDb has the necessary operations from the macro-ORMs, enough for the developers do do what they usually do with macro-ORMs (ie: *Fluent Calls*, *Batch Operations* and *Type-Field Mappings*). The operations' performance and efficiency is identical to micro-ORMs. It can be used right-away after the installation.
+
+	In addition, some special features were introduced (ie: *StatementBuilder*, *Bulk Operations*, *Trace*, *2nd-Layer Cache*) which are very useful in micro-development.
+
+</details>
 
 ## Community
 
