@@ -64,7 +64,7 @@ After the deployment, we will leave the bug open for the next few days (not yet 
 
 ### Request
 
-A request is an any form of item the issuer would like us to implement (or do). Usually, it is being assessed internally. The weight of requests to be considered as top priority will be dependent on the community engagement or on our assessment. The higher the engagement ratio, the higher probability that the requests will be prioritized and implemented.
+A request is an any form of item the issuer would like us to implement (or do). Usually, it is being assessed internally. The weight of the requests to be considered as top priority will be dependent on the community engagement or on our assessment. The higher the engagement ratio, the higher probability that the requests will be prioritized and implemented.
 
 > There will be possibility that the requests will not be implemented if we find it not practical to do so. Sometime, we placed it in the *Nice-To-Have* items.
 

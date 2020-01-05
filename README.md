@@ -26,7 +26,7 @@ Basically, all [operations](https://github.com/mikependon/RepoDb#operations) wer
 - Can work *without* the models; everything can be *dynamics*.
 - Ease of pain when working with *large* data sets.
 - Minimizes the round trips with *2nd-Layer cache*.
-- *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
+- *Transmission* of the data between *different* databases become so easy.
 
 ### It is high-performant
 
