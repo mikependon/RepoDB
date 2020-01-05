@@ -26,7 +26,7 @@ Basically, all [operations](https://github.com/mikependon/RepoDb#operations) wer
 - Can work *without* the models; everything can be *dynamics*.
 - Ease of pain when working with *large* data sets.
 - Minimizes the round trips with *2nd-Layer cache*.
-- *Transmission* of the data between *different* databases become so easy.
+- *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
 
 ### It is high-performant
 
@@ -39,6 +39,28 @@ This refers to “how fast” RepoDb converts the raw data into a class object a
 This refers to “how well-managed” RepoDb uses the computer memory when manipulating the objects all throughout the cycle of the operations.
 
 > RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
+
+## Scenarios and Use Cases
+
+Below are the important scenarios and use cases RepoDb is addressing.
+
+#### We usually used a micro-ORM
+
+If the *performance* is a big factor. The drawback is that, we are always required to write raw-SQLs. RepoDb solves this drawback by having a *very-fast* and *efficient* fluent methods.
+
+> In addition, it can do all the things what a micro-ORM usually do.
+
+#### We usually used a macro-ORM
+
+If the *feature* is a big factor. The drawbacks are:
+- Difficult to setup at the beginning.
+- Slow in performance.
+- Inefficient memory management.
+- Uncontrollable SQL generations.
+
+RepoDb has the necessary operations from the macro-ORMs, enough for the developers do do what they usually do with macro-ORMs (ie: *Fluent Calls*, *Batch Operations* and *Type-Field Mappings*). The operations' performance and efficiency is identical to micro-ORMs. It can be used right-away after the installation.
+
+> In addition, some special features were introduced (ie: *StatementBuilder*, *Bulk Operations*, *Trace*, *2nd-Layer Cache*) which are very useful in micro-development.
 
 ## Community
 
@@ -67,7 +89,7 @@ Your biggest contribution is to be active in our collaborations and to share thi
 
 - [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md) - let us build your copies.
 - [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - let us be uniformed.
-- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) - let us organize for easy tracking and fixing.
+- [Reporting an Incident](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md) - let us organize for easy tracking and fixing.
 
 ### Active code-lines
 
