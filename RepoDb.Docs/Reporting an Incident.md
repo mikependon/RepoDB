@@ -8,10 +8,10 @@ In this page, we will guide you with the standards on how to report an incident.
 
 We considered the following incidents.
 
-- [Bug](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md#Bug)
-- [Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md#request)
-- [Question](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md#question)
-- [Nice To Have](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md#nice-to-have)
+- [Bug](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Incident.md#bug)
+- [Request](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Incident.md#request)
+- [Question](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Incident.md#question)
+- [Nice To Have](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Incident.md#nice-to-have)
 
 ### Bug
 

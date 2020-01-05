@@ -64,6 +64,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{0C8FF83A
 		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqLite", "SqLite", "{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.SqLite\README.md = ..\RepoDb.SqLite\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySql", "MySql", "{97CDB540-A186-42B9-9492-608A2392A8C5}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.MySql\README.md = ..\RepoDb.MySql\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSql", "PostgreSql", "{97F2640B-CD0C-430E-8E18-D948A6966C85}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.PostgreSql\README.md = ..\RepoDb.PostgreSql\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FCAEE688-26E0-490C-9C70-0A52AA7AFF62}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +110,11 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0C8FF83A-9C61-4ABA-B18D-89A3520CC36A} = {D0EB4CFD-A1B1-46F9-BD43-D1B03324FF30}
+		{5EA323B8-B4B6-4083-97A3-018C9423B20A} = {810FF947-4368-477F-9193-07532892B492}
+		{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{97F2640B-CD0C-430E-8E18-D948A6966C85} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{FCAEE688-26E0-490C-9C70-0A52AA7AFF62} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
