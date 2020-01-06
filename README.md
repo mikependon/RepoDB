@@ -18,30 +18,30 @@ RepoDb is a .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It 
 Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
 
 <details>
-<summary><b>Why use RepoDb? Your benefits!</b></summary>
+<summary><b>Why use RepoDb as your ORM?</b></summary>
 
-- Usabilities and Benefits
+- **Usabilities and Benefits**
 
-	- Easy installation! It only takes few seconds and can then be used right-away.
+	- Easy and fast installation! It can then be used right-away.
 	- No controlled layer like *DbContext*, those make the developers *speed-up* the usability.
 	- Calls to *Fluent* and *Raw-SQL* method is just a *dot* away.
 	- *Repository* implementation becomes more *simpler* by leveraging the built-in repositories.
 	- Can work *without* the models; everything can be *dynamics*.
 	- Ease of pain when working with *large* data sets.
-	- Minimizes the round trips with *2nd-Layer cache*.
+	- Minimizes the round trips to the database with a *2nd-Layer cache*.
 	- *Transmission* of data from *different* RDBMS DB Providers only take few lines of codes.
 
-- Features and Capabilities
+- **Features and Capabilities**
 
-	- The *second-layer cache* has been introduced; can be customized.
+	- The *2nd-layer cache* has been introduced; can be customized.
 	- The *tracing* has been introduced; can be customized.
 	- The support to *dynamics* is rich.
 	- The *batch-operations* were introduced; being executed through *packed-statements* and is *ACID*.
-	- The *bulk-operations* were embedded by reusing the existing ADO.NET implementation.
+	- The *bulk-operations* were introduced and is leveraging the ADO.NET implementations.
 	- The usage of *expression* is present in most operations.
-	- The *statement builder* can be customized, developers can create its own and override the default implementation.
+	- The *statement builder* can be customized. The developers can override the default implementation.
 	- The *repositories* were introduced; can be leveraged for actual implementation.
-	- The *hints* were introduced for fetched-operations.
+	- The *hints* were introduced to optimize the help query analyzers.
 	- The *asynchronous* operations are present in all operations.
 	- The equivalent *table-based* operations are present for most operations.
 
@@ -51,7 +51,7 @@ Basically, all [operations](https://github.com/mikependon/RepoDb#operations) wer
 
 This refers to “how fast” RepoDb converts the raw data into a class object and transport the class object as an actual data in the database.
 
-> RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. Furthermore, RepoDb also caches the “already-executed” operation-context and reusing it for future calls.
+> RepoDb has its own compiler. It caches the “already-generated” compiled-ILs and compiled-Expressions and reusing them for the upcoming transformations. It also caches the “already-executed” operation-context and reusing it for future calls.
 
 ### It is efficient
 
@@ -66,30 +66,40 @@ A compelling reason to choose *RepoDb* as your ORM is to understand which real-w
 <details>
 <summary><b>We usually used a micro-ORM</b></summary>
 
-- To have *more control* on the lower-level implementations.
+- **To have more control on the low-level implementations.**
 
-	The drawback is, we ended up writing more codes just to implement lower-level access layers and sometimes cluttered across the solutions. RepoDb solves this through built-in repositories.
+	The drawback to this is that, we usually write more codes just to implement a simple lower-level data access layers. Sometimes, it is cluttered across the solutions. RepoDb solves this through organized built-in repositories.
 
-- If the *performance* is a big factor.
+- **If the performance is a big factor.**
 	
-	The drawback is, we are always required to write raw-SQLs. RepoDb solves this drawback by having a *very-fast* and *efficient* fluent methods. It also provides what are the capabilities of micro-ORM.
+	The drawback to this is that, we are always required to write raw-SQLs. RepoDb solves this by having a *very-fast* and *efficient* fluent methods.
+
+	RepoDb is the fastest ORM in the market (for both *fluents* and *raw-SQL* operations). It also provides what are the capabilities of micro-ORM.
 
 </details>
 
 <details>
 <summary><b>We usually used a macro-ORM</b></summary>
 
-- If the *feature* is a big factor.
+- **If the feature is a big factor.**
 	
 	The drawbacks are:
-	- Difficult to setup at the beginning.
-	- Slow in performance.
-	- Inefficient memory management.
-	- Uncontrollable SQL generations.
+	- It is difficult to setup in the beginning.
+	- It is slow in performance.
+	- It is inefficient in memory management.
+	- It is is usually generate un-optimized SQLs.
 
-	RepoDb has the necessary operations from the macro-ORMs, enough for the developers do do what they usually do with macro-ORMs (ie: *Fluent Calls*, *Batch Operations* and *Type-Field Mappings*). The operations' performance and efficiency is identical to micro-ORMs. It can be used right-away after the installation.
+	RepoDb has certain operations from the macro-ORMs, enough for the developers do do what they usually do with macro-ORMs (ie: *Fluent Calls*, *Batch Operations* and *Type-Field Mappings*). The performance and efficiency to these operations are identical to micro-ORMs.
+
+	It can be used right-away after the installation.
 
 	In addition, some special features were introduced (ie: *StatementBuilder*, *Bulk Operations*, *Trace*, *2nd-Layer Cache*) which are very useful in micro-development.
+
+- **If we do not want to write more SQLs.**
+
+	The drawback to this is that, fluent calls could not do all the scenarios the the raw-SQLs can do. With this, the developers is force to do a raw-SQL execution. However, most Macro-ORMs are designed to process deep object-graphs, they are not optimize in lightweight operations.
+
+	RepoDb provides a much more optimal raw-SQL operations. It is designed to extract a raw data from the database in a very efficient and fast manner.
 
 </details>
 
@@ -114,7 +124,7 @@ We would like to build a healthy and active community that would help fellow .NE
 
 To contribute, please open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
-Your biggest contribution is to be active in our collaborations and to share this solution. **We really thanked you for that!**
+Your biggest contribution is to be active in our collaborations and to share this solution. **We are really thanking you for that!**
 
 ### Pull-request hints
 
