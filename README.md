@@ -97,7 +97,7 @@ A compelling reason to choose *RepoDb* as your ORM is to understand which real-w
 
 - **If we do not want to write more SQLs.**
 
-	The drawback to this is that, fluent calls could not do all the scenarios the the raw-SQLs can do. With this, the developers is force to do a raw-SQL execution. However, most Macro-ORMs are designed to process deep object-graphs, they are not optimize in lightweight operations.
+	The drawback to this is that, fluent calls could not do all the scenarios the raw-SQLs can do. With this, the developer is force to do a raw-SQL execution. However, most Macro-ORMs are designed to process deep object-graphs and they are not optimize in lightweight operations.
 
 	RepoDb provides a much more optimal raw-SQL operations. It is designed to extract a raw data from the database in a very efficient and fast manner.
 
