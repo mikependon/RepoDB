@@ -130,7 +130,7 @@ Your biggest contribution is to be active in our collaborations and to share thi
 
 - [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md) - let us build your copies.
 - [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - let us be uniformed.
-- [Reporting an Incident](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Incident.md) - let us organize for easy tracking and fixing.
+- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) - let us organize for easy tracking and fixing.
 
 ### Active code-lines
 
