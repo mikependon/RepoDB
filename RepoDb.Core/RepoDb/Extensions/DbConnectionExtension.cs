@@ -1224,8 +1224,8 @@ namespace RepoDb
             var property = PrimaryCache.Get<TEntity>();
             if (property == null)
             {
-                var primary = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
-                    .FirstOrDefault(dbField => dbField.IsPrimary == true);
+                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
                 if (primary != null)
                 {
                     var properties = PropertyCache.Get<TEntity>();

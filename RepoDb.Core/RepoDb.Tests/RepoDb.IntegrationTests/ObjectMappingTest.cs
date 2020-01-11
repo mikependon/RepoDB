@@ -67,6 +67,13 @@ namespace RepoDb.IntegrationTests
             public string ColumnNVarCharMapped { get; set; }
         }
 
+        [Map("[dbo].[COMPLETETABLE]")]
+        private class MappedCompleteTableForKey
+        {
+            [Map("SESSIONID")]
+            public Guid IdMapped { get; set; }
+        }
+
         #endregion
 
         #region Methods
@@ -134,6 +141,79 @@ namespace RepoDb.IntegrationTests
                 };
             }
         }
+
+        #endregion
+
+        #region KeyTest
+
+        #region InsertAndDeleteByKey
+
+        [TestMethod]
+        public void TestSqlConnectionObjectMappingInsertAndDeleteByKey()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = connection.Insert(entity);
+
+                // Act Query
+                var result = connection.Delete<MappedCompleteTableForKey>(id);
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        #endregion
+
+        #region InsertAndExistsByKey
+
+        [TestMethod]
+        public void TestSqlConnectionObjectMappingInsertAndExistsByKey()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = connection.Insert(entity);
+
+                // Act Query
+                var result = connection.Exists<MappedCompleteTableForKey>(id);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        #endregion
+
+        #region InsertAndQueryByKey
+
+        [TestMethod]
+        public void TestSqlConnectionObjectMappingInsertAndQueryByKey()
+        {
+            // Setup
+            var entity = GetMappedCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act Insert
+                var id = connection.Insert(entity);
+
+                // Act Query
+                var result = connection.Query<MappedCompleteTable>(id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(result);
+            }
+        }
+
+        #endregion
 
         #endregion
 
