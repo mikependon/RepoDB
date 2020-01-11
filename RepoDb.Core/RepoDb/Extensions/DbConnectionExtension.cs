@@ -1357,9 +1357,13 @@ namespace RepoDb
         /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(object whereOrPrimaryKey)
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(IDbConnection connection,
+            object whereOrPrimaryKey,
+            IDbTransaction transaction)
             where TEntity : class
         {
             if (whereOrPrimaryKey == null)
@@ -1372,14 +1376,20 @@ namespace RepoDb
             }
             else
             {
-                var primary = PrimaryCache.Get<TEntity>();
-                if (primary == null)
+                var field = PrimaryCache.Get<TEntity>()?.AsField();
+                if (field == null)
                 {
-                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", typeof(TEntity).Name));
+                    field = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
+                        .FirstOrDefault(p => p.IsPrimary == true)?
+                        .AsField();
+                }
+                if (field == null)
+                {
+                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
+                    return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
                 }
             }
         }

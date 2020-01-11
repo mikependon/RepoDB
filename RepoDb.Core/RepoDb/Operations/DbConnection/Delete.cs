@@ -66,7 +66,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -276,7 +276,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,

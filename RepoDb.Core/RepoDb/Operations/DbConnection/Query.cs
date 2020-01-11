@@ -53,7 +53,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -345,7 +345,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,

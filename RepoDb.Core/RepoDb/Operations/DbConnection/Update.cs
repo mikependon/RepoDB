@@ -74,7 +74,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -291,7 +291,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,

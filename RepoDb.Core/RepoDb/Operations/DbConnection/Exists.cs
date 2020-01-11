@@ -39,7 +39,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Exists<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -238,7 +238,7 @@ namespace RepoDb
             where TEntity : class
         {
             return ExistsAsync<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
