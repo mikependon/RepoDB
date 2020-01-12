@@ -16,56 +16,176 @@ namespace RepoDb.Resolvers
         public string Resolve(DbType dbType)
         {
             /*
-            Id : System.Int64
-            ColumnBigInt : System.Int64
-            ColumnBlob : System.Byte[]
-            ColumnBoolean : System.Boolean
-            ColumnChar : System.String
-            ColumnDate : System.DateTime
-            ColumnDateTime : System.DateTime
-            ColumnDecimal : System.Decimal
-            ColumnDouble : System.Double
-            ColumnInteger : System.Int64
-            ColumnInt : System.Int32
-            ColumnNone : System.Double
-            ColumnNumeric : System.Decimal
-            ColumnReal : System.Double
-            ColumnString : System.String
-            ColumnText : System.String
-            ColumnTime : System.DateTime
-            ColumnVarChar : System.String
-             */
+            Id = System.Int64
+            ColumnChar = System.Char
+            ColumnCharAsArray = System.Array
+            ColumnAclItem = System.String
+            ColumnAclItemAsArray = System.String
+            ColumnBigInt = System.Int64
+            ColumnBigIntAsArray = System.Array
+            ColumnBigSerial = System.Int64
+            ColumnBit = System.Boolean
+            ColumnBitVarying = System.Collections.BitArray
+            ColumnBitVaryingAsArray = System.Array
+            ColumnBitAsArray = System.Array
+            ColumnBoolean = System.Boolean
+            ColumnBooleanAsArray = System.Array
+            ColumnBox = NpgsqlTypes.NpgsqlBox
+            ColumnBoxAsArray = System.Array
+            ColumnByteA = System.Byte[]
+            ColumnByteAAsArray = System.Array
+            ColumnCharacter = System.String
+            ColumnCharacterVarying = System.String
+            ColumnCharacterVaryingAsArray = System.Array
+            ColumnCid = System.UInt32
+            ColumnCidAsArray = System.Array
+            ColumnCidr = System.ValueTuple`2[[System.Net.IPAddress, System.Net.Primitives, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a],[System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnCircle = NpgsqlTypes.NpgsqlCircle
+            ColumnCircleAsArray = System.Array
+            ColumnDate = System.DateTime
+            ColumnDateAsArray = System.Array
+            ColumnDateRange = NpgsqlTypes.NpgsqlRange`1[[System.DateTime, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnDateRangeAsArray = System.Array
+            ColumnDoublePrecision = System.Double
+            ColumnDoublePrecisionAsArray = System.Array
+            ColumnGtsVector = System.String
+            ColumnInet = System.Net.IPAddress
+            ColumnInetAsArray = System.Array
+            ColumnInt2Vector = System.Array
+            ColumnInt2VectorAsArray = System.Array
+            ColumnInt4Range = NpgsqlTypes.NpgsqlRange`1[[System.Int32, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnInt4RangeAsArray = System.Array
+            ColumnInt8Range = NpgsqlTypes.NpgsqlRange`1[[System.Int64, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnInt8RangeAsArray = System.Array
+            ColumnInteger = System.Int32
+            ColumnIntegerAsArray = System.Array
+            ColumnInterval = System.TimeSpan
+            ColumnIntervalAsArray = System.Array
+            ColumnJson = System.String
+            ColumnJsonAsArray = System.Array
+            ColumnJsonB = System.String
+            ColumnJsonBAsArray = System.Array
+            ColumnJsonPath = System.String
+            ColumnJsonPathAsArray = System.String
+            ColumnLine = NpgsqlTypes.NpgsqlLine
+            ColumnLineAsArray = System.Array
+            ColumnLSeg = NpgsqlTypes.NpgsqlLSeg
+            ColumnLSegAsArray = System.Array
+            ColumnMacAddr = System.Net.NetworkInformation.PhysicalAddress
+            ColumnMacAddrAsArray = System.Array
+            ColumnMacAddr8 = System.Net.NetworkInformation.PhysicalAddress
+            ColumnMacAddr8AsArray = System.Array
+            ColumMoney = System.Decimal
+            ColumnMoneyAsArray = System.Array
+            ColumName = System.String
+            ColumnNameAsArray = System.Array
+            ColumnNumeric = System.Decimal
+            ColumnNumericAsArray = System.Array
+            ColumnNumRange = NpgsqlTypes.NpgsqlRange`1[[System.Decimal, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnNumRangeAsArray = System.Array
+            ColumnOId = System.UInt32
+            ColumnOIdAsArray = System.Array
+            ColumnOIdVector = System.Array
+            ColumnOIdVectorAsArray = System.Array
+            ColumnPath = NpgsqlTypes.NpgsqlPath
+            ColumnPathAsArray = System.Array
+            ColumnPgDependencies = System.String
+            ColumnPgLsn = System.String
+            ColumnPgLsnAsArray = System.String
+            ColumnPgMcvList = System.String
+            ColumnPgNDistinct = System.String
+            ColumnPgNodeTree = System.String
+            ColumnPoint = NpgsqlTypes.NpgsqlPoint
+            ColumnPointAsArray = System.Array
+            ColumnPolygon = NpgsqlTypes.NpgsqlPolygon
+            ColumnPolygonAsArray = System.Array
+            ColumnReal = System.Single
+            ColumnRealAsArray = System.Array
+            ColumnRefCursor = System.String
+            ColumnRefCursorAsArray = System.Array
+            ColumnRegClass = System.String
+            ColumnRegClassAsArray = System.String
+            ColumnRegConfig = System.UInt32
+            ColumnRegConfigAsArray = System.Array
+            ColumnRegDictionary = System.String
+            ColumnRegDictionaryAsArray = System.String
+            ColumnRegNamespace = System.String
+            ColumnRegNamespaceAsArray = System.String
+            ColumnRegOper = System.String
+            ColumnRegOperAsArray = System.String
+            ColumnRegOperator = System.String
+            ColumnRegOperationAsArray = System.String
+            ColumnRegProc = System.String
+            ColumnRegProcAsArray = System.String
+            ColumnRegProcedure = System.String
+            ColumnRegProcedureAsArray = System.String
+            ColumnRegRole = System.String
+            ColumnRegRoleAsArray = System.String
+            ColumnRegType = System.UInt32
+            ColumnRegTypeAsArray = System.Array
+            ColumnSerial = System.Int32
+            ColumnSmallInt = System.Int16
+            ColumnSmallIntAsArray = System.Array
+            ColumnSmallSerial = System.Int16
+            ColumnText = System.String
+            ColumnTextAsArray = System.Array
+            ColumnTId = NpgsqlTypes.NpgsqlTid
+            ColumnTidAsArray = System.Array
+            ColumnTimeWithTimeZoneAsArray = System.Array
+            ColumnTimeWithTimeZone = System.DateTimeOffset
+            ColumnTimeWithoutTimeZone = System.TimeSpan
+            ColumnTimeWithoutTimeZoneAsArray = System.Array
+            ColumnTimestampWithTimeZone = System.Array
+            ColumnTimestampWithTimeZoneAsArray = System.Array
+            ColumnTimestampWithoutTimeZone = System.DateTime
+            ColumnTimestampWithoutTimeZoneAsArray = System.Array
+            ColumnTSQuery = NpgsqlTypes.NpgsqlTsQuery
+            ColumnTSQueryAsArray = System.Array
+            ColumnTSRange = NpgsqlTypes.NpgsqlRange`1[[System.DateTime, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnTSRangeAsArray = System.Array
+            ColumnTSTZRange = NpgsqlTypes.NpgsqlRange`1[[System.DateTime, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]
+            ColumnTSTZRangeAsArray = System.Array
+            ColumnTSVector = NpgsqlTypes.NpgsqlTsVector
+            ColumnTSVectorAsArray = System.Array
+            ColumnTXIDSnapshot = System.String
+            ColumnTXIDSnapshotAsArray = System.String
+            ColumnUUID = System.Guid
+            ColumnUUIDAsArray = System.Array
+            ColumnXID = System.UInt32
+            ColumnXIDAsArray = System.Array
+            ColumnXML = System.String
+            ColumnXMLAsArray = System.Array
+            */
             switch (dbType)
             {
                 case DbType.Int64:
                     return "BIGINT";
-                case DbType.Byte:
                 case DbType.Binary:
-                    return "BLOB";
+                case DbType.Byte:
+                    return "BYTEA";
                 case DbType.Boolean:
                     return "BOOLEAN";
-                case DbType.String:
                 case DbType.AnsiString:
                 case DbType.AnsiStringFixedLength:
+                case DbType.String:
                 case DbType.StringFixedLength:
                     return "TEXT";
                 case DbType.Date:
-                    return "DATE";
                 case DbType.DateTime:
                 case DbType.DateTime2:
                 case DbType.DateTimeOffset:
-                    return "DATETIME";
+                    return "DATE";
                 case DbType.Decimal:
-                    return "DECIMAL";
+                    return "NUMERIC";
                 case DbType.Single:
                     return "REAL";
                 case DbType.Double:
-                    return "DOUBLE";
-                case DbType.Int32:
+                    return "DOUBLEPRECISION";
                 case DbType.Int16:
-                    return "INT";
+                case DbType.Int32:
+                    return "INTEGER";
                 case DbType.Time:
-                    return "TIME";
+                    return "INTERVAL";
                 default:
                     /* DbType.Guid
                      * DbType.Xml

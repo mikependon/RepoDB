@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 
 namespace RepoDb
 {

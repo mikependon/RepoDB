@@ -15,6 +15,36 @@ namespace RepoDb.PostgreSql.DbSettings
         #region Properties
 
         /// <summary>
+        /// Gets the value that indicates whether the table hints are supported.
+        /// </summary>
+        public bool AreTableHintsSupported { get; } = false;
+
+        /// <summary>
+        /// Gets the character (or string) used for closing quote.
+        /// </summary>
+        public string ClosingQuote { get; } = "\"";
+
+        /// <summary>
+        /// Gets the default averageable .NET CLR types for the database.
+        /// </summary>
+        public Type DefaultAverageableType { get; } = typeof(double);
+
+        /// <summary>
+        /// Gets the default schema of the database.
+        /// </summary>
+        public string DefaultSchema { get; } = "public";
+
+        /// <summary>
+        /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
+        /// </summary>
+        public bool IsDbParameterDirectionSettingSupported { get; } = false;
+
+        /// <summary>
+        /// Gets a value that indicates whether the <see cref="DbCommand"/> object must be disposed after calling the <see cref="DbCommand.ExecuteReader()"/> method.
+        /// </summary>
+        public bool IsDisposeDbCommandAfterExecuteReader { get; } = true;
+
+        /// <summary>
         /// Gets a value whether the multiple statement execution is supported.
         /// </summary>
         public bool IsMultipleStatementExecutionSupported { get; } = true;
@@ -25,29 +55,9 @@ namespace RepoDb.PostgreSql.DbSettings
         public bool IsUseUpsertForMergeOperation { get; } = false;
 
         /// <summary>
-        /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
-        /// </summary>
-        public bool IsDbParameterDirectionSettingSupported { get; } = false;
-
-        /// <summary>
-        /// Gets the value that indicates whether the table hints are supported.
-        /// </summary>
-        public bool AreTableHintsSupported { get; } = false;
-
-        /// <summary>
-        /// Gets the value that indicates whether the count big operation is supported.
-        /// </summary>
-        public bool IsCountBigSupported { get; } = false;
-
-        /// <summary>
         /// Gets the character (or string) used for opening quote.
         /// </summary>
-        public string OpeningQuote { get; } = "[";
-
-        /// <summary>
-        /// Gets the character (or string) used for closing quote.
-        /// </summary>
-        public string ClosingQuote { get; } = "]";
+        public string OpeningQuote { get; } = "\"";
 
         /// <summary>
         /// Gets the character (or string) used for the database command parameter quoting.
@@ -58,16 +68,6 @@ namespace RepoDb.PostgreSql.DbSettings
         /// Gets the character (or string) used for separating the schema.
         /// </summary>
         public string SchemaSeparator { get; } = ".";
-
-        /// <summary>
-        /// Gets the default schema of the database.
-        /// </summary>
-        public string DefaultSchema { get; } = null; // Research the SQLite default schema
-
-        /// <summary>
-        /// Gets the default averageable .NET CLR types for the database.
-        /// </summary>
-        public Type DefaultAverageableType { get; } = typeof(double);
 
         #endregion
 
@@ -87,31 +87,43 @@ namespace RepoDb.PostgreSql.DbSettings
             // Use the non nullable for perf purposes
             var hashCode = 0;
 
-            // IsMultipleStatementExecutionSupported
-            hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
-
-            // IsDbParameterDirectionSettingSupported
-            hashCode += IsDbParameterDirectionSettingSupported.GetHashCode();
-
-            // IsUseUpsertForMergeOperation
-            hashCode += IsUseUpsertForMergeOperation.GetHashCode();
-
             // AreTableHintsSupported
             hashCode += AreTableHintsSupported.GetHashCode();
-
-            // IsCountBigSupported
-            hashCode += IsCountBigSupported.GetHashCode();
-
-            // OpeningQuote
-            if (!string.IsNullOrEmpty(OpeningQuote))
-            {
-                hashCode += OpeningQuote.GetHashCode();
-            }
 
             // ClosingQuote
             if (!string.IsNullOrEmpty(ClosingQuote))
             {
                 hashCode += ClosingQuote.GetHashCode();
+            }
+
+            // DefaultAverageableType
+            if (DefaultAverageableType != null)
+            {
+                hashCode += DefaultAverageableType.GetHashCode();
+            }
+
+            // DefaultSchema
+            if (!string.IsNullOrEmpty(DefaultSchema))
+            {
+                hashCode += DefaultSchema.GetHashCode();
+            }
+
+            // IsDbParameterDirectionSettingSupported
+            hashCode += IsDbParameterDirectionSettingSupported.GetHashCode();
+
+            // IsDisposeDbCommandAfterExecuteReader
+            hashCode += IsDisposeDbCommandAfterExecuteReader.GetHashCode();
+
+            // IsMultipleStatementExecutionSupported
+            hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // IsUseUpsertForMergeOperation
+            hashCode += IsUseUpsertForMergeOperation.GetHashCode();
+
+            // OpeningQuote
+            if (!string.IsNullOrEmpty(OpeningQuote))
+            {
+                hashCode += OpeningQuote.GetHashCode();
             }
 
             // ParameterPrefix
@@ -124,18 +136,6 @@ namespace RepoDb.PostgreSql.DbSettings
             if (!string.IsNullOrEmpty(SchemaSeparator))
             {
                 hashCode += SchemaSeparator.GetHashCode();
-            }
-
-            // DefaultSchema
-            if (!string.IsNullOrEmpty(DefaultSchema))
-            {
-                hashCode += DefaultSchema.GetHashCode();
-            }
-
-            // DefaultAverageableType
-            if (DefaultAverageableType != null)
-            {
-                hashCode += DefaultAverageableType.GetHashCode();
             }
 
             // Set and return the hashcode
