@@ -123,7 +123,7 @@
         //public System.Array ColumnTimeWithoutTimeZoneAsArray { get; set; }
         //public System.Array ColumnTimestampWithTimeZone { get; set; }
         //public System.Array ColumnTimestampWithTimeZoneAsArray { get; set; }
-        //public System.Nullable<System.DateTime> ColumnTimestampWithoutTimeZone { get; set; }
+        public System.Nullable<System.DateTime> ColumnTimestampWithoutTimeZone { get; set; }
         //public System.Array ColumnTimestampWithoutTimeZoneAsArray { get; set; }
         //public NpgsqlTypes.NpgsqlTsQuery ColumnTSQuery { get; set; }
         //public System.Array ColumnTSQueryAsArray { get; set; }
@@ -141,6 +141,5 @@
         //public System.Array ColumnXIDAsArray { get; set; }
         //public System.String ColumnXML { get; set; }
         //public System.Array ColumnXMLAsArray { get; set; }
-
     }
 }

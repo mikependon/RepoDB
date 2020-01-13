@@ -12,6 +12,7 @@ namespace RepoDb.UnitTests.CustomObjects
         public bool IsDbParameterDirectionSettingSupported => false;
         public bool IsDisposeDbCommandAfterExecuteReader => true;
         public bool IsMultipleStatementExecutionSupported => true;
+        public bool IsPreparable => true;
         public bool IsUseUpsertForMergeOperation => false;
         public string OpeningQuote => "[";
         public string ParameterPrefix => "@";
@@ -27,6 +28,7 @@ namespace RepoDb.UnitTests.CustomObjects
         public bool IsDbParameterDirectionSettingSupported => false;
         public bool IsDisposeDbCommandAfterExecuteReader => true;
         public bool IsMultipleStatementExecutionSupported => true;
+        public bool IsPreparable => true;
         public bool IsUseUpsertForMergeOperation => false;
         public string OpeningQuote => "[";
         public string ParameterPrefix => "@";
@@ -42,6 +44,7 @@ namespace RepoDb.UnitTests.CustomObjects
         public bool IsDbParameterDirectionSettingSupported => false;
         public bool IsDisposeDbCommandAfterExecuteReader => true;
         public bool IsMultipleStatementExecutionSupported => false;
+        public bool IsPreparable => true;
         public bool IsUseUpsertForMergeOperation => false;
         public string OpeningQuote => "[";
         public string ParameterPrefix => "@";

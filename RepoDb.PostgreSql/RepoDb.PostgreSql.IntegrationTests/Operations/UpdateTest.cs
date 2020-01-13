@@ -378,7 +378,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -403,7 +403,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -428,7 +428,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -458,7 +458,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -489,7 +489,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -518,7 +518,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -543,7 +543,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -568,7 +568,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -598,7 +598,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -629,7 +629,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);

@@ -161,17 +161,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 tables.Add(new CompleteTable
                 {
                     ColumnBigInt = Convert.ToInt64(i),
-                    //ColumnBit = (i % 2 == 0),
                     ColumnBoolean = (i % 2 != 0),
                     ColumnCharacter = "C",
-                    ColumnDate = now,
+                    ColumnDate = now.Date,
                     ColumnInteger = Convert.ToInt32(i),
                     ColumnInterval = now.TimeOfDay,
                     ColumMoney = Convert.ToDecimal(i),
                     ColumName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
-                    ColumnText = $"ColumnText{i}"
+                    ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithoutTimeZone = now
                 });
             }
             return tables;
@@ -186,7 +186,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
-
+            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnCharacter = "C";
+            table.ColumnDate = now.Date;
+            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInterval = now.TimeOfDay;
+            table.ColumMoney = Convert.ToDecimal(1);
+            table.ColumName = $"ColumnName{1}";
+            table.ColumnReal = Convert.ToSingle(1);
+            table.ColumnSmallInt = Convert.ToInt16(1);
+            table.ColumnText = $"ColumnText{1}";
+            table.ColumnTimestampWithoutTimeZone = now;
         }
 
         /// <summary>
@@ -204,6 +215,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
             {
                 tables.Add(new
                 {
+                    ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBoolean = (i % 2 != 0),
+                    ColumnCharacter = "C",
+                    ColumnDate = now.Date,
+                    ColumnInteger = Convert.ToInt32(i),
+                    ColumnInterval = now.TimeOfDay,
+                    ColumMoney = Convert.ToDecimal(i),
+                    ColumName = $"ColumnName{i}",
+                    ColumnReal = Convert.ToSingle(i),
+                    ColumnSmallInt = Convert.ToInt16(i),
+                    ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithoutTimeZone = now
                 });
             }
             return tables;
@@ -218,6 +241,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
+            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnCharacter = "C";
+            table.ColumnDate = now.Date;
+            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInterval = now.TimeOfDay;
+            table.ColumMoney = Convert.ToDecimal(1);
+            table.ColumName = $"ColumnName{1}";
+            table.ColumnReal = Convert.ToSingle(1);
+            table.ColumnSmallInt = Convert.ToInt16(1);
+            table.ColumnText = $"ColumnText{1}";
+            table.ColumnTimestampWithoutTimeZone = now;
         }
 
         #endregion
@@ -240,6 +275,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 tables.Add(new NonIdentityCompleteTable
                 {
                     Id = (i + 1),
+                    ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBoolean = (i % 2 != 0),
+                    ColumnCharacter = "C",
+                    ColumnDate = now.Date,
+                    ColumnInteger = Convert.ToInt32(i),
+                    ColumnInterval = now.TimeOfDay,
+                    ColumMoney = Convert.ToDecimal(i),
+                    ColumName = $"ColumnName{i}",
+                    ColumnReal = Convert.ToSingle(i),
+                    ColumnSmallInt = Convert.ToInt16(i),
+                    ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithoutTimeZone = now
                 });
             }
             return tables;
@@ -254,7 +301,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
-
+            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnCharacter = "C";
+            table.ColumnDate = now.Date;
+            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInterval = now.TimeOfDay;
+            table.ColumMoney = Convert.ToDecimal(1);
+            table.ColumName = $"ColumnName{1}";
+            table.ColumnReal = Convert.ToSingle(1);
+            table.ColumnSmallInt = Convert.ToInt16(1);
+            table.ColumnText = $"ColumnText{1}";
+            table.ColumnTimestampWithoutTimeZone = now;
         }
 
         /// <summary>
@@ -273,6 +331,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 tables.Add(new
                 {
                     Id = (long)(i + 1),
+                    ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBoolean = (i % 2 != 0),
+                    ColumnCharacter = "C",
+                    ColumnDate = now.Date,
+                    ColumnInteger = Convert.ToInt32(i),
+                    ColumnInterval = now.TimeOfDay,
+                    ColumMoney = Convert.ToDecimal(i),
+                    ColumName = $"ColumnName{i}",
+                    ColumnReal = Convert.ToSingle(i),
+                    ColumnSmallInt = Convert.ToInt16(i),
+                    ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithoutTimeZone = now
                 });
             }
             return tables;
@@ -287,6 +357,18 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
+            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnCharacter = "C";
+            table.ColumnDate = now.Date;
+            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInterval = now.TimeOfDay;
+            table.ColumMoney = Convert.ToDecimal(1);
+            table.ColumName = $"ColumnName{1}";
+            table.ColumnReal = Convert.ToSingle(1);
+            table.ColumnSmallInt = Convert.ToInt16(1);
+            table.ColumnText = $"ColumnText{1}";
+            table.ColumnTimestampWithoutTimeZone = now;
         }
 
         #endregion

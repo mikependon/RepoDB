@@ -2,6 +2,7 @@
 using Npgsql;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations

@@ -435,22 +435,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = dbFields?.AsFields();
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
-            // Call the method
             return UpdateAllInternalBase<object>(connection: connection,
                 tableName: tableName,
                 entities: entities,
@@ -601,7 +585,6 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            // Call the method
             return UpdateAllAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
                 entities: entities,
@@ -654,11 +637,25 @@ namespace RepoDb
             // Validate the batch size
             batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
+            // Get the fields
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            if (fields?.Any() != true)
+            {
+                var first = entities?.First();
+                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
+            }
+
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
+
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
 
                 // Filter the actual properties for input fields
@@ -769,8 +766,11 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
-                    // Prepare the command
-                    command.Prepare();
+                    if (dbSetting.IsPreparable)
+                    {
+                        // Prepare the command
+                        command.Prepare();
+                    }
 
                     // Directly execute if the entities is only 1 (performance)
                     if (batchSize == 1)
@@ -806,8 +806,11 @@ namespace RepoDb
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
 
-                                // Prepare the command
-                                command.Prepare();
+                                if (dbSetting.IsPreparable)
+                                {
+                                    // Prepare the command
+                                    command.Prepare();
+                                }
                             }
 
                             // Set the values
@@ -898,7 +901,8 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
             if (fields?.Any() != true)
             {
-                fields = dbFields?.AsFields();
+                var first = entities?.First();
+                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
             }
 
             // Check the qualifiers
@@ -1022,8 +1026,11 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
-                    // Prepare the command
-                    command.Prepare();
+                    if (dbSetting.IsPreparable)
+                    {
+                        // Prepare the command
+                        command.Prepare();
+                    }
 
                     // Directly execute if the entities is only 1 (performance)
                     if (batchSize == 1)
@@ -1059,8 +1066,11 @@ namespace RepoDb
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
 
-                                // Prepare the command
-                                command.Prepare();
+                                if (dbSetting.IsPreparable)
+                                {
+                                    // Prepare the command
+                                    command.Prepare();
+                                }
                             }
 
                             // Set the values

@@ -339,9 +339,10 @@ namespace RepoDb
 
             // Get the fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            if (fields == null)
+             if (fields?.Any() != true)
             {
-                fields = dbFields?.AsFields();
+                var first = entities?.First();
+                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
             }
 
             // Get the function
@@ -677,9 +678,10 @@ namespace RepoDb
 
             // Get the fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-            if (fields == null)
+             if (fields?.Any() != true)
             {
-                fields = dbFields?.AsFields();
+                var first = entities?.First();
+                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
             }
 
             // Get the function

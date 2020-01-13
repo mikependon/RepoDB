@@ -955,5 +955,15 @@ namespace RepoDb
         {
             return Append("REPLACE");
         }
+
+        /// <summary>
+        /// Appends a word RETURNING to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Returning()
+        {
+            return Append("RETURNING");
+        }
+
     }
 }

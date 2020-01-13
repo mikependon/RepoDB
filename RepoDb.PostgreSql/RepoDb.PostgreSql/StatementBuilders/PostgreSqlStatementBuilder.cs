@@ -125,7 +125,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .WriteText("1 AS [ExistsValue]")
+                .WriteText("1 AS \"ExistsValue\"")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -167,7 +167,7 @@ namespace RepoDb.StatementBuilders
                 identityField);
 
             // Variables needed
-            var databaseType = "BIGINT";
+            var databaseType = (string)null;
 
             // Check for the identity
             if (identityField != null)
@@ -175,23 +175,26 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
             // Set the return value
             var result = identityField != null ?
-                string.Concat($"CAST(lastval() AS {databaseType})") :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
+                string.IsNullOrEmpty(databaseType) ?
+                    identityField.Name.AsQuoted(DbSetting) :
+                        string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
+                            primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
-            builder
-                .Select()
-                .WriteText(result)
-                .As("[Result]")
-                .End();
+            // Get the string
+            var sql = builder.GetString().Trim();
+
+            // Append the result
+            sql = string.Concat(sql.Substring(0, sql.Length - 1),
+                " RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
 
             // Return the query
-            return builder.GetString();
+            return sql;
         }
 
         #endregion
@@ -227,7 +230,7 @@ namespace RepoDb.StatementBuilders
                 identityField);
 
             // Variables needed
-            var databaseType = (string)null;
+            var databaseType = "BIGINT";
 
             // Check for the identity
             if (identityField != null)
@@ -235,7 +238,7 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -249,10 +252,14 @@ namespace RepoDb.StatementBuilders
                 for (var index = 0; index < splitted.Count(); index++)
                 {
                     var line = splitted[index].Trim();
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT lastval()" :
-                        $"SELECT CAST(lastval() AS {databaseType})";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
+
+                    // Set the return value
+                    var returnValue = identityField != null ?
+                        string.IsNullOrEmpty(databaseType) ?
+                            identityField.Name.AsQuoted(DbSetting) :
+                                string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
+                                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
+                    commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), " ;"));
                 }
 
                 // Set the command text
@@ -330,7 +337,7 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
                 }
             }
             else
@@ -360,7 +367,7 @@ namespace RepoDb.StatementBuilders
                 builder
                     .Select()
                     .WriteText(result)
-                    .As("[Result]")
+                    .As("Result".AsQuoted(DbSetting))
                     .End();
             }
 
@@ -432,7 +439,7 @@ namespace RepoDb.StatementBuilders
             var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
             if (dbType != null)
             {
-                databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
             }
 
             // Clear the builder
@@ -473,7 +480,7 @@ namespace RepoDb.StatementBuilders
                     builder
                         .Select()
                         .WriteText(result)
-                        .As("[Result]")
+                        .As("Result".AsQuoted(DbSetting))
                         .End();
                 }
             }
