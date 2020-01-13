@@ -50,6 +50,11 @@ namespace RepoDb.MySql.DbSettings
         public bool IsMultipleStatementExecutionSupported { get; } = true;
 
         /// <summary>
+        /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
+        /// </summary>
+        public bool IsPreparable { get; } = true;
+
+        /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsertForMergeOperation { get; } = false;
@@ -116,6 +121,9 @@ namespace RepoDb.MySql.DbSettings
 
             // IsMultipleStatementExecutionSupported
             hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // IsPreparable
+            hashCode += IsPreparable.GetHashCode();
 
             // IsUseUpsertForMergeOperation
             hashCode += IsUseUpsertForMergeOperation.GetHashCode();
