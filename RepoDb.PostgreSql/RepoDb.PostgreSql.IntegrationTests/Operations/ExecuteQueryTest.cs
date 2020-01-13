@@ -1,12 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
+using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System.Linq;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
     [TestClass]
-    public class TruncateTest
+    public class ExecuteQueryTest
     {
         [TestInitialize]
         public void Initialize()
@@ -21,12 +23,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             Database.Cleanup();
         }
 
-        #region DataEntity
-
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncate()
+        public void TestPostgreSqlConnectionExecuteQuery()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -34,11 +34,29 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Truncate<CompleteTable>();
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable`;");
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlConnectionExecuteQueryWithParameters()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.ExecuteQuery<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                    new { tables.Last().Id });
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
             }
         }
 
@@ -47,7 +65,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateAsyncWithoutExpression()
+        public void TestPostgreSqlConnectionExecuteQueryAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -55,24 +73,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync<CompleteTable>().Result;
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable`;").Result;
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
             }
         }
-
-        #endregion
-
-        #endregion
-
-        #region TableName
-
-        #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionExecuteQueryAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -80,36 +90,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Truncate(ClassMappedNameCache.Get<CompleteTable>());
-                var countResult = connection.CountAll<CompleteTable>();
+                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                    new { tables.Last().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(1, result.Count());
+                Helper.AssertPropertiesEquality(tables.Last(), result.First());
             }
         }
-
-        #endregion
-
-        #region Async
-
-        [TestMethod]
-        public void TestPostgreSqlConnectionTruncateAsyncViaTableNameWithoutExpression()
-        {
-            // Setup
-            var tables = Database.CreateCompleteTables(10);
-
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
-            {
-                // Act
-                var result = connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
-                var countResult = connection.CountAll<CompleteTable>();
-
-                // Assert
-                Assert.AreEqual(0, countResult);
-            }
-        }
-
-        #endregion
 
         #endregion
     }

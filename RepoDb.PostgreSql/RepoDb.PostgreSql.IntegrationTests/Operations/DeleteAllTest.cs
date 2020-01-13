@@ -27,7 +27,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteAll()
+        public void TestPostgreSqlConnectionDeleteAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -47,7 +47,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAllAsyncWithoutExpression()
+        public void TestPostgreSqlConnectionDeleteAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -71,7 +71,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestDeleteAllViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionDeleteAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -91,7 +91,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestDeleteAllAsyncViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

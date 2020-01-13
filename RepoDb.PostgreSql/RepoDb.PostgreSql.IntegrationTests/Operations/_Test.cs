@@ -35,6 +35,31 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestExtractProperties()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                var entities = (string)null;
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\" WHERE 1 = 0;"))
+                {
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        var name = reader.GetName(i);
+                        var type = reader.GetFieldType(i);
+                        if (type.IsValueType)
+                        {
+                            entities = string.Concat(entities, $"public System.Nullable<{type.FullName}> {name} {{ get; set; }}\n");
+                        }
+                        else
+                        {
+                            entities = string.Concat(entities, $"public {type.FullName} {name} {{ get; set; }}\n");
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestExtractForPostgreSqlTypeNameToClientTypeResolver()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))

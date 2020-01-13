@@ -181,7 +181,7 @@ namespace RepoDb.StatementBuilders
 
             // Set the return value
             var result = identityField != null ?
-                string.Concat($"CAST(last_insert_rowid() AS {databaseType})") :
+                string.Concat($"CAST(lastval() AS {databaseType})") :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             builder
@@ -250,8 +250,8 @@ namespace RepoDb.StatementBuilders
                 {
                     var line = splitted[index].Trim();
                     var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT last_insert_rowid()" :
-                        $"SELECT CAST(last_insert_rowid() AS {databaseType})";
+                        "SELECT lastval()" :
+                        $"SELECT CAST(lastval() AS {databaseType})";
                     commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
                 }
 
@@ -324,7 +324,7 @@ namespace RepoDb.StatementBuilders
             // Check both primary and identity
             if (identityField != null)
             {
-                result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
+                result = string.Concat($"CAST(COALESCE(lastval(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
 
                 // Set the type
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
@@ -460,7 +460,7 @@ namespace RepoDb.StatementBuilders
                 // Check both primary and identity
                 if (identityField != null)
                 {
-                    result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
+                    result = string.Concat($"CAST(COALESCE(lastval(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
                 }
                 else
                 {
@@ -542,7 +542,6 @@ namespace RepoDb.StatementBuilders
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting);
             if (top > 0)
@@ -576,12 +575,9 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .Clear()
-                .Delete()
-                .From()
+                .Truncate()
+                .Table()
                 .TableNameFrom(tableName, DbSetting)
-                .End()
-                .WriteText("VACUUM")
                 .End();
 
             // Return the query

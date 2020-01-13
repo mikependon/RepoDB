@@ -180,10 +180,11 @@ namespace RepoDb.Resolvers
                 case DbType.Single:
                     return "REAL";
                 case DbType.Double:
-                    return "DOUBLEPRECISION";
-                case DbType.Int16:
+                    return "DOUBLE PRECISION";
                 case DbType.Int32:
                     return "INTEGER";
+                case DbType.Int16:
+                    return "SMALLINT";
                 case DbType.Time:
                     return "INTERVAL";
                 default:

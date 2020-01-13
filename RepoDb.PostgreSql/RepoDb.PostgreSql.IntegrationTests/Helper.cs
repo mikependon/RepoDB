@@ -54,7 +54,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     var b1 = (byte[])value1;
                     var b2 = (byte[])value2;
-                    for (var i = 0; i < b1.Length; i++)
+                    for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
                     {
                         var v1 = b1[i];
                         var v2 = b2[i];
@@ -121,7 +121,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     {
                         var b1 = (byte[])value1;
                         var b2 = (byte[])value2;
-                        for (var i = 0; i < b1.Length; i++)
+                        for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
                         {
                             var v1 = b1[i];
                             var v2 = b2[i];
@@ -153,27 +153,25 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<CompleteTable> CreateCompleteTables(int count)
         {
             var tables = new List<CompleteTable>();
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new CompleteTable
                 {
-                    ColumnBigInt = i,
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBoolean = true,
-                    ColumnChar = "C",
-                    ColumnDate = EpocDate,
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnDouble = Convert.ToDouble(i),
-                    ColumnInt = i,
-                    ColumnInteger = i,
-                    ColumnNone = "N",
-                    ColumnNumeric = Convert.ToDecimal(i),
-                    ColumnReal = (float)i,
-                    ColumnString = $"ColumnString:{i}",
-                    ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnVarChar = $"ColumnVarChar:{i}"
+                    ColumnBigInt = Convert.ToInt64(i),
+                    //ColumnBit = (i % 2 == 0),
+                    ColumnBoolean = (i % 2 != 0),
+                    ColumnCharacter = "C",
+                    ColumnDate = now,
+                    ColumnInteger = Convert.ToInt32(i),
+                    ColumnInterval = now.TimeOfDay,
+                    ColumMoney = Convert.ToDecimal(i),
+                    ColumName = $"ColumnName{i}",
+                    ColumnReal = Convert.ToSingle(i),
+                    ColumnSmallInt = Convert.ToInt16(i),
+                    ColumnText = $"ColumnText{i}"
                 });
             }
             return tables;
@@ -185,22 +183,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table">The instance to be updated.</param>
         public static void UpdateCompleteTableProperties(CompleteTable table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = true;
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
-            table.ColumnInt = Randomizer.Next(1000000);
-            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
+
         }
 
         /// <summary>
@@ -211,28 +197,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<dynamic> CreateCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new
                 {
-                    Id = (long)(i + 1),
-                    ColumnBigInt = (long)i,
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBoolean = true,
-                    ColumnChar = "C",
-                    ColumnDate = EpocDate,
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnDouble = Convert.ToDouble(i),
-                    ColumnInt = i,
-                    ColumnInteger = (long)i,
-                    ColumnNone = "N",
-                    ColumnNumeric = Convert.ToDecimal(i),
-                    ColumnReal = (float)i,
-                    ColumnString = $"ColumnString:{i}",
-                    ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
             return tables;
@@ -244,22 +215,9 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table">The instance to be updated.</param>
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = true;
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
-            table.ColumnInt = Randomizer.Next(1000000);
-            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
         }
 
         #endregion
@@ -274,28 +232,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
             var tables = new List<NonIdentityCompleteTable>();
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new NonIdentityCompleteTable
                 {
-                    Id = (long)(i + 1),
-                    ColumnBigInt = (long)i,
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBoolean = true,
-                    ColumnChar = "C",
-                    ColumnDate = EpocDate,
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnDouble = Convert.ToDouble(i),
-                    ColumnInt = i,
-                    ColumnInteger = (long)i,
-                    ColumnNone = "N",
-                    ColumnNumeric = Convert.ToDecimal(i),
-                    ColumnReal = (float)i,
-                    ColumnString = $"ColumnString:{i}",
-                    ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnVarChar = $"ColumnVarChar:{i}"
+                    Id = (i + 1),
                 });
             }
             return tables;
@@ -307,22 +251,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table">The instance to be updated.</param>
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = true;
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.UtcNow.Date;
-            table.ColumnDateTime = DateTime.UtcNow;
-            table.ColumnDecimal = decimal.MaxValue;
-            table.ColumnDouble = double.MaxValue;
-            table.ColumnInt = int.MaxValue;
-            table.ColumnInteger = long.MaxValue;
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.UtcNow.TimeOfDay;
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
+
         }
 
         /// <summary>
@@ -333,28 +265,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<dynamic> CreateNonIdentityCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new
                 {
                     Id = (long)(i + 1),
-                    ColumnBigInt = i,
-                    ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
-                    ColumnBoolean = true,
-                    ColumnChar = "C",
-                    ColumnDate = EpocDate,
-                    ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnDouble = Convert.ToDouble(i),
-                    ColumnInt = i,
-                    ColumnInteger = i,
-                    ColumnNone = "N",
-                    ColumnNumeric = Convert.ToDecimal(i),
-                    ColumnReal = (float)i,
-                    ColumnString = $"ColumnString:{i}",
-                    ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
-                    ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
             return tables;
@@ -366,22 +284,9 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table">The instance to be updated.</param>
         public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = true;
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
-            table.ColumnInt = Randomizer.Next(1000000);
-            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
         }
 
         #endregion

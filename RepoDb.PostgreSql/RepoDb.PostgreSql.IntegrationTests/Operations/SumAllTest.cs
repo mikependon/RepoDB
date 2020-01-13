@@ -28,7 +28,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumAllWithoutExpression()
+        public void TestPostgreSqlConnectionSumAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -36,15 +36,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAll<CompleteTable>(e => e.ColumnInt);
+                var result = connection.SumAll<CompleteTable>(e => e.ColumnInteger);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSumAllWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -52,7 +52,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SumAll<CompleteTable>(e => e.ColumnInt,
+                connection.SumAll<CompleteTable>(e => e.ColumnInteger,
                     hints: "WhatEver");
             }
         }
@@ -62,7 +62,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAllAsyncWithoutExpression()
+        public void TestPostgreSqlConnectionSumAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -70,15 +70,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAllAsync<CompleteTable>(e => e.ColumnInt).Result;
+                var result = connection.SumAllAsync<CompleteTable>(e => e.ColumnInteger).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAllAsyncWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -86,7 +86,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SumAllAsync<CompleteTable>(e => e.ColumnInt,
+                connection.SumAllAsync<CompleteTable>(e => e.ColumnInteger,
                     hints: "WhatEver").Wait();
             }
         }
@@ -100,7 +100,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumAllViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionSumAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -109,15 +109,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt));
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger));
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSumAllViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -126,7 +126,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
                     hints: "WhatEver");
             }
         }
@@ -136,7 +136,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAllAsyncViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionSumAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -145,15 +145,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt64(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAllAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -162,7 +162,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
                     hints: "WhatEver").Wait();
             }
         }

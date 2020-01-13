@@ -50,6 +50,11 @@ namespace RepoDb.PostgreSql.DbSettings
         public bool IsMultipleStatementExecutionSupported { get; } = true;
 
         /// <summary>
+        /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
+        /// </summary>
+        public bool IsPreparable { get; } = false;
+
+        /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
         public bool IsUseUpsertForMergeOperation { get; } = false;
@@ -116,6 +121,9 @@ namespace RepoDb.PostgreSql.DbSettings
 
             // IsMultipleStatementExecutionSupported
             hashCode += IsMultipleStatementExecutionSupported.GetHashCode();
+
+            // IsPreparable
+            hashCode += IsPreparable.GetHashCode();
 
             // IsUseUpsertForMergeOperation
             hashCode += IsUseUpsertForMergeOperation.GetHashCode();

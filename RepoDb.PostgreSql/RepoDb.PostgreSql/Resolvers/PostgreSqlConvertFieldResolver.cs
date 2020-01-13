@@ -39,7 +39,7 @@ namespace RepoDb.Resolvers
                 var dbType = DbTypeResolver.Resolve(field.Type);
                 if (dbType != null)
                 {
-                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper().AsQuoted(dbSetting);
+                    var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper();
                     return string.Concat("CAST(", field.Name.AsQuoted(true, true, dbSetting), " AS ", dbTypeName, ")");
                 }
             }

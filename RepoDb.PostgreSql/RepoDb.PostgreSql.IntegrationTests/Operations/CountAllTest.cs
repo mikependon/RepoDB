@@ -28,7 +28,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestCountAllWithoutExpression()
+        public void TestPostgreSqlConnectionCountAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -44,7 +44,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCountAllWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionCountAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -61,7 +61,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestCountAllAsyncWithoutExpression()
+        public void TestPostgreSqlConnectionCountAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,7 +77,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAllAsyncWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionCountAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -98,7 +98,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestCountAllViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionCountAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -114,7 +114,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnCountAllViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionCountAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -132,7 +132,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestCountAllAsyncViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionCountAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -148,7 +148,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAllAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

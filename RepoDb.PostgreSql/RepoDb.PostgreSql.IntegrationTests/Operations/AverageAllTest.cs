@@ -28,7 +28,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestAverageAllWithoutExpression()
+        public void TestPostgreSqlConnectionAverageAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -39,12 +39,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.AverageAll<CompleteTable>(e => e.ColumnInteger);
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInteger), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnAverageAllWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionAverageAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -62,7 +62,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestAverageAllAsyncWithoutExpression()
+        public void TestPostgreSqlConnectionAverageAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -73,12 +73,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.AverageAllAsync<CompleteTable>(e => e.ColumnInteger).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInteger), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnAverageAllAsyncWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionAverageAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -100,7 +100,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestAverageAllViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionAverageAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -112,12 +112,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInteger));
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInteger), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnAverageAllViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionAverageAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -136,7 +136,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestAverageAllAsyncViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionAverageAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -148,12 +148,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     Field.Parse<CompleteTable>(e => e.ColumnInteger)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Average(e => e.ColumnInteger), result);
+                Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnAverageAllAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionAverageAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

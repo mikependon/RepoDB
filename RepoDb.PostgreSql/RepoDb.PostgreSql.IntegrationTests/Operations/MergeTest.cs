@@ -2,6 +2,7 @@
 using Npgsql;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System;
 using System.Linq;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
@@ -27,7 +28,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMergeForIdentityForEmptyTable()
+        public void TestPostgreSqlConnectionMergeForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -36,7 +37,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -45,7 +46,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeForIdentityForNonEmptyTable()
+        public void TestPostgreSqlConnectionMergeForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -59,10 +60,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.Merge<CompleteTable>(table);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -71,7 +72,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeForIdentityForNonEmptyTableWithQualifiers()
+        public void TestPostgreSqlConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -84,18 +85,18 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
-                table.ColumnInt = 0;
-                table.ColumnChar = "C";
+                table.ColumnInteger = 0;
+                table.ColumnCharacter = "C";
 
                 // Act
                 var result = connection.Merge<CompleteTable>(table,
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -108,7 +109,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMergeAsyncForIdentityForEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -117,7 +118,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -126,7 +127,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsyncForIdentityForNonEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -140,10 +141,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -152,7 +153,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestPostgreSqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -165,18 +166,18 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
-                table.ColumnInt = 0;
-                table.ColumnChar = "C";
+                table.ColumnInteger = 0;
+                table.ColumnCharacter = "C";
 
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table,
                     qualifiers).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -193,7 +194,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestMergeViaTableNameForIdentityForEmptyTable()
+        public void TestPostgreSqlConnectionMergeViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -203,7 +204,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -212,7 +213,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeViaTableNameForIdentityForNonEmptyTable()
+        public void TestPostgreSqlConnectionMergeViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -227,10 +228,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     table);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -239,7 +240,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestPostgreSqlConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -252,8 +253,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Setup
                 Helper.UpdateCompleteTableProperties(table);
-                table.ColumnInt = 0;
-                table.ColumnChar = "C";
+                table.ColumnInteger = 0;
+                table.ColumnCharacter = "C";
 
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
@@ -261,10 +262,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -273,7 +274,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -285,10 +286,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -297,14 +298,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var obj = new
             {
                 table.Id,
-                ColumnInt = int.MaxValue
+                ColumnInteger = int.MaxValue
             };
 
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -314,26 +315,26 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)obj);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Assert.AreEqual(obj.ColumnInteger, queryResult.First().ColumnInteger);
             }
         }
 
         [TestMethod]
-        public void TestMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestPostgreSqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var obj = new
             {
                 table.Id,
-                ColumnInt = int.MaxValue
+                ColumnInteger = int.MaxValue
             };
             var qualifiers = new[]
             {
@@ -348,14 +349,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     qualifiers);
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Assert.AreEqual(obj.ColumnInteger, queryResult.First().ColumnInteger);
             }
         }
 
@@ -364,7 +365,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -374,7 +375,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table).Result;
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -383,7 +384,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -398,10 +399,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     table).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -410,7 +411,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestPostgreSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -430,10 +431,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     qualifiers).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -442,7 +443,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -454,10 +455,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
@@ -466,14 +467,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestPostgreSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var obj = new
             {
                 table.Id,
-                ColumnInt = int.MaxValue
+                ColumnInteger = int.MaxValue
             };
 
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -483,26 +484,26 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)obj).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Assert.AreEqual(obj.ColumnInteger, queryResult.First().ColumnInteger);
             }
         }
 
         [TestMethod]
-        public void TestMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestPostgreSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var obj = new
             {
                 table.Id,
-                ColumnInt = int.MaxValue
+                ColumnInteger = int.MaxValue
             };
             var qualifiers = new[]
             {
@@ -517,14 +518,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     qualifiers).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(result);
+                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Assert.AreEqual(obj.ColumnInteger, queryResult.First().ColumnInteger);
             }
         }
 

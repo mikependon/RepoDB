@@ -29,11 +29,6 @@ namespace RepoDb.Interfaces
         string DefaultSchema { get; }
 
         /// <summary>
-        /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
-        /// </summary>
-        bool IsUseUpsertForMergeOperation { get; }
-
-        /// <summary>
         /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
         /// </summary>
         bool IsDbParameterDirectionSettingSupported { get; }
@@ -47,6 +42,16 @@ namespace RepoDb.Interfaces
         /// Gets a value whether the multiple statement execution is supported.
         /// </summary>
         bool IsMultipleStatementExecutionSupported { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
+        /// </summary>
+        bool IsPreparable { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
+        /// </summary>
+        bool IsUseUpsertForMergeOperation { get; }
 
         /// <summary>
         /// Gets the character used for opening quote.

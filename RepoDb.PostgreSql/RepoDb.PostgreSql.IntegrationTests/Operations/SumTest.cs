@@ -29,7 +29,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumWithoutExpression()
+        public void TestPostgreSqlConnectionSumWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -37,16 +37,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaExpression()
+        public void TestPostgreSqlConnectionSumViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -55,16 +55,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     e => ids.Contains(e.Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaDynamic()
+        public void TestPostgreSqlConnectionSumViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -72,16 +72,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaQueryField()
+        public void TestPostgreSqlConnectionSumViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -89,16 +89,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaQueryFields()
+        public void TestPostgreSqlConnectionSumViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -111,16 +111,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaQueryGroup()
+        public void TestPostgreSqlConnectionSumViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -134,16 +134,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSumWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -151,7 +151,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Sum<CompleteTable>(e => e.ColumnInt,
+                connection.Sum<CompleteTable>(e => e.ColumnInteger,
                     (object)null,
                     hints: "WhatEver");
             }
@@ -162,7 +162,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAsyncWithoutExpression()
+        public void TestPostgreSqlConnectionSumAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -170,16 +170,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     (object)null).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaExpression()
+        public void TestPostgreSqlConnectionSumAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -188,16 +188,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     e => ids.Contains(e.Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaDynamic()
+        public void TestPostgreSqlConnectionSumAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -205,16 +205,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     new { tables.First().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaQueryField()
+        public void TestPostgreSqlConnectionSumAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -222,16 +222,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     new QueryField("Id", tables.First().Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaQueryFields()
+        public void TestPostgreSqlConnectionSumAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -244,16 +244,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     queryFields).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaQueryGroup()
+        public void TestPostgreSqlConnectionSumAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -267,16 +267,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     queryGroup).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAsyncWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -284,7 +284,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                connection.SumAsync<CompleteTable>(e => e.ColumnInteger,
                     (object)null,
                     hints: "WhatEver").Wait();
             }
@@ -299,7 +299,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSumViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionSumViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -308,16 +308,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     (object)null);
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaTableNameViaDynamic()
+        public void TestPostgreSqlConnectionSumViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -326,16 +326,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     new { tables.First().Id });
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaTableNameViaQueryField()
+        public void TestPostgreSqlConnectionSumViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -344,16 +344,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     new QueryField("Id", tables.First().Id));
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaTableNameViaQueryFields()
+        public void TestPostgreSqlConnectionSumViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -367,16 +367,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     queryFields);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumViaTableNameViaQueryGroup()
+        public void TestPostgreSqlConnectionSumViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -391,16 +391,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     queryGroup);
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSumViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -409,7 +409,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     (object)null,
                     hints: "WhatEver");
             }
@@ -420,7 +420,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSumAsyncViaTableNameWithoutExpression()
+        public void TestPostgreSqlConnectionSumAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -429,16 +429,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     (object)null).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaTableNameViaDynamic()
+        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -447,16 +447,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     new { tables.First().Id }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaTableNameViaQueryField()
+        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -465,16 +465,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     new QueryField("Id", tables.First().Id)).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaTableNameViaQueryFields()
+        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -488,16 +488,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     queryFields).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod]
-        public void TestSumAsyncViaTableNameViaQueryGroup()
+        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -512,16 +512,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     queryGroup).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
+                Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAsyncViaTableNameWithHints()
+        public void ThrowExceptionOnPostgreSqlConnectionSumAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -530,7 +530,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new Field("ColumnInt", typeof(int)),
+                    new Field("ColumnInteger", typeof(int)),
                     (object)null,
                     hints: "WhatEver").Wait();
             }

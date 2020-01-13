@@ -1,38 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Helper.cs" />
-    <Compile Remove="Operations\AverageAllTest.cs" />
-    <Compile Remove="Operations\AverageTest.cs" />
-    <Compile Remove="Operations\BatchQueryTest.cs" />
-    <Compile Remove="Operations\CountAllTest.cs" />
-    <Compile Remove="Operations\CountTest.cs" />
-    <Compile Remove="Operations\DeleteAllTest.cs" />
-    <Compile Remove="Operations\DeleteTest.cs" />
-    <Compile Remove="Operations\ExistsTest.cs" />
-    <Compile Remove="Operations\InsertAllTest.cs" />
-    <Compile Remove="Operations\InsertTest.cs" />
-    <Compile Remove="Operations\MaxAllTest.cs" />
-    <Compile Remove="Operations\MaxTest.cs" />
-    <Compile Remove="Operations\MergeAllTest.cs" />
-    <Compile Remove="Operations\MergeTest.cs" />
-    <Compile Remove="Operations\MinAllTest.cs" />
-    <Compile Remove="Operations\MinTest.cs" />
-    <Compile Remove="Operations\QueryAllTest.cs" />
-    <Compile Remove="Operations\QueryMultipleTest.cs" />
-    <Compile Remove="Operations\QueryTest.cs" />
-    <Compile Remove="Operations\SumAllTest.cs" />
-    <Compile Remove="Operations\SumTest.cs" />
-    <Compile Remove="Operations\TruncateTest.cs" />
-    <Compile Remove="Operations\UpdateAllTest.cs" />
-    <Compile Remove="Operations\UpdateTest.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />

@@ -1,6 +1,7 @@
 ﻿using RepoDb.PostgreSql.IntegrationTests.Models;
 using Npgsql;
 using System;
+using System.Collections.Generic;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Setup
 {
@@ -89,7 +90,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""CompleteTable""
                     (
                         ""Id"" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
-                        ""ColumnChar"" ""char"",
+                        ""ColumnCharacter"" ""char"",
                         ""ColumnCharAsArray"" ""char""[],
                         ""ColumnAclItem"" aclitem,
                         ""ColumnAclItemAsArray"" aclitem[],
@@ -244,7 +245,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""NonIdentityCompleteTable""
                     (
                         ""Id"" bigint NOT NULL,
-                        ""ColumnChar"" ""char"",
+                        ""ColumnCharacter"" ""char"",
                         ""ColumnCharAsArray"" ""char""[],
                         ""ColumnAclItem"" aclitem,
                         ""ColumnAclItemAsArray"" aclitem[],
@@ -393,5 +394,34 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         }
 
         #endregion
+
+        #region CompleteTable
+
+        public static IEnumerable<CompleteTable> CreateCompleteTables(int count)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var tables = Helper.CreateCompleteTables(count);
+                connection.InsertAll(tables);
+                return tables;
+            }
+        }
+
+        #endregion
+
+        #region NonIdentityCompleteTable
+
+        public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                var tables = Helper.CreateNonIdentityCompleteTables(count);
+                connection.InsertAll(tables);
+                return tables;
+            }
+        }
+
+        #endregion
+
     }
 }

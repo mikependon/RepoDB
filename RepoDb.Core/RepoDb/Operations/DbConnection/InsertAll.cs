@@ -507,8 +507,11 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
-                    // Prepare the command
-                    command.Prepare();
+                    if (dbSetting.IsPreparable)
+                    {
+                        // Prepare the command
+                        command.Prepare();
+                    }
 
                     // Directly execute if the entities is only 1 (performance)
                     if (context.BatchSize == 1)
@@ -558,8 +561,11 @@ namespace RepoDb
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
 
-                                // Prepare the command
-                                command.Prepare();
+                                if (dbSetting.IsPreparable)
+                                {
+                                    // Prepare the command
+                                    command.Prepare();
+                                }
                             }
 
                             // Set the values

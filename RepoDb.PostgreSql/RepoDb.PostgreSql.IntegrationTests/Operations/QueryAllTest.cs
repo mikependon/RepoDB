@@ -29,7 +29,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryAll()
+        public void TestPostgreSqlConnectionQueryAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -63,7 +63,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAllAsync()
+        public void TestPostgreSqlConnectionQueryAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,7 +101,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryAllViaTableName()
+        public void TestPostgreSqlConnectionQueryAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -137,7 +137,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAllAsyncViaTableName()
+        public void TestPostgreSqlConnectionQueryAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

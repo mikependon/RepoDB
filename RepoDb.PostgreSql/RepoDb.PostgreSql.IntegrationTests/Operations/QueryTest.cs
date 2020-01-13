@@ -29,7 +29,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryViaPrimaryKey()
+        public void TestPostgreSqlConnectionQueryViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -45,7 +45,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaExpression()
+        public void TestPostgreSqlConnectionQueryViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -61,7 +61,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaDynamic()
+        public void TestPostgreSqlConnectionQueryViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -77,7 +77,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryField()
+        public void TestPostgreSqlConnectionQueryViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -93,14 +93,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryFields()
+        public void TestPostgreSqlConnectionQueryViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -114,14 +114,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaQueryGroup()
+        public void TestPostgreSqlConnectionQueryViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
             var queryGroup = new QueryGroup(queryFields);
 
@@ -136,7 +136,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryWithTop()
+        public void TestPostgreSqlConnectionQueryWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -172,7 +172,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncViaPrimaryKey()
+        public void TestPostgreSqlConnectionQueryAsyncViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -188,7 +188,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaExpression()
+        public void TestPostgreSqlConnectionQueryAsyncViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -204,7 +204,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaDynamic()
+        public void TestPostgreSqlConnectionQueryAsyncViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -220,7 +220,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryField()
+        public void TestPostgreSqlConnectionQueryAsyncViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -236,14 +236,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryFields()
+        public void TestPostgreSqlConnectionQueryAsyncViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -257,14 +257,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaQueryGroup()
+        public void TestPostgreSqlConnectionQueryAsyncViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
             var queryGroup = new QueryGroup(queryFields);
 
@@ -279,7 +279,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncWithTop()
+        public void TestPostgreSqlConnectionQueryAsyncWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -319,7 +319,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestQueryViaTableNameViaPrimaryKey()
+        public void TestPostgreSqlConnectionQueryViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -335,7 +335,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaDynamic()
+        public void TestPostgreSqlConnectionQueryViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -351,7 +351,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryField()
+        public void TestPostgreSqlConnectionQueryViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -367,14 +367,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryFields()
+        public void TestPostgreSqlConnectionQueryViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -388,14 +388,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameViaQueryGroup()
+        public void TestPostgreSqlConnectionQueryViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
             var queryGroup = new QueryGroup(queryFields);
 
@@ -410,7 +410,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryViaTableNameWithTop()
+        public void TestPostgreSqlConnectionQueryViaTableNameWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -448,7 +448,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaPrimaryKey()
+        public void TestPostgreSqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -464,7 +464,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaDynamic()
+        public void TestPostgreSqlConnectionQueryAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -480,7 +480,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryField()
+        public void TestPostgreSqlConnectionQueryAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -496,14 +496,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryFields()
+        public void TestPostgreSqlConnectionQueryAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
 
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -517,14 +517,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameViaQueryGroup()
+        public void TestPostgreSqlConnectionQueryAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
             var queryFields = new[]
             {
                 new QueryField("Id", table.Id),
-                new QueryField("ColumnInt", table.ColumnInt)
+                new QueryField("ColumnInteger", table.ColumnInteger)
             };
             var queryGroup = new QueryGroup(queryFields);
 
@@ -539,7 +539,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestQueryAsyncViaTableNameWithTop()
+        public void TestPostgreSqlConnectionQueryAsyncViaTableNameWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
