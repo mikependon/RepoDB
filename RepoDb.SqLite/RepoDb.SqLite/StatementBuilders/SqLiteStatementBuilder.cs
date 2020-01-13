@@ -175,7 +175,7 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -235,7 +235,7 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
@@ -330,7 +330,7 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
                 }
             }
             else
@@ -434,7 +434,7 @@ namespace RepoDb.StatementBuilders
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
                 if (dbType != null)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
                 }
             }
 
