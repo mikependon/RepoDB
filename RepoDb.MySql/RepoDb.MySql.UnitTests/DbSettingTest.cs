@@ -33,13 +33,13 @@ namespace RepoDb.MySql.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingDefaultAverageableTypeProperty()
+        public void TestMySqlDbSettingAverageableTypeProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.AreEqual(typeof(double), setting.DefaultAverageableType);
+            Assert.AreEqual(typeof(double), setting.AverageableType);
         }
 
         [TestMethod]
@@ -53,43 +53,43 @@ namespace RepoDb.MySql.UnitTests
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingIsDbParameterDirectionSettingSupportedProperty()
+        public void TestMySqlDbSettingIsDirectionSupportedProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsDbParameterDirectionSettingSupported);
+            Assert.IsFalse(setting.IsDirectionSupported);
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingIsDisposeDbCommandAfterExecuteReaderProperty()
+        public void TestMySqlDbSettingIsExecuteReaderDisposableProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsDisposeDbCommandAfterExecuteReader);
+            Assert.IsFalse(setting.IsExecuteReaderDisposable);
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingIsMultipleStatementExecutionSupportedProperty()
+        public void TestMySqlDbSettingIsMultiStatementExecutableProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.IsTrue(setting.IsMultipleStatementExecutionSupported);
+            Assert.IsTrue(setting.IsMultiStatementExecutable);
         }
 
         [TestMethod]
-        public void TestMySqlDbSettingIsUseUpsertForMergeOperationProperty()
+        public void TestMySqlDbSettingIsUseUpsertProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<MySqlConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsUseUpsertForMergeOperation);
+            Assert.IsFalse(setting.IsUseUpsert);
         }
 
         [TestMethod]

@@ -232,7 +232,7 @@ namespace RepoDb
             var setting = connection.GetDbSetting();
 
             // Return the result
-            if (setting.IsUseUpsertForMergeOperation == false)
+            if (setting.IsUseUpsert == false)
             {
                 return MergeInternalBase<TEntity, TResult>(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -474,7 +474,7 @@ namespace RepoDb
             var setting = connection.GetDbSetting();
 
             // Return the result
-            if (setting.IsUseUpsertForMergeOperation == false)
+            if (setting.IsUseUpsert == false)
             {
                 return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -715,7 +715,7 @@ namespace RepoDb
             var setting = connection.GetDbSetting();
 
             // Return the result
-            if (setting.IsUseUpsertForMergeOperation == false)
+            if (setting.IsUseUpsert == false)
             {
                 return MergeInternalBase<object, TResult>(connection: connection,
                     tableName: tableName,
@@ -956,7 +956,7 @@ namespace RepoDb
             var setting = connection.GetDbSetting();
 
             // Return the result
-            if (setting.IsUseUpsertForMergeOperation == false)
+            if (setting.IsUseUpsert == false)
             {
                 return await MergeAsyncInternalBase<object, TResult>(connection: connection,
                     tableName: tableName,

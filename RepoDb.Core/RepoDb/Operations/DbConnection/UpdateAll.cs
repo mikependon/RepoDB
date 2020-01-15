@@ -635,7 +635,7 @@ namespace RepoDb
             GuardUpdateAll(entities);
 
             // Validate the batch size
-            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -895,7 +895,7 @@ namespace RepoDb
             GuardUpdateAll(entities);
 
             // Validate the batch size
-            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);

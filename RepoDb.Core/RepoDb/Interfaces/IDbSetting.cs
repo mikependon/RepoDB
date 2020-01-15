@@ -21,7 +21,7 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// Gets the default averageable .NET CLR types for the database.
         /// </summary>
-        Type DefaultAverageableType { get; }
+        Type AverageableType { get; }
 
         /// <summary>
         /// Gets the default schema of the database.
@@ -31,17 +31,17 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// Gets a value that indicates whether setting the value of <see cref="DbParameter.Direction"/> object is supported.
         /// </summary>
-        bool IsDbParameterDirectionSettingSupported { get; }
+        bool IsDirectionSupported { get; }
 
         /// <summary>
         /// Gets a value that indicates whether the <see cref="DbCommand"/> object must be disposed after calling the <see cref="DbCommand.ExecuteReader()"/> method.
         /// </summary>
-        bool IsDisposeDbCommandAfterExecuteReader { get; }
+        bool IsExecuteReaderDisposable { get; }
 
         /// <summary>
         /// Gets a value whether the multiple statement execution is supported.
         /// </summary>
-        bool IsMultipleStatementExecutionSupported { get; }
+        bool IsMultiStatementExecutable { get; }
 
         /// <summary>
         /// Gets a value that indicates whether the current DB Provider supports the <see cref="DbCommand.Prepare()"/> calls.
@@ -51,7 +51,7 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// Gets a value that indicates whether the Insert/Update operation will be used for Merge operation.
         /// </summary>
-        bool IsUseUpsertForMergeOperation { get; }
+        bool IsUseUpsert { get; }
 
         /// <summary>
         /// Gets the character used for opening quote.

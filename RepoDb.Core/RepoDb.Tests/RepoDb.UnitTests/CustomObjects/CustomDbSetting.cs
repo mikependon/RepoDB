@@ -1,53 +1,62 @@
-﻿using System;
-using RepoDb.Interfaces;
+﻿using RepoDb.DbSettings;
 
 namespace RepoDb.UnitTests.CustomObjects
 {
-    public class CustomDbSetting : IDbSetting
+    public class CustomDbSetting : BaseDbSetting
     {
-        public bool AreTableHintsSupported => true;
-        public Type DefaultAverageableType => typeof(double);
-        public string ClosingQuote => "]";
-        public string DefaultSchema => "dbo";
-        public bool IsDbParameterDirectionSettingSupported => false;
-        public bool IsDisposeDbCommandAfterExecuteReader => true;
-        public bool IsMultipleStatementExecutionSupported => true;
-        public bool IsPreparable => true;
-        public bool IsUseUpsertForMergeOperation => false;
-        public string OpeningQuote => "[";
-        public string ParameterPrefix => "@";
-        public string SchemaSeparator => ".";
+        public CustomDbSetting()
+        {
+            AreTableHintsSupported = true;
+            AverageableType = typeof(double);
+            ClosingQuote = "]";
+            DefaultSchema = "dbo";
+            IsDirectionSupported = false;
+            IsExecuteReaderDisposable = true;
+            IsMultiStatementExecutable = true;
+            IsPreparable = true;
+            IsUseUpsert = false;
+            OpeningQuote = "[";
+            ParameterPrefix = "@";
+            SchemaSeparator = ".";
+        }
     }
 
-    public class CustomNonHintsSupportingDbSetting : IDbSetting
+    public class CustomNonHintsSupportingDbSetting : BaseDbSetting
     {
-        public bool AreTableHintsSupported => false;
-        public Type DefaultAverageableType => typeof(double);
-        public string ClosingQuote => "]";
-        public string DefaultSchema => "dbo";
-        public bool IsDbParameterDirectionSettingSupported => false;
-        public bool IsDisposeDbCommandAfterExecuteReader => true;
-        public bool IsMultipleStatementExecutionSupported => true;
-        public bool IsPreparable => true;
-        public bool IsUseUpsertForMergeOperation => false;
-        public string OpeningQuote => "[";
-        public string ParameterPrefix => "@";
-        public string SchemaSeparator => ".";
+        public CustomNonHintsSupportingDbSetting()
+        {
+            AreTableHintsSupported = false;
+            AverageableType = typeof(double);
+            ClosingQuote = "]";
+            DefaultSchema = "dbo";
+            IsDirectionSupported = false;
+            IsExecuteReaderDisposable = true;
+            IsMultiStatementExecutable = true;
+            IsPreparable = true;
+            IsUseUpsert = false;
+            OpeningQuote = "[";
+            ParameterPrefix = "@";
+            SchemaSeparator = ".";
+
+        }
     }
 
-    public class CustomSingleStatementSupportDbSetting : IDbSetting
+    public class CustomSingleStatementSupportDbSetting : BaseDbSetting
     {
-        public bool AreTableHintsSupported => true;
-        public Type DefaultAverageableType => typeof(double);
-        public string ClosingQuote => "]";
-        public string DefaultSchema => "dbo";
-        public bool IsDbParameterDirectionSettingSupported => false;
-        public bool IsDisposeDbCommandAfterExecuteReader => true;
-        public bool IsMultipleStatementExecutionSupported => false;
-        public bool IsPreparable => true;
-        public bool IsUseUpsertForMergeOperation => false;
-        public string OpeningQuote => "[";
-        public string ParameterPrefix => "@";
-        public string SchemaSeparator => ".";
+        public CustomSingleStatementSupportDbSetting()
+        {
+            AreTableHintsSupported = true;
+            AverageableType = typeof(double);
+            ClosingQuote = "]";
+            DefaultSchema = "dbo";
+            IsDirectionSupported = false;
+            IsExecuteReaderDisposable = true;
+            IsMultiStatementExecutable = false;
+            IsPreparable = true;
+            IsUseUpsert = false;
+            OpeningQuote = "[";
+            ParameterPrefix = "@";
+            SchemaSeparator = ".";
+        }
     }
 }

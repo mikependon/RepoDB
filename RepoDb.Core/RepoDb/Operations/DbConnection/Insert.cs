@@ -522,7 +522,7 @@ namespace RepoDb
                 result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
 
                 // Get explicity if needed
-                if (Equals(result, default(TResult)) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
                     result = ObjectConverter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
                 }
@@ -689,7 +689,7 @@ namespace RepoDb
                 result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
 
                 // Get explicity if needed
-                if (Equals(result, default(TResult)) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
                     result = ObjectConverter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
                 }

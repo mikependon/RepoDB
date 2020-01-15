@@ -23,6 +23,16 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
+        public void TestSqLiteDbSettingAverageableTypeProperty()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SQLiteConnection>();
+
+            // Assert
+            Assert.AreEqual(typeof(double), setting.AverageableType);
+        }
+
+        [TestMethod]
         public void TestSqLiteDbSettingClosingQuoteProperty()
         {
             // Setup
@@ -30,16 +40,6 @@ namespace RepoDb.SqLite.UnitTests
 
             // Assert
             Assert.AreEqual("]", setting.ClosingQuote);
-        }
-
-        [TestMethod]
-        public void TestSqLiteDbSettingDefaultAverageableTypeProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
-
-            // Assert
-            Assert.AreEqual(typeof(double), setting.DefaultAverageableType);
         }
 
         [TestMethod]
@@ -53,43 +53,43 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsDbParameterDirectionSettingSupportedProperty()
+        public void TestSqLiteDbSettingIsDirectionSupportedSupportedProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsDbParameterDirectionSettingSupported);
+            Assert.IsFalse(setting.IsDirectionSupported);
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsDisposeDbCommandAfterExecuteReaderProperty()
+        public void TestSqLiteDbSettingIsExecuteReaderDisposableProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
 
             // Assert
-            Assert.IsTrue(setting.IsDisposeDbCommandAfterExecuteReader);
+            Assert.IsTrue(setting.IsExecuteReaderDisposable);
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsMultipleStatementExecutionSupportedProperty()
+        public void TestSqLiteDbSettingIsMultiStatementExecutableProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
 
             // Assert
-            Assert.IsTrue(setting.IsMultipleStatementExecutionSupported);
+            Assert.IsTrue(setting.IsMultiStatementExecutable);
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsUseUpsertForMergeOperationProperty()
+        public void TestSqLiteDbSettingIsUseUpsertProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsUseUpsertForMergeOperation);
+            Assert.IsFalse(setting.IsUseUpsert);
         }
 
         [TestMethod]

@@ -335,7 +335,7 @@ namespace RepoDb
             GuardInsertAll(entities);
 
             // Validate the batch size
-            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
@@ -526,7 +526,7 @@ namespace RepoDb
                             var returnValue = ObjectConverter.DbNullToNull(command.ExecuteScalar());
 
                             // Get explicity if needed
-                            if (Equals(returnValue, null) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                            if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
                                 returnValue = ObjectConverter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
                             }
@@ -674,7 +674,7 @@ namespace RepoDb
             GuardInsertAll(entities);
 
             // Validate the batch size
-            batchSize = (dbSetting.IsMultipleStatementExecutionSupported == true) ? Math.Min(batchSize, entities.Count()) : 1;
+            batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
@@ -859,7 +859,7 @@ namespace RepoDb
                             var returnValue = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
 
                             // Get explicity if needed
-                            if (Equals(returnValue, null) == true && dbSetting.IsMultipleStatementExecutionSupported == false)
+                            if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
                                 returnValue = ObjectConverter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
                             }

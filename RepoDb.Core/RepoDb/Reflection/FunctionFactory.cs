@@ -785,7 +785,7 @@ namespace RepoDb.Reflection
 
                 #region Direction
 
-                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                if (dbSetting.IsDirectionSupported)
                 {
                     // Set the Parameter Direction
                     var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
@@ -1281,7 +1281,7 @@ namespace RepoDb.Reflection
 
                 #region Direction
 
-                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                if (dbSetting.IsDirectionSupported)
                 {
                     // Set the Parameter Direction
                     var directionAssignment = Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
@@ -1603,7 +1603,7 @@ namespace RepoDb.Reflection
                 parameter.ParameterName = field.Name.AsParameter(index, dbSetting);
 
                 // Set the Direction
-                if (dbSetting.IsDbParameterDirectionSettingSupported)
+                if (dbSetting.IsDirectionSupported)
                 {
                     parameter.Direction = direction;
                 }

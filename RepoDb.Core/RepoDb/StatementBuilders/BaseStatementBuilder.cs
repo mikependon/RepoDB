@@ -78,7 +78,7 @@ namespace RepoDb.StatementBuilders
             }
             else
             {
-                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? DbSetting.AverageableType);
             }
 
             // Initialize the builder
@@ -129,7 +129,7 @@ namespace RepoDb.StatementBuilders
             }
             else
             {
-                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? DbSetting.DefaultAverageableType);
+                field.Type = AverageableClientTypeResolver?.Resolve(field.Type ?? DbSetting.AverageableType);
             }
 
             // Initialize the builder
@@ -1225,7 +1225,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size to be evaluated.</param>
         protected void ValidateMultipleStatementExecution(int batchSize = Constant.DefaultBatchOperationSize)
         {
-            if (DbSetting.IsMultipleStatementExecutionSupported == false && batchSize > 1)
+            if (DbSetting.IsMultiStatementExecutable == false && batchSize > 1)
             {
                 throw new NotSupportedException($"Multiple execution is not supported based on the current database setting '{DbSetting.GetType().FullName}'. Consider setting the batchsize to 1.");
             }

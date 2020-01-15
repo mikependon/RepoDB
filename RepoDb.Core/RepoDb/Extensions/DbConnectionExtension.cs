@@ -572,7 +572,7 @@ namespace RepoDb
             }
             finally
             {
-                if (setting.IsDisposeDbCommandAfterExecuteReader || hasError)
+                if (setting.IsExecuteReaderDisposable || hasError)
                 {
                     command.Dispose();
                 }
@@ -659,7 +659,7 @@ namespace RepoDb
             }
             finally
             {
-                if (setting.IsDisposeDbCommandAfterExecuteReader || hasError)
+                if (setting.IsExecuteReaderDisposable || hasError)
                 {
                     command.Dispose();
                 }
