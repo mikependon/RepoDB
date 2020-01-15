@@ -38,7 +38,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of data entity objects.</returns>
-        internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
+        public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
             IDbConnection connection,
             IDbTransaction transaction,
             bool basedOnFields)
@@ -86,7 +86,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
         /// <returns>An array of data entity objects.</returns>
-        internal static async Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
+        public static async Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
             IDbConnection connection,
             IDbTransaction transaction,
             bool basedOnFields)

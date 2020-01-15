@@ -36,7 +36,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInteger, ColumnDate FROM `CompleteTable`;"))
+                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
                 {
                     while (reader.Read())
                     {
@@ -64,7 +64,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT Id, ColumnInteger, ColumnDate FROM `CompleteTable`; SELECT Id, ColumnInteger, ColumnDate FROM `CompleteTable`;"))
+                using (var reader = connection.ExecuteReader("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
                 {
                     do
                     {
@@ -95,10 +95,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection).AsList();
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection, null, true).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -115,7 +115,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM `CompleteTable`;"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
@@ -139,7 +139,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInteger, ColumnDate FROM `CompleteTable`;").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").Result)
                 {
                     while (reader.Read())
                     {
@@ -167,7 +167,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInteger, ColumnDate FROM `CompleteTable`; SELECT Id, ColumnInteger, ColumnDate FROM `CompleteTable`;").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").Result)
                 {
                     do
                     {
@@ -198,10 +198,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection).AsList();
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection, null, true).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -218,7 +218,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();

@@ -32,7 +32,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM `CompleteTable`;");
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -48,7 +48,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM `CompleteTable` WHERE Id = @Id;",
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
                     new { tables.Last().Id });
 
                 // Assert
@@ -65,7 +65,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQuery("DELETE FROM `CompleteTable`; DELETE FROM `CompleteTable`;");
+                var result = connection.ExecuteNonQuery("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -85,7 +85,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`;").Result;
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -101,7 +101,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE Id = @Id;",
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
                     new { tables.Last().Id }).Result;
 
                 // Assert
@@ -118,7 +118,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`; DELETE FROM `CompleteTable`;").Result;
+                var result = connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

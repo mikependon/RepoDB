@@ -33,7 +33,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM `CompleteTable`;");
+                var result = connection.ExecuteScalar("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -49,7 +49,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM `CompleteTable`;");
+                var result = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -69,7 +69,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT COUNT(*) FROM `CompleteTable`;").Result;
+                var result = connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -85,7 +85,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM `CompleteTable`;").Result;
+                var result = connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

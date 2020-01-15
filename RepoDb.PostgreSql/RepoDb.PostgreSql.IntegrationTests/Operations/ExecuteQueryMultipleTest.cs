@@ -35,8 +35,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable`;
-                    SELECT * FROM `CompleteTable`;"))
+                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\"; " +
+                    "SELECT * FROM \"CompleteTable\";"))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -63,8 +63,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
+                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id1; " +
+                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
@@ -95,8 +95,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultiple(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                using (var extractor = connection.ExecuteQueryMultiple("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; " +
+                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
                     new { Id = tables.Last().Id }))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
@@ -127,8 +127,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable`;
-                    SELECT * FROM `CompleteTable`;").Result)
+                using (var extractor = connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\"; " +
+                    "SELECT * FROM \"CompleteTable\";").Result)
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -155,8 +155,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
+                using (var extractor = connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id1; " +
+                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
@@ -187,8 +187,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
-                    SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                using (var extractor = connection.ExecuteQueryMultipleAsync("SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id; " +
+                    "SELECT * FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
                     new { Id = tables.Last().Id }).Result)
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
