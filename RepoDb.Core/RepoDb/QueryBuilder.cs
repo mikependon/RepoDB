@@ -671,19 +671,74 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder Limit()
         {
-            return Append("LIMIT");
+            return Limit(null);
+        }
+
+        /// <summary>
+        /// Appends a word LIMIT to the SQL Query Statement.
+        /// </summary>
+        /// <param name="take">The number of rows to be taken.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Limit(int? take)
+        {
+            if (take > 0)
+            {
+                return Append(string.Concat("LIMIT ", take));
+            }
+            else
+            {
+                return Append("LIMIT");
+            }
+        }
+
+        /// <summary>
+        /// Appends a word LIMIT (Rows, Skip) with the number of rows to be skipped and return the SQL Query Statement.
+        /// </summary>
+        /// <param name="take">The number of rows to be taken.</param>
+        /// <param name="skip">The number of rows to be skipped.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder LimitTake(int? take,
+            int? skip)
+        {
+            return skip > 0 ? Append(string.Concat("LIMIT ", skip, ", ", take)) : Append(string.Concat("LIMIT ", take));
         }
 
         /// <summary>
         /// Appends a word LIMIT with the number of rows to be skipped and return the SQL Query Statement.
         /// </summary>
-        /// <param name="skip">The number of rows to be skipped.</param>
         /// <param name="take">The number of rows to be taken.</param>
+        /// <param name="skip">The number of rows to be skipped.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder LimitFrom(int? skip,
-            int? take)
+        public QueryBuilder LimitOffset(int? take,
+            int? skip)
         {
-            return skip > 0 ? Append(string.Concat("LIMIT ", skip, ", ", take)) : Append(string.Concat("LIMIT ", take));
+            return skip > 0 ? Append(string.Concat("LIMIT ", take, " OFFSET ", skip)) : Append(string.Concat("LIMIT ", take));
+        }
+
+        /// <summary>
+        /// Appends a word OFFSET to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Offset()
+        {
+            return Offset(null);
+        }
+
+        /// <summary>
+        /// Appends a word OFFSET to the SQL Query Statement.
+        /// </summary>
+        /// <param name="skip">The number of rows to be skipped.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Offset(int? skip)
+        {
+            if (skip > 0)
+            {
+                return Append(string.Concat("OFFSET ", skip));
+            }
+            else
+            {
+                return Append("OFFSET");
+            }
         }
 
         /// <summary>

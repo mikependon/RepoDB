@@ -89,7 +89,7 @@ namespace RepoDb.StatementBuilders
                 .TableNameFrom(tableName, DbSetting)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
-                .LimitFrom(skip, rowsPerBatch)
+                .LimitTake(rowsPerBatch, skip)
                 .End();
 
             // Return the query
@@ -179,7 +179,7 @@ namespace RepoDb.StatementBuilders
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
-                .LimitFrom(0, 1)
+                .Limit(1)
                 .End();
 
             // Return the query
@@ -664,7 +664,7 @@ namespace RepoDb.StatementBuilders
                 .OrderByFrom(orderBy, DbSetting);
             if (top > 0)
             {
-                builder.LimitFrom(0, top);
+                builder.Limit(top);
             }
             builder.End();
 
