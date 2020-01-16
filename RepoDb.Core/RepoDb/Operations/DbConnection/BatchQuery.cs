@@ -1163,7 +1163,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                basedOnFields: false,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -1256,7 +1255,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                basedOnFields: false,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution

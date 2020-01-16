@@ -164,7 +164,7 @@ namespace RepoDb
             EnsureSingleCallForDbFieldCacheGet<TEntity>(m_transaction);
 
             // Get the result
-            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, m_transaction, true).AsList();
+            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, m_transaction).AsList();
 
             // Move to next result
             NextResult();
@@ -185,7 +185,7 @@ namespace RepoDb
             await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(m_transaction);
 
             // Get the result
-            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, m_transaction, true);
+            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, m_transaction);
 
             // Move to next result
             await NextResultAsync();

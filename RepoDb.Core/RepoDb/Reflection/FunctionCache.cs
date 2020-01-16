@@ -41,22 +41,13 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
         internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
             IDbConnection connection,
-            IDbTransaction transaction,
-            bool basedOnFields = false)
+            IDbTransaction transaction)
             where TEntity : class
         {
-            if (basedOnFields == false)
-            {
-                return GetDataReaderToDataEntityConverterFunctionCache<TEntity>.Get(reader, connection, transaction);
-            }
-            else
-            {
-                return GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection, transaction);
-            }
+            return GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection, transaction);
         }
 
         #region GetDataReaderToDataEntityConverterFunctionCache

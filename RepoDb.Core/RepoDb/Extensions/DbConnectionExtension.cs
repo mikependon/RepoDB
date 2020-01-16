@@ -277,7 +277,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                basedOnFields: true,
                 skipCommandArrayParametersCheck: false);
         }
 
@@ -295,7 +294,6 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="basedOnFields">True if the conversion will be based on the data reader fields.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -306,7 +304,6 @@ namespace RepoDb
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
-            bool basedOnFields,
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
@@ -324,7 +321,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, transaction, basedOnFields).AsList();
+                    return DataReader.ToEnumerable<TEntity>(reader, connection, transaction).AsList();
                 }
             }
         }
@@ -364,7 +361,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                basedOnFields: true,
                 skipCommandArrayParametersCheck: false);
         }
 
@@ -382,7 +378,6 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="basedOnFields">True if the conversion will be based on the data reader fields.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -393,7 +388,6 @@ namespace RepoDb
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
-            bool basedOnFields,
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
@@ -411,7 +405,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction, basedOnFields);
+                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction);
                 }
             }
         }
