@@ -98,7 +98,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReader("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection, null, true).AsList();
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -201,7 +201,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection, null, true).AsList();
+                    var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader, connection).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));

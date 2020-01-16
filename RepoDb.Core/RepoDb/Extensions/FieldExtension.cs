@@ -67,7 +67,16 @@ namespace RepoDb.Extensions
         }
 
         // AsJoinQualifier
-        internal static string AsJoinQualifier(this Field field,
+
+        /// <summary>
+        /// Creates a string representation of JOIN statement for the target <see cref="Field"/> object.
+        /// </summary>
+        /// <param name="field">The instance of the <see cref="Field"/> object.</param>
+        /// <param name="leftAlias">The left alias.</param>
+        /// <param name="rightAlias">The right alias.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The currently in used database setting.</returns>
+        public static string AsJoinQualifier(this Field field,
             string leftAlias,
             string rightAlias,
             IDbSetting dbSetting)

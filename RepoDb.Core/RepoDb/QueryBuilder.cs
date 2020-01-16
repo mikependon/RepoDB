@@ -1020,5 +1020,66 @@ namespace RepoDb
             return Append("RETURNING");
         }
 
+        /// <summary>
+        /// Appends a word CONFLICT to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Conflict()
+        {
+            return Append("CONFLICT");
+        }
+
+        /// <summary>
+        /// Appends a word ON CONFLICT to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder OnConflict()
+        {
+            return Append("ON CONFLICT");
+        }
+
+        /// <summary>
+        /// Appends a word ON CONFLICT ON (fieldname) to the SQL Query Statement.
+        /// </summary>
+        /// <param name="fields">The instances of the <see cref="Field"/> objects to be used.</param>
+        /// <param name="index">The parameter index.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder OnConflict(IEnumerable<Field> fields
+            , int? index
+            , IDbSetting dbSetting)
+        {
+            var fieldNames = fields
+                .Select(f => (index > 0 ? $"{f.Name}{index}" : f.Name).AsQuoted(dbSetting))
+                .Join(", ");
+            return Append(string.Concat("ON CONFLICT (", fieldNames, ")"));
+        }
+
+        /// <summary>
+        /// Appends a word DO to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Do()
+        {
+            return Append("DO");
+        }
+
+        /// <summary>
+        /// Appends a word DO NOTHING to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder DoNothing()
+        {
+            return Append("DO NOTHING");
+        }
+
+        /// <summary>
+        /// Appends a word DO UPDATE to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder DoUpdate()
+        {
+            return Append("DO UPDATE");
+        }
     }
 }
