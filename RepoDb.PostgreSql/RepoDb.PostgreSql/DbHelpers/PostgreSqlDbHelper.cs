@@ -21,7 +21,7 @@ namespace RepoDb.DbHelpers
         /// </summary>
         public PostgreSqlDbHelper()
         {
-            DbTypeResolver = new PostgreSqlTypeNameToClientTypeResolver();
+            DbTypeResolver = new PostgreSqlDbTypeNameToClientTypeResolver();
         }
 
         #region Properties

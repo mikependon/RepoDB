@@ -191,7 +191,7 @@ namespace RepoDb.StatementBuilders
 
             // Append the result
             sql = string.Concat(sql.Substring(0, sql.Length - 1),
-                " RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
+                "RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
 
             // Return the query
             return sql;
@@ -383,7 +383,7 @@ namespace RepoDb.StatementBuilders
             if (!string.IsNullOrEmpty(result))
             {
                 // Get the string
-                var sql = string.Concat(" RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
+                var sql = string.Concat("RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
 
                 // Set the result
                 builder
@@ -518,7 +518,7 @@ namespace RepoDb.StatementBuilders
                 if (!string.IsNullOrEmpty(result))
                 {
                     // Get the string
-                    var sql = string.Concat(" RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
+                    var sql = string.Concat("RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
 
                     // Set the result
                     builder

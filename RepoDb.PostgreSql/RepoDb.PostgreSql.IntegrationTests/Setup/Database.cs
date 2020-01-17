@@ -36,7 +36,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             ConnectionString = (connectionString ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;");
 
             // Initialize PostgreSql
-            Bootstrap.Initialize();
+            PostgreSqlBootstrap.Initialize();
 
             // Create databases
             CreateDatabase();

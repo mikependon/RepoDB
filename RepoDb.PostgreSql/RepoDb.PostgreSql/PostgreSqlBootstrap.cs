@@ -8,7 +8,7 @@ namespace RepoDb.PostgreSql
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="NpgsqlConnection"/> object.
     /// </summary>
-    public static class Bootstrap
+    public static class PostgreSqlBootstrap
     {
         #region Properties
 
