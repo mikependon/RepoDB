@@ -61,9 +61,9 @@
         //public System.Array ColumnMacAddrAsArray { get; set; }
         //public System.Net.NetworkInformation.PhysicalAddress ColumnMacAddr8 { get; set; }
         //public System.Array ColumnMacAddr8AsArray { get; set; }
-        public System.Nullable<System.Decimal> ColumMoney { get; set; }
+        public System.Nullable<System.Decimal> ColumnMoney { get; set; }
         //public System.Array ColumnMoneyAsArray { get; set; }
-        public System.String ColumName { get; set; }
+        public System.String ColumnName { get; set; }
         //public System.Array ColumnNameAsArray { get; set; }
         //public System.Nullable<System.Decimal> ColumnNumeric { get; set; }
         //public System.Array ColumnNumericAsArray { get; set; }

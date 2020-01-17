@@ -1042,15 +1042,13 @@ namespace RepoDb
         /// Appends a word ON CONFLICT ON (fieldname) to the SQL Query Statement.
         /// </summary>
         /// <param name="fields">The instances of the <see cref="Field"/> objects to be used.</param>
-        /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder OnConflict(IEnumerable<Field> fields
-            , int? index
             , IDbSetting dbSetting)
         {
             var fieldNames = fields?
-                .Select(f => (index > 0 ? $"{f.Name}{index}" : f.Name).AsQuoted(dbSetting))
+                .Select(f => f.Name.AsQuoted(dbSetting))
                 .Join(", ");
             return Append(string.Concat("ON CONFLICT (", fieldNames, ")"));
         }

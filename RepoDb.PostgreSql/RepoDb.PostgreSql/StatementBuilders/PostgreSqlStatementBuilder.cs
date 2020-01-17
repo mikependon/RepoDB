@@ -355,7 +355,7 @@ namespace RepoDb.StatementBuilders
                 .OpenParen()
                 .ParametersFrom(fields, 0, DbSetting)
                 .CloseParen()
-                .OnConflict(qualifiers, 0, DbSetting)
+                .OnConflict(qualifiers, DbSetting)
                 .DoUpdate()
                 .Set()
                 .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
@@ -510,10 +510,10 @@ namespace RepoDb.StatementBuilders
                     .OpenParen()
                     .ParametersFrom(fields, index, DbSetting)
                     .CloseParen()
-                    .OnConflict(qualifiers, 0, DbSetting)
+                    .OnConflict(qualifiers, DbSetting)
                     .DoUpdate()
                     .Set()
-                    .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
+                    .FieldsAndParametersFrom(updatableFields, index, DbSetting);
 
                 if (!string.IsNullOrEmpty(result))
                 {

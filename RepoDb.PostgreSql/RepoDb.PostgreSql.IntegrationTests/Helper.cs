@@ -162,13 +162,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
-                    ColumnBoolean = (i % 2 != 0),
+                    ColumnBoolean = true,
                     ColumnCharacter = "C",
                     ColumnDate = now.Date,
                     ColumnInteger = Convert.ToInt32(i),
                     ColumnInterval = now.TimeOfDay,
-                    ColumMoney = Convert.ToDecimal(i),
-                    ColumName = $"ColumnName{i}",
+                    ColumnMoney = Convert.ToDecimal(i),
+                    ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
@@ -187,17 +187,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
-            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
             table.ColumnCharacter = "C";
             table.ColumnDate = now.Date;
-            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInteger = Convert.ToInt32(2);
             table.ColumnInterval = now.TimeOfDay;
-            table.ColumMoney = Convert.ToDecimal(1);
-            table.ColumName = $"ColumnName{1}";
-            table.ColumnReal = Convert.ToSingle(1);
-            table.ColumnSmallInt = Convert.ToInt16(1);
-            table.ColumnText = $"ColumnText{1}";
+            table.ColumnMoney = Convert.ToDecimal(2);
+            table.ColumnName = $"{table.ColumnName} (Updated)";
+            table.ColumnReal = Convert.ToSingle(2);
+            table.ColumnSmallInt = Convert.ToInt16(2);
+            table.ColumnText = $"{table.ColumnText} (Updated)";
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -218,13 +218,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (long)(i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
-                    ColumnBoolean = (i % 2 != 0),
+                    ColumnBoolean = true,
                     ColumnCharacter = "C",
                     ColumnDate = now.Date,
                     ColumnInteger = Convert.ToInt32(i),
                     ColumnInterval = now.TimeOfDay,
-                    ColumMoney = Convert.ToDecimal(i),
-                    ColumName = $"ColumnName{i}",
+                    ColumnMoney = Convert.ToDecimal(i),
+                    ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
@@ -243,17 +243,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
-            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
             table.ColumnCharacter = "C";
             table.ColumnDate = now.Date;
-            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInteger = Convert.ToInt32(2);
             table.ColumnInterval = now.TimeOfDay;
-            table.ColumMoney = Convert.ToDecimal(1);
-            table.ColumName = $"ColumnName{1}";
-            table.ColumnReal = Convert.ToSingle(1);
-            table.ColumnSmallInt = Convert.ToInt16(1);
-            table.ColumnText = $"ColumnText{1}";
+            table.ColumnMoney = Convert.ToDecimal(2);
+            table.ColumnName = $"{table.ColumnName} (Updated)";
+            table.ColumnReal = Convert.ToSingle(2);
+            table.ColumnSmallInt = Convert.ToInt16(2);
+            table.ColumnText = $"{table.ColumnText} (Updated)";
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -278,13 +278,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
-                    ColumnBoolean = (i % 2 != 0),
+                    ColumnBoolean = true,
                     ColumnCharacter = "C",
                     ColumnDate = now.Date,
                     ColumnInteger = Convert.ToInt32(i),
                     ColumnInterval = now.TimeOfDay,
-                    ColumMoney = Convert.ToDecimal(i),
-                    ColumName = $"ColumnName{i}",
+                    ColumnMoney = Convert.ToDecimal(i),
+                    ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
@@ -303,17 +303,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
-            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
             table.ColumnCharacter = "C";
             table.ColumnDate = now.Date;
-            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInteger = Convert.ToInt32(2);
             table.ColumnInterval = now.TimeOfDay;
-            table.ColumMoney = Convert.ToDecimal(1);
-            table.ColumName = $"ColumnName{1}";
-            table.ColumnReal = Convert.ToSingle(1);
-            table.ColumnSmallInt = Convert.ToInt16(1);
-            table.ColumnText = $"ColumnText{1}";
+            table.ColumnMoney = Convert.ToDecimal(2);
+            table.ColumnName = $"{table.ColumnName}(Updated) - {Guid.NewGuid()}";
+            table.ColumnReal = Convert.ToSingle(2);
+            table.ColumnSmallInt = Convert.ToInt16(2);
+            table.ColumnText = $"{table.ColumnText} (Updated)";
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -334,13 +334,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (long)(i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
-                    ColumnBoolean = (i % 2 != 0),
+                    ColumnBoolean = true,
                     ColumnCharacter = "C",
                     ColumnDate = now.Date,
                     ColumnInteger = Convert.ToInt32(i),
                     ColumnInterval = now.TimeOfDay,
-                    ColumMoney = Convert.ToDecimal(i),
-                    ColumName = $"ColumnName{i}",
+                    ColumnMoney = Convert.ToDecimal(i),
+                    ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
@@ -359,17 +359,17 @@ namespace RepoDb.PostgreSql.IntegrationTests
             var now = DateTime.SpecifyKind(
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
-            table.ColumnBigInt = Convert.ToInt64(1);
+            table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
             table.ColumnCharacter = "C";
             table.ColumnDate = now.Date;
-            table.ColumnInteger = Convert.ToInt32(1);
+            table.ColumnInteger = Convert.ToInt32(2);
             table.ColumnInterval = now.TimeOfDay;
-            table.ColumMoney = Convert.ToDecimal(1);
-            table.ColumName = $"ColumnName{1}";
-            table.ColumnReal = Convert.ToSingle(1);
-            table.ColumnSmallInt = Convert.ToInt16(1);
-            table.ColumnText = $"ColumnText{1}";
+            table.ColumnMoney = Convert.ToDecimal(2);
+            table.ColumnName = $"{table.ColumnName} (Updated)";
+            table.ColumnReal = Convert.ToSingle(2);
+            table.ColumnSmallInt = Convert.ToInt16(2);
+            table.ColumnText = $"{table.ColumnText} (Updated)";
             table.ColumnTimestampWithoutTimeZone = now;
         }
 

@@ -1178,7 +1178,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)0, queryResult.First().ColumnBoolean);
+                Assert.AreEqual(false, queryResult.First().ColumnBoolean);
             }
         }
 
@@ -1209,7 +1209,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)1, queryResult.First().ColumnBoolean);
+                Assert.AreEqual(true, queryResult.First().ColumnBoolean);
             }
         }
 
@@ -1244,7 +1244,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)0, queryResult.First().ColumnBoolean);
+                Assert.AreEqual(false, queryResult.First().ColumnBoolean);
             }
         }
 
@@ -1275,7 +1275,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<CompleteTable>(entity.Id);
 
                 // Assert
-                Assert.AreEqual((ulong)1, queryResult.First().ColumnBoolean);
+                Assert.AreEqual(true, queryResult.First().ColumnBoolean);
             }
         }
 
@@ -1314,7 +1314,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)0, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual(false, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
             }
         }
 
@@ -1345,7 +1345,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)1, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual(true, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
             }
         }
 
@@ -1380,7 +1380,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)0, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual(false, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
             }
         }
 
@@ -1411,7 +1411,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Assert.AreEqual((ulong)1, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                entities.ForEach(entity => Assert.AreEqual(true, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
             }
         }
 
