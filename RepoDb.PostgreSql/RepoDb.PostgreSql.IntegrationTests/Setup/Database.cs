@@ -89,7 +89,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""CompleteTable""
                     (
-                        ""Id"" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+                        ""Id"" bigint GENERATED ALWAYS AS IDENTITY,
                         ""ColumnCharacter"" ""char"",
                         ""ColumnCharAsArray"" ""char""[],
                         ""ColumnAclItem"" aclitem,
