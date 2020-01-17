@@ -361,7 +361,6 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
-                var qualifiers = request.Qualifiers;
                 var primaryField = GetPrimaryField(request);
                 var identityField = GetIdentityField(request);
                 commandText = statementBuilder.CreateMergeAll(new QueryBuilder(),

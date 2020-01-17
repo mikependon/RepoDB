@@ -160,6 +160,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             {
                 tables.Add(new CompleteTable
                 {
+                    Id = (i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
                     ColumnBoolean = (i % 2 != 0),
                     ColumnCharacter = "C",
@@ -215,6 +216,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             {
                 tables.Add(new
                 {
+                    Id = (long)(i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
                     ColumnBoolean = (i % 2 != 0),
                     ColumnCharacter = "C",

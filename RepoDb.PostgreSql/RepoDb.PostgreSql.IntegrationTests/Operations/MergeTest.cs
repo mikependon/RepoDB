@@ -286,7 +286,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table);
 
                 // Assert
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
@@ -455,7 +455,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table).Result;
 
                 // Assert
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));

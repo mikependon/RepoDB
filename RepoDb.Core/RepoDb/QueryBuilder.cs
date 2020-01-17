@@ -1049,7 +1049,7 @@ namespace RepoDb
             , int? index
             , IDbSetting dbSetting)
         {
-            var fieldNames = fields
+            var fieldNames = fields?
                 .Select(f => (index > 0 ? $"{f.Name}{index}" : f.Name).AsQuoted(dbSetting))
                 .Join(", ");
             return Append(string.Concat("ON CONFLICT (", fieldNames, ")"));

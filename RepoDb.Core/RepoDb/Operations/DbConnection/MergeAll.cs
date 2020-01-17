@@ -481,7 +481,8 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = dbFields?.AsFields();
+                var first = entities?.First();
+                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
             }
 
             // Check the qualifiers
@@ -673,7 +674,8 @@ namespace RepoDb
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = dbFields?.AsFields();
+                var first = entities?.First();
+                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
             }
 
             // Check the qualifiers
@@ -755,6 +757,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Guard the parameters
             GuardMergeAll(entities);
 
@@ -769,7 +774,6 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -924,8 +928,11 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
-                    // Prepare the command
-                    command.Prepare();
+                    if (dbSetting.IsPreparable)
+                    {
+                        // Prepare the command
+                        command.Prepare();
+                    }
 
                     // Directly execute if the entities is only 1 (performance)
                     if (batchSize == 1)
@@ -971,8 +978,11 @@ namespace RepoDb
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
 
-                                // Prepare the command
-                                command.Prepare();
+                                if (dbSetting.IsPreparable)
+                                {
+                                    // Prepare the command
+                                    command.Prepare();
+                                }
                             }
 
                             // Set the values
@@ -1228,6 +1238,9 @@ namespace RepoDb
             bool skipIdentityCheck = false)
             where TEntity : class
         {
+            // Variables needed
+            var dbSetting = connection.GetDbSetting();
+
             // Guard the parameters
             GuardMergeAll(entities);
 
@@ -1256,7 +1269,6 @@ namespace RepoDb
                 var identity = (Field)null;
                 var inputFields = (IEnumerable<DbField>)null;
                 var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
 
                 // Set the identity value
                 if (skipIdentityCheck == false)
@@ -1411,8 +1423,11 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
-                    // Prepare the command
-                    command.Prepare();
+                    if (dbSetting.IsPreparable)
+                    {
+                        // Prepare the command
+                        command.Prepare();
+                    }
 
                     // Directly execute if the entities is only 1 (performance)
                     if (batchSize == 1)
@@ -1458,8 +1473,11 @@ namespace RepoDb
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
 
-                                // Prepare the command
-                                command.Prepare();
+                                if (dbSetting.IsPreparable)
+                                {
+                                    // Prepare the command
+                                    command.Prepare();
+                                }
                             }
 
                             // Set the values

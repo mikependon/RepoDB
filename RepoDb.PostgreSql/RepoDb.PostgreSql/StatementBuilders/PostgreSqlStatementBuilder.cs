@@ -319,31 +319,46 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
+            // Set the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                qualifiers = primaryField.AsField().AsEnumerable();
+            }
+
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
-            // Variables needed
-            //var databaseType = "BIGINT";
+            // Remove the qualifers from the fields
+            var updatableFields = fields
+                .Where(f =>
+                    qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
+                .AsList();
 
-            //// Set the return value
-            //var result = (string)null;
+            // Build the query
+            builder.Clear()
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .OpenParen()
+                .FieldsFrom(fields, DbSetting)
+                .CloseParen();
 
-            //// Check both primary and identity
-            //if (identityField != null)
-            //{
-            //    result = string.Concat($"CAST(COALESCE(lastval(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
+            // Override the system value
+            if (identityField != null)
+            {
+                builder.WriteText("OVERRIDING SYSTEM VALUE");
+            }
 
-            //    // Set the type
-            //    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-            //    if (dbType != null)
-            //    {
-            //        databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-            //    }
-            //}
-            //else
-            //{
-            //    result = string.Concat($"CAST({primaryField.Name.AsParameter(DbSetting)} AS {databaseType})");
-            //}
+            // Continue
+            builder
+                .Values()
+                .OpenParen()
+                .ParametersFrom(fields, 0, DbSetting)
+                .CloseParen()
+                .OnConflict(qualifiers, 0, DbSetting)
+                .DoUpdate()
+                .Set()
+                .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
 
             // Variables needed
             var databaseType = (string)null;
@@ -363,35 +378,12 @@ namespace RepoDb.StatementBuilders
                 string.IsNullOrEmpty(databaseType) ?
                     identityField.Name.AsQuoted(DbSetting) :
                         string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
-                            primaryField != null ? primaryField.Name.AsParameter(DbSetting).AsQuoted(DbSetting) : "NULL";
-
-            // Remove the qualifers from the fields
-            fields = fields
-                .Where(f =>
-                    qualifiers.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase) == false))
-                .AsList();
-
-            // Build the query
-            builder.Clear()
-                .Insert()
-                .Into()
-                .TableNameFrom(tableName, DbSetting)
-                .OpenParen()
-                .FieldsFrom(fields, DbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(fields, 0, DbSetting)
-                .CloseParen()
-                .OnConflict(qualifiers, 0, DbSetting)
-                .DoUpdate()
-                .Set()
-                .FieldsAndParametersFrom(fields, 0, DbSetting);
+                            primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             if (!string.IsNullOrEmpty(result))
             {
                 // Get the string
-                var sql = string.Concat(" RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
+                var sql = string.Concat(" RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
 
                 // Set the result
                 builder
@@ -456,21 +448,40 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
+            // Set the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                qualifiers = primaryField.AsField().AsEnumerable();
+            }
+
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
+            // Remove the qualifers from the fields
+            var updatableFields = fields
+                .Where(f =>
+                    qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
+                .AsList();
+
             // Variables needed
-            var databaseType = "BIGINT";
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
+                }
+            }
 
             // Set the return value
-            var result = (string)null;
-
-            // Set the type
-            var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-            if (dbType != null)
-            {
-                databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-            }
+            var result = identityField != null ?
+                string.IsNullOrEmpty(databaseType) ?
+                    identityField.Name.AsQuoted(DbSetting) :
+                        string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
+                            primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             // Clear the builder
             builder.Clear();
@@ -481,38 +492,41 @@ namespace RepoDb.StatementBuilders
                 // Build the query
                 builder
                     .Insert()
-                    .Or()
-                    .Replace()
                     .Into()
                     .TableNameFrom(tableName, DbSetting)
                     .OpenParen()
                     .FieldsFrom(fields, DbSetting)
-                    .CloseParen()
+                    .CloseParen();
+
+                // Override the system value
+                if (identityField != null)
+                {
+                    builder.WriteText("OVERRIDING SYSTEM VALUE");
+                }
+
+                // Continue
+                builder
                     .Values()
                     .OpenParen()
                     .ParametersFrom(fields, index, DbSetting)
                     .CloseParen()
-                    .End();
-
-                // Check both primary and identity
-                if (identityField != null)
-                {
-                    result = string.Concat($"CAST(COALESCE(lastval(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
-                }
-                else
-                {
-                    result = string.Concat($"CAST({primaryField.Name.AsParameter(index, DbSetting)} AS {databaseType})");
-                }
+                    .OnConflict(qualifiers, 0, DbSetting)
+                    .DoUpdate()
+                    .Set()
+                    .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
 
                 if (!string.IsNullOrEmpty(result))
                 {
+                    // Get the string
+                    var sql = string.Concat(" RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
+
                     // Set the result
                     builder
-                        .Select()
-                        .WriteText(result)
-                        .As("Result".AsQuoted(DbSetting))
-                        .End();
+                        .WriteText(sql);
                 }
+
+                // End the builder
+                builder.End();
             }
 
             // Return the query
