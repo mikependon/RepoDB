@@ -27,214 +27,6 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForInteger()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("INTEGER");
-
-            // Assert
-            Assert.AreEqual(typeof(long), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBlob()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("BLOB");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBlobAsArray()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("BLOBASARRAY");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBinary()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("BINARY");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForLongBlob()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("LONGBLOB");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMediumBlob()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("MEDIUMBLOB");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTinyBlob()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("TINYBLOB");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForVarBinary()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("VARBINARY");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForGeometry()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("GEOMETRY");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForLineString()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("LINESTRING");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMultiLineString()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("MULTILINESTRING");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMultiPoint()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("MULTIPOINT");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMultiPolygon()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("MULTIPOLYGON");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPoint()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("POINT");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPolygon()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("POLYGON");
-
-            // Assert
-            Assert.AreEqual(typeof(byte[]), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBoolean()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("BOOLEAN");
-
-            // Assert
-            Assert.AreEqual(typeof(bool), result);
-        }
-
-        [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForChar()
         {
             // Setup
@@ -242,6 +34,58 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
 
             // Act
             var result = resolver.Resolve("CHAR");
+
+            // Assert
+            Assert.AreEqual(typeof(char), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForChar2()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("\"CHAR\"");
+
+            // Assert
+            Assert.AreEqual(typeof(char), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForArray()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("ARRAY");
+
+            // Assert
+            Assert.AreEqual(typeof(Array), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForCharacter()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("CHARACTER");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForCharacterVarying()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("CHARACTER VARYING");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
@@ -261,65 +105,221 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForLongText()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForJsonB()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("LONGTEXT");
+            var result = resolver.Resolve("JSONB");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMediumText()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForJsonPath()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("MEDIUMTEXT");
+            var result = resolver.Resolve("JSONPATH");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForNChar()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForName()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("NCHAR");
+            var result = resolver.Resolve("NAME");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForNVarChar()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPgDependencies()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("NVARCHAR");
+            var result = resolver.Resolve("PG_DEPENDENCIES");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForString()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPgLsn()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("STRING");
+            var result = resolver.Resolve("PG_LSN");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPgMcvList()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("PG_MCV_LIST");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPgNDistinct()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("PG_NDISTINCT");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPgNodeTree()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("PG_NODE_TREE");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRefCursor()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REFCURSOR");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegClass()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGCLASS");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegDictionary()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGDICTIONARY");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegNamespace()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGNAMESPACE");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegOper()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGOPER");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegOperator()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGOPERATOR");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegProc()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGPROC");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegProcedure()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGPROCEDURE");
+
+            // Assert
+            Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegRole()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGROLE");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
@@ -339,29 +339,172 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTinyText()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTxidSnapshot()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("TINYTEXT");
+            var result = resolver.Resolve("TXID_SNAPSHOT");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForVarChar()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForXml()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("VARCHAR");
+            var result = resolver.Resolve("XML");
 
             // Assert
             Assert.AreEqual(typeof(string), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBit()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("BIT");
+
+            // Assert
+            Assert.AreEqual(typeof(bool), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBoolean()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("BOOLEAN");
+
+            // Assert
+            Assert.AreEqual(typeof(bool), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBitVarying()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("BIT VARYING");
+
+            // Assert
+            Assert.AreEqual(typeof(System.Collections.BitArray), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBox()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("BOX");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlBox), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForByteA()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("BYTEA");
+
+            // Assert
+            Assert.AreEqual(typeof(byte[]), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForCid()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("CID");
+
+            // Assert
+            Assert.AreEqual(typeof(uint), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForOid()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("OID");
+
+            // Assert
+            Assert.AreEqual(typeof(uint), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegConfig()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGCONFIG");
+
+            // Assert
+            Assert.AreEqual(typeof(uint), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForRegType()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("REGTYPE");
+
+            // Assert
+            Assert.AreEqual(typeof(uint), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForXid()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("XID");
+
+            // Assert
+            Assert.AreEqual(typeof(uint), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForCircle()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("CIRCLE");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlCircle), result);
         }
 
         [TestMethod]
@@ -378,85 +521,150 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForDateTime()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestampWithoutTimeZone()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("DATETIME");
+            var result = resolver.Resolve("TIMESTAMP WITHOUT TIME ZONE");
 
             // Assert
             Assert.AreEqual(typeof(DateTime), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForDateTime2()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForDoublePrecision()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("DATETIME2");
+            var result = resolver.Resolve("DOUBLE PRECISION");
 
             // Assert
-            Assert.AreEqual(typeof(DateTime), result);
+            Assert.AreEqual(typeof(double), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimeStamp()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForInet()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("TIMESTAMP");
+            var result = resolver.Resolve("INET");
 
             // Assert
-            Assert.AreEqual(typeof(DateTime), result);
+            Assert.AreEqual(typeof(System.Net.IPAddress), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTime()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForInteger()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("TIME");
+            var result = resolver.Resolve("INTEGER");
+
+            // Assert
+            Assert.AreEqual(typeof(int), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForInterval()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("INTERVAL");
 
             // Assert
             Assert.AreEqual(typeof(TimeSpan), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForDecimal()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimeWithoutTimeZone()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("DECIMAL");
+            var result = resolver.Resolve("TIME WITHOUT TIME ZONE");
+
+            // Assert
+            Assert.AreEqual(typeof(TimeSpan), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForLine()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("LINE");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlLine), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForLSeg()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("LSEG");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlLSeg), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMacAddr()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("MACADDR");
+
+            // Assert
+            Assert.AreEqual(typeof(System.Net.NetworkInformation.PhysicalAddress), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMacAddr8()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("MACADDR8");
+
+            // Assert
+            Assert.AreEqual(typeof(System.Net.NetworkInformation.PhysicalAddress), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMoney()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("MONEY");
 
             // Assert
             Assert.AreEqual(typeof(decimal), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForDecimal2()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("DECIMAL2");
-
-            // Assert
-            Assert.AreEqual(typeof(decimal), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForNumeric()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForNumerc()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
@@ -469,16 +677,42 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForDouble()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPath()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("DOUBLE");
+            var result = resolver.Resolve("PATH");
 
             // Assert
-            Assert.AreEqual(typeof(double), result);
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlPath), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPoint()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("POINT");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlPoint), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForPolygon()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("POLYGON");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlPolygon), result);
         }
 
         [TestMethod]
@@ -491,72 +725,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("REAL");
 
             // Assert
-            Assert.AreEqual(typeof(double), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForFloat()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("FLOAT");
-
-            // Assert
             Assert.AreEqual(typeof(float), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForInt()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("INT");
-
-            // Assert
-            Assert.AreEqual(typeof(int), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForInt2()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("INT2");
-
-            // Assert
-            Assert.AreEqual(typeof(int), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForMediumInt()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("MEDIUMINT");
-
-            // Assert
-            Assert.AreEqual(typeof(int), result);
-        }
-
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForYear()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
-
-            // Act
-            var result = resolver.Resolve("YEAR");
-
-            // Assert
-            Assert.AreEqual(typeof(int), result);
         }
 
         [TestMethod]
@@ -573,39 +742,78 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTinyInt()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTid()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("TINYINT");
+            var result = resolver.Resolve("TID");
 
             // Assert
-            Assert.AreEqual(typeof(sbyte), result);
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlTid), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForBit()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimeWithTimeZone()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("BIT");
+            var result = resolver.Resolve("TIME WITH TIME ZONE");
 
             // Assert
-            Assert.AreEqual(typeof(ulong), result);
+            Assert.AreEqual(typeof(System.DateTimeOffset), result);
         }
 
         [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForNone()
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTsQuery()
         {
             // Setup
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("NONE");
+            var result = resolver.Resolve("TSQUERY");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlTsQuery), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTsVector()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TSVECTOR");
+
+            // Assert
+            Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlTsVector), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForUuid()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("UUID");
+
+            // Assert
+            Assert.AreEqual(typeof(Guid), result);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForOthers()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("OTHERS");
 
             // Assert
             Assert.AreEqual(typeof(object), result);
