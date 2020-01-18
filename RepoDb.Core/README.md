@@ -1,8 +1,10 @@
 [![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
+[![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
+[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb)](https://www.nuget.org/packages/RepoDb)
 [![CoreDL](https://img.shields.io/nuget/dt/repodb)](https://www.nuget.org/packages/RepoDb)
-[![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
-[![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
+[![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
+[![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
 
 ## RepoDb - a hybrid ORM library for .NET.
 
