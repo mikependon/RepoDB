@@ -14,7 +14,7 @@ namespace RepoDb.DbHelpers
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for SqLite.
     /// </summary>
-    internal class SqLiteDbHelper : IDbHelper
+    public sealed class SqLiteDbHelper : IDbHelper
     {
         private IDbSetting m_dbSetting = DbSettingMapper.Get<SQLiteConnection>();
 
@@ -22,8 +22,16 @@ namespace RepoDb.DbHelpers
         /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
         /// </summary>
         public SqLiteDbHelper()
+            : this(new SqLiteDbTypeNameToClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
+        /// </summary>
+        /// <param name="dbTypeResolver">The type resolver to be used.</param>
+        public SqLiteDbHelper(IResolver<string, Type> dbTypeResolver)
         {
-            DbTypeResolver = new SqLiteDbTypeNameToClientTypeResolver();
+            DbTypeResolver = dbTypeResolver;
         }
 
         #region Properties

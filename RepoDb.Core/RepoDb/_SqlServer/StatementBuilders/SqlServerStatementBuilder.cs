@@ -5,21 +5,36 @@ using System;
 using RepoDb.Exceptions;
 using RepoDb.Resolvers;
 using System.Data.SqlClient;
+using RepoDb.Interfaces;
 
 namespace RepoDb.StatementBuilders
 {
     /// <summary>
     /// A class used to build a SQL Statement for SQL Server. This is the default statement builder used by the library.
     /// </summary>
-    internal sealed class SqlServerStatementBuilder : BaseStatementBuilder
+    public sealed class SqlServerStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
         public SqlServerStatementBuilder()
-        : base(DbSettingMapper.Get<SqlConnection>(),
-            new SqlServerConvertFieldResolver(),
-            new ClientTypeToAverageableClientTypeResolver())
+            : this(DbSettingMapper.Get<SqlConnection>(),
+                new SqlServerConvertFieldResolver(),
+                new ClientTypeToAverageableClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
+        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
+        public SqlServerStatementBuilder(IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+            IResolver<Type, Type> averageableClientTypeResolver = null)
+            : base(dbSetting,
+                  convertFieldResolver,
+                  averageableClientTypeResolver)
         { }
 
         #region CreateBatchQuery

@@ -13,7 +13,7 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="dbType">The type of the database.</param>
         /// <returns>The equivalent string name.</returns>
-        public string Resolve(DbType dbType)
+        public virtual string Resolve(DbType dbType)
         {
             /*
             Id = System.Int64

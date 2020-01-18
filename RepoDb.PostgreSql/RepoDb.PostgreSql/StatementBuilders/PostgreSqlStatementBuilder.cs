@@ -1,6 +1,7 @@
 ﻿using Npgsql;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,29 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for PostgreSql.
     /// </summary>
-    internal sealed class PostgreSqlStatementBuilder : BaseStatementBuilder
+    public sealed class PostgreSqlStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="PostgreSqlStatementBuilder"/> object.
         /// </summary>
         public PostgreSqlStatementBuilder()
-            : base(DbSettingMapper.Get(typeof(NpgsqlConnection)),
+            : this(DbSettingMapper.Get(typeof(NpgsqlConnection)),
                   new PostgreSqlConvertFieldResolver(),
                   new ClientTypeToAverageableClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="PostgreSqlStatementBuilder"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
+        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
+        public PostgreSqlStatementBuilder(IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+            IResolver<Type, Type> averageableClientTypeResolver = null)
+            : base(dbSetting,
+                  convertFieldResolver,
+                  averageableClientTypeResolver)
         { }
 
         #region CreateBatchQuery

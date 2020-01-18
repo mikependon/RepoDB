@@ -10,17 +10,35 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class SqLiteConvertFieldResolver : IResolver<Field, IDbSetting, string>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SqLiteConvertFieldResolver"/> class.
+        /// </summary>
+        public SqLiteConvertFieldResolver()
+            : this(new ClientTypeToDbTypeResolver(),
+                 new DbTypeToSqLiteStringNameResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqLiteConvertFieldResolver"/> class.
+        /// </summary>
+        public SqLiteConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
+            IResolver<DbType, string> stringNameResolver)
+        {
+            DbTypeResolver = dbTypeResolver;
+            StringNameResolver = stringNameResolver;
+        }
+
         #region Properties
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the .NET CLR Type and <see cref="DbType"/>.
         /// </summary>
-        private static ClientTypeToDbTypeResolver DbTypeResolver => new ClientTypeToDbTypeResolver();
+        public IResolver<Type, DbType?> DbTypeResolver { get; }
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
         /// </summary>
-        private static DbTypeToSqLiteStringNameResolver StringNameResolver => new DbTypeToSqLiteStringNameResolver();
+        public IResolver<DbType, string> StringNameResolver { get; }
 
         #endregion
 

@@ -4,7 +4,6 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -13,7 +12,7 @@ namespace RepoDb.DbHelpers
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for SQL Server.
     /// </summary>
-    internal sealed class SqlServerDbHelper : IDbHelper
+    public sealed class SqlServerDbHelper : IDbHelper
     {
         private IDbSetting m_dbSetting = DbSettingMapper.Get<SqlConnection>();
 
@@ -21,8 +20,16 @@ namespace RepoDb.DbHelpers
         /// Creates a new instance of <see cref="SqlServerDbHelper"/> class.
         /// </summary>
         public SqlServerDbHelper()
+            : this(new SqlServerDbTypeNameToClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqlServerDbHelper"/> class.
+        /// </summary>
+        /// <param name="dbTypeResolver">The type resolver to be used.</param>
+        public SqlServerDbHelper(IResolver<string, Type> dbTypeResolver)
         {
-            DbTypeResolver = new SqlServerDbTypeNameToClientTypeResolver();
+            DbTypeResolver = dbTypeResolver;
         }
 
         #region Properties

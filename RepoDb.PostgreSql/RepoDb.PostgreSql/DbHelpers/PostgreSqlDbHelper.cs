@@ -12,7 +12,7 @@ namespace RepoDb.DbHelpers
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for PostgreSql.
     /// </summary>
-    internal class PostgreSqlDbHelper : IDbHelper
+    public sealed class PostgreSqlDbHelper : IDbHelper
     {
         private IDbSetting m_dbSetting = DbSettingMapper.Get<NpgsqlConnection>();
 
@@ -20,8 +20,16 @@ namespace RepoDb.DbHelpers
         /// Creates a new instance of <see cref="PostgreSqlDbHelper"/> class.
         /// </summary>
         public PostgreSqlDbHelper()
+            : this(new PostgreSqlDbTypeNameToClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="PostgreSqlDbHelper"/> class.
+        /// </summary>
+        /// <param name="dbTypeResolver">The type resolver to be used.</param>
+        public PostgreSqlDbHelper(IResolver<string, Type> dbTypeResolver)
         {
-            DbTypeResolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+            DbTypeResolver = dbTypeResolver;
         }
 
         #region Properties

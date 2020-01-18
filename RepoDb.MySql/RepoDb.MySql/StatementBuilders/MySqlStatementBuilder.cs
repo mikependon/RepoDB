@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
-using RepoDb.Resolvers;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +11,29 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for MySql.
     /// </summary>
-    internal sealed class MySqlStatementBuilder : BaseStatementBuilder
+    public sealed class MySqlStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="MySqlStatementBuilder"/> object.
         /// </summary>
         public MySqlStatementBuilder()
-            : base(DbSettingMapper.Get(typeof(MySqlConnection)),
+            : this(DbSettingMapper.Get(typeof(MySqlConnection)),
                   null,
                   null)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="MySqlStatementBuilder"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
+        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
+        public MySqlStatementBuilder(IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+            IResolver<Type, Type> averageableClientTypeResolver = null)
+            : base(dbSetting,
+                  convertFieldResolver,
+                  averageableClientTypeResolver)
         { }
 
         #region CreateBatchQuery

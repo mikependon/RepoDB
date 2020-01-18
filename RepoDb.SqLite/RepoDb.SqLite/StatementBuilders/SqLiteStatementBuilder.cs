@@ -1,5 +1,6 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,29 @@ namespace RepoDb.StatementBuilders
     /// <summary>
     /// A class used to build a SQL Statement for SqLite.
     /// </summary>
-    internal sealed class SqLiteStatementBuilder : BaseStatementBuilder
+    public sealed class SqLiteStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> object.
         /// </summary>
         public SqLiteStatementBuilder()
-            : base(DbSettingMapper.Get(typeof(SQLiteConnection)),
+            : this(DbSettingMapper.Get(typeof(SQLiteConnection)),
                   new SqLiteConvertFieldResolver(),
                   new ClientTypeToAverageableClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> class.
+        /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
+        /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
+        /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
+        public SqLiteStatementBuilder(IDbSetting dbSetting,
+            IResolver<Field, IDbSetting, string> convertFieldResolver = null,
+            IResolver<Type, Type> averageableClientTypeResolver = null)
+            : base(dbSetting,
+                  convertFieldResolver,
+                  averageableClientTypeResolver)
         { }
 
         #region CreateBatchQuery

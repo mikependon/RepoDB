@@ -5,7 +5,7 @@ namespace RepoDb.DbSettings
     /// <summary>
     /// A setting class used for <see cref="SQLiteConnection"/> data provider.
     /// </summary>
-    internal sealed class SqLiteDbSetting : BaseDbSetting
+    public sealed class SqLiteDbSetting : BaseDbSetting
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteDbSetting"/> class.

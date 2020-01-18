@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using System;
 using System.Data;
 
 namespace RepoDb.Resolvers
@@ -9,17 +10,35 @@ namespace RepoDb.Resolvers
     /// </summary>
     public class SqlServerConvertFieldResolver : IResolver<Field, IDbSetting, string>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SqlServerConvertFieldResolver"/> class.
+        /// </summary>
+        public SqlServerConvertFieldResolver()
+            : this(new ClientTypeToDbTypeResolver(),
+                 new DbTypeToSqlServerStringNameResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqlServerConvertFieldResolver"/> class.
+        /// </summary>
+        public SqlServerConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
+            IResolver<DbType, string> stringNameResolver)
+        {
+            DbTypeResolver = dbTypeResolver;
+            StringNameResolver = stringNameResolver;
+        }
+
         #region Properties
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the .NET CLR Type and <see cref="DbType"/>.
         /// </summary>
-        private static ClientTypeToDbTypeResolver DbTypeResolver => new ClientTypeToDbTypeResolver();
+        public IResolver<Type, DbType?> DbTypeResolver { get; }
 
         /// <summary>
         /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
         /// </summary>
-        private static DbTypeToSqlServerStringNameResolver StringNameResolver => new DbTypeToSqlServerStringNameResolver();
+        public IResolver<DbType, string> StringNameResolver { get; }
 
         #endregion
 

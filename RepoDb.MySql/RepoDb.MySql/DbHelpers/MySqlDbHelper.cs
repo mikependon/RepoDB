@@ -5,7 +5,6 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +13,7 @@ namespace RepoDb.DbHelpers
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for MySql.
     /// </summary>
-    internal class MySqlDbHelper : IDbHelper
+    public sealed class MySqlDbHelper : IDbHelper
     {
         private IDbSetting m_dbSetting = DbSettingMapper.Get<MySqlConnection>();
 
@@ -22,8 +21,16 @@ namespace RepoDb.DbHelpers
         /// Creates a new instance of <see cref="MySqlDbHelper"/> class.
         /// </summary>
         public MySqlDbHelper()
+            : this(new MySqlDbTypeNameToClientTypeResolver())
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="MySqlDbHelper"/> class.
+        /// </summary>
+        /// <param name="dbTypeResolver">The type resolver to be used.</param>
+        public MySqlDbHelper(IResolver<string, Type> dbTypeResolver)
         {
-            DbTypeResolver = new MySqlDbTypeNameToClientTypeResolver();
+            DbTypeResolver = dbTypeResolver;
         }
 
         #region Properties
