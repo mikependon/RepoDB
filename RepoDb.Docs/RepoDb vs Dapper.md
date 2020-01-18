@@ -2,11 +2,11 @@
 
 In this page, we will share you the differences and what sets [*RepoDb*](https://github.com/mikependon/RepoDb) apart from [*Dapper*](https://github.com/StackExchange/Dapper). We tried our best to make a *1-to-1* comparisson for most area. This page will hopefully help you decide as a developer to choose *RepoDb* as your micro-ORM (*with compelling reason*).
 
-> All the contents of this page is written by the author itself. Our knowledge to *Dapper* is not that deep enough when compared to our knowledge with *RepoDb*. So, please allow yourselves to *check* or *comments* right away if you think we made this page bias for *RepoDb*. Please do a pull-requests for any change!
+> All the contents of this page is written by the *RepoDb* author itself. Our knowledge to *Dapper* is not that deep enough when compared to our knowledge with *RepoDb*. So, please allow yourselves to *check* or *comments* right away if you think we made this page bias for *RepoDb*. Please do a pull-requests for any change!
 
 **Disclaimer:**
 
-This page may not be updated with the latest features of *Dapper* (ASAP). We are not tracking the *Dapper*, but we know what happened on *RepoDb*. To protect the integrity, we are happy if somebody from the community could immediately take an action (before us) to update this page with *Dapper* updates.
+This page may not be updated with the latest features of *Dapper* (ASAP). We are not tracking the *Dapper*! To protect the integrity, we are happy if somebody from the community could immediately take an action (before us) to update this page with *Dapper* updates.
 
 ## Before we begin
 
@@ -29,7 +29,7 @@ The programming language and database provider we are using on our samples below
 
 Both library is an *ORM* framework for *.NET*. They are both lightweight, fast and efficient. The *Dapper* is a full-fledge *micro-ORM* whereas *RepoDb* is a *hybrid-ORM*.
 
-> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension library of *Dapper* (ie: *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
+> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension libraries of both (ie: *RepoDb.SqLite*, *RepoDb.MySql*, *RepoDb.PostgreSql*, *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
 
 ### Tables
 
@@ -66,6 +66,7 @@ CREATE TABLE [dbo].[Order]
 	, CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED ([Id] ASC )
 )
 ON [PRIMARY];
+GO
 ```
 
 ### Models
@@ -934,7 +935,7 @@ Dapper is already running since 2012 and is being used by *StackOverflow.com*. I
 
 **RepoDb:**
 
-We did our best to write *one-test per scenario* and we have delivered *thousand of items (approximately 7K)* for both *Unit* and *IntegrationTests*. We would like your help to review it as well.
+We did our best to write *one-test per scenario* and we have delivered *thousand of items (approximately 6.5K)* for both *Unit* and *IntegrationTests*. We would like your help to review it as well.
 
 Below are the links to our test suites.
 
@@ -944,13 +945,14 @@ Below are the links to our test suites.
 - [SqLite Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite/RepoDb.SqLite.IntegrationTests)
 - [MySql Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.UnitTests)
 - [MySql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
-- We are about to write more on *PostgreSql*.
+- [PostgreSql Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql/RepoDb.PostgreSql.UnitTests)
+- [PostgreSql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql/RepoDb.PostgreSql.IntegrationTests)
 
-> We (or I as an author) have been challenged that the quality of the software does not depends on the number of tests. However, we strongly believe that *spending* much efforts on writing a test will give confidence to the library consumers (ie: *.NET community*). Practially, it helps us to avoid manual revisits on the *already-working* features if somebody is doing a *PR* to us; it prevents the library from any surprising bugs.
+> We (or I as an author) has been challenged that the quality of the software does not depends on the number of tests. However, we strongly believe that *spending* much efforts on writing a test will give confidence to the library consumers (ie: *.NET community*). Practially, it helps us to avoid manual revisits on the *already-working* features if somebody is doing a *PR* to us; it prevents the library from any surprising bugs.
 
 **Conclusion:**
 
-*Dapper* is far matured and with *high-quality* over *RepoDb*. We will not contest this!
+Both is with *high-quality* but the *Dapper* is far matured over **RepoDb**. We will not contest this!
 
 --------
 
