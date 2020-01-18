@@ -3,23 +3,23 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.10.4-beta1</Version>
+    <Version>1.10.4-beta2</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageTags>orm orm-framework orm-library hybrid-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.10.4-beta1:
-- Error: Invalid expression. The property &lt;Id&gt; is not defined on a target type #364 - MySql Support.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.10.4-beta2:
+- Initial support of RepoDb.PostgreSql.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <NeutralLanguage>en-US</NeutralLanguage>
+    <NeutralLanguage></NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.10.4.1</AssemblyVersion>
-    <FileVersion>1.10.4.1</FileVersion>
+    <AssemblyVersion>1.10.4.2</AssemblyVersion>
+    <FileVersion>1.10.4.2</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageIconUrl></PackageIconUrl>
