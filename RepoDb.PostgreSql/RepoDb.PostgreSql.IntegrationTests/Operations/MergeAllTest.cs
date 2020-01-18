@@ -534,7 +534,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), queryResult.Count());
-                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.OrderBy(e => e.Id).ElementAt((int)tables.IndexOf(table))));
             }
         }
 
@@ -927,7 +927,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count(), queryResult.Count());
-                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table))));
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.OrderBy(e => e.Id).ElementAt((int)tables.IndexOf(table))));
             }
         }
 

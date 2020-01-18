@@ -50,14 +50,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                if (value1 is byte[] && value2 is byte[])
+                if (value1 is Array && value2 is Array)
                 {
-                    var b1 = (byte[])value1;
-                    var b2 = (byte[])value2;
-                    for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
+                    var array1 = (Array)value1;
+                    var array2 = (Array)value2;
+                    for (var i = 0; i < Math.Min(array1.Length, array2.Length); i++)
                     {
-                        var v1 = b1[i];
-                        var v2 = b2[i];
+                        var v1 = array1.GetValue(i);
+                        var v2 = array2.GetValue(i);
                         Assert.AreEqual(v1, v2,
                             $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                     }
@@ -117,14 +117,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     var value1 = property.GetValue(obj);
                     var value2 = dictionary[property.Name];
-                    if (value1 is byte[] && value2 is byte[])
+                    if (value1 is Array && value2 is Array)
                     {
-                        var b1 = (byte[])value1;
-                        var b2 = (byte[])value2;
-                        for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
+                        var array1 = (Array)value1;
+                        var array2 = (Array)value2;
+                        for (var i = 0; i < Math.Min(array1.Length, array2.Length); i++)
                         {
-                            var v1 = b1[i];
-                            var v2 = b2[i];
+                            var v1 = array1.GetValue(i);
+                            var v2 = array2.GetValue(i);
                             Assert.AreEqual(v1, v2,
                                 $"Assert failed for '{property.Name}'. The values are '{v1}' and '{v2}'.");
                         }
@@ -162,11 +162,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 },
+                    ColumnBigSerial = Convert.ToInt64(i),
+                    //ColumnBit = true,
                     ColumnBoolean = true,
+                    ColumnChar = 'C',
                     ColumnCharacter = "C",
+                    ColumnCharacterVarying = "ColumnCharacterVarying",
                     ColumnDate = now.Date,
+                    ColumnDateAsArray = new[] { now.Date, now.Date, now.Date },
                     ColumnInteger = Convert.ToInt32(i),
+                    ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 },
                     ColumnInterval = now.TimeOfDay,
+                    ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay },
+                    //ColumnJson = "{\"field1\": 1, \"field2\": 2}",
                     ColumnMoney = Convert.ToDecimal(i),
                     ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
@@ -188,11 +197,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
+            table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
+            table.ColumnBigSerial = Convert.ToInt64(2);
+            //table.ColumnBit = true;
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnChar = 'C';
             table.ColumnCharacter = "C";
+            table.ColumnCharacterVarying = "ColumnCharacterVarying";
             table.ColumnDate = now.Date;
+            table.ColumnDateAsArray = new[] { now.Date, now.Date, now.Date };
             table.ColumnInteger = Convert.ToInt32(2);
+            table.ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 };
             table.ColumnInterval = now.TimeOfDay;
+            table.ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay };
+            //table.ColumnJson = "{\"field1\": 1, \"field2\": 2}";
             table.ColumnMoney = Convert.ToDecimal(2);
             table.ColumnName = $"{table.ColumnName} (Updated)";
             table.ColumnReal = Convert.ToSingle(2);
@@ -218,11 +236,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (long)(i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 },
+                    ColumnBigSerial = Convert.ToInt64(i),
+                    //ColumnBit = true,
                     ColumnBoolean = true,
+                    ColumnChar = 'C',
                     ColumnCharacter = "C",
+                    ColumnCharacterVarying = "ColumnCharacterVarying",
                     ColumnDate = now.Date,
+                    ColumnDateAsArray = new[] { now.Date, now.Date, now.Date },
                     ColumnInteger = Convert.ToInt32(i),
+                    ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 },
                     ColumnInterval = now.TimeOfDay,
+                    ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay },
+                    //ColumnJson = "{\"field1\": 1, \"field2\": 2}",
                     ColumnMoney = Convert.ToDecimal(i),
                     ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
@@ -244,11 +271,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
+            table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
+            table.ColumnBigSerial = Convert.ToInt64(2);
+            //table.ColumnBit = true;
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnChar = 'C';
             table.ColumnCharacter = "C";
+            table.ColumnCharacterVarying = "ColumnCharacterVarying";
             table.ColumnDate = now.Date;
+            table.ColumnDateAsArray = new[] { now.Date, now.Date, now.Date };
             table.ColumnInteger = Convert.ToInt32(2);
+            table.ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 };
             table.ColumnInterval = now.TimeOfDay;
+            table.ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay };
+            //table.ColumnJson = "{\"field1\": 1, \"field2\": 2}";
             table.ColumnMoney = Convert.ToDecimal(2);
             table.ColumnName = $"{table.ColumnName} (Updated)";
             table.ColumnReal = Convert.ToSingle(2);
@@ -278,11 +314,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 },
+                    ColumnBigSerial = Convert.ToInt64(i),
+                    //ColumnBit = true,
                     ColumnBoolean = true,
+                    ColumnChar = 'C',
                     ColumnCharacter = "C",
+                    ColumnCharacterVarying = "ColumnCharacterVarying",
                     ColumnDate = now.Date,
+                    ColumnDateAsArray = new[] { now.Date, now.Date, now.Date },
                     ColumnInteger = Convert.ToInt32(i),
+                    ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 },
                     ColumnInterval = now.TimeOfDay,
+                    ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay },
+                    //ColumnJson = "{\"field1\": 1, \"field2\": 2}",
                     ColumnMoney = Convert.ToDecimal(i),
                     ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
@@ -304,11 +349,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
+            table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
+            table.ColumnBigSerial = Convert.ToInt64(2);
+            //table.ColumnBit = true;
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnChar = 'C';
             table.ColumnCharacter = "C";
+            table.ColumnCharacterVarying = "ColumnCharacterVarying";
             table.ColumnDate = now.Date;
+            table.ColumnDateAsArray = new[] { now.Date, now.Date, now.Date };
             table.ColumnInteger = Convert.ToInt32(2);
+            table.ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 };
             table.ColumnInterval = now.TimeOfDay;
+            table.ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay };
+            //table.ColumnJson = "{\"field1\": 1, \"field2\": 2}";
             table.ColumnMoney = Convert.ToDecimal(2);
             table.ColumnName = $"{table.ColumnName}(Updated) - {Guid.NewGuid()}";
             table.ColumnReal = Convert.ToSingle(2);
@@ -334,11 +388,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = (long)(i + 1),
                     ColumnBigInt = Convert.ToInt64(i),
+                    ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 },
+                    ColumnBigSerial = Convert.ToInt64(i),
+                    //ColumnBit = true,
                     ColumnBoolean = true,
+                    ColumnChar = 'C',
                     ColumnCharacter = "C",
+                    ColumnCharacterVarying = "ColumnCharacterVarying",
                     ColumnDate = now.Date,
+                    ColumnDateAsArray = new[] { now.Date, now.Date, now.Date },
                     ColumnInteger = Convert.ToInt32(i),
+                    ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 },
                     ColumnInterval = now.TimeOfDay,
+                    ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay },
+                    //ColumnJson = "{\"field1\": 1, \"field2\": 2}",
                     ColumnMoney = Convert.ToDecimal(i),
                     ColumnName = $"ColumnName{i}",
                     ColumnReal = Convert.ToSingle(i),
@@ -360,11 +423,20 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
                     DateTimeKind.Unspecified);
             table.ColumnBigInt = Convert.ToInt64(2);
+            table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
+            table.ColumnBigSerial = Convert.ToInt64(2);
+            //table.ColumnBit = true;
             table.ColumnBoolean = (Randomizer.Next() % 2 != 0);
+            table.ColumnChar = 'C';
             table.ColumnCharacter = "C";
+            table.ColumnCharacterVarying = "ColumnCharacterVarying";
             table.ColumnDate = now.Date;
+            table.ColumnDateAsArray = new[] { now.Date, now.Date, now.Date };
             table.ColumnInteger = Convert.ToInt32(2);
+            table.ColumnIntegerAsArray = new[] { 1, 2, 3, 4, 5 };
             table.ColumnInterval = now.TimeOfDay;
+            table.ColumnIntervalAsArray = new[] { now.TimeOfDay, now.TimeOfDay, now.TimeOfDay };
+            //table.ColumnJson = "{\"field1\": 1, \"field2\": 2}";
             table.ColumnMoney = Convert.ToDecimal(2);
             table.ColumnName = $"{table.ColumnName} (Updated)";
             table.ColumnReal = Convert.ToSingle(2);

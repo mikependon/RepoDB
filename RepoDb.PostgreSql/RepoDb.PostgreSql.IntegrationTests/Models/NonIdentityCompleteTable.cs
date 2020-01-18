@@ -5,13 +5,13 @@ namespace RepoDb.PostgreSql.IntegrationTests.Models
     public class NonIdentityCompleteTable
     {
         public System.Int64 Id { get; set; }
-        //public System.Nullable<System.Char> ColumnChar { get; set; }
+        public System.Nullable<System.Char> ColumnChar { get; set; }
         //public System.Array ColumnCharAsArray { get; set; }
         //public System.String ColumnAclItem { get; set; }
         //public System.String ColumnAclItemAsArray { get; set; }
         public System.Nullable<System.Int64> ColumnBigInt { get; set; }
-        //public System.Array ColumnBigIntAsArray { get; set; }
-        //public System.Nullable<System.Int64> ColumnBigSerial { get; set; }
+        public System.Array ColumnBigIntAsArray { get; set; }
+        public System.Nullable<System.Int64> ColumnBigSerial { get; set; }
         //public System.Nullable<System.Boolean> ColumnBit { get; set; }
         //public System.Collections.BitArray ColumnBitVarying { get; set; }
         //public System.Array ColumnBitVaryingAsArray { get; set; }
@@ -23,7 +23,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Models
         //public System.Byte[] ColumnByteA { get; set; }
         //public System.Array ColumnByteAAsArray { get; set; }
         public System.String ColumnCharacter { get; set; }
-        //public System.String ColumnCharacterVarying { get; set; }
+        public System.String ColumnCharacterVarying { get; set; }
         //public System.Array ColumnCharacterVaryingAsArray { get; set; }
         //public System.Nullable<System.UInt32> ColumnCid { get; set; }
         //public System.Array ColumnCidAsArray { get; set; }
@@ -31,7 +31,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Models
         //public System.Nullable<NpgsqlTypes.NpgsqlCircle> ColumnCircle { get; set; }
         //public System.Array ColumnCircleAsArray { get; set; }
         public System.Nullable<System.DateTime> ColumnDate { get; set; }
-        //public System.Array ColumnDateAsArray { get; set; }
+        public System.Array ColumnDateAsArray { get; set; }
         ////public System.Nullable<NpgsqlTypes.NpgsqlRange`1[[System.DateTime, System.Private.CoreLib, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = 7cec85d7bea7798e]]> ColumnDateRange { get; set; }
         //public System.Array ColumnDateRangeAsArray { get; set; }
         //public System.Nullable<System.Double> ColumnDoublePrecision { get; set; }
@@ -46,9 +46,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Models
         ////public System.Nullable<NpgsqlTypes.NpgsqlRange`1[[System.Int64, System.Private.CoreLib, Version = 4.0.0.0, Culture = neutral, PublicKeyToken = 7cec85d7bea7798e]]> ColumnInt8Range { get; set; }
         //public System.Array ColumnInt8RangeAsArray { get; set; }
         public System.Nullable<System.Int32> ColumnInteger { get; set; }
-        //public System.Array ColumnIntegerAsArray { get; set; }
+        public System.Array ColumnIntegerAsArray { get; set; }
         public System.Nullable<System.TimeSpan> ColumnInterval { get; set; }
-        //public System.Array ColumnIntervalAsArray { get; set; }
+        public System.Array ColumnIntervalAsArray { get; set; }
         //public System.String ColumnJson { get; set; }
         //public System.Array ColumnJsonAsArray { get; set; }
         //public System.String ColumnJsonB { get; set; }

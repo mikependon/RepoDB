@@ -90,7 +90,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""CompleteTable""
                     (
                         ""Id"" bigint GENERATED ALWAYS AS IDENTITY,
-                        ""ColumnCharacter"" character(1),
+                        ""ColumnChar"" ""char"",
                         ""ColumnCharAsArray"" ""char""[],
                         --""ColumnAclItem"" aclitem,
                         --""ColumnAclItemAsArray"" aclitem[],
@@ -107,6 +107,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                         ""ColumnBoxAsArray"" box[],
                         ""ColumnByteA"" bytea,
                         ""ColumnByteAAsArray"" bytea[],
+                        ""ColumnCharacter"" character(1) COLLATE pg_catalog.""default"",
                         ""ColumnCharacterVarying"" character varying COLLATE pg_catalog.""default"",
                         ""ColumnCharacterVaryingAsArray"" character varying[] COLLATE pg_catalog.""default"",
                         ""ColumnCid"" cid,
@@ -244,7 +245,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS public.""NonIdentityCompleteTable""
                     (
                         ""Id"" bigint NOT NULL,
-                        ""ColumnCharacter"" character(1),
+                        ""ColumnChar"" ""char"",
                         ""ColumnCharAsArray"" ""char""[],
                         --""ColumnAclItem"" aclitem,
                         --""ColumnAclItemAsArray"" aclitem[],
@@ -261,6 +262,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                         ""ColumnBoxAsArray"" box[],
                         ""ColumnByteA"" bytea,
                         ""ColumnByteAAsArray"" bytea[],
+                        ""ColumnCharacter"" character(1) COLLATE pg_catalog.""default"",
                         ""ColumnCharacterVarying"" character varying COLLATE pg_catalog.""default"",
                         ""ColumnCharacterVaryingAsArray"" character varying[] COLLATE pg_catalog.""default"",
                         ""ColumnCid"" cid,
@@ -420,6 +422,5 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         }
 
         #endregion
-
     }
 }
