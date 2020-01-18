@@ -952,7 +952,7 @@ Below are the links to our test suites.
 
 **Conclusion:**
 
-Both is with *high-quality* but the *Dapper* is far matured over **RepoDb**. We will not contest this!
+Both is with *high-quality* but the *Dapper* is far matured over *RepoDb*. We will not contest this!
 
 --------
 
