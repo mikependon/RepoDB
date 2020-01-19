@@ -3,25 +3,31 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
-    <Description>The official RepoDb extented library for SqLite.</Description>
+    <Description>A hybrid .NET ORM library for SqLite.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm sqlite sqlite-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.SqLite v1.0.3:
-- Referenced the updated version of RepoDb core library (v1.10.3).
+    <PackageReleaseNotes>RepoDb.SqLite v1.0.4:
+- Referenced the updated version of RepoDb core library (v1.10.4).
 
-RepoDb v1.10.3:
-- Revert the recurrent calls to DbFieldCache.Get() in the ExecuteQuery method.</PackageReleaseNotes>
+RepoDb v1.10.4:
+- Initial support of RepoDb.PostgreSql.
+- Added 'IsPreparable' Property for IDbSetting.
+- Removed the 'basedOnFields' logic when extracting the DbDataReader.
+- Enhancement: Parsed the first entity property fields if the 'fields' argument is not defined for InsertAll, MergeAll and UpdateAll.
+- Enhancement: Introduce the BaseDbSetting class to cater a uniform HashCode generator. #369
+- Adhoc: Sealed and exposed the DbSettings, DbHelpers and the DbStatementBuilders classes.
+- Enhancement: Introduced the DbConvertFieldResolver as the base converter field.</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</PackageIconUrl>
   </PropertyGroup>
 
@@ -37,7 +43,7 @@ RepoDb v1.10.3:
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.10.3" />
+    <PackageReference Include="RepoDb" Version="1.10.4" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
   </ItemGroup>
 

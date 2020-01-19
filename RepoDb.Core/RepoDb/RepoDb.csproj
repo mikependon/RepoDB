@@ -3,14 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.10.4-beta2</Version>
+    <Version>1.10.4</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageTags>orm orm-framework orm-library hybrid-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb v1.10.4-beta2:
-- Initial support of RepoDb.PostgreSql.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb v1.10.4:
+- Initial support of RepoDb.PostgreSql.
+- Added 'IsPreparable' Property for IDbSetting.
+- Removed the 'basedOnFields' logic when extracting the DbDataReader.
+- InsertAll: Parsed the first entity property fields if the 'fields' argument is not defined.
+- Enhancement: Introduce the BaseDbSetting class to cater a uniform HashCode generator. #369
+- Adhoc: Sealed and exposed the DbSettings, DbHelpers and the DbStatementBuilders classes.
+- Enhancement: Introduced the DbConvertFieldResolver as the base converter field.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
@@ -18,8 +24,8 @@
     <NeutralLanguage></NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.10.4.2</AssemblyVersion>
-    <FileVersion>1.10.4.2</FileVersion>
+    <AssemblyVersion>1.10.4.3</AssemblyVersion>
+    <FileVersion>1.10.4.3</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageIconUrl></PackageIconUrl>

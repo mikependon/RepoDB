@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.3-beta1</Version>
+    <Version>1.0.3</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for MySql.</Description>
@@ -13,15 +13,22 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm mysql mysql-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.MySql v1.0.3-beta1:
-- Referenced the updated version of RepoDb core library (v1.10.4-beta1).
+    <PackageReleaseNotes>RepoDb.MySql v1.0.3:
+- Referenced the updated version of RepoDb core library (v1.10.4).
+- Error: Invalid expression. The property &lt;Id&gt; is not defined on a target type #364
 
-RepoDb v1.10.4-beta1:
-- Error: Invalid expression. The property &lt;Id&gt; is not defined on a target type #364 - MySql Support</PackageReleaseNotes>
+RepoDb v1.10.4:
+- Initial support of RepoDb.PostgreSql.
+- Added 'IsPreparable' Property for IDbSetting.
+- Removed the 'basedOnFields' logic when extracting the DbDataReader.
+- Enhancement: Parsed the first entity property fields if the 'fields' argument is not defined for InsertAll, MergeAll and UpdateAll.
+- Enhancement: Introduce the BaseDbSetting class to cater a uniform HashCode generator. #369
+- Adhoc: Sealed and exposed the DbSettings, DbHelpers and the DbStatementBuilders classes.
+- Enhancement: Introduced the DbConvertFieldResolver as the base converter field.</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.3.1</AssemblyVersion>
-    <FileVersion>1.0.3.1</FileVersion>
+    <AssemblyVersion>1.0.3.2</AssemblyVersion>
+    <FileVersion>1.0.3.2</FileVersion>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
@@ -44,8 +51,8 @@ RepoDb v1.10.4-beta1:
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.18" />
-    <PackageReference Include="RepoDb" Version="1.10.4-beta1" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="RepoDb" Version="1.10.4" />
   </ItemGroup>
 
   <ItemGroup>
