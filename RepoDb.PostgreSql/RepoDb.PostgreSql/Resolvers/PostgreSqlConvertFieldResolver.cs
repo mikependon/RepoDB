@@ -8,7 +8,7 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class used to resolve the <see cref="Field"/> name conversion for PostgreSql.
     /// </summary>
-    public class PostgreSqlConvertFieldResolver : IResolver<Field, IDbSetting, string>
+    public class PostgreSqlConvertFieldResolver : DbConvertFieldResolver
     {
         /// <summary>
         /// Creates a new instance of <see cref="PostgreSqlConvertFieldResolver"/> class.
@@ -23,34 +23,19 @@ namespace RepoDb.Resolvers
         /// </summary>
         public PostgreSqlConvertFieldResolver(IResolver<Type, DbType?> dbTypeResolver,
             IResolver<DbType, string> stringNameResolver)
-        {
-            DbTypeResolver = dbTypeResolver;
-            StringNameResolver = stringNameResolver;
-        }
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the resolver that is being used to resolve the .NET CLR Type and <see cref="DbType"/>.
-        /// </summary>
-        public IResolver<Type, DbType?> DbTypeResolver { get; }
-
-        /// <summary>
-        /// Gets the resolver that is being used to resolve the <see cref="DbType"/> and the database type string name.
-        /// </summary>
-        public IResolver<DbType, string> StringNameResolver { get; }
-
-        #endregion
+            : base(dbTypeResolver,
+                  stringNameResolver)
+        { }
 
         #region Methods
 
         /// <summary>
-        /// Returns the converted name of the <see cref="Field"/> object for SQL Server.
+        /// Returns the converted name of the <see cref="Field"/> object for PostgreSql.
         /// </summary>
-        /// <param name="field">The instance of the <see cref="Field"/> to be converted..</param>
+        /// <param name="field">The instance of the <see cref="Field"/> to be converted.</param>
         /// <param name="dbSetting">The current in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The converted name of the <see cref="Field"/> object for SQL Server.</returns>
-        public virtual string Resolve(Field field,
+        /// <returns>The converted name of the <see cref="Field"/> object for PostgreSql.</returns>
+        public override string Resolve(Field field,
             IDbSetting dbSetting)
         {
             if (field != null && field.Type != null)
@@ -59,7 +44,7 @@ namespace RepoDb.Resolvers
                 if (dbType != null)
                 {
                     var dbTypeName = StringNameResolver.Resolve(dbType.Value).ToUpper();
-                    return string.Concat("CAST(", field.Name.AsQuoted(true, true, dbSetting), " AS ", dbTypeName, ")");
+                    return string.Concat("CAST(", field.Name.AsField(dbSetting), " AS ", dbTypeName, ")");
                 }
             }
             return field?.Name?.AsQuoted(true, true, dbSetting);
