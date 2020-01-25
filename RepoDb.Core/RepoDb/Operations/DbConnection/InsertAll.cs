@@ -508,12 +508,6 @@ namespace RepoDb
                 using (var command = (DbCommand)connection.CreateCommand(context.CommandText,
                     CommandType.Text, commandTimeout, transaction))
                 {
-                    if (dbSetting.IsPreparable)
-                    {
-                        // Prepare the command
-                        command.Prepare();
-                    }
-
                     // Directly execute if the entities is only 1 (performance)
                     if (context.BatchSize == 1)
                     {
@@ -521,6 +515,12 @@ namespace RepoDb
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
+
+                            // Prepare the command
+                            if (dbSetting.IsPreparable)
+                            {
+                                command.Prepare();
+                            }
 
                             // Actual Execution
                             var returnValue = ObjectConverter.DbNullToNull(command.ExecuteScalar());
@@ -561,16 +561,16 @@ namespace RepoDb
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
-
-                                if (dbSetting.IsPreparable)
-                                {
-                                    // Prepare the command
-                                    command.Prepare();
-                                }
                             }
 
                             // Set the values
                             context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+
+                            // Prepare the command
+                            if (dbSetting.IsPreparable)
+                            {
+                                command.Prepare();
+                            }
 
                             // Actual Execution
                             if (context.IdentityPropertySetterFunc == null)
@@ -855,6 +855,12 @@ namespace RepoDb
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
 
+                            // Prepare the command
+                            if (dbSetting.IsPreparable)
+                            {
+                                command.Prepare();
+                            }
+
                             // Actual Execution
                             var returnValue = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
 
@@ -894,13 +900,16 @@ namespace RepoDb
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
-
-                                // Prepare the command
-                                command.Prepare();
                             }
 
                             // Set the values
                             context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+
+                            // Prepare the command
+                            if (dbSetting.IsPreparable)
+                            {
+                                command.Prepare();
+                            }
 
                             // Actual Execution
                             if (context.IdentityPropertySetterFunc == null)

@@ -21,7 +21,7 @@ namespace RepoDb.PostgreSql.DbSettings
             IsDirectionSupported = true;
             IsExecuteReaderDisposable = true;
             IsMultiStatementExecutable = true;
-            IsPreparable = false;
+            IsPreparable = true;
             IsUseUpsert = false;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
