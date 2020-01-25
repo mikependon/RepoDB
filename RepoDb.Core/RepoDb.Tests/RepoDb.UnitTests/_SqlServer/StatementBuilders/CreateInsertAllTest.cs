@@ -157,5 +157,73 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+
+            // Act
+            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                batchSize: 1,
+                primaryField: null,
+                identityField: identityField,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2, @Field3 ) ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityForThreeBatchesWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+
+            // Act
+            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                batchSize: 3,
+                primaryField: null,
+                identityField: identityField,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2, @Field3 ) ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ; " +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2_1, @Field3_1 ) ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ; " +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2_2, @Field3_2 ) ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

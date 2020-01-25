@@ -23,6 +23,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be deleted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -30,6 +31,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -39,6 +41,7 @@ namespace RepoDb
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(primary, entity),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -51,6 +54,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -58,6 +62,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -67,6 +72,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return Delete<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -79,6 +85,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -86,6 +93,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -94,6 +102,7 @@ namespace RepoDb
         {
             return Delete<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -106,6 +115,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -113,6 +123,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -121,6 +132,7 @@ namespace RepoDb
         {
             return Delete<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -133,6 +145,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -140,6 +153,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -148,6 +162,7 @@ namespace RepoDb
         {
             return Delete<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -160,6 +175,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -167,6 +183,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -175,6 +192,7 @@ namespace RepoDb
         {
             return DeleteInternal<TEntity>(connection: connection,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -187,6 +205,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -194,6 +213,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int DeleteInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -205,6 +225,7 @@ namespace RepoDb
                 connection,
                 transaction,
                 where,
+                hints,
                 statementBuilder);
             var param = (object)null;
 
@@ -233,6 +254,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be deleted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -240,6 +262,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -249,6 +272,7 @@ namespace RepoDb
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(primary, entity),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -261,6 +285,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -268,6 +293,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -277,6 +303,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
             return DeleteAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -289,6 +316,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -296,6 +324,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -304,6 +333,7 @@ namespace RepoDb
         {
             return DeleteAsync<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -316,6 +346,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -323,6 +354,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -331,6 +363,7 @@ namespace RepoDb
         {
             return DeleteAsync<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -343,6 +376,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -350,6 +384,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -358,6 +393,7 @@ namespace RepoDb
         {
             return DeleteAsync<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -370,6 +406,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -377,6 +414,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -385,6 +423,7 @@ namespace RepoDb
         {
             return DeleteAsyncInternal<TEntity>(connection: connection,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -397,6 +436,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -404,6 +444,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> DeleteAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -415,6 +456,7 @@ namespace RepoDb
                 connection,
                 transaction,
                 where,
+                hints,
                 statementBuilder);
             var param = (object)null;
 
@@ -443,6 +485,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -451,6 +494,7 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -459,6 +503,7 @@ namespace RepoDb
             return Delete(connection: connection,
                 tableName: tableName,
                 where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -471,6 +516,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -479,6 +525,7 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -487,6 +534,7 @@ namespace RepoDb
             return Delete(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -499,6 +547,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -507,6 +556,7 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -515,6 +565,7 @@ namespace RepoDb
             return Delete(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -527,6 +578,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -535,6 +587,7 @@ namespace RepoDb
         public static int Delete(this IDbConnection connection,
             string tableName,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -543,6 +596,7 @@ namespace RepoDb
             return DeleteInternal(connection: connection,
                 tableName: tableName,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -555,6 +609,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -563,6 +618,7 @@ namespace RepoDb
         internal static int DeleteInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -573,6 +629,7 @@ namespace RepoDb
                 connection,
                 transaction,
                 where,
+                hints,
                 statementBuilder);
             var param = (object)null;
 
@@ -601,6 +658,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -609,6 +667,7 @@ namespace RepoDb
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -617,6 +676,7 @@ namespace RepoDb
             return DeleteAsync(connection: connection,
                 tableName: tableName,
                 where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -629,6 +689,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -638,6 +699,7 @@ namespace RepoDb
             string tableName,
             QueryField where,
             int? commandTimeout = null,
+            string hints = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -645,6 +707,7 @@ namespace RepoDb
             return DeleteAsync(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -657,6 +720,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -665,6 +729,7 @@ namespace RepoDb
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -673,6 +738,7 @@ namespace RepoDb
             return DeleteAsync(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -685,6 +751,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -693,6 +760,7 @@ namespace RepoDb
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -701,6 +769,7 @@ namespace RepoDb
             return DeleteAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -713,6 +782,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -721,6 +791,7 @@ namespace RepoDb
         internal static Task<int> DeleteAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -731,6 +802,7 @@ namespace RepoDb
                 connection,
                 transaction,
                 where,
+                hints,
                 statementBuilder);
             var param = (object)null;
 

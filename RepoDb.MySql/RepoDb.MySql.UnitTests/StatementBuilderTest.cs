@@ -115,6 +115,23 @@ namespace RepoDb.MySql.UnitTests
                 OrderField.Parse(new { Id = Order.Ascending }));
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateBatchQueryIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateBatchQuery(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }),
+                null,
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateCount
@@ -276,6 +293,21 @@ namespace RepoDb.MySql.UnitTests
             Assert.AreEqual(expected, query);
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateInsertIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateInsert(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                null,
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateInsertAll
@@ -341,6 +373,22 @@ namespace RepoDb.MySql.UnitTests
 
             // Assert
             Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateInsertAllIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateInsertAll(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                3,
+                null,
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                "WhatEver");
         }
 
         #endregion
@@ -628,6 +676,22 @@ namespace RepoDb.MySql.UnitTests
                 null);
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateMergeIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateMerge(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                Field.From("Id", "Name"),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null,
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateMergeAll
@@ -744,6 +808,23 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateMergeAllIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateMergeAll(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                Field.From("Id", "Name"),
+                3,
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null,
+                "WhatEver");
         }
 
         #endregion

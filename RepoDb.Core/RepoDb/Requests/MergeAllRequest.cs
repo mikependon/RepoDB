@@ -22,6 +22,7 @@ namespace RepoDb.Requests
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeAllRequest(Type type,
             IDbConnection connection,
@@ -29,14 +30,16 @@ namespace RepoDb.Requests
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
-                  connection,
-                  transaction,
-                  fields,
-                  qualifiers,
-                  batchSize,
-                  statementBuilder)
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                batchSize,
+                hints,
+                statementBuilder)
         {
             Type = type;
         }
@@ -50,6 +53,7 @@ namespace RepoDb.Requests
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeAllRequest(string name,
             IDbConnection connection,
@@ -57,15 +61,17 @@ namespace RepoDb.Requests
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
+                connection,
+                transaction,
+                statementBuilder)
         {
             Fields = fields?.AsList();
             Qualifiers = qualifiers?.AsList();
             BatchSize = batchSize;
+            Hints = hints;
         }
 
         /// <summary>
@@ -82,6 +88,11 @@ namespace RepoDb.Requests
         /// Gets the size batch of the update operation.
         /// </summary>
         public int BatchSize { get; set; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         #region Equality and comparers
 
@@ -122,6 +133,12 @@ namespace RepoDb.Requests
             if (BatchSize > 0)
             {
                 hashCode += BatchSize.GetHashCode();
+            }
+
+            // Add the hints
+            if (!string.IsNullOrEmpty(Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set and return the hashcode

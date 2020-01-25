@@ -19,11 +19,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -34,7 +36,8 @@ namespace RepoDb
                 // Call the method
                 return connection.InsertAll<TEntity>(entities: entities,
                     batchSize: batchSize,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -61,11 +64,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -76,7 +81,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAllAsync<TEntity>(entities: entities,
                     batchSize: batchSize,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -104,13 +110,15 @@ namespace RepoDb
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -122,7 +130,8 @@ namespace RepoDb
                     entities: entities,
                     fields: fields,
                     batchSize: batchSize,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -150,13 +159,15 @@ namespace RepoDb
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -168,7 +179,8 @@ namespace RepoDb
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);

@@ -25,6 +25,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -32,6 +33,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static object Insert<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -40,6 +42,7 @@ namespace RepoDb
         {
             return InsertInternal<TEntity, object>(connection: connection,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -53,6 +56,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -60,6 +64,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -68,6 +73,7 @@ namespace RepoDb
         {
             return InsertInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -81,6 +87,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -88,6 +95,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -98,6 +106,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 fields: FieldCache.Get<TEntity>(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -115,6 +124,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -122,6 +132,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -130,6 +141,7 @@ namespace RepoDb
         {
             return InsertAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -143,6 +155,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -150,6 +163,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -158,6 +172,7 @@ namespace RepoDb
         {
             return InsertAsyncInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -171,6 +186,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -178,6 +194,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         internal static Task<TResult> InsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -188,6 +205,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 fields: FieldCache.Get<TEntity>(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -205,6 +223,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -213,6 +232,7 @@ namespace RepoDb
         public static object Insert(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -221,6 +241,7 @@ namespace RepoDb
             return InsertInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -234,6 +255,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -242,6 +264,7 @@ namespace RepoDb
         public static TResult Insert<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -250,6 +273,7 @@ namespace RepoDb
             return InsertInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -263,6 +287,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -271,6 +296,7 @@ namespace RepoDb
         internal static TResult InsertInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -281,6 +307,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 fields: Field.Parse(entity),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -298,6 +325,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -306,6 +334,7 @@ namespace RepoDb
         public static Task<object> InsertAsync(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -314,6 +343,7 @@ namespace RepoDb
             return InsertAsync<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -327,6 +357,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -335,6 +366,7 @@ namespace RepoDb
         public static Task<TResult> InsertAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -343,6 +375,7 @@ namespace RepoDb
             return InsertAsyncInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -356,6 +389,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -364,6 +398,7 @@ namespace RepoDb
         internal static Task<TResult> InsertAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -374,6 +409,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 fields: Field.Parse(entity),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -394,6 +430,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -404,6 +441,7 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -460,6 +498,7 @@ namespace RepoDb
                         connection,
                         transaction,
                         fields,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -468,6 +507,7 @@ namespace RepoDb
                         connection,
                         transaction,
                         fields,
+                        hints,
                         statementBuilder);
                 }
 
@@ -558,6 +598,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -568,6 +609,7 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -627,6 +669,7 @@ namespace RepoDb
                         connection,
                         transaction,
                         fields,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -635,6 +678,7 @@ namespace RepoDb
                         connection,
                         transaction,
                         fields,
+                        hints,
                         statementBuilder);
                 }
 

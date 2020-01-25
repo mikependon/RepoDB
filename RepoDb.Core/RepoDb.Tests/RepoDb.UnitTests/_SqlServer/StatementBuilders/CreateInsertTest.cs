@@ -220,5 +220,33 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateInsertWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: null,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT NULL AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
     }
 }

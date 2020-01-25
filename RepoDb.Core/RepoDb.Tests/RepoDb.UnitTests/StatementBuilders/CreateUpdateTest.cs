@@ -363,6 +363,32 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateUpdateWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var where = (QueryGroup)null;
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                where: where,
+                primaryField: null,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"UPDATE [Table] WITH (TABLOCK) " +
+                $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateIfTheTableIsNull()
         {

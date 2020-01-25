@@ -14,11 +14,14 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database.
         /// </summary>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int DeleteAll(IDbTransaction transaction = null)
+        public int DeleteAll(string hints = null,
+			IDbTransaction transaction = null)
         {
-            return DbRepository.DeleteAll<TEntity>(transaction: transaction);
+            return DbRepository.DeleteAll<TEntity>(hints: hints,
+				transaction: transaction);
         }
 
         #endregion
@@ -28,9 +31,11 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync(IDbTransaction transaction = null)
+        public Task<int> DeleteAllAsync(string hints = null,
+			IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAllAsync<TEntity>();
         }

@@ -19,12 +19,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int DeleteAll<TEntity>(this IDbConnection connection,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -32,6 +34,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAllInternal<TEntity>(connection: connection,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -43,12 +46,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int DeleteAllInternal<TEntity>(this IDbConnection connection,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -59,6 +64,7 @@ namespace RepoDb
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
                 transaction,
+                hints,
                 statementBuilder);
 
             // Return the result
@@ -78,12 +84,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -91,6 +99,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAllAsyncInternal<TEntity>(connection: connection,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -102,12 +111,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> DeleteAllAsyncInternal<TEntity>(this IDbConnection connection,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -118,6 +129,7 @@ namespace RepoDb
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
                 transaction,
+                hints,
                 statementBuilder);
 
             // Return the result
@@ -137,6 +149,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -144,6 +157,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int DeleteAll(this IDbConnection connection,
             string tableName,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -151,6 +165,7 @@ namespace RepoDb
         {
             return DeleteAllInternal(connection: connection,
                 tableName: tableName,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -162,6 +177,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -169,6 +185,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int DeleteAllInternal(this IDbConnection connection,
             string tableName,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -178,6 +195,7 @@ namespace RepoDb
             var request = new DeleteAllRequest(tableName,
                 connection,
                 transaction,
+                hints,
                 statementBuilder);
 
             // Return the result
@@ -197,6 +215,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -204,6 +223,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> DeleteAllAsync(this IDbConnection connection,
             string tableName,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -211,6 +231,7 @@ namespace RepoDb
         {
             return DeleteAllAsyncInternal(connection: connection,
                 tableName: tableName,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -222,6 +243,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -229,6 +251,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         internal static Task<int> DeleteAllAsyncInternal(this IDbConnection connection,
             string tableName,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -238,6 +261,7 @@ namespace RepoDb
             var request = new DeleteAllRequest(tableName,
                 connection,
                 transaction,
+                hints,
                 statementBuilder);
 
             // Return the result

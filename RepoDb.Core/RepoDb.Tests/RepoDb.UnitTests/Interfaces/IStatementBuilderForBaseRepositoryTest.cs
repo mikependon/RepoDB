@@ -265,7 +265,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
-                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -279,7 +280,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
-                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -301,7 +303,8 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>())), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -314,7 +317,8 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>())), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -383,7 +387,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -402,7 +407,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -434,7 +440,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -456,7 +463,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -483,7 +491,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -504,7 +513,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -618,7 +628,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -640,7 +651,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -675,7 +687,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -699,7 +712,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -728,7 +742,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -750,7 +765,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1066,7 +1082,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1088,7 +1105,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1123,7 +1141,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1147,7 +1166,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1385,7 +1405,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
-                    It.IsAny<QueryGroup>()), Times.Exactly(1));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1399,7 +1420,8 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateDelete(
                     It.IsAny<QueryBuilder>(),
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
-                    It.IsAny<QueryGroup>()), Times.Exactly(0));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1421,7 +1443,8 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>())), Times.Exactly(1));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1434,7 +1457,8 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilderNever.Verify(builder =>
                 builder.CreateDeleteAll(
                     It.IsAny<QueryBuilder>(),
-                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>())), Times.Exactly(0));
+                    It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1503,7 +1527,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1522,7 +1547,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1554,7 +1580,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1576,7 +1603,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.Is<int>(v => v > 1),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -1602,7 +1630,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1623,7 +1652,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.Is<string>(v => v == ClassMappedNameCache.Get<StatementBuilderEntity>()),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1737,7 +1767,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1759,7 +1790,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -1794,7 +1826,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1818,7 +1851,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         [TestMethod]
@@ -1847,7 +1881,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -1869,7 +1904,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -2185,7 +2221,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -2207,7 +2244,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion
@@ -2242,7 +2280,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(1));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(1));
 
             // Prepare
             var statementBuilderNever = new Mock<IStatementBuilder>();
@@ -2266,7 +2305,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<int>(),
                     It.IsAny<DbField>(),
-                    It.IsAny<DbField>()), Times.Exactly(0));
+                    It.IsAny<DbField>(),
+                    It.IsAny<string>()), Times.Exactly(0));
         }
 
         #endregion

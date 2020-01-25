@@ -21,18 +21,21 @@ namespace RepoDb.Requests
         /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertAllRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
                   fields,
                   batchSize,
+                  hints,
                   statementBuilder)
         {
             Type = type;
@@ -46,12 +49,14 @@ namespace RepoDb.Requests
         /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertAllRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
@@ -60,6 +65,7 @@ namespace RepoDb.Requests
         {
             Fields = fields?.AsList();
             BatchSize = batchSize;
+            Hints = hints;
         }
 
         /// <summary>
@@ -71,6 +77,11 @@ namespace RepoDb.Requests
         /// Gets the size batch of the insertion.
         /// </summary>
         public int BatchSize { get; set; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         #region Equality and comparers
 
@@ -102,6 +113,12 @@ namespace RepoDb.Requests
             if (BatchSize > 0)
             {
                 hashCode += BatchSize.GetHashCode();
+            }
+
+            // Add the hints
+            if (!string.IsNullOrEmpty(Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set and return the hashcode

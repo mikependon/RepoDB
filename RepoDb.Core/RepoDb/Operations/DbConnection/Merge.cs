@@ -26,6 +26,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -33,6 +34,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -42,6 +44,7 @@ namespace RepoDb
             return Merge<TEntity>(connection: connection,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -54,6 +57,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -63,6 +67,7 @@ namespace RepoDb
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -72,6 +77,7 @@ namespace RepoDb
             return Merge<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -84,6 +90,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -93,6 +100,7 @@ namespace RepoDb
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -102,6 +110,7 @@ namespace RepoDb
             return MergeInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -115,6 +124,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -122,6 +132,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -131,6 +142,7 @@ namespace RepoDb
             return Merge<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -144,6 +156,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -153,6 +166,7 @@ namespace RepoDb
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -162,6 +176,7 @@ namespace RepoDb
             return Merge<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -175,6 +190,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -184,6 +200,7 @@ namespace RepoDb
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -193,6 +210,7 @@ namespace RepoDb
             return MergeInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -206,6 +224,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -215,6 +234,7 @@ namespace RepoDb
         internal static TResult MergeInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -239,6 +259,7 @@ namespace RepoDb
                     entity: entity,
                     fields: entity.AsFields(),
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -251,6 +272,7 @@ namespace RepoDb
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     entity: entity,
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -268,6 +290,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -275,6 +298,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -284,6 +308,7 @@ namespace RepoDb
             return MergeAsync<TEntity>(connection: connection,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -296,6 +321,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -305,6 +331,7 @@ namespace RepoDb
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -314,6 +341,7 @@ namespace RepoDb
             return MergeAsync<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -326,6 +354,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -335,6 +364,7 @@ namespace RepoDb
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -344,6 +374,7 @@ namespace RepoDb
             return MergeAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -357,6 +388,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -364,6 +396,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -373,6 +406,7 @@ namespace RepoDb
             return MergeAsync<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -386,6 +420,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -395,6 +430,7 @@ namespace RepoDb
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -404,6 +440,7 @@ namespace RepoDb
             return MergeAsync<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -417,6 +454,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -426,6 +464,7 @@ namespace RepoDb
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -435,6 +474,7 @@ namespace RepoDb
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -448,6 +488,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
+		/// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -457,6 +498,7 @@ namespace RepoDb
         internal static Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -481,6 +523,7 @@ namespace RepoDb
                     entity: entity,
                     fields: entity.AsFields(),
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -493,6 +536,7 @@ namespace RepoDb
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     entity: entity,
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -510,6 +554,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -518,6 +563,7 @@ namespace RepoDb
         public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -527,6 +573,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -540,6 +587,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -549,6 +597,7 @@ namespace RepoDb
             string tableName,
             object entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -558,6 +607,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -571,6 +621,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -580,6 +631,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -589,6 +641,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -602,6 +655,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -610,6 +664,7 @@ namespace RepoDb
         public static TResult Merge<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -619,6 +674,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -633,6 +689,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -642,6 +699,7 @@ namespace RepoDb
             string tableName,
             object entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -651,6 +709,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -665,6 +724,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -674,6 +734,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -683,6 +744,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -697,6 +759,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -706,6 +769,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -722,6 +786,7 @@ namespace RepoDb
                     entity: entity,
                     fields: entity.AsFields(),
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -734,6 +799,7 @@ namespace RepoDb
                     tableName: tableName,
                     entity: entity,
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -751,6 +817,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -759,6 +826,7 @@ namespace RepoDb
         public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -768,6 +836,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -781,6 +850,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -790,6 +860,7 @@ namespace RepoDb
             string tableName,
             object entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -799,6 +870,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -812,6 +884,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -821,6 +894,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -830,6 +904,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -843,6 +918,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -851,6 +927,7 @@ namespace RepoDb
         public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -860,6 +937,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifier: null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -874,6 +952,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -883,6 +962,7 @@ namespace RepoDb
             string tableName,
             object entity,
             Field qualifier,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -892,6 +972,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -906,6 +987,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -915,6 +997,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -924,6 +1007,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -938,6 +1022,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -947,6 +1032,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<Field> qualifiers,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -963,6 +1049,7 @@ namespace RepoDb
                     entity: entity,
                     fields: entity.AsFields(),
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -975,6 +1062,7 @@ namespace RepoDb
                     tableName: tableName,
                     entity: entity,
                     qualifiers: qualifiers,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -996,6 +1084,7 @@ namespace RepoDb
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1007,6 +1096,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1079,6 +1169,7 @@ namespace RepoDb
                         transaction,
                         fields,
                         qualifiers,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -1088,6 +1179,7 @@ namespace RepoDb
                         transaction,
                         fields,
                         qualifiers,
+                        hints,
                         statementBuilder);
                 }
 
@@ -1172,6 +1264,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1181,6 +1274,7 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1263,6 +1357,7 @@ namespace RepoDb
             {
                 exists = connection.Exists(tableName,
                     where,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -1271,6 +1366,7 @@ namespace RepoDb
             else
             {
                 exists = connection.Exists<TEntity>(where,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -1288,6 +1384,7 @@ namespace RepoDb
                     updateResult = connection.Update(tableName,
                         entity,
                         where,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1297,6 +1394,7 @@ namespace RepoDb
                 {
                     updateResult = connection.Update<TEntity>(entity,
                         where,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1322,6 +1420,7 @@ namespace RepoDb
                 {
                     insertResult = connection.Insert(tableName,
                         entity,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1330,6 +1429,7 @@ namespace RepoDb
                 else
                 {
                     insertResult = connection.Insert<TEntity>(entity,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1365,6 +1465,7 @@ namespace RepoDb
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1376,6 +1477,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1432,6 +1534,7 @@ namespace RepoDb
                         transaction,
                         fields,
                         qualifiers,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -1441,6 +1544,7 @@ namespace RepoDb
                         transaction,
                         fields,
                         qualifiers,
+                        hints,
                         statementBuilder);
                 }
 
@@ -1525,6 +1629,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1534,6 +1639,7 @@ namespace RepoDb
             string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1616,6 +1722,7 @@ namespace RepoDb
             {
                 exists = await connection.ExistsAsync(tableName,
                     where,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -1624,6 +1731,7 @@ namespace RepoDb
             else
             {
                 exists = await connection.ExistsAsync<TEntity>(where,
+                    hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
@@ -1641,6 +1749,7 @@ namespace RepoDb
                     updateResult = await connection.UpdateAsync(tableName,
                         entity,
                         where,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1650,6 +1759,7 @@ namespace RepoDb
                 {
                     updateResult = await connection.UpdateAsync<TEntity>(entity,
                         where,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1675,6 +1785,7 @@ namespace RepoDb
                 {
                     insertResult = await connection.InsertAsync(tableName,
                         entity,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,
@@ -1683,6 +1794,7 @@ namespace RepoDb
                 else
                 {
                     insertResult = await connection.InsertAsync<TEntity>(entity,
+                        hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
                         trace: trace,

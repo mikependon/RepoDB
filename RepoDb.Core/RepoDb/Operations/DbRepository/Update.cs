@@ -19,10 +19,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -32,7 +34,8 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -55,11 +58,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -70,7 +75,8 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -93,11 +99,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -108,7 +116,8 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -131,11 +140,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
             QueryField where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -146,7 +157,8 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -169,11 +181,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -184,7 +198,8 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -207,11 +222,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
             QueryGroup where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -222,7 +239,8 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -248,10 +266,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -261,7 +281,8 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -284,11 +305,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -299,7 +322,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -322,11 +346,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -337,7 +363,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -360,11 +387,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryField where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -375,7 +404,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -398,11 +428,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -413,7 +445,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -436,11 +469,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryGroup where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -451,7 +486,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -477,11 +513,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -491,7 +529,8 @@ namespace RepoDb
                 // Call the method
                 return connection.Update(tableName: tableName,
                     entity: entity,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -514,12 +553,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
             object whereOrPrimaryKey,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -530,7 +571,8 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -553,12 +595,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
             QueryField where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -569,7 +613,8 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -592,12 +637,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
             IEnumerable<QueryField> where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -608,7 +655,8 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -631,12 +679,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(string tableName,
             object entity,
             QueryGroup where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -647,7 +697,8 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -673,11 +724,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -687,7 +740,8 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -710,12 +764,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             object whereOrPrimaryKey,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -726,7 +782,8 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -749,12 +806,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryField where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -765,7 +824,8 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -788,12 +848,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             IEnumerable<QueryField> where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -804,7 +866,8 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -827,12 +890,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryGroup where,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -843,7 +908,8 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);

@@ -220,6 +220,68 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateUpdateAllWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+
+            // Act
+            var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 1,
+                primaryField: null,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"UPDATE [Table] WITH (TABLOCK) " +
+                $"SET [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Field1] = @Field1) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateUpdateAllForThreeBatchesWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+
+            // Act
+            var actual = statementBuilder.CreateUpdateAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 3,
+                primaryField: null,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"UPDATE [Table] WITH (TABLOCK) " +
+                $"SET [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Field1] = @Field1) ; " +
+                $"UPDATE [Table] WITH (TABLOCK) " +
+                $"SET [Field2] = @Field2_1, [Field3] = @Field3_1 " +
+                $"WHERE ([Field1] = @Field1_1) ; " +
+                $"UPDATE [Table] WITH (TABLOCK) " +
+                $"SET [Field2] = @Field2_2, [Field3] = @Field3_2 " +
+                $"WHERE ([Field1] = @Field1_2) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnBaseStatementBuilderCreateUpdateAllIfTheTableIsNull()
         {

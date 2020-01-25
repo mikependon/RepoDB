@@ -18,16 +18,19 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             QueryGroup where = null,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
                   connection,
                   transaction,
                   where,
+                  hints,
                   statementBuilder)
         {
             Type = type;
@@ -40,11 +43,13 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
             QueryGroup where = null,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
                   connection,
@@ -52,12 +57,18 @@ namespace RepoDb.Requests
                   statementBuilder)
         {
             Where = where;
+            Hints = hints;
         }
 
         /// <summary>
         /// Gets the query expression used.
         /// </summary>
         public QueryGroup Where { get; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         #region Equality and comparers
 
@@ -80,6 +91,12 @@ namespace RepoDb.Requests
             if (Where != null)
             {
                 hashCode += Where.GetHashCode();
+            }
+
+            // Add the hints
+            if (!string.IsNullOrEmpty(Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set and return the hashcode

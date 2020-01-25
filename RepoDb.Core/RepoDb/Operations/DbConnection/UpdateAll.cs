@@ -26,7 +26,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -34,6 +35,7 @@ namespace RepoDb
         public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -44,6 +46,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -58,7 +61,8 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -67,6 +71,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -77,6 +82,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifier?.AsEnumerable(),
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -91,7 +97,8 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -100,6 +107,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -110,6 +118,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -124,7 +133,8 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -133,6 +143,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -150,6 +161,7 @@ namespace RepoDb
                 batchSize: batchSize,
                 fields: FieldCache.Get<TEntity>(),
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -167,7 +179,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -175,6 +188,7 @@ namespace RepoDb
         public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -185,6 +199,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -199,7 +214,8 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -208,6 +224,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -218,6 +235,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifier?.AsEnumerable(),
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -232,7 +250,8 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -241,6 +260,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -251,6 +271,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -265,7 +286,8 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -274,6 +296,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -291,6 +314,7 @@ namespace RepoDb
                 batchSize: batchSize,
                 fields: FieldCache.Get<TEntity>(),
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -309,7 +333,8 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -319,6 +344,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -330,6 +356,7 @@ namespace RepoDb
                 qualifiers: null,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -345,7 +372,8 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -356,6 +384,7 @@ namespace RepoDb
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -367,6 +396,7 @@ namespace RepoDb
                 qualifiers: qualifier?.AsEnumerable(),
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -382,7 +412,8 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -393,6 +424,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -404,6 +436,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -419,7 +452,8 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -430,6 +464,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -441,6 +476,7 @@ namespace RepoDb
                 batchSize: batchSize,
                 fields: fields,
                 qualifiers: qualifiers,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -459,7 +495,8 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -469,6 +506,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -480,6 +518,7 @@ namespace RepoDb
                 qualifiers: null,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -495,7 +534,8 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -506,6 +546,7 @@ namespace RepoDb
             Field qualifier,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -517,6 +558,7 @@ namespace RepoDb
                 qualifiers: qualifier?.AsEnumerable(),
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -532,7 +574,8 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -543,6 +586,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -554,6 +598,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -569,7 +614,8 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -580,6 +626,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -591,6 +638,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -611,7 +659,8 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be updated.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -622,6 +671,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -699,6 +749,7 @@ namespace RepoDb
                         fields,
                         qualifiers,
                         batchSizeValue,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -709,6 +760,7 @@ namespace RepoDb
                         fields,
                         qualifiers,
                         batchSizeValue,
+                        hints,
                         statementBuilder);
                 }
 
@@ -871,7 +923,8 @@ namespace RepoDb
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be updated.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -882,6 +935,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -959,6 +1013,7 @@ namespace RepoDb
                         fields,
                         qualifiers,
                         batchSizeValue,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -969,6 +1024,7 @@ namespace RepoDb
                         fields,
                         qualifiers,
                         batchSizeValue,
+                        hints,
                         statementBuilder);
                 }
 

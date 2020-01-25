@@ -17,15 +17,18 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAll<TEntity>(entities: entities,
                 batchSize: batchSize,
-                transaction: transaction);
+                hints: hints,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -34,17 +37,20 @@ namespace RepoDb
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAll<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                transaction: transaction);
+                hints: hints,
+				transaction: transaction);
         }
 
         #endregion
@@ -56,15 +62,18 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAllAsync<TEntity>(entities: entities,
                 batchSize: batchSize,
-                transaction: transaction);
+                hints: hints,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -73,17 +82,20 @@ namespace RepoDb
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAllAsync<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                transaction: transaction);
+                hints: hints,
+				transaction: transaction);
         }
 
         #endregion

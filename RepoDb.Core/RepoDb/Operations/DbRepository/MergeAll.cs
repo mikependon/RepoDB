@@ -19,10 +19,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -34,6 +36,7 @@ namespace RepoDb
                 // Call the method
                 return connection.MergeAll<TEntity>(entities: entities,
                     batchSize: batchSize,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -58,11 +61,13 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -75,6 +80,7 @@ namespace RepoDb
                 return connection.MergeAll<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -102,10 +108,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -117,6 +125,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.MergeAllAsync<TEntity>(entities: entities,
                     batchSize: batchSize,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -141,11 +150,13 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -158,6 +169,7 @@ namespace RepoDb
                 return await connection.MergeAllAsync<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -186,12 +198,14 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -204,6 +218,7 @@ namespace RepoDb
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -229,13 +244,15 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -249,6 +266,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -277,12 +295,14 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -295,6 +315,7 @@ namespace RepoDb
                     entities: entities,
                     batchSize: batchSize,
                     fields: fields,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -320,13 +341,15 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -340,6 +363,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     batchSize: batchSize,
                     fields: fields,
+                    hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,

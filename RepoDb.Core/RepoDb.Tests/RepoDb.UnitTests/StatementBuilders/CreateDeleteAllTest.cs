@@ -70,6 +70,24 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateDeleteAllWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+
+            // Act
+            var actual = statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                hints: SqlServerTableHints.TabLock);
+            var expected = "DELETE FROM [Table] WITH (TABLOCK) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnBaseStatementBuilderCreateDeleteAllIfTheTableIsNull()
         {

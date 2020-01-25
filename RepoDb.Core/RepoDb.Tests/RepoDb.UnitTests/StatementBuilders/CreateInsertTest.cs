@@ -174,6 +174,32 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateInsertWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                primaryField: null,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertIfTheNonIdentityPrimaryIsNotCovered()
         {

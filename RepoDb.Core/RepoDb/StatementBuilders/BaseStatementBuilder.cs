@@ -69,7 +69,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -120,7 +120,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -170,7 +170,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -209,7 +209,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -238,13 +238,18 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for delete operation.</returns>
         public virtual string CreateDelete(QueryBuilder queryBuilder,
             string tableName,
-            QueryGroup where = null)
+            QueryGroup where = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+
+            // Validate the hints
+            GuardHints(hints);
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -254,6 +259,7 @@ namespace RepoDb.StatementBuilders
                 .Delete()
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .End();
 
@@ -270,12 +276,17 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for delete-all operation.</returns>
         public virtual string CreateDeleteAll(QueryBuilder queryBuilder,
-            string tableName)
+            string tableName,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+
+            // Validate the hints
+            GuardHints(hints);
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -285,6 +296,7 @@ namespace RepoDb.StatementBuilders
                 .Delete()
                 .From()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .End();
 
             // Return the query
@@ -312,7 +324,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -344,15 +356,18 @@ namespace RepoDb.StatementBuilders
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public virtual string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+            GuardHints(hints);
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
@@ -387,6 +402,7 @@ namespace RepoDb.StatementBuilders
                 .Insert()
                 .Into()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .OpenParen()
                 .FieldsFrom(insertableFields, DbSetting)
                 .CloseParen()
@@ -413,16 +429,19 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public virtual string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+            GuardHints(hints);
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
@@ -464,6 +483,7 @@ namespace RepoDb.StatementBuilders
                 queryBuilder.Insert()
                     .Into()
                     .TableNameFrom(tableName, DbSetting)
+                    .HintsFrom(hints)
                     .OpenParen()
                     .FieldsFrom(insertableFields, DbSetting)
                     .CloseParen()
@@ -501,7 +521,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -548,7 +568,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -596,7 +616,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -643,7 +663,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -695,7 +715,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // There should be fields
             if (fields?.Any() != true)
@@ -761,7 +781,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // There should be fields
             if (fields?.Any() != true)
@@ -825,7 +845,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -872,7 +892,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Check the field
             if (field == null)
@@ -940,16 +960,19 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for update operation.</returns>
         public virtual string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+            GuardHints(hints);
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
@@ -971,6 +994,7 @@ namespace RepoDb.StatementBuilders
             builder.Clear()
                 .Update()
                 .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
                 .Set()
                 .FieldsAndParametersFrom(updatableFields, 0, DbSetting)
                 .WhereFrom(where, DbSetting)
@@ -994,6 +1018,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for update-all operation.</returns>
         public virtual string CreateUpdateAll(QueryBuilder queryBuilder,
             string tableName,
@@ -1001,10 +1026,12 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+            GuardHints(hints);
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
@@ -1081,6 +1108,7 @@ namespace RepoDb.StatementBuilders
                 queryBuilder
                     .Update()
                     .TableNameFrom(tableName, DbSetting)
+                    .HintsFrom(hints)
                     .Set()
                     .FieldsAndParametersFrom(fields, index, DbSetting)
                     .WhereFrom(qualifiers, index, DbSetting)
@@ -1133,13 +1161,15 @@ namespace RepoDb.StatementBuilders
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public abstract string CreateMerge(QueryBuilder queryBuilder,
-             string tableName,
-             IEnumerable<Field> fields,
-             IEnumerable<Field> qualifiers = null,
-             DbField primaryField = null,
-             DbField identityField = null);
+            string tableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers = null,
+            DbField primaryField = null,
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -1155,6 +1185,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public abstract string CreateMergeAll(QueryBuilder queryBuilder,
             string tableName,
@@ -1162,7 +1193,8 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -1210,7 +1242,7 @@ namespace RepoDb.StatementBuilders
         /// Throws an exception if the 'hints' is present and the <see cref="IDbSetting"/> object does not support it.
         /// </summary>
         /// <param name="hints">The value to be evaluated.</param>
-        protected void ValidateHints(string hints = null)
+        protected void GuardHints(string hints = null)
         {
             if (!string.IsNullOrEmpty(hints) && !DbSetting.AreTableHintsSupported)
             {

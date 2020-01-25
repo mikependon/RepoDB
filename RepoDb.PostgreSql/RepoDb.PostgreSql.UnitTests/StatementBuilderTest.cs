@@ -115,6 +115,23 @@ namespace RepoDb.PostgreSql.UnitTests
                 OrderField.Parse(new { Id = Order.Ascending }));
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateBatchQueryIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateBatchQuery(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }),
+                null,
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateCount
@@ -276,6 +293,21 @@ namespace RepoDb.PostgreSql.UnitTests
             Assert.AreEqual(expected, query);
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateInsertIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateInsert(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                null,
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateInsertAll
@@ -341,6 +373,22 @@ namespace RepoDb.PostgreSql.UnitTests
 
             // Assert
             Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateInsertAllIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateInsertAll(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                3,
+                null,
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                "WhatEver");
         }
 
         #endregion
@@ -629,6 +677,22 @@ namespace RepoDb.PostgreSql.UnitTests
                 null);
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateMergeIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateMerge(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                Field.From("Id", "Name"),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null,
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateMergeAll
@@ -745,6 +809,23 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateMergeAllIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateMergeAll(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                Field.From("Id", "Name"),
+                3,
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null,
+                "WhatEver");
         }
 
         #endregion

@@ -16,9 +16,11 @@ namespace RepoDb
         /// Deletes all the data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public int DeleteAll<TEntity>(IDbTransaction transaction = null)
+        public int DeleteAll<TEntity>(string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -27,7 +29,8 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.DeleteAll<TEntity>(commandTimeout: CommandTimeout,
+                return connection.DeleteAll<TEntity>(hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -52,9 +55,11 @@ namespace RepoDb
         /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
+        public async Task<int> DeleteAllAsync<TEntity>(string hints = null,
+			IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -63,7 +68,8 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.DeleteAllAsync<TEntity>(commandTimeout: CommandTimeout,
+                return await connection.DeleteAllAsync<TEntity>(hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -87,11 +93,13 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database.
         /// </summary>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll(string tableName,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -100,7 +108,8 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.DeleteAll(tableName: tableName,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -124,11 +133,13 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAllAsync(string tableName,
-            IDbTransaction transaction = null)
+            string hints = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -137,7 +148,8 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.DeleteAllAsync(tableName: tableName,
-                    commandTimeout: CommandTimeout,
+                    hints: hints,
+					commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);

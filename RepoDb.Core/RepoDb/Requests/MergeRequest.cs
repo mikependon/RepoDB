@@ -21,19 +21,22 @@ namespace RepoDb.Requests
         /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
-                  connection,
-                  transaction,
-                  fields,
-                  qualifiers,
-                  statementBuilder)
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                hints,
+                statementBuilder)
         {
             Type = type;
         }
@@ -46,20 +49,23 @@ namespace RepoDb.Requests
         /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public MergeRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
+                connection,
+                transaction,
+                statementBuilder)
         {
             Fields = fields?.AsList();
             Qualifiers = qualifiers?.AsList();
+            Hints = hints;
         }
 
         /// <summary>
@@ -71,6 +77,11 @@ namespace RepoDb.Requests
         /// Gets the qualifier <see cref="Field"/> objects.
         /// </summary>
         public IEnumerable<Field> Qualifiers { get; set; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         #region Equality and comparers
 
@@ -105,6 +116,12 @@ namespace RepoDb.Requests
                 {
                     hashCode += field.GetHashCode();
                 }
+            }
+
+            // Add the hints
+            if (!string.IsNullOrEmpty(Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set and return the hashcode

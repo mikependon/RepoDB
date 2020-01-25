@@ -33,12 +33,12 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateDelete(QueryBuilder queryBuilder, string tableName, QueryGroup where = null)
+        public string CreateDelete(QueryBuilder queryBuilder, string tableName, QueryGroup where = null, string hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateDeleteAll(QueryBuilder queryBuilder, string tableName)
+        public string CreateDeleteAll(QueryBuilder queryBuilder, string tableName, string hints = null)
         {
             return string.Empty;
         }
@@ -48,12 +48,12 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateInsert(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, DbField primaryField = null, DbField identityField = null)
+        public string CreateInsert(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateInsertAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        public string CreateInsertAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
@@ -68,12 +68,12 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateMerge(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null)
+        public string CreateMerge(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateMergeAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        public string CreateMergeAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
@@ -113,12 +113,12 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateUpdate(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, QueryGroup where = null, DbField primaryField = null, DbField identityField = null)
+        public string CreateUpdate(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, QueryGroup where = null, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
 
-        public string CreateUpdateAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        public string CreateUpdateAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
             return string.Empty;
         }
@@ -142,22 +142,21 @@ namespace RepoDb.UnitTests.CustomObjects
             : base(dbSetting,
                   convertFieldResolver,
                   averageableClientTypeResolver)
-        {
-        }
+        {}
 
         public override string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int? page, int? rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
 
-        public override string CreateMerge(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null)
+        public override string CreateMerge(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
 
-        public override string CreateMergeAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null)
+        public override string CreateMergeAll(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
     }
 

@@ -26,6 +26,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -34,6 +35,7 @@ namespace RepoDb
         public static int InsertAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -43,6 +45,7 @@ namespace RepoDb
             return InsertAllInternal<TEntity>(connection: connection,
                 entities: entities,
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -56,6 +59,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -64,6 +68,7 @@ namespace RepoDb
         internal static int InsertAllInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -75,6 +80,7 @@ namespace RepoDb
                 entities: entities,
                 batchSize: batchSize,
                 fields: FieldCache.Get<TEntity>(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -93,6 +99,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -101,6 +108,7 @@ namespace RepoDb
         public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -110,6 +118,7 @@ namespace RepoDb
             return InsertAllAsyncInternal<TEntity>(connection: connection,
                 entities: entities,
                 batchSize: batchSize,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -123,6 +132,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -131,6 +141,7 @@ namespace RepoDb
         internal static Task<int> InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -142,6 +153,7 @@ namespace RepoDb
                 entities: entities,
                 batchSize: batchSize,
                 fields: FieldCache.Get<TEntity>(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -161,6 +173,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -171,6 +184,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -181,6 +195,7 @@ namespace RepoDb
                 entities: entities,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -195,6 +210,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -205,6 +221,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -216,6 +233,7 @@ namespace RepoDb
                 entities: entities,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -235,6 +253,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -245,6 +264,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -255,6 +275,7 @@ namespace RepoDb
                 entities: entities,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -269,6 +290,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -279,6 +301,7 @@ namespace RepoDb
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -290,6 +313,7 @@ namespace RepoDb
                 entities: entities,
                 batchSize: batchSize,
                 fields: fields,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -310,6 +334,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity or dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -321,6 +346,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -339,7 +365,7 @@ namespace RepoDb
 
             // Get the fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-             if (fields?.Any() != true)
+            if (fields?.Any() != true)
             {
                 var first = entities?.First();
                 fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
@@ -416,6 +442,7 @@ namespace RepoDb
                             transaction,
                             fields,
                             batchSizeValue,
+                            hints,
                             statementBuilder);
                     }
                     else
@@ -424,6 +451,7 @@ namespace RepoDb
                             connection,
                             transaction,
                             fields,
+                            hints,
                             statementBuilder);
                     }
                 }
@@ -436,6 +464,7 @@ namespace RepoDb
                             transaction,
                             fields,
                             batchSizeValue,
+                            hints,
                             statementBuilder);
                     }
                     else
@@ -444,6 +473,7 @@ namespace RepoDb
                             connection,
                             transaction,
                             fields,
+                            hints,
                             statementBuilder);
                     }
                 }
@@ -649,6 +679,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity or dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -660,6 +691,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -678,7 +710,7 @@ namespace RepoDb
 
             // Get the fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-             if (fields?.Any() != true)
+            if (fields?.Any() != true)
             {
                 var first = entities?.First();
                 fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
@@ -755,6 +787,7 @@ namespace RepoDb
                             transaction,
                             fields,
                             batchSizeValue,
+                            hints,
                             statementBuilder);
                     }
                     else
@@ -763,6 +796,7 @@ namespace RepoDb
                             connection,
                             transaction,
                             fields,
+                            hints,
                             statementBuilder);
                     }
                 }
@@ -775,6 +809,7 @@ namespace RepoDb
                             transaction,
                             fields,
                             batchSizeValue,
+                            hints,
                             statementBuilder);
                     }
                     else
@@ -783,6 +818,7 @@ namespace RepoDb
                             connection,
                             transaction,
                             fields,
+                            hints,
                             statementBuilder);
                     }
                 }

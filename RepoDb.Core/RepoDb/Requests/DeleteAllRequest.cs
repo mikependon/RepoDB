@@ -17,15 +17,18 @@ namespace RepoDb.Requests
         /// <param name="type">The target type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteAllRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
-                  connection,
-                  transaction,
-                  statementBuilder)
+                connection,
+                transaction,
+                hints,
+                statementBuilder)
         {
             Type = type;
         }
@@ -36,16 +39,25 @@ namespace RepoDb.Requests
         /// <param name="name">The name of the request.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public DeleteAllRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
-        { }
+                connection,
+                transaction,
+                statementBuilder)
+        {
+            Hints = hints;
+        }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         #region Equality and comparers
 
@@ -63,6 +75,12 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = string.Concat(Name, ".DeleteAll").GetHashCode();
+
+            // Add the hints
+            if (!string.IsNullOrEmpty(Hints))
+            {
+                hashCode += Hints.GetHashCode();
+            }
 
             // Set and return the hashcode
             return (m_hashCode = hashCode).Value;

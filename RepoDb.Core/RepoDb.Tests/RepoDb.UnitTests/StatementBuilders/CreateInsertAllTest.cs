@@ -163,6 +163,69 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateInsertAllWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                batchSize: 1,
+                primaryField: null,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestBaseStatementBuilderCreateInsertAllForThreeBatchesWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+
+            // Act
+            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                batchSize: 3,
+                primaryField: null,
+                identityField: identityField,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2, @Field3 ) ; " +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2_1, @Field3_1 ) ; " +
+                $"INSERT INTO [Table] WITH (TABLOCK) " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2_2, @Field3_2 ) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
         public void ThrowExceptionOnBaseStatementBuilderCreateInsertAllIfTheNonIdentityPrimaryIsNotCovered()
         {

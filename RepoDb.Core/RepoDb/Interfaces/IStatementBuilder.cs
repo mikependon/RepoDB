@@ -110,10 +110,12 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for delete operation.</returns>
         string CreateDelete(QueryBuilder queryBuilder,
             string tableName,
-            QueryGroup where = null);
+            QueryGroup where = null,
+            string hints = null);
 
         #endregion
 
@@ -124,9 +126,11 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for delete-all operation.</returns>
         string CreateDeleteAll(QueryBuilder queryBuilder,
-            string tableName);
+            string tableName,
+            string hints = null);
 
         #endregion
 
@@ -157,12 +161,14 @@ namespace RepoDb.Interfaces
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for insert operation.</returns>
         string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -177,13 +183,15 @@ namespace RepoDb.Interfaces
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for insert operation.</returns>
         string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -234,13 +242,15 @@ namespace RepoDb.Interfaces
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for merge operation.</returns>
         string CreateMerge(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -256,6 +266,7 @@ namespace RepoDb.Interfaces
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for update-all operation.</returns>
         string CreateMergeAll(QueryBuilder queryBuilder,
             string tableName,
@@ -263,7 +274,8 @@ namespace RepoDb.Interfaces
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -405,13 +417,15 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for update operation.</returns>
         string CreateUpdate(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
 
@@ -427,6 +441,7 @@ namespace RepoDb.Interfaces
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for update-all operation.</returns>
         string CreateUpdateAll(QueryBuilder queryBuilder,
             string tableName,
@@ -434,7 +449,8 @@ namespace RepoDb.Interfaces
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
-            DbField identityField = null);
+            DbField identityField = null,
+            string hints = null);
 
         #endregion
     }

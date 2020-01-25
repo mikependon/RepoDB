@@ -20,17 +20,20 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertRequest(Type type,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : this(ClassMappedNameCache.Get(type),
-                  connection,
-                  transaction,
-                  fields,
-                  statementBuilder)
+                connection,
+                transaction,
+                fields,
+                hints,
+                statementBuilder)
         {
             Type = type;
         }
@@ -42,24 +45,32 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="transaction">The transaction object.</param>
         /// <param name="fields">The list of the target fields.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
         public InsertRequest(string name,
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields = null,
+            string hints = null,
             IStatementBuilder statementBuilder = null)
             : base(name,
-                  connection,
-                  transaction,
-                  statementBuilder)
+                connection,
+                transaction,
+                statementBuilder)
         {
             Fields = fields?.AsList();
+            Hints = hints;
         }
 
         /// <summary>
         /// Gets the target fields.
         /// </summary>
         public IEnumerable<Field> Fields { get; set; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         #region Equality and comparers
 
@@ -85,6 +96,12 @@ namespace RepoDb.Requests
                 {
                     hashCode += field.GetHashCode();
                 }
+            }
+
+            // Add the hints
+            if (!string.IsNullOrEmpty(Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set and return the hashcode

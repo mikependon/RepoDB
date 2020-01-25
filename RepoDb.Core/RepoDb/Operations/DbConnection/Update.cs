@@ -27,13 +27,15 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The entity object to be used for update.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -44,6 +46,7 @@ namespace RepoDb
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup<TEntity>(primary, entity),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -57,7 +60,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -65,6 +69,7 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -75,6 +80,7 @@ namespace RepoDb
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -88,7 +94,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -96,6 +103,7 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -105,6 +113,7 @@ namespace RepoDb
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -118,7 +127,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -126,6 +136,7 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -135,6 +146,7 @@ namespace RepoDb
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -148,7 +160,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -156,6 +169,7 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -165,6 +179,7 @@ namespace RepoDb
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -178,7 +193,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -186,6 +202,7 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -195,6 +212,7 @@ namespace RepoDb
             return UpdateInternal<TEntity>(connection: connection,
                 entity: entity,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -208,7 +226,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -216,6 +235,7 @@ namespace RepoDb
         internal static int UpdateInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -228,6 +248,7 @@ namespace RepoDb
                 entity: entity,
                 where: where,
                 fields: entity.AsFields(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -244,13 +265,15 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -261,6 +284,7 @@ namespace RepoDb
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup<TEntity>(primary, entity),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -274,7 +298,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -282,6 +307,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -292,6 +318,7 @@ namespace RepoDb
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -305,7 +332,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -313,6 +341,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -322,6 +351,7 @@ namespace RepoDb
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -335,7 +365,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -343,6 +374,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -352,6 +384,7 @@ namespace RepoDb
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -365,7 +398,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -373,6 +407,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -382,6 +417,7 @@ namespace RepoDb
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -395,7 +431,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -403,6 +440,7 @@ namespace RepoDb
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -412,6 +450,7 @@ namespace RepoDb
             return UpdateAsyncInternal<TEntity>(connection: connection,
                 entity: entity,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -425,7 +464,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -433,6 +473,7 @@ namespace RepoDb
         internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -445,6 +486,7 @@ namespace RepoDb
                 entity: entity,
                 where: where,
                 fields: entity.AsFields(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -461,7 +503,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -469,6 +512,7 @@ namespace RepoDb
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -476,16 +520,14 @@ namespace RepoDb
         {
             // Variables needed
             var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(dbField => dbField.IsPrimary);
-            var where = (QueryGroup)null;
-
-            // Identify the property via primary
-            where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
+            var where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
 
             // Execute the proper method
             return UpdateInternal(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -499,7 +541,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -508,6 +551,7 @@ namespace RepoDb
             string tableName,
             object entity,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -517,6 +561,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -530,7 +575,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -539,6 +585,7 @@ namespace RepoDb
             string tableName,
             object entity,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -548,6 +595,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -561,7 +609,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -570,6 +619,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -579,6 +629,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -592,7 +643,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -601,6 +653,7 @@ namespace RepoDb
             string tableName,
             object entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -610,6 +663,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -623,7 +677,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -632,6 +687,7 @@ namespace RepoDb
             string tableName,
             object entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -643,6 +699,7 @@ namespace RepoDb
                 entity: entity,
                 where: where,
                 fields: entity?.AsFields(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -659,7 +716,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -667,6 +725,7 @@ namespace RepoDb
         public static async Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -674,16 +733,14 @@ namespace RepoDb
         {
             // Variables needed
             var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.FirstOrDefault(dbField => dbField.IsPrimary);
-            var where = (QueryGroup)null;
-
-            // Identify the property via primary
-            where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
+            var where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
 
             // Execute the proper method
             return await UpdateAsyncInternal(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -697,7 +754,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -706,6 +764,7 @@ namespace RepoDb
             string tableName,
             object entity,
             object whereOrPrimaryKey,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -715,6 +774,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -728,7 +788,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -737,6 +798,7 @@ namespace RepoDb
             string tableName,
             object entity,
             QueryField where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -746,6 +808,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -759,7 +822,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -768,6 +832,7 @@ namespace RepoDb
             string tableName,
             object entity,
             IEnumerable<QueryField> where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -777,6 +842,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -790,7 +856,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -799,6 +866,7 @@ namespace RepoDb
             string tableName,
             object entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -808,6 +876,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -821,7 +890,8 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -830,6 +900,7 @@ namespace RepoDb
             string tableName,
             object entity,
             QueryGroup where,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -841,6 +912,7 @@ namespace RepoDb
                 entity: entity,
                 where: where,
                 fields: entity?.AsFields(),
+                hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -860,7 +932,8 @@ namespace RepoDb
         /// <param name="entity">The data entity or dynamic object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -870,6 +943,7 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -905,6 +979,7 @@ namespace RepoDb
                         transaction,
                         where,
                         fields,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -914,6 +989,7 @@ namespace RepoDb
                         transaction,
                         where,
                         fields,
+                        hints,
                         statementBuilder);
                 }
 
@@ -1005,7 +1081,8 @@ namespace RepoDb
         /// <param name="entity">The data entity or dynamic object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1015,6 +1092,7 @@ namespace RepoDb
             TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
+            string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1052,6 +1130,7 @@ namespace RepoDb
                         transaction,
                         where,
                         fields,
+                        hints,
                         statementBuilder);
                 }
                 else
@@ -1061,6 +1140,7 @@ namespace RepoDb
                         transaction,
                         where,
                         fields,
+                        hints,
                         statementBuilder);
                 }
 

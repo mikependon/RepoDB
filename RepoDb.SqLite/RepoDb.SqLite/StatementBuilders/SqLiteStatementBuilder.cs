@@ -64,7 +64,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // There should be fields
             if (fields?.Any() != true)
@@ -132,7 +132,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -164,12 +164,14 @@ namespace RepoDb.StatementBuilders
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -179,7 +181,8 @@ namespace RepoDb.StatementBuilders
                 tableName,
                 fields,
                 primaryField,
-                identityField);
+                identityField,
+                hints);
 
             // Variables needed
             var databaseType = "BIGINT";
@@ -222,13 +225,15 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = 1,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -239,7 +244,8 @@ namespace RepoDb.StatementBuilders
                 fields,
                 batchSize,
                 primaryField,
-                identityField);
+                identityField,
+                hints);
 
             // Variables needed
             var databaseType = (string)null;
@@ -291,16 +297,19 @@ namespace RepoDb.StatementBuilders
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMerge(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+            GuardHints(hints);
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
@@ -397,6 +406,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMergeAll(QueryBuilder queryBuilder,
             string tableName,
@@ -404,10 +414,12 @@ namespace RepoDb.StatementBuilders
             IEnumerable<Field> qualifiers,
             int batchSize = 10,
             DbField primaryField = null,
-            DbField identityField = null)
+            DbField identityField = null,
+            string hints = null)
         {
             // Ensure with guards
             GuardTableName(tableName);
+            GuardHints(hints);
             GuardPrimary(primaryField);
             GuardIdentity(identityField);
 
@@ -527,7 +539,7 @@ namespace RepoDb.StatementBuilders
             GuardTableName(tableName);
 
             // Validate the hints
-            ValidateHints(hints);
+            GuardHints(hints);
 
             // There should be fields
             if (fields?.Any() != true)

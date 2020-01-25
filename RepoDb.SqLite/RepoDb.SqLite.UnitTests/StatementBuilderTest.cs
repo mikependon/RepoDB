@@ -115,6 +115,23 @@ namespace RepoDb.SqLite.UnitTests
                 OrderField.Parse(new { Id = Order.Ascending }));
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateBatchQueryIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+
+            // Act
+            builder.CreateBatchQuery(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }),
+                null,
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateExists
@@ -193,6 +210,21 @@ namespace RepoDb.SqLite.UnitTests
             Assert.AreEqual(expected, query);
         }
 
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateInsertIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+
+            // Act
+            builder.CreateInsert(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                null,
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                "WhatEver");
+        }
+
         #endregion
 
         #region CreateInsertAll
@@ -258,6 +290,22 @@ namespace RepoDb.SqLite.UnitTests
 
             // Assert
             Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateInsertAllIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+
+            // Act
+            builder.CreateInsertAll(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                3,
+                null,
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                "WhatEver");
         }
 
         #endregion
@@ -364,6 +412,22 @@ namespace RepoDb.SqLite.UnitTests
                 Field.From("Id", "Name"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+
+            // Act
+            builder.CreateMerge(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                Field.From("Id", "Name"),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null,
+                "WhatEver");
         }
 
         #endregion
@@ -482,6 +546,23 @@ namespace RepoDb.SqLite.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+
+            // Act
+            builder.CreateMergeAll(new QueryBuilder(),
+                "Table",
+                Field.From("Id", "Name", "Address"),
+                Field.From("Id", "Name"),
+                3,
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                null,
+                "WhatEver");
         }
 
         #endregion
