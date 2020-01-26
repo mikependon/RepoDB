@@ -383,7 +383,7 @@ namespace RepoDb
                 sqlBulkCopy.WriteToServer(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var copiedField = GetRowsCopiedFieldFromSystemDataSqlBulkCopy();
+                var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
@@ -485,7 +485,7 @@ namespace RepoDb
                 await sqlBulkCopy.WriteToServerAsync(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var copiedField = GetRowsCopiedFieldFromSystemDataSqlBulkCopy();
+                var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
