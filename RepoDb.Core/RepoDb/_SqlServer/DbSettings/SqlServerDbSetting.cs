@@ -1,9 +1,7 @@
-﻿using System.Data.SqlClient;
-
-namespace RepoDb.DbSettings
+﻿namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A setting class used for <see cref="SqlConnection"/> data provider.
+    /// A setting class used for SQL Server data provider.
     /// </summary>
     public sealed class SqlServerDbSetting : BaseDbSetting
     {

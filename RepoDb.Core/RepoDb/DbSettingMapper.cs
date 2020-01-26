@@ -4,7 +4,6 @@ using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Reflection;
 
 namespace RepoDb
@@ -19,8 +18,8 @@ namespace RepoDb
 
         static DbSettingMapper()
         {
-            // By default, map the Sql
-            Add(typeof(SqlConnection), new SqlServerDbSetting(), true);
+            Add(typeof(System.Data.SqlClient.SqlConnection), new SqlServerDbSetting(), true);
+            Add(typeof(Microsoft.Data.SqlClient.SqlConnection), new SqlServerDbSetting(), true);
         }
 
         /// <summary>

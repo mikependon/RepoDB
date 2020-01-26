@@ -14,8 +14,6 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public sealed class SqlServerDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = DbSettingMapper.Get<SqlConnection>();
-
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerDbHelper"/> class.
         /// </summary>
@@ -112,36 +110,40 @@ namespace RepoDb.DbHelpers
         /// Gets the actual schema of the table from the database.
         /// </summary>
         /// <param name="tableName">The passed table name.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The actual table schema.</returns>
-        private string GetSchema(string tableName)
+        private string GetSchema(string tableName,
+            IDbSetting dbSetting)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
+            if (tableName.IndexOf(dbSetting.SchemaSeparator) > 0)
             {
-                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
-                return splitted[0].AsUnquoted(true, m_dbSetting);
+                var splitted = tableName.Split(dbSetting.SchemaSeparator.ToCharArray());
+                return splitted[0].AsUnquoted(true, dbSetting);
             }
 
             // Return the unquoted
-            return m_dbSetting.DefaultSchema;
+            return dbSetting.DefaultSchema;
         }
 
         /// <summary>
         /// Gets the actual name of the table from the database.
         /// </summary>
         /// <param name="tableName">The passed table name.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The actual table name.</returns>
-        private string GetTableName(string tableName)
+        private string GetTableName(string tableName,
+            IDbSetting dbSetting)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
+            if (tableName.IndexOf(dbSetting.SchemaSeparator) > 0)
             {
-                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
-                return splitted[1].AsUnquoted(true, m_dbSetting);
+                var splitted = tableName.Split(dbSetting.SchemaSeparator.ToCharArray());
+                return splitted[1].AsUnquoted(true, dbSetting);
             }
 
             // Return the unquoted
-            return tableName.AsUnquoted(true, m_dbSetting);
+            return tableName.AsUnquoted(true, dbSetting);
         }
 
         #endregion
@@ -163,10 +165,11 @@ namespace RepoDb.DbHelpers
         {
             // Variables
             var commandText = GetCommandText();
+            var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = GetSchema(tableName),
-                TableName = GetTableName(tableName)
+                Schema = GetSchema(tableName, setting),
+                TableName = GetTableName(tableName, setting)
             };
 
             // Iterate and extract
@@ -198,10 +201,11 @@ namespace RepoDb.DbHelpers
         {
             // Variables
             var commandText = GetCommandText();
+            var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = GetSchema(tableName),
-                TableName = GetTableName(tableName)
+                Schema = GetSchema(tableName, setting),
+                TableName = GetTableName(tableName, setting)
             };
 
             // Iterate and extract

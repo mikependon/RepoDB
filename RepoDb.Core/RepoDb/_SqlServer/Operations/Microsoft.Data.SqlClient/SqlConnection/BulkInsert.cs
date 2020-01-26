@@ -1,11 +1,8 @@
-﻿using RepoDb.Exceptions;
+﻿using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,8 +16,8 @@ namespace RepoDb
     {
         #region Privates
 
-        private static bool m_bulkInsertRowsCopiedFieldHasSet = false;
-        private static FieldInfo m_bulkInsertRowsCopiedField = null;
+        private static bool m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet = false;
+        private static FieldInfo m_microsoftDataSqlBulkCopyRowsCopiedField = null;
 
         #endregion
 
@@ -386,7 +383,7 @@ namespace RepoDb
                 sqlBulkCopy.WriteToServer(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var copiedField = GetRowsCopiedField();
+                var copiedField = GetRowsCopiedFieldFromSystemDataSqlBulkCopy();
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
@@ -488,7 +485,7 @@ namespace RepoDb
                 await sqlBulkCopy.WriteToServerAsync(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var copiedField = GetRowsCopiedField();
+                var copiedField = GetRowsCopiedFieldFromSystemDataSqlBulkCopy();
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
@@ -506,23 +503,23 @@ namespace RepoDb
         /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
         /// </summary>
         /// <returns>The actual field.</returns>
-        private static FieldInfo GetRowsCopiedField()
+        private static FieldInfo GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy()
         {
             // Check if the call has made earlier
-            if (m_bulkInsertRowsCopiedFieldHasSet == true)
+            if (m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet == true)
             {
-                return m_bulkInsertRowsCopiedField;
+                return m_microsoftDataSqlBulkCopyRowsCopiedField;
             }
 
             // Set the flag
-            m_bulkInsertRowsCopiedFieldHasSet = true;
+            m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet = true;
 
             // Get the field (whether null or not)
-            m_bulkInsertRowsCopiedField = typeof(SqlBulkCopy)
+            m_microsoftDataSqlBulkCopyRowsCopiedField = typeof(SqlBulkCopy)
                 .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
 
             // Return the value
-            return m_bulkInsertRowsCopiedField;
+            return m_microsoftDataSqlBulkCopyRowsCopiedField;
         }
 
         #endregion

@@ -172,7 +172,7 @@ namespace RepoDb
         /// <summary>
         /// Closes the current data reader.
         /// </summary>
-        public void Close()
+        public override void Close()
         {
             m_isClosed = true;
         }
@@ -411,7 +411,7 @@ namespace RepoDb
         /// Gets the table schema.
         /// </summary>
         /// <returns>An instance of the <see cref="DataTable"/> with the table schema.</returns>
-        public DataTable GetSchemaTable()
+        public override DataTable GetSchemaTable()
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");

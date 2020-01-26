@@ -4,7 +4,6 @@ using RepoDb.StatementBuilders;
 using System;
 using System.Collections.Concurrent;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Reflection;
 
 namespace RepoDb
@@ -19,8 +18,11 @@ namespace RepoDb
 
         static StatementBuilderMapper()
         {
-            // Default for SqlConnection
-            Add(typeof(SqlConnection), new SqlServerStatementBuilder());
+            Add(typeof(System.Data.SqlClient.SqlConnection),
+                new SqlServerStatementBuilder(DbSettingMapper.Get<System.Data.SqlClient.SqlConnection>()));
+
+            Add(typeof(Microsoft.Data.SqlClient.SqlConnection),
+                new SqlServerStatementBuilder(DbSettingMapper.Get<Microsoft.Data.SqlClient.SqlConnection>()));
         }
 
         /// <summary>
