@@ -1,4 +1,5 @@
-﻿using RepoDb.Enumerations;
+﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -1141,6 +1142,21 @@ namespace RepoDb.Reflection
 
                         #endregion
 
+                        #region PropertyHandler
+
+                        // TODO: Get from the cache
+                        // Get the property handler
+                        var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
+
+                        if (propertyHandler != null)
+                        {
+                            var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
+                            value = Expression.Call(Expression.New(propertyHandler.HandlerType),
+                                handlerSetMethod, value);
+                        }
+
+                        #endregion
+
                         // Convert to object
                         value = Expression.Convert(value, typeOfObject);
                     }
@@ -1169,8 +1185,8 @@ namespace RepoDb.Reflection
 
                         // Set the propert value
                         valueBlock = Expression.Block(new[] { valueVariable },
-                                            Expression.Assign(valueVariable, value),
-                                            Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                            Expression.Assign(valueVariable, value),
+                            Expression.Condition(valueIsNull, dbNullValue, valueVariable));
                     }
                     else
                     {

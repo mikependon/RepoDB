@@ -2636,6 +2636,146 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertForEntitiesDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<IdentityTable>(table);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var result = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, result.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertForEntitiesDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var result = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, result.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add invalid mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+
+            // Switched
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            destinationConnection.BulkInsert<IdentityTable>(table, DataRowState.Unchanged, mappings);
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region BulkInsert<TEntity>(Extra Fields)
@@ -2916,6 +3056,215 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertForTableNameDbDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var result = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, result.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertForTableNameDbDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var result = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, result.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheMappingsAreInvalid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add invalid mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+
+            // Switched
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged);
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region BulkInsertAsync<TEntity>
@@ -3133,6 +3482,149 @@ namespace RepoDb.IntegrationTests.Operations
 
                         // Trigger
                         var result = bulkInsertResult.Result;
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForEntitiesDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>(table).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add invalid mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+
+            // Switched
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<IdentityTable>(table, DataRowState.Unchanged, mappings);
+
+                            // Trigger
+                            var result = bulkInsertResult.Result;
+                        }
                     }
                 }
             }
@@ -3419,6 +3911,221 @@ namespace RepoDb.IntegrationTests.Operations
 
                         // Trigger
                         var result = bulkInsertResult.Result;
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForTableNameDataTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBulkInsertAsyncForTableNameDataTableWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.RowGuid), nameof(IdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnNVarChar)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<IdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheMappingsAreInvalid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add invalid mappings
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime), nameof(IdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDateTime2), nameof(IdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnDecimal), nameof(IdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnFloat), nameof(IdentityTable.ColumnFloat)));
+
+            // Switched
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(IdentityTable.ColumnNVarChar), nameof(IdentityTable.ColumnInt)));
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<IdentityTable>(), table, DataRowState.Unchanged, mappings);
+
+                            // Trigger
+                            var result = bulkInsertResult.Result;
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync("InvalidTable", table);
+
+                            // Trigger
+                            var result = bulkInsertResult.Result;
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [sc].[IdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged);
+
+                            // Trigger
+                            var result = bulkInsertResult.Result;
+                        }
                     }
                 }
             }
