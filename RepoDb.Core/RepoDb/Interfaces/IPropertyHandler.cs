@@ -1,0 +1,24 @@
+﻿namespace RepoDb.Interfaces
+{
+    /// <summary>
+    /// An interface that is being used to mark the class as property handler.
+    /// </summary>
+    /// <typeparam name="TInput">The input type for the getter; the output type for the setter.</typeparam>
+    /// <typeparam name="TResult">The input type for the setter; the output type for the getter.</typeparam>
+    public interface IPropertyHandler<TInput, TResult>
+    {
+        /// <summary>
+        /// The method that is used to invoked when the outbound transformation is triggered (ie: Query).
+        /// </summary>
+        /// <param name="input">The input value.</param>
+        /// <returns>An instance of the TResult generic type.</returns>
+        TResult Get(TInput input);
+
+        /// <summary>
+        /// The method that is used to invoked when the inbound transformation is triggered (ie: Insert, Update, Merge).
+        /// </summary>
+        /// <param name="input">The input value.</param>
+        /// <returns>An instance of the TInput generic type.</returns>
+        TInput Set(TResult input);
+    }
+}

@@ -109,6 +109,21 @@ namespace RepoDb.Reflection
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetMappedName().AsUnquoted(true, dbSetting);
                 var ordinal = fieldNames.IndexOf(mappedName.ToLower());
+                var propertyHandler = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
+                var handlerInstance = (object)null;
+                var handlerGetMethod = (MethodInfo)null;
+                var getParameter = (ParameterInfo)null;
+
+                #region PropertyHandler
+
+                if (propertyHandler != null)
+                {
+                    handlerInstance = PropertyHandlerCache.Get(propertyHandler.HandlerType);
+                    handlerGetMethod = propertyHandler.HandlerType.GetMethod("Get");
+                    getParameter = handlerGetMethod.GetParameters().First();
+                }
+
+                #endregion
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
@@ -167,12 +182,23 @@ namespace RepoDb.Reflection
                         var trueExpression = (Expression)null;
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
-                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(propertyType));
+                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(
+                                getParameter?.ParameterType?.GetUnderlyingType() ?? propertyType));
                         }
                         else
                         {
-                            trueExpression = Expression.Default(propertyType);
+                            trueExpression = Expression.Default(getParameter?.ParameterType.GetUnderlyingType() ?? propertyType);
                         }
+
+                        #region PropertyHandler (TrueExpression)
+
+                        if (propertyHandler != null)
+                        {
+                            trueExpression = Expression.Call(Expression.Constant(handlerInstance),
+                                handlerGetMethod, trueExpression);
+                        }
+
+                        #endregion
 
                         // False expression
                         var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
@@ -235,7 +261,8 @@ namespace RepoDb.Reflection
 
                                     else
                                     {
-                                        falseExpression = Expression.Convert(falseExpression, propertyType);
+                                        falseExpression = Expression.Convert(falseExpression, 
+                                            getParameter?.ParameterType?.GetUnderlyingType() ?? propertyType);
                                     }
 
                                     #endregion
@@ -259,11 +286,22 @@ namespace RepoDb.Reflection
 
                             #endregion
                         }
+
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
                             var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
                         }
+
+                        #region PropertyHandler (FalseExpression)
+
+                        if (propertyHandler != null)
+                        {
+                            falseExpression = Expression.Call(Expression.Constant(handlerInstance),
+                                handlerGetMethod, falseExpression);
+                        }
+
+                        #endregion
 
                         // Set the value
                         valueExpression = Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
@@ -642,6 +680,20 @@ namespace RepoDb.Reflection
                                     value = Expression.Call(convertToTypeMethod, Expression.Convert(value, typeOfObject));
                                 }
                             }
+                        }
+
+                        #endregion
+
+                        #region PropertyHandler
+
+                        var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
+                        if (propertyHandler != null)
+                        {
+                            var handlerInstance = PropertyHandlerCache.Get(propertyHandler.HandlerType);
+                            var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
+                            var setParameter = handlerSetMethod.GetParameters().First();
+                            value = Expression.Call(Expression.Constant(handlerInstance),
+                                handlerSetMethod, Expression.Convert(value, setParameter.ParameterType));
                         }
 
                         #endregion
@@ -1144,15 +1196,14 @@ namespace RepoDb.Reflection
 
                         #region PropertyHandler
 
-                        // TODO: Get from the cache
-                        // Get the property handler
                         var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
-
                         if (propertyHandler != null)
                         {
+                            var handlerInstance = PropertyHandlerCache.Get(propertyHandler.HandlerType);
                             var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
-                            value = Expression.Call(Expression.New(propertyHandler.HandlerType),
-                                handlerSetMethod, value);
+                            var setParameter = handlerSetMethod.GetParameters().First();
+                            value = Expression.Call(Expression.Constant(handlerInstance),
+                                handlerSetMethod, Expression.Convert(value, setParameter.ParameterType));
                         }
 
                         #endregion
