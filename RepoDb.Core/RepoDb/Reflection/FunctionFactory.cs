@@ -118,7 +118,7 @@ namespace RepoDb.Reflection
 
                 if (propertyHandler != null)
                 {
-                    handlerInstance = PropertyHandlerCache.Get(propertyHandler.HandlerType);
+                    handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandler.HandlerType);
                     handlerGetMethod = propertyHandler.HandlerType.GetMethod("Get");
                     getParameter = handlerGetMethod.GetParameters().First();
                 }
@@ -689,7 +689,7 @@ namespace RepoDb.Reflection
                         var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
                         if (propertyHandler != null)
                         {
-                            var handlerInstance = PropertyHandlerCache.Get(propertyHandler.HandlerType);
+                            var handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandler.HandlerType);
                             var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
                             var setParameter = handlerSetMethod.GetParameters().First();
                             value = Expression.Call(Expression.Constant(handlerInstance),
@@ -1199,7 +1199,7 @@ namespace RepoDb.Reflection
                         var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
                         if (propertyHandler != null)
                         {
-                            var handlerInstance = PropertyHandlerCache.Get(propertyHandler.HandlerType);
+                            var handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandler.HandlerType);
                             var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
                             var setParameter = handlerSetMethod.GetParameters().First();
                             value = Expression.Call(Expression.Constant(handlerInstance),
