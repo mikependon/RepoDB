@@ -2486,6 +2486,30 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryDeleteViaDataEntityWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    var result = repository.Delete(item, hints: SqlServerTableHints.TabLock);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
+
         #endregion
 
         #region DeleteAsync
@@ -2648,6 +2672,30 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAsyncViaDataEntityWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    var result = repository.DeleteAsync(item, SqlServerTableHints.TabLock).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
+
         #endregion
 
         #endregion
@@ -2777,6 +2825,29 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryInsertWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = repository.Insert<long>(item, hints: SqlServerTableHints.TabLock));
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
+            }
+        }
+
         #endregion
 
         #region Insert(Extra Fields)
@@ -2879,6 +2950,29 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(item, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryInsertAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.InsertAsync(item, hints: SqlServerTableHints.TabLock).Result));
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table)));
+                });
             }
         }
 
@@ -4106,6 +4200,29 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryMergeForIdentitySingleEntityForEmptyTableWithHints()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.Merge(item, hints: SqlServerTableHints.TabLock);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
         #endregion
 
         #region Merge<TEntity>(Extra Fields)
@@ -4759,6 +4876,29 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryMergeAsyncForIdentitySingleEntityForEmptyTableWithHints()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeResult = repository.MergeAsync(item, hints: SqlServerTableHints.TabLock).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, repository.CountAll());
+
+                // Act
+                var queryResult = repository.Query(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
         #endregion
 
         #region MergeAsync<TEntity>(Extra Fields)
@@ -5116,6 +5256,30 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = repository.MergeAll(tables,
                     Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll());
+
+                // Act
+                var queryResult = repository.QueryAll();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAllForIdentityEmptyTableWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeAllResult = repository.MergeAll(tables, hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -5530,6 +5694,30 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = repository.MergeAllAsync(tables,
                     Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, repository.CountAll());
+
+                // Act
+                var queryResult = repository.QueryAll();
+
+                // Assert
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item,
+                    queryResult.First(data => data.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryMergeAllAsyncForIdentityEmptyTableWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                var mergeAllResult = repository.MergeAllAsync(tables, hints: SqlServerTableHints.TabLock).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -8848,6 +9036,41 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryUpdateViaDataEntityWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update(item, hints: SqlServerTableHints.TabLock);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
         #endregion
 
         #region Update(With Extra Fields)
@@ -9348,6 +9571,41 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryUpdateAsyncViaDataEntityWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(item, hints: SqlServerTableHints.TabLock).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
             }
         }
 
