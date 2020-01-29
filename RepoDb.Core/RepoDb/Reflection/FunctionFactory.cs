@@ -109,17 +109,31 @@ namespace RepoDb.Reflection
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetMappedName().AsUnquoted(true, dbSetting);
                 var ordinal = fieldNames.IndexOf(mappedName.ToLower());
-                var propertyHandler = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
+                var propertyHandlerAttribute = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
                 var handlerInstance = (object)null;
                 var handlerGetMethod = (MethodInfo)null;
                 var getParameter = (ParameterInfo)null;
 
                 #region PropertyHandler
 
-                if (propertyHandler != null)
+                if (propertyHandlerAttribute != null)
                 {
-                    handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandler.HandlerType);
-                    handlerGetMethod = propertyHandler.HandlerType.GetMethod("Get");
+                    // Get from the attribute
+                    handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                    handlerGetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Get");
+                }
+                else
+                {
+                    // Get from the mappings
+                    handlerInstance = PropertyTypeHandlerMapper.Get<object>(property.PropertyInfo.PropertyType.GetUnderlyingType());
+                    if (handlerInstance != null)
+                    {
+                        handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
+                    }
+                }
+
+                if (handlerInstance != null)
+                {
                     getParameter = handlerGetMethod.GetParameters().First();
                 }
 
@@ -192,7 +206,7 @@ namespace RepoDb.Reflection
 
                         #region PropertyHandler (TrueExpression)
 
-                        if (propertyHandler != null)
+                        if (propertyHandlerAttribute != null)
                         {
                             trueExpression = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerGetMethod, trueExpression);
@@ -261,7 +275,7 @@ namespace RepoDb.Reflection
 
                                     else
                                     {
-                                        falseExpression = Expression.Convert(falseExpression, 
+                                        falseExpression = Expression.Convert(falseExpression,
                                             getParameter?.ParameterType?.GetUnderlyingType() ?? propertyType);
                                     }
 
@@ -295,7 +309,7 @@ namespace RepoDb.Reflection
 
                         #region PropertyHandler (FalseExpression)
 
-                        if (propertyHandler != null)
+                        if (propertyHandlerAttribute != null)
                         {
                             falseExpression = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerGetMethod, falseExpression);
@@ -686,11 +700,28 @@ namespace RepoDb.Reflection
 
                         #region PropertyHandler
 
-                        var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
-                        if (propertyHandler != null)
+                        var propertyHandlerAttribute = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
+                        var handlerInstance = (object)null;
+                        var handlerSetMethod = (MethodInfo)null;
+
+                        if (propertyHandlerAttribute != null)
                         {
-                            var handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandler.HandlerType);
-                            var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
+                            // Get from the attribute
+                            handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                            handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
+                        }
+                        else
+                        {
+                            // Get from the mappings
+                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(instanceProperty.PropertyType.GetUnderlyingType());
+                            if (handlerInstance != null)
+                            {
+                                handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
+                            }
+                        }
+
+                        if (handlerInstance != null)
+                        {
                             var setParameter = handlerSetMethod.GetParameters().First();
                             value = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerSetMethod, Expression.Convert(value, setParameter.ParameterType));
@@ -1196,11 +1227,28 @@ namespace RepoDb.Reflection
 
                         #region PropertyHandler
 
-                        var propertyHandler = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
-                        if (propertyHandler != null)
+                        var propertyHandlerAttribute = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
+                        var handlerInstance = (object)null;
+                        var handlerSetMethod = (MethodInfo)null;
+
+                        if (propertyHandlerAttribute != null)
                         {
-                            var handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandler.HandlerType);
-                            var handlerSetMethod = propertyHandler.HandlerType.GetMethod("Set");
+                            // Get from the attribute
+                            handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                            handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
+                        }
+                        else
+                        {
+                            // Get from the mappings
+                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(instanceProperty.PropertyType.GetUnderlyingType());
+                            if (handlerInstance != null)
+                            {
+                                handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
+                            }
+                        }
+
+                        if (handlerInstance != null)
+                        {
                             var setParameter = handlerSetMethod.GetParameters().First();
                             value = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerSetMethod, Expression.Convert(value, setParameter.ParameterType));

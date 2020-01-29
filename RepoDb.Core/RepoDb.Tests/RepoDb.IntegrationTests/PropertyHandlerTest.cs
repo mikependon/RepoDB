@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.Interfaces;
 using System;
@@ -11,6 +12,19 @@ namespace RepoDb.IntegrationTests
     public class Address
     {
         public string Value { get; set; }
+    }
+
+    public class FloatToDecimalTypeHandler : IPropertyHandler<float, decimal>
+    {
+        public decimal Get(float input)
+        {
+            return decimal.Parse(input.ToString()) - 200;
+        }
+
+        public float Set(decimal input)
+        {
+            return float.Parse(input.ToString()) + 100;
+        }
     }
 
     public class AddressHandler : IPropertyHandler<string, Address>
@@ -34,6 +48,10 @@ namespace RepoDb.IntegrationTests
         [Map("ColumnNVarChar")]
         [PropertyHandler(typeof(AddressHandler))]
         public Address Address { get; set; }
+
+        [Map("ColumnFloat")]
+        [PropertyHandler(typeof(FloatToDecimalTypeHandler))]
+        public Decimal FloatAsDecimal { get; set; }
     }
 
     [TestClass]
@@ -76,6 +94,7 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModel>();
+                var nonIdentityTableResult = connection.QueryAll<NonIdentityTable>();
             }
         }
     }
