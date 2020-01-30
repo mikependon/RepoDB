@@ -113,6 +113,7 @@ namespace RepoDb.Reflection
                 var handlerInstance = (object)null;
                 var handlerGetMethod = (MethodInfo)null;
                 var getParameter = (ParameterInfo)null;
+                var getParameterUnderlyingType = (Type)null;
 
                 #region PropertyHandler
 
@@ -135,6 +136,7 @@ namespace RepoDb.Reflection
                 if (handlerInstance != null)
                 {
                     getParameter = handlerGetMethod.GetParameters().First();
+                    getParameterUnderlyingType = Nullable.GetUnderlyingType(getParameter.ParameterType);
                 }
 
                 #endregion
@@ -194,10 +196,11 @@ namespace RepoDb.Reflection
 
                         // True expression
                         var trueExpression = (Expression)null;
+                        var isNullableAlreadySet = false;
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
-                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(
-                                getParameter?.ParameterType?.GetUnderlyingType() ?? propertyType));
+                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(getParameterUnderlyingType ?? propertyType));
+                            isNullableAlreadySet = true;
                         }
                         else
                         {
@@ -208,6 +211,11 @@ namespace RepoDb.Reflection
 
                         if (propertyHandlerAttribute != null)
                         {
+                            if (isNullableAlreadySet == false && getParameterUnderlyingType != null)
+                            {
+                                var nullableGetConstructor = getParameter?.ParameterType.GetConstructor(new[] { getParameterUnderlyingType });
+                                trueExpression = Expression.New(nullableGetConstructor, trueExpression);
+                            }
                             trueExpression = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerGetMethod, trueExpression);
                         }
@@ -301,16 +309,24 @@ namespace RepoDb.Reflection
                             #endregion
                         }
 
+                        // Reset nullable variable
+                        isNullableAlreadySet = false;
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
                             var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
+                            isNullableAlreadySet = true;
                         }
 
                         #region PropertyHandler (FalseExpression)
 
                         if (propertyHandlerAttribute != null)
                         {
+                            if (isNullableAlreadySet == false && getParameterUnderlyingType != null)
+                            {
+                                var nullableGetConstructor = getParameter?.ParameterType.GetConstructor(new[] { getParameterUnderlyingType });
+                                falseExpression = Expression.New(nullableGetConstructor, falseExpression);
+                            }
                             falseExpression = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerGetMethod, falseExpression);
                         }

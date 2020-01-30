@@ -1,4 +1,7 @@
-﻿using System;
+﻿using RepoDb.Exceptions;
+using RepoDb.Interfaces;
+using System;
+using System.Linq;
 
 namespace RepoDb.Attributes
 {
@@ -13,6 +16,7 @@ namespace RepoDb.Attributes
         /// <param name="handlerType">The type of the handler.</param>
         public PropertyHandlerAttribute(Type handlerType)
         {
+            Validate(handlerType);
             HandlerType = handlerType;
         }
 
@@ -22,6 +26,21 @@ namespace RepoDb.Attributes
         /// Gets the type of the handler that is being used.
         /// </summary>
         public Type HandlerType { get; }
+
+        #endregion
+
+        #region Methods
+
+        private void Validate(Type handlerType)
+        {
+            var @interface = handlerType.GetInterfaces()
+                .Where(e => e.FullName.StartsWith("RepoDb.Interfaces.IPropertyHandler"))
+                .FirstOrDefault();
+            if (@interface == null)
+            {
+                throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{typeof(IPropertyHandler<,>).FullName}' interface.");
+            }
+        }
 
         #endregion
     }
