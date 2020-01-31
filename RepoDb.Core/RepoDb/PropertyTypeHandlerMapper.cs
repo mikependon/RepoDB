@@ -18,6 +18,10 @@ namespace RepoDb
         /// </summary>
         private static void Guard(Type type)
         {
+            if (type == null)
+            {
+                throw new NullReferenceException("Property handler type.");
+            }
             var @interface = type.GetInterfaces()
                 .Where(e => e.FullName.StartsWith("RepoDb.Interfaces.IPropertyHandler"))
                 .FirstOrDefault();
@@ -66,14 +70,14 @@ namespace RepoDb
         /// Adds a mapping between the .NET CLR Type and a property handler..
         /// </summary>
         /// <param name="type">The .NET CLR Type.</param>
-        /// <param name="propertyHandlerType">The property handler type.</param>
+        /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
         public static void Add(Type type,
-            Type propertyHandlerType,
+            object propertyHandler,
             bool @override = false)
         {
             // Guard the type
-            Guard(propertyHandlerType);
+            Guard(propertyHandler?.GetType());
 
             // Variables for cache
             var key = type.FullName.GetHashCode();
@@ -85,7 +89,7 @@ namespace RepoDb
                 if (@override)
                 {
                     // Override the existing one
-                    m_maps.TryUpdate(key, propertyHandlerType, existing);
+                    m_maps.TryUpdate(key, propertyHandler, existing);
                 }
                 else
                 {
@@ -96,7 +100,7 @@ namespace RepoDb
             else
             {
                 // Add to mapping
-                m_maps.TryAdd(key, propertyHandlerType);
+                m_maps.TryAdd(key, propertyHandler);
             }
         }
     }

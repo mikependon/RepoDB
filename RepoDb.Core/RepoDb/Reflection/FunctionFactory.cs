@@ -109,37 +109,6 @@ namespace RepoDb.Reflection
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetMappedName().AsUnquoted(true, dbSetting);
                 var ordinal = fieldNames.IndexOf(mappedName.ToLower());
-                var propertyHandlerAttribute = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
-                var handlerInstance = (object)null;
-                var handlerGetMethod = (MethodInfo)null;
-                var getParameter = (ParameterInfo)null;
-                var getParameterUnderlyingType = (Type)null;
-
-                #region PropertyHandler
-
-                if (propertyHandlerAttribute != null)
-                {
-                    // Get from the attribute
-                    handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
-                    handlerGetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Get");
-                }
-                else
-                {
-                    // Get from the mappings
-                    handlerInstance = PropertyTypeHandlerMapper.Get<object>(property.PropertyInfo.PropertyType.GetUnderlyingType());
-                    if (handlerInstance != null)
-                    {
-                        handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
-                    }
-                }
-
-                if (handlerInstance != null)
-                {
-                    getParameter = handlerGetMethod.GetParameters().First();
-                    getParameterUnderlyingType = Nullable.GetUnderlyingType(getParameter.ParameterType);
-                }
-
-                #endregion
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
@@ -151,9 +120,40 @@ namespace RepoDb.Reflection
                     var convertType = readerField.Type;
                     var isConversionNeeded = readerField.Type != propertyType;
                     var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
+                    var propertyHandlerAttribute = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
+                    var handlerInstance = (object)null;
+                    var handlerGetMethod = (MethodInfo)null;
+                    var getParameter = (ParameterInfo)null;
+                    var getParameterUnderlyingType = (Type)null;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
                     var readerGetValueMethod = (MethodInfo)null;
+
+                    #region PropertyHandler
+
+                    if (propertyHandlerAttribute != null)
+                    {
+                        // Get from the attribute
+                        handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                        handlerGetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Get");
+                    }
+                    else
+                    {
+                        // Get from the type level mappings (DB type)
+                        handlerInstance = PropertyTypeHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
+                        if (handlerInstance != null)
+                        {
+                            handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
+                        }
+                    }
+
+                    if (handlerInstance != null)
+                    {
+                        getParameter = handlerGetMethod.GetParameters().First();
+                        getParameterUnderlyingType = Nullable.GetUnderlyingType(getParameter.ParameterType);
+                    }
+
+                    #endregion
 
                     // Ignore for the TimeSpan
                     if (propertyType != typeOfTimeSpan)
@@ -199,7 +199,7 @@ namespace RepoDb.Reflection
                         var isNullableAlreadySet = false;
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
-                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(getParameterUnderlyingType ?? propertyType));
+                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(getParameter?.ParameterType.GetUnderlyingType() ?? propertyType));
                             isNullableAlreadySet = true;
                         }
                         else
@@ -209,15 +209,23 @@ namespace RepoDb.Reflection
 
                         #region PropertyHandler (TrueExpression)
 
-                        if (propertyHandlerAttribute != null)
+                        if (handlerInstance != null)
                         {
                             if (isNullableAlreadySet == false && getParameterUnderlyingType != null)
                             {
                                 var nullableGetConstructor = getParameter?.ParameterType.GetConstructor(new[] { getParameterUnderlyingType });
                                 trueExpression = Expression.New(nullableGetConstructor, trueExpression);
                             }
-                            trueExpression = Expression.Call(Expression.Constant(handlerInstance),
-                                handlerGetMethod, trueExpression);
+                            if (readerField.Type != getParameter.ParameterType.GetUnderlyingType())
+                            {
+                                trueExpression = Expression.Call(Expression.Constant(handlerInstance),
+                                    handlerGetMethod, Expression.Convert(trueExpression, getParameter.ParameterType.GetUnderlyingType()));
+                            }
+                            else
+                            {
+                                trueExpression = Expression.Call(Expression.Constant(handlerInstance),
+                                    handlerGetMethod, trueExpression);
+                            }
                         }
 
                         #endregion
@@ -314,13 +322,16 @@ namespace RepoDb.Reflection
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
                             var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
-                            falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
-                            isNullableAlreadySet = true;
+                            if (handlerInstance == null)
+                            {
+                                falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
+                                isNullableAlreadySet = true;
+                            }
                         }
 
                         #region PropertyHandler (FalseExpression)
 
-                        if (propertyHandlerAttribute != null)
+                        if (handlerInstance != null)
                         {
                             if (isNullableAlreadySet == false && getParameterUnderlyingType != null)
                             {
@@ -728,8 +739,8 @@ namespace RepoDb.Reflection
                         }
                         else
                         {
-                            // Get from the mappings
-                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(instanceProperty.PropertyType.GetUnderlyingType());
+                            // Get from the type level mappings (DB type)
+                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(field.Type.GetUnderlyingType());
                             if (handlerInstance != null)
                             {
                                 handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
@@ -1255,8 +1266,8 @@ namespace RepoDb.Reflection
                         }
                         else
                         {
-                            // Get from the mappings
-                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(instanceProperty.PropertyType.GetUnderlyingType());
+                            // Get from the type level mappings (DB type)
+                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(field.Type.GetUnderlyingType());
                             if (handlerInstance != null)
                             {
                                 handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
