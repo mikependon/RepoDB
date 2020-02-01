@@ -197,12 +197,19 @@ namespace RepoDb.Reflection
                         // True expression
                         var trueExpression = (Expression)null;
                         var isNullableAlreadySet = false;
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+
+                        // Check for nullable
+                        if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(getParameter?.ParameterType.GetUnderlyingType() ?? propertyType));
-                            isNullableAlreadySet = true;
+                            if (handlerInstance == null || (handlerInstance != null && getParameterUnderlyingType != null))
+                            {
+                                trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(getParameter?.ParameterType.GetUnderlyingType() ?? propertyType));
+                                isNullableAlreadySet = true;
+                            }
                         }
-                        else
+
+                        // Check if it has been set
+                        if (trueExpression == null)
                         {
                             trueExpression = Expression.Default(getParameter?.ParameterType.GetUnderlyingType() ?? propertyType);
                         }
@@ -238,7 +245,7 @@ namespace RepoDb.Reflection
                         {
                             if (isDefaultConversion == true)
                             {
-                                if (propertyType.GetTypeInfo().IsEnum)
+                                if (propertyType.IsEnum)
                                 {
                                     #region StringToEnum
 
@@ -319,7 +326,7 @@ namespace RepoDb.Reflection
 
                         // Reset nullable variable
                         isNullableAlreadySet = false;
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        if (underlyingType != null && underlyingType.IsValueType == true)
                         {
                             var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             if (handlerInstance == null)
@@ -361,7 +368,7 @@ namespace RepoDb.Reflection
                         }
 
                         // Set for the 'Nullable' property
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        if (underlyingType != null && underlyingType.IsValueType == true)
                         {
                             var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
                             valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
@@ -530,7 +537,7 @@ namespace RepoDb.Reflection
                 {
                     var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
                     var trueExpression = (Expression)null;
-                    if (readerField.Type.GetTypeInfo().IsValueType == true)
+                    if (readerField.Type.IsValueType == true)
                     {
                         trueExpression = Expression.Constant(null, typeof(object));
                         valueExpression = Expression.Convert(valueExpression, typeof(object));
@@ -664,7 +671,7 @@ namespace RepoDb.Reflection
                     var valueAssignment = (Expression)null;
 
                     // Check the proper type of the entity
-                    if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
+                    if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
                     {
                         instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                     }
@@ -693,7 +700,7 @@ namespace RepoDb.Reflection
                             // Create a new guid here
                             if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
-                                value = Expression.New(typeOfGuid.GetTypeInfo().GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
                             else
                             {
@@ -710,7 +717,7 @@ namespace RepoDb.Reflection
 
                         #region EnumAsIntForString
 
-                        if (propertyType.GetTypeInfo().IsEnum)
+                        if (propertyType.IsEnum)
                         {
                             var mappedToType = classProperty?.GetDbType();
                             if (mappedToType != null && mappedToType != DbType.String)
@@ -767,7 +774,7 @@ namespace RepoDb.Reflection
                         (
                             instanceProperty != null &&
                             (
-                                instanceProperty.PropertyType.GetTypeInfo().IsValueType == false ||
+                                instanceProperty.PropertyType.IsValueType == false ||
                                 Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null
                             )
                         );
@@ -867,7 +874,7 @@ namespace RepoDb.Reflection
                     var dbType = (DbType?)null;
 
                     // Get the class property
-                    if (propertyType?.GetTypeInfo().IsEnum == true)
+                    if (propertyType?.IsEnum == true)
                     {
                         dbType = classProperty?.GetDbType();
                     }
@@ -1191,7 +1198,7 @@ namespace RepoDb.Reflection
                     var valueAssignment = (Expression)null;
 
                     // Check the proper type of the entity
-                    if (typeOfEntity != typeOfObject && typeOfEntity.GetTypeInfo().IsGenericType == false)
+                    if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
                     {
                         instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                     }
@@ -1220,7 +1227,7 @@ namespace RepoDb.Reflection
                             // Create a new guid here
                             if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
-                                value = Expression.New(typeOfGuid.GetTypeInfo().GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
                             else
                             {
@@ -1237,7 +1244,7 @@ namespace RepoDb.Reflection
 
                         #region EnumAsIntForString
 
-                        if (propertyType.GetTypeInfo().IsEnum)
+                        if (propertyType.IsEnum)
                         {
                             var mappedToType = classProperty?.GetDbType();
                             if (mappedToType != null && mappedToType != DbType.String)
@@ -1294,7 +1301,7 @@ namespace RepoDb.Reflection
                         (
                             instanceProperty != null &&
                             (
-                                instanceProperty.PropertyType.GetTypeInfo().IsValueType == false ||
+                                instanceProperty.PropertyType.IsValueType == false ||
                                 Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null
                             )
                         );
@@ -1394,7 +1401,7 @@ namespace RepoDb.Reflection
                     var dbType = (DbType?)null;
 
                     // Get the class property db type
-                    if (propertyType?.GetTypeInfo().IsEnum == true)
+                    if (propertyType?.IsEnum == true)
                     {
                         dbType = classProperty?.GetDbType();
                     }

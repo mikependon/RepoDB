@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Setup;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -22,6 +23,7 @@ namespace RepoDb.IntegrationTests
             // Add the maapings
             PropertyTypeHandlerMapper.Add(typeof(float), new PropertiesToLongTypeHandler(), true);
             PropertyTypeHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+            PropertyTypeHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
         }
 
         [TestCleanup]
@@ -29,11 +31,15 @@ namespace RepoDb.IntegrationTests
         {
             PropertyTypeHandlerMapper.Remove(typeof(float), false);
             PropertyTypeHandlerMapper.Remove(typeof(decimal), false);
+            PropertyTypeHandlerMapper.Remove(typeof(DateTime), false);
             Database.Cleanup();
         }
 
         #region Handlers
 
+        /// <summary>
+        /// A class used to handle the property transformation from a property to a class.
+        /// </summary>
         private class PropertyToClassHandler : IPropertyHandler<string, TargetModel>
         {
             public TargetModel Get(string input)
@@ -47,6 +53,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// A class used to handle the property transformation from Int to String.
+        /// </summary>
         public class IntToStringTypeHandler : IPropertyHandler<int?, string>
         {
             public string Get(int? input)
@@ -60,8 +69,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        // TODO: If the decimal is not nullable, then it is failing
-
+        /// <summary>
+        /// A class used to handle the property transformation from Decimal to Long. The values are nullable.
+        /// </summary>
         public class DecimalToLongTypeHandler : IPropertyHandler<decimal?, long?>
         {
             public long? Get(decimal? input)
@@ -75,6 +85,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// A class used to handle the property transformation of any property to type long.
+        /// </summary>
         public class PropertiesToLongTypeHandler : IPropertyHandler<object, long?>
         {
             public long? Get(object input)
@@ -85,6 +98,22 @@ namespace RepoDb.IntegrationTests
             public object Set(long? input)
             {
                 return input;
+            }
+        }
+
+        /// <summary>
+        /// A class used to handle the property transformation of <see cref="DateTime.Kind" /> property. The values are not nullable.
+        /// </summary>
+        public class DateTimeToUtcKindHandler : IPropertyHandler<DateTime, DateTime?>
+        {
+            public DateTime? Get(DateTime input)
+            {
+                return DateTime.SpecifyKind(input, DateTimeKind.Utc);
+            }
+
+            public DateTime Set(DateTime? input)
+            {
+                return DateTime.SpecifyKind(input.GetValueOrDefault(), DateTimeKind.Unspecified);
             }
         }
 
@@ -129,6 +158,16 @@ namespace RepoDb.IntegrationTests
             public long? FloatAsLong { get; set; }
         }
 
+        [Map("[dbo].[CompleteTable]")]
+        private class EntityModelForDateTimeKind
+        {
+            [Map("SessionId")]
+            public Guid Id { get; set; }
+
+            [Map("ColumnDateTime2"), TypeMap(DbType.DateTime2)]
+            public DateTime? DateTime { get; set; }
+        }
+
         #endregion
 
         #region Helpers
@@ -158,6 +197,19 @@ namespace RepoDb.IntegrationTests
                 {
                     Id = Guid.NewGuid(),
                     IntAsString = isIntNull ? null : Convert.ToString(new Random().Next(int.MaxValue))
+                };
+            }
+        }
+
+        private IEnumerable<EntityModelForDateTimeKind> CreateEntityModelForDateTimeKinds(int count,
+            bool isIntNull = false)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return new EntityModelForDateTimeKind
+                {
+                    Id = Guid.NewGuid(),
+                    DateTime = DateTime.UtcNow
                 };
             }
         }
@@ -340,7 +392,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual("0", item.IntAsString); // Since the int type is really not nullable
+                    Assert.AreEqual("0", item.IntAsString);
                 });
             }
         }
@@ -363,7 +415,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual("0", item.IntAsString); // Since the int type is really not nullable
+                    Assert.AreEqual("0", item.IntAsString);
                 });
             }
         }
@@ -469,5 +521,102 @@ namespace RepoDb.IntegrationTests
         }
 
         #endregion
+
+        #region DateTimeKind
+
+        [TestMethod]
+        public void TestPropertyHandlerForDateTimeKind()
+        {
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(models);
+
+                // Act
+                var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.AreEqual(e.DateTime, item.DateTime);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerForDateTimeKindAtomic()
+        {
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                models.ForEach(e => connection.Insert(e));
+
+                // Act
+                var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.AreEqual(e.DateTime, item.DateTime);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerForDateTimeKindAsNull()
+        {
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(models);
+
+                // Act
+                var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.AreEqual(e.DateTime, item.DateTime);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerForDateTimeKindAsNullAtomic()
+        {
+            // Setup
+            var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                models.ForEach(e => connection.Insert(e));
+
+                // Act
+                var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.AreEqual(e.DateTime, item.DateTime);
+                });
+            }
+        }
+
+        #endregion
+
     }
 }
