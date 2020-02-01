@@ -3,32 +3,40 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for SqLite.</Description>
     <Copyright>Copyright © 2019</Copyright>
-    <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm sqlite sqlite-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.SqLite v1.0.4:
-- Referenced the updated version of RepoDb core library (v1.10.4).
+    <PackageReleaseNotes>RepoDb.SqLite v1.0.5:
+- Referenced the latest version of RepoDb v1.10.5.
 
-RepoDb v1.10.4:
-- Initial support of RepoDb.PostgreSql.
-- Added 'IsPreparable' Property for IDbSetting.
-- Removed the 'basedOnFields' logic when extracting the DbDataReader.
-- Enhancement: Parsed the first entity property fields if the 'fields' argument is not defined for InsertAll, MergeAll and UpdateAll.
-- Enhancement: Introduce the BaseDbSetting class to cater a uniform HashCode generator. #369
-- Adhoc: Sealed and exposed the DbSettings, DbHelpers and the DbStatementBuilders classes.
-- Enhancement: Introduced the DbConvertFieldResolver as the base converter field.</PackageReleaseNotes>
+v1.10.5
+[Highlights]
+- Support: Initiate the support to 'Microsoft.Data.SqlClient' namespace. #374
+- Feature: Support PropertyHandlerAttribute as requested. #367
+- Feature: Re-enabled the BulkInsert for DataTable.
+- Feature: Support deleting an array of entity objects or primary keys via DeleteAll. #353
+[Others]
+- Support: Change the target type to .NetStandard 2.0.
+- Support: Initiate the support to 'Microsoft.Data.SqlClient' namespace. #374
+- Enhancement: Support to Microsoft.Data.SqlClient #359
+- NTH: Add a table hints in 'Merge' and 'MergeAll'. #370
+- NTH: Add a table hints in 'Update' and 'UpdateAll'. #371
+- NTH: Add a table hints in 'Delete' and 'DeleteAll'. #376
+- NTH: Add a table hints in 'Insert' and 'InsertAll'. #379</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.4.0</AssemblyVersion>
-    <FileVersion>1.0.4.0</FileVersion>
-    <PackageIconUrl>https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-128x128.png</PackageIconUrl>
+    <AssemblyVersion>1.0.5.0</AssemblyVersion>
+    <FileVersion>1.0.5.0</FileVersion>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageIcon>RepoDb-64x64.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -53,6 +61,17 @@ RepoDb v1.10.4:
 
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\RepoDb.Icons\RepoDb-64x64.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

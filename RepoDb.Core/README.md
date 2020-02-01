@@ -32,6 +32,7 @@ Basically, all [operations](https://github.com/mikependon/RepoDb#operations) wer
 - Inline Hints
 - Massive Operations (Generics/Explicits/MethodCalls/TableBased)
 - Multi-Resultset Query
+- Property Handlers (Transformations)
 - Query Builder
 - Repositories
 - Resolvers (CLR Types, DB Types)
