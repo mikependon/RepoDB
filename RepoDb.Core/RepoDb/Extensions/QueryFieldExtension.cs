@@ -71,8 +71,8 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            var array = ((Array)queryField.Parameter.Value);
-            var values = array
+            var enumerable = (System.Collections.IEnumerable)queryField.Parameter.Value;
+            var values = enumerable
                 .OfType<object>()
                 .Select((value, valueIndex) =>
                     string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_In_", valueIndex))

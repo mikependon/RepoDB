@@ -4774,6 +4774,47 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.DeleteAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = repository.DeleteAll<IdentityTable>(keys);
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, repository.CountAll<IdentityTable>());
+            }
+        }
+
         #endregion
 
         #region DeleteAllAsync<TEntity>
@@ -4815,6 +4856,47 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(10, result);
                 Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllAsyncWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.DeleteAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllAsyncWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = repository.DeleteAllAsync<IdentityTable>(keys).Result;
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, repository.CountAll<IdentityTable>());
             }
         }
 
@@ -4862,12 +4944,55 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllViaTableNameWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.DeleteAll(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables.Select(e => (object)e.Id));
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<NonIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllViaTableNameWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = repository.DeleteAll(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    keys);
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, repository.CountAll<NonIdentityTable>());
+            }
+        }
+
         #endregion
 
         #region DeleteAllAsync(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAllViaTableNameAsync()
+        public void TestDbRepositoryDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4887,7 +5012,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAllViaTableNameAsyncWithHints()
+        public void TestDbRepositoryDeleteAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -4903,6 +5028,49 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(10, result);
                 Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllAsyncViaTableNameWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables.Select(e => (object)e.Id)).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<NonIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAllAsyncViaTableNameWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = repository.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    keys).Result;
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, repository.CountAll<NonIdentityTable>());
             }
         }
 

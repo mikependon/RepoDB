@@ -141,7 +141,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<TEntity> entities,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -152,7 +152,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.DeleteAllAsync<TEntity>(entities: entities,
+                return await connection.DeleteAllAsync<TEntity>(entities: entities,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -179,7 +179,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> primaryKeys,
+        public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> primaryKeys,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -190,7 +190,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.DeleteAllAsync<TEntity>(primaryKeys: primaryKeys,
+                return await connection.DeleteAllAsync<TEntity>(primaryKeys: primaryKeys,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -343,7 +343,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync(string tableName,
+        public async Task<int> DeleteAllAsync(string tableName,
             IEnumerable<object> primaryKeys,
             string hints = null,
             IDbTransaction transaction = null)
@@ -354,7 +354,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.DeleteAllAsync(tableName: tableName,
+                return await connection.DeleteAllAsync(tableName: tableName,
                     primaryKeys: primaryKeys,
                     hints: hints,
                     commandTimeout: CommandTimeout,

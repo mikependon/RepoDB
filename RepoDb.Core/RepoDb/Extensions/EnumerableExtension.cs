@@ -42,15 +42,21 @@ namespace RepoDb.Extensions
             int sizePerSplit)
         {
             var itemCount = value.Count();
-            var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + (itemCount % sizePerSplit);
-            for (var i = 0; i < batchCount; i++)
+            if (itemCount < sizePerSplit)
             {
-                yield return value
-                    .Select((item, index) =>
-                        new { Item = item, Index = index })
-                    .Where(item => item.Index >= (sizePerSplit * i) &&
-                        item.Index < (sizePerSplit * i) + sizePerSplit)
-                    .Select(item => item.Item);
+                yield return value;
+            }
+            else
+            {
+                var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + (itemCount % sizePerSplit);
+                for (var i = 0; i < batchCount; i++)
+                {
+                    yield return Enumerable.Where(value, (item, index) =>
+                    {
+                        return index >= (sizePerSplit * i) && 
+                            index < (sizePerSplit * i) + sizePerSplit;
+                    });
+                }
             }
         }
 
@@ -73,7 +79,7 @@ namespace RepoDb.Extensions
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
         public static T[] AsArray<T>(this IEnumerable<T> value)
         {
-            return value is T[] ? (T[])value : value.ToArray();
+            return value is T[]? (T[])value : value.ToArray();
         }
     }
 }

@@ -1654,7 +1654,9 @@ namespace RepoDb
                     }
 
                     // Replace the target parameters
-                    var parameter = AsCommandArrayParameter(property.Name, ((Array)property.GetValue(param)).AsEnumerable(),
+                    var items = ((System.Collections.IEnumerable)property.GetValue(param))
+                        .OfType<object>();
+                    var parameter = AsCommandArrayParameter(property.Name, items,
                         dbSetting,
                         ref commandText);
                     commandArrayParameters.Add(parameter);
@@ -1703,8 +1705,10 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
+                var items = ((System.Collections.IEnumerable)kvp.Value)
+                    .OfType<object>();
                 var parameter = AsCommandArrayParameter(kvp.Key,
-                    ((Array)kvp.Value).AsEnumerable(),
+                    items,
                     dbSetting,
                     ref commandText);
                 commandArrayParameters.Add(parameter);
@@ -1766,8 +1770,10 @@ namespace RepoDb
                 }
 
                 // Replace the target parameters
+                var items = ((System.Collections.IEnumerable)field.Parameter.Value)
+                    .OfType<object>();
                 var parameter = AsCommandArrayParameter(field.Field.Name,
-                    ((Array)field.Parameter.Value).AsEnumerable(),
+                    items,
                     dbSetting,
                     ref commandText);
                 commandArrayParameters.Add(parameter);
@@ -1806,8 +1812,10 @@ namespace RepoDb
             var commandArrayParameters = new List<CommandArrayParameter>();
 
             // Replace the target parameters
+            var items = ((System.Collections.IEnumerable)queryField.Parameter.Value)
+                .OfType<object>();
             var parameter = AsCommandArrayParameter(queryField.Field.Name,
-                ((Array)queryField.Parameter.Value).AsEnumerable(),
+                items,
                 dbSetting,
                 ref commandText);
             commandArrayParameters.Add(parameter);

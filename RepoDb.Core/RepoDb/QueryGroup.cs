@@ -370,9 +370,12 @@ namespace RepoDb
                         var values = new List<object>();
                         if (queryField.Parameter.Value != null)
                         {
-                            if (queryField.Parameter.Value is Array)
+                            if (queryField.Parameter.Value is System.Collections.IEnumerable)
                             {
-                                values.AddRange(((Array)queryField.Parameter.Value).AsEnumerable());
+                                var items = ((System.Collections.IEnumerable)queryField.Parameter.Value)
+                                    .OfType<object>()
+                                    .AsList();
+                                values.AddRange(items);
                             }
                             else
                             {
@@ -416,9 +419,12 @@ namespace RepoDb
                         var values = new List<object>();
                         if (queryField.Parameter.Value != null)
                         {
-                            if (queryField.Parameter.Value is Array)
+                            if (queryField.Parameter.Value is System.Collections.IEnumerable)
                             {
-                                values.AddRange(((Array)queryField.Parameter.Value).AsEnumerable());
+                                var items = ((System.Collections.IEnumerable)queryField.Parameter.Value)
+                                    .OfType<object>()
+                                    .AsList();
+                                values.AddRange(items);
                             }
                             else
                             {
@@ -1001,10 +1007,10 @@ namespace RepoDb
             }
 
             // Values must be an array
-            if (values is Array)
+            if (values is System.Collections.IEnumerable)
             {
                 var operation = QueryField.GetOperation(binary.NodeType);
-                foreach (var value in (Array)values)
+                foreach (var value in (System.Collections.IEnumerable)values)
                 {
                     var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, value);
                     queryFields.Add(queryField);

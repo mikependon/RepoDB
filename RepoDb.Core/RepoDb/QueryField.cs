@@ -298,9 +298,13 @@ namespace RepoDb
             }
             // The parameter's length affects the uniqueness of the object
             else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
-                Parameter.Value != null && Parameter.Value is Array)
+                Parameter.Value != null && Parameter.Value is System.Collections.IEnumerable)
             {
-                hashCode += ((Array)Parameter.Value).Length.GetHashCode();
+                var items = ((System.Collections.IEnumerable)Parameter.Value);
+                hashCode += items
+                    .OfType<object>()
+                    .Count()
+                    .GetHashCode();
             }
 
             // Set and return the hashcode

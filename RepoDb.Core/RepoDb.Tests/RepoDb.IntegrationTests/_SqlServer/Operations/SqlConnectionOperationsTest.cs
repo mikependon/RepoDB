@@ -5554,6 +5554,47 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAll<IdentityTable>(tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = connection.DeleteAll<IdentityTable>(keys);
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, connection.CountAll<IdentityTable>());
+            }
+        }
+
         #endregion
 
         #region DeleteAllAsync<TEntity>
@@ -5595,6 +5636,47 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(10, result);
                 Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllAsyncWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAllAsync<IdentityTable>(tables).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllAsyncWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = connection.DeleteAllAsync<IdentityTable>(keys).Result;
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, connection.CountAll<IdentityTable>());
             }
         }
 
@@ -5643,12 +5725,55 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllViaTableNameWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables.Select(e => (object)e.Id));
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<NonIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllViaTableNameWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    keys);
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, connection.CountAll<NonIdentityTable>());
+            }
+        }
+
         #endregion
 
         #region DeleteAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllViaTableNameAsync()
+        public void TestSqlConnectionDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -5668,7 +5793,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllViaTableNameAsyncWithHints()
+        public void TestSqlConnectionDeleteAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -5685,6 +5810,49 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(10, result);
                 Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllAsyncViaTableNameWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables.Select(e => (object)e.Id)).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<NonIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllAsyncViaTableNameWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    keys).Result;
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, connection.CountAll<NonIdentityTable>());
             }
         }
 

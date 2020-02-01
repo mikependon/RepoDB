@@ -2061,270 +2061,6 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
-        #region Exists
-
-        #region Exists
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsWithoutCondition()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.Exists((object)null);
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsViaExpression()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.Exists(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsViaDynamic()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.Exists(new { ColumnInt = 1 });
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsViaQueryField()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.Exists(field);
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsViaQueryFields()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.Exists(fields);
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsViaQueryGroup()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
-            };
-            var queryGroup = new QueryGroup(fields);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.Exists(queryGroup);
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        #endregion
-
-        #region ExistsAsync
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsAsyncWithoutCondition()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.ExistsAsync((object)null).Result;
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsAsyncViaExpression()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.ExistsAsync(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsAsyncViaDynamic()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.ExistsAsync(new { ColumnInt = 1 }).Result;
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsAsyncViaQueryField()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.ExistsAsync(field).Result;
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsAsyncViaQueryFields()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
-            };
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.ExistsAsync(fields).Result;
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        [TestMethod]
-        public void TestBaseRepositoryExistsAsyncViaQueryGroup()
-        {
-            // Setup
-            var tables = Helper.CreateIdentityTables(10);
-            var fields = new[]
-            {
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
-                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
-            };
-            var queryGroup = new QueryGroup(fields);
-
-            using (var repository = new IdentityTableRepository())
-            {
-                // Act
-                repository.InsertAll(tables);
-
-                // Act
-                var result = repository.ExistsAsync(queryGroup).Result;
-
-                // Assert
-                Assert.IsTrue(result);
-            }
-        }
-
-        #endregion
-
-        #endregion
-
         #region Delete
 
         #region Delete
@@ -2720,6 +2456,48 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAllWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.DeleteAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAllWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = repository.DeleteAll(keys);
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, repository.CountAll());
             }
         }
 
@@ -2743,6 +2521,311 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAllAsyncWithEntities()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.DeleteAllAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+                Assert.AreEqual(0, repository.CountAll());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAllAsyncWithPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var keys = new object[] { tables.First().Id, tables.Last().Id };
+                var result = repository.DeleteAllAsync(keys).Result;
+
+                // Assert
+                Assert.AreEqual(2, result);
+                Assert.AreEqual(8, repository.CountAll());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Exists
+
+        #region Exists
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists((object)null);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(new { ColumnInt = 1 });
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(field);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(fields);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Exists(queryGroup);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        #endregion
+
+        #region ExistsAsync
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync((object)null).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaExpression()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(field).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(fields).Result;
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExistsAsyncViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 5),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 8)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var repository = new IdentityTableRepository())
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.ExistsAsync(queryGroup).Result;
+
+                // Assert
+                Assert.IsTrue(result);
             }
         }
 

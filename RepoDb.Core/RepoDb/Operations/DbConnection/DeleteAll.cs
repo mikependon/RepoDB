@@ -6,6 +6,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -86,9 +87,14 @@ namespace RepoDb
                 }
 
                 // Call the underlying method
-                foreach (var keys in primaryKeys.Split(Constant.MaxParametersCount))
+                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                foreach (var keys in splitted)
                 {
-                    var field = new QueryField(primary.GetMappedName(), Operation.In, keys?.AsList());
+                    if (keys.Any() != true)
+                    {
+                        break;
+                    }
+                    var field = new QueryField(primary.GetMappedName(), Operation.In, keys.AsList());
                     deletedRows += DeleteInternal<TEntity>(connection: connection,
                         where: new QueryGroup(field),
                         hints: hints,
@@ -191,11 +197,16 @@ namespace RepoDb
                 }
 
                 // Call the underlying method
-                foreach (var keys in primaryKeys.Split(Constant.MaxParametersCount))
+                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                foreach (var keys in splitted)
                 {
+                    if (keys.Any() != true)
+                    {
+                        break;
+                    }
                     var field = new QueryField(primary.GetMappedName(), Operation.In, keys?.AsList());
-                    deletedRows += await DeleteAllAsync<TEntity>(connection: connection,
-                        primaryKeys: primaryKeys,
+                    deletedRows += await DeleteAsync<TEntity>(connection: connection,
+                        where: new QueryGroup(field),
                         hints: hints,
                         commandTimeout: commandTimeout,
                         transaction: transaction,
@@ -394,8 +405,13 @@ namespace RepoDb
                 }
 
                 // Call the underlying method
-                foreach (var keys in primaryKeys.Split(Constant.MaxParametersCount))
+                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                foreach (var keys in splitted)
                 {
+                    if (keys.Any() != true)
+                    {
+                        break;
+                    }
                     var field = new QueryField(primary.Name.AsQuoted(dbSetting), Operation.In, keys?.AsList());
                     deletedRows += DeleteInternal(connection: connection,
                         tableName: tableName,
@@ -468,8 +484,13 @@ namespace RepoDb
                 }
 
                 // Call the underlying method
-                foreach (var keys in primaryKeys.Split(Constant.MaxParametersCount))
+                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                foreach (var keys in splitted)
                 {
+                    if (keys.Any() != true)
+                    {
+                        break;
+                    }
                     var field = new QueryField(primary.Name.AsQuoted(dbSetting), Operation.In, keys?.AsList());
                     deletedRows += await DeleteAsyncInternal(connection: connection,
                         tableName: tableName,
