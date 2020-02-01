@@ -356,6 +356,8 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
+                        var isNullableAlreadySet = false;
+
                         // Call the actual Get<Type>/GetValue method by ordinal
                         valueExpression = Expression.Call(readerParameterExpression,
                             readerGetValueMethod,
@@ -364,15 +366,37 @@ namespace RepoDb.Reflection
                         // Convert to correct type if necessary
                         if (isConversionNeeded == true)
                         {
-                            valueExpression = ConvertValueExpressionForDataEntity(valueExpression, readerField, propertyType, convertType);
+                            valueExpression = ConvertValueExpressionForDataEntity(valueExpression,
+                                readerField,
+                                getParameter?.ParameterType?.GetUnderlyingType() ?? propertyType,
+                                convertType);
                         }
 
                         // Set for the 'Nullable' property
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {
                             var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
-                            valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
+                            if (handlerInstance == null)
+                            {
+                                valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
+                                isNullableAlreadySet = true;
+                            }
                         }
+
+                        #region PropertyHandler (FalseExpression)
+
+                        if (handlerInstance != null)
+                        {
+                            if (isNullableAlreadySet == false && getParameterUnderlyingType != null)
+                            {
+                                var nullableGetConstructor = getParameter?.ParameterType.GetConstructor(new[] { getParameterUnderlyingType });
+                                valueExpression = Expression.New(nullableGetConstructor, valueExpression);
+                            }
+                            valueExpression = Expression.Call(Expression.Constant(handlerInstance),
+                                handlerGetMethod, valueExpression);
+                        }
+
+                        #endregion
                     }
 
                     // Set the actual property value
@@ -395,8 +419,6 @@ namespace RepoDb.Reflection
             }
             else
             {
-                var result = (Expression)null;
-
                 // Variables needed
                 var targetInstance = (Expression)null;
                 var targetMethod = (MethodInfo)null;
@@ -422,6 +444,9 @@ namespace RepoDb.Reflection
                     targetInstance = null;
                     targetParameter = expression;
                 }
+
+                // Result variable
+                var result = (Expression)null;
 
                 // If there are methods found from System.Convert(), then use it, otherwise use the normal
                 if (targetMethod != null)
