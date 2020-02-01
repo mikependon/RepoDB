@@ -1235,6 +1235,47 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Throws an exception if there is no defined primary key on the data entity type.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>The primary <see cref="DbField"/> of the table.</returns>
+        private static DbField GetAndGuardPrimaryKey(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
+        {
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+            if (primary == null)
+            {
+                throw new PrimaryFieldNotFoundException($"No primary key found at table '{tableName}'.");
+            }
+            return primary;
+        }
+
+        /// <summary>
+        /// Extract the property value from the instances
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="entities">The list of data entity objects to be extracted.</param>
+        /// <param name="property">The class property to be used.</param>
+        /// <returns>An array of the results based on the target types.</returns>
+        private static IEnumerable<object> ExtractPropertyValues<TEntity>(IEnumerable<TEntity> entities,
+            ClassProperty property)
+            where TEntity : class
+        {
+            if (entities != null)
+            {
+                foreach (var entity in entities)
+                {
+                    // TODO: Make a compiler for this
+                    yield return property.PropertyInfo.GetValue(entity);
+                }
+            }
+        }
+
+        /// <summary>
         /// Validates whether the transaction object connection is object is equals to the connection object.
         /// </summary>
         /// <param name="connection">The connection object to be validated.</param>
