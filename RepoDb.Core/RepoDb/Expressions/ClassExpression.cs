@@ -1,10 +1,8 @@
 ﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace RepoDb
 {
@@ -13,6 +11,66 @@ namespace RepoDb
     /// </summary>
     public static partial class ClassExpression
     {
+        #region GetPropertyValues
+
+        /// <summary>
+        /// Gets the values of the property of the data entities.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entities.</typeparam>
+        /// <param name="entities">The list of the data entities.</param>
+        /// <param name="property">The target property.</param>
+        /// <returns>The values of the property of the data entities.</returns>
+        public static IEnumerable<object> GetPropertyValue<TEntity>(IEnumerable<TEntity> entities,
+            ClassProperty property = null)
+            where TEntity : class
+        {
+            return GetPropertyValuesCache<TEntity>.Do(entities, property);
+        }
+
+        private static class GetPropertyValuesCache<T>
+            where T : class
+        {
+            private static Func<T, object> m_func;
+
+            private static Func<T, object> GetFunc(ClassProperty property)
+            {
+                // Expressions
+                var obj = Expression.Parameter(typeof(T), "obj");
+
+                // Set the body
+                var body = (Expression)Expression.Property(obj, property.PropertyInfo);
+
+                // Convert if necessary
+                if (property.PropertyInfo.PropertyType != typeof(object))
+                {
+                    body = Expression.Convert(body, typeof(object));
+                }
+                
+                // Set the function value
+                return Expression
+                    .Lambda<Func<T, object>>(body, obj)
+                    .Compile();
+            }
+
+            public static IEnumerable<object> Do(IEnumerable<T> entities,
+                ClassProperty property)
+            {
+                if (m_func == null)
+                {
+                    m_func = GetFunc(property);
+                }
+                if (entities?.Any() == true)
+                {
+                    foreach (var entity in entities)
+                    {
+                        yield return m_func(entity);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region GetProperties
 
         /// <summary>
@@ -65,16 +123,16 @@ namespace RepoDb
             return GetPropertiesValuesCache<TEntity>.Do(obj);
         }
 
-        private static class GetPropertiesValuesCache<TEntity>
-            where TEntity : class
+        private static class GetPropertiesValuesCache<T>
+            where T : class
         {
-            private static Func<TEntity, IEnumerable<PropertyValue>> m_func;
+            private static Func<T, IEnumerable<PropertyValue>> m_func;
 
-            private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc(IEnumerable<ClassProperty> properties)
+            private static Func<T, IEnumerable<PropertyValue>> GetFunc(IEnumerable<ClassProperty> properties)
             {
                 // Expressions
                 var addMethod = typeof(List<PropertyValue>).GetMethod("Add", new[] { typeof(PropertyValue) });
-                var obj = Expression.Parameter(typeof(TEntity), "obj");
+                var obj = Expression.Parameter(typeof(T), "obj");
                 var constructor = typeof(PropertyValue).GetConstructor(new[]
                 {
                     typeof(string),
@@ -98,15 +156,15 @@ namespace RepoDb
 
                 // Set the function value
                 return Expression
-                    .Lambda<Func<TEntity, IEnumerable<PropertyValue>>>(body, obj)
+                    .Lambda<Func<T, IEnumerable<PropertyValue>>>(body, obj)
                     .Compile();
             }
 
-            public static IEnumerable<PropertyValue> Do(TEntity obj)
+            public static IEnumerable<PropertyValue> Do(T obj)
             {
                 if (m_func == null)
                 {
-                    m_func = GetFunc(PropertyCache.Get<TEntity>());
+                    m_func = GetFunc(PropertyCache.Get<T>());
                 }
                 return m_func(obj);
             }

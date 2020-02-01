@@ -1265,14 +1265,7 @@ namespace RepoDb
             ClassProperty property)
             where TEntity : class
         {
-            if (entities != null)
-            {
-                foreach (var entity in entities)
-                {
-                    // TODO: Make a compiler for this
-                    yield return property.PropertyInfo.GetValue(entity);
-                }
-            }
+            return ClassExpression.GetPropertyValue<TEntity>(entities, property);
         }
 
         /// <summary>
