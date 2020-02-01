@@ -26,10 +26,22 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Throws an exception if null.
+        /// </summary>
+        private static void GuardPresence(Type type)
+        {
+            if (type == null)
+            {
+                throw new NullReferenceException("Property handler type.");
+            }
+        }
+
+        /// <summary>
         /// Throws an exception if the type is not a sublcass of type <see cref="DbConnection"/>.
         /// </summary>
         private static void Guard(Type type)
         {
+            GuardPresence(type);
             if (type.GetTypeInfo().IsSubclassOf(m_type) == false)
             {
                 throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
@@ -73,7 +85,9 @@ namespace RepoDb
         /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="statementBuilder">The statement builder to be mapped.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type, IStatementBuilder statementBuilder, bool @override = false)
+        public static void Add(Type type,
+            IStatementBuilder statementBuilder,
+            bool @override = false)
         {
             // Guard the type
             Guard(type);
@@ -101,6 +115,33 @@ namespace RepoDb
                 // Add to mapping
                 m_maps.TryAdd(key, statementBuilder);
             }
+        }
+
+        /// <summary>
+        /// Removes an existing mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IStatementBuilder"/> object.
+        /// </summary>
+        /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
+        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
+        /// <returns>True if the removal is successful, otherwise false.</returns>
+        public static bool Remove(Type type,
+            bool throwException = true)
+        {
+            // Check the presence
+            GuardPresence(type);
+
+            // Variables for cache
+            var key = type.FullName.GetHashCode();
+            var existing = (IStatementBuilder)null;
+            var result = m_maps.TryRemove(key, out existing);
+
+            // Throws an exception if necessary
+            if (result == false && throwException == true)
+            {
+                throw new MissingMappingException($"There is no mapping defined for '{type.FullName}'.");
+            }
+
+            // Return false
+            return result;
         }
     }
 }

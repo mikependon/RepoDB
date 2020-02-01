@@ -27,6 +27,8 @@ namespace RepoDb.IntegrationTests
         [TestCleanup]
         public void Cleanup()
         {
+            PropertyTypeHandlerMapper.Remove(typeof(float), false);
+            PropertyTypeHandlerMapper.Remove(typeof(decimal), false);
             Database.Cleanup();
         }
 
@@ -57,6 +59,8 @@ namespace RepoDb.IntegrationTests
                 return Convert.ToInt32(input);
             }
         }
+
+        // TODO: If the decimal is not nullable, then it is failing
 
         public class DecimalToLongTypeHandler : IPropertyHandler<decimal?, long?>
         {

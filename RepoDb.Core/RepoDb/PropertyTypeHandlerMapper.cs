@@ -14,14 +14,22 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<int, object> m_maps = new ConcurrentDictionary<int, object>();
 
         /// <summary>
-        /// Throws an exception if the type does not implemented the <see cref="IPropertyHandler{TInput, TResult}"/> interface.
+        /// Throws an exception if null.
         /// </summary>
-        private static void Guard(Type type)
+        private static void GuardPresence(Type type)
         {
             if (type == null)
             {
                 throw new NullReferenceException("Property handler type.");
             }
+        }
+
+        /// <summary>
+        /// Throws an exception if the type does not implemented the <see cref="IPropertyHandler{TInput, TResult}"/> interface.
+        /// </summary>
+        private static void Guard(Type type)
+        {
+            GuardPresence(type);
             var @interface = type.GetInterfaces()
                 .Where(e => e.FullName.StartsWith("RepoDb.Interfaces.IPropertyHandler"))
                 .FirstOrDefault();
@@ -50,6 +58,9 @@ namespace RepoDb
         /// <returns>An instance of mapped property handler for .NET CLR Type.</returns>
         public static TPropertyHandler Get<TPropertyHandler>(Type type)
         {
+            // Check the presence
+            GuardPresence(type);
+
             // Variables for the cache
             var value = (object)null;
 
@@ -77,6 +88,7 @@ namespace RepoDb
             bool @override = false)
         {
             // Guard the type
+            GuardPresence(type);
             Guard(propertyHandler?.GetType());
 
             // Variables for cache
@@ -102,6 +114,33 @@ namespace RepoDb
                 // Add to mapping
                 m_maps.TryAdd(key, propertyHandler);
             }
+        }
+
+        /// <summary>
+        /// Removes an existing property handler mapping.
+        /// </summary>
+        /// <param name="type">The .NET CLR Type.</param>
+        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
+        /// <returns>True if the removal is successful, otherwise false.</returns>
+        public static bool Remove(Type type,
+            bool throwException = true)
+        {
+            // Check the presence
+            GuardPresence(type);
+
+            // Variables for cache
+            var key = type.FullName.GetHashCode();
+            var existing = (object)null;
+            var result = m_maps.TryRemove(key, out existing);
+
+            // Throws an exception if necessary
+            if (result == false && throwException == true)
+            {
+                throw new MissingMappingException($"There is no mapping defined for '{type.FullName}'.");
+            }
+
+            // Return false
+            return result;
         }
     }
 }
