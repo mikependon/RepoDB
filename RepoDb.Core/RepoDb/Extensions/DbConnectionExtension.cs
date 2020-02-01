@@ -1165,19 +1165,13 @@ namespace RepoDb
         /// <summary>
         /// Creates a <see cref="QueryGroup"/> object based on the given qualifiers.
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
         /// <param name="properties">The list of properties for the entity object.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup CreateQueryGroupForUpsert(this IDbConnection connection,
-            string tableName,
-            object entity,
+        private static QueryGroup CreateQueryGroupForUpsert(object entity,
             IEnumerable<ClassProperty> properties,
-            IEnumerable<Field> qualifiers = null,
-            IDbTransaction transaction = null)
+            IEnumerable<Field> qualifiers = null)
         {
             // Variables needed
             var queryFields = (IList<QueryField>)null;
@@ -1186,7 +1180,10 @@ namespace RepoDb
             foreach (var field in qualifiers)
             {
                 // Get the property
-                var property = properties?.FirstOrDefault(p => string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
+                var property = properties?.FirstOrDefault(
+                    p => string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
+
+                // Get the value
                 if (property != null)
                 {
                     // Create the list if necessary
@@ -1265,7 +1262,7 @@ namespace RepoDb
             ClassProperty property)
             where TEntity : class
         {
-            return ClassExpression.GetPropertyValue<TEntity>(entities, property);
+            return ClassExpression.GetEntitiesPropertyValues<TEntity, object>(entities, property);
         }
 
         /// <summary>

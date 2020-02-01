@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,56 +15,137 @@ namespace RepoDb
         #region GetPropertyValues
 
         /// <summary>
+        /// Gets the values of the property of the data entities. The comparisson will be based on the mappings.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entities.</typeparam>
+        /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
+        /// <param name="entities">The list of the data entities.</param>
+        /// <param name="dbField">The name of the target property defined as <see cref="DbField"/>.</param>
+        /// <returns>The values of the property of the data entities.</returns>
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+            DbField dbField)
+            where TEntity : class
+        {
+            var property = PropertyCache.Get<TEntity>()
+                .Where(e => string.Equals(e.GetMappedName(), dbField.Name))
+                .FirstOrDefault();
+            return GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+        }
+
+        /// <summary>
         /// Gets the values of the property of the data entities.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entities.</typeparam>
+        /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
+        /// <param name="entities">The list of the data entities.</param>
+        /// <param name="field">The name of the target property defined as <see cref="Field"/>.</param>
+        /// <returns>The values of the property of the data entities.</returns>
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+            Field field)
+            where TEntity : class
+        {
+            var property = PropertyCache.Get<TEntity>()
+                .Where(e => string.Equals(e.PropertyInfo.Name, field.Name))
+                .FirstOrDefault();
+            return GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+        }
+
+        /// <summary>
+        /// Gets the values of the property of the data entities.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entities.</typeparam>
+        /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
+        /// <param name="entities">The list of the data entities.</param>
+        /// <param name="propertyName">The name of the target property.</param>
+        /// <returns>The values of the property of the data entities.</returns>
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+            string propertyName)
+            where TEntity : class
+        {
+            var property = PropertyCache.Get<TEntity>()
+                .Where(e => string.Equals(e.PropertyInfo.Name, propertyName))
+                .FirstOrDefault();
+            return GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+        }
+
+        /// <summary>
+        /// Gets the values of the property of the data entities.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entities.</typeparam>
+        /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
         /// <param name="entities">The list of the data entities.</param>
         /// <param name="property">The target property.</param>
         /// <returns>The values of the property of the data entities.</returns>
-        public static IEnumerable<object> GetPropertyValue<TEntity>(IEnumerable<TEntity> entities,
-            ClassProperty property = null)
+        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+            ClassProperty property)
             where TEntity : class
         {
-            return GetPropertyValuesCache<TEntity>.Do(entities, property);
+            return GetPropertyValuesCache<TEntity, TResult>.Do(entities, property);
         }
 
-        private static class GetPropertyValuesCache<T>
-            where T : class
+        private static class GetPropertyValuesCache<TEntity, TResult>
+            where TEntity : class
         {
-            private static Func<T, object> m_func;
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> m_cache =
+                new ConcurrentDictionary<int, Func<TEntity, TResult>>();
 
-            private static Func<T, object> GetFunc(ClassProperty property)
+            private static Func<TEntity, TResult> GetFunc(ClassProperty property)
             {
                 // Expressions
-                var obj = Expression.Parameter(typeof(T), "obj");
+                var obj = Expression.Parameter(typeof(TEntity), "obj");
 
                 // Set the body
                 var body = (Expression)Expression.Property(obj, property.PropertyInfo);
 
                 // Convert if necessary
-                if (property.PropertyInfo.PropertyType != typeof(object))
+                if (property.PropertyInfo.PropertyType != typeof(TResult))
                 {
-                    body = Expression.Convert(body, typeof(object));
+                    body = Expression.Convert(body, typeof(TResult));
                 }
-                
+
                 // Set the function value
                 return Expression
-                    .Lambda<Func<T, object>>(body, obj)
+                    .Lambda<Func<TEntity, TResult>>(body, obj)
                     .Compile();
             }
 
-            public static IEnumerable<object> Do(IEnumerable<T> entities,
+            private static void Guard(ClassProperty property)
+            {
+                // Check the presence
+                if (property == null)
+                {
+                    throw new NullReferenceException("Property");
+                }
+
+                // Check the equality
+                if (typeof(TEntity) != property.PropertyInfo.DeclaringType)
+                {
+                    throw new InvalidOperationException("The declaring type of the property is not equal to the target entity type.");
+                }
+            }
+
+            public static IEnumerable<TResult> Do(IEnumerable<TEntity> entities,
                 ClassProperty property)
             {
-                if (m_func == null)
+                // Guard first
+                Guard(property);
+
+                // Variables needed
+                var func = (Func<TEntity, TResult>)null;
+                var key = property.GetHashCode();
+
+                // Get from the cache
+                if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    m_func = GetFunc(property);
+                    func = GetFunc(property);
                 }
+
+                // Extract the values
                 if (entities?.Any() == true)
                 {
                     foreach (var entity in entities)
                     {
-                        yield return m_func(entity);
+                        yield return func(entity);
                     }
                 }
             }
@@ -84,14 +166,14 @@ namespace RepoDb
             return GetPropertiesCache<TEntity>.Do();
         }
 
-        private static class GetPropertiesCache<T>
-            where T : class
+        private static class GetPropertiesCache<TEntity>
+            where TEntity : class
         {
             private static Func<IEnumerable<ClassProperty>> m_func;
 
             private static Func<IEnumerable<ClassProperty>> GetFunc()
             {
-                var body = Expression.Constant(DataEntityExtension.GetProperties<T>());
+                var body = Expression.Constant(DataEntityExtension.GetProperties<TEntity>());
                 return Expression
                     .Lambda<Func<IEnumerable<ClassProperty>>>(body)
                     .Compile();
@@ -123,16 +205,16 @@ namespace RepoDb
             return GetPropertiesValuesCache<TEntity>.Do(obj);
         }
 
-        private static class GetPropertiesValuesCache<T>
-            where T : class
+        private static class GetPropertiesValuesCache<TEntity>
+            where TEntity : class
         {
-            private static Func<T, IEnumerable<PropertyValue>> m_func;
+            private static Func<TEntity, IEnumerable<PropertyValue>> m_func;
 
-            private static Func<T, IEnumerable<PropertyValue>> GetFunc(IEnumerable<ClassProperty> properties)
+            private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc()
             {
                 // Expressions
                 var addMethod = typeof(List<PropertyValue>).GetMethod("Add", new[] { typeof(PropertyValue) });
-                var obj = Expression.Parameter(typeof(T), "obj");
+                var obj = Expression.Parameter(typeof(TEntity), "obj");
                 var constructor = typeof(PropertyValue).GetConstructor(new[]
                 {
                     typeof(string),
@@ -141,6 +223,7 @@ namespace RepoDb
                 });
 
                 // Set the body
+                var properties = PropertyCache.Get<TEntity>();
                 var body = Expression.ListInit(
                     Expression.New(typeof(List<PropertyValue>)),
                     properties.Select(property =>
@@ -156,15 +239,15 @@ namespace RepoDb
 
                 // Set the function value
                 return Expression
-                    .Lambda<Func<T, IEnumerable<PropertyValue>>>(body, obj)
+                    .Lambda<Func<TEntity, IEnumerable<PropertyValue>>>(body, obj)
                     .Compile();
             }
 
-            public static IEnumerable<PropertyValue> Do(T obj)
+            public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
                 if (m_func == null)
                 {
-                    m_func = GetFunc(PropertyCache.Get<T>());
+                    m_func = GetFunc();
                 }
                 return m_func(obj);
             }

@@ -1333,12 +1333,9 @@ namespace RepoDb
             }
 
             // Expression
-            var where = CreateQueryGroupForUpsert(connection,
-                tableName,
-                entity,
+            var where = CreateQueryGroupForUpsert(entity,
                 properties,
-                qualifiers,
-                transaction);
+                qualifiers);
 
             // Validate
             if (where == null)
@@ -1698,12 +1695,9 @@ namespace RepoDb
             }
 
             // Expression
-            var where = CreateQueryGroupForUpsert(connection,
-                tableName,
-                entity,
+            var where = CreateQueryGroupForUpsert(entity,
                 properties,
-                qualifiers,
-                transaction);
+                qualifiers);
 
             // Validate
             if (where == null)
