@@ -54,6 +54,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{0C8FF83A
 		..\Docs\pages\orderfield.rst = ..\Docs\pages\orderfield.rst
 		..\Docs\pages\performance.rst = ..\Docs\pages\performance.rst
 		..\Docs\pages\persistency.rst = ..\Docs\pages\persistency.rst
+		..\Docs\pages\propertyhandler.rst = ..\Docs\pages\propertyhandler.rst
 		..\Docs\pages\querygroup.rst = ..\Docs\pages\querygroup.rst
 		..\Docs\pages\rawsql.rst = ..\Docs\pages\rawsql.rst
 		..\Docs\pages\repository.rst = ..\Docs\pages\repository.rst

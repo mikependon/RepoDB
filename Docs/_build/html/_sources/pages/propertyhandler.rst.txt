@@ -105,5 +105,5 @@ In reality, with this feature, the scenarios are unlimitted. See some of the kno
 - Querying a child records of the parent rows.
 - Updating a record as a reaction to the transformation.
 - Can be used as trigger.
-- Manually override the defaul handler for the `Enumerations`.
+- Manually override the default handler for the `Enumerations`.
 - and many more...
