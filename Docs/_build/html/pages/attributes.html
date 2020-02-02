@@ -88,9 +88,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#primary">Primary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#identity">Identity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#typemap">TypeMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#propertyhandler">PropertyHandler</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propertyhandler.html">Property Handler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
@@ -259,6 +261,42 @@
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
+</div>
+<div class="section" id="propertyhandler">
+<h2>PropertyHandler<a class="headerlink" href="#propertyhandler" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a a handler for the property transformation.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerExtraInfo</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">CompleteAddress</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Notes</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Preferrences</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="na">        [PropertyHandler(typeof(CustomerExtraInfoHandler)]</span>
+        <span class="k">public</span> <span class="n">CustomerExtraInfo</span> <span class="n">ExtraInfo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>In which the type <cite>CustomerExtraInfoHandler</cite> is a customized property handler that is used to handle the transformation of <cite>ExtraInfo</cite> property.</p>
 <p><strong>Note</strong>: Any of the attribute mentioned above is only being used to support the special scenarios and requirements defined by the businesses. <strong>They are really not necessary!</strong> The library is intelligent enough to identify the characteristics of your columns (<cite>Primary</cite>, <cite>Identity</cite>) by touching the database once and caching everything in the memory.</p>
 </div>
 </div>

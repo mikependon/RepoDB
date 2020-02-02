@@ -8,6 +8,7 @@ RepoDb Documentation
    pages/installation
    pages/attributes
    pages/typemapping
+   pages/propertyhandler
    pages/field
    pages/orderfield
    pages/connection

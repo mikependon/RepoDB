@@ -82,9 +82,8 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#learnings">Learnings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#packages">Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#packages">Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#repositories">Repositories</a></li>
 </ul>
 </li>
@@ -177,33 +176,6 @@
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://github.com/mikependon/RepoDb">RepoDb</a> - a hybrid ORM library for .NET.</p>
-<div class="section" id="learnings">
-<h2>Learnings<a class="headerlink" href="#learnings" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Getting-Started">Getting started</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Implementing-a-Repository">Implementing a Repository</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Making-the-Repositories-Dependency-Injectable">Making the Repositories Dependency-Injectable</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Batch-Operations-vs-Bulk-Operations">Bulk-Operations vs Batch-Operations</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Multiple-Resultsets-via-QueryMultiple-and-ExecuteQueryMultiple">Multiple Resultsets via QueryMultiple and ExecuteQueryMultiple</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Working-with-Transactions">Working with Transactions</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Expression-Trees">Expression Trees</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Advance-Field-and-Type-Mapping-Implementation">Advance Field and Type Mapping Implementations</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache">Customizing a Cache</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace">Implementing a Trace</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/The-importance-of-Connection-Persistency">The importance of Connection Persistency</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Working-with-Enumerations">Working with Enumerations</a></li>
-<li><a class="reference external" href="https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider">Extending the supports for specific DB Provider</a></li>
-</ul>
-</div>
-<div class="section" id="packages">
-<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>RepoDb: <a class="reference external" href="https://www.nuget.org/packages/RepoDb">https://www.nuget.org/packages/RepoDb</a></li>
-<li>RepoDb.SqLite: <a class="reference external" href="https://www.nuget.org/packages/RepoDb.SqLite">https://www.nuget.org/packages/RepoDb.SqLite</a></li>
-<li>RepoDb.MySql: <a class="reference external" href="https://www.nuget.org/packages/RepoDb.MySql">https://www.nuget.org/packages/RepoDb.MySql</a></li>
-<li>RepoDb.PostgreSql (soon): <a class="reference external" href="https://www.nuget.org/packages/RepoDb.PostgreSql">https://www.nuget.org/packages/RepoDb.PostgreSql</a></li>
-</ul>
-</div>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -220,6 +192,7 @@
 <li>Inline Hints</li>
 <li>Massive Operations (Generics/Explicits/MethodCalls/TableBased)</li>
 <li>Multi-Resultset Query</li>
+<li>Property Handlers (Property Transformations)</li>
 <li>Query Builder</li>
 <li>Repositories</li>
 <li>Resolvers (CLR Types, DB Types)</li>
@@ -227,6 +200,15 @@
 <li>Tracing</li>
 <li>Transaction</li>
 <li>Type Mapping</li>
+</ul>
+</div>
+<div class="section" id="packages">
+<h2>Packages<a class="headerlink" href="#packages" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>RepoDb: <a class="reference external" href="https://www.nuget.org/packages/RepoDb">https://www.nuget.org/packages/RepoDb</a></li>
+<li>RepoDb.SqLite: <a class="reference external" href="https://www.nuget.org/packages/RepoDb.SqLite">https://www.nuget.org/packages/RepoDb.SqLite</a></li>
+<li>RepoDb.MySql: <a class="reference external" href="https://www.nuget.org/packages/RepoDb.MySql">https://www.nuget.org/packages/RepoDb.MySql</a></li>
+<li>RepoDb.PostgreSql (soon): <a class="reference external" href="https://www.nuget.org/packages/RepoDb.PostgreSql">https://www.nuget.org/packages/RepoDb.PostgreSql</a></li>
 </ul>
 </div>
 <div class="section" id="repositories">

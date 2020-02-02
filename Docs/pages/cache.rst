@@ -1,7 +1,7 @@
 Cache
 =====
 
-It is a feature used to cache the result set from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. A cache is only working on the `Query` operation.
+It is a feature that is used to cache the results from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. A cache is only working on the `Query` operation.
 
 The caching is of the `pseudo` below.
 
