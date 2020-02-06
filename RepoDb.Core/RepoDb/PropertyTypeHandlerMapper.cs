@@ -1,4 +1,5 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -30,10 +31,8 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            var @interface = type.GetInterfaces()
-                .Where(e => e.FullName.StartsWith("RepoDb.Interfaces.IPropertyHandler"))
-                .FirstOrDefault();
-            if (@interface == null)
+            var isInterfacedTo = type.IsInterfacedTo(typeof(IPropertyHandler<,>));
+            if (isInterfacedTo == false)
             {
                 throw new InvalidTypeException($"Type '{type.FullName}' must implement the '{typeof(IPropertyHandler<,>).FullName}' interface.");
             }

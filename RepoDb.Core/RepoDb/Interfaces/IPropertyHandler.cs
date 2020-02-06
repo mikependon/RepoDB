@@ -11,14 +11,18 @@
         /// The method that is used to invoked when the outbound transformation is triggered (ie: Query).
         /// </summary>
         /// <param name="input">The input value.</param>
+        /// <param name="property">The property in the current execution context.</param>
         /// <returns>An instance of the TResult generic type.</returns>
-        TResult Get(TInput input);
+        TResult Get(TInput input,
+            ClassProperty property);
 
         /// <summary>
         /// The method that is used to invoked when the inbound transformation is triggered (ie: Insert, Update, Merge).
         /// </summary>
         /// <param name="input">The input value.</param>
+        /// <param name="property">The property in the current execution context.</param>
         /// <returns>An instance of the TInput generic type.</returns>
-        TInput Set(TResult input);
+        TInput Set(TResult input,
+            ClassProperty property);
     }
 }

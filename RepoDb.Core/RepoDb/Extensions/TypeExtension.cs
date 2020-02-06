@@ -1,8 +1,6 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -56,5 +54,213 @@ namespace RepoDb.Extensions
             return PropertyCache.Get(type)
                 .FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
         }
+
+        /// <summary>
+        /// Checks whether the current type has implemented the target interface.
+        /// </summary>
+        /// <typeparam name="T">The type of the interface.</typeparam>
+        /// <param name="type">The current type.</param>
+        /// <returns>True if the current type has implemented the target interface.</returns>
+        public static bool IsInterfacedTo<T>(this Type type)
+        {
+            return IsInterfacedTo(type, typeof(T));
+        }
+
+        /// <summary>
+        /// Checks whether the current type has implemented the target interface.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <param name="interfaceType">The type of the interface.</param>
+        /// <returns>True if the current type has implemented the target interface.</returns>
+        public static bool IsInterfacedTo(this Type type,
+            Type interfaceType)
+        {
+            if (interfaceType?.IsInterface != true)
+            {
+                throw new ArgumentException("The type of argument 'interfaceType' must be an interface.");
+            }
+
+            // Variables needed
+            var interfaces = type
+                .GetInterfaces()
+                .Where(e => string.Equals(e.Namespace, interfaceType.Namespace))
+                .AsList();
+            var isInterfacedTo = false;
+
+            // Iterates
+            foreach (var item in interfaces)
+            {
+                // Check the type equality
+                if (item == interfaceType)
+                {
+                    isInterfacedTo = true;
+                    break;
+                }
+
+                // Check the generic arguments length
+                if (AreGenericArgumentsLengthEquals(item, interfaceType) == false)
+                {
+                    continue;
+                }
+
+                // Check the members name
+                if (AreMembersNamesEquals(item, interfaceType) == false)
+                {
+                    continue;
+                }
+
+                // Check the name equality
+                if (item.FullName.Length > interfaceType.FullName.Length)
+                {
+                    isInterfacedTo = string.Equals(item.FullName.Substring(0, interfaceType.FullName.Length),
+                        interfaceType.FullName, StringComparison.Ordinal);
+                }
+                else
+                {
+                    isInterfacedTo = string.Equals(interfaceType.FullName.Substring(0, item.FullName.Length),
+                        item.FullName, StringComparison.Ordinal);
+                }
+                if (isInterfacedTo)
+                {
+                    break;
+                }
+            }
+
+            // Return the value
+            return isInterfacedTo;
+        }
+
+        #region Helpers
+
+        /// <summary>
+        /// Checks whether the generic arguments length are equal to both types.
+        /// </summary>
+        /// <param name="type1">The first type.</param>
+        /// <param name="type2">The second type.</param>
+        /// <returns>True if the type of the generic arguments length are equal.</returns>
+        internal static bool AreGenericArgumentsLengthEquals(Type type1,
+            Type type2)
+        {
+            // Variables
+            var genericArguments1 = type1?.GetGenericArguments();
+            var genericArguments2 = type2?.GetGenericArguments();
+
+            // Check nulls
+            if (null == genericArguments1 && null == genericArguments2)
+            {
+                return true;
+            }
+
+            // Check the length equality
+            if (genericArguments1?.Length != genericArguments2?.Length)
+            {
+                return false;
+            }
+
+            // Return True
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether the members names are equal to both types.
+        /// </summary>
+        /// <param name="type1">The first type.</param>
+        /// <param name="type2">The second type.</param>
+        /// <returns>True if the type of the members names are equal.</returns>
+        internal static bool AreMembersNamesEquals(Type type1,
+            Type type2)
+        {
+            // Variables
+            var members1 = type1?
+                .GetMembers()
+                .OrderBy(e => e.Name)
+                .AsList();
+            var members2 = type2?
+                .GetMembers()
+                .OrderBy(e => e.Name)
+                .AsList();
+
+            // Check nulls
+            if (null == members1 && null == members2)
+            {
+                return true;
+            }
+
+            // Check the name equality
+            if (members1?.Count() != members2?.Count())
+            {
+                return false;
+            }
+            else
+            {
+                for (var i = 0; i < members1.Count(); i++)
+                {
+                    if (string.Equals(members1[i].Name, members2[i].Name, StringComparison.Ordinal) == false)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Return True
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether the members length are equal to both types.
+        /// </summary>
+        /// <param name="type1">The first type.</param>
+        /// <param name="type2">The second type.</param>
+        /// <returns>True if the type of the members length are equal.</returns>
+        internal static bool AreMembersLengthEquals(Type type1,
+            Type type2)
+        {
+            // Variables
+            var members1 = type1?
+                .GetMembers()
+                .OrderBy(e => e.Name)
+                .AsList();
+            var members2 = type2?
+                .GetMembers()
+                .OrderBy(e => e.Name)
+                .AsList();
+
+            // Check nulls
+            if (null == members1 && null == members2)
+            {
+                return true;
+            }
+
+            // Check the argument name equalities
+            if (members1?.Count() != members2?.Count())
+            {
+                return false;
+            }
+            else
+            {
+                for (var i = 0; i < members1.Count(); i++)
+                {
+                    var member1 = members1[i];
+                    var member2 = members2[i];
+
+                    // Arguments length
+                    if (MemberInfoExtension.IsMemberArgumentLengthEqual(member1, member2) == false)
+                    {
+                        return false;
+                    }
+
+                    // Check the name
+                    if (string.Equals(member1.Name, member2.Name) == false)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // Return True
+            return true;
+        }
+
+        #endregion
     }
 }

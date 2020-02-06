@@ -42,12 +42,14 @@ namespace RepoDb.IntegrationTests
         /// </summary>
         private class PropertyToClassHandler : IPropertyHandler<string, TargetModel>
         {
-            public TargetModel Get(string input)
+            public TargetModel Get(string input,
+                ClassProperty property)
             {
                 return new TargetModel { Value = input };
             }
 
-            public string Set(TargetModel input)
+            public string Set(TargetModel input,
+                ClassProperty property)
             {
                 return input?.Value;
             }
@@ -58,12 +60,14 @@ namespace RepoDb.IntegrationTests
         /// </summary>
         public class IntToStringTypeHandler : IPropertyHandler<int?, string>
         {
-            public string Get(int? input)
+            public string Get(int? input,
+                ClassProperty property)
             {
                 return Convert.ToString(input);
             }
 
-            public int? Set(string input)
+            public int? Set(string input,
+                ClassProperty property)
             {
                 return Convert.ToInt32(input);
             }
@@ -74,12 +78,14 @@ namespace RepoDb.IntegrationTests
         /// </summary>
         public class DecimalToLongTypeHandler : IPropertyHandler<decimal?, long?>
         {
-            public long? Get(decimal? input)
+            public long? Get(decimal? input,
+                ClassProperty property)
             {
                 return Convert.ToInt64(input);
             }
 
-            public decimal? Set(long? input)
+            public decimal? Set(long? input,
+                ClassProperty property)
             {
                 return Convert.ToDecimal(input);
             }
@@ -90,12 +96,14 @@ namespace RepoDb.IntegrationTests
         /// </summary>
         public class PropertiesToLongTypeHandler : IPropertyHandler<object, long?>
         {
-            public long? Get(object input)
+            public long? Get(object input,
+                ClassProperty property)
             {
                 return Convert.ToInt64(input);
             }
 
-            public object Set(long? input)
+            public object Set(long? input,
+                ClassProperty property)
             {
                 return input;
             }
@@ -104,16 +112,22 @@ namespace RepoDb.IntegrationTests
         /// <summary>
         /// A class used to handle the property transformation of <see cref="DateTime.Kind" /> property. The values are not nullable.
         /// </summary>
-        public class DateTimeToUtcKindHandler : IPropertyHandler<DateTime, DateTime?>
+        public class DateTimeToUtcKindHandler : IPropertyHandler<DateTime?, DateTime?>
         {
-            public DateTime? Get(DateTime input)
+            public DateTime? Get(DateTime? input,
+                ClassProperty property)
             {
-                return DateTime.SpecifyKind(input, DateTimeKind.Utc);
+                return input.HasValue ?
+                    DateTime.SpecifyKind(input.Value, DateTimeKind.Utc) :
+                    (DateTime?)null;
             }
 
-            public DateTime Set(DateTime? input)
+            public DateTime? Set(DateTime? input,
+                ClassProperty property)
             {
-                return DateTime.SpecifyKind(input.GetValueOrDefault(), DateTimeKind.Unspecified);
+                return input.HasValue ?
+                    DateTime.SpecifyKind(input.Value, DateTimeKind.Unspecified) :
+                    (DateTime?)null;
             }
         }
 
@@ -202,14 +216,14 @@ namespace RepoDb.IntegrationTests
         }
 
         private IEnumerable<EntityModelForDateTimeKind> CreateEntityModelForDateTimeKinds(int count,
-            bool isIntNull = false)
+            bool isDateTimeNull = false)
         {
             for (var i = 0; i < count; i++)
             {
                 yield return new EntityModelForDateTimeKind
                 {
                     Id = Guid.NewGuid(),
-                    DateTime = DateTime.UtcNow
+                    DateTime = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow
                 };
             }
         }

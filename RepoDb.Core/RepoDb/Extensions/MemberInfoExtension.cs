@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -132,6 +131,29 @@ namespace RepoDb.Extensions
         public static MethodInfo ToMethodInfo(this MemberInfo member)
         {
             return (MethodInfo)member;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Checks whether the arguments length are equal to both members.
+        /// </summary>
+        /// <param name="member1">The first <see cref="MemberInfo"/>.</param>
+        /// <param name="member2">The second <see cref="MemberInfo"/>.</param>
+        /// <returns>True if the arguments length of the members are equal.</returns>
+        internal static bool IsMemberArgumentLengthEqual(MemberInfo member1,
+            MemberInfo member2)
+        {
+            if (member1.IsMethodInfo() && member2.IsMethodInfo())
+            {
+                return member1.ToMethodInfo().GetParameters().Length == member2.ToMethodInfo().GetParameters().Length;
+            }
+            else
+            {
+                return member1.IsPropertyInfo() && member2.IsPropertyInfo();
+            }
         }
 
         #endregion

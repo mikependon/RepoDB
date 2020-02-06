@@ -1,7 +1,8 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.StatementBuilders;
 using System;
-using System.Linq;
 
 namespace RepoDb.Attributes
 {
@@ -33,10 +34,8 @@ namespace RepoDb.Attributes
 
         private void Validate(Type handlerType)
         {
-            var @interface = handlerType.GetInterfaces()
-                .Where(e => e.FullName.StartsWith("RepoDb.Interfaces.IPropertyHandler"))
-                .FirstOrDefault();
-            if (@interface == null)
+            var isInterfacedTo = handlerType.IsInterfacedTo(typeof(IPropertyHandler<,>));
+            if (isInterfacedTo == false)
             {
                 throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{typeof(IPropertyHandler<,>).FullName}' interface.");
             }

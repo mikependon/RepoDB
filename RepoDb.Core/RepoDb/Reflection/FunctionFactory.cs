@@ -226,12 +226,16 @@ namespace RepoDb.Reflection
                             if (readerField.Type != getParameter.ParameterType.GetUnderlyingType())
                             {
                                 trueExpression = Expression.Call(Expression.Constant(handlerInstance),
-                                    handlerGetMethod, Expression.Convert(trueExpression, getParameter.ParameterType.GetUnderlyingType()));
+                                    handlerGetMethod,
+                                    Expression.Convert(trueExpression, getParameter.ParameterType.GetUnderlyingType()),
+                                    Expression.Constant(property));
                             }
                             else
                             {
                                 trueExpression = Expression.Call(Expression.Constant(handlerInstance),
-                                    handlerGetMethod, trueExpression);
+                                    handlerGetMethod,
+                                    trueExpression,
+                                    Expression.Constant(property));
                             }
                         }
 
@@ -346,7 +350,9 @@ namespace RepoDb.Reflection
                                 falseExpression = Expression.New(nullableGetConstructor, falseExpression);
                             }
                             falseExpression = Expression.Call(Expression.Constant(handlerInstance),
-                                handlerGetMethod, falseExpression);
+                                handlerGetMethod,
+                                falseExpression,
+                                Expression.Constant(property));
                         }
 
                         #endregion
@@ -393,7 +399,9 @@ namespace RepoDb.Reflection
                                 valueExpression = Expression.New(nullableGetConstructor, valueExpression);
                             }
                             valueExpression = Expression.Call(Expression.Constant(handlerInstance),
-                                handlerGetMethod, valueExpression);
+                                handlerGetMethod,
+                                valueExpression,
+                                Expression.Constant(property));
                         }
 
                         #endregion
@@ -783,7 +791,9 @@ namespace RepoDb.Reflection
                         {
                             var setParameter = handlerSetMethod.GetParameters().First();
                             value = Expression.Call(Expression.Constant(handlerInstance),
-                                handlerSetMethod, Expression.Convert(value, setParameter.ParameterType));
+                                handlerSetMethod,
+                                Expression.Convert(value, setParameter.ParameterType),
+                                Expression.Constant(classProperty));
                         }
 
                         #endregion
@@ -1310,7 +1320,9 @@ namespace RepoDb.Reflection
                         {
                             var setParameter = handlerSetMethod.GetParameters().First();
                             value = Expression.Call(Expression.Constant(handlerInstance),
-                                handlerSetMethod, Expression.Convert(value, setParameter.ParameterType));
+                                handlerSetMethod,
+                                Expression.Convert(value, setParameter.ParameterType),
+                                Expression.Constant(classProperty));
                         }
 
                         #endregion
