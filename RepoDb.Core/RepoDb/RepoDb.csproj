@@ -3,26 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.10.5</Version>
+    <Version>1.10.6</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
     <Copyright>Copyright © 2019</Copyright>
     <PackageTags>orm orm-framework orm-library hybrid-orm</PackageTags>
-    <PackageReleaseNotes>v1.10.5
-[Highlights]
-- Support: Initiate the support to 'Microsoft.Data.SqlClient' namespace. #374
-- Feature: Support PropertyHandlerAttribute as requested. #367
-- Feature: Re-enabled the BulkInsert for DataTable.
-- Feature: Support deleting an array of entity objects or primary keys via DeleteAll. #353
-[Others]
-- Support: Change the target type to .NetStandard 2.0.
-- Support: Initiate the support to 'Microsoft.Data.SqlClient' namespace. #374
-- Enhancement: Support to Microsoft.Data.SqlClient #359
-- NTH: Add a table hints in 'Merge' and 'MergeAll'. #370
-- NTH: Add a table hints in 'Update' and 'UpdateAll'. #371
-- NTH: Add a table hints in 'Delete' and 'DeleteAll'. #376
-- NTH: Add a table hints in 'Insert' and 'InsertAll'. #379</PackageReleaseNotes>
+    <PackageReleaseNotes>v1.10.6
+- Added the class property as an argument context in the 'Get' and 'Set' method.
+- Exposed the underlying 'DbRepository' property at the 'BaseRepository' object.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
@@ -30,8 +19,8 @@
     <NeutralLanguage></NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.10.5.0</AssemblyVersion>
-    <FileVersion>1.10.5.0</FileVersion>
+    <AssemblyVersion>1.10.6.0</AssemblyVersion>
+    <FileVersion>1.10.6.0</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageIconUrl></PackageIconUrl>
