@@ -48,18 +48,20 @@ Then, below is a sample property handler for the `CustomerExtraInfo` class of th
 
     public class CustomerExtraInfoHandler : IPropertyHandler<string, CustomerExtraInfo>
     {
-        public CustomerExtraInfo Get(string input)
+        public CustomerExtraInfo Get(string input, ClassProperty property)
         {
             return JsonConvert.DeserializeObject<PersonExtendedInfo>(input);
         }
 
-        public string Set(CustomerExtraInfo input)
+        public string Set(CustomerExtraInfo input, ClassProperty property)
         {
             return JsonConvert.SerializeObject(input);
         }
     }
 
 In which the value of the `ExtraInfo` property will be pushed as `NVARCHAR(MAX)` in the database during `Insert`, `Update` and `Merge`; the value of `ExtraInfo` column from the database will be extracted as `CustomerExtraInfo` object in the client during `Read` operations.
+
+**Note:** The argument of type *ClassProperty* is provided to both `Get` and `Set` method to add an additional context on the current execution.
 
 PropertyTypeHandlerMapper
 -------------------------
@@ -74,12 +76,12 @@ Let us say, the scenario is to convert all the `DateTime.Kind` properties to `Ut
 	
     public class DateTimeKindToUtcPropertyHandler : IPropertyHandler<DateTime, DateTime?>
     {
-        public DateTime? Get(DateTime input)
+        public DateTime? Get(DateTime input, ClassProperty property)
         {
             return DateTime.SpecifyKind(input, DateTimeKind.Utc);
         }
 
-        public DateTime Set(DateTime? input)
+        public DateTime Set(DateTime? input, ClassProperty property)
         {
             return DateTime.SpecifyKind(input.GetValueOrDefault(), DateTimeKind.Unspecified);
         }

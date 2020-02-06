@@ -231,12 +231,12 @@
 <p>Then, below is a sample property handler for the <cite>CustomerExtraInfo</cite> class of the <cite>Customer</cite> data entity.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerExtraInfoHandler</span> <span class="p">:</span> <span class="n">IPropertyHandler</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="n">CustomerExtraInfo</span><span class="p">&gt;</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="n">CustomerExtraInfo</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">input</span><span class="p">)</span>
+    <span class="k">public</span> <span class="n">CustomerExtraInfo</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">input</span><span class="p">,</span> <span class="n">ClassProperty</span> <span class="n">property</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">JsonConvert</span><span class="p">.</span><span class="n">DeserializeObject</span><span class="p">&lt;</span><span class="n">PersonExtendedInfo</span><span class="p">&gt;(</span><span class="n">input</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="k">public</span> <span class="kt">string</span> <span class="nf">Set</span><span class="p">(</span><span class="n">CustomerExtraInfo</span> <span class="n">input</span><span class="p">)</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="nf">Set</span><span class="p">(</span><span class="n">CustomerExtraInfo</span> <span class="n">input</span><span class="p">,</span> <span class="n">ClassProperty</span> <span class="n">property</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">JsonConvert</span><span class="p">.</span><span class="n">SerializeObject</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
     <span class="p">}</span>
@@ -244,6 +244,7 @@
 </pre></div>
 </div>
 <p>In which the value of the <cite>ExtraInfo</cite> property will be pushed as <cite>NVARCHAR(MAX)</cite> in the database during <cite>Insert</cite>, <cite>Update</cite> and <cite>Merge</cite>; the value of <cite>ExtraInfo</cite> column from the database will be extracted as <cite>CustomerExtraInfo</cite> object in the client during <cite>Read</cite> operations.</p>
+<p><strong>Note:</strong> The argument of type <em>ClassProperty</em> is provided to both <cite>Get</cite> and <cite>Set</cite> method to add an additional context on the current execution.</p>
 </div>
 <div class="section" id="propertytypehandlermapper">
 <h2>PropertyTypeHandlerMapper<a class="headerlink" href="#propertytypehandlermapper" title="Permalink to this headline">¶</a></h2>
@@ -252,12 +253,12 @@
 <p>Let us say, the scenario is to convert all the <cite>DateTime.Kind</cite> properties to <cite>Utc</cite> in all read operations.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">DateTimeKindToUtcPropertyHandler</span> <span class="p">:</span> <span class="n">IPropertyHandler</span><span class="p">&lt;</span><span class="n">DateTime</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">?&gt;</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">Get</span><span class="p">(</span><span class="n">DateTime</span> <span class="n">input</span><span class="p">)</span>
+    <span class="k">public</span> <span class="n">DateTime</span><span class="p">?</span> <span class="n">Get</span><span class="p">(</span><span class="n">DateTime</span> <span class="n">input</span><span class="p">,</span> <span class="n">ClassProperty</span> <span class="n">property</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">SpecifyKind</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">DateTimeKind</span><span class="p">.</span><span class="n">Utc</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="k">public</span> <span class="n">DateTime</span> <span class="nf">Set</span><span class="p">(</span><span class="n">DateTime</span><span class="p">?</span> <span class="n">input</span><span class="p">)</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="nf">Set</span><span class="p">(</span><span class="n">DateTime</span><span class="p">?</span> <span class="n">input</span><span class="p">,</span> <span class="n">ClassProperty</span> <span class="n">property</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">SpecifyKind</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">GetValueOrDefault</span><span class="p">(),</span> <span class="n">DateTimeKind</span><span class="p">.</span><span class="n">Unspecified</span><span class="p">);</span>
     <span class="p">}</span>
