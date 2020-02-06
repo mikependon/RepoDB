@@ -219,7 +219,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the underlying repository used by this repository.
         /// </summary>
-        internal DbRepository<TDbConnection> DbRepository { get; }
+        public DbRepository<TDbConnection> DbRepository { get; }
 
         /// <summary>
         /// Gets the connection used by this repository.
