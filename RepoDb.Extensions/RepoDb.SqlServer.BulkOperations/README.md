@@ -5,6 +5,11 @@
 
 An extension library that contains the official Bulk Operations for RepoDb.
 
+## Important Pages
+
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
+
 ## Core Features
  
 - BulkInsert via DataEntities
@@ -33,50 +38,40 @@ At the *Package Manager Console*, write the command below.
 Install-Package RepoDb.SqlServer.BulkOperations
 ```
 
-### Query
+### BulkInsert (DataEntities)
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(c => c.Id == 10045);
+	var customers = GetCustomers().ToDataTable();
+
+	var rows = connection.BulkInsert<Customer>(customers);
+	// or
+	var rows = connection.BulkInsert("Customers", customers);
 }
 ```
 
-### Insert
-
-```csharp
-var customer = new Customer
-{
-	FirstName = "John",
-	LastName = "Doe",
-	IsActive = true
-};
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var id = connection.Insert<Customer>(customer);
-}
-```
-
-### Update
+### BulkInsert (DataTable)
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(10045);
-	customer.FirstName = "John";
-	customer.LastUpdatedUtc = DateTime.UtcNow;
-	var affectedRows = connection.Update<Customer>(customer);
+	var table = GetCustomers().ToDataTable();
+
+	var rows = connection.BulkInsert<Customer>(table);
+	// or
+	var rows = connection.BulkInsert("Customer", table);
 }
 ```
 
-### Delete
+### BulkInsert (DataReader)
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(10045);
-	var deletedCount = connection.Delete<Customer>(customer);
+	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customers];"))
+	{
+		var rows = connection.BulkInsert("Customer", reader);
+	}
 }
 ```
-
-To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
