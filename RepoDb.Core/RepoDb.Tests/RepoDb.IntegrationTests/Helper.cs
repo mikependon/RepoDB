@@ -5,7 +5,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;

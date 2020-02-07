@@ -1,4 +1,5 @@
-﻿using RepoDb.DbHelpers;
+﻿using Microsoft.Data.SqlClient;
+using RepoDb.DbHelpers;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
@@ -18,8 +19,7 @@ namespace RepoDb
 
         static DbHelperMapper()
         {
-            Add(typeof(System.Data.SqlClient.SqlConnection), new SqlServerDbHelper(), true);
-            Add(typeof(Microsoft.Data.SqlClient.SqlConnection), new SqlServerDbHelper(), true);
+            Add(typeof(SqlConnection), new SqlServerDbHelper(), true);
         }
 
         /// <summary>

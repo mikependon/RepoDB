@@ -18,9 +18,6 @@ namespace RepoDb
 
         static StatementBuilderMapper()
         {
-            Add(typeof(System.Data.SqlClient.SqlConnection),
-                new SqlServerStatementBuilder(DbSettingMapper.Get<System.Data.SqlClient.SqlConnection>()));
-
             Add(typeof(Microsoft.Data.SqlClient.SqlConnection),
                 new SqlServerStatementBuilder(DbSettingMapper.Get<Microsoft.Data.SqlClient.SqlConnection>()));
         }

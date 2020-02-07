@@ -1,4 +1,5 @@
-﻿using RepoDb.DbSettings;
+﻿using Microsoft.Data.SqlClient;
+using RepoDb.DbSettings;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
@@ -18,8 +19,7 @@ namespace RepoDb
 
         static DbSettingMapper()
         {
-            Add(typeof(System.Data.SqlClient.SqlConnection), new SqlServerDbSetting(), true);
-            Add(typeof(Microsoft.Data.SqlClient.SqlConnection), new SqlServerDbSetting(), true);
+            Add(typeof(SqlConnection), new SqlServerDbSetting(), true);
         }
 
         /// <summary>

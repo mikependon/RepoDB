@@ -140,10 +140,13 @@ namespace RepoDb.Reflection
                     else
                     {
                         // Get from the type level mappings (DB type)
-                        handlerInstance = PropertyTypeHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
-                        if (handlerInstance != null)
+                        if (readerField.Type != null)
                         {
-                            handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
+                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
+                            if (handlerInstance != null)
+                            {
+                                handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
+                            }
                         }
                     }
 
@@ -158,7 +161,7 @@ namespace RepoDb.Reflection
                     // Ignore for the TimeSpan
                     if (propertyType != typeOfTimeSpan)
                     {
-                        readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", readerField.Type.Name));
+                        readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", readerField.Type?.Name));
                     }
 
                     // If null, use the object
@@ -554,7 +557,7 @@ namespace RepoDb.Reflection
                 var isConversionNeeded = false;
 
                 // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type.Name));
+                var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField.Type?.Name));
                 if (readerGetValueMethod == null)
                 {
                     readerGetValueMethod = dataReaderType.GetMethod("GetValue");
@@ -570,18 +573,18 @@ namespace RepoDb.Reflection
                 {
                     var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
                     var trueExpression = (Expression)null;
-                    if (readerField.Type.IsValueType == true)
+                    if (readerField.Type?.IsValueType != true)
                     {
-                        trueExpression = Expression.Constant(null, typeof(object));
-                        valueExpression = Expression.Convert(valueExpression, typeof(object));
+                        trueExpression = Expression.Default(readerField.Type ?? typeof(object));
+                        if (isConversionNeeded == true)
+                        {
+                            valueExpression = Expression.Convert(valueExpression, readerField.Type ?? typeof(object));
+                        }
                     }
                     else
                     {
-                        trueExpression = Expression.Default(readerField.Type);
-                        if (isConversionNeeded == true)
-                        {
-                            valueExpression = Expression.Convert(valueExpression, readerField.Type);
-                        }
+                        trueExpression = Expression.Constant(null, typeof(object));
+                        valueExpression = Expression.Convert(valueExpression, typeof(object));
                     }
                     valueExpression = Expression.Condition(isDbNullExpression, trueExpression, valueExpression);
                 }

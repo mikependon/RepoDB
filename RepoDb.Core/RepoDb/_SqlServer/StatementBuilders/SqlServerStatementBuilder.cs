@@ -5,6 +5,7 @@ using System;
 using RepoDb.Exceptions;
 using RepoDb.Resolvers;
 using RepoDb.Interfaces;
+using Microsoft.Data.SqlClient;
 
 namespace RepoDb.StatementBuilders
 {
@@ -17,7 +18,7 @@ namespace RepoDb.StatementBuilders
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
         public SqlServerStatementBuilder(IDbSetting dbSetting)
-            : this((dbSetting ?? DbSettingMapper.Get<System.Data.SqlClient.SqlConnection>()),
+            : this((dbSetting ?? DbSettingMapper.Get<SqlConnection>()),
                 new SqlServerConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver())
         { }

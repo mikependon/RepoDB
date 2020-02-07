@@ -2,7 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests

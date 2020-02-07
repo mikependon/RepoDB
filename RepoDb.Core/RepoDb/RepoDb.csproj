@@ -41,6 +41,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="_SqlServer\Operations\**" />
+    <EmbeddedResource Remove="_SqlServer\Operations\**" />
+    <None Remove="_SqlServer\Operations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="PerformanceMonitor.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
     <Compile Remove="Reflection\DataCommand.cs" />
@@ -54,7 +60,6 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
