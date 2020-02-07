@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\EnumClasses.cs" />
+    <Compile Remove="Models\IdentityTableWithDifferentPrimary.cs" />
+    <Compile Remove="Models\LiteIdentityTable.cs" />
+    <Compile Remove="Models\NonIdentityTable.cs" />
+    <Compile Remove="Models\TypeClasses.cs" />
+    <Compile Remove="Models\TypeMappableClasses.cs" />
+    <Compile Remove="Models\UnorganizedTable.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+    <PackageReference Include="coverlet.collector" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj" />
+  </ItemGroup>
+
+</Project>
