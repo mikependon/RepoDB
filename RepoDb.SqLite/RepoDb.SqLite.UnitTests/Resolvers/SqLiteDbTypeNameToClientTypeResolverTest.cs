@@ -153,7 +153,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
             var result = resolver.Resolve("TIME");
 
             // Assert
-            Assert.AreEqual(typeof(TimeSpan), result);
+            Assert.AreEqual(typeof(DateTime), result);
         }
 
         [TestMethod]
