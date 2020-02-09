@@ -19,6 +19,7 @@ RepoDb and its extension is available via Nuget as a NetStandard library. Type a
 
 ```
 > Install-Package RepoDb
+> Install-Package RepoDb.SqlServer
 > Install-Package RepoDb.SqLite
 > Install-Package RepoDb.MySql
 > Install-Package RepoDb.PostgreSql

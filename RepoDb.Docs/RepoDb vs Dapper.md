@@ -29,7 +29,7 @@ The programming language and database provider we are using on our samples below
 
 Both library is an *ORM* framework for *.NET*. They are both lightweight, fast and efficient. The *Dapper* is a full-fledge *micro-ORM* whereas *RepoDb* is a *hybrid-ORM*.
 
-> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension libraries of both (ie: *RepoDb.SqLite*, *RepoDb.MySql*, *RepoDb.PostgreSql*, *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
+> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension libraries of both (ie: *RepoDb.SqlServer*, *RepoDb.SqLite*, *RepoDb.MySql*, *RepoDb.PostgreSql*, *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
 
 ### Tables
 
