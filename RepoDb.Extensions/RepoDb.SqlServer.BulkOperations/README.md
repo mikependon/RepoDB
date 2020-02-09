@@ -16,6 +16,18 @@ An extension library that contains the official Bulk Operations for RepoDb.
 - BulkInsert via DataTable
 - BulkInsert via DbDataReader
 - BulkInsert Asynchronous Methods
+- (In-Progress) BulkDelete via DataEntities
+- (In-Progress) BulkDelete via DataTable
+- (In-Progress) BulkDelete via DbDataReader
+- (In-Progress) BulkDelete Asynchronous Methods
+- (In-Progress) BulkMerge via DataEntities
+- (In-Progress) BulkMerge via DataTable
+- (In-Progress) BulkMerge via DbDataReader
+- (In-Progress) BulkMerge Asynchronous Methods
+- (In-Progress) BulkUpdate via DataEntities
+- (In-Progress) BulkUpdate via DataTable
+- (In-Progress) BulkUpdate via DbDataReader
+- (In-Progress) BulkUpdate Asynchronous Methods
 
 ## Community engagements
 
@@ -38,33 +50,47 @@ At the *Package Manager Console*, write the command below.
 Install-Package RepoDb.SqlServer.BulkOperations
 ```
 
-### BulkInsert (DataEntities)
+### BulkInsert via DataEntities
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customers = GetCustomers().ToDataTable();
-
+	var customers = GetCustomers();
 	var rows = connection.BulkInsert<Customer>(customers);
-	// or
-	var rows = connection.BulkInsert("Customers", customers);
 }
 ```
 
-### BulkInsert (DataTable)
+Or
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var table = GetCustomers().ToDataTable();
+	var customers = GetCustomers();
+	var rows = connection.BulkInsert("Customer", customers);
+}
+```
 
+### BulkInsert via DataTable
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkInsert<Customer>(table);
-	// or
+}
+```
+
+Or
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkInsert("Customer", table);
 }
 ```
 
-### BulkInsert (DataReader)
+### BulkInsert via DataReader
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
