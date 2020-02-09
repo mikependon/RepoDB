@@ -91,6 +91,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql", "..\Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{B57B1387-2718-46F0-9608-11746ECB4DF2}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.SqlServer\README.md = ..\RepoDb.SqlServer\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +133,7 @@ Global
 		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97F2640B-CD0C-430E-8E18-D948A6966C85} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{FCAEE688-26E0-490C-9C70-0A52AA7AFF62} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{B57B1387-2718-46F0-9608-11746ECB4DF2} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
