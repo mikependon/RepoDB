@@ -15,7 +15,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the value indicating whether the initialization is completed.
         /// </summary>
-        public static bool Initialized { get; private set; }
+        public static bool IsInitialized { get; private set; }
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace RepoDb
         public static void Initialize()
         {
             // Skip if already initialized
-            if (Initialized == true)
+            if (IsInitialized == true)
             {
                 return;
             }
@@ -42,7 +42,7 @@ namespace RepoDb
             StatementBuilderMapper.Add(typeof(MySqlConnection), new MySqlStatementBuilder(), true);
 
             // Set the flag
-            Initialized = true;
+            IsInitialized = true;
         }
 
         #endregion

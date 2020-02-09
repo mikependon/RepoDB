@@ -150,14 +150,14 @@
             A class used to initialize necessary objects that is connected to <see cref="T:Microsoft.Data.SqlClient.SqlConnection"/> object.
             </summary>
         </member>
-        <member name="P:RepoDb.SqlServer.SqlServerBootstrap.Initialized">
+        <member name="P:RepoDb.SqlServer.SqlServerBootstrap.IsInitialized">
             <summary>
             Gets the value indicating whether the initialization is completed.
             </summary>
         </member>
         <member name="M:RepoDb.SqlServer.SqlServerBootstrap.Initialize">
             <summary>
-            Initializes all necessary settings for PostgreSql.
+            Initializes all necessary settings for SqlServer.
             </summary>
         </member>
         <member name="T:RepoDb.SqlServerTableHints">

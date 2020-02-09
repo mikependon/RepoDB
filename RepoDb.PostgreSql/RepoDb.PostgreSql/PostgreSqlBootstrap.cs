@@ -15,7 +15,7 @@ namespace RepoDb.PostgreSql
         /// <summary>
         /// Gets the value indicating whether the initialization is completed.
         /// </summary>
-        public static bool Initialized { get; private set; }
+        public static bool IsInitialized { get; private set; }
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace RepoDb.PostgreSql
         public static void Initialize()
         {
             // Skip if already initialized
-            if (Initialized == true)
+            if (IsInitialized == true)
             {
                 return;
             }
@@ -42,7 +42,7 @@ namespace RepoDb.PostgreSql
             StatementBuilderMapper.Add(typeof(NpgsqlConnection), new PostgreSqlStatementBuilder(), true);
 
             // Set the flag
-            Initialized = true;
+            IsInitialized = true;
         }
 
         #endregion

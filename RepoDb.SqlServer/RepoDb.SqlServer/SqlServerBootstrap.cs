@@ -15,19 +15,19 @@ namespace RepoDb.SqlServer
         /// <summary>
         /// Gets the value indicating whether the initialization is completed.
         /// </summary>
-        public static bool Initialized { get; private set; }
+        public static bool IsInitialized { get; private set; }
 
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Initializes all necessary settings for PostgreSql.
+        /// Initializes all necessary settings for SqlServer.
         /// </summary>
         public static void Initialize()
         {
             // Skip if already initialized
-            if (Initialized == true)
+            if (IsInitialized == true)
             {
                 return;
             }
@@ -43,7 +43,7 @@ namespace RepoDb.SqlServer
                 new SqlServerStatementBuilder(DbSettingMapper.Get<SqlConnection>()), true);
 
             // Set the flag
-            Initialized = true;
+            IsInitialized = true;
         }
 
         #endregion

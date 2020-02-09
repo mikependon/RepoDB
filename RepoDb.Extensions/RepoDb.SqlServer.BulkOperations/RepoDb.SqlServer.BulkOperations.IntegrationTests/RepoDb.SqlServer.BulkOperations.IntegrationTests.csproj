@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
     <ProjectReference Include="..\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj" />
   </ItemGroup>
 

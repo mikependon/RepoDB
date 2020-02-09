@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using RepoDb.SqlServer;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
 using System;
 
@@ -23,6 +24,9 @@ namespace RepoDb.IntegrationTests.Setup
 
             // RepoDb connection
             ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
+
+            // Initialize the SqlServer
+            SqlServerBootstrap.Initialize();
 
             // Create the database first
             CreateDatabase();
