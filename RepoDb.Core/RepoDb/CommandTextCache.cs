@@ -753,12 +753,7 @@ namespace RepoDb
         private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection,
             IStatementBuilder builder)
         {
-            builder = builder ?? StatementBuilderMapper.Get(connection.GetType());
-            if (builder == null)
-            {
-                throw new MissingMappingException($"There is no statement builder mapping found for '{connection.GetType().FullName}' object.");
-            }
-            return builder;
+            return builder ?? connection.GetStatementBuilder();
         }
 
         #endregion

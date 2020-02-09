@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using RepoDb.DbSettings;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -17,11 +15,6 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<int, IDbSetting> m_maps = new ConcurrentDictionary<int, IDbSetting>();
         private static Type m_type = typeof(DbConnection);
 
-        static DbSettingMapper()
-        {
-            Add(typeof(SqlConnection), new SqlServerDbSetting(), true);
-        }
-
         /// <summary>
         /// Throws an exception if null.
         /// </summary>
@@ -29,7 +22,7 @@ namespace RepoDb
         {
             if (type == null)
             {
-                throw new NullReferenceException("Property handler type.");
+                throw new NullReferenceException("Database setting type.");
             }
         }
 

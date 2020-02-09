@@ -272,9 +272,12 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            value = string.Concat(dbSetting.ParameterPrefix,
-                (value.StartsWith(dbSetting.ParameterPrefix) ? value.Substring(1) : value)
-                    .AsUnquoted(true, dbSetting).AsAlphaNumeric());
+            if (dbSetting != null)
+            {
+                value = string.Concat(dbSetting.ParameterPrefix,
+                    (value.StartsWith(dbSetting.ParameterPrefix) ? value.Substring(1) : value)
+                        .AsUnquoted(true, dbSetting).AsAlphaNumeric());
+            }
             return index > 0 ? string.Concat(value, "_", index) : value;
         }
 

@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 

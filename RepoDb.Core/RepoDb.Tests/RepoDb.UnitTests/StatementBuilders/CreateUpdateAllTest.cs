@@ -238,7 +238,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 batchSize: 1,
                 primaryField: null,
                 identityField: null,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = $"" +
                 $"UPDATE [Table] WITH (TABLOCK) " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +
@@ -266,7 +266,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 batchSize: 3,
                 primaryField: null,
                 identityField: null,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = $"" +
                 $"UPDATE [Table] WITH (TABLOCK) " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 " +

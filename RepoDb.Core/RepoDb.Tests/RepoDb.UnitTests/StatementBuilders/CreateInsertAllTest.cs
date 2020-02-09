@@ -179,7 +179,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 batchSize: 1,
                 primaryField: null,
                 identityField: null,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -207,7 +207,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 batchSize: 3,
                 primaryField: null,
                 identityField: identityField,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +

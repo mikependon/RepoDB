@@ -81,7 +81,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
                 tableName: tableName,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = "DELETE FROM [Table] WITH (TABLOCK) ;";
 
             // Assert

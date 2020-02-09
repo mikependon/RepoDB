@@ -189,7 +189,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 fields: fields,
                 primaryField: null,
                 identityField: null,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field1], [Field2], [Field3] ) " +

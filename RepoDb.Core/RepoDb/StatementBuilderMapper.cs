@@ -1,6 +1,5 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using System;
 using System.Collections.Concurrent;
 using System.Data.Common;
@@ -16,12 +15,6 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<int, IStatementBuilder> m_maps = new ConcurrentDictionary<int, IStatementBuilder>();
         private static Type m_type = typeof(DbConnection);
 
-        static StatementBuilderMapper()
-        {
-            Add(typeof(Microsoft.Data.SqlClient.SqlConnection),
-                new SqlServerStatementBuilder(DbSettingMapper.Get<Microsoft.Data.SqlClient.SqlConnection>()));
-        }
-
         /// <summary>
         /// Throws an exception if null.
         /// </summary>
@@ -29,7 +22,7 @@ namespace RepoDb
         {
             if (type == null)
             {
-                throw new NullReferenceException("Property handler type.");
+                throw new NullReferenceException("Statement builder type.");
             }
         }
 

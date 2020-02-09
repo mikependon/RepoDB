@@ -41,9 +41,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="_SqlServer\Operations\**" />
-    <EmbeddedResource Remove="_SqlServer\Operations\**" />
-    <None Remove="_SqlServer\Operations\**" />
+    <Compile Remove="_SqlServer\**" />
+    <EmbeddedResource Remove="_SqlServer\**" />
+    <None Remove="_SqlServer\**" />
   </ItemGroup>
 
   <ItemGroup>

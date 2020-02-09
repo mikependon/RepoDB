@@ -113,7 +113,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var hints = SqlServerTableHints.NoLock;
+            var hints = "WITH (NOLOCK)";
 
             // Act
             var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
@@ -135,7 +135,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending });
-            var hints = SqlServerTableHints.NoLock;
+            var hints = "WITH (NOLOCK)";
 
             // Act
             var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,

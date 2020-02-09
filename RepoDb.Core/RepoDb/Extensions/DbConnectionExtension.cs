@@ -544,7 +544,7 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
         {
             // Variables
-            var setting = connection.GetDbSetting();
+            var setting = DbSettingMapper.Get(connection.GetType());
             var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -566,7 +566,7 @@ namespace RepoDb
             }
             finally
             {
-                if (setting.IsExecuteReaderDisposable || hasError)
+                if (setting?.IsExecuteReaderDisposable == true || hasError)
                 {
                     command.Dispose();
                 }
@@ -1099,7 +1099,7 @@ namespace RepoDb
             // Check the presence
             if (setting == null)
             {
-                throw new MissingMappingException($"There is no database setting mapping found for '{connection.GetType().FullName}'.");
+                throw new MissingMappingException($"There is no database setting mapping found for '{connection.GetType().FullName}'. Either install the extension library (ie: 'RepoDb.SqlServer', 'RepoDb.SqLite') and call their respective boostrapper once (ie: 'SqlServer.Bootstrap.Initialize()', 'SqLiteBootstrap.Bootstrap.Initialize()').");
             }
 
             // Return the validator
@@ -1125,7 +1125,7 @@ namespace RepoDb
             // Check the presence
             if (helper == null)
             {
-                throw new MissingMappingException($"There is no database helper mapping found for '{connection.GetType().FullName}'.");
+                throw new MissingMappingException($"There is no database helper mapping found for '{connection.GetType().FullName}'. Either install the extension library (ie: 'RepoDb.SqlServer', 'RepoDb.SqLite') and call their respective boostrapper once (ie: 'SqlServer.Bootstrap.Initialize()', 'SqLiteBootstrap.Bootstrap.Initialize()').");
             }
 
             // Return the validator
@@ -1151,7 +1151,7 @@ namespace RepoDb
             // Check the presence
             if (statementBuilder == null)
             {
-                throw new MissingMappingException($"There is no database statement builder mapping found for '{connection.GetType().FullName}'.");
+                throw new MissingMappingException($"There is no database statement builder mapping found for '{connection.GetType().FullName}'. Either install the extension library (ie: 'RepoDb.SqlServer', 'RepoDb.SqLite') and call their respective boostrapper once (ie: 'SqlServer.Bootstrap.Initialize()', 'SqLiteBootstrap.Bootstrap.Initialize()').");
             }
 
             // Return the validator
@@ -1530,7 +1530,7 @@ namespace RepoDb
             // Check the array parameters
             if (skipCommandArrayParametersCheck == false)
             {
-                commandArrayParameters = AsCommandArrayParameters(param, connection.GetDbSetting(), ref commandText);
+                commandArrayParameters = AsCommandArrayParameters(param, DbSettingMapper.Get(connection.GetType()), ref commandText);
             }
 
             // Command object initialization

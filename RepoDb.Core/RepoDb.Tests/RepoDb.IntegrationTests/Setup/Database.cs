@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
+using RepoDb.SqlServer;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -25,6 +26,9 @@ namespace RepoDb.IntegrationTests.Setup
 
             // Set the proper values for type mapper
             TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
+
+            // Initialize the SqlServer
+            SqlServerBootstrap.Initialize();
 
             // Create the database first
             CreateDatabase();

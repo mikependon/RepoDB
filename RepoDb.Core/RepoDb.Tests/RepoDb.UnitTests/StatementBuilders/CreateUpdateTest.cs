@@ -380,7 +380,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 where: where,
                 primaryField: null,
                 identityField: null,
-                hints: SqlServerTableHints.TabLock);
+                hints: "WITH (TABLOCK)");
             var expected = $"" +
                 $"UPDATE [Table] WITH (TABLOCK) " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";

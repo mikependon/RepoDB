@@ -89,7 +89,7 @@ namespace RepoDb.Extensions
             var parameter = command.CreateParameter();
 
             // Set the values
-            parameter.ParameterName = name.AsParameter(command.Connection.GetDbSetting());
+            parameter.ParameterName = name.AsParameter(DbSettingMapper.Get(command.Connection.GetType()));
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values (so check properly Time/DateTime problem)
