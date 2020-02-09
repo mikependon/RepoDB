@@ -1,12 +1,12 @@
-[![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
+[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
 [![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
-[![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql)](https://www.nuget.org/packages/RepoDb.PostgreSql)
-[![PostgreSqlDL](https://img.shields.io/nuget/dt/repodb.postgresql)](https://www.nuget.org/packages/RepoDb.PostgreSql)
-[![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
-[![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
+[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer)](https://www.nuget.org/packages/RepoDb.SqlServer)
+[![SqlServerDL](https://img.shields.io/nuget/dt/repodb.postgresql)](https://www.nuget.org/packages/RepoDb.SqlServer)
+[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
+[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
-## RepoDb.PostgreSql - a hybrid .NET ORM library for PostgreSql.
+## RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
 
 RepoDb is an ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development.
 
@@ -26,7 +26,7 @@ Basically, all [operations](https://github.com/mikependon/RepoDb#operations) wer
 
 ## Dependencies
 
-- [Npgsql](https://www.nuget.org/packages/Npgsql/) - the data provider used for *PostgreSql*.
+- [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) - the data provider used for *SqlServer*.
 - [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of *RepoDb*.
 
 ## License
@@ -40,7 +40,7 @@ Basically, all [operations](https://github.com/mikependon/RepoDb#operations) wer
 At the *Package Manager Console*, write the command below.
 
 ```
-Install-Package RepoDb.PostgreSql
+Install-Package RepoDb.SqlServer
 ```
 
 ## Getting Started
@@ -48,7 +48,7 @@ Install-Package RepoDb.PostgreSql
 First, the bootstrapper must be initialized.
 
 ```csharp
-RepoDb.PostgreSqlBootstrap.Initialize();
+RepoDb.SqlServerBootstrap.Initialize();
 ```
 
 **Note:** The call must be done once.
@@ -58,7 +58,7 @@ After the bootstrap initialization, any library operation can then be called.
 ### Query
 
 ```csharp
-using (var connection = new NpgsqlConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(c => c.Id == 10045);
 }
@@ -73,7 +73,7 @@ var customer = new Customer
 	LastName = "Doe",
 	IsActive = true
 };
-using (var connection = new NpgsqlConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var id = connection.Insert<Customer>(customer);
 }
@@ -82,7 +82,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ### Update
 
 ```csharp
-using (var connection = new NpgsqlConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
@@ -94,7 +94,7 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 ### Delete
 
 ```csharp
-using (var connection = new NpgsqlConnection(ConnectionString))
+using (var connection = new SqlConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);

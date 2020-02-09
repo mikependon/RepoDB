@@ -89,6 +89,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FCAEE688-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql", "..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj", "{FAD179C4-B9E1-44F3-956A-D755459747F8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

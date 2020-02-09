@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\RepoDb.Core\Re
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SqlServer.Base", "RepoDb.SqlServer.Base", "{A94DF673-8A85-428A-8101-4498FF6EF429}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.PostgreSql\README.md = ..\RepoDb.PostgreSql\README.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SqlServer.Tests", "RepoDb.SqlServer.Tests", "{5D2F2547-B733-437C-9E8B-8E4959D8CBC4}"

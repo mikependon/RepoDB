@@ -48,7 +48,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for batch query operation.</returns>
         public override string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
@@ -120,7 +120,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count operation.</returns>
         public override string CreateCount(QueryBuilder queryBuilder,
             string tableName,
@@ -145,7 +145,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count-all operation.</returns>
         public override string CreateCountAll(QueryBuilder queryBuilder,
             string tableName,
@@ -169,7 +169,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for exists operation.</returns>
         public override string CreateExists(QueryBuilder queryBuilder,
             string tableName,
@@ -212,7 +212,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
@@ -260,7 +260,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
@@ -315,7 +315,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be maximumd.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for maximum operation.</returns>
         public override string CreateMax(QueryBuilder queryBuilder,
             string tableName,
@@ -343,7 +343,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for maximum-all operation.</returns>
         public override string CreateMaxAll(QueryBuilder queryBuilder,
             string tableName,
@@ -372,7 +372,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMerge(QueryBuilder queryBuilder,
             string tableName,
@@ -474,7 +474,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMergeAll(QueryBuilder queryBuilder,
             string tableName,
@@ -581,7 +581,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for minimum operation.</returns>
         public override string CreateMin(QueryBuilder queryBuilder,
             string tableName,
@@ -609,7 +609,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for minimum-all operation.</returns>
         public override string CreateMinAll(QueryBuilder queryBuilder,
             string tableName,
@@ -638,7 +638,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="top">The number of rows to be returned.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for query operation.</returns>
         public override string CreateQuery(QueryBuilder queryBuilder,
             string tableName,
@@ -709,7 +709,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for sum operation.</returns>
         public override string CreateSum(QueryBuilder queryBuilder,
             string tableName,
@@ -737,7 +737,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be sumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for sum-all operation.</returns>
         public override string CreateSumAll(QueryBuilder queryBuilder,
             string tableName,

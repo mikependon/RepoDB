@@ -9,7 +9,7 @@ namespace RepoDb.PostgreSql.DbSettings
     public sealed class PostgreSqlDbSetting : BaseDbSetting
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SqlServerDbSetting"/> class.
+        /// Creates a new instance of <see cref="PostgreSqlDbSetting"/> class.
         /// </summary>
         public PostgreSqlDbSetting()
             : base()
