@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Michael Camara Pendon</Authors>
+    <Company>RepoDb</Company>
+    <Product>RepoDb</Product>
+    <Description>An extension library that contains the official Bulk Operations for RepoDb.</Description>
+    <Copyright>Copyright © 2020</Copyright>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
+    <PackageIcon>RepoDb-64x64.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
+    <PackageReleaseNotes>Initial release for RepoDb.SqlServer.BulkOperations.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +25,17 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\..\RepoDb.Icons\RepoDb-64x64.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
