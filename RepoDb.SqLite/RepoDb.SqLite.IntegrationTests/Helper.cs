@@ -172,7 +172,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
@@ -199,7 +199,7 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
             table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
             table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
+            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 
@@ -231,7 +231,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
@@ -258,7 +258,7 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
             table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
             table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
+            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 
@@ -294,7 +294,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
@@ -321,7 +321,7 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
             table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
             table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
+            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 
@@ -353,7 +353,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnReal = (float)i,
                     ColumnString = $"ColumnString:{i}",
                     ColumnText = $"ColumnText:{i}",
-                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay,
+                    ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     ColumnVarChar = $"ColumnVarChar:{i}"
                 });
             }
@@ -380,7 +380,7 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
             table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
             table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).TimeOfDay;
+            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
         }
 

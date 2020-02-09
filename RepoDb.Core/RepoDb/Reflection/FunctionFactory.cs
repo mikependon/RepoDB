@@ -1438,7 +1438,7 @@ namespace RepoDb.Reflection
 
                 // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
                 // It is actually me who file this issue to Microsoft :)
-                // if (fieldOrPropertyType != typeOfTimeSpan)
+                //if (fieldOrPropertyType != typeOfTimeSpan)
                 //{
                 var dbType = (DbType?)null;
 

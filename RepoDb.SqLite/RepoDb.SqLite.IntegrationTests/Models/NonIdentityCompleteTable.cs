@@ -20,7 +20,7 @@ namespace RepoDb.SqLite.IntegrationTests.Models
         public Double? ColumnReal { get; set; }
         public String ColumnString { get; set; }
         public String ColumnText { get; set; }
-        public TimeSpan? ColumnTime { get; set; }
+        public DateTime? ColumnTime { get; set; }
         public String ColumnVarChar { get; set; }
     }
 }

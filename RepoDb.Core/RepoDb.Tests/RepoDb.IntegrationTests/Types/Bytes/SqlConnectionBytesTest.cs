@@ -30,7 +30,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesCrud()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
@@ -92,7 +92,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesMappedCrud()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {
@@ -154,7 +154,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesCrudAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
@@ -220,7 +220,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesMappedCrudAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {
@@ -290,7 +290,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesCrudViaTableName()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new
             {
@@ -352,7 +352,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesCrudViaTableNameAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new
             {

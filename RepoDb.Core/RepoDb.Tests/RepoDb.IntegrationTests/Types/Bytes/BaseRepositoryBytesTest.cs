@@ -40,7 +40,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesCrud()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
@@ -102,7 +102,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesMappedCrud()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {
@@ -164,7 +164,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesCrudAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
@@ -230,7 +230,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesMappedCrudAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
+            var text = "RepoDb"; // Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {

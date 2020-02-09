@@ -57,7 +57,7 @@ namespace RepoDb.Resolvers
                 case "datetime":
                     return typeof(DateTime);
                 case "time":
-                    return typeof(TimeSpan);
+                    return typeof(DateTime);
                 case "decimal":
                 case "numeric":
                     return typeof(decimal);
