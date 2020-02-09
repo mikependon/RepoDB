@@ -2,7 +2,7 @@
 using RepoDb.Resolvers;
 using System.Data;
 
-namespace RepoDb.SqlServer.Tests.UnitTests.Resolvers
+namespace RepoDb.SqlServer.UnitTests.Resolvers
 {
     [TestClass]
     public class DbTypeToSqlServerStringNameResolverTest

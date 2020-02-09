@@ -3,7 +3,7 @@ using RepoDb.Resolvers;
 using RepoDb.Types;
 using System;
 
-namespace RepoDb.SqlServer.Tests.UnitTests.Resolvers
+namespace RepoDb.SqlServer.UnitTests.Resolvers
 {
     [TestClass]
     public class SqlServerTypeNameToClientTypeResolverTest
