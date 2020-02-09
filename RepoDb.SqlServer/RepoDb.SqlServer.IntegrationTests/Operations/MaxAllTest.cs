@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMaxAll()
+        public void TestSqlServerConnectionMaxAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -43,8 +43,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMaxAllWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMaxAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -52,8 +52,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MaxAll<CompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                var result = connection.MaxAll<CompleteTable>(e => e.ColumnInt,
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -62,7 +65,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMaxAllAsync()
+        public void TestSqlServerConnectionMaxAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,8 +80,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMaxAllAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMaxAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -86,8 +89,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver").Wait();
+                var result = connection.MaxAllAsync<CompleteTable>(e => e.ColumnInt,
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -100,7 +106,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMaxAllViaTableName()
+        public void TestSqlServerConnectionMaxAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -116,8 +122,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMaxAllViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMaxAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -125,9 +131,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MaxAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MaxAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -136,7 +145,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMaxAllAsyncViaTableName()
+        public void TestSqlServerConnectionMaxAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -152,8 +161,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMaxAllAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMaxAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -161,9 +170,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 

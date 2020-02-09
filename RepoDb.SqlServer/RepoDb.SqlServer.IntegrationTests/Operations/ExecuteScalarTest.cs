@@ -25,7 +25,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteScalar()
+        public void TestSqlServerConnectionExecuteScalar()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -41,7 +41,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteScalarWithReturnType()
+        public void TestSqlServerConnectionExecuteScalarWithReturnType()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -61,7 +61,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteScalarAsync()
+        public void TestSqlServerConnectionExecuteScalarAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,7 +77,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteScalarAsyncWithReturnType()
+        public void TestSqlServerConnectionExecuteScalarAsyncWithReturnType()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

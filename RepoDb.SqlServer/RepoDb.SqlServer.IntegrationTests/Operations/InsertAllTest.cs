@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllForIdentity()
+        public void TestSqlServerConnectionInsertAllForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -54,7 +54,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllForNonIdentity()
+        public void TestSqlServerConnectionInsertAllForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -83,7 +83,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllAsyncForIdentity()
+        public void TestSqlServerConnectionInsertAllAsyncForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -109,7 +109,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllAsyncForNonIdentity()
+        public void TestSqlServerConnectionInsertAllAsyncForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -142,7 +142,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllViaTableNameForIdentity()
+        public void TestSqlServerConnectionInsertAllViaTableNameForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -169,7 +169,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllViaTableNameAsDynamicsForIdentity()
+        public void TestSqlServerConnectionInsertAllViaTableNameAsDynamicsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -196,7 +196,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllViaTableNameForNonIdentity()
+        public void TestSqlServerConnectionInsertAllViaTableNameForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -219,7 +219,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
+        public void TestSqlServerConnectionInsertAllViaTableNameAsDynamicsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
@@ -246,7 +246,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllViaTableNameAsyncForIdentity()
+        public void TestSqlServerConnectionInsertAllViaTableNameAsyncForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -273,7 +273,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
+        public void TestSqlServerConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -300,7 +300,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllViaTableNameAsyncForNonIdentity()
+        public void TestSqlServerConnectionInsertAllViaTableNameAsyncForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -323,7 +323,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
+        public void TestSqlServerConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);

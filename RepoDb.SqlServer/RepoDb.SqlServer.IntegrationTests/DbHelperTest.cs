@@ -205,7 +205,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var result = helper.GetScopeIdentity(connection, null);
 
                 // Assert
-                Assert.AreEqual(insertResult, result);
+                Assert.AreEqual(Convert.ToInt64(insertResult), Convert.ToInt64(result));
             }
         }
 
@@ -233,7 +233,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var result = helper.GetScopeIdentityAsync(connection, null).Result;
 
                 // Assert
-                Assert.AreEqual(insertResult, result);
+                Assert.AreEqual(Convert.ToInt64(insertResult), Convert.ToInt64(result));
             }
         }
 

@@ -31,7 +31,7 @@
         public System.Object ColumnSqlVariant { get; set; }
         public System.String ColumnText { get; set; }
         public System.TimeSpan ColumnTime { get; set; }
-        public System.Byte[] ColumnTimestamp { get; set; }
+        //public System.Byte[] ColumnTimestamp { get; set; }
         public System.Byte ColumnTinyInt { get; set; }
         public System.Guid ColumnUniqueIdentifier { get; set; }
         public System.Byte[] ColumnVarBinary { get; set; }

@@ -29,7 +29,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinWithoutExpression()
+        public void TestSqlServerConnectionMinWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -46,7 +46,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaExpression()
+        public void TestSqlServerConnectionMinViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -64,7 +64,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaDynamic()
+        public void TestSqlServerConnectionMinViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -81,7 +81,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaQueryField()
+        public void TestSqlServerConnectionMinViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -98,7 +98,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaQueryFields()
+        public void TestSqlServerConnectionMinViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -120,7 +120,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaQueryGroup()
+        public void TestSqlServerConnectionMinViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -142,8 +142,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMinWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMinWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -151,9 +151,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Min<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Min<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -162,7 +165,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncWithoutExpression()
+        public void TestSqlServerConnectionMinAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +182,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaExpression()
+        public void TestSqlServerConnectionMinAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -197,7 +200,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaDynamic()
+        public void TestSqlServerConnectionMinAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -214,7 +217,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaQueryField()
+        public void TestSqlServerConnectionMinAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -231,7 +234,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaQueryFields()
+        public void TestSqlServerConnectionMinAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -253,7 +256,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaQueryGroup()
+        public void TestSqlServerConnectionMinAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -275,8 +278,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMinAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMinAsyncWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -284,9 +287,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MinAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.MinAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -299,7 +305,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionMinViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -317,7 +323,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaTableNameViaDynamic()
+        public void TestSqlServerConnectionMinViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -335,7 +341,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaTableNameViaQueryField()
+        public void TestSqlServerConnectionMinViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -353,7 +359,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionMinViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -376,7 +382,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionMinViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -399,8 +405,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMinViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMinViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -408,10 +414,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Min(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -420,7 +429,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionMinAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -438,7 +447,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaTableNameViaDynamic()
+        public void TestSqlServerConnectionMinAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -456,7 +465,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaTableNameViaQueryField()
+        public void TestSqlServerConnectionMinAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -474,7 +483,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionMinAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -497,7 +506,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAsyncViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionMinAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -520,8 +529,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMinAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionMinAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -529,10 +538,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.MinAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 

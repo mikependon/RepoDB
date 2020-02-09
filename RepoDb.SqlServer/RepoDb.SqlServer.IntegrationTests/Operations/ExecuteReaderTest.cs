@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReader()
+        public void TestSqlServerConnectionExecuteReader()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -41,7 +41,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     while (reader.Read())
                     {
                         // Act
-                        var id = reader.GetInt64(0);
+                        var id = reader.GetInt32(0);
                         var columnInt = reader.GetInt32(1);
                         var columnDateTime = reader.GetDateTime(2);
                         var table = tables.FirstOrDefault(e => e.Id == id);
@@ -56,7 +56,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderWithMultipleStatements()
+        public void TestSqlServerConnectionExecuteReaderWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -71,7 +71,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                         while (reader.Read())
                         {
                             // Act
-                            var id = reader.GetInt64(0);
+                            var id = reader.GetInt32(0);
                             var columnInt = reader.GetInt32(1);
                             var columnDateTime = reader.GetDateTime(2);
                             var table = tables.FirstOrDefault(e => e.Id == id);
@@ -87,7 +87,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsExtractedEntity()
+        public void TestSqlServerConnectionExecuteReaderAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -107,7 +107,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsExtractedDynamic()
+        public void TestSqlServerConnectionExecuteReaderAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -131,7 +131,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsync()
+        public void TestSqlServerConnectionExecuteReaderAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -144,7 +144,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     while (reader.Read())
                     {
                         // Act
-                        var id = reader.GetInt64(0);
+                        var id = reader.GetInt32(0);
                         var columnInt = reader.GetInt32(1);
                         var columnDateTime = reader.GetDateTime(2);
                         var table = tables.FirstOrDefault(e => e.Id == id);
@@ -159,7 +159,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsyncWithMultipleStatements()
+        public void TestSqlServerConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -174,7 +174,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                         while (reader.Read())
                         {
                             // Act
-                            var id = reader.GetInt64(0);
+                            var id = reader.GetInt32(0);
                             var columnInt = reader.GetInt32(1);
                             var columnDateTime = reader.GetDateTime(2);
                             var table = tables.FirstOrDefault(e => e.Id == id);
@@ -190,7 +190,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsyncAsExtractedEntity()
+        public void TestSqlServerConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -210,7 +210,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public void TestSqlServerConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

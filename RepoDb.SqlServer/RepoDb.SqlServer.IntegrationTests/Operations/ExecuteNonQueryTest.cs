@@ -24,7 +24,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQuery()
+        public void TestSqlServerConnectionExecuteNonQuery()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -40,7 +40,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryWithParameters()
+        public void TestSqlServerConnectionExecuteNonQueryWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -57,7 +57,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryWithMultipleStatement()
+        public void TestSqlServerConnectionExecuteNonQueryWithMultipleStatement()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,7 +77,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryAsync()
+        public void TestSqlServerConnectionExecuteNonQueryAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -93,7 +93,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryAsyncWithParameters()
+        public void TestSqlServerConnectionExecuteNonQueryAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -110,7 +110,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryAsyncWithMultipleStatement()
+        public void TestSqlServerConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

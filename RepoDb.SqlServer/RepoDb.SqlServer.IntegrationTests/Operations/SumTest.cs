@@ -29,7 +29,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumWithoutExpression()
+        public void TestSqlServerConnectionSumWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -46,7 +46,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaExpression()
+        public void TestSqlServerConnectionSumViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -64,7 +64,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaDynamic()
+        public void TestSqlServerConnectionSumViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -81,7 +81,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaQueryField()
+        public void TestSqlServerConnectionSumViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -98,7 +98,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaQueryFields()
+        public void TestSqlServerConnectionSumViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -120,7 +120,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaQueryGroup()
+        public void TestSqlServerConnectionSumViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -142,8 +142,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionSumWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionSumWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -151,9 +151,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Sum<CompleteTable>(e => e.ColumnInt,
+                var result = connection.Sum<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -162,7 +165,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncWithoutExpression()
+        public void TestSqlServerConnectionSumAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +182,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaExpression()
+        public void TestSqlServerConnectionSumAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -197,7 +200,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaDynamic()
+        public void TestSqlServerConnectionSumAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -214,7 +217,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaQueryField()
+        public void TestSqlServerConnectionSumAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -231,7 +234,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaQueryFields()
+        public void TestSqlServerConnectionSumAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -253,7 +256,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaQueryGroup()
+        public void TestSqlServerConnectionSumAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -275,8 +278,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionSumAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionSumAsyncWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -284,9 +287,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SumAsync<CompleteTable>(e => e.ColumnInt,
+                var result = connection.SumAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -299,7 +305,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionSumViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -317,7 +323,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaTableNameViaDynamic()
+        public void TestSqlServerConnectionSumViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -335,7 +341,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaTableNameViaQueryField()
+        public void TestSqlServerConnectionSumViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -353,7 +359,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionSumViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -376,7 +382,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionSumViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -399,8 +405,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionSumViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionSumViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -408,10 +414,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Sum(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
@@ -420,7 +429,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionSumAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -438,7 +447,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaDynamic()
+        public void TestSqlServerConnectionSumAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -456,7 +465,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaQueryField()
+        public void TestSqlServerConnectionSumAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -474,7 +483,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionSumAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -497,7 +506,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionSumAsyncViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionSumAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -520,8 +529,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionSumAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionSumAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -529,10 +538,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.SumAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 

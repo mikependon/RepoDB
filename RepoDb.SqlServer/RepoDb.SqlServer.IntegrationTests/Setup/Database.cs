@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace RepoDb.SqlServer.IntegrationTests.Setup
 {
@@ -35,8 +36,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             // RepoDb connection
             ConnectionString = (connectionString ?? @"Server=(local);Database=RepoDbTest;Integrated Security=False;User Id=michael;Password=Password123;");
 
-            // Initialize PostgreSql
+            // Initialize the SqlServer
             SqlServerBootstrap.Initialize();
+
+            // Set the DateTime type
+            TypeMapper.Map(typeof(DateTime), DbType.DateTime2, true);
 
             // Create databases
             CreateDatabase();
@@ -49,8 +53,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                connection.DeleteAll<CompleteTable>();
-                connection.DeleteAll<NonIdentityCompleteTable>();
+                connection.Truncate<CompleteTable>();
+                connection.Truncate<NonIdentityCompleteTable>();
             }
         }
 
@@ -91,7 +95,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 		                [ColumnBigInt] BIGINT NULL,
 		                [ColumnBinary] BINARY(4000) NULL,
 		                [ColumnBit] BIT NULL,
-		                [ColumnChar] CHAR(32) NULL,
+		                [ColumnChar] CHAR(1) NULL,
 		                [ColumnDate] DATE NULL,
 		                [ColumnDateTime] DATETIME NULL,
 		                [ColumnDateTime2] DATETIME2(7) NULL,
@@ -104,7 +108,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 		                [ColumnImage] IMAGE NULL,
 		                [ColumnInt] INT NULL,
 		                [ColumnMoney] MONEY NULL,
-		                [ColumnNChar] NCHAR(32) NULL,
+		                [ColumnNChar] NCHAR(1) NULL,
 		                [ColumnNText] NTEXT NULL,
 		                [ColumnNumeric] NUMERIC(18, 2) NULL,
 		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
@@ -144,7 +148,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 		                [ColumnBigInt] BIGINT NULL,
 		                [ColumnBinary] BINARY(4000) NULL,
 		                [ColumnBit] BIT NULL,
-		                [ColumnChar] CHAR(32) NULL,
+		                [ColumnChar] CHAR(1) NULL,
 		                [ColumnDate] DATE NULL,
 		                [ColumnDateTime] DATETIME NULL,
 		                [ColumnDateTime2] DATETIME2(7) NULL,
@@ -157,7 +161,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 		                [ColumnImage] IMAGE NULL,
 		                [ColumnInt] INT NULL,
 		                [ColumnMoney] MONEY NULL,
-		                [ColumnNChar] NCHAR(32) NULL,
+		                [ColumnNChar] NCHAR(1) NULL,
 		                [ColumnNText] NTEXT NULL,
 		                [ColumnNumeric] NUMERIC(18, 2) NULL,
 		                [ColumnNVarChar] NVARCHAR(MAX) NULL,

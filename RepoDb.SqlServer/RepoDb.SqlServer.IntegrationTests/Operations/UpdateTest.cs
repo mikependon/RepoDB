@@ -27,7 +27,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaDataEntity()
+        public void TestSqlServerConnectionUpdateViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -52,7 +52,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaExpression()
+        public void TestSqlServerConnectionUpdateViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -77,7 +77,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaDynamic()
+        public void TestSqlServerConnectionUpdateViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -102,7 +102,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaQueryField()
+        public void TestSqlServerConnectionUpdateViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -127,7 +127,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaQueryFields()
+        public void TestSqlServerConnectionUpdateViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -157,7 +157,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaQueryGroup()
+        public void TestSqlServerConnectionUpdateViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -192,7 +192,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaDataEntity()
+        public void TestSqlServerConnectionUpdateAsyncViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -217,7 +217,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaExpression()
+        public void TestSqlServerConnectionUpdateAsyncViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -242,7 +242,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaDynamic()
+        public void TestSqlServerConnectionUpdateAsyncViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -267,7 +267,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaQueryField()
+        public void TestSqlServerConnectionUpdateAsyncViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -292,7 +292,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaQueryFields()
+        public void TestSqlServerConnectionUpdateAsyncViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -322,7 +322,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaQueryGroup()
+        public void TestSqlServerConnectionUpdateAsyncViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -361,7 +361,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaTableNameViaDataEntity()
+        public void TestSqlServerConnectionUpdateViaTableNameViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -386,7 +386,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaTableNameViaDynamic()
+        public void TestSqlServerConnectionUpdateViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -411,7 +411,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaTableNameViaQueryField()
+        public void TestSqlServerConnectionUpdateViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -436,7 +436,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionUpdateViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -466,7 +466,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionUpdateViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -501,7 +501,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDataEntity()
+        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -526,7 +526,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDynamic()
+        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -551,7 +551,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryField()
+        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -576,7 +576,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -606,7 +606,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();

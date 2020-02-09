@@ -27,7 +27,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteQueryMultiple()
+        public void TestSqlServerConnectionExecuteQueryMultiple()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -55,7 +55,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteQueryMultipleWithParameters()
+        public void TestSqlServerConnectionExecuteQueryMultipleWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -87,7 +87,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteQueryMultipleWithSharedParameters()
+        public void TestSqlServerConnectionExecuteQueryMultipleWithSharedParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -119,7 +119,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteQueryMultipleAsync()
+        public void TestSqlServerConnectionExecuteQueryMultipleAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -147,7 +147,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteQueryMultipleAsyncWithParameters()
+        public void TestSqlServerConnectionExecuteQueryMultipleAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +179,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteQueryMultipleAsyncWithSharedParameters()
+        public void TestSqlServerConnectionExecuteQueryMultipleAsyncWithSharedParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

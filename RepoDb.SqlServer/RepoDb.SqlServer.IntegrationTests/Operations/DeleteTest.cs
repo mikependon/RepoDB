@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteWithoutExpression()
+        public void TestSqlServerConnectionDeleteWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -44,7 +44,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaPrimaryKey()
+        public void TestSqlServerConnectionDeleteViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -60,7 +60,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaDataEntity()
+        public void TestSqlServerConnectionDeleteViaDataEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -76,7 +76,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaExpression()
+        public void TestSqlServerConnectionDeleteViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -92,7 +92,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaDynamic()
+        public void TestSqlServerConnectionDeleteViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -108,7 +108,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaQueryField()
+        public void TestSqlServerConnectionDeleteViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -124,7 +124,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaQueryFields()
+        public void TestSqlServerConnectionDeleteViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -145,7 +145,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaQueryGroup()
+        public void TestSqlServerConnectionDeleteViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -171,7 +171,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncWithoutExpression()
+        public void TestSqlServerConnectionDeleteAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -187,7 +187,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaPrimaryKey()
+        public void TestSqlServerConnectionDeleteAsyncViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -203,7 +203,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaDataEntity()
+        public void TestSqlServerConnectionDeleteAsyncViaDataEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -219,7 +219,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaExpression()
+        public void TestSqlServerConnectionDeleteAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -235,7 +235,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaDynamic()
+        public void TestSqlServerConnectionDeleteAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -251,7 +251,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaQueryField()
+        public void TestSqlServerConnectionDeleteAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -267,7 +267,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaQueryFields()
+        public void TestSqlServerConnectionDeleteAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -288,7 +288,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaQueryGroup()
+        public void TestSqlServerConnectionDeleteAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -318,7 +318,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionDeleteViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -334,7 +334,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaTableNameViaPrimaryKey()
+        public void TestSqlServerConnectionDeleteViaTableNameViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -350,7 +350,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaTableNameViaDynamic()
+        public void TestSqlServerConnectionDeleteViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -366,7 +366,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaTableNameViaQueryField()
+        public void TestSqlServerConnectionDeleteViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -382,7 +382,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionDeleteViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -403,7 +403,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionDeleteViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -429,7 +429,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionDeleteAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -445,7 +445,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaTableNameViaPrimaryKey()
+        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -461,7 +461,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaTableNameViaDynamic()
+        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -477,7 +477,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaTableNameViaQueryField()
+        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -493,7 +493,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -514,7 +514,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionDeleteAsyncViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

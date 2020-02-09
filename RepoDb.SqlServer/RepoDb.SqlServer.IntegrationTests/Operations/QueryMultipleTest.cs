@@ -29,7 +29,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleForT2()
+        public void TestSqlServerConnectionQueryMultipleForT2()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -51,7 +51,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleForT3()
+        public void TestSqlServerConnectionQueryMultipleForT3()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,7 +77,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleForT4()
+        public void TestSqlServerConnectionQueryMultipleForT4()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -107,7 +107,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleForT5()
+        public void TestSqlServerConnectionQueryMultipleForT5()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -141,7 +141,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleForT6()
+        public void TestSqlServerConnectionQueryMultipleForT6()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +179,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleForT7()
+        public void TestSqlServerConnectionQueryMultipleForT7()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -220,8 +220,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionQueryMultipleWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionQueryMultipleForT2WithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -229,12 +229,18 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultiple<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
-                    hints1: "WhatEver",
                     top2: 2,
-                    hints2: "WhatEver");
+                    hints1: SqlServerTableHints.NoLock,
+                    hints2: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(2, result.Item2.Count());
+                result.Item1.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+                result.Item2.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
             }
         }
 
@@ -243,7 +249,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT2()
+        public void TestSqlServerConnectionQueryMultipleAsyncForT2()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -265,7 +271,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT3()
+        public void TestSqlServerConnectionQueryMultipleAsyncForT3()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -291,7 +297,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT4()
+        public void TestSqlServerConnectionQueryMultipleAsyncForT4()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -321,7 +327,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT5()
+        public void TestSqlServerConnectionQueryMultipleAsyncForT5()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -355,7 +361,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT6()
+        public void TestSqlServerConnectionQueryMultipleAsyncForT6()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -393,7 +399,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT7()
+        public void TestSqlServerConnectionQueryMultipleAsyncForT7()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -434,8 +440,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryMultipleAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionQueryMultipleAsyncForT2WithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -443,12 +449,18 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
-                    hints1: "WhatEver",
                     top2: 2,
-                    hints2: "WhatEver").Wait();
+                    hints1: SqlServerTableHints.NoLock,
+                    hints2: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Item1.Count());
+                Assert.AreEqual(2, result.Item2.Count());
+                result.Item1.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
+                result.Item2.AsList().ForEach(item => Helper.AssertPropertiesEquality(tables.First(e => e.Id == item.Id), item));
             }
         }
 

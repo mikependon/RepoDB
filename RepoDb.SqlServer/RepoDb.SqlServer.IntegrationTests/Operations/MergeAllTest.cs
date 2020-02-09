@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -51,7 +51,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -77,7 +77,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -108,7 +108,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllForNonIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllForNonIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -131,7 +131,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllForNonIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -154,7 +154,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -186,7 +186,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -209,7 +209,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -235,7 +235,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -266,7 +266,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncForNonIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -289,7 +289,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -312,7 +312,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -348,7 +348,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -372,7 +372,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -396,7 +396,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -425,7 +425,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -450,7 +450,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -480,7 +480,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -515,7 +515,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -539,7 +539,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -563,7 +563,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -592,7 +592,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -616,7 +616,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -646,7 +646,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -681,7 +681,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -702,7 +702,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -726,7 +726,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -755,7 +755,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -776,7 +776,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -802,7 +802,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -833,7 +833,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -854,7 +854,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -882,7 +882,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -911,7 +911,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -932,7 +932,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -958,7 +958,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();

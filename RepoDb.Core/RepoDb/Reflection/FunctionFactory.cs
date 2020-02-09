@@ -906,36 +906,37 @@ namespace RepoDb.Reflection
                     fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
                 }
 
-                // Set for non Timestamp
-                if (fieldOrPropertyType != typeOfTimeSpan)
+                // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
+                // It is actually me who file this issue to Microsoft :)
+                //if (fieldOrPropertyType != typeOfTimeSpan)
+                //{
+                var dbType = (DbType?)null;
+
+                // Get the class property
+                if (propertyType?.IsEnum == true)
                 {
-                    var dbType = (DbType?)null;
-
-                    // Get the class property
-                    if (propertyType?.IsEnum == true)
-                    {
-                        dbType = classProperty?.GetDbType();
-                    }
-
-                    // Get the type mapping
-                    if (dbType == null)
-                    {
-                        dbType = TypeMapper.Get(fieldOrPropertyType);
-                    }
-
-                    // Use the resolver
-                    if (dbType == null)
-                    {
-                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
-                    }
-
-                    // Set the DB Type
-                    if (dbType != null)
-                    {
-                        var dbTypeAssignment = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
-                        parameterAssignments.Add(dbTypeAssignment);
-                    }
+                    dbType = classProperty?.GetDbType();
                 }
+
+                // Get the type mapping
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.Get(fieldOrPropertyType);
+                }
+
+                // Use the resolver
+                if (dbType == null)
+                {
+                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                }
+
+                // Set the DB Type
+                if (dbType != null)
+                {
+                    var dbTypeAssignment = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                    parameterAssignments.Add(dbTypeAssignment);
+                }
+                //}
 
                 #endregion
 
@@ -955,15 +956,15 @@ namespace RepoDb.Reflection
                 // Set only for non-image
                 // By default, SQL Server only put (16 size), and that would fail if the user
                 // used this type for their binary columns and assign a much longer values
-                if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
+                //if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
+                //{
+                // Set the Size
+                if (field.Size != null)
                 {
-                    // Set the Size
-                    if (field.Size != null)
-                    {
-                        var sizeAssignment = Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
-                        parameterAssignments.Add(sizeAssignment);
-                    }
+                    var sizeAssignment = Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
+                    parameterAssignments.Add(sizeAssignment);
                 }
+                //}
 
                 #endregion
 
@@ -1435,36 +1436,37 @@ namespace RepoDb.Reflection
                     fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
                 }
 
-                // Set for non Timestamp
-                if (fieldOrPropertyType != typeOfTimeSpan)
+                // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
+                // It is actually me who file this issue to Microsoft :)
+                // if (fieldOrPropertyType != typeOfTimeSpan)
+                //{
+                var dbType = (DbType?)null;
+
+                // Get the class property db type
+                if (propertyType?.IsEnum == true)
                 {
-                    var dbType = (DbType?)null;
-
-                    // Get the class property db type
-                    if (propertyType?.IsEnum == true)
-                    {
-                        dbType = classProperty?.GetDbType();
-                    }
-
-                    // Get the type mapping
-                    if (dbType == null)
-                    {
-                        dbType = TypeMapper.Get(fieldOrPropertyType);
-                    }
-
-                    // Use the resolver
-                    if (dbType == null)
-                    {
-                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
-                    }
-
-                    // Set the DB Type
-                    if (dbType != null)
-                    {
-                        var dbTypeAssignment = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
-                        parameterAssignments.Add(dbTypeAssignment);
-                    }
+                    dbType = classProperty?.GetDbType();
                 }
+
+                // Get the type mapping
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.Get(fieldOrPropertyType);
+                }
+
+                // Use the resolver
+                if (dbType == null)
+                {
+                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                }
+
+                // Set the DB Type
+                if (dbType != null)
+                {
+                    var dbTypeAssignment = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                    parameterAssignments.Add(dbTypeAssignment);
+                }
+                //}
 
                 #endregion
 
@@ -1484,15 +1486,15 @@ namespace RepoDb.Reflection
                 // Set only for non-image
                 // By default, SQL Server only put (16 size), and that would fail if the user
                 // used this type for their binary columns and assign a much longer values
-                if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
+                //if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
+                //{
+                // Set the Size
+                if (field.Size != null)
                 {
-                    // Set the Size
-                    if (field.Size != null)
-                    {
-                        var sizeAssignment = Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
-                        parameterAssignments.Add(sizeAssignment);
-                    }
+                    var sizeAssignment = Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(field.Size.Value));
+                    parameterAssignments.Add(sizeAssignment);
                 }
+                //}
 
                 #endregion
 

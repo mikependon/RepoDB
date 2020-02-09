@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -46,7 +46,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -72,7 +72,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -109,7 +109,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -127,7 +127,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -153,7 +153,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -194,7 +194,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -213,7 +213,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -240,7 +240,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -274,7 +274,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -298,7 +298,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -327,7 +327,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -365,7 +365,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -384,7 +384,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -411,7 +411,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -443,7 +443,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestSqlServerConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -467,7 +467,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlServerConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -496,7 +496,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlServerConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();

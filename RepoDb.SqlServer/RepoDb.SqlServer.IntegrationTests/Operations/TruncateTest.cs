@@ -26,7 +26,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncate()
+        public void TestSqlServerConnectionTruncate()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -47,7 +47,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateAsyncWithoutExpression()
+        public void TestSqlServerConnectionTruncateAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -72,7 +72,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionTruncateViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -93,7 +93,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateAsyncViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);

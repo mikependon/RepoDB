@@ -29,7 +29,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsWithoutExpression()
+        public void TestSqlServerConnectionExistsWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -45,7 +45,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaExpression()
+        public void TestSqlServerConnectionExistsViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -62,7 +62,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaDynamic()
+        public void TestSqlServerConnectionExistsViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -78,7 +78,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaQueryField()
+        public void TestSqlServerConnectionExistsViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -94,7 +94,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaQueryFields()
+        public void TestSqlServerConnectionExistsViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -115,7 +115,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaQueryGroup()
+        public void TestSqlServerConnectionExistsViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -136,8 +136,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionExistsWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionExistsWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -145,8 +145,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Exists<CompleteTable>((object)null,
-                    hints: "WhatEver");
+                var result = connection.Exists<CompleteTable>((object)null,
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.IsTrue(result);
             }
         }
 
@@ -155,7 +158,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncWithoutExpression()
+        public void TestSqlServerConnectionExistsAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -171,7 +174,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaExpression()
+        public void TestSqlServerConnectionExistsAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -188,7 +191,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaDynamic()
+        public void TestSqlServerConnectionExistsAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -204,7 +207,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaQueryField()
+        public void TestSqlServerConnectionExistsAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -220,7 +223,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaQueryFields()
+        public void TestSqlServerConnectionExistsAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -241,7 +244,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaQueryGroup()
+        public void TestSqlServerConnectionExistsAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -262,8 +265,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionExistsAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionExistsAsyncWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -271,8 +274,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.ExistsAsync<CompleteTable>((object)null,
-                    hints: "WhatEver").Wait();
+                var result = connection.ExistsAsync<CompleteTable>((object)null,
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.IsTrue(result);
             }
         }
 
@@ -285,7 +291,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionExistsViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -302,7 +308,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaTableNameViaDynamic()
+        public void TestSqlServerConnectionExistsViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -319,7 +325,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaTableNameViaQueryField()
+        public void TestSqlServerConnectionExistsViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -336,7 +342,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionExistsViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -358,7 +364,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionExistsViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -380,8 +386,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionExistsViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionExistsViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -389,9 +395,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.Exists(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.IsTrue(result);
             }
         }
 
@@ -400,7 +409,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaTableNameWithoutExpression()
+        public void TestSqlServerConnectionExistsAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -417,7 +426,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaTableNameViaDynamic()
+        public void TestSqlServerConnectionExistsAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -434,7 +443,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaTableNameViaQueryField()
+        public void TestSqlServerConnectionExistsAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -451,7 +460,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaTableNameViaQueryFields()
+        public void TestSqlServerConnectionExistsAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -473,7 +482,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExistsAsyncViaTableNameViaQueryGroup()
+        public void TestSqlServerConnectionExistsAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -495,8 +504,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionExistsAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionExistsAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -504,9 +513,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.IsTrue(result);
             }
         }
 

@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
-using System;
 using System.Linq;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
@@ -29,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryAll()
+        public void TestSqlServerConnectionQueryAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -45,16 +44,20 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionQueryAllWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionQueryAllWithHints()
         {
             // Setup
-            var table = Database.CreateCompleteTables(1).First();
+            var tables = Database.CreateCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAll<CompleteTable>(hints: "WhatEver");
+                var queryResult = connection.QueryAll<CompleteTable>(hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -63,7 +66,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryAllAsync()
+        public void TestSqlServerConnectionQueryAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -79,16 +82,20 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAllAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionQueryAllAsyncWithHints()
         {
             // Setup
-            var table = Database.CreateCompleteTables(1).First();
+            var tables = Database.CreateCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAllAsync<CompleteTable>(hints: "WhatEver").Wait();
+                var queryResult = connection.QueryAll<CompleteTable>(hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -101,7 +108,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryAllViaTableName()
+        public void TestSqlServerConnectionQueryAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -117,18 +124,21 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionQueryAllViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionQueryAllViaTableNameWithHints()
         {
             // Setup
-            var table = Database.CreateCompleteTables(1).First();
+            var tables = Database.CreateCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver");
+                var queryResult = connection.QueryAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -137,7 +147,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryAllAsyncViaTableName()
+        public void TestSqlServerConnectionQueryAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -153,18 +163,21 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAllAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionQueryAllAsyncViaTableNameWithHints()
         {
             // Setup
-            var table = Database.CreateCompleteTables(1).First();
+            var tables = Database.CreateCompleteTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                var queryResult = connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 

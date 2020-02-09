@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionAverageAll()
+        public void TestSqlServerConnectionAverageAll()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -43,8 +43,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionAverageAllWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionAverageAllWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -52,8 +52,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAll<CompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver");
+                var result = connection.AverageAll<CompleteTable>(e => e.ColumnInt,
+                    SqlServerTableHints.TabLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -62,7 +65,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionAverageAllAsync()
+        public void TestSqlServerConnectionAverageAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -77,8 +80,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionAverageAllAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionAverageAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -86,8 +89,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver").Wait();
+                var result = connection.AverageAllAsync<CompleteTable>(e => e.ColumnInt,
+                    SqlServerTableHints.TabLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -100,7 +106,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionAverageAllViaTableName()
+        public void TestSqlServerConnectionAverageAllViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -116,8 +122,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionAverageAllViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionAverageAllViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -125,9 +131,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
-                    hints: "WhatEver");
+                    SqlServerTableHints.TabLock);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
@@ -136,7 +145,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionAverageAllAsyncViaTableName()
+        public void TestSqlServerConnectionAverageAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -152,8 +161,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionAverageAllAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionAverageAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -161,9 +170,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt),
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.TabLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 

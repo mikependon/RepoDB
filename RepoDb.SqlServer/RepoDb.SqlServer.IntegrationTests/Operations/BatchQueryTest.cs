@@ -29,7 +29,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryFirstBatchAscending()
+        public void TestSqlServerConnectionBatchQueryFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -49,7 +49,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryFirstBatchDescending()
+        public void TestSqlServerConnectionBatchQueryFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -69,7 +69,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryThirdBatchAscending()
+        public void TestSqlServerConnectionBatchQueryThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -89,7 +89,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryThirdBatchDescending()
+        public void TestSqlServerConnectionBatchQueryThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -108,8 +108,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionBatchQueryWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionBatchQueryFirstBatchAscendingWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -117,11 +117,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQuery<CompleteTable>(0,
+                var result = connection.BatchQuery<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null,
-                    hints: "WhatEver");
+                    SqlServerTableHints.NoLock);
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
             }
         }
 
@@ -130,7 +134,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncFirstBatchAscending()
+        public void TestSqlServerConnectionBatchQueryAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -150,7 +154,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncFirstBatchDescending()
+        public void TestSqlServerConnectionBatchQueryAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -170,7 +174,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncThirdBatchAscending()
+        public void TestSqlServerConnectionBatchQueryAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -190,7 +194,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncThirdBatchDescending()
+        public void TestSqlServerConnectionBatchQueryAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -209,8 +213,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionBatchQueryAsyncWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionBatchQueryAsyncFirstBatchAscendingWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,11 +222,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQueryAsync<CompleteTable>(0,
+                var result = connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(2));
             }
         }
 
@@ -235,7 +243,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameFirstBatchAscending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -256,7 +264,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameFirstBatchDescending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -277,7 +285,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameThirdBatchAscending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -298,7 +306,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameThirdBatchDescending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -318,8 +326,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnPostgreSqlConnectionBatchQueryViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionBatchQueryViaTableNameFirstBatchAscendingWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -327,12 +335,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQuery(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver");
+                    where: (object)null,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(2));
             }
         }
 
@@ -341,7 +353,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -362,7 +374,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -383,7 +395,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -404,7 +416,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
+        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -424,8 +436,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionBatchQueryAsyncViaTableNameWithHints()
+        [TestMethod]
+        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscendingWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -433,12 +445,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    hints: "WhatEver").Wait();
+                    where: (object)null,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(2));
             }
         }
 
