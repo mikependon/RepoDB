@@ -1,12 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using RepoDb.DbHelpers;
+﻿using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb.SqlServer
 {
     /// <summary>
-    /// A class used to initialize necessary objects that is connected to <see cref="SqlConnection"/> object.
+    /// A class used to initialize necessary objects that is connected to both <see cref="Microsoft.Data.SqlClient.SqlConnection"/> and <see cref="System.Data.SqlClient.SqlConnection"/> object.
     /// </summary>
     public static class SqlServerBootstrap
     {
@@ -33,14 +32,19 @@ namespace RepoDb.SqlServer
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(SqlConnection), new SqlServerDbSetting(), true);
+            var dbSetting = new SqlServerDbSetting();
+            DbSettingMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), dbSetting, true);
+            DbSettingMapper.Add(typeof(System.Data.SqlClient.SqlConnection), dbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SqlConnection), new SqlServerDbHelper(), true);
+            var dbHelper = new SqlServerDbHelper();
+            DbHelperMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), dbHelper, true);
+            DbHelperMapper.Add(typeof(System.Data.SqlClient.SqlConnection), dbHelper, true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SqlConnection),
-                new SqlServerStatementBuilder(DbSettingMapper.Get<SqlConnection>()), true);
+            var statementBuilder = new SqlServerStatementBuilder(dbSetting);
+            StatementBuilderMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), statementBuilder, true);
+            StatementBuilderMapper.Add(typeof(System.Data.SqlClient.SqlConnection), statementBuilder, true);
 
             // Set the flag
             IsInitialized = true;

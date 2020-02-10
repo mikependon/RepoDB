@@ -5,7 +5,6 @@ using System;
 using RepoDb.Exceptions;
 using RepoDb.Resolvers;
 using RepoDb.Interfaces;
-using Microsoft.Data.SqlClient;
 
 namespace RepoDb.StatementBuilders
 {
@@ -17,8 +16,9 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a new instance of <see cref="SqlServerStatementBuilder"/> object.
         /// </summary>
+        /// <param name="dbSetting">The database settings object currently in used.</param>
         public SqlServerStatementBuilder(IDbSetting dbSetting)
-            : this((dbSetting ?? DbSettingMapper.Get<SqlConnection>()),
+            : this(dbSetting,
                 new SqlServerConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver())
         { }
@@ -33,8 +33,8 @@ namespace RepoDb.StatementBuilders
             IResolver<Field, IDbSetting, string> convertFieldResolver = null,
             IResolver<Type, Type> averageableClientTypeResolver = null)
             : base(dbSetting,
-                  convertFieldResolver,
-                  averageableClientTypeResolver)
+                  (convertFieldResolver ?? new SqlServerConvertFieldResolver()),
+                  (averageableClientTypeResolver ?? new ClientTypeToAverageableClientTypeResolver()))
         { }
 
         #region CreateBatchQuery

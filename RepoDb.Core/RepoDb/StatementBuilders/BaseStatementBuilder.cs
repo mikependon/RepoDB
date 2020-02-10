@@ -22,9 +22,13 @@ namespace RepoDb.StatementBuilders
             IResolver<Field, IDbSetting, string> convertFieldResolver = null,
             IResolver<Type, Type> averageableClientTypeResolver = null)
         {
+            if (dbSetting == null)
+            {
+                throw new NullReferenceException("The database setting cannot be null.");
+            }
+            DbSetting = dbSetting;
             ConvertFieldResolver = convertFieldResolver;
             AverageableClientTypeResolver = averageableClientTypeResolver;
-            DbSetting = dbSetting;
         }
 
         #region Properties

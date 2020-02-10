@@ -155,7 +155,7 @@
         </member>
         <member name="T:RepoDb.SqlServer.SqlServerBootstrap">
             <summary>
-            A class used to initialize necessary objects that is connected to <see cref="T:Microsoft.Data.SqlClient.SqlConnection"/> object.
+            A class used to initialize necessary objects that is connected to both <see cref="T:Microsoft.Data.SqlClient.SqlConnection"/> and <see cref="T:System.Data.SqlClient.SqlConnection"/> object.
             </summary>
         </member>
         <member name="P:RepoDb.SqlServer.SqlServerBootstrap.IsInitialized">
@@ -286,6 +286,7 @@
             <summary>
             Creates a new instance of <see cref="T:RepoDb.StatementBuilders.SqlServerStatementBuilder"/> object.
             </summary>
+            <param name="dbSetting">The database settings object currently in used.</param>
         </member>
         <member name="M:RepoDb.StatementBuilders.SqlServerStatementBuilder.#ctor(RepoDb.Interfaces.IDbSetting,RepoDb.Interfaces.IResolver{RepoDb.Field,RepoDb.Interfaces.IDbSetting,System.String},RepoDb.Interfaces.IResolver{System.Type,System.Type})">
             <summary>
