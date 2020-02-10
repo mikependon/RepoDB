@@ -19,10 +19,4 @@
     <ProjectReference Include="..\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="RepoDb.SqlServer.BulkOperations.IntegrationTests.runtimeconfig.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
