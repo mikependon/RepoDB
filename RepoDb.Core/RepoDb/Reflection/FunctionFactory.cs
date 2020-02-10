@@ -756,7 +756,11 @@ namespace RepoDb.Reflection
                         if (propertyType.IsEnum)
                         {
                             var mappedToType = classProperty?.GetDbType();
-                            if (mappedToType != null && mappedToType != DbType.String)
+                            if (mappedToType == null)
+                            {
+                                mappedToType = new ClientTypeToDbTypeResolver().Resolve(field.Type);
+                            }
+                            if (mappedToType != null)
                             {
                                 var convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { typeOfObject });
                                 if (convertToTypeMethod != null)
@@ -829,8 +833,8 @@ namespace RepoDb.Reflection
 
                         // Set the propert value
                         valueBlock = Expression.Block(new[] { valueVariable },
-                    Expression.Assign(valueVariable, value),
-                    Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                            Expression.Assign(valueVariable, value),
+                            Expression.Condition(valueIsNull, dbNullValue, valueVariable));
                     }
                     else
                     {
