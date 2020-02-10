@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// Contains the extension methods for SqlConnection object.
+    /// Contains the extension methods for <see cref="SqlConnection"/> object.
     /// </summary>
     public static partial class SqlConnectionExtension
     {
         #region Privates
 
-        private static bool m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet = false;
-        private static FieldInfo m_microsoftDataSqlBulkCopyRowsCopiedField = null;
+        private static bool m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = false;
+        private static FieldInfo m_systemDataSqlBulkCopyRowsCopiedField = null;
 
         #endregion
 
@@ -530,7 +530,7 @@ namespace RepoDb
                 sqlBulkCopy.WriteToServer(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
+                var copiedField = GetRowsCopiedFieldFromSystemDataSqlBulkCopy();
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
@@ -729,7 +729,7 @@ namespace RepoDb
                 await sqlBulkCopy.WriteToServerAsync(reader);
 
                 // Hack the 'SqlBulkCopy' object
-                var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
+                var copiedField = GetRowsCopiedFieldFromSystemDataSqlBulkCopy();
 
                 // Set the return value
                 result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
@@ -844,23 +844,23 @@ namespace RepoDb
         /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
         /// </summary>
         /// <returns>The actual field.</returns>
-        private static FieldInfo GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy()
+        private static FieldInfo GetRowsCopiedFieldFromSystemDataSqlBulkCopy()
         {
             // Check if the call has made earlier
-            if (m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet == true)
+            if (m_systemDataBulkInsertRowsCopiedFieldHasBeenSet == true)
             {
-                return m_microsoftDataSqlBulkCopyRowsCopiedField;
+                return m_systemDataSqlBulkCopyRowsCopiedField;
             }
 
             // Set the flag
-            m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet = true;
+            m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = true;
 
             // Get the field (whether null or not)
-            m_microsoftDataSqlBulkCopyRowsCopiedField = typeof(SqlBulkCopy)
+            m_systemDataSqlBulkCopyRowsCopiedField = typeof(SqlBulkCopy)
                 .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
 
             // Return the value
-            return m_microsoftDataSqlBulkCopyRowsCopiedField;
+            return m_systemDataSqlBulkCopyRowsCopiedField;
         }
 
         #endregion

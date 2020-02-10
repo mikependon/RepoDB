@@ -43,7 +43,8 @@ namespace RepoDb
         /// <param name="dataTable">The instance of <see cref="DataTable"/> where the list of <see cref="DataRow"/> will be extracted.</param>
         /// <param name="rowState">The state of the <see cref="DataRow"/> objects to be extracted.</param>
         /// <returns>The list of <see cref="DataRow"/> objects.</returns>
-        private static IEnumerable<DataRow> GetDataRows(DataTable dataTable, DataRowState rowState)
+        private static IEnumerable<DataRow> GetDataRows(DataTable dataTable,
+            DataRowState rowState)
         {
             foreach (var row in dataTable.Rows.OfType<DataRow>().Where(r => r.RowState == rowState))
             {
