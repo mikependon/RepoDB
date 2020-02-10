@@ -16,10 +16,13 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
     <PackageReleaseNotes>Initial release for RepoDb.SqlServer.BulkOperations.</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
+    <PackageReference Include="RepoDb" Version="1.10.7" />
+    <PackageReference Include="RepoDb.SqlServer" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
