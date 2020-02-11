@@ -1290,7 +1290,11 @@ namespace RepoDb.Reflection
                         if (propertyType.IsEnum)
                         {
                             var mappedToType = classProperty?.GetDbType();
-                            if (mappedToType != null && mappedToType != DbType.String)
+                            if (mappedToType == null)
+                            {
+                                mappedToType = new ClientTypeToDbTypeResolver().Resolve(field.Type);
+                            }
+                            if (mappedToType != null)
                             {
                                 var convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { typeOfObject });
                                 if (convertToTypeMethod != null)

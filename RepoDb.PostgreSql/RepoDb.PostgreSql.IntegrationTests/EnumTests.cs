@@ -1,7 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Attributes;
+using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.PostgreSql.IntegrationTests
@@ -26,6 +30,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
         public enum Hands
         {
+            Unidentified,
             Left,
             Right
         }
@@ -35,25 +40,71 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region SubClasses
 
         [Map("CompleteTable")]
-        public class PersonText
+        public class PersonWithText
         {
             public System.Int64 Id { get; set; }
             public Hands ColumnText { get; set; }
         }
 
         [Map("CompleteTable")]
-        public class PersonInteger
+        public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
             public Hands ColumnInteger { get; set; }
         }
 
         [Map("CompleteTable")]
-        public class PersonTextAsInteger
+        public class PersonWithTextAsInteger
         {
             public System.Int64 Id { get; set; }
             [TypeMap(System.Data.DbType.Int32)]
             public Hands ColumnText { get; set; }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        public IEnumerable<PersonWithText> GetPersonWithText(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithText
+                {
+                    Id = i,
+                    ColumnText = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithInteger> GetPersonWithInteger(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithInteger
+                {
+                    Id = i,
+                    ColumnInteger = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithTextAsInteger> GetPersonWithTextAsInteger(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithTextAsInteger
+                {
+                    Id = i,
+                    ColumnText = hand
+                };
+            }
         }
 
         #endregion
@@ -64,16 +115,39 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var person = new PersonText { Id = 1, ColumnText = Hands.Right };
+                var person = GetPersonWithText(1).First();
 
                 // Act
                 connection.Insert(person);
 
                 // Query
-                var queryResult = connection.Query<PersonText>(person.Id).First();
+                var queryResult = connection.Query<PersonWithText>(person.Id).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextByBatch()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithText(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithText>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                });
             }
         }
 
@@ -83,16 +157,39 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var person = new PersonInteger { Id = 1, ColumnInteger = Hands.Right };
+                var person = GetPersonWithInteger(1).First();
 
                 // Act
                 connection.Insert(person);
 
                 // Query
-                var queryResult = connection.Query<PersonInteger>(person.Id).First();
+                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnInteger, queryResult.ColumnInteger);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsIntegerAsBatch()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithInteger(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithInteger>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnInteger, item.ColumnInteger);
+                });
             }
         }
 
@@ -102,16 +199,39 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
-                var person = new PersonTextAsInteger { Id = 1, ColumnText = Hands.Right };
+                var person = GetPersonWithTextAsInteger(1).First();
 
                 // Act
                 connection.Insert(person);
 
                 // Query
-                var queryResult = connection.Query<PersonTextAsInteger>(person.Id).First();
+                var queryResult = connection.Query<PersonWithTextAsInteger>(person.Id).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithTextAsInteger(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithTextAsInteger>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                });
             }
         }
     }
