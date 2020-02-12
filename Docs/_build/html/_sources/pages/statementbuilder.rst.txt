@@ -124,7 +124,7 @@ Then, in order to utilize the mentioned statement builders, the code below must 
 .. code-block:: c#
 	:linenos:
 
-	StatementBuilderMapper.Map(typeof(OracleConnection), new SqlServerStatementBuilder());
+	StatementBuilderMapper.Map(typeof(SqlConnection), new SqlServerStatementBuilder());
 	StatementBuilderMapper.Map(typeof(SqLiteConnection), new SqLiteStatementBuilder());
 	StatementBuilderMapper.Map(typeof(MySqlConnection), new MySqlStatementBuilder());
 	StatementBuilderMapper.Map(typeof(NpgsqlConnection), new PostgreSqlStatementBuilder());

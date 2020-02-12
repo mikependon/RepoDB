@@ -89,6 +89,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propertyhandler.html">Property Handler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
@@ -96,17 +97,17 @@
 <li class="toctree-l1"><a class="reference internal" href="enumeration.html">Enumeration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dbhelper.html">DB Helper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hints.html">Hints</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provideroperation.html">Provider Operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dbsetting.html">DB Setting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supports</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
@@ -183,7 +184,7 @@
 <li>Right click on the solution and click the <cite>Manage Nuget Packages for Solution…</cite>.</li>
 <li>Select the <cite>Browse</cite> tab.</li>
 <li>In the <cite>Search</cite> field, type <cite>RepoDb</cite> and press <cite>Enter</cite>.</li>
-<li>In the right side, select the project you wish the library to install to.</li>
+<li>In the right side, select the project you wish the library to install to (ie: <cite>RepoDb.SqlServer</cite>, <cite>RepoDb.MySql</cite>, <cite>RepoDb.PostgreSql</cite>, <cite>RepoDb.SqLite</cite> and <cite>RepoDb.SqlServer.BulkOperations</cite>).</li>
 <li>Click the <cite>Install</cite> button.</li>
 </ol>
 <p>Wait for few seconds until the installation is completed.</p>
@@ -195,8 +196,19 @@
 <li>Select the <cite>View -&gt; Other Windows -&gt; Package Manager Console</cite>.</li>
 <li>In the <cite>Package Source</cite> drop down field, select <cite>All</cite>.</li>
 <li>In the <cite>Default Project</cite> drop down field, select the project you wish the library to install to.</li>
-<li>In the <cite>Package Manager Console</cite>, type the <cite>Install-Package RepoDb</cite>, then press <cite>Enter</cite>.</li>
+<li>In the <cite>Package Manager Console</cite>, type any of the command below and press <cite>Enter</cite>.</li>
 </ol>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqlServer</span>
+<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">MySql</span>
+<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">PostgreSql</span>
+<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqLite</span>
+<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqlServer</span><span class="p">.</span><span class="n">BulkOperations</span>
+</pre></div>
+</td></tr></table></div>
 <p>Wait for few seconds until the installation is completed.</p>
 </div>
 </div>

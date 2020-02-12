@@ -85,6 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propertyhandler.html">Property Handler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
@@ -364,7 +365,7 @@
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerStatementBuilder</span><span class="p">());</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqlServerStatementBuilder</span><span class="p">());</span>
 <span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SqLiteConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">SqLiteStatementBuilder</span><span class="p">());</span>
 <span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">MySqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">MySqlStatementBuilder</span><span class="p">());</span>
 <span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">NpgsqlConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">PostgreSqlStatementBuilder</span><span class="p">());</span>
