@@ -124,9 +124,13 @@ RepoDb has “fluent” methods in which the SQL Statements are automatically be
 
 ### Extensibility
 
-RepoDb is highly extensible to further support other RDBMS data-providers. The developers only need to implement certain interfaces to make it work.
+RepoDb is a highly extensible to further support customizations. You can:
 
-For the actual implementation, please visit our [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider) page.
+- [Customize the Cache](https://github.com/mikependon/RepoDb/wiki/Customizing-a-Cache)
+- [Create a customized Property Handler](https://github.com/mikependon/RepoDb/wiki/Creating-a-Property-Handler)
+- [Implement a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)
+- [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider)
+- and many more
 
 ## Operations
 
