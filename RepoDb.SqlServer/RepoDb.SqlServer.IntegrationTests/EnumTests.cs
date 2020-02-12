@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Npgsql;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
-using RepoDb.PostgreSql.IntegrationTests.Setup;
+using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RepoDb.PostgreSql.IntegrationTests
+namespace RepoDb.SqlServer.IntegrationTests
 {
     [TestClass]
     public class EnumTests
@@ -42,22 +42,25 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public class PersonWithText
         {
             public System.Int64 Id { get; set; }
-            public Hands? ColumnText { get; set; }
+            public System.Guid SessionId { get; set; }
+            public Hands? ColumnNVarChar { get; set; }
         }
 
         [Map("CompleteTable")]
         public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
-            public Hands? ColumnInteger { get; set; }
+            public System.Guid SessionId { get; set; }
+            public Hands? ColumnNVarChar { get; set; }
         }
 
         [Map("CompleteTable")]
         public class PersonWithTextAsInteger
         {
             public System.Int64 Id { get; set; }
+            public System.Guid SessionId { get; set; }
             [TypeMap(System.Data.DbType.Int32)]
-            public Hands? ColumnText { get; set; }
+            public Hands? ColumnNVarChar { get; set; }
         }
 
         #endregion
@@ -73,7 +76,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 yield return new PersonWithText
                 {
                     Id = i,
-                    ColumnText = hand
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = hand
                 };
             }
         }
@@ -87,7 +91,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 yield return new PersonWithInteger
                 {
                     Id = i,
-                    ColumnInteger = hand
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = hand
                 };
             }
         }
@@ -101,7 +106,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 yield return new PersonWithTextAsInteger
                 {
                     Id = i,
-                    ColumnText = hand
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = hand
                 };
             }
         }
@@ -111,7 +117,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -123,14 +129,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<PersonWithText>(person.Id).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+                Assert.AreEqual(person.ColumnNVarChar, queryResult.ColumnNVarChar);
             }
         }
 
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithText(10).AsList();
@@ -145,7 +151,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 people.ForEach(p =>
                 {
                     var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                    Assert.AreEqual(p.ColumnNVarChar, item.ColumnNVarChar);
                 });
             }
         }
@@ -153,7 +159,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -165,14 +171,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnInteger, queryResult.ColumnInteger);
+                Assert.AreEqual(person.ColumnNVarChar, queryResult.ColumnNVarChar);
             }
         }
 
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithInteger(10).AsList();
@@ -187,7 +193,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 people.ForEach(p =>
                 {
                     var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnInteger, item.ColumnInteger);
+                    Assert.AreEqual(p.ColumnNVarChar, item.ColumnNVarChar);
                 });
             }
         }
@@ -195,7 +201,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
@@ -207,14 +213,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<PersonWithTextAsInteger>(person.Id).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnText, queryResult.ColumnText);
+                Assert.AreEqual(person.ColumnNVarChar, queryResult.ColumnNVarChar);
             }
         }
 
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var people = GetPersonWithTextAsInteger(10).AsList();
@@ -229,7 +235,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 people.ForEach(p =>
                 {
                     var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnText, item.ColumnText);
+                    Assert.AreEqual(p.ColumnNVarChar, item.ColumnNVarChar);
                 });
             }
         }

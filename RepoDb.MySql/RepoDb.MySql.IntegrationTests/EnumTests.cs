@@ -42,14 +42,14 @@ namespace RepoDb.MySql.IntegrationTests
         public class PersonWithText
         {
             public System.Int64 Id { get; set; }
-            public Hands ColumnText { get; set; }
+            public Hands? ColumnText { get; set; }
         }
 
         [Map("CompleteTable")]
         public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
-            public Hands ColumnInt { get; set; }
+            public Hands? ColumnInt { get; set; }
         }
 
         [Map("CompleteTable")]
@@ -57,7 +57,7 @@ namespace RepoDb.MySql.IntegrationTests
         {
             public System.Int64 Id { get; set; }
             [TypeMap(System.Data.DbType.Int32)]
-            public Hands ColumnText { get; set; }
+            public Hands? ColumnText { get; set; }
         }
 
         #endregion

@@ -42,14 +42,14 @@ namespace RepoDb.SqLite.IntegrationTests
         public class PersonWithText
         {
             public System.Int64 Id { get; set; }
-            public Hands ColumnText { get; set; }
+            public Hands? ColumnText { get; set; }
         }
 
         [Map("CompleteTable")]
         public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
-            public Hands ColumnInteger { get; set; }
+            public Hands? ColumnInteger { get; set; }
         }
 
         [Map("CompleteTable")]
@@ -57,7 +57,7 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             public System.Int64 Id { get; set; }
             [TypeMap(System.Data.DbType.Int32)]
-            public Hands ColumnText { get; set; }
+            public Hands? ColumnText { get; set; }
         }
 
         #endregion
@@ -113,6 +113,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var person = GetPersonWithText(1).First();
 
@@ -132,6 +135,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var people = GetPersonWithText(10).AsList();
 
@@ -155,6 +161,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var person = GetPersonWithInteger(1).First();
 
@@ -174,6 +183,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var people = GetPersonWithInteger(10).AsList();
 
@@ -197,6 +209,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
 
@@ -216,6 +231,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var people = GetPersonWithTextAsInteger(10).AsList();
 
