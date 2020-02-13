@@ -44,7 +44,14 @@ namespace RepoDb
             IsNullable = isNullable;
             Type = type;
             Size = size;
-            Precision = precision;
+            if (type == typeof(double) && precision > 38)
+            {
+                Precision = 38;
+            }
+            else
+            {
+                Precision = precision;
+            }
             Scale = scale;
             DatabaseType = databaseType;
         }

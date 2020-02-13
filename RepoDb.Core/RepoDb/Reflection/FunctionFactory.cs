@@ -639,6 +639,7 @@ namespace RepoDb.Reflection
             var typeOfLong = typeof(long);
             var typeOfDouble = typeof(Double);
             var typeOfShort = typeof(short);
+            var typeOfBoolean = typeof(bool);
             var typeOfConvert = typeof(Convert);
 
             // Variables for arguments
@@ -729,21 +730,34 @@ namespace RepoDb.Reflection
                         // Parse with Guid if necessary
                         if (TypeMapper.ConversionType == ConversionType.Automatic)
                         {
-                            #region StringToGuid
-
                             var valueToConvert = Expression.Property(instance, instanceProperty);
+
+                            #region StringToGuid
 
                             // Create a new guid here
                             if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
                                 value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
+
+                            #endregion
+
+                            #region GuidToString
+
+                            // Call the System.Convert conversion
+                            else if (propertyType == typeOfGuid && fieldType == typeOfString/* GuidToString*/)
+                            {
+                                var convertMethod = typeof(Convert).GetMethod("ToString", new[] { typeOfObject });
+                                value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, typeOfObject));
+                                value = Expression.Convert(value, fieldType);
+                            }
+
+                            #endregion
+
                             else
                             {
                                 value = valueToConvert;
                             }
-
-                            #endregion
                         }
                         else
                         {
@@ -884,24 +898,52 @@ namespace RepoDb.Reflection
 
                 #region DbType
 
+                // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
+                // It is actually me who file this issue to Microsoft :)
+                //if (fieldOrPropertyType != typeOfTimeSpan)
+                //{
                 // Identify the DB Type
                 var fieldOrPropertyType = (Type)null;
+                var dbType = (DbType?)null;
 
                 // Identify the conversion
                 if (TypeMapper.ConversionType == ConversionType.Automatic)
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                        propertyType == typeOfDecimal && (fieldType == typeOfFloat || fieldType == typeOfDouble) /* DecimalToFloat/DecimalToDouble */ ||
                         propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
                         propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
                         propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
                         propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
                         propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                        propertyType == typeOfString && fieldType == typeOfDateTime /* StringToDate */ ||
+                        propertyType == typeOfString && fieldType == typeOfShort /* StringToShort */ ||
+                        propertyType == typeOfString && fieldType == typeOfInt /* StringToInt */ ||
+                        propertyType == typeOfString && fieldType == typeOfLong /* StringToLong */ ||
+                        propertyType == typeOfString && fieldType == typeOfDouble /* StringToDouble */ ||
+                        propertyType == typeOfString && fieldType == typeOfDecimal /* StringToDecimal */ ||
+                        propertyType == typeOfString && fieldType == typeOfFloat /* StringToFloat */ ||
+                        propertyType == typeOfString && fieldType == typeOfBoolean /* StringToBoolean */ ||
+                        propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */ ||
+                        propertyType == typeOfGuid && fieldType == typeOfString /* GuidToString */)
+                    {
+                        fieldOrPropertyType = fieldType;
+                    }
+                    else if (propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
+                    if (fieldOrPropertyType != null)
+                    {
+                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    }
+                }
+
+                // Get the class property
+                if (dbType == null)
+                {
+                    dbType = classProperty?.GetDbType();
                 }
 
                 // Set to normal if null
@@ -910,28 +952,19 @@ namespace RepoDb.Reflection
                     fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
                 }
 
-                // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
-                // It is actually me who file this issue to Microsoft :)
-                //if (fieldOrPropertyType != typeOfTimeSpan)
-                //{
-                var dbType = (DbType?)null;
-
-                // Get the class property
-                if (propertyType?.IsEnum == true)
+                if (fieldOrPropertyType != null)
                 {
-                    dbType = classProperty?.GetDbType();
-                }
+                    // Get the type mapping
+                    if (dbType == null)
+                    {
+                        dbType = TypeMapper.Get(fieldOrPropertyType);
+                    }
 
-                // Get the type mapping
-                if (dbType == null)
-                {
-                    dbType = TypeMapper.Get(fieldOrPropertyType);
-                }
-
-                // Use the resolver
-                if (dbType == null)
-                {
-                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    // Use the resolver
+                    if (dbType == null)
+                    {
+                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    }
                 }
 
                 // Set the DB Type
@@ -1168,6 +1201,7 @@ namespace RepoDb.Reflection
             var typeOfLong = typeof(long);
             var typeOfDouble = typeof(Double);
             var typeOfShort = typeof(short);
+            var typeOfBoolean = typeof(bool);
             var typeOfConvert = typeof(Convert);
 
             // Variables for arguments
@@ -1263,21 +1297,34 @@ namespace RepoDb.Reflection
                         // Parse with Guid if necessary
                         if (TypeMapper.ConversionType == ConversionType.Automatic)
                         {
-                            #region StringToGuid
-
                             var valueToConvert = Expression.Property(instance, instanceProperty);
+
+                            #region StringToGuid
 
                             // Create a new guid here
                             if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
                             {
                                 value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
                             }
+
+                            #endregion
+
+                            #region GuidToString
+
+                            // Call the System.Convert conversion
+                            else if (propertyType == typeOfGuid && fieldType == typeOfString/* GuidToString*/)
+                            {
+                                var convertMethod = typeof(Convert).GetMethod("ToString", new[] { typeOfObject });
+                                value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, typeOfObject));
+                                value = Expression.Convert(value, fieldType);
+                            }
+
+                            #endregion
+
                             else
                             {
                                 value = valueToConvert;
                             }
-
-                            #endregion
                         }
                         else
                         {
@@ -1418,24 +1465,52 @@ namespace RepoDb.Reflection
 
                 #region DbType
 
+                // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
+                // It is actually me who file this issue to Microsoft :)
+                //if (fieldOrPropertyType != typeOfTimeSpan)
+                //{
                 // Identify the DB Type
                 var fieldOrPropertyType = (Type)null;
+                var dbType = (DbType?)null;
 
                 // Identify the conversion
                 if (TypeMapper.ConversionType == ConversionType.Automatic)
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeOfDecimal && fieldType == typeOfFloat /* DecimalToFloat */ ||
+                        propertyType == typeOfDecimal && (fieldType == typeOfFloat || fieldType == typeOfDouble) /* DecimalToFloat/DecimalToDouble */ ||
                         propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
                         propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
                         propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
                         propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
                         propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                        propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                        propertyType == typeOfString && fieldType == typeOfDateTime /* StringToDate */ ||
+                        propertyType == typeOfString && fieldType == typeOfShort /* StringToShort */ ||
+                        propertyType == typeOfString && fieldType == typeOfInt /* StringToInt */ ||
+                        propertyType == typeOfString && fieldType == typeOfLong /* StringToLong */ ||
+                        propertyType == typeOfString && fieldType == typeOfDouble /* StringToDouble */ ||
+                        propertyType == typeOfString && fieldType == typeOfDecimal /* StringToDecimal */ ||
+                        propertyType == typeOfString && fieldType == typeOfFloat /* StringToFloat */ ||
+                        propertyType == typeOfString && fieldType == typeOfBoolean /* StringToBoolean */ ||
+                        propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */ ||
+                        propertyType == typeOfGuid && fieldType == typeOfString /* GuidToString */)
+                    {
+                        fieldOrPropertyType = fieldType;
+                    }
+                    else if (propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
+                    if (fieldOrPropertyType != null)
+                    {
+                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    }
+                }
+
+                // Get the class property
+                if (dbType == null)
+                {
+                    dbType = classProperty?.GetDbType();
                 }
 
                 // Set to normal if null
@@ -1444,28 +1519,19 @@ namespace RepoDb.Reflection
                     fieldOrPropertyType = field.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
                 }
 
-                // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
-                // It is actually me who file this issue to Microsoft :)
-                //if (fieldOrPropertyType != typeOfTimeSpan)
-                //{
-                var dbType = (DbType?)null;
-
-                // Get the class property db type
-                if (propertyType?.IsEnum == true)
+                if (fieldOrPropertyType != null)
                 {
-                    dbType = classProperty?.GetDbType();
-                }
+                    // Get the type mapping
+                    if (dbType == null)
+                    {
+                        dbType = TypeMapper.Get(fieldOrPropertyType);
+                    }
 
-                // Get the type mapping
-                if (dbType == null)
-                {
-                    dbType = TypeMapper.Get(fieldOrPropertyType);
-                }
-
-                // Use the resolver
-                if (dbType == null)
-                {
-                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    // Use the resolver
+                    if (dbType == null)
+                    {
+                        dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                    }
                 }
 
                 // Set the DB Type

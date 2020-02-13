@@ -580,7 +580,7 @@ namespace RepoDb.IntegrationTests
             var entity = new DateTimeToStringClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnNVarChar = DateTime.UtcNow
+                ColumnNVarChar = DateTime.UtcNow.Date
             };
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
@@ -1677,7 +1677,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<DoubleToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(12345, data.ColumnBigInt);
+                Assert.AreEqual(12346, data.ColumnBigInt);
             }
         }
 
@@ -1712,7 +1712,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<DoubleToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(12345, data.ColumnInt);
+                Assert.AreEqual(12346, data.ColumnInt);
             }
         }
 
@@ -1747,7 +1747,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<DoubleToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(12345, data.ColumnInt);
+                Assert.AreEqual(12346, data.ColumnInt);
             }
         }
 
@@ -1957,7 +1957,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<FloatToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(12345, data.ColumnBigInt);
+                Assert.AreEqual(12346, data.ColumnBigInt);
             }
         }
 
@@ -1992,7 +1992,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<FloatToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(12345, data.ColumnInt);
+                Assert.AreEqual(12346, data.ColumnInt);
             }
         }
 
@@ -2027,7 +2027,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<FloatToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(12345, data.ColumnInt);
+                Assert.AreEqual(12346, data.ColumnInt);
             }
         }
 
