@@ -78,6 +78,10 @@ namespace RepoDb.Resolvers
             {
                 return DbType.Int16;
             }
+            else if (type == typeof(SqlVariant))
+            {
+                return DbType.Object;
+            }
             // Object must be defaulted to String, defaulted by .NET for DbType
             else if (type == typeof(object))
             {
@@ -99,10 +103,6 @@ namespace RepoDb.Resolvers
             else if (type == typeof(Guid))
             {
                 return DbType.Guid;
-            }
-            else if (type == typeof(SqlVariant))
-            {
-                return DbType.Object;
             }
             // XML must be defaulted to String, defaulted by .NET for DbType
             /*else if (type == typeof(Xml))

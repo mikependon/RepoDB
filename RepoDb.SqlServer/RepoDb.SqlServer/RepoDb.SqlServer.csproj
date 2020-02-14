@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.0" />
-    <PackageReference Include="RepoDb" Version="1.10.7" />
+    <PackageReference Include="RepoDb" Version="1.10.8" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
   </ItemGroup>
 

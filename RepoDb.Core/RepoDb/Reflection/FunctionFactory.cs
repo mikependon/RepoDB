@@ -4,6 +4,7 @@ using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
+using RepoDb.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -945,7 +946,10 @@ namespace RepoDb.Reflection
                 // Get the class property
                 if (dbType == null && handlerInstance == null)
                 {
-                    dbType = classProperty?.GetDbType();
+                    if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(field.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
+                    {
+                        dbType = classProperty?.GetDbType();
+                    }
                 }
 
                 // Set to normal if null
@@ -1514,7 +1518,10 @@ namespace RepoDb.Reflection
                 // Get the class property
                 if (dbType == null && handlerInstance == null)
                 {
-                    dbType = classProperty?.GetDbType();
+                    if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(field.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
+                    {
+                        dbType = classProperty?.GetDbType();
+                    }
                 }
 
                 // Set to normal if null
