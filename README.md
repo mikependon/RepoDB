@@ -11,6 +11,27 @@
 [![Documentation](https://img.shields.io/badge/docs-library-yellowgreen)](https://repodb.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-apache-important)](http://apache.org/licenses/LICENSE-2.0.html)
 
+## Important Notice!!!
+
+Starting v1.10.7, the supports to [*SQL Server*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer) has been moved from [*RepoDb.Core*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) into its own dedicated package named [*RepoDb.SqlServer*](https://www.nuget.org/packages/RepoDb.SqlServer).
+
+To work with *SQL Server*, install the following packages.
+
+```csharp
+> Install-Package RepoDb.SqlServer
+> Install-Package RepoDb.SqlServer.BulkOperations
+```
+
+And call the bootstrapper once.
+
+```csharp
+RepoDb.SqlServerBootstrap.Initialize();
+```
+
+The rest is the same as before.
+
+----------
+
 ## RepoDb - a hybrid ORM Library for .NET.
 
 RepoDb is a .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development.
@@ -47,15 +68,15 @@ RepoDb is a .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It 
 
 ### It is easy-to-use
 
-Basically, all [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
+RepoDb [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
 
 ### It is high-performant
 
-RepoDb has its own compiler and pre-caches the “already-generated” compiled-ILs and compiled-Expressions for future reusabilities.
+RepoDb has its own compiler and pre-caches the already-generated compiled-ILs and compiled-Expressions for future reusabilities.
 
 ### It is efficient
 
-RepoDb caches the “already-extracted” object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
+RepoDb extracts and caches the object properties, mappings and SQL statements and reusing them throughout the process of transformations and executions. It helps eliminate the creation of unnecessary objects that leads to a low memory consumption.
 
 ## Community
 
@@ -76,7 +97,7 @@ We would like to build a healthy and active community that would help fellow .NE
 
 To contribute, please open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
-Your biggest contribution is to share this solution to other developers. You can:
+Your biggest contribution is to utilize and share this solution to other developers. You can:
 
 - Blog it
 - Discuss it
