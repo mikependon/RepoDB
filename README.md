@@ -68,7 +68,7 @@ RepoDb is a .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It 
 
 ### It is easy-to-use
 
-RepoDb [operations](https://github.com/mikependon/RepoDb#operations) were implemented as an extended methods of the *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
+RepoDb [operations](https://github.com/mikependon/RepoDb#operations) were implemented as extended methods of *IDbConnection* object. As long as the database connection is open, the developers can do all the activities towards the database.
 
 ### It is high-performant
 
@@ -107,7 +107,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 
 We are really thanking you for that!
 
-### Pull-request hints
+### Contribution hints
 
 - [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md) - let us build your copies.
 - [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - let us be uniformed.
@@ -151,7 +151,8 @@ RepoDb is a highly extensible to further support customizations. You can:
 - [Create a customized Property Handler](https://github.com/mikependon/RepoDb/wiki/Creating-a-Property-Handler)
 - [Implement a Trace](https://github.com/mikependon/RepoDb/wiki/Implementing-a-Trace)
 - [Extending the supports for specific DB Provider](https://github.com/mikependon/RepoDb/wiki/Extending-the-supports-for-specific-DB-Provider)
-- and many more
+
+And many more extensibility possibilities.
 
 ## Operations
 
