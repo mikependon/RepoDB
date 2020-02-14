@@ -699,6 +699,10 @@ namespace RepoDb.Reflection
                 var propertyType = (Type)null;
                 var fieldType = field.Type?.GetUnderlyingType();
 
+                //  Property handlers
+                var handlerInstance = (object)null;
+                var handlerSetMethod = (MethodInfo)null;
+
                 #region Value
 
                 // Set the value
@@ -789,8 +793,6 @@ namespace RepoDb.Reflection
                         #region PropertyHandler
 
                         var propertyHandlerAttribute = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
-                        var handlerInstance = (object)null;
-                        var handlerSetMethod = (MethodInfo)null;
 
                         if (propertyHandlerAttribute != null)
                         {
@@ -941,7 +943,7 @@ namespace RepoDb.Reflection
                 }
 
                 // Get the class property
-                if (dbType == null)
+                if (dbType == null && handlerInstance == null)
                 {
                     dbType = classProperty?.GetDbType();
                 }
@@ -1266,6 +1268,10 @@ namespace RepoDb.Reflection
                 var propertyType = (Type)null;
                 var fieldType = field.Type?.GetUnderlyingType();
 
+                //  Property handlers
+                var handlerInstance = (object)null;
+                var handlerSetMethod = (MethodInfo)null;
+
                 #region Value
 
                 // Set the value
@@ -1356,8 +1362,6 @@ namespace RepoDb.Reflection
                         #region PropertyHandler
 
                         var propertyHandlerAttribute = instanceProperty.GetCustomAttribute<PropertyHandlerAttribute>();
-                        var handlerInstance = (object)null;
-                        var handlerSetMethod = (MethodInfo)null;
 
                         if (propertyHandlerAttribute != null)
                         {
@@ -1508,7 +1512,7 @@ namespace RepoDb.Reflection
                 }
 
                 // Get the class property
-                if (dbType == null)
+                if (dbType == null && handlerInstance == null)
                 {
                     dbType = classProperty?.GetDbType();
                 }
