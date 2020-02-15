@@ -1,4 +1,5 @@
-﻿using NpgsqlTypes;
+﻿using Npgsql;
+using NpgsqlTypes;
 using System;
 
 namespace RepoDb.Attributes
@@ -11,11 +12,11 @@ namespace RepoDb.Attributes
         /// <summary>
         /// Creates a new instance of <see cref="NpgsqlTypeMapAttribute"/> class.
         /// </summary>
-        /// <param name="npgsqlDbType">A target <see cref="NpgsqlDbType"/> value.</param>
+        /// <param name="npgsqlDbType">A target <see cref="NpgsqlTypes.NpgsqlDbType"/> value.</param>
         public NpgsqlTypeMapAttribute(NpgsqlDbType npgsqlDbType)
         {
             NpgsqlDbType = npgsqlDbType;
-            ParameterType = typeof(Npgsql.NpgsqlParameter);
+            ParameterType = typeof(NpgsqlParameter);
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace RepoDb.Attributes
         public NpgsqlDbType NpgsqlDbType { get; }
 
         /// <summary>
-        /// Gets the represented <see cref="Type"/> of the <see cref="Npgsql.NpgsqlParameter"/>.
+        /// Gets the represented <see cref="Type"/> of the <see cref="NpgsqlParameter"/>.
         /// </summary>
         public Type ParameterType { get; }
     }
