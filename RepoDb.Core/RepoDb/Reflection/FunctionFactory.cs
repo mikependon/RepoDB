@@ -901,6 +901,8 @@ namespace RepoDb.Reflection
 
                 #region DbType
 
+                #region DbType
+
                 // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
                 // It is actually me who file this issue to Microsoft :)
                 //if (fieldOrPropertyType != typeOfTimeSpan)
@@ -983,12 +985,28 @@ namespace RepoDb.Reflection
 
                 #endregion
 
+                #region MySqlDbType
+
+                // Get the MySqlDbType value from MySqlDbTypeAttribute
+                var mysqlDbTypeTypeMapAttribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
+                if (mysqlDbTypeTypeMapAttribute != null)
+                {
+                    var mySqlDbTypeValue = GetMySqlDbTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                    var mySqlParameterType = GetMySqlParameterTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                    var dbParameterMySqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
+                    var mySqlDbTypeAssignment = Expression.Call(
+                        Expression.Convert(parameterVariable, mySqlParameterType),
+                        dbParameterMySqlDbTypeSetMethod,
+                        Expression.Constant(mySqlDbTypeValue));
+                    parameterAssignments.Add(mySqlDbTypeAssignment);
+                }
+
+                #endregion
+
                 #region NpgsqlDbType
 
-                // Get the NpgsqlDbType value from NpgsqlTypeMap attribute
+                // Get the NpgsqlDbType value from NpgsqlTypeMapAttribute
                 var npgsqlDbTypeTypeMapAttribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
-
-                // Only set if there is a value
                 if (npgsqlDbTypeTypeMapAttribute != null)
                 {
                     var npgsqlDbTypeValue = GetNpgsqlDbTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
@@ -1000,6 +1018,8 @@ namespace RepoDb.Reflection
                         Expression.Constant(npgsqlDbTypeValue));
                     parameterAssignments.Add(npgsqlDbTypeAssignment);
                 }
+
+                #endregion
 
                 #endregion
 
@@ -1493,6 +1513,8 @@ namespace RepoDb.Reflection
 
                 #region DbType
 
+                #region DbType
+
                 // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
                 // It is actually me who file this issue to Microsoft :)
                 //if (fieldOrPropertyType != typeOfTimeSpan)
@@ -1575,12 +1597,28 @@ namespace RepoDb.Reflection
 
                 #endregion
 
+                #region MySqlDbType
+
+                // Get the MySqlDbType value from MySqlDbTypeAttribute
+                var mysqlDbTypeTypeMapAttribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
+                if (mysqlDbTypeTypeMapAttribute != null)
+                {
+                    var mySqlDbTypeValue = GetMySqlDbTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                    var mySqlParameterType = GetMySqlParameterTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                    var dbParameterMySqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
+                    var mySqlDbTypeAssignment = Expression.Call(
+                        Expression.Convert(parameterVariable, mySqlParameterType),
+                        dbParameterMySqlDbTypeSetMethod,
+                        Expression.Constant(mySqlDbTypeValue));
+                    parameterAssignments.Add(mySqlDbTypeAssignment);
+                }
+
+                #endregion
+
                 #region NpgsqlDbType
 
-                // Get the NpgsqlDbType value from NpgsqlTypeMap attribute
+                // Get the NpgsqlDbType value from NpgsqlTypeMapAttribute
                 var npgsqlDbTypeTypeMapAttribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
-
-                // Only set if there is a value
                 if (npgsqlDbTypeTypeMapAttribute != null)
                 {
                     var npgsqlDbTypeValue = GetNpgsqlDbTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
@@ -1592,6 +1630,8 @@ namespace RepoDb.Reflection
                         Expression.Constant(npgsqlDbTypeValue));
                     parameterAssignments.Add(npgsqlDbTypeAssignment);
                 }
+
+                #endregion
 
                 #endregion
 
@@ -1885,74 +1925,6 @@ namespace RepoDb.Reflection
 
         #endregion
 
-        #region Npgsql Helpers
-
-        /// <summary>
-        /// Gets the NpgsqlDbTypeMap attribute if present.
-        /// </summary>
-        /// <param name="property">The instance of propery to inspect.</param>
-        /// <returns>The instance of NpgsqlDbTypeMap attribute.</returns>
-        internal static Attribute GetNpgsqlDbTypeTypeMapAttribute(ClassProperty property)
-        {
-            return property?
-                .PropertyInfo
-                .GetCustomAttributes()?
-                .FirstOrDefault(e =>
-                    e.GetType().FullName.Equals("RepoDb.Attributes.NpgsqlTypeMapAttribute"));
-        }
-
-        /// <summary>
-        /// Gets the value represented by the NpgsqlDbTypeMap.NpgsqlDbType property.
-        /// </summary>
-        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
-        /// <returns>The value represented by the NpgsqlDbTypeMap.NpgsqlDbType property.</returns>
-        internal static object GetNpgsqlDbTypeFromAttribute(Attribute attribute)
-        {
-            if (attribute == null)
-            {
-                return null;
-            }
-            var type = attribute.GetType();
-            return type
-                .GetProperty("DbType")?
-                .GetValue(attribute);
-        }
-
-        /// <summary>
-        /// Gets the system type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMap.ParameterType property.
-        /// </summary>
-        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
-        /// <returns>The type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMap.ParameterType property.</returns>
-        internal static Type GetNpgsqlParameterTypeFromAttribute(Attribute attribute)
-        {
-            if (attribute == null)
-            {
-                return null;
-            }
-            return (Type)attribute
-                .GetType()
-                .GetProperty("ParameterType")?
-                .GetValue(attribute);
-        }
-
-        /// <summary>
-        /// Gets the instance of <see cref="MethodInfo"/> represented by the NpgsqlDbTypeMap.NpgsqlDbType property.
-        /// </summary>
-        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
-        /// <returns>The instance of <see cref="MethodInfo"/> represented by the NpgsqlDbTypeMap.NpgsqlDbType property.</returns>
-        internal static MethodInfo GetNpgsqlDbTypeFromAttributeSetMethod(Attribute attribute)
-        {
-            if (attribute == null)
-            {
-                return null;
-            }
-            return GetNpgsqlParameterTypeFromAttribute(attribute)?
-                .GetProperty("NpgsqlDbType")?
-                .SetMethod;
-        }
-
-        #endregion
-
         #region Helpers
 
         /// <summary>
@@ -2059,6 +2031,146 @@ namespace RepoDb.Reflection
                 }
             }
         }
+
+        #endregion
+
+        #region Other Data Providers Helpers
+
+        #region MySql
+
+        /// <summary>
+        /// Gets the MySqlTypeMapAttribute if present.
+        /// </summary>
+        /// <param name="property">The instance of propery to inspect.</param>
+        /// <returns>The instance of MySqlTypeMapAttribute.</returns>
+        internal static Attribute GetMySqlDbTypeTypeMapAttribute(ClassProperty property)
+        {
+            return property?
+                .PropertyInfo
+                .GetCustomAttributes()?
+                .FirstOrDefault(e =>
+                    e.GetType().FullName.Equals("RepoDb.Attributes.MySqlTypeMapAttribute"));
+        }
+
+        /// <summary>
+        /// Gets the value represented by the MySqlTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of MySqlTypeMapAttribute to extract.</param>
+        /// <returns>The value represented by the MySqlTypeMapAttribute.DbType property.</returns>
+        internal static object GetMySqlDbTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            var type = attribute.GetType();
+            return type
+                .GetProperty("DbType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the system type of MySql.Data.MySqlClient.MySqlParameter represented by MySqlTypeMapAttribute.ParameterType property.
+        /// </summary>
+        /// <param name="attribute">The instance of MySqlTypeMapAttribute to extract.</param>
+        /// <returns>The type of MySql.Data.MySqlClient.MySqlParameter represented by MySqlTypeMapAttribute.ParameterType property.</returns>
+        internal static Type GetMySqlParameterTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return (Type)attribute
+                .GetType()
+                .GetProperty("ParameterType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="MethodInfo"/> represented by the MySqlTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of MySqlTypeMapAttribute to extract.</param>
+        /// <returns>The instance of <see cref="MethodInfo"/> represented by the MySqlTypeMapAttribute.DbType property.</returns>
+        internal static MethodInfo GetMySqlDbTypeFromAttributeSetMethod(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return GetNpgsqlParameterTypeFromAttribute(attribute)?
+                .GetProperty("MySqlDbType")?
+                .SetMethod;
+        }
+
+        #endregion
+
+        #region Npgsql
+
+        /// <summary>
+        /// Gets the NpgsqlDbTypeMapAttribute if present.
+        /// </summary>
+        /// <param name="property">The instance of propery to inspect.</param>
+        /// <returns>The instance of NpgsqlDbTypeMapAttribute.</returns>
+        internal static Attribute GetNpgsqlDbTypeTypeMapAttribute(ClassProperty property)
+        {
+            return property?
+                .PropertyInfo
+                .GetCustomAttributes()?
+                .FirstOrDefault(e =>
+                    e.GetType().FullName.Equals("RepoDb.Attributes.NpgsqlTypeMapAttribute"));
+        }
+
+        /// <summary>
+        /// Gets the value represented by the NpgsqlDbTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
+        /// <returns>The value represented by the NpgsqlDbTypeMapAttribute.DbType property.</returns>
+        internal static object GetNpgsqlDbTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            var type = attribute.GetType();
+            return type
+                .GetProperty("DbType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the system type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMapAttribute.ParameterType property.
+        /// </summary>
+        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
+        /// <returns>The type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMapAttribute.ParameterType property.</returns>
+        internal static Type GetNpgsqlParameterTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return (Type)attribute
+                .GetType()
+                .GetProperty("ParameterType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="MethodInfo"/> represented by the NpgsqlDbTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
+        /// <returns>The instance of <see cref="MethodInfo"/> represented by the NpgsqlDbTypeMapAttribute.DbType property.</returns>
+        internal static MethodInfo GetNpgsqlDbTypeFromAttributeSetMethod(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return GetNpgsqlParameterTypeFromAttribute(attribute)?
+                .GetProperty("NpgsqlDbType")?
+                .SetMethod;
+        }
+
+        #endregion
 
         #endregion
     }
