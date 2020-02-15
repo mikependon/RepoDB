@@ -48,8 +48,8 @@ An extension library that contains the official Bulk Operations for RepoDb.
 
 At the *Package Manager Console*, write the command below.
 
-```
-Install-Package RepoDb.SqlServer.BulkOperations
+```csharp
+> Install-Package RepoDb.SqlServer.BulkOperations
 ```
 
 ### BulkInsert via DataEntities

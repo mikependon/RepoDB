@@ -37,8 +37,8 @@ RepoDb is an ORM that bridge the gaps between micro-ORMs and macro-ORMs. It help
 
 At the *Package Manager Console*, write the command below.
 
-```
-Install-Package RepoDb.SqLite
+```csharp
+> Install-Package RepoDb.SqLite
 ```
 
 ## Getting Started

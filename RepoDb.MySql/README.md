@@ -37,8 +37,8 @@ RepoDb is an ORM that bridge the gaps between micro-ORMs and macro-ORMs. It help
 
 At the *Package Manager Console*, write the command below.
 
-```
-Install-Package RepoDb.MySql
+```csharp
+> Install-Package RepoDb.MySql
 ```
 
 ## Getting Started
