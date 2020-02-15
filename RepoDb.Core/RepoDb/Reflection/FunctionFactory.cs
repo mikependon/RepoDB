@@ -991,9 +991,9 @@ namespace RepoDb.Reflection
                 // Only set if there is a value
                 if (npgsqlDbTypeTypeMapAttribute != null)
                 {
-                    var npgsqlDbTypeValue = GetNpgsqlDbType(npgsqlDbTypeTypeMapAttribute);
-                    var npgsqlParameterType = GetNpgsqlParameterType(npgsqlDbTypeTypeMapAttribute);
-                    var dbParameterNpgsqlDbTypeSetMethod = GetNpgsqlDbTypeSetMethod(npgsqlDbTypeTypeMapAttribute);
+                    var npgsqlDbTypeValue = GetNpgsqlDbTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                    var npgsqlParameterType = GetNpgsqlParameterTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                    var dbParameterNpgsqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(npgsqlDbTypeTypeMapAttribute);
                     var npgsqlDbTypeAssignment = Expression.Call(
                         Expression.Convert(parameterVariable, npgsqlParameterType),
                         dbParameterNpgsqlDbTypeSetMethod,
@@ -1583,9 +1583,9 @@ namespace RepoDb.Reflection
                 // Only set if there is a value
                 if (npgsqlDbTypeTypeMapAttribute != null)
                 {
-                    var npgsqlDbTypeValue = GetNpgsqlDbType(npgsqlDbTypeTypeMapAttribute);
-                    var npgsqlParameterType = GetNpgsqlParameterType(npgsqlDbTypeTypeMapAttribute);
-                    var dbParameterNpgsqlDbTypeSetMethod = GetNpgsqlDbTypeSetMethod(npgsqlDbTypeTypeMapAttribute);
+                    var npgsqlDbTypeValue = GetNpgsqlDbTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                    var npgsqlParameterType = GetNpgsqlParameterTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                    var dbParameterNpgsqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(npgsqlDbTypeTypeMapAttribute);
                     var npgsqlDbTypeAssignment = Expression.Call(
                         Expression.Convert(parameterVariable, npgsqlParameterType),
                         dbParameterNpgsqlDbTypeSetMethod,
@@ -1904,9 +1904,9 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets the value represented by the NpgsqlDbTypeMap.NpgsqlDbType property.
         /// </summary>
-        /// <param name="attribute">The instance of NpgsqlDbTypeMap to extract.</param>
+        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
         /// <returns>The value represented by the NpgsqlDbTypeMap.NpgsqlDbType property.</returns>
-        internal static object GetNpgsqlDbType(Attribute attribute)
+        internal static object GetNpgsqlDbTypeFromAttribute(Attribute attribute)
         {
             if (attribute == null)
             {
@@ -1914,16 +1914,16 @@ namespace RepoDb.Reflection
             }
             var type = attribute.GetType();
             return type
-                .GetProperty("NpgsqlDbType")?
+                .GetProperty("DbType")?
                 .GetValue(attribute);
         }
 
         /// <summary>
         /// Gets the system type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMap.ParameterType property.
         /// </summary>
-        /// <param name="attribute">The instance of NpgsqlDbTypeMap to extract.</param>
+        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
         /// <returns>The type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMap.ParameterType property.</returns>
-        internal static Type GetNpgsqlParameterType(Attribute attribute)
+        internal static Type GetNpgsqlParameterTypeFromAttribute(Attribute attribute)
         {
             if (attribute == null)
             {
@@ -1938,15 +1938,15 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets the instance of <see cref="MethodInfo"/> represented by the NpgsqlDbTypeMap.NpgsqlDbType property.
         /// </summary>
-        /// <param name="attribute">The instance of NpgsqlDbTypeMap to extract.</param>
+        /// <param name="attribute">The instance of NpgsqlDbTypeMapAttribute to extract.</param>
         /// <returns>The instance of <see cref="MethodInfo"/> represented by the NpgsqlDbTypeMap.NpgsqlDbType property.</returns>
-        internal static MethodInfo GetNpgsqlDbTypeSetMethod(Attribute attribute)
+        internal static MethodInfo GetNpgsqlDbTypeFromAttributeSetMethod(Attribute attribute)
         {
             if (attribute == null)
             {
                 return null;
             }
-            return GetNpgsqlParameterType(attribute)?
+            return GetNpgsqlParameterTypeFromAttribute(attribute)?
                 .GetProperty("NpgsqlDbType")?
                 .SetMethod;
         }
