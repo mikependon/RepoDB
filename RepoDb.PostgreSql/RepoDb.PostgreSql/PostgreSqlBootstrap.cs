@@ -3,7 +3,7 @@ using RepoDb.DbHelpers;
 using RepoDb.PostgreSql.DbSettings;
 using RepoDb.StatementBuilders;
 
-namespace RepoDb.PostgreSql
+namespace RepoDb
 {
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="NpgsqlConnection"/> object.

@@ -2,7 +2,7 @@
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 
-namespace RepoDb.SqlServer
+namespace RepoDb
 {
     /// <summary>
     /// A class used to initialize necessary objects that is connected to both <see cref="Microsoft.Data.SqlClient.SqlConnection"/> and <see cref="System.Data.SqlClient.SqlConnection"/> object.

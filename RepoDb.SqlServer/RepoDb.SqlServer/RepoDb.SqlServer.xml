@@ -153,17 +153,17 @@
             <param name="dbTypeName">The name of the database type.</param>
             <returns>The equivalent .NET CLR type.</returns>
         </member>
-        <member name="T:RepoDb.SqlServer.SqlServerBootstrap">
+        <member name="T:RepoDb.SqlServerBootstrap">
             <summary>
             A class used to initialize necessary objects that is connected to both <see cref="T:Microsoft.Data.SqlClient.SqlConnection"/> and <see cref="T:System.Data.SqlClient.SqlConnection"/> object.
             </summary>
         </member>
-        <member name="P:RepoDb.SqlServer.SqlServerBootstrap.IsInitialized">
+        <member name="P:RepoDb.SqlServerBootstrap.IsInitialized">
             <summary>
             Gets the value indicating whether the initialization is completed.
             </summary>
         </member>
-        <member name="M:RepoDb.SqlServer.SqlServerBootstrap.Initialize">
+        <member name="M:RepoDb.SqlServerBootstrap.Initialize">
             <summary>
             Initializes all necessary settings for SqlServer.
             </summary>
