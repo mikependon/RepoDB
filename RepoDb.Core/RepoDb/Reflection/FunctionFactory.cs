@@ -993,7 +993,7 @@ namespace RepoDb.Reflection
                 {
                     var mySqlDbTypeValue = GetMySqlDbTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
                     var mySqlParameterType = GetMySqlParameterTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
-                    var dbParameterMySqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
+                    var dbParameterMySqlDbTypeSetMethod = GetMySqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
                     var mySqlDbTypeAssignment = Expression.Call(
                         Expression.Convert(parameterVariable, mySqlParameterType),
                         dbParameterMySqlDbTypeSetMethod,
@@ -1605,7 +1605,7 @@ namespace RepoDb.Reflection
                 {
                     var mySqlDbTypeValue = GetMySqlDbTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
                     var mySqlParameterType = GetMySqlParameterTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
-                    var dbParameterMySqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
+                    var dbParameterMySqlDbTypeSetMethod = GetMySqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
                     var mySqlDbTypeAssignment = Expression.Call(
                         Expression.Convert(parameterVariable, mySqlParameterType),
                         dbParameterMySqlDbTypeSetMethod,
@@ -2097,7 +2097,7 @@ namespace RepoDb.Reflection
             {
                 return null;
             }
-            return GetNpgsqlParameterTypeFromAttribute(attribute)?
+            return GetMySqlParameterTypeFromAttribute(attribute)?
                 .GetProperty("MySqlDbType")?
                 .SetMethod;
         }

@@ -15,7 +15,7 @@ namespace RepoDb.Attributes
         public MySqlTypeMapAttribute(MySqlDbType dbType)
         {
             DbType = dbType;
-            ParameterType = typeof(MySqlDbType);
+            ParameterType = typeof(MySqlParameter);
         }
 
         /// <summary>
