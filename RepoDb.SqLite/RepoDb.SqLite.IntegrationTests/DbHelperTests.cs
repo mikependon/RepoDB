@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Data.SQLite;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Npgsql;
-using RepoDb.PostgreSql.IntegrationTests.Models;
-using RepoDb.PostgreSql.IntegrationTests.Setup;
+using RepoDb.SqLite.IntegrationTests.Models;
+using RepoDb.SqLite.IntegrationTests.Setup;
 
-namespace RepoDb.PostgreSql.IntegrationTests
+namespace RepoDb.SqLite.IntegrationTests
 {
     [TestClass]
-    public class DbHelperTest
+    public class DbHelperTests
     {
         [TestInitialize]
         public void Initialize()
@@ -30,26 +30,23 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
+                var tables = Database.CreateCompleteTables(10, connection);
 
                 // Act
                 var fields = helper.GetFields(connection, "CompleteTable", null);
 
                 // Assert
-                using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
-                    FROM INFORMATION_SCHEMA.COLUMNS
-                    WHERE
-	                    TABLE_NAME = @TableName
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }))
+                using (var reader = connection.ExecuteReader("pragma table_info([CompleteTable]);"))
                 {
                     var fieldCount = 0;
 
                     while (reader.Read())
                     {
-                        var name = reader.GetString(0);
+                        var name = reader.GetString(1);
                         var field = fields.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase));
 
                         // Assert
@@ -67,10 +64,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
+                var tables = Database.CreateCompleteTables(10, connection);
 
                 // Act
                 var fields = helper.GetFields(connection, "CompleteTable", null);
@@ -85,10 +83,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsIdentity()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
+                var tables = Database.CreateCompleteTables(10, connection);
 
                 // Act
                 var fields = helper.GetFields(connection, "CompleteTable", null);
@@ -107,26 +106,23 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
+                var tables = Database.CreateCompleteTables(10, connection);
 
                 // Act
                 var fields = helper.GetFieldsAsync(connection, "CompleteTable", null).Result;
 
                 // Assert
-                using (var reader = connection.ExecuteReader(@"SELECT COLUMN_NAME AS ColumnName
-                    FROM INFORMATION_SCHEMA.COLUMNS
-                    WHERE
-	                    TABLE_NAME = @TableName
-                    ORDER BY ORDINAL_POSITION;", new { TableName = "CompleteTable" }))
+                using (var reader = connection.ExecuteReader("pragma table_info([CompleteTable]);"))
                 {
                     var fieldCount = 0;
 
                     while (reader.Read())
                     {
-                        var name = reader.GetString(0);
+                        var name = reader.GetString(1);
                         var field = fields.FirstOrDefault(f => string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase));
 
                         // Assert
@@ -144,10 +140,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
+                var tables = Database.CreateCompleteTables(10, connection);
 
                 // Act
                 var fields = helper.GetFieldsAsync(connection, "CompleteTable", null).Result;
@@ -162,10 +159,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsAsyncIdentity()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
+                var tables = Database.CreateCompleteTables(10, connection);
 
                 // Act
                 var fields = helper.GetFieldsAsync(connection, "CompleteTable", null).Result;
@@ -188,8 +186,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentity()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
                 // Setup
                 var helper = connection.GetDbHelper();
                 var table = Helper.CreateCompleteTables(1).First();
@@ -216,8 +217,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                // Create the tables
+                Database.CreateTables(connection);
+
                 // Setup
                 var helper = connection.GetDbHelper();
                 var table = Helper.CreateCompleteTables(1).First();

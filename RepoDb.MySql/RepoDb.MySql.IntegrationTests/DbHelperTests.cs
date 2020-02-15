@@ -8,7 +8,7 @@ using RepoDb.MySql.IntegrationTests.Setup;
 namespace RepoDb.MySql.IntegrationTests
 {
     [TestClass]
-    public class DbHelperTest
+    public class DbHelperTests
     {
         [TestInitialize]
         public void Initialize()
