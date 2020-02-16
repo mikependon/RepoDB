@@ -67,6 +67,19 @@ namespace RepoDb.PostgreSql.UnitTests
             Assert.AreEqual("\" Field \"", result);
         }
 
+        [TestMethod]
+        public void TestPostgreSqlQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+
+            // Act
+            var result = " \" Field \" ".AsQuoted(true, setting);
+
+            // Assert
+            Assert.AreEqual("\" Field \"", result);
+        }
+
         #endregion
 
         #region AsUnquoted

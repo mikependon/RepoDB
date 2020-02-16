@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
-using System.Data.SQLite;
 
-namespace RepoDb.SqLite.UnitTests
+namespace RepoDb.SqlServer.UnitTests
 {
     [TestClass]
     public class QuotationTest
@@ -10,16 +10,16 @@ namespace RepoDb.SqLite.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            SqLiteBootstrap.Initialize();
+            SqlServerBootstrap.Initialize();
         }
 
         #region AsQuoted
 
         [TestMethod]
-        public void TestSqLiteQuotationForQuotedAndTrimmed()
+        public void TestSqlServerQuotationForQuotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = " Field ".AsQuoted(true, setting);
@@ -29,10 +29,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForQuotedNonTrimmed()
+        public void TestSqlServerQuotationForQuotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = " Field ".AsQuoted(setting);
@@ -42,10 +42,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForQuotedForPreQuoted()
+        public void TestSqlServerQuotationForQuotedForPreQuoted()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = "[Field]".AsQuoted(setting);
@@ -55,10 +55,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForQuotedForPreQuotedWithSpace()
+        public void TestSqlServerQuotationForQuotedForPreQuotedWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = "[ Field ]".AsQuoted(setting);
@@ -68,10 +68,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
+        public void TestSqlServerQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = " [ Field ] ".AsQuoted(true, setting);
@@ -85,10 +85,10 @@ namespace RepoDb.SqLite.UnitTests
         #region AsUnquoted
 
         [TestMethod]
-        public void TestSqLiteQuotationForUnquotedAndTrimmed()
+        public void TestSqlServerQuotationForUnquotedAndTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = " [ Field ] ".AsUnquoted(true, setting);
@@ -98,10 +98,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForUnquotedNonTrimmed()
+        public void TestSqlServerQuotationForUnquotedNonTrimmed()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = "[ Field ]".AsUnquoted(setting);
@@ -111,10 +111,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForUnquotedForPlain()
+        public void TestSqlServerQuotationForUnquotedForPlain()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = "Field".AsUnquoted(setting);
@@ -124,10 +124,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForUnquotedForPlainWithSpace()
+        public void TestSqlServerQuotationForUnquotedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = " Field ".AsUnquoted(setting);
@@ -137,10 +137,10 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteQuotationForUnquotedAndTrimmedForPlainWithSpace()
+        public void TestSqlServerQuotationForUnquotedAndTrimmedForPlainWithSpace()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqlConnection>();
 
             // Act
             var result = " Field ".AsUnquoted(true, setting);

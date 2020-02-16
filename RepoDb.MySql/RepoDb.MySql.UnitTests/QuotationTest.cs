@@ -67,6 +67,19 @@ namespace RepoDb.MySql.UnitTests
             Assert.AreEqual("` Field `", result);
         }
 
+        [TestMethod]
+        public void TestMySqlQuotationForQuotedForPreQuotedWithSpaceAndTrimmed()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<MySqlConnection>();
+
+            // Act
+            var result = " ` Field ` ".AsQuoted(true, setting);
+
+            // Assert
+            Assert.AreEqual("` Field `", result);
+        }
+
         #endregion
 
         #region AsUnquoted
