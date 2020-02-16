@@ -4,6 +4,48 @@
         <name>RepoDb.SqlServer</name>
     </assembly>
     <members>
+        <member name="T:RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute">
+            <summary>
+            An attribute used to define a mapping of .NET CLR <see cref="T:System.Type"/> into its equivalent <see cref="T:System.Data.SqlDbType"/> value.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute.#ctor(System.Data.SqlDbType)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute"/> class.
+            </summary>
+            <param name="dbType">A target <see cref="T:System.Data.SqlDbType"/> value.</param>
+        </member>
+        <member name="P:RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute.DbType">
+            <summary>
+            Gets a <see cref="T:System.Data.SqlDbType"/> that is currently mapped.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute.ParameterType">
+            <summary>
+            Gets the represented <see cref="T:System.Type"/> of the <see cref="T:Microsoft.Data.SqlClient.SqlParameter"/>.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Attributes.SystemSqlServerTypeMapAttribute">
+            <summary>
+            An attribute used to define a mapping of .NET CLR <see cref="T:System.Type"/> into its equivalent <see cref="T:System.Data.SqlDbType"/> value.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Attributes.SystemSqlServerTypeMapAttribute.#ctor(System.Data.SqlDbType)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.Attributes.SystemSqlServerTypeMapAttribute"/> class.
+            </summary>
+            <param name="dbType">A target <see cref="T:System.Data.SqlDbType"/> value.</param>
+        </member>
+        <member name="P:RepoDb.Attributes.SystemSqlServerTypeMapAttribute.DbType">
+            <summary>
+            Gets a <see cref="T:System.Data.SqlDbType"/> that is currently mapped.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Attributes.SystemSqlServerTypeMapAttribute.ParameterType">
+            <summary>
+            Gets the represented <see cref="T:System.Type"/> of the <see cref="T:System.Data.SqlClient.SqlParameter"/>.
+            </summary>
+        </member>
         <member name="T:RepoDb.DbHelpers.SqlServerDbHelper">
             <summary>
             A helper class for database specially for the direct access. This class is only meant for SQL Server.
