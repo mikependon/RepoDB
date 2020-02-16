@@ -29,7 +29,7 @@ The programming language and database provider we are using on our samples below
 
 Both library is an *ORM* framework for *.NET*. They are both lightweight, fast and efficient. The *Dapper* is a full-fledge *micro-ORM* whereas *RepoDb* is a *hybrid-ORM*.
 
-> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension libraries of both (ie: *RepoDb.SqlServer*, *RepoDb.SqLite*, *RepoDb.MySql*, *RepoDb.PostgreSql*, *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
+> To avoid the bias on the comparisson, we will not cover the features that is present in *RepoDb* but is absent in *Dapper* (ie: *Cache*, *Trace*, *QueryHints*, *Extensibility*, *StatementBuilder* and *Repositories*) (vice-versa). Also, the comparisson does not included any other extension libraries of both (ie: *RepoDb.SqLite*, *RepoDb.MySql*, *RepoDb.PostgreSql*, *Dapper.Contrib*, *DapperExtensions*, *Dapper.SqlBuilder*, etc).
 
 ### Tables
 
@@ -949,6 +949,7 @@ Below are the links to our test suites.
 - [MySql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
 - [PostgreSql Unit Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql/RepoDb.PostgreSql.UnitTests)
 - [PostgreSql Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql/RepoDb.PostgreSql.IntegrationTests)
+- [RepoDb.SqlServer.BulkOperations Integration Tests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations/RepoDb.SqlServer.BulkOperations.IntegrationTests)
 
 > We (or I as an author) has been challenged that the quality of the software does not depends on the number of tests. However, we strongly believe that *spending* much efforts on writing a test will give confidence to the library consumers (ie: *.NET community*). Practially, it helps us to avoid manual revisits on the *already-working* features if somebody is doing a *PR* to us; it prevents the library from any surprising bugs.
 
