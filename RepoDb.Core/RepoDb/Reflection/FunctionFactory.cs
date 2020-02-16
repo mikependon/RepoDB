@@ -985,6 +985,42 @@ namespace RepoDb.Reflection
 
                 #endregion
 
+                #region SqlDbType (System)
+
+                // Get the SqlDbType value from SystemSqlServerTypeMapAttribute
+                var systemSqlServerTypeMapAttribute = GetSystemSqlServerTypeMapAttribute(classProperty);
+                if (systemSqlServerTypeMapAttribute != null)
+                {
+                    var systemSqlDbTypeValue = GetSystemSqlServerDbTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                    var systemSqlParameterType = GetSystemSqlServerParameterTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                    var dbParameterSystemSqlDbTypeSetMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(systemSqlServerTypeMapAttribute);
+                    var systemSqlDbTypeAssignment = Expression.Call(
+                        Expression.Convert(parameterVariable, systemSqlParameterType),
+                        dbParameterSystemSqlDbTypeSetMethod,
+                        Expression.Constant(systemSqlDbTypeValue));
+                    parameterAssignments.Add(systemSqlDbTypeAssignment);
+                }
+
+                #endregion
+
+                #region SqlDbType (Microsoft)
+
+                // Get the SqlDbType value from MicrosoftSqlServerTypeMapAttribute
+                var microsoftSqlServerTypeMapAttribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
+                if (microsoftSqlServerTypeMapAttribute != null)
+                {
+                    var microsoftSqlDbTypeValue = GetMicrosoftSqlServerDbTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                    var microsoftSqlParameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                    var dbParameterMicrosoftSqlDbTypeSetMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(microsoftSqlServerTypeMapAttribute);
+                    var microsoftSqlDbTypeAssignment = Expression.Call(
+                        Expression.Convert(parameterVariable, microsoftSqlParameterType),
+                        dbParameterMicrosoftSqlDbTypeSetMethod,
+                        Expression.Constant(microsoftSqlDbTypeValue));
+                    parameterAssignments.Add(microsoftSqlDbTypeAssignment);
+                }
+
+                #endregion
+
                 #region MySqlDbType
 
                 // Get the MySqlDbType value from MySqlDbTypeAttribute
@@ -1597,6 +1633,42 @@ namespace RepoDb.Reflection
 
                 #endregion
 
+                #region SqlDbType (System)
+
+                // Get the SqlDbType value from SystemSqlServerTypeMapAttribute
+                var systemSqlServerTypeMapAttribute = GetSystemSqlServerTypeMapAttribute(classProperty);
+                if (systemSqlServerTypeMapAttribute != null)
+                {
+                    var systemSqlDbTypeValue = GetSystemSqlServerDbTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                    var systemSqlParameterType = GetSystemSqlServerParameterTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                    var dbParameterSystemSqlDbTypeSetMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(systemSqlServerTypeMapAttribute);
+                    var systemSqlDbTypeAssignment = Expression.Call(
+                        Expression.Convert(parameterVariable, systemSqlParameterType),
+                        dbParameterSystemSqlDbTypeSetMethod,
+                        Expression.Constant(systemSqlDbTypeValue));
+                    parameterAssignments.Add(systemSqlDbTypeAssignment);
+                }
+
+                #endregion
+
+                #region SqlDbType (Microsoft)
+
+                // Get the SqlDbType value from MicrosoftSqlServerTypeMapAttribute
+                var microsoftSqlServerTypeMapAttribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
+                if (microsoftSqlServerTypeMapAttribute != null)
+                {
+                    var microsoftSqlDbTypeValue = GetMicrosoftSqlServerDbTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                    var microsoftSqlParameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                    var dbParameterMicrosoftSqlDbTypeSetMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(microsoftSqlServerTypeMapAttribute);
+                    var microsoftSqlDbTypeAssignment = Expression.Call(
+                        Expression.Convert(parameterVariable, microsoftSqlParameterType),
+                        dbParameterMicrosoftSqlDbTypeSetMethod,
+                        Expression.Constant(microsoftSqlDbTypeValue));
+                    parameterAssignments.Add(microsoftSqlDbTypeAssignment);
+                }
+
+                #endregion
+
                 #region MySqlDbType
 
                 // Get the MySqlDbType value from MySqlDbTypeAttribute
@@ -2035,6 +2107,142 @@ namespace RepoDb.Reflection
         #endregion
 
         #region Other Data Providers Helpers
+
+        #region SqlServer (System)
+
+        /// <summary>
+        /// Gets the SystemSqlServerTypeMapAttribute if present.
+        /// </summary>
+        /// <param name="property">The instance of propery to inspect.</param>
+        /// <returns>The instance of SystemSqlServerTypeMapAttribute.</returns>
+        internal static Attribute GetSystemSqlServerTypeMapAttribute(ClassProperty property)
+        {
+            return property?
+                .PropertyInfo
+                .GetCustomAttributes()?
+                .FirstOrDefault(e =>
+                    e.GetType().FullName.Equals("RepoDb.Attributes.SystemSqlServerTypeMapAttribute"));
+        }
+
+        /// <summary>
+        /// Gets the value represented by the SystemSqlServerTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of SystemSqlServerTypeMapAttribute to extract.</param>
+        /// <returns>The value represented by the SystemSqlServerTypeMapAttribute.DbType property.</returns>
+        internal static object GetSystemSqlServerDbTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            var type = attribute.GetType();
+            return type
+                .GetProperty("DbType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the system type of System.Data.SqlClient.SqlParameter represented by SystemSqlServerTypeMapAttribute.ParameterType property.
+        /// </summary>
+        /// <param name="attribute">The instance of SystemSqlServerTypeMapAttribute to extract.</param>
+        /// <returns>The type of System.Data.SqlClient.SqlParameter represented by SystemSqlServerTypeMapAttribute.ParameterType property.</returns>
+        internal static Type GetSystemSqlServerParameterTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return (Type)attribute
+                .GetType()
+                .GetProperty("ParameterType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="MethodInfo"/> represented by the SystemSqlServerTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of SystemSqlServerTypeMapAttribute to extract.</param>
+        /// <returns>The instance of <see cref="MethodInfo"/> represented by the SystemSqlServerTypeMapAttribute.DbType property.</returns>
+        internal static MethodInfo GetSystemSqlServerDbTypeFromAttributeSetMethod(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return GetSystemSqlServerParameterTypeFromAttribute(attribute)?
+                .GetProperty("SqlDbType")?
+                .SetMethod;
+        }
+
+        #endregion
+
+        #region SqlServer (Microsoft)
+
+        /// <summary>
+        /// Gets the MicrosoftSqlServerTypeMapAttribute if present.
+        /// </summary>
+        /// <param name="property">The instance of propery to inspect.</param>
+        /// <returns>The instance of MicrosoftSqlServerTypeMapAttribute.</returns>
+        internal static Attribute GetMicrosoftSqlServerTypeMapAttribute(ClassProperty property)
+        {
+            return property?
+                .PropertyInfo
+                .GetCustomAttributes()?
+                .FirstOrDefault(e =>
+                    e.GetType().FullName.Equals("RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute"));
+        }
+
+        /// <summary>
+        /// Gets the value represented by the MicrosoftSqlServerTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of MicrosoftSqlServerTypeMapAttribute to extract.</param>
+        /// <returns>The value represented by the MicrosoftSqlServerTypeMapAttribute.DbType property.</returns>
+        internal static object GetMicrosoftSqlServerDbTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            var type = attribute.GetType();
+            return type
+                .GetProperty("DbType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the system type of Microsoft.Data.SqlClient.SqlParameter represented by MicrosoftSqlServerTypeMapAttribute.ParameterType property.
+        /// </summary>
+        /// <param name="attribute">The instance of MicrosoftSqlServerTypeMapAttribute to extract.</param>
+        /// <returns>The type of Microsoft.Data.SqlClient.SqlParameter represented by MicrosoftSqlServerTypeMapAttribute.ParameterType property.</returns>
+        internal static Type GetMicrosoftSqlServerParameterTypeFromAttribute(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return (Type)attribute
+                .GetType()
+                .GetProperty("ParameterType")?
+                .GetValue(attribute);
+        }
+
+        /// <summary>
+        /// Gets the instance of <see cref="MethodInfo"/> represented by the MicrosoftSqlServerTypeMapAttribute.DbType property.
+        /// </summary>
+        /// <param name="attribute">The instance of MicrosoftSqlServerTypeMapAttribute to extract.</param>
+        /// <returns>The instance of <see cref="MethodInfo"/> represented by the MicrosoftSqlServerTypeMapAttribute.DbType property.</returns>
+        internal static MethodInfo GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(Attribute attribute)
+        {
+            if (attribute == null)
+            {
+                return null;
+            }
+            return GetMicrosoftSqlServerParameterTypeFromAttribute(attribute)?
+                .GetProperty("SqlDbType")?
+                .SetMethod;
+        }
+
+        #endregion
 
         #region MySql
 
