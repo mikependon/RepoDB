@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for PostgreSql.</Description>
@@ -13,16 +13,12 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm npgsql npgsql-orm postgresql postgresql-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.PostgreSql v1.0.2:
-- Referenced the latest version of RepoDb v1.10.6.
-
-RepoDb v1.10.6
-- Added the class property as an argument context in the 'Get' and 'Set' method.
-- Exposed the underlying 'DbRepository' property at the 'BaseRepository' object.</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb.PostgreSql v1.0.3:
+- Feature: Introduce PostgreSql support to NpgsqlDbType via PostgreSqlTypeMapAttribute. #390</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
     <PackageIconUrl />
@@ -41,7 +37,7 @@ RepoDb v1.10.6
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.2" />
-    <PackageReference Include="RepoDb" Version="1.10.4" />
+    <PackageReference Include="RepoDb" Version="1.10.9" />
   </ItemGroup>
 
   <ItemGroup>
