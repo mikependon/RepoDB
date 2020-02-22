@@ -12,7 +12,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class SqlConnectionOperationsTest
+    public class SqlConnectionBulkInsertOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -144,10 +144,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, result.Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -192,10 +192,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, result.Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -273,10 +273,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                             Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(tables.Count * 2, result.Count());
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -326,10 +326,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                             Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(tables.Count * 2, result.Count());
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -505,10 +505,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, result.Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -553,10 +553,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, result.Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -693,10 +693,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                             Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(tables.Count * 2, result.Count());
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -746,10 +746,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                             Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var result = destinationConnection.QueryAll<BulkInsertIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkInsertIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(tables.Count * 2, result.Count());
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }

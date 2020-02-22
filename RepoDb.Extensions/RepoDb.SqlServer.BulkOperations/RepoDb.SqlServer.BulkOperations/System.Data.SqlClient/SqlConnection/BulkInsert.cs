@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -18,7 +17,6 @@ namespace RepoDb
         #region Privates
 
         private static bool m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = false;
-        private static FieldInfo m_systemDataSqlBulkCopyRowsCopiedField = null;
 
         #endregion
 
@@ -171,7 +169,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             DataTable dataTable,
-            DataRowState rowState = DataRowState.Unchanged,
+            DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
@@ -206,21 +204,14 @@ namespace RepoDb
         public static int BulkInsert(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
-            DataRowState rowState = DataRowState.Unchanged,
+            DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
         {
-            // Variables for the operation
-            var result = 0;
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual execution
-            result = BulkInsertInternal(connection: connection,
+            return BulkInsertInternal(connection: connection,
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,
@@ -229,9 +220,6 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 transaction: transaction);
-
-            // Return the result
-            return result;
         }
 
         #endregion
@@ -385,7 +373,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
-            DataRowState rowState = DataRowState.Unchanged,
+            DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
@@ -420,7 +408,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
-            DataRowState rowState = DataRowState.Unchanged,
+            DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
@@ -556,7 +544,7 @@ namespace RepoDb
         internal static int BulkInsertInternal(SqlConnection connection,
             string tableName,
             DataTable dataTable,
-            DataRowState rowState = DataRowState.Unchanged,
+            DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
@@ -627,7 +615,14 @@ namespace RepoDb
 
                 // Open the connection and do the operation
                 connection.EnsureOpen();
-                sqlBulkCopy.WriteToServer(dataTable, rowState);
+                if (rowState.HasValue == true)
+                {
+                    sqlBulkCopy.WriteToServer(dataTable, rowState.Value);
+                }
+                else
+                {
+                    sqlBulkCopy.WriteToServer(dataTable);
+                }
 
                 // Set the return value
                 result = GetDataRows(dataTable, rowState).Count();
@@ -755,7 +750,7 @@ namespace RepoDb
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
             DataTable dataTable,
-            DataRowState rowState = DataRowState.Unchanged,
+            DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
             int? bulkCopyTimeout = null,
@@ -826,7 +821,14 @@ namespace RepoDb
 
                 // Open the connection and do the operation
                 connection.EnsureOpen();
-                await sqlBulkCopy.WriteToServerAsync(dataTable, rowState);
+                if (rowState.HasValue == true)
+                {
+                    await sqlBulkCopy.WriteToServerAsync(dataTable, rowState.Value);
+                }
+                else
+                {
+                    await sqlBulkCopy.WriteToServerAsync(dataTable);
+                }
 
                 // Set the return value
                 result = GetDataRows(dataTable, rowState).Count();
@@ -834,33 +836,6 @@ namespace RepoDb
 
             // Result
             return result;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
-        /// </summary>
-        /// <returns>The actual field.</returns>
-        private static FieldInfo GetRowsCopiedFieldFromSystemDataSqlBulkCopy()
-        {
-            // Check if the call has made earlier
-            if (m_systemDataBulkInsertRowsCopiedFieldHasBeenSet == true)
-            {
-                return m_systemDataSqlBulkCopyRowsCopiedField;
-            }
-
-            // Set the flag
-            m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = true;
-
-            // Get the field (whether null or not)
-            m_systemDataSqlBulkCopyRowsCopiedField = typeof(SqlBulkCopy)
-                .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-
-            // Return the value
-            return m_systemDataSqlBulkCopyRowsCopiedField;
         }
 
         #endregion
