@@ -1,5 +1,4 @@
 ﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,6 +25,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -36,6 +36,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -50,6 +51,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -67,6 +69,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -78,6 +81,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -92,6 +96,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -108,6 +113,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -118,6 +124,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -130,6 +137,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -145,6 +153,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -156,6 +165,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -167,6 +177,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -183,6 +194,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -194,6 +206,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -207,6 +220,7 @@ namespace RepoDb
                 rowState: rowState,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -223,6 +237,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -235,6 +250,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -247,6 +263,7 @@ namespace RepoDb
                 rowState: rowState,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -266,6 +283,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -276,6 +294,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -290,6 +309,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -307,6 +327,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -318,6 +339,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -332,6 +354,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -348,6 +371,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -358,6 +382,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -370,6 +395,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -385,6 +411,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -396,6 +423,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -407,6 +435,7 @@ namespace RepoDb
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -423,6 +452,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -434,6 +464,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -447,6 +478,7 @@ namespace RepoDb
                 rowState: rowState,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -463,6 +495,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -475,6 +508,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -487,6 +521,7 @@ namespace RepoDb
                 rowState: rowState,
                 mappings: mappings,
                 options: options,
+                hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
@@ -506,6 +541,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -517,6 +553,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -593,7 +630,7 @@ namespace RepoDb
                 }
 
                 // Create a temporary table
-                var sql = GetBulkUpdateCreateTemporaryTableSqlText(tableName,
+                var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName, fields, qualifiers, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -608,15 +645,15 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetBulkUpdateCreateClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Drop the table after used
-                sql = GetBulkUpdateDropTemporaryTableSqlText(tempTableName, dbSetting);
+                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Commit the transaction
@@ -659,6 +696,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -671,6 +709,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -747,7 +786,7 @@ namespace RepoDb
                 }
 
                 // Create a temporary table
-                var sql = GetBulkUpdateCreateTemporaryTableSqlText(tableName,
+                var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName, fields, qualifiers, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -763,15 +802,15 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetBulkUpdateCreateClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Drop the table after used
-                sql = GetBulkUpdateDropTemporaryTableSqlText(tempTableName, dbSetting);
+                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Commit the transaction
@@ -817,6 +856,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -828,6 +868,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -904,7 +945,7 @@ namespace RepoDb
                 }
 
                 // Create a temporary table
-                var sql = GetBulkUpdateCreateTemporaryTableSqlText(tableName,
+                var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName, fields, qualifiers, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
@@ -919,15 +960,15 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetBulkUpdateCreateClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
                 result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Drop the table after used
-                sql = GetBulkUpdateDropTemporaryTableSqlText(tempTableName, dbSetting);
+                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Commit the transaction
@@ -970,6 +1011,7 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
@@ -982,6 +1024,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -1058,7 +1101,7 @@ namespace RepoDb
                 }
 
                 // Create a temporary table
-                var sql = GetBulkUpdateCreateTemporaryTableSqlText(tableName,
+                var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName, fields, qualifiers, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
@@ -1074,15 +1117,15 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetBulkUpdateCreateClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
                 result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Drop the table after used
-                sql = GetBulkUpdateDropTemporaryTableSqlText(tempTableName, dbSetting);
+                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Commit the transaction

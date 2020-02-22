@@ -127,7 +127,7 @@ namespace RepoDb
 
         #region SQL Helpers
 
-        private static string GetBulkUpdateCreateTemporaryTableSqlText(string tableName,
+        private static string GetCreateTemporaryTableSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
@@ -154,7 +154,91 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        private static string GetCreateTemporaryTableClusteredIndexSqlText(string tempTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            // Validate the presence
+            if (qualifiers?.Any() != true)
+            {
+                throw new MissingFieldException("There is no qualifer field(s) defined.");
+            }
+
+            // Variables needed
+            var clusteredIndexFields = qualifiers
+                .Select(f => $"{f.Name.AsQuoted(dbSetting)} ASC")
+                .Join(", ");
+            var builder = new QueryBuilder();
+
+            // Compose the statement
+            builder
+                .WriteText("CREATE CLUSTERED INDEX")
+                .WriteText($"IX_{tempTableName}".AsQuoted(dbSetting))
+                .On()
+                .WriteText(tempTableName.AsQuoted(dbSetting))
+                .OpenParen()
+                .WriteText(clusteredIndexFields)
+                .CloseParen()
+                .End();
+
+            // Return the sql
+            return builder.ToString();
+        }
+
+        private static string GetDropTemporaryTableSqlText(string tempTableName,
+            IDbSetting dbSetting)
+        {
+            return $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
+        }
+
         private static string GetBulkUpdateSqlText(string tableName,
+            string tempTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            string hints,
+            IDbSetting dbSetting)
+        {
+            // Validate the presence
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldException("There is no field(s) defined.");
+            }
+
+            if (qualifiers?.Any() != true)
+            {
+                throw new MissingFieldException("There is no qualifer field(s) defined.");
+            }
+
+            // Variables needed
+            var qualifierFields = qualifiers
+                .Select(f => $"S.{f.Name.AsField(dbSetting)} = T.{f.Name.AsField(dbSetting)}")
+                .Join(", ");
+            var setFields = fields
+                .Select(f => $"T.{f.Name.AsField(dbSetting)} = S.{f.Name.AsField(dbSetting)}")
+                .Join(", ");
+            var builder = new QueryBuilder();
+
+            // Compose the statement
+            builder
+                .Update()
+                .WriteText("T")
+                .Set()
+                .WriteText(setFields)
+                .From()
+                .TableNameFrom(tableName, dbSetting)
+                .WriteText("T")
+                .WriteText("INNER JOIN")
+                .TableNameFrom(tempTableName, dbSetting)
+                .WriteText("S")
+                .WriteText("ON")
+                .WriteText(qualifierFields)
+                .End();
+
+            // Return the sql
+            return builder.ToString();
+        }
+
+        private static string GetBulkMergeSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
@@ -198,43 +282,6 @@ namespace RepoDb
 
             // Return the sql
             return builder.ToString();
-        }
-
-        private static string GetBulkUpdateCreateClusteredIndexSqlText(string tempTableName,
-            IEnumerable<Field> qualifiers,
-            IDbSetting dbSetting)
-        {
-            // Validate the presence
-            if (qualifiers?.Any() != true)
-            {
-                throw new MissingFieldException("There is no qualifer field(s) defined.");
-            }
-
-            // Variables needed
-            var clusteredIndexFields = qualifiers
-                .Select(f => $"{f.Name.AsQuoted(dbSetting)} ASC")
-                .Join(", ");
-            var builder = new QueryBuilder();
-
-            // Compose the statement
-            builder
-                .WriteText("CREATE CLUSTERED INDEX")
-                .WriteText($"IX_{tempTableName}".AsQuoted(dbSetting))
-                .On()
-                .WriteText(tempTableName.AsQuoted(dbSetting))
-                .OpenParen()
-                .WriteText(clusteredIndexFields)
-                .CloseParen()
-                .End();
-
-            // Return the sql
-            return builder.ToString();
-        }
-
-        private static string GetBulkUpdateDropTemporaryTableSqlText(string tempTableName,
-            IDbSetting dbSetting)
-        {
-            return $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
         }
 
         #endregion
