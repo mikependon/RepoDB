@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -72,7 +74,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Methods
+        #region Helpers
 
         /// <summary>
         /// Validates whether the transaction object connection is object is equals to the connection object.
@@ -119,6 +121,120 @@ namespace RepoDb
             {
                 yield return row;
             }
+        }
+
+        #endregion
+
+        #region SQL Helpers
+
+        private static string GetBulkUpdateCreateTemporaryTableSqlText(string tableName,
+            string tempTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            var builder = new QueryBuilder();
+            var selectFields = new List<Field>(qualifiers);
+
+            // Add the fields
+            selectFields.AddRange(fields);
+
+            // Compose the statement
+            builder.Select()
+                .FieldsFrom(selectFields, dbSetting)
+                .Into()
+                .WriteText(tempTableName.AsQuoted(dbSetting))
+                .From()
+                .TableNameFrom(tableName, dbSetting)
+                .Where()
+                .WriteText("1 = 0")
+                .End();
+
+            // Return the text
+            return builder.ToString();
+        }
+
+        private static string GetBulkUpdateSqlText(string tableName,
+            string tempTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            // Validate the presence
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldException("There is no field(s) defined.");
+            }
+
+            if (qualifiers?.Any() != true)
+            {
+                throw new MissingFieldException("There is no qualifer field(s) defined.");
+            }
+
+            // Variables needed
+            var qualifierFields = qualifiers
+                .Select(f => $"S.{f.Name.AsField(dbSetting)} = T.{f.Name.AsField(dbSetting)}")
+                .Join(", ");
+            var setFields = fields
+                .Select(f => $"T.{f.Name.AsField(dbSetting)} = S.{f.Name.AsField(dbSetting)}")
+                .Join(", ");
+            var builder = new QueryBuilder();
+
+            // Compose the statement
+            builder
+                .Update()
+                .WriteText("T")
+                .Set()
+                .WriteText(setFields)
+                .From()
+                .TableNameFrom(tableName, dbSetting)
+                .WriteText("T")
+                .WriteText("INNER JOIN")
+                .TableNameFrom(tempTableName, dbSetting)
+                .WriteText("S")
+                .WriteText("ON")
+                .WriteText(qualifierFields)
+                .End();
+
+            // Return the sql
+            return builder.ToString();
+        }
+
+        private static string GetBulkUpdateCreateClusteredIndexSqlText(string tempTableName,
+            IEnumerable<Field> qualifiers,
+            IDbSetting dbSetting)
+        {
+            // Validate the presence
+            if (qualifiers?.Any() != true)
+            {
+                throw new MissingFieldException("There is no qualifer field(s) defined.");
+            }
+
+            // Variables needed
+            var clusteredIndexFields = qualifiers
+                .Select(f => $"{f.Name.AsQuoted(dbSetting)} ASC")
+                .Join(", ");
+            var builder = new QueryBuilder();
+
+            // Compose the statement
+            builder
+                .WriteText("CREATE CLUSTERED INDEX")
+                .WriteText($"IX_{tempTableName}".AsQuoted(dbSetting))
+                .On()
+                .WriteText(tempTableName.AsQuoted(dbSetting))
+                .OpenParen()
+                .WriteText(clusteredIndexFields)
+                .CloseParen()
+                .End();
+
+            // Return the sql
+            return builder.ToString();
+        }
+
+        private static string GetBulkUpdateDropTemporaryTableSqlText(string tempTableName,
+            IDbSetting dbSetting)
+        {
+            return $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
         }
 
         #endregion
