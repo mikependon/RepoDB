@@ -83,8 +83,10 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#nuget-package">Nuget Package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#package-manager">Package Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sql-server">SQL Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sqlite">SQLite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mysql-data">MySql.Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#postgresql">PostgreSql</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
@@ -176,40 +178,53 @@
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <p><strong>Pre-requisite</strong>: A Microsoft Visual Studio has already been installed and a .NET Solution and Project has already been created.</p>
-<p>There are two ways of installing the library as standardized by Microsoft.</p>
-<div class="section" id="nuget-package">
-<h2>Nuget Package<a class="headerlink" href="#nuget-package" title="Permalink to this headline">¶</a></h2>
-<p>Once the project has been opened, then do the following steps:</p>
-<ol class="arabic simple">
-<li>Right click on the solution and click the <cite>Manage Nuget Packages for Solution…</cite>.</li>
-<li>Select the <cite>Browse</cite> tab.</li>
-<li>In the <cite>Search</cite> field, type <cite>RepoDb</cite> and press <cite>Enter</cite>.</li>
-<li>In the right side, select the project you wish the library to install to (ie: <cite>RepoDb.SqlServer</cite>, <cite>RepoDb.MySql</cite>, <cite>RepoDb.PostgreSql</cite>, <cite>RepoDb.SqLite</cite> and <cite>RepoDb.SqlServer.BulkOperations</cite>).</li>
-<li>Click the <cite>Install</cite> button.</li>
-</ol>
-<p>Wait for few seconds until the installation is completed.</p>
-</div>
-<div class="section" id="package-manager">
-<h2>Package Manager<a class="headerlink" href="#package-manager" title="Permalink to this headline">¶</a></h2>
-<p>Once the project has been opened, then do the following steps:</p>
-<ol class="arabic simple">
-<li>Select the <cite>View -&gt; Other Windows -&gt; Package Manager Console</cite>.</li>
-<li>In the <cite>Package Source</cite> drop down field, select <cite>All</cite>.</li>
-<li>In the <cite>Default Project</cite> drop down field, select the project you wish the library to install to.</li>
-<li>In the <cite>Package Manager Console</cite>, type any of the command below and press <cite>Enter</cite>.</li>
-</ol>
-<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqlServer</span>
-<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">MySql</span>
-<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">PostgreSql</span>
-<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqLite</span>
-<span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqlServer</span><span class="p">.</span><span class="n">BulkOperations</span>
+<div class="section" id="sql-server">
+<h2>SQL Server<a class="headerlink" href="#sql-server" title="Permalink to this headline">¶</a></h2>
+<p>In your Package Manager Console, type the following command.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">&gt;</span> <span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqlServer</span>
 </pre></div>
 </td></tr></table></div>
-<p>Wait for few seconds until the installation is completed.</p>
+<p>Then, bootstrap your SQL Server settings once.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">SqlServerBootstrap</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>To work with <cite>BulkOperations</cite>, type the following command in your Package Manager Console.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">&gt;</span> <span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqlServer</span><span class="p">.</span><span class="n">BulkOperations</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="sqlite">
+<h2>SQLite<a class="headerlink" href="#sqlite" title="Permalink to this headline">¶</a></h2>
+<p>In your Package Manager Console, type the following command.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">&gt;</span> <span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">SqLite</span>
+</pre></div>
+</td></tr></table></div>
+<p>Then, bootstrap your SQLite settings once.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">SqLiteBootstrap</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="mysql-data">
+<h2>MySql.Data<a class="headerlink" href="#mysql-data" title="Permalink to this headline">¶</a></h2>
+<p>In your Package Manager Console, type the following command.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">&gt;</span> <span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">MySql</span>
+</pre></div>
+</td></tr></table></div>
+<p>Then, bootstrap your MySql settings once.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">MySqlBootstrap</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="postgresql">
+<h2>PostgreSql<a class="headerlink" href="#postgresql" title="Permalink to this headline">¶</a></h2>
+<p>In your Package Manager Console, type the following command.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">&gt;</span> <span class="n">Install</span><span class="p">-</span><span class="n">Package</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">PostgreSql</span>
+</pre></div>
+</td></tr></table></div>
+<p>Then, bootstrap your PostgreSQL settings once.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">PostgreSqlBootstrap</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 </div>
 

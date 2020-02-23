@@ -34,7 +34,7 @@ Packages
 * RepoDb: `https://www.nuget.org/packages/RepoDb <https://www.nuget.org/packages/RepoDb>`_
 * RepoDb.SqLite: `https://www.nuget.org/packages/RepoDb.SqLite <https://www.nuget.org/packages/RepoDb.SqLite>`_
 * RepoDb.MySql: `https://www.nuget.org/packages/RepoDb.MySql <https://www.nuget.org/packages/RepoDb.MySql>`_
-* RepoDb.PostgreSql (soon): `https://www.nuget.org/packages/RepoDb.PostgreSql <https://www.nuget.org/packages/RepoDb.PostgreSql>`_
+* RepoDb.PostgreSql: `https://www.nuget.org/packages/RepoDb.PostgreSql <https://www.nuget.org/packages/RepoDb.PostgreSql>`_
 
 Repositories
 ------------

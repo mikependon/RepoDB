@@ -62,23 +62,6 @@ Is used to define an identity key property in the class.
 		public int Id { get; set; }
 	}
 
-TypeMap
--------
-
-Is used to define a property-level mapping of database type.
-
-.. code-block:: c#
-	:linenos:
-
-	public class Customer
-	{
-		[Primary]
-		public int Id { get; set; }
-
-		[TypeMap(DbType.Binary)]
-		public byte[] Image { get; set; }
-	}
-	
 PropertyHandler
 ---------------
 
@@ -106,3 +89,96 @@ Is used to define a a handler for the property transformation.
 In which the type `CustomerExtraInfoHandler` is a customized property handler that is used to handle the transformation of `ExtraInfo` property.
 
 **Note**: Any of the attribute mentioned above is only being used to support the special scenarios and requirements defined by the businesses. **They are really not necessary!** The library is intelligent enough to identify the characteristics of your columns (`Primary`, `Identity`) by touching the database once and caching everything in the memory.
+
+TypeMap
+-------
+
+Is used to define a property-level mapping of database type.
+
+.. code-block:: c#
+	:linenos:
+
+	public class Customer
+	{
+		[Primary]
+		public int Id { get; set; }
+
+		[TypeMap(DbType.Binary)]
+		public byte[] Image { get; set; }
+	}
+
+NpgsqlTypeMap
+-------------
+
+Is used to define a property-level mapping of database type for PostgreSql.
+
+**Note:** `Only at package RepoDb.PostgreSql.`
+
+.. code-block:: c#
+	:linenos:
+
+	public class Customer
+	{
+		[Primary]
+		public int Id { get; set; }
+
+		[NpgsqlTypeMap(NpgsqlDbType.Array)]
+		public byte[] Image { get; set; }
+	}
+
+MySqlTypeMap
+------------
+
+Is used to define a property-level mapping of database type for MySql.
+
+**Note:** `Only at package RepoDb.MySql.`
+
+.. code-block:: c#
+	:linenos:
+
+	public class Customer
+	{
+		[Primary]
+		public int Id { get; set; }
+
+		[MySqlTypeMap(MySqlDbType.Blob)]
+		public byte[] Image { get; set; }
+	}
+
+MicrosoftSqlServerTypeMap
+-------------------------
+
+Is used to define a property-level mapping of database type for Microsoft.Data.
+
+**Note:** `Only at package RepoDb.SqlServer.`
+
+.. code-block:: c#
+	:linenos:
+
+	public class Customer
+	{
+		[Primary]
+		public int Id { get; set; }
+
+		[MicrosoftSqlServerTypeMap(SqlDbType.Binary)]
+		public byte[] Image { get; set; }
+	}
+
+SystemSqlServerTypeMap
+----------------------
+
+Is used to define a property-level mapping of database type for System.Data.
+
+**Note:** `Only at package RepoDb.SqlServer.`
+
+.. code-block:: c#
+	:linenos:
+
+	public class Customer
+	{
+		[Primary]
+		public int Id { get; set; }
+
+		[SystemSqlServerTypeMap(SqlDbType.Binary)]
+		public byte[] Image { get; set; }
+	}

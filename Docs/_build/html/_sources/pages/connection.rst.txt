@@ -177,22 +177,86 @@ Explicit way:
 			fields: Field.From("Id", "Name", "Address"));
 	}
 
-BulkInsert
+BulkDelete
 ----------
 
-Bulk insert a list of data entity objects into the database. Only available for SQL Server and Postgre SQL data provider.
+Bulk delete a list of data entity objects from the database.
 
-Create a list to hold the data entities.
+**Note:** `Only at package RepoDb.SqlServer.BulkOperations.`
+
+Create a list to hold the data entities and add each item to be bulk-deleted.
 
 .. code-block:: c#
 	:linenos:
 
 	var orders = new List<Order>();
 
-Add each item to be bulk-inserted.
+	orders.Add(new Order()
+	{
+		Id = 1,
+		...
+	},
+	...);
+
+Call the `BulkDelete` operation to delete the data.
 
 .. code-block:: c#
 	:linenos:
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.BulkDelete<Order>(orders);
+		// or
+		var result = connection.BulkDelete("Order", orders);
+	}
+
+The result would be the number of rows affected by the operation.
+
+`BulkDelete` can also be done via `DbDataReader`.
+
+.. code-block:: c#
+	:linenos:
+
+	using (var sourceConnection = new SqlConnection(@"Server=.;Database=Northwind_Old;Integrated Security=SSPI;").EnsureOpen())
+	{
+		using (var reader = sourceConnection.ExecuteReader("SELECT Id FROM [dbo].[Order];"))
+		{
+			using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+			{
+				var result = destinationConnection.BulkDelete<Order>(reader);
+				// or
+				var result = destinationConnection.BulkDelete("Order", reader);
+			}
+		}
+	}
+
+It can also be used by passing an array of primary keys.
+
+.. code-block:: c#
+	:linenos:
+	
+	var primaryKeys = new[] { 10045, 10077, ..., 10089, 10092 };
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.BulkDelete<Order>(primaryKeys);
+		// or
+		var result = connection.BulkDelete("Order", primaryKeys);
+	}
+
+BulkInsert
+----------
+
+Bulk insert a list of data entity objects into the database.
+
+**Note:** `Only at package RepoDb.SqlServer.BulkOperations.`
+
+Create a list to hold the data entities and add each item to be bulk-inserted.
+
+.. code-block:: c#
+	:linenos:
+
+	var orders = new List<Order>();
 
 	orders.Add(new Order()
 	{
@@ -200,7 +264,8 @@ Add each item to be bulk-inserted.
 		ProductId = 12,
 		CreatedDate = DateTime.UtcNow,
 		UpdatedDate = DateTime.UtcNow
-	});
+	},
+	...);
 
 Call the `BulkInsert` operation to insert the data.
 
@@ -210,6 +275,8 @@ Call the `BulkInsert` operation to insert the data.
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var result = connection.BulkInsert<Order>(orders);
+		// or
+		var result = connection.BulkInsert("Order", orders);
 	}
 
 The result would be the number of rows affected by the `BulkInsert` in the database.
@@ -223,41 +290,134 @@ The result would be the number of rows affected by the `BulkInsert` in the datab
 	{
 		using (var reader = sourceConnection.ExecuteReader("SELECT Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];"))
 		{
-			// Do the stuffs here
+			using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+			{
+				var result = destinationConnection.BulkInsert<Order>(reader);
+				// or
+				var result = destinationConnection.BulkInsert("Order", reader);
+			}
 		}
 	}
 
-Call the `BulkInsert` operation by passing the `DbDataReader` object as the parameter.
+BulkMerge
+---------
+
+Bulk merge a list of data entity objects into the database.
+
+**Note:** `Only at package RepoDb.SqlServer.BulkOperations.`
+
+Create a list to hold the data entities and add each item to be bulk-merged.
 
 .. code-block:: c#
 	:linenos:
 
-	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	var orders = new List<Order>();
+
+	orders.Add(new Order()
 	{
-		var result = connection.BulkInsert<Order>(reader);
-	}
+		Id = 1,
+		Quantity = 2,
+		ProductId = 12,
+		CreatedDate = DateTime.UtcNow,
+		UpdatedDate = DateTime.UtcNow
+	},
+	...);
 
-**Note**: Be aware of the `COLLATION` for the cross-database `BulkInsert` operation.
-
-Records can also be bulk-inserted via table name.
+Call the `BulkMerge` operation to insert the data.
 
 .. code-block:: c#
 	:linenos:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var result = connection.BulkInsert("Order", orders);
+		var result = connection.BulkMerge<Order>(orders);
+		// or
+		var result = connection.BulkMerge("Order", orders);
 	}
 
-Or, via table name with `DbDataReader`.
+The result would be the number of rows affected by the `BulkMerge` in the database.
+
+`BulkMerge` can also be done via `DbDataReader`.
 
 .. code-block:: c#
 	:linenos:
 
-	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	using (var sourceConnection = new SqlConnection(@"Server=.;Database=Northwind_Old;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var result = connection.BulkInsert("Order", reader);
+		using (var reader = sourceConnection.ExecuteReader("SELECT Id, Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];"))
+		{
+			using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+			{
+				var result = destinationConnection.BulkMerge<Order>(reader);
+				// or
+				var result = destinationConnection.BulkMerge("Order", reader);
+			}
+		}
 	}
+
+BulkUpdate
+----------
+
+Bulk update a list of data entity objects into the database.
+
+**Note:** `Only at package RepoDb.SqlServer.BulkOperations.`
+
+Create a list to hold the data entities and add each item to be bulk-updated.
+
+.. code-block:: c#
+	:linenos:
+
+	var orders = new List<Order>();
+
+	orders.Add(new Order()
+	{
+		Id = 1,
+		Quantity = 2,
+		ProductId = 12,
+		CreatedDate = DateTime.UtcNow,
+		UpdatedDate = DateTime.UtcNow
+	},
+	...);
+
+Call the `BulkUpdate` operation to insert the data.
+
+.. code-block:: c#
+	:linenos:
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.BulkUpdate<Order>(orders);
+		// or
+		var result = connection.BulkUpdate("Order", orders);
+	}
+
+The result would be the number of rows affected by the `BulkUpdate` in the database.
+
+`BulkUpdate` can also be done via `DbDataReader`.
+
+.. code-block:: c#
+	:linenos:
+
+	using (var sourceConnection = new SqlConnection(@"Server=.;Database=Northwind_Old;Integrated Security=SSPI;").EnsureOpen())
+	{
+		using (var reader = sourceConnection.ExecuteReader("SELECT Id, Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];"))
+		{
+			using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+			{
+				var result = destinationConnection.BulkUpdate<Order>(reader);
+				// or
+				var result = destinationConnection.BulkUpdate("Order", reader);
+			}
+		}
+	}
+
+**Impotant Notes:**
+
+In the `BulkDelete`, `BulkMerge` and `BulkUpdate` the arguments `qualifiers` and `usePhysicalPseudoTempTable` is given.
+
+The argument `qualifiers` is used to define the fields to be used during the operation. If not given, it will be defaulted to `PrimaryKey` or `IdentityKey` is not present.
+
+The argument `usePhysicalPseudoTempTable` is used whether the actual physical table will be used as a pseudo table prior the actual operation, otherwise a temporary table will be created.
 
 Count
 -----

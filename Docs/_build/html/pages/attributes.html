@@ -87,8 +87,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#map">Map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#primary">Primary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#identity">Identity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#typemap">TypeMap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#propertyhandler">PropertyHandler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typemap">TypeMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#npgsqltypemap">NpgsqlTypeMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mysqltypemap">MySqlTypeMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#microsoftsqlservertypemap">MicrosoftSqlServerTypeMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#systemsqlservertypemap">SystemSqlServerTypeMap</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
@@ -241,27 +245,6 @@
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="typemap">
-<h2>TypeMap<a class="headerlink" href="#typemap" title="Permalink to this headline">¶</a></h2>
-<p>Is used to define a property-level mapping of database type.</p>
-<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
-<span class="p">{</span>
-<span class="na">        [Primary]</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-
-<span class="na">        [TypeMap(DbType.Binary)]</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</td></tr></table></div>
-</div>
 <div class="section" id="propertyhandler">
 <h2>PropertyHandler<a class="headerlink" href="#propertyhandler" title="Permalink to this headline">¶</a></h2>
 <p>Is used to define a a handler for the property transformation.</p>
@@ -298,6 +281,115 @@
 </td></tr></table></div>
 <p>In which the type <cite>CustomerExtraInfoHandler</cite> is a customized property handler that is used to handle the transformation of <cite>ExtraInfo</cite> property.</p>
 <p><strong>Note</strong>: Any of the attribute mentioned above is only being used to support the special scenarios and requirements defined by the businesses. <strong>They are really not necessary!</strong> The library is intelligent enough to identify the characteristics of your columns (<cite>Primary</cite>, <cite>Identity</cite>) by touching the database once and caching everything in the memory.</p>
+</div>
+<div class="section" id="typemap">
+<h2>TypeMap<a class="headerlink" href="#typemap" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a property-level mapping of database type.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Primary]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [TypeMap(DbType.Binary)]</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="npgsqltypemap">
+<h2>NpgsqlTypeMap<a class="headerlink" href="#npgsqltypemap" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a property-level mapping of database type for PostgreSql.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.PostgreSql.</cite></p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Primary]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [NpgsqlTypeMap(NpgsqlDbType.Array)]</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="mysqltypemap">
+<h2>MySqlTypeMap<a class="headerlink" href="#mysqltypemap" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a property-level mapping of database type for MySql.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.MySql.</cite></p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Primary]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [MySqlTypeMap(MySqlDbType.Blob)]</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="microsoftsqlservertypemap">
+<h2>MicrosoftSqlServerTypeMap<a class="headerlink" href="#microsoftsqlservertypemap" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a property-level mapping of database type for Microsoft.Data.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.SqlServer.</cite></p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Primary]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [MicrosoftSqlServerTypeMap(SqlDbType.Binary)]</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="systemsqlservertypemap">
+<h2>SystemSqlServerTypeMap<a class="headerlink" href="#systemsqlservertypemap" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a property-level mapping of database type for System.Data.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.SqlServer.</cite></p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Primary]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [SystemSqlServerTypeMap(SqlDbType.Binary)]</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
 </div>
 </div>
 

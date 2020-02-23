@@ -85,13 +85,17 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="propertyhandler.html">Property Handler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Connection</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#average">Average</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#averageall">AverageAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batchquery">BatchQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bulkdelete">BulkDelete</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bulkinsert">BulkInsert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bulkmerge">BulkMerge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bulkupdate">BulkUpdate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#count">Count</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#countall">CountAll</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createcommand">CreateCommand</a></li>
@@ -406,87 +410,299 @@
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="bulkinsert">
-<h2>BulkInsert<a class="headerlink" href="#bulkinsert" title="Permalink to this headline">¶</a></h2>
-<p>Bulk insert a list of data entity objects into the database. Only available for SQL Server and Postgre SQL data provider.</p>
-<p>Create a list to hold the data entities.</p>
-<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
-</pre></div>
-</td></tr></table></div>
-<p>Add each item to be bulk-inserted.</p>
+<div class="section" id="bulkdelete">
+<h2>BulkDelete<a class="headerlink" href="#bulkdelete" title="Permalink to this headline">¶</a></h2>
+<p>Bulk delete a list of data entity objects from the database.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.SqlServer.BulkOperations.</cite></p>
+<p>Create a list to hold the data entities and add each item to be bulk-deleted.</p>
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
 6
-7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">orders</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+
+<span class="n">orders</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="p">...</span>
+<span class="p">},</span>
+<span class="p">...);</span>
+</pre></div>
+</td></tr></table></div>
+<p>Call the <cite>BulkDelete</cite> operation to delete the data.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkDelete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">orders</span><span class="p">);</span>
+        <span class="c1">// or</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkDelete</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">orders</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The result would be the number of rows affected by the operation.</p>
+<p><cite>BulkDelete</cite> can also be done via <cite>DbDataReader</cite>.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">sourceConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind_Old;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">sourceConnection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT Id FROM [dbo].[Order];&quot;</span><span class="p">))</span>
+        <span class="p">{</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+                <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkDelete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+                        <span class="c1">// or</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkDelete</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>It can also be used by passing an array of primary keys.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">primaryKeys</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10077</span><span class="p">,</span> <span class="p">...,</span> <span class="m">10089</span><span class="p">,</span> <span class="m">10092</span> <span class="p">};</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkDelete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">primaryKeys</span><span class="p">);</span>
+        <span class="c1">// or</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkDelete</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">primaryKeys</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="bulkinsert">
+<h2>BulkInsert<a class="headerlink" href="#bulkinsert" title="Permalink to this headline">¶</a></h2>
+<p>Bulk insert a list of data entity objects into the database.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.SqlServer.BulkOperations.</cite></p>
+<p>Create a list to hold the data entities and add each item to be bulk-inserted.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+
+<span class="n">orders</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
 <span class="p">{</span>
         <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
         <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
         <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
         <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-<span class="p">});</span>
+<span class="p">},</span>
+<span class="p">...);</span>
 </pre></div>
 </td></tr></table></div>
 <p>Call the <cite>BulkInsert</cite> operation to insert the data.</p>
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">orders</span><span class="p">);</span>
+        <span class="c1">// or</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">orders</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
 <p>The result would be the number of rows affected by the <cite>BulkInsert</cite> in the database.</p>
 <p><cite>BulkInsert</cite> can also be done via <cite>DbDataReader</cite>.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">sourceConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind_Old;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">sourceConnection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];&quot;</span><span class="p">))</span>
+        <span class="p">{</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+                <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+                        <span class="c1">// or</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="bulkmerge">
+<h2>BulkMerge<a class="headerlink" href="#bulkmerge" title="Permalink to this headline">¶</a></h2>
+<p>Bulk merge a list of data entity objects into the database.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.SqlServer.BulkOperations.</cite></p>
+<p>Create a list to hold the data entities and add each item to be bulk-merged.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+
+<span class="n">orders</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">},</span>
+<span class="p">...);</span>
+</pre></div>
+</td></tr></table></div>
+<p>Call the <cite>BulkMerge</cite> operation to insert the data.</p>
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6
-7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">sourceConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind_Old;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">sourceConnection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];&quot;</span><span class="p">))</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">orders</span><span class="p">);</span>
+        <span class="c1">// or</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkMerge</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">orders</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The result would be the number of rows affected by the <cite>BulkMerge</cite> in the database.</p>
+<p><cite>BulkMerge</cite> can also be done via <cite>DbDataReader</cite>.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">sourceConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind_Old;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">sourceConnection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT Id, Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];&quot;</span><span class="p">))</span>
         <span class="p">{</span>
-                <span class="c1">// Do the stuffs here</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+                <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+                        <span class="c1">// or</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkMerge</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
+                <span class="p">}</span>
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>Call the <cite>BulkInsert</cite> operation by passing the <cite>DbDataReader</cite> object as the parameter.</p>
+</div>
+<div class="section" id="bulkupdate">
+<h2>BulkUpdate<a class="headerlink" href="#bulkupdate" title="Permalink to this headline">¶</a></h2>
+<p>Bulk update a list of data entity objects into the database.</p>
+<p><strong>Note:</strong> <cite>Only at package RepoDb.SqlServer.BulkOperations.</cite></p>
+<p>Create a list to hold the data entities and add each item to be bulk-updated.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+
+<span class="n">orders</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">},</span>
+<span class="p">...);</span>
+</pre></div>
+</td></tr></table></div>
+<p>Call the <cite>BulkUpdate</cite> operation to insert the data.</p>
 <div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkUpdate</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">orders</span><span class="p">);</span>
+        <span class="c1">// or</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkUpdate</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">orders</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p><strong>Note</strong>: Be aware of the <cite>COLLATION</cite> for the cross-database <cite>BulkInsert</cite> operation.</p>
-<p>Records can also be bulk-inserted via table name.</p>
-<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<p>The result would be the number of rows affected by the <cite>BulkUpdate</cite> in the database.</p>
+<p><cite>BulkUpdate</cite> can also be done via <cite>DbDataReader</cite>.</p>
+<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">sourceConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind_Old;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">orders</span><span class="p">);</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">sourceConnection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT Id, Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];&quot;</span><span class="p">))</span>
+        <span class="p">{</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+                <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkUpdate</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+                        <span class="c1">// or</span>
+                        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">destinationConnection</span><span class="p">.</span><span class="n">BulkUpdate</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>Or, via table name with <cite>DbDataReader</cite>.</p>
-<div class="highlight-c# notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="s">&quot;Order&quot;</span><span class="p">,</span> <span class="n">reader</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</td></tr></table></div>
+<p><strong>Impotant Notes:</strong></p>
+<p>In the <cite>BulkDelete</cite>, <cite>BulkMerge</cite> and <cite>BulkUpdate</cite> the arguments <cite>qualifiers</cite> and <cite>usePhysicalPseudoTempTable</cite> is given.</p>
+<p>The argument <cite>qualifiers</cite> is used to define the fields to be used during the operation. If not given, it will be defaulted to <cite>PrimaryKey</cite> or <cite>IdentityKey</cite> is not present.</p>
+<p>The argument <cite>usePhysicalPseudoTempTable</cite> is used whether the actual physical table will be used as a pseudo table prior the actual operation, otherwise a temporary table will be created.</p>
 </div>
 <div class="section" id="count">
 <h2>Count<a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h2>
