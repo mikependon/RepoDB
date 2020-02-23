@@ -1235,7 +1235,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration);
+                cache?.Add(cacheKey, result, cacheItemExpiration, false);
             }
 
             // Result
@@ -1351,7 +1351,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration);
+                cache?.Add(cacheKey, result, cacheItemExpiration, false);
             }
 
             // Result
@@ -1474,7 +1474,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration);
+                cache?.Add(cacheKey, result, cacheItemExpiration, false);
             }
 
             // Result
@@ -1597,7 +1597,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration);
+                cache?.Add(cacheKey, result, cacheItemExpiration, false);
             }
 
             // Result

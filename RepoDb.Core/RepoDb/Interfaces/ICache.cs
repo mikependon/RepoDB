@@ -17,7 +17,7 @@ namespace RepoDb.Interfaces
         void Add(string key,
             object value,
             int expiration = Constant.DefaultCacheItemExpirationInMinutes,
-            bool throwException = false);
+            bool throwException = true);
 
         /// <summary>
         /// Adds a cache item value.
@@ -25,7 +25,7 @@ namespace RepoDb.Interfaces
         /// <param name="item">The cache item to be added in the collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
         void Add(CacheItem item,
-            bool throwException = false);
+            bool throwException = true);
 
         /// <summary>
         /// Clears the collection of the cache.
@@ -46,7 +46,7 @@ namespace RepoDb.Interfaces
         /// <returns>A cached item object from the cache collection based on the given key.</returns>
         /// <param name="throwException">Throws an exception if the item is not found.</param>
         CacheItem Get(string key,
-            bool throwException = false);
+            bool throwException = true);
 
         /// <summary>
         /// Removes the item from the cache collection.
@@ -54,6 +54,6 @@ namespace RepoDb.Interfaces
         /// <param name="key">The key of the item to be removed from the cache collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to remove an item.</param>
         void Remove(string key,
-            bool throwException = false);
+            bool throwException = true);
     }
 }
