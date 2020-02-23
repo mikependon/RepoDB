@@ -1087,7 +1087,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1119,7 +1119,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1151,7 +1151,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1184,7 +1184,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1219,7 +1219,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1253,7 +1253,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Id] AS [Result] ;";
 
             // Assert
@@ -1287,7 +1287,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1321,7 +1321,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Id] AS [Result] ;";
 
             // Assert
@@ -1354,7 +1354,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1388,7 +1388,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field2] AS [Result] ;";
 
             // Assert
@@ -1422,7 +1422,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
@@ -1431,7 +1431,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
@@ -1440,7 +1440,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1474,7 +1474,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1508,7 +1508,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
                 $"MERGE [Table] AS T WITH (TABLOCK) " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
@@ -1517,7 +1517,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
                 $"MERGE [Table] AS T WITH (TABLOCK) " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
@@ -1526,7 +1526,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1741,7 +1741,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1772,7 +1772,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1803,7 +1803,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1835,7 +1835,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1869,7 +1869,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1902,7 +1902,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Id] AS [Result] ;";
 
             // Assert
@@ -1935,7 +1935,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -1968,7 +1968,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Id] AS [Result] ;";
 
             // Assert
@@ -2000,7 +2000,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ;";
 
             // Assert
@@ -2033,7 +2033,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field3] = S.[Field3] " +
+                $"UPDATE SET T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field2] AS [Result] ;";
 
             // Assert
@@ -2066,7 +2066,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
