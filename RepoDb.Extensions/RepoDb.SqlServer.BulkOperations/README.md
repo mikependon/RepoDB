@@ -14,22 +14,19 @@ An extension library that contains the official Bulk Operations for RepoDb.
 
 ## Core Features
  
+- BulkDelete via PrimaryKeys
+- BulkDelete via DataEntities
+- BulkDelete via DataTable
+- BulkDelete via DbDataReader
 - BulkInsert via DataEntities
 - BulkInsert via DataTable
 - BulkInsert via DbDataReader
-- BulkInsert Asynchronous Methods
-- (In-Progress) BulkDelete via DataEntities
-- (In-Progress) BulkDelete via DataTable
-- (In-Progress) BulkDelete via DbDataReader
-- (In-Progress) BulkDelete Asynchronous Methods
-- (In-Progress) BulkMerge via DataEntities
-- (In-Progress) BulkMerge via DataTable
-- (In-Progress) BulkMerge via DbDataReader
-- (In-Progress) BulkMerge Asynchronous Methods
-- (In-Progress) BulkUpdate via DataEntities
-- (In-Progress) BulkUpdate via DataTable
-- (In-Progress) BulkUpdate via DbDataReader
-- (In-Progress) BulkUpdate Asynchronous Methods
+- BulkMerge via DataEntities
+- BulkMerge via DataTable
+- BulkUpdate via DataEntities
+- BulkUpdate via DataTable
+- BulkUpdate via DbDataReader
+- BulkOperatations Asynchronous Methods
 
 ## Community engagements
 
