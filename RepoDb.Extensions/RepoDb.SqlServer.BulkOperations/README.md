@@ -9,9 +9,11 @@ An extension library that contains the official Bulk Operations for RepoDb.
 
 ## Why use Bulk Operations?
 
-Basically, we do the normal *Delete*, *Insert*, *Merge* and *Update* operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. There will be round-trips in between your application and database. Thus does not give you the maximum performance when doing the operation.
+Basically, we do the normal *Delete*, *Insert*, *Merge* and *Update* operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the batch operations.
 
-With bulk operations, the data is brought from the client application to the database via *BulkInsert* process. It ignores the audit and any other database special handling. After that, the data is being processed at the same time in the database. The performance is hugely improved from the basic operations by more than 90%.
+With bulk operations, the data is brought from the client application to the database via *BulkInsert* process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
+
+The bulk operations can hugely improve the performance by more than 90% when processing a large datasets.
 
 ## Important Pages
 
