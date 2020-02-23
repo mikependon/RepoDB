@@ -157,10 +157,10 @@ namespace RepoDb.UnitTests.Caches
         {
             // Prepare
             var cache = new MemoryCache();
-            cache.Add("Key", new object());
+            cache.Add("Key", new object(), throwException: true);
 
             // Act/Assert
-            cache.Add("Key", new object());
+            cache.Add("Key", new object(), throwException: true);
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
@@ -180,7 +180,7 @@ namespace RepoDb.UnitTests.Caches
             var cache = new MemoryCache();
 
             // Act/Assert
-            cache.Remove("Key");
+            cache.Remove("Key", true);
         }
     }
 }
