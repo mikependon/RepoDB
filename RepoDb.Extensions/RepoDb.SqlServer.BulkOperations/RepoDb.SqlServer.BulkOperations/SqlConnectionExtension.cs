@@ -130,20 +130,15 @@ namespace RepoDb
         private static string GetCreateTemporaryTableSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
-            IEnumerable<Field> qualifiers,
             IDbSetting dbSetting)
         {
             var builder = new QueryBuilder();
-            var selectFields = new List<Field>(qualifiers);
-
-            // Add the fields
-            selectFields.AddRange(fields);
 
             // Compose the statement
             builder
                 .Clear()
                 .Select()
-                .FieldsFrom(selectFields, dbSetting)
+                .FieldsFrom(fields, dbSetting)
                 .Into()
                 .WriteText(tempTableName.AsQuoted(dbSetting))
                 .From()
@@ -215,13 +210,19 @@ namespace RepoDb
             // Variables needed
             var builder = new QueryBuilder();
 
+            // Updatable fields
+            var updateableFields = fields
+                .Where(field =>
+                    qualifiers.Any(
+                        q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
+
             // Compose the statement
             builder
                 .Clear()
                 .Update()
                 .WriteText("T")
                 .Set()
-                .FieldsAndAliasFieldsFrom(fields, "T", "S", dbSetting)
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting)
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .WriteText("T")
@@ -244,6 +245,7 @@ namespace RepoDb
             string tempTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field identityField,
             string hints,
             IDbSetting dbSetting)
         {
@@ -265,11 +267,14 @@ namespace RepoDb
             var builder = new QueryBuilder();
 
             // Insertable fields
-            var insertableFields = qualifiers.AsList();
-            insertableFields.AddRange(fields);
+            var insertableFields = fields
+                .Where(field => string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
 
             // Updatable fields
-            var updateableFields = fields.AsList();
+            var updateableFields = fields
+                .Where(field =>
+                    qualifiers.Any(
+                        q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
 
             // Compose the statement
             builder.Clear()
@@ -282,6 +287,7 @@ namespace RepoDb
                 .OpenParen()
                 .Select()
                 .FieldsFrom(fields, dbSetting)
+                .From()
                 .TableNameFrom(tempTableName, dbSetting)
                 .CloseParen()
                 .As("S")
@@ -312,7 +318,8 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting)
+                .End();
 
             // Return the sql
             return builder.ToString();
