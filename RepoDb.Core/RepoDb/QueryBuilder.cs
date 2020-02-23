@@ -313,30 +313,34 @@ namespace RepoDb
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement with aliases.
         /// </summary>
-        /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <param name="leftAlias">The alias to be prepended for each field in the left.</param>
+        /// <param name="rightAlias">The alias to be prepended for each field in the right.</param>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndAliasFieldsFrom<TEntity>(string alias,
+        public QueryBuilder FieldsAndAliasFieldsFrom<TEntity>(string leftAlias,
+            string rightAlias,
             IDbSetting dbSetting)
             where TEntity : class
         {
             var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
-            return Append(fields?.AsFieldsAndAliasFields(alias, dbSetting).Join(", "));
+            return Append(fields?.AsFieldsAndAliasFields(leftAlias, rightAlias, dbSetting).Join(", "));
         }
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement with aliases.
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
-        /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <param name="leftAlias">The alias to be prepended for each field in the left.</param>
+        /// <param name="rightAlias">The alias to be prepended for each field in the right.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder FieldsAndAliasFieldsFrom(IEnumerable<Field> fields,
-            string alias,
+            string leftAlias,
+            string rightAlias,
             IDbSetting dbSetting)
         {
-            return Append(fields?.AsFieldsAndAliasFields(alias, dbSetting).Join(", "));
+            return Append(fields?.AsFieldsAndAliasFields(leftAlias, rightAlias, dbSetting).Join(", "));
         }
 
         /// <summary>

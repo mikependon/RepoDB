@@ -14,14 +14,18 @@ namespace RepoDb.Interfaces
         /// <param name="value">The value of the cache.</param>
         /// <param name="expiration">The expiration in minutes of the cache item.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        void Add(string key, object value, int expiration = Constant.DefaultCacheItemExpirationInMinutes, bool throwException = true);
+        void Add(string key,
+            object value,
+            int expiration = Constant.DefaultCacheItemExpirationInMinutes,
+            bool throwException = false);
 
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
         /// <param name="item">The cache item to be added in the collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        void Add(CacheItem item, bool throwException = true);
+        void Add(CacheItem item,
+            bool throwException = false);
 
         /// <summary>
         /// Clears the collection of the cache.
@@ -41,13 +45,15 @@ namespace RepoDb.Interfaces
         /// <param name="key">The key of the cache object to be retrieved.</param>
         /// <returns>A cached item object from the cache collection based on the given key.</returns>
         /// <param name="throwException">Throws an exception if the item is not found.</param>
-        CacheItem Get(string key, bool throwException = true);
+        CacheItem Get(string key,
+            bool throwException = false);
 
         /// <summary>
         /// Removes the item from the cache collection.
         /// </summary>
         /// <param name="key">The key of the item to be removed from the cache collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to remove an item.</param>
-        void Remove(string key, bool throwException = true);
+        void Remove(string key,
+            bool throwException = false);
     }
 }

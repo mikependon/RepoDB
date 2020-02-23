@@ -140,7 +140,9 @@ namespace RepoDb
             selectFields.AddRange(fields);
 
             // Compose the statement
-            builder.Select()
+            builder
+                .Clear()
+                .Select()
                 .FieldsFrom(selectFields, dbSetting)
                 .Into()
                 .WriteText(tempTableName.AsQuoted(dbSetting))
@@ -172,6 +174,7 @@ namespace RepoDb
 
             // Compose the statement
             builder
+                .Clear()
                 .WriteText("CREATE CLUSTERED INDEX")
                 .WriteText($"IX_{tempTableName}".AsQuoted(dbSetting))
                 .On()
@@ -210,20 +213,15 @@ namespace RepoDb
             }
 
             // Variables needed
-            var qualifierFields = qualifiers
-                .Select(f => $"S.{f.Name.AsField(dbSetting)} = T.{f.Name.AsField(dbSetting)}")
-                .Join(", ");
-            var setFields = fields
-                .Select(f => $"T.{f.Name.AsField(dbSetting)} = S.{f.Name.AsField(dbSetting)}")
-                .Join(", ");
             var builder = new QueryBuilder();
 
             // Compose the statement
             builder
+                .Clear()
                 .Update()
                 .WriteText("T")
                 .Set()
-                .WriteText(setFields)
+                .FieldsAndAliasFieldsFrom(fields, "T", "S", dbSetting)
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .WriteText("T")
@@ -232,7 +230,10 @@ namespace RepoDb
                 .TableNameFrom(tempTableName, dbSetting)
                 .WriteText("S")
                 .WriteText("ON")
-                .WriteText(qualifierFields)
+                .WriteText(qualifiers
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T", dbSetting))
+                            .Join(" AND "))
                 .End();
 
             // Return the sql
@@ -258,30 +259,60 @@ namespace RepoDb
             }
 
             // Variables needed
-            var qualifierFields = qualifiers
-                .Select(f => $"S.{f.Name.AsField(dbSetting)} = T.{f.Name.AsField(dbSetting)}")
-                .Join(", ");
             var setFields = fields
-                .Select(f => $"T.{f.Name.AsField(dbSetting)} = S.{f.Name.AsField(dbSetting)}")
+                .Select(field => field.AsJoinQualifier("T", "S", dbSetting))
                 .Join(", ");
             var builder = new QueryBuilder();
 
+            // Insertable fields
+            var insertableFields = qualifiers.AsList();
+            insertableFields.AddRange(fields);
+
+            // Updatable fields
+            var updateableFields = fields.AsList();
+
             // Compose the statement
-            builder
-                .Update()
-                .WriteText("T")
-                .Set()
-                .WriteText(setFields)
-                .From()
+            builder.Clear()
+                // MERGE T USING S
+                .Merge()
                 .TableNameFrom(tableName, dbSetting)
-                .WriteText("T")
+                .As("T")
                 .HintsFrom(hints)
-                .WriteText("INNER JOIN")
+                .Using()
+                .OpenParen()
+                .Select()
+                .FieldsFrom(fields, dbSetting)
                 .TableNameFrom(tempTableName, dbSetting)
-                .WriteText("S")
-                .WriteText("ON")
-                .WriteText(qualifierFields)
-                .End();
+                .CloseParen()
+                .As("S")
+                // QUALIFIERS
+                .On()
+                .OpenParen()
+                .WriteText(qualifiers?
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T", dbSetting))
+                            .Join(" AND "))
+                .CloseParen()
+                // WHEN NOT MATCHED THEN INSERT VALUES
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .FieldsFrom(insertableFields, dbSetting)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
+                .CloseParen()
+                // WHEN MATCHED THEN UPDATE SET
+                .When()
+                .Matched()
+                .Then()
+                .Update()
+                .Set()
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
 
             // Return the sql
             return builder.ToString();

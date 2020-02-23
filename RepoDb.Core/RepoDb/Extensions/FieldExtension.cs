@@ -60,10 +60,11 @@ namespace RepoDb.Extensions
 
         // AsFieldAndAliasField
         private static string AsFieldAndAliasField(this Field field,
-            string alias,
+            string leftAlias,
+            string rightAlias,
             IDbSetting dbSetting)
         {
-            return field.Name.AsFieldAndAliasField(alias, dbSetting);
+            return field.Name.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting);
         }
 
         // AsJoinQualifier
@@ -127,10 +128,11 @@ namespace RepoDb.Extensions
 
         // AsFieldsAndAliasFields
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<Field> fields,
-            string alias,
+            string leftAlias,
+            string rightAlias,
             IDbSetting dbSetting)
         {
-            return fields?.Select(field => field.AsFieldAndAliasField(alias, dbSetting));
+            return fields?.Select(field => field.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
         }
     }
 }

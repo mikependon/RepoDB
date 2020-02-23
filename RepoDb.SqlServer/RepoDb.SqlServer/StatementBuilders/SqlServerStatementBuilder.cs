@@ -472,7 +472,7 @@ namespace RepoDb.StatementBuilders
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "S", DbSetting);
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting);
 
             // Set the output
             var outputField = identityField ?? primaryField;
@@ -640,7 +640,7 @@ namespace RepoDb.StatementBuilders
                     .Then()
                     .Update()
                     .Set()
-                    .FieldsAndAliasFieldsFrom(updateableFields, "S", DbSetting);
+                    .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting);
 
                 // Set the output
                 var outputField = identityField ?? primaryField;

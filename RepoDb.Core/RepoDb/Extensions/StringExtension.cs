@@ -287,7 +287,8 @@ namespace RepoDb.Extensions
             string rightAlias,
             IDbSetting dbSetting)
         {
-            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
+            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting),
+                " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
         }
 
         // AsAliasField
@@ -316,10 +317,12 @@ namespace RepoDb.Extensions
 
         // AsFieldAndAliasField
         internal static string AsFieldAndAliasField(this string value,
-            string alias,
+            string leftAlias,
+            string rightAlias,
             IDbSetting dbSetting)
         {
-            return string.Concat(AsField(value, dbSetting), " = ", alias, dbSetting.SchemaSeparator, AsField(value, dbSetting));
+            return string.Concat(leftAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting),
+                " = ", rightAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting));
         }
 
         /* IEnumerable<string> */
@@ -365,10 +368,11 @@ namespace RepoDb.Extensions
 
         // AsFieldsAndAliasFields
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<string> values,
-            string alias,
+            string leftAlias,
+            string rightAlias,
             IDbSetting dbSetting)
         {
-            return values?.Select(value => value.AsFieldAndAliasField(alias, dbSetting));
+            return values?.Select(value => value.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
         }
     }
 }
