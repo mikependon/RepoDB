@@ -18,7 +18,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Field field,
@@ -37,7 +37,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Field field,
@@ -56,7 +56,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Field field,
@@ -75,7 +75,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Field field,
@@ -94,7 +94,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Field field,
@@ -113,7 +113,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Expression<Func<TEntity, object>> field,
@@ -132,7 +132,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Expression<Func<TEntity, object>> field,
@@ -151,7 +151,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Expression<Func<TEntity, object>> field,
@@ -170,7 +170,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Expression<Func<TEntity, object>> field,
@@ -189,7 +189,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object Min(Expression<Func<TEntity, object>> field,
@@ -212,7 +212,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Field field,
@@ -231,7 +231,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Field field,
@@ -250,7 +250,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Field field,
@@ -269,7 +269,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Field field,
@@ -288,7 +288,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Field field,
@@ -307,7 +307,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
@@ -326,7 +326,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
@@ -345,7 +345,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
@@ -364,7 +364,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Expression<Func<TEntity, object>> field,
@@ -383,7 +383,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public Task<object> MinAsync(Expression<Func<TEntity, object>> field,

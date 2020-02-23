@@ -17,7 +17,7 @@ namespace RepoDb
         /// Deletes all the target existing data from the database. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll(IEnumerable<TEntity> entities,
@@ -33,7 +33,7 @@ namespace RepoDb
         /// Deletes all the target existing data from the database. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
         /// </summary>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll(IEnumerable<object> primaryKeys,
@@ -52,7 +52,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll(string hints = null,
@@ -70,7 +70,7 @@ namespace RepoDb
         /// Deletes all the target existing data from the database in an asynchronous way. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAllAsync(IEnumerable<TEntity> entities,
@@ -86,7 +86,7 @@ namespace RepoDb
         /// Deletes all the target existing data from the database. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
         /// </summary>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAllAsync(IEnumerable<object> primaryKeys,
@@ -105,7 +105,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAllAsync(string hints = null,

@@ -15,7 +15,7 @@ namespace RepoDb
         /// Inserts a new data in the database.
         /// </summary>
         /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public object Insert(TEntity entity,
@@ -32,7 +32,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public TResult Insert<TResult>(TEntity entity,
@@ -52,7 +52,7 @@ namespace RepoDb
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<object> InsertAsync(TEntity entity,
@@ -69,7 +69,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<TResult> InsertAsync<TResult>(TEntity entity,

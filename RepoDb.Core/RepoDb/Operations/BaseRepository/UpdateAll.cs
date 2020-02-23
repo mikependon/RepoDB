@@ -17,7 +17,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int UpdateAll(IEnumerable<TEntity> entities,
@@ -37,7 +37,7 @@ namespace RepoDb
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int UpdateAll(IEnumerable<TEntity> entities,
@@ -62,7 +62,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAllAsync(IEnumerable<TEntity> entities,
@@ -82,7 +82,7 @@ namespace RepoDb
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAllAsync(IEnumerable<TEntity> entities,

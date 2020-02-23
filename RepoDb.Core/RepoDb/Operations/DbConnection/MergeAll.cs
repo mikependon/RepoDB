@@ -27,7 +27,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -62,7 +62,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -98,7 +98,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -134,7 +134,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -201,7 +201,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -236,7 +236,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -272,7 +272,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -308,7 +308,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -376,7 +376,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -415,7 +415,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier field to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -455,7 +455,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -495,7 +495,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -582,7 +582,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -621,7 +621,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier field to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -661,7 +661,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -701,7 +701,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -790,7 +790,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1122,7 +1122,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The data entity or dynamic object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1280,7 +1280,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1626,7 +1626,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The data entity or dynamic object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>

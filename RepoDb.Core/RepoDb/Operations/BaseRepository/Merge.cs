@@ -16,7 +16,7 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public object Merge(TEntity entity,
@@ -33,7 +33,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public object Merge(TEntity entity,
@@ -52,7 +52,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public object Merge(TEntity entity,
@@ -71,7 +71,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
@@ -90,7 +90,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
@@ -110,7 +110,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
@@ -132,7 +132,7 @@ namespace RepoDb
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<object> MergeAsync(TEntity entity,
@@ -149,7 +149,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<object> MergeAsync(TEntity entity,
@@ -168,7 +168,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<object> MergeAsync(TEntity entity,
@@ -187,7 +187,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<TResult> MergeAsync<TResult>(TEntity entity,
@@ -206,7 +206,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<TResult> MergeAsync<TResult>(TEntity entity,
@@ -226,7 +226,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
         public Task<TResult> MergeAsync<TResult>(TEntity entity,

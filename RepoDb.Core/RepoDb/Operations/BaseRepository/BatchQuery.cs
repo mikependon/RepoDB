@@ -20,7 +20,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
@@ -45,7 +45,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
@@ -69,7 +69,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
@@ -94,7 +94,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
@@ -119,7 +119,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
@@ -147,7 +147,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -170,7 +170,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -195,7 +195,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -220,7 +220,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -245,7 +245,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -270,7 +270,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,

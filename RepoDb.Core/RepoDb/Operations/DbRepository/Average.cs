@@ -20,7 +20,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Field field,
@@ -61,7 +61,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Field field,
@@ -102,7 +102,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Field field,
@@ -143,7 +143,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Field field,
@@ -184,7 +184,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Field field,
@@ -225,7 +225,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Expression<Func<TEntity, object>> field,
@@ -266,7 +266,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Expression<Func<TEntity, object>> field,
@@ -307,7 +307,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Expression<Func<TEntity, object>> field,
@@ -348,7 +348,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Expression<Func<TEntity, object>> field,
@@ -389,7 +389,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average<TEntity>(Expression<Func<TEntity, object>> field,
@@ -434,7 +434,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Field field,
@@ -475,7 +475,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Field field,
@@ -516,7 +516,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Field field,
@@ -557,7 +557,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Field field,
@@ -598,7 +598,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Field field,
@@ -639,7 +639,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Expression<Func<TEntity, object>> field,
@@ -680,7 +680,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Expression<Func<TEntity, object>> field,
@@ -721,7 +721,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Expression<Func<TEntity, object>> field,
@@ -762,7 +762,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Expression<Func<TEntity, object>> field,
@@ -803,7 +803,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync<TEntity>(Expression<Func<TEntity, object>> field,
@@ -848,7 +848,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average(string tableName,
@@ -890,7 +890,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average(string tableName,
@@ -932,7 +932,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average(string tableName,
@@ -974,7 +974,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public object Average(string tableName,
@@ -1020,7 +1020,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync(string tableName,
@@ -1062,7 +1062,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync(string tableName,
@@ -1104,7 +1104,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync(string tableName,
@@ -1146,7 +1146,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The average value.</returns>
         public async Task<object> AverageAsync(string tableName,

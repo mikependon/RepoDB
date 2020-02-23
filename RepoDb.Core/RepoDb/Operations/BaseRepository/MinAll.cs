@@ -16,7 +16,7 @@ namespace RepoDb
         /// Minimizes the target field from all data of the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object MinAll(Field field,
@@ -32,7 +32,7 @@ namespace RepoDb
         /// Minimizes the target field from all data of the database table.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The minimum value.</returns>
         public object MinAll(Expression<Func<TEntity, object>> field,
@@ -52,7 +52,7 @@ namespace RepoDb
         /// Minimizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<object> MinAllAsync(Field field,
@@ -68,7 +68,7 @@ namespace RepoDb
         /// Minimizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<object> MinAllAsync(Expression<Func<TEntity, object>> field,

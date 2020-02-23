@@ -19,7 +19,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
@@ -64,7 +64,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -110,7 +110,7 @@ namespace RepoDb
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public int InsertAll(string tableName,
@@ -159,7 +159,7 @@ namespace RepoDb
         /// <param name="entities">The dynamic objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public async Task<int> InsertAllAsync(string tableName,

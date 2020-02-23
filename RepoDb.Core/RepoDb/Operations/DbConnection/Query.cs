@@ -26,7 +26,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -74,7 +74,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -122,7 +122,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -170,7 +170,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -217,7 +217,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -265,7 +265,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -318,7 +318,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -366,7 +366,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -414,7 +414,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -462,7 +462,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -510,7 +510,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -557,7 +557,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -611,7 +611,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -663,7 +663,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -715,7 +715,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -767,7 +767,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -819,7 +819,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -875,7 +875,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -927,7 +927,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -979,7 +979,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -1031,7 +1031,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -1083,7 +1083,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -1139,7 +1139,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -1255,7 +1255,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -1371,7 +1371,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -1494,7 +1494,7 @@ namespace RepoDb
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.

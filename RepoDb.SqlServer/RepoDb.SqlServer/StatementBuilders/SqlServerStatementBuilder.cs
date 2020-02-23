@@ -49,7 +49,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for batch query operation.</returns>
         public override string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
@@ -134,7 +134,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count operation.</returns>
         public override string CreateCount(QueryBuilder queryBuilder,
             string tableName,
@@ -174,7 +174,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count-all operation.</returns>
         public override string CreateCountAll(QueryBuilder queryBuilder,
             string tableName,
@@ -215,7 +215,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsert(QueryBuilder queryBuilder,
             string tableName,
@@ -276,7 +276,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(QueryBuilder queryBuilder,
             string tableName,
@@ -348,7 +348,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMerge(QueryBuilder queryBuilder,
             string tableName,
@@ -504,7 +504,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="batchSize">The batch size of the operation.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
         public override string CreateMergeAll(QueryBuilder queryBuilder,
             string tableName,

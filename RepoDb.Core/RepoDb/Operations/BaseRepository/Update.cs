@@ -17,7 +17,7 @@ namespace RepoDb
         /// Updates an existing data in the database.
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -34,7 +34,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -53,7 +53,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -72,7 +72,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -91,7 +91,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -110,7 +110,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -132,7 +132,7 @@ namespace RepoDb
         /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
@@ -149,7 +149,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
@@ -168,7 +168,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
@@ -187,7 +187,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
@@ -206,7 +206,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,
@@ -225,7 +225,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity,

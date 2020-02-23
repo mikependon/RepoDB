@@ -24,7 +24,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -90,7 +90,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -123,7 +123,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -156,7 +156,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -189,7 +189,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -222,7 +222,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -255,7 +255,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -288,7 +288,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -321,7 +321,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -354,7 +354,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -406,7 +406,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -439,7 +439,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -472,7 +472,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -505,7 +505,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -538,7 +538,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -571,7 +571,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -604,7 +604,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -637,7 +637,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -670,7 +670,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -703,7 +703,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -736,7 +736,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -788,7 +788,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -822,7 +822,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -856,7 +856,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -890,7 +890,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -924,7 +924,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -976,7 +976,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The dynamic expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1010,7 +1010,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1044,7 +1044,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1078,7 +1078,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1112,7 +1112,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be sumd.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>

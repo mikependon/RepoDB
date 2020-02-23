@@ -26,10 +26,10 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (at T2).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(Expression<Func<T1, bool>> where1,
@@ -90,13 +90,13 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (at T3).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(Expression<Func<T1, bool>> where1,
@@ -168,16 +168,16 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (at T4).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
@@ -261,19 +261,19 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (at T5).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The top number of data to be used (at T5).</param>
-        /// <param name="hints5">The table hints to be used (at T5). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
@@ -368,22 +368,22 @@ namespace RepoDb
         /// <param name="where6">The query expression to be used (at T6).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The top number of data to be used (at T5).</param>
-        /// <param name="hints5">The table hints to be used (at T5). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The top number of data to be used (at T6).</param>
-        /// <param name="hints6">The table hints to be used (at T6). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints6">The table hints to be used (at T6).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
@@ -489,25 +489,25 @@ namespace RepoDb
         /// <param name="where7">The query expression to be used (at T7).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The top number of data to be used (at T5).</param>
-        /// <param name="hints5">The table hints to be used (at T5). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The top number of data to be used (at T6).</param>
-        /// <param name="hints6">The table hints to be used (at T6). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints6">The table hints to be used (at T6).</param>
         /// <param name="orderBy7">The order definition of the fields to be used (at T7).</param>
         /// <param name="top7">The top number of data to be used (at T7).</param>
-        /// <param name="hints7">The table hints to be used (at T7). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints7">The table hints to be used (at T7).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
@@ -616,10 +616,10 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (at T2).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
@@ -680,13 +680,13 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (at T3).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
@@ -758,16 +758,16 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (at T4).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -851,19 +851,19 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (at T5).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The top number of data to be used (at T5).</param>
-        /// <param name="hints5">The table hints to be used (at T5). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -958,22 +958,22 @@ namespace RepoDb
         /// <param name="where6">The query expression to be used (at T6).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The top number of data to be used (at T5).</param>
-        /// <param name="hints5">The table hints to be used (at T5). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The top number of data to be used (at T6).</param>
-        /// <param name="hints6">The table hints to be used (at T6). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints6">The table hints to be used (at T6).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -1079,25 +1079,25 @@ namespace RepoDb
         /// <param name="where7">The query expression to be used (at T7).</param>
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The top number of data to be used (at T1).</param>
-        /// <param name="hints1">The table hints to be used (at T1). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints1">The table hints to be used (at T1).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The top number of data to be used (at T2).</param>
-        /// <param name="hints2">The table hints to be used (at T2). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The top number of data to be used (at T3).</param>
-        /// <param name="hints3">The table hints to be used (at T3). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The top number of data to be used (at T4).</param>
-        /// <param name="hints4">The table hints to be used (at T4). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The top number of data to be used (at T5).</param>
-        /// <param name="hints5">The table hints to be used (at T5). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The top number of data to be used (at T6).</param>
-        /// <param name="hints6">The table hints to be used (at T6). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints6">The table hints to be used (at T6).</param>
         /// <param name="orderBy7">The order definition of the fields to be used (at T7).</param>
         /// <param name="top7">The top number of data to be used (at T7).</param>
-        /// <param name="hints7">The table hints to be used (at T7). See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints7">The table hints to be used (at T7).</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>

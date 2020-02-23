@@ -19,7 +19,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll<TEntity>(IEnumerable<TEntity> entities,
@@ -57,7 +57,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll<TEntity>(IEnumerable<object> primaryKeys,
@@ -98,7 +98,7 @@ namespace RepoDb
         /// Deletes all the data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int DeleteAll<TEntity>(string hints = null,
@@ -138,7 +138,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -176,7 +176,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> primaryKeys,
@@ -217,7 +217,7 @@ namespace RepoDb
         /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> DeleteAllAsync<TEntity>(string hints = null,
@@ -256,7 +256,7 @@ namespace RepoDb
         /// Deletes all the target existing data from the database. It uses the <see cref="DbConnectionExtension.Delete(IDbConnection, string, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
         /// </summary>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -298,7 +298,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -339,7 +339,7 @@ namespace RepoDb
         /// Deletes all the target existing data from the database in an asynchronous way. It uses the <see cref="DbConnectionExtension.Delete(IDbConnection, string, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
         /// </summary>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -381,7 +381,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows affected by the execution.</returns>

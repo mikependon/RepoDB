@@ -16,7 +16,7 @@ namespace RepoDb
         /// Inserts multiple data in the database.
         /// </summary>
         /// <param name="entities">The data entity objects to be inserted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <returns>The number of inserted rows.</returns>
@@ -40,7 +40,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of inserted rows.</returns>
         public Task<int> InsertAllAsync(IEnumerable<TEntity> entities,

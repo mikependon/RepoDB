@@ -17,7 +17,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(TEntity entity,
@@ -33,7 +33,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(object whereOrPrimaryKey,
@@ -49,7 +49,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(Expression<Func<TEntity, bool>> where,
@@ -65,7 +65,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(QueryField where,
@@ -81,7 +81,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(IEnumerable<QueryField> where,
@@ -97,7 +97,7 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int Delete(QueryGroup where,
@@ -117,7 +117,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(TEntity entity,
@@ -133,7 +133,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(object whereOrPrimaryKey,
@@ -149,7 +149,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where,
@@ -165,7 +165,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(QueryField where,
@@ -181,7 +181,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(IEnumerable<QueryField> where,
@@ -197,7 +197,7 @@ namespace RepoDb
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync(QueryGroup where,

@@ -16,7 +16,7 @@ namespace RepoDb
         /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The maximum value.</returns>
         public object MaxAll(Field field,
@@ -32,7 +32,7 @@ namespace RepoDb
         /// Maximizes the target field from all data of the database table.
         /// </summary>
         /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The maximum value.</returns>
         public object MaxAll(Expression<Func<TEntity, object>> field,
@@ -52,7 +52,7 @@ namespace RepoDb
         /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<object> MaxAllAsync(Field field,
@@ -68,7 +68,7 @@ namespace RepoDb
         /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public Task<object> MaxAllAsync(Expression<Func<TEntity, object>> field,

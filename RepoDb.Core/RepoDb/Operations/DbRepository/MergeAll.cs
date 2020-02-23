@@ -19,7 +19,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
@@ -61,7 +61,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
@@ -108,7 +108,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -150,7 +150,7 @@ namespace RepoDb
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
@@ -198,7 +198,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(string tableName,
@@ -244,7 +244,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(string tableName,
@@ -295,7 +295,7 @@ namespace RepoDb
         /// <param name="entities">The list of dynamic objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync(string tableName,
@@ -341,7 +341,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used. See <see cref="SqlServerTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync(string tableName,
