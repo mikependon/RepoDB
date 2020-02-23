@@ -227,6 +227,7 @@ namespace RepoDb
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .WriteText("T")
+                .HintsFrom(hints)
                 .WriteText("INNER JOIN")
                 .TableNameFrom(tempTableName, dbSetting)
                 .WriteText("S")
@@ -242,6 +243,7 @@ namespace RepoDb
             string tempTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            string hints,
             IDbSetting dbSetting)
         {
             // Validate the presence
@@ -273,6 +275,7 @@ namespace RepoDb
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .WriteText("T")
+                .HintsFrom(hints)
                 .WriteText("INNER JOIN")
                 .TableNameFrom(tempTableName, dbSetting)
                 .WriteText("S")

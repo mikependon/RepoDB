@@ -631,7 +631,10 @@ namespace RepoDb
 
                 // Create a temporary table
                 var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName, fields, qualifiers, dbSetting);
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Do the bulk insertion first
@@ -645,11 +648,18 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
+                    qualifiers,
+                    dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    hints,
+                    dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Drop the table after used
@@ -787,7 +797,10 @@ namespace RepoDb
 
                 // Create a temporary table
                 var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName, fields, qualifiers, dbSetting);
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Do the bulk insertion first
@@ -802,11 +815,18 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
+                    qualifiers,
+                    dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    hints,
+                    dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Drop the table after used
@@ -946,7 +966,10 @@ namespace RepoDb
 
                 // Create a temporary table
                 var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName, fields, qualifiers, dbSetting);
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Do the bulk insertion first
@@ -960,11 +983,18 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
+                    qualifiers,
+                    dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    hints,
+                    dbSetting);
                 result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Drop the table after used
@@ -1102,7 +1132,10 @@ namespace RepoDb
 
                 // Create a temporary table
                 var sql = GetCreateTemporaryTableSqlText(tableName,
-                    tempTableName, fields, qualifiers, dbSetting);
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Do the bulk insertion first
@@ -1117,11 +1150,18 @@ namespace RepoDb
                     transaction);
 
                 // Create the clustered index
-                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName, qualifiers, dbSetting);
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
+                    qualifiers,
+                    dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Update the actual update
-                sql = GetBulkUpdateSqlText(tableName, tempTableName, fields, qualifiers, hints, dbSetting);
+                sql = GetBulkUpdateSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    hints,
+                    dbSetting);
                 result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Drop the table after used
