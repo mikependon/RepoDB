@@ -633,7 +633,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -799,7 +798,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -968,7 +966,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
@@ -1134,7 +1131,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 

@@ -591,7 +591,7 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var fields = (IEnumerable<Field>)null;
+                var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
                     dbFields.FirstOrDefault(e => e.IsIdentity);
                 var dbSetting = connection.GetDbSetting();
@@ -608,12 +608,6 @@ namespace RepoDb
                         qualifiers = new[] { primaryKey.AsField() };
                     }
                 }
-
-                // Get the fields (originated from the DB)
-                fields = dbFields
-                    .Where(e =>
-                        qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == false)
-                    .Select(e => e.AsField());
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -633,7 +627,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -757,7 +750,7 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var fields = (IEnumerable<Field>)null;
+                var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
                     dbFields.FirstOrDefault(e => e.IsIdentity);
                 var dbSetting = connection.GetDbSetting();
@@ -774,12 +767,6 @@ namespace RepoDb
                         qualifiers = new[] { primaryKey.AsField() };
                     }
                 }
-
-                // Get the fields (originated from the DB)
-                fields = dbFields
-                    .Where(e =>
-                        qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == false)
-                    .Select(e => e.AsField());
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -799,7 +786,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -926,7 +912,7 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                var fields = (IEnumerable<Field>)null;
+                var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
                     dbFields.FirstOrDefault(e => e.IsIdentity);
                 var dbSetting = connection.GetDbSetting();
@@ -943,12 +929,6 @@ namespace RepoDb
                         qualifiers = new[] { primaryKey.AsField() };
                     }
                 }
-
-                // Get the fields (originated from the DB)
-                fields = dbFields
-                    .Where(e =>
-                        qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == false)
-                    .Select(e => e.AsField());
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -968,7 +948,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
@@ -1092,7 +1071,7 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                var fields = (IEnumerable<Field>)null;
+                var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
                     dbFields.FirstOrDefault(e => e.IsIdentity);
                 var dbSetting = connection.GetDbSetting();
@@ -1109,12 +1088,6 @@ namespace RepoDb
                         qualifiers = new[] { primaryKey.AsField() };
                     }
                 }
-
-                // Get the fields (originated from the DB)
-                fields = dbFields
-                    .Where(e =>
-                        qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == false)
-                    .Select(e => e.AsField());
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -1134,7 +1107,6 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    qualifiers,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
