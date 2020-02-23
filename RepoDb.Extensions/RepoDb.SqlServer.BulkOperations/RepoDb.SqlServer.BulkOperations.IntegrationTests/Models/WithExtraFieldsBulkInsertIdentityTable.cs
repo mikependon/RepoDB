@@ -19,6 +19,6 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
         public string ColumnNVarChar { get; set; }
         /* Extra Fields */
         public string ExtraField { get; set; }
-        public IEnumerable<BulkInsertIdentityTable> IdentityTables { get; set; }
+        public IEnumerable<BulkOperationIdentityTable> IdentityTables { get; set; }
     }
 }

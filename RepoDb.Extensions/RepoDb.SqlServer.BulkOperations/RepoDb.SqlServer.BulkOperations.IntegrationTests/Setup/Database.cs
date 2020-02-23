@@ -77,7 +77,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb))
             {
-                connection.Truncate<BulkInsertIdentityTable>();
+                connection.Truncate<BulkOperationIdentityTable>();
             }
         }
 
@@ -90,9 +90,9 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateBulkInsertIdentityTable()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'BulkInsertIdentityTable'))
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'BulkOperationIdentityTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[BulkInsertIdentityTable]
+	                CREATE TABLE [dbo].[BulkOperationIdentityTable]
 	                (
 		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
                         [RowGuid] UNIQUEIDENTIFIER NOT NULL,
@@ -103,6 +103,11 @@ namespace RepoDb.IntegrationTests.Setup
 		                [ColumnFloat] FLOAT NULL,
 		                [ColumnInt] INT NULL,
 		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
+                        CONSTRAINT [PK_BulkOperationIdentityTable] PRIMARY KEY CLUSTERED 
+                        (
+	                        [Id] ASC
+                        )
+                        WITH (FILLFACTOR = 90) ON [PRIMARY]
 	                ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())

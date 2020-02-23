@@ -151,17 +151,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         #region BulkInsertIdentityTable
 
         /// <summary>
-        /// Creates a list of <see cref="BulkInsertIdentityTable"/> objects.
+        /// Creates a list of <see cref="BulkOperationIdentityTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="BulkInsertIdentityTable"/> objects.</returns>
-        public static List<BulkInsertIdentityTable> CreateBulkInsertIdentityTables(int count)
+        /// <returns>A list of <see cref="BulkOperationIdentityTable"/> objects.</returns>
+        public static List<BulkOperationIdentityTable> CreateBulkInsertIdentityTables(int count)
         {
-            var tables = new List<BulkInsertIdentityTable>();
+            var tables = new List<BulkOperationIdentityTable>();
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
-                tables.Add(new BulkInsertIdentityTable
+                tables.Add(new BulkOperationIdentityTable
                 {
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
@@ -177,13 +177,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="BulkInsertIdentityTable"/> object.
+        /// Creates an instance of <see cref="BulkOperationIdentityTable"/> object.
         /// </summary>
-        /// <returns>A new created instance of <see cref="BulkInsertIdentityTable"/> object.</returns>
-        public static BulkInsertIdentityTable CreateBulkInsertIdentityTable()
+        /// <returns>A new created instance of <see cref="BulkOperationIdentityTable"/> object.</returns>
+        public static BulkOperationIdentityTable CreateBulkInsertIdentityTable()
         {
             var random = new Random();
-            return new BulkInsertIdentityTable
+            return new BulkOperationIdentityTable
             {
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = true,
@@ -204,7 +204,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         /// Creates a list of <see cref="WithExtraFieldsBulkInsertIdentityTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="BulkInsertIdentityTable"/> objects.</returns>
+        /// <returns>A list of <see cref="BulkOperationIdentityTable"/> objects.</returns>
         public static List<WithExtraFieldsBulkInsertIdentityTable> CreateWithExtraFieldsBulkInsertIdentityTables(int count)
         {
             var tables = new List<WithExtraFieldsBulkInsertIdentityTable>();

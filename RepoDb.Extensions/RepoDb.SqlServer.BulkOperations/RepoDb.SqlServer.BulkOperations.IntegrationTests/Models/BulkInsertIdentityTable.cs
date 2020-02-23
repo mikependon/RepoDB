@@ -3,7 +3,7 @@ using System;
 
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
 {
-    public class BulkInsertIdentityTable
+    public class BulkOperationIdentityTable
     {
         public long Id { get; set; }
         public Guid RowGuid { get; set; }

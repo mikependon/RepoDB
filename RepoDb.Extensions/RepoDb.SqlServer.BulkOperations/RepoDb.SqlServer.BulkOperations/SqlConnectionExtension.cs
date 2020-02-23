@@ -189,19 +189,13 @@ namespace RepoDb
             return $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
         }
 
-        private static string GetBulkUpdateSqlText(string tableName,
+        private static string GetBulkDeleteSqlText(string tableName,
             string tempTableName,
-            IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             string hints,
             IDbSetting dbSetting)
         {
             // Validate the presence
-            if (fields?.Any() != true)
-            {
-                throw new MissingFieldException("There is no field(s) defined.");
-            }
-
             if (qualifiers?.Any() != true)
             {
                 throw new MissingFieldException("There is no qualifer field(s) defined.");
@@ -210,19 +204,11 @@ namespace RepoDb
             // Variables needed
             var builder = new QueryBuilder();
 
-            // Updatable fields
-            var updateableFields = fields
-                .Where(field =>
-                    qualifiers.Any(
-                        q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
-
             // Compose the statement
             builder
                 .Clear()
-                .Update()
+                .Delete()
                 .WriteText("T")
-                .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting)
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .WriteText("T")
@@ -323,6 +309,83 @@ namespace RepoDb
 
             // Return the sql
             return builder.ToString();
+        }
+
+        private static string GetBulkUpdateSqlText(string tableName,
+            string tempTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            string hints,
+            IDbSetting dbSetting)
+        {
+            // Validate the presence
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldException("There is no field(s) defined.");
+            }
+
+            if (qualifiers?.Any() != true)
+            {
+                throw new MissingFieldException("There is no qualifer field(s) defined.");
+            }
+
+            // Variables needed
+            var builder = new QueryBuilder();
+
+            // Updatable fields
+            var updateableFields = fields
+                .Where(field =>
+                    qualifiers.Any(
+                        q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
+
+            // Compose the statement
+            builder
+                .Clear()
+                .Update()
+                .WriteText("T")
+                .Set()
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting)
+                .From()
+                .TableNameFrom(tableName, dbSetting)
+                .WriteText("T")
+                .HintsFrom(hints)
+                .WriteText("INNER JOIN")
+                .TableNameFrom(tempTableName, dbSetting)
+                .WriteText("S")
+                .WriteText("ON")
+                .WriteText(qualifiers
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T", dbSetting))
+                            .Join(" AND "))
+                .End();
+
+            // Return the sql
+            return builder.ToString();
+        }
+
+        private static DataTable CreateDataTableWithSingleColumn(string tableName,
+            Field field,
+            IEnumerable<object> values)
+        {
+            // Variables
+            var table = new DataTable(tableName);
+            var column = table
+                .Columns
+                .Add(field.Name, field.Type);
+
+            // Add the values
+            foreach (var value in values)
+            {
+                var row = table.NewRow();
+                row[column] = value;
+                table.Rows.Add(row);
+            }
+
+            // Commit
+            table.AcceptChanges();
+
+            // Return the table
+            return table;
         }
 
         #endregion
