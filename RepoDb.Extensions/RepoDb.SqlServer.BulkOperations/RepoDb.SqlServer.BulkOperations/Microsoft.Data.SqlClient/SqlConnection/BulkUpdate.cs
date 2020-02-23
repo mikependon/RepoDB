@@ -589,7 +589,9 @@ namespace RepoDb
 
             try
             {
-                // Get the DB Fields
+                // Variables needed
+                var readerFields = Enumerable.Range(0, reader.FieldCount)
+                    .Select((index) => reader.GetName(index));
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
@@ -609,7 +611,15 @@ namespace RepoDb
                     }
                 }
 
-                // Filter the fields (based on mappings)
+                // Filter the fields (based on the data reader)
+                if (readerFields?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Filter the fields (based on the mappings)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
@@ -748,7 +758,9 @@ namespace RepoDb
 
             try
             {
-                // Get the DB Fields
+                // Variables needed
+                var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
+                    .Select((index) => dataTable.Columns[index].ColumnName);
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
@@ -768,7 +780,15 @@ namespace RepoDb
                     }
                 }
 
-                // Filter the fields (based on mappings)
+                // Filter the fields (based on the data table)
+                if (tableFields?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Filter the fields (based on the mappings)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
@@ -910,7 +930,9 @@ namespace RepoDb
 
             try
             {
-                // Get the DB Fields
+                // Variables needed
+                var readerFields = Enumerable.Range(0, reader.FieldCount)
+                    .Select((index) => reader.GetName(index));
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
@@ -930,7 +952,15 @@ namespace RepoDb
                     }
                 }
 
-                // Filter the fields (based on mappings)
+                // Filter the fields (based on the data reader)
+                if (readerFields?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Filter the fields (based on the mappings)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
@@ -1069,7 +1099,9 @@ namespace RepoDb
 
             try
             {
-                // Get the DB Fields
+                // Variables needed
+                var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
+                    .Select((index) => dataTable.Columns[index].ColumnName);
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
@@ -1089,7 +1121,15 @@ namespace RepoDb
                     }
                 }
 
-                // Filter the fields (based on mappings)
+                // Filter the fields (based on the data table)
+                if (tableFields?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Filter the fields (based on the mappings)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
