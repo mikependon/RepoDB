@@ -1,8 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -40,6 +40,57 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.BulkDelete<TEntity>(primaryKeys: primaryKeys,
+                    hints: hints,
+                    bulkCopyTimeout: repository.CommandTimeout,
+                    batchSize: batchSize,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
+                {
+                    if (transaction == null)
+                    {
+                        connection.Dispose();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bulk delete the list of data entity objects via primary keys from the database.
+        /// </summary>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
+        /// <param name="tableName">The target table for bulk-delete operation.</param>
+        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkDelete(this DbRepository<SqlConnection> repository,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            string hints = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BulkDelete(tableName: tableName,
+                    primaryKeys: primaryKeys,
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
@@ -459,6 +510,57 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.BulkDeleteAsync<TEntity>(primaryKeys: primaryKeys,
+                    hints: hints,
+                    bulkCopyTimeout: repository.CommandTimeout,
+                    batchSize: batchSize,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
+                {
+                    if (transaction == null)
+                    {
+                        connection.Dispose();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="repository">The instance of <see cref="DbRepository{TDbConnection}"/> object.</param>
+        /// <param name="tableName">The target table for bulk-delete operation.</param>
+        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static async Task<int> BulkDeleteAsync(this DbRepository<SqlConnection> repository,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            string hints = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? repository.CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.BulkDeleteAsync(tableName: tableName,
+                    primaryKeys: primaryKeys,
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,

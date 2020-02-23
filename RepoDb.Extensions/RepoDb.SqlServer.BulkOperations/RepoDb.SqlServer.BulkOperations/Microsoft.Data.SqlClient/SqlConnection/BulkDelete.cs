@@ -48,6 +48,37 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Bulk delete the list of data entity objects via primary keys from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-delete operation.</param>
+        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkDelete(this SqlConnection connection,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+        {
+            return BulkDeleteInternal(connection: connection,
+                tableName: tableName,
+                primaryKeys: primaryKeys,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
+        }
+
+        /// <summary>
         /// Bulk delete a list of data entity objects from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -328,6 +359,37 @@ namespace RepoDb
         {
             return await BulkDeleteAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
+                primaryKeys: primaryKeys,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-delete operation.</param>
+        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+        {
+            return await BulkDeleteAsyncInternal(connection: connection,
+                tableName: tableName,
                 primaryKeys: primaryKeys,
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
