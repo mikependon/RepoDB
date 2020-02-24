@@ -15,13 +15,16 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
-    <PackageReleaseNotes>Upgrade the references to Microsoft.Data.SqlClient (v1.1.1) and RepoDb.SqlServer (v1.0.3).</PackageReleaseNotes>
-    <Version>1.0.3</Version>
-    <FileVersion>1.0.3.0</FileVersion>
+    <PackageReleaseNotes>RepoDb.SqlServer.BulkOperations v1.0.4-beta1:
+- Initial full support to the Bulk Operations (BulkDelete, BulkInsert, BulkMerge and BulkUpdate).</PackageReleaseNotes>
+    <Version>1.0.4-beta1</Version>
+    <FileVersion>1.0.4.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.1" />
+    <PackageReference Include="RepoDb" Version="1.10.10-beta1" />
     <PackageReference Include="RepoDb.SqlServer" Version="1.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
   </ItemGroup>
