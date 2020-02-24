@@ -15,11 +15,12 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
-    <PackageReleaseNotes>RepoDb.SqlServer.BulkOperations v1.0.4-beta1:
-- Initial full support to the Bulk Operations (BulkDelete, BulkInsert, BulkMerge and BulkUpdate).</PackageReleaseNotes>
-    <Version>1.0.4-beta1</Version>
-    <FileVersion>1.0.4.0</FileVersion>
-    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <PackageReleaseNotes>RepoDb.SqlServer.BulkOperations v1.0.4-beta2:
+- Auto set the options to SqlBulkCopyOptions.KeepIdentity for BulkDelete, BulkMerge and BulkUpdate (if there an identity primary/column from the DB).
+- Used an underscore over dashes when composing the temporary/pseudo tables.</PackageReleaseNotes>
+    <Version>1.0.4-beta2</Version>
+    <FileVersion>1.0.4.2</FileVersion>
+    <AssemblyVersion>1.0.4.2</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
