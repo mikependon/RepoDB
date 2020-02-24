@@ -1,13 +1,9 @@
-﻿using RepoDb.Attributes;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
 {
-    [Map("[dbo].[BulkInsertIdentityTable]")]
-    public class WithExtraFieldsBulkInsertIdentityTable
+    public class BulkOperationIdentityTable
     {
-        /* Normal Fields */
         public long Id { get; set; }
         public Guid RowGuid { get; set; }
         public bool? ColumnBit { get; set; }
@@ -17,8 +13,5 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
         public double? ColumnFloat { get; set; }
         public int? ColumnInt { get; set; }
         public string ColumnNVarChar { get; set; }
-        /* Extra Fields */
-        public string ExtraField { get; set; }
-        public IEnumerable<BulkOperationIdentityTable> IdentityTables { get; set; }
     }
 }

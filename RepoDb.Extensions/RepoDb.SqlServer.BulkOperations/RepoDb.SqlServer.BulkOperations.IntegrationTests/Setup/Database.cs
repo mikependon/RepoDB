@@ -67,7 +67,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateTables()
         {
-            CreateBulkInsertIdentityTable();
+            CreateBulkOperationIdentityTable();
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates an identity table that has some important fields. All fields are nullable.
         /// </summary>
-        public static void CreateBulkInsertIdentityTable()
+        public static void CreateBulkOperationIdentityTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'BulkOperationIdentityTable'))
                 BEGIN

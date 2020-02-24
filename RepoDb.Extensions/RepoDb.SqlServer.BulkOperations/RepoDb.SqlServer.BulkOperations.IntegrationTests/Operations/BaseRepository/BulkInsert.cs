@@ -28,16 +28,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #region SubClass
 
-        private class BulkInsertIdentityTableRepository : BaseRepository<BulkOperationIdentityTable, SqlConnection>
+        private class BulkOperationIdentityTableRepository : BaseRepository<BulkOperationIdentityTable, SqlConnection>
         {
-            public BulkInsertIdentityTableRepository() :
+            public BulkOperationIdentityTableRepository() :
                 base(Database.ConnectionStringForRepoDb, ConnectionPersistency.Instance)
             { }
         }
 
-        private class WithExtraFieldsBulkInsertIdentityTableRepository : BaseRepository<WithExtraFieldsBulkInsertIdentityTable, SqlConnection>
+        private class WithExtraFieldsBulkOperationIdentityTableRepository : BaseRepository<WithExtraFieldsBulkOperationIdentityTable, SqlConnection>
         {
-            public WithExtraFieldsBulkInsertIdentityTableRepository() :
+            public WithExtraFieldsBulkOperationIdentityTableRepository() :
                 base(Database.ConnectionStringForRepoDb, ConnectionPersistency.Instance)
             { }
         }
@@ -50,9 +50,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertForEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
@@ -76,7 +76,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertForEntitiesWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -88,7 +88,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(tables);
@@ -112,7 +112,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -126,7 +126,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 repository.BulkInsert(tables, mappings);
@@ -141,14 +141,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertForEntitiesWithExtraFields()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var withExtraFieldsRepository = new WithExtraFieldsBulkInsertIdentityTableRepository())
+            using (var withExtraFieldsRepository = new WithExtraFieldsBulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = withExtraFieldsRepository.BulkInsert(tables);
 
-                using (var repository = new BulkInsertIdentityTableRepository())
+                using (var repository = new BulkOperationIdentityTableRepository())
                 {
                     // Act
                     var queryResult = repository.QueryAll();
@@ -168,7 +168,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -180,12 +180,12 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var withExtraFieldsRepository = new WithExtraFieldsBulkInsertIdentityTableRepository())
+            using (var withExtraFieldsRepository = new WithExtraFieldsBulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = withExtraFieldsRepository.BulkInsert(tables);
 
-                using (var repository = new BulkInsertIdentityTableRepository())
+                using (var repository = new BulkOperationIdentityTableRepository())
                 {
                     // Act
                     var queryResult = repository.QueryAll();
@@ -209,9 +209,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertForTableNameEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
@@ -239,9 +239,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertAsyncForEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
@@ -265,7 +265,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -277,7 +277,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
@@ -301,7 +301,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -315,7 +315,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(tables, mappings);
@@ -334,14 +334,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithExtraFields()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var withExtraFieldsRepository = new WithExtraFieldsBulkInsertIdentityTableRepository())
+            using (var withExtraFieldsRepository = new WithExtraFieldsBulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = withExtraFieldsRepository.BulkInsertAsync(tables).Result;
 
-                using (var repository = new BulkInsertIdentityTableRepository())
+                using (var repository = new BulkOperationIdentityTableRepository())
                 {
                     // Act
                     var queryResult = repository.QueryAll();
@@ -361,7 +361,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -373,12 +373,12 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var withExtraFieldsRepository = new WithExtraFieldsBulkInsertIdentityTableRepository())
+            using (var withExtraFieldsRepository = new WithExtraFieldsBulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = withExtraFieldsRepository.BulkInsertAsync(tables).Result;
 
-                using (var repository = new BulkInsertIdentityTableRepository())
+                using (var repository = new BulkOperationIdentityTableRepository())
                 {
                     // Act
                     var queryResult = repository.QueryAll();
@@ -402,9 +402,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestDbRepositoryBulkInsertAsyncForTableNameEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var repository = new BulkInsertIdentityTableRepository())
+            using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
                 var bulkInsertResult = repository.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;

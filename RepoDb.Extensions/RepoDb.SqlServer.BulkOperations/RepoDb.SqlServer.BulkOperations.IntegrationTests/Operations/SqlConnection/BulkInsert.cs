@@ -33,7 +33,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -59,7 +59,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -95,7 +95,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -120,7 +120,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesDbDataReader()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -132,7 +132,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -157,7 +157,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesDbDataReaderWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -180,7 +180,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -205,7 +205,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -229,7 +229,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -245,7 +245,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesDataTable()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -257,7 +257,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -287,7 +287,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesDataTableWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -310,7 +310,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -340,7 +340,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -364,7 +364,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -389,7 +389,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesWithExtraFields()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -415,7 +415,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -455,7 +455,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDataEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -481,7 +481,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDbDataReader()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -493,7 +493,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -518,7 +518,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDbDataReaderWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -541,7 +541,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -566,7 +566,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -590,7 +590,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -609,7 +609,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -621,7 +621,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -637,7 +637,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -649,7 +649,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -665,7 +665,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDbDataTable()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -677,7 +677,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -707,7 +707,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertForTableNameDbDataTableWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -730,7 +730,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -760,7 +760,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -784,7 +784,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -808,7 +808,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -820,7 +820,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -841,7 +841,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -853,7 +853,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -878,7 +878,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -904,7 +904,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -940,7 +940,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -968,7 +968,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesDbDataReader()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -980,7 +980,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1005,7 +1005,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -1028,7 +1028,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1053,7 +1053,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -1077,7 +1077,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1096,7 +1096,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesDataTable()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1108,7 +1108,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1138,7 +1138,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -1161,7 +1161,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1191,7 +1191,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -1215,7 +1215,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1243,7 +1243,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesWithExtraFields()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1269,7 +1269,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
-            var tables = Helper.CreateWithExtraFieldsBulkInsertIdentityTables(10);
+            var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -1309,7 +1309,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDataEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1335,7 +1335,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDbDataReader()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1347,7 +1347,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1372,7 +1372,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDbDataReaderWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -1395,7 +1395,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1420,7 +1420,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -1444,7 +1444,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1463,7 +1463,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1475,7 +1475,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1494,7 +1494,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1506,7 +1506,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1525,7 +1525,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDataTable()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1537,7 +1537,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1567,7 +1567,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void TestSqlConnectionBulkInsertAsyncForTableNameDataTableWithMappings()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
@@ -1590,7 +1590,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1620,7 +1620,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add invalid mappings
@@ -1644,7 +1644,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1668,7 +1668,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1680,7 +1680,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {
@@ -1704,7 +1704,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
-            var tables = Helper.CreateBulkInsertIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1716,7 +1716,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkInsertIdentityTable];"))
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     using (var table = new DataTable())
                     {

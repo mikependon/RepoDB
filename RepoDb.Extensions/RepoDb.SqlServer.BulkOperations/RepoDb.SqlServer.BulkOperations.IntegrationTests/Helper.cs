@@ -148,14 +148,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
             });
         }
 
-        #region BulkInsertIdentityTable
+        #region BulkOperationIdentityTable
 
         /// <summary>
         /// Creates a list of <see cref="BulkOperationIdentityTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
         /// <returns>A list of <see cref="BulkOperationIdentityTable"/> objects.</returns>
-        public static List<BulkOperationIdentityTable> CreateBulkInsertIdentityTables(int count)
+        public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count)
         {
             var tables = new List<BulkOperationIdentityTable>();
             for (var i = 0; i < count; i++)
@@ -180,7 +180,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         /// Creates an instance of <see cref="BulkOperationIdentityTable"/> object.
         /// </summary>
         /// <returns>A new created instance of <see cref="BulkOperationIdentityTable"/> object.</returns>
-        public static BulkOperationIdentityTable CreateBulkInsertIdentityTable()
+        public static BulkOperationIdentityTable CreateBulkOperationIdentityTable()
         {
             var random = new Random();
             return new BulkOperationIdentityTable
@@ -198,20 +198,20 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region WithExtraFieldsBulkInsertIdentityTable
+        #region WithExtraFieldsBulkOperationIdentityTable
 
         /// <summary>
-        /// Creates a list of <see cref="WithExtraFieldsBulkInsertIdentityTable"/> objects.
+        /// Creates a list of <see cref="WithExtraFieldsBulkOperationIdentityTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
         /// <returns>A list of <see cref="BulkOperationIdentityTable"/> objects.</returns>
-        public static List<WithExtraFieldsBulkInsertIdentityTable> CreateWithExtraFieldsBulkInsertIdentityTables(int count)
+        public static List<WithExtraFieldsBulkOperationIdentityTable> CreateWithExtraFieldsBulkOperationIdentityTables(int count)
         {
-            var tables = new List<WithExtraFieldsBulkInsertIdentityTable>();
+            var tables = new List<WithExtraFieldsBulkOperationIdentityTable>();
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
-                tables.Add(new WithExtraFieldsBulkInsertIdentityTable
+                tables.Add(new WithExtraFieldsBulkOperationIdentityTable
                 {
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
@@ -224,8 +224,8 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
                     ExtraField = $"ExtraField{index}",
                     IdentityTables = new[]
                     {
-                        CreateBulkInsertIdentityTable(),
-                        CreateBulkInsertIdentityTable()
+                        CreateBulkOperationIdentityTable(),
+                        CreateBulkOperationIdentityTable()
                     }
                 });
             }
@@ -233,13 +233,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="WithExtraFieldsBulkInsertIdentityTable"/> object.
+        /// Creates an instance of <see cref="WithExtraFieldsBulkOperationIdentityTable"/> object.
         /// </summary>
         /// <returns>A new created instance of <see cref="NonIdentityTable"/> object.</returns>
-        public static WithExtraFieldsBulkInsertIdentityTable CreateWithExtraFieldsBulkInsertIdentityTable()
+        public static WithExtraFieldsBulkOperationIdentityTable CreateWithExtraFieldsBulkOperationIdentityTable()
         {
             var random = new Random();
-            return new WithExtraFieldsBulkInsertIdentityTable
+            return new WithExtraFieldsBulkOperationIdentityTable
             {
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = true,

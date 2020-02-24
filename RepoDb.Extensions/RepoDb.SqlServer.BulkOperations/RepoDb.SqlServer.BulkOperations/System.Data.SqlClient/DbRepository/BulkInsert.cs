@@ -1,8 +1,8 @@
-﻿using System.Data.SqlClient;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -12,7 +12,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbRepositoryExtension
     {
-        #region BulkInsert
+        #region BulkInsert<TEntity>
 
         /// <summary>
         /// Bulk insert a list of data entity objects into the database.
@@ -28,7 +28,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -80,7 +80,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -131,7 +131,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -167,6 +167,10 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region BulkInsert(TableName)
+
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
@@ -182,7 +186,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
         {
@@ -234,7 +238,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -288,7 +292,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
         {
@@ -327,7 +331,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsertAsync
+        #region BulkInsertAsync<TEntity>
 
         /// <summary>
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
@@ -343,7 +347,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -395,7 +399,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -446,7 +450,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -482,6 +486,10 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region BulkInsertAsync(TableName)
+
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
@@ -497,7 +505,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
         {
@@ -549,7 +557,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -603,7 +611,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
         {

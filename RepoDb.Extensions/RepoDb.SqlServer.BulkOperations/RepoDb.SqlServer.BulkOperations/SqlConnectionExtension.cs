@@ -363,12 +363,11 @@ namespace RepoDb
             return builder.ToString();
         }
 
-        private static DataTable CreateDataTableWithSingleColumn(string tableName,
-            Field field,
+        private static DataTable CreateDataTableWithSingleColumn(Field field,
             IEnumerable<object> values)
         {
             // Variables
-            var table = new DataTable(tableName);
+            var table = new DataTable();
             var column = table
                 .Columns
                 .Add(field.Name, field.Type);

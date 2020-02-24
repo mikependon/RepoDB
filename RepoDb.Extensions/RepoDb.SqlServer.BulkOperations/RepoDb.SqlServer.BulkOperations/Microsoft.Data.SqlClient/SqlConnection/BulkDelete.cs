@@ -14,7 +14,7 @@ namespace RepoDb
     /// </summary>
     public static partial class SqlConnectionExtension
     {
-        #region BulkDelete
+        #region BulkDelete<TEntity>
 
         /// <summary>
         /// Bulk delete the list of data entity objects via primary keys from the database.
@@ -48,43 +48,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-delete operation.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete(this SqlConnection connection,
-            string tableName,
-            IEnumerable<object> primaryKeys,
-            string hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-        {
-            return BulkDeleteInternal(connection: connection,
-                tableName: tableName,
-                primaryKeys: primaryKeys,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
         /// Bulk delete a list of data entity objects from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-deleted.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -97,7 +66,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -128,7 +97,7 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-deleted.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -142,7 +111,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -172,7 +141,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -185,7 +154,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -207,12 +176,90 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Bulk delete an instance of <see cref="DataTable"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkDelete<TEntity>(this SqlConnection connection,
+            DataTable dataTable,
+            IEnumerable<Field> qualifiers = null,
+            DataRowState? rowState = null,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions? options = null,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+            where TEntity : class
+        {
+            return BulkDeleteInternal(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                dataTable: dataTable,
+                qualifiers: qualifiers,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
+        }
+
+        #endregion
+
+        #region BulkDelete(TableName)
+
+        /// <summary>
+        /// Bulk delete the list of data entity objects via primary keys from the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-delete operation.</param>
+        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int BulkDelete(this SqlConnection connection,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+        {
+            return BulkDeleteInternal(connection: connection,
+                tableName: tableName,
+                primaryKeys: primaryKeys,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
+        }
+
+        /// <summary>
         /// Bulk delete an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -226,7 +273,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -249,53 +296,10 @@ namespace RepoDb
         /// <summary>
         /// Bulk delete an instance of <see cref="DataTable"/> object into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkDelete<TEntity>(this SqlConnection connection,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
-            string hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkDeleteInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
-                qualifiers: qualifiers,
-                rowState: rowState,
-                mappings: mappings,
-                options: options,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk delete an instance of <see cref="DataTable"/> object into the database.
-        /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -311,7 +315,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -334,7 +338,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkDeleteAsync
+        #region BulkDeleteAsync<TEntity>
 
         /// <summary>
         /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
@@ -368,43 +372,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-delete operation.</param>
-        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
-            string tableName,
-            IEnumerable<object> primaryKeys,
-            string hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-        {
-            return await BulkDeleteAsyncInternal(connection: connection,
-                tableName: tableName,
-                primaryKeys: primaryKeys,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
         /// Bulk delete a list of data entity objects from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-deleted.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -417,7 +390,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -448,7 +421,7 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-deleted.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -462,7 +435,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -492,7 +465,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -505,7 +478,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -527,12 +500,90 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Bulk delete an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
+        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+            DataTable dataTable,
+            IEnumerable<Field> qualifiers = null,
+            DataRowState? rowState = null,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions? options = null,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+            where TEntity : class
+        {
+            return await BulkDeleteAsyncInternal(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                dataTable: dataTable,
+                qualifiers: qualifiers,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
+        }
+
+        #endregion
+
+        #region BulkDeleteAsync(TableName)
+
+        /// <summary>
+        /// Bulk delete the list of data entity objects via primary keys from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-delete operation.</param>
+        /// <param name="primaryKeys">The list of primary keys to be bulk-deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
+            string tableName,
+            IEnumerable<object> primaryKeys,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+        {
+            return await BulkDeleteAsyncInternal(connection: connection,
+                tableName: tableName,
+                primaryKeys: primaryKeys,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
+        }
+
+        /// <summary>
         /// Bulk delete an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -546,7 +597,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -569,53 +620,10 @@ namespace RepoDb
         /// <summary>
         /// Bulk delete an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="options">The bulk-copy options to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
-            string hints = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return await BulkDeleteAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
-                qualifiers: qualifiers,
-                rowState: rowState,
-                mappings: mappings,
-                options: options,
-                hints: hints,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk delete an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -631,7 +639,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -697,7 +705,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkDelete-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -709,7 +717,7 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var primaryKey =
+                var primaryOrIdentityDbField =
                     (
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         dbFields.FirstOrDefault(e => e.IsIdentity)
@@ -717,23 +725,23 @@ namespace RepoDb
                 var dbSetting = connection.GetDbSetting();
 
                 // Throw an error if there are is no primary key
-                if (primaryKey == null)
+                if (primaryOrIdentityDbField == null)
                 {
-                    throw new MissingPrimaryKeyException($"Primary key is not found for table '{tableName}'.");
+                    throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                 }
 
                 // Create a temporary table
-                var primaryField = primaryKey.AsField();
+                var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
-                    primaryField.AsEnumerable(),
+                    primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Do the bulk insertion first
-                using (var dataTable = CreateDataTableWithSingleColumn(tempTableName, primaryField, primaryKeys))
+                using (var dataTable = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
                 {
-                    var options = primaryKey?.IsIdentity == true ?
+                    var options = primaryOrIdentityDbField?.IsIdentity == true ?
                         SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
                     BulkInsertInternal(connection,
                         tempTableName,
@@ -747,14 +755,14 @@ namespace RepoDb
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    primaryField.AsEnumerable(),
+                    primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Delete the actual delete
                 sql = GetBulkDeleteSqlText(tableName,
                     tempTableName,
-                    primaryField.AsEnumerable(),
+                    primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
@@ -799,7 +807,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -813,7 +821,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -840,7 +848,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkDelete-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -855,20 +863,25 @@ namespace RepoDb
                     .Select((index) => reader.GetName(index));
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -900,6 +913,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
@@ -965,7 +986,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -981,7 +1002,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -1008,7 +1029,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkDelete-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1023,20 +1044,25 @@ namespace RepoDb
                     .Select((index) => dataTable.Columns[index].ColumnName);
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -1068,6 +1094,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
@@ -1173,7 +1207,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkDelete-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1185,7 +1219,7 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                var primaryKey =
+                var primaryOrIdentityDbField =
                     (
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         dbFields.FirstOrDefault(e => e.IsIdentity)
@@ -1193,23 +1227,23 @@ namespace RepoDb
                 var dbSetting = connection.GetDbSetting();
 
                 // Throw an error if there are is no primary key
-                if (primaryKey == null)
+                if (primaryOrIdentityDbField == null)
                 {
-                    throw new MissingPrimaryKeyException($"Primary key is not found for table '{tableName}'.");
+                    throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                 }
 
                 // Create a temporary table
-                var primaryField = primaryKey.AsField();
+                var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
-                    primaryField.AsEnumerable(),
+                    primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Do the bulk insertion first
-                using (var dataTable = CreateDataTableWithSingleColumn(tempTableName, primaryField, primaryKeys))
+                using (var dataTable = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
                 {
-                    var options = primaryKey?.IsIdentity == true ?
+                    var options = primaryOrIdentityDbField?.IsIdentity == true ?
                         SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
                     await BulkInsertAsyncInternal(connection,
                         tempTableName,
@@ -1223,14 +1257,14 @@ namespace RepoDb
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
-                    primaryField.AsEnumerable(),
+                    primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Delete the actual delete
                 sql = GetBulkDeleteSqlText(tableName,
                     tempTableName,
-                    primaryField.AsEnumerable(),
+                    primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
@@ -1275,7 +1309,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1289,7 +1323,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -1316,7 +1350,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkDelete-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1331,20 +1365,25 @@ namespace RepoDb
                     .Select((index) => reader.GetName(index));
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -1376,6 +1415,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,
@@ -1441,7 +1488,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-delete operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-delete operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-delete operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -1457,7 +1504,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -1484,7 +1531,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkDelete-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1499,20 +1546,25 @@ namespace RepoDb
                     .Select((index) => dataTable.Columns[index].ColumnName);
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -1544,6 +1596,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,

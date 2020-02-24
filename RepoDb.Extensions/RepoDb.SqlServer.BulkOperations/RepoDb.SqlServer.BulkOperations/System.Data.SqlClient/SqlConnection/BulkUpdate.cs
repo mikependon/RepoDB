@@ -14,7 +14,7 @@ namespace RepoDb
     /// </summary>
     public static partial class SqlConnectionExtension
     {
-        #region BulkUpdate
+        #region BulkUpdate<TEntity>
 
         /// <summary>
         /// Bulk update a list of data entity objects into the database.
@@ -22,7 +22,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-updated.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -35,7 +35,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -66,7 +66,7 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-updated.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -80,7 +80,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -110,7 +110,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -123,7 +123,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -144,13 +144,17 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        #endregion
+
+        #region BulkUpdate(TableName)
+
         /// <summary>
         /// Bulk update an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -164,7 +168,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -190,7 +194,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -205,7 +209,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -233,7 +237,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -249,7 +253,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -272,7 +276,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkUpdateAsync
+        #region BulkUpdateAsync<TEntity>
 
         /// <summary>
         /// Bulk update a list of data entity objects into the database in an asynchronous way.
@@ -280,7 +284,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-updated.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -293,7 +297,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -324,7 +328,7 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of the data entities to be bulk-updated.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -338,7 +342,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -368,7 +372,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -381,7 +385,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -402,13 +406,17 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        #endregion
+
+        #region BulkUpdateAsync(TableName)
+
         /// <summary>
         /// Bulk update an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -422,7 +430,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -448,7 +456,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -463,7 +471,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -491,7 +499,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -507,7 +515,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -538,7 +546,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -552,7 +560,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -594,20 +602,25 @@ namespace RepoDb
                     .Select((index) => reader.GetName(index));
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -639,6 +652,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
@@ -705,7 +726,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -721,7 +742,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -763,20 +784,25 @@ namespace RepoDb
                     .Select((index) => dataTable.Columns[index].ColumnName);
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -808,6 +834,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
@@ -879,7 +913,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -893,7 +927,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -935,20 +969,25 @@ namespace RepoDb
                     .Select((index) => reader.GetName(index));
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -980,6 +1019,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,
@@ -1046,7 +1093,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-update operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-update operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-update operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
@@ -1062,7 +1109,7 @@ namespace RepoDb
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
@@ -1104,20 +1151,25 @@ namespace RepoDb
                     .Select((index) => dataTable.Columns[index].ColumnName);
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryKey = dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                    dbFields.FirstOrDefault(e => e.IsIdentity);
+                var identityDbField = dbFields?
+                    .FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField =
+                    (
+                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
+                        identityDbField
+                    );
                 var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
                 {
-                    if (primaryKey == null)
+                    if (primaryOrIdentityDbField == null)
                     {
-                        throw new MissingPrimaryKeyException($"No primary key found for table '{tableName}'.");
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                     }
                     else
                     {
-                        qualifiers = new[] { primaryKey.AsField() };
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
                     }
                 }
 
@@ -1149,6 +1201,14 @@ namespace RepoDb
                     fields,
                     dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
 
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,

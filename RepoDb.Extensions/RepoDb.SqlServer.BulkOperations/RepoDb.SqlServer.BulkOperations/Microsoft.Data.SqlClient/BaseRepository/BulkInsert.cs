@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public static partial class BaseRepositoryExtension
     {
-        #region BulkInsert
+        #region BulkInsert<TEntity>
 
         /// <summary>
         /// Bulk insert a list of data entity objects into the database.
@@ -25,7 +25,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -53,7 +53,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -68,7 +68,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsertAsync
+        #region BulkInsertAsync<TEntity>
 
         /// <summary>
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
@@ -84,7 +84,7 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -112,7 +112,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
             where TEntity : class

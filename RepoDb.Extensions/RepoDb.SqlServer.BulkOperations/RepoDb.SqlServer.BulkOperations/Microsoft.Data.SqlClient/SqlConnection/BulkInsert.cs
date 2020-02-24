@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +19,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsert
+        #region BulkInsert<TEntity>
 
         /// <summary>
         /// Bulk insert a list of data entity objects into the database.
@@ -37,7 +36,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -73,7 +72,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -107,7 +106,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this SqlConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -122,6 +121,10 @@ namespace RepoDb
                 batchSize: batchSize,
                 transaction: transaction);
         }
+
+        #endregion
+
+        #region BulkInsert(TableName)
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
@@ -139,7 +142,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -171,7 +174,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -206,7 +209,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -224,7 +227,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsertAsync
+        #region BulkInsertAsync<TEntity>
 
         /// <summary>
         /// Bulk insert a list of data entity objects into the database in an asynchronous way.
@@ -241,7 +244,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -277,7 +280,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -311,7 +314,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -326,6 +329,10 @@ namespace RepoDb
                 batchSize: batchSize,
                 transaction: transaction);
         }
+
+        #endregion
+
+        #region BulkInsertAsync(TableName)
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
@@ -343,7 +350,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -375,7 +382,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -410,7 +417,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -446,7 +453,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -454,14 +461,31 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
-            // Variables for the operation
+            // Variables needed
             var result = 0;
+            var dbFields = DbFieldCache
+                .Get(connection, tableName, transaction);
+            var readerFields = Enumerable
+                .Range(0, reader.FieldCount)
+                .Select((index) => reader.GetName(index));
+            var mappingFields = new List<Tuple<string, string>>();
+
+            // To fix the casing problem of the bulk inserts
+            foreach (var dbField in dbFields)
+            {
+                var readerField = readerFields.FirstOrDefault(field =>
+                    string.Equals(field, dbField.Name, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrEmpty(readerField))
+                {
+                    mappingFields.Add(new Tuple<string, string>(readerField, dbField.Name));
+                }
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy(connection, options, transaction))
+            using (var sqlBulkCopy = new SqlBulkCopy(connection, options.GetValueOrDefault(), transaction))
             {
                 // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
@@ -481,25 +505,8 @@ namespace RepoDb
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Variables needed
-                    var dbSetting = connection.GetDbSetting();
-                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                    var fields = Enumerable.Range(0, reader.FieldCount).Select((index) => reader.GetName(index));
-                    var filteredFields = new List<Tuple<string, string>>();
-
-                    // To fix the casing problem of the bulk inserts
-                    foreach (var dbField in dbFields)
-                    {
-                        var readerField = fields.FirstOrDefault(field =>
-                            string.Equals(field.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                        if (!string.IsNullOrEmpty(readerField))
-                        {
-                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(true, dbSetting)));
-                        }
-                    }
-
                     // Iterate the filtered fields
-                    foreach (var field in filteredFields)
+                    foreach (var field in mappingFields)
                     {
                         sqlBulkCopy.ColumnMappings.Add(field.Item1, field.Item2);
                     }
@@ -546,7 +553,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -554,14 +561,30 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
-            // Variables for the operation
+            // Variables needed
             var result = 0;
+            var dbFields = DbFieldCache
+                .Get(connection, tableName, transaction);
+            var tableFields = GetDataColumns(dataTable)
+                .Select(column => column.ColumnName);
+            var mappingFields = new List<Tuple<string, string>>();
+
+            // To fix the casing problem of the bulk inserts
+            foreach (var dbField in dbFields)
+            {
+                var tableField = tableFields.FirstOrDefault(field =>
+                    string.Equals(field, dbField.Name, StringComparison.OrdinalIgnoreCase));
+                if (tableField != null)
+                {
+                    mappingFields.Add(new Tuple<string, string>(tableField, dbField.Name));
+                }
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy(connection, options, transaction))
+            using (var sqlBulkCopy = new SqlBulkCopy(connection, options.GetValueOrDefault(), transaction))
             {
                 // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
@@ -581,25 +604,8 @@ namespace RepoDb
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Variables needed
-                    var dbSetting = connection.GetDbSetting();
-                    var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                    var fields = GetDataColumns(dataTable).Select(column => column.ColumnName);
-                    var filteredFields = new List<Tuple<string, string>>();
-
-                    // To fix the casing problem of the bulk inserts
-                    foreach (var dbField in dbFields)
-                    {
-                        var field = fields.FirstOrDefault(f =>
-                            string.Equals(f.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                        if (field != null)
-                        {
-                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(true, dbSetting)));
-                        }
-                    }
-
                     // Iterate the filtered fields
-                    foreach (var field in filteredFields)
+                    foreach (var field in mappingFields)
                     {
                         sqlBulkCopy.ColumnMappings.Add(field.Item1, field.Item2);
                     }
@@ -652,7 +658,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -660,14 +666,31 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
-            // Variables for the operation
+            // Variables needed
             var result = 0;
+            var dbFields = await DbFieldCache
+                .GetAsync(connection, tableName, transaction);
+            var readerFields = Enumerable
+                .Range(0, reader.FieldCount)
+                .Select((index) => reader.GetName(index));
+            var mappingFields = new List<Tuple<string, string>>();
+
+            // To fix the casing problem of the bulk inserts
+            foreach (var dbField in dbFields)
+            {
+                var readerField = readerFields.FirstOrDefault(field =>
+                    string.Equals(field, dbField.Name, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrEmpty(readerField))
+                {
+                    mappingFields.Add(new Tuple<string, string>(readerField, dbField.Name));
+                }
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy(connection, options, transaction))
+            using (var sqlBulkCopy = new SqlBulkCopy(connection, options.GetValueOrDefault(), transaction))
             {
                 // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
@@ -687,25 +710,8 @@ namespace RepoDb
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Variables needed
-                    var dbSetting = connection.GetDbSetting();
-                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                    var fields = Enumerable.Range(0, reader.FieldCount).Select((index) => reader.GetName(index));
-                    var filteredFields = new List<Tuple<string, string>>();
-
-                    // To fix the casing problem of the bulk inserts
-                    foreach (var dbField in dbFields)
-                    {
-                        var readerField = fields.FirstOrDefault(field =>
-                            string.Equals(field.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                        if (!string.IsNullOrEmpty(readerField))
-                        {
-                            filteredFields.Add(new Tuple<string, string>(readerField, dbField.Name.AsUnquoted(true, dbSetting)));
-                        }
-                    }
-
                     // Iterate the filtered fields
-                    foreach (var field in filteredFields)
+                    foreach (var field in mappingFields)
                     {
                         sqlBulkCopy.ColumnMappings.Add(field.Item1, field.Item2);
                     }
@@ -752,7 +758,7 @@ namespace RepoDb
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
+            SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null)
@@ -760,14 +766,30 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
-            // Variables for the operation
+            // Variables needed
             var result = 0;
+            var dbFields = await DbFieldCache
+                .GetAsync(connection, tableName, transaction);
+            var tableFields = GetDataColumns(dataTable)
+                .Select(column => column.ColumnName);
+            var mappingFields = new List<Tuple<string, string>>();
+
+            // To fix the casing problem of the bulk inserts
+            foreach (var dbField in dbFields)
+            {
+                var tableField = tableFields.FirstOrDefault(field =>
+                    string.Equals(field, dbField.Name, StringComparison.OrdinalIgnoreCase));
+                if (tableField != null)
+                {
+                    mappingFields.Add(new Tuple<string, string>(tableField, dbField.Name));
+                }
+            }
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var sqlBulkCopy = new SqlBulkCopy(connection, options, transaction))
+            using (var sqlBulkCopy = new SqlBulkCopy(connection, options.GetValueOrDefault(), transaction))
             {
                 // Set the destinationtable
                 sqlBulkCopy.DestinationTableName = tableName;
@@ -787,25 +809,8 @@ namespace RepoDb
                 // Add the mappings
                 if (mappings == null)
                 {
-                    // Variables needed
-                    var dbSetting = connection.GetDbSetting();
-                    var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                    var fields = GetDataColumns(dataTable).Select(column => column.ColumnName);
-                    var filteredFields = new List<Tuple<string, string>>();
-
-                    // To fix the casing problem of the bulk inserts
-                    foreach (var dbField in dbFields)
-                    {
-                        var field = fields.FirstOrDefault(f =>
-                            string.Equals(f.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                        if (field != null)
-                        {
-                            filteredFields.Add(new Tuple<string, string>(field, dbField.Name.AsUnquoted(true, dbSetting)));
-                        }
-                    }
-
                     // Iterate the filtered fields
-                    foreach (var field in filteredFields)
+                    foreach (var field in mappingFields)
                     {
                         sqlBulkCopy.ColumnMappings.Add(field.Item1, field.Item2);
                     }
