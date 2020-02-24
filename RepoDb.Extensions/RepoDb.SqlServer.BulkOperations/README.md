@@ -23,7 +23,7 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 ## Core Features
 
 - [Special Arguments](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#special-arguments)
-- [BulkOperations Asynchronous Methods](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkoperations-asynchronous-methods)
+- [Async Methods](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#async-methods)
 - [Caveats](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#caveats)
 - [BulkDelete via PrimaryKeys](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete-via-primarykeys)
 - [BulkDelete via DataEntities](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete-via-dataentities)
@@ -68,13 +68,13 @@ The argument *qualifiers* is used to define the qualifier fields to be used in t
 
 The argument *usePhysicalPseudoTempTable* is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: *#TableName*) is used.
 
-## BulkOperations Asynchronous Methods
+## Async Methods
 
-All synchronous methods has an equivalent asynchronous methods.
+All synchronous methods has an equivalent asynchronous (Async) methods.
 
 ## Caveats
 
-RepoDb is automatically setting the value of *options* argument to *SqlBulkCopyOptions.KeepIdentity* when calling the *BulkDelete*, *BulkMerge* and *BulkDelete* if you have not passed any *qualifiers* and if your table has an *IDENTITY* primary key column. The same logic will apply if there is no primary key but has an *IDENTITY* column defined in the table.
+RepoDb is automatically setting the value of *options* argument to *SqlBulkCopyOptions.KeepIdentity* when calling the *BulkDelete*, *BulkMerge* and *BulkUpdate* if you have not passed any *qualifiers* and if your table has an *IDENTITY* primary key column. The same logic will apply if there is no primary key but has an *IDENTITY* column defined in the table.
 
 ## BulkDelete
 
