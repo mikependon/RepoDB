@@ -587,7 +587,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkUpdate-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkUpdate_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -769,7 +769,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkUpdate-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkUpdate_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -954,7 +954,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkUpdate-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkUpdate_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1136,7 +1136,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("RepoDb-BulkUpdate-", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkUpdate_", tableName);
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
