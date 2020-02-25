@@ -77,6 +77,26 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
+        /// Gets the actual name of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The actual table name.</returns>
+        private static string GetTableName(string tableName,
+            IDbSetting dbSetting)
+        {
+            // Get the schema and table name
+            if (tableName.IndexOf(dbSetting.SchemaSeparator) > 0)
+            {
+                var splitted = tableName.Split(dbSetting.SchemaSeparator.ToCharArray());
+                return splitted[1].AsUnquoted(true, dbSetting);
+            }
+
+            // Return the unquoted
+            return tableName.AsUnquoted(true, dbSetting);
+        }
+
+        /// <summary>
         /// Validates whether the transaction object connection is object is equals to the connection object.
         /// </summary>
         /// <param name="connection">The connection object to be validated.</param>
@@ -120,6 +140,19 @@ namespace RepoDb
             foreach (var row in rows)
             {
                 yield return row;
+            }
+        }
+
+        /// <summary>
+        /// Gets the equivalent list of <see cref="BulkInsertMapItem"/> from the list of the <see cref="Field"/> objects.
+        /// </summary>
+        /// <param name="fields">The list of <see cref="Field"/> objects to extract.</param>
+        /// <returns>The list of <see cref="BulkInsertMapItem"/> objects.</returns>
+        private static IEnumerable<BulkInsertMapItem> GetMapItemsFromFields(IEnumerable<Field> fields)
+        {
+            foreach (var field in fields)
+            {
+                yield return new BulkInsertMapItem(field.Name, field.Name);
             }
         }
 

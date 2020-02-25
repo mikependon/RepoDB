@@ -686,6 +686,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -705,7 +706,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -722,7 +723,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         dbFields.FirstOrDefault(e => e.IsIdentity)
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Throw an error if there are is no primary key
                 if (primaryOrIdentityDbField == null)
@@ -829,6 +829,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -848,7 +849,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -870,7 +871,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -920,6 +920,12 @@ namespace RepoDb
                         field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
+                }
+
+                // If there is no mapping
+                if (mappings?.Any() != true)
+                {
+                    mappings = GetMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first
@@ -1010,6 +1016,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -1029,7 +1036,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1051,7 +1058,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1101,6 +1107,12 @@ namespace RepoDb
                         field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
+                }
+
+                // If there is no mapping
+                if (mappings?.Any() != true)
+                {
+                    mappings = GetMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first
@@ -1188,6 +1200,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -1207,7 +1220,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1224,7 +1237,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         dbFields.FirstOrDefault(e => e.IsIdentity)
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Throw an error if there are is no primary key
                 if (primaryOrIdentityDbField == null)
@@ -1331,6 +1343,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -1350,7 +1363,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1372,7 +1385,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1422,6 +1434,12 @@ namespace RepoDb
                         field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
+                }
+
+                // If there is no mapping
+                if (mappings?.Any() != true)
+                {
+                    mappings = GetMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first
@@ -1512,6 +1530,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -1531,7 +1550,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1553,7 +1572,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1603,6 +1621,12 @@ namespace RepoDb
                         field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
+                }
+
+                // If there is no mapping
+                if (mappings?.Any() != true)
+                {
+                    mappings = GetMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first

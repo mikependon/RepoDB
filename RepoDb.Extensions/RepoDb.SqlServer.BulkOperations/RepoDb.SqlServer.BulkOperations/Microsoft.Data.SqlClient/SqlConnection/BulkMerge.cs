@@ -568,6 +568,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -587,7 +588,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkMerge_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -609,7 +610,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -751,6 +751,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -770,7 +771,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkMerge_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -792,7 +793,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -937,6 +937,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -956,7 +957,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkMerge_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -978,7 +979,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1120,6 +1120,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Variables
+            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -1139,7 +1140,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkMerge_", tableName);
+            var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
             if (usePhysicalPseudoTempTable != true)
@@ -1161,7 +1162,6 @@ namespace RepoDb
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
                         identityDbField
                     );
-                var dbSetting = connection.GetDbSetting();
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
