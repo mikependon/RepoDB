@@ -25,19 +25,10 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 - [Special Arguments](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#special-arguments)
 - [Async Methods](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#async-methods)
 - [Caveats](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#caveats)
-- [BulkDelete via PrimaryKeys](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete-via-primarykeys)
-- [BulkDelete via DataEntities](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete-via-dataentities)
-- [BulkDelete via DataTable](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete-via-datatable)
-- [BulkDelete via DbDataReader](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete-via-dbdatareader)
-- [BulkInsert via DataEntities](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert-via-dataentities)
-- [BulkInsert via DataTable](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert-via-datatable)
-- [BulkInsert via DbDataReader](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert-via-dbdatareader)
-- [BulkMerge via DataEntities](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge-via-dataentities)
-- [BulkMerge via DataTable](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge-via-datatable)
-- [BulkMerge via DbDataReader](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge-via-dbdatareader)
-- [BulkUpdate via DataEntities](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate-via-dataentities)
-- [BulkUpdate via DataTable](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate-via-datatable)
-- [BulkUpdate via DbDataReader](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate-via-dbdatareader)
+- [BulkDelete](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete)
+- [BulkInsert](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert)
+- [BulkMerge](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge)
+- [BulkUpdate](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate)
 
 ## Community engagements
 
@@ -48,7 +39,7 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright Â© 2019 - Michael Camara Pendon
 
 --------
 
