@@ -9,9 +9,9 @@ An extension library that contains the official Bulk Operations for RepoDb.
 
 ## Why use Bulk Operations?
 
-Basically, we do the normal *Delete*, *Insert*, *Merge* and *Update* operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the batch operations.
+Basically, we do the normal *Delete*, *Insert*, *Merge* and *Update* operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the CRUD operations.
 
-With bulk operations, the data is brought from the client application to the database via *BulkInsert* process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
+With bulk operations, all data is brought from the client application to the database via *BulkInsert* process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
 
 The bulk operations can hugely improve the performance by more than 90% when processing a large datasets.
 
@@ -51,6 +51,12 @@ At the *Package Manager Console*, write the command below.
 > Install-Package RepoDb.SqlServer.BulkOperations
 ```
 
+Then call the bootstrapper once.
+
+```csharp
+RepoDb.SqlServerBootstrap.Initialize();
+```
+
 ## Special Arguments
 
 The arguments *qualifiers* and *usePhysicalPseudoTempTable* is provided at *BulkDelete*, *BulkMerge* and *BulkUpdate* operations.
@@ -61,11 +67,13 @@ The argument *usePhysicalPseudoTempTable* is used to define whether a physical p
 
 ## Async Methods
 
-All synchronous methods has an equivalent asynchronous (Async) methods.
+All synchronous methods has an equivalent asynchronous (Async) methods (ie: *BulkDeleteAsync*, *BulkInsertAsync*, *BulkMergeAsync* and *BulkUpdateAsync*).
 
 ## Caveats
 
 RepoDb is automatically setting the value of *options* argument to *SqlBulkCopyOptions.KeepIdentity* when calling the *BulkDelete*, *BulkMerge* and *BulkUpdate* if you have not passed any *qualifiers* and if your table has an *IDENTITY* primary key column. The same logic will apply if there is no primary key but has an *IDENTITY* column defined in the table.
+
+In addition, when calling the *BulkDelete*, *BulkMerge* and *BulkUpdate* operations, the library is creating a pseudo temporary table behind the scene. It requires your user to have the correct privilege to create a table in the database, otherwise a *SqlException* will be thrown.
 
 ## BulkDelete
 
