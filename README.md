@@ -11,30 +11,11 @@
 [![Documentation](https://img.shields.io/badge/docs-library-yellowgreen)](https://repodb.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-apache-important)](http://apache.org/licenses/LICENSE-2.0.html)
 
-## Important Notice!!!
-
-Starting v1.10.7, the supports to [*SQL Server*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer) has been moved from [*RepoDb.Core*](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core) into its own dedicated package named [*RepoDb.SqlServer*](https://www.nuget.org/packages/RepoDb.SqlServer).
-
-To work with *SQL Server*, install the following packages.
-
-```csharp
-> Install-Package RepoDb.SqlServer
-> Install-Package RepoDb.SqlServer.BulkOperations
-```
-
-And call the bootstrapper once.
-
-```csharp
-RepoDb.SqlServerBootstrap.Initialize();
-```
-
-The rest is the same as before.
-
-----------
-
 ## RepoDb - a hybrid ORM Library for .NET.
 
 RepoDb is a .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “basic” and “advance” operations during the development.
+
+RepoDb is your best alternative ORM to both Dapper and EntityFramework.
 
 <details>
 <summary><b>Why use RepoDb as your ORM?</b></summary>
