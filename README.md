@@ -15,7 +15,7 @@
 
 RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
 
-It is the best alternative ORM to both Dapper and EntityFramework.
+RepoDb is the best alternative ORM to both Dapper and EntityFramework.
 
 <details>
 <summary><b>Why use RepoDb as your ORM?</b></summary>
