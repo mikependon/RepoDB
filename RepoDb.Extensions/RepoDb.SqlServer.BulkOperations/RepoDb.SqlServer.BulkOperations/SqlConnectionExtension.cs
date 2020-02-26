@@ -148,7 +148,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of <see cref="Field"/> objects to extract.</param>
         /// <returns>The list of <see cref="BulkInsertMapItem"/> objects.</returns>
-        private static IEnumerable<BulkInsertMapItem> GetMapItemsFromFields(IEnumerable<Field> fields)
+        private static IEnumerable<BulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
         {
             foreach (var field in fields)
             {

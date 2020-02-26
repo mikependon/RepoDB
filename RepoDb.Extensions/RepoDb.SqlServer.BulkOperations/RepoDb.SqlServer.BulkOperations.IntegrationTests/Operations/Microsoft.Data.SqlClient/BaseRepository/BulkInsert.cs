@@ -11,7 +11,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class MicrosoftSqlConnectionBaseRepositoryOperationsTest
+    public class MicrosoftSqlConnectionBaseRepositoryBulkInsertOperationsTest
     {
         [TestInitialize]
         public void Initialize()

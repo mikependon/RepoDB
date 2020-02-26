@@ -925,7 +925,7 @@ namespace RepoDb
                 // If there is no mapping
                 if (mappings?.Any() != true)
                 {
-                    mappings = GetMapItemsFromFields(fields);
+                    mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first
@@ -1112,7 +1112,7 @@ namespace RepoDb
                 // If there is no mapping
                 if (mappings?.Any() != true)
                 {
-                    mappings = GetMapItemsFromFields(fields);
+                    mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first
@@ -1439,7 +1439,7 @@ namespace RepoDb
                 // If there is no mapping
                 if (mappings?.Any() != true)
                 {
-                    mappings = GetMapItemsFromFields(fields);
+                    mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first
@@ -1626,7 +1626,7 @@ namespace RepoDb
                 // If there is no mapping
                 if (mappings?.Any() != true)
                 {
-                    mappings = GetMapItemsFromFields(fields);
+                    mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
                 // Do the bulk insertion first

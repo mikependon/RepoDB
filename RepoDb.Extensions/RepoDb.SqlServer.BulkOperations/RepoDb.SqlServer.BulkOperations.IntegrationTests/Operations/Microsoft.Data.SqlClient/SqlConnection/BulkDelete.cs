@@ -83,6 +83,58 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteForEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables,
+                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteForEntitiesWithUsePhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables,
+                    usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
         public void TestMicrosoftSqlConnectionBulkDeleteForEntitiesWithMappings()
         {
             // Setup
@@ -480,6 +532,35 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkDelete(TableName)
 
         [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteForTableNameEntitiesViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => (object)e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys: primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
         public void TestMicrosoftSqlConnectionBulkDeleteForTableNameDataEntities()
         {
             // Setup
@@ -492,6 +573,60 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteForTableNameDataEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
+                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
+                    usePhysicalPseudoTempTable: true);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -836,6 +971,58 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteAsyncForEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
+                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteAsyncForEntitiesWithUsePhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
+                    usePhysicalPseudoTempTable: true).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1268,6 +1455,35 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkDeleteAsync(TableName)
 
         [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteAsyncForTableNameEntitiesViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => (object)e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys: primaryKeys).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
         public void TestMicrosoftSqlConnectionBulkDeleteAsyncForTableNameDataEntities()
         {
             // Setup
@@ -1280,6 +1496,60 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteAsyncForTableNameDataEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
+                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
+                    usePhysicalPseudoTempTable: true).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
