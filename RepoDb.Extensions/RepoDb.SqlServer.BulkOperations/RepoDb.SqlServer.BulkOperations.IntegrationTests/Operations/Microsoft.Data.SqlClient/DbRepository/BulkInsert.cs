@@ -12,7 +12,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class DbRepositoryOperationsTest
+    public class MicrosoftSqlConnectionDbRepositoryOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -30,7 +30,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsert<TEntity>
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntities()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -56,7 +56,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -92,7 +92,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnDbRepositoryBulkInsertForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -117,7 +117,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesDbDataReader()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -154,7 +154,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -202,7 +202,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnDbRepositoryBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -242,7 +242,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesDataTable()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -284,7 +284,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -337,7 +337,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnDbRepositoryBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -386,7 +386,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsert<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -412,7 +412,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -452,7 +452,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsert(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForTableNameEntities()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForTableNameEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -478,7 +478,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForTableNameDbDataReader()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -515,7 +515,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForTableNameDataTable()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -561,7 +561,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsertAsync<TEntity>
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntities()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -587,7 +587,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -623,7 +623,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDbRepositoryBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -651,7 +651,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesDbDataReader()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -688,7 +688,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -736,7 +736,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDbRepositoryBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -779,7 +779,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesDataTable()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -821,7 +821,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -874,7 +874,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDbRepositoryBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -926,7 +926,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsertAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -952,7 +952,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -992,7 +992,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsertAsync(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForTableNameEntities()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForTableNameEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1018,7 +1018,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForTableNameDbDataReader()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1055,7 +1055,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForTableNameDataTable()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);

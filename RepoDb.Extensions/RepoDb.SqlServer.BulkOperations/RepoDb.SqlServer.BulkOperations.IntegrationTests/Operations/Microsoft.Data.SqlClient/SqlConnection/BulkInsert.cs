@@ -12,7 +12,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class SqlConnectionBulkDeleteOperationsTest
+    public class MicrosoftSqlConnectionBulkInsertOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -27,70 +27,42 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             Database.Cleanup();
         }
 
-        #region BulkDelete<TEntity>
+        #region BulkInsert<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesViaPrimaryKeys()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
-
+            
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var primaryKeys = tables.Select(e => (object)e.Id);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDelete<BulkOperationIdentityTable>(primaryKeys);
+                var bulkInsertResult = connection.BulkInsert(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntities()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDelete(tables);
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
-
-                // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(0, countResult);
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -102,24 +74,25 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDelete(tables);
+                var bulkInsertResult = connection.BulkInsert(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -139,12 +112,12 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.BulkDelete(tables, null, mappings);
+                connection.BulkInsert(tables, mappings);
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -165,30 +138,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>((DbDataReader)reader);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -214,23 +186,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader, null, mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>((DbDataReader)reader, mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -263,14 +235,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader, null, mappings);
+                        destinationConnection.BulkInsert<BulkOperationIdentityTable>((DbDataReader)reader, mappings);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -295,16 +267,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>(table);
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -312,14 +284,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -349,16 +320,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -366,7 +337,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -403,7 +374,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings);
+                            destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings);
                         }
                     }
                 }
@@ -412,10 +383,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkDelete<TEntity>(Extra Fields)
+        #region BulkInsert<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -423,31 +394,31 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDelete(tables);
+                var bulkInsertResult = connection.BulkInsert(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -459,28 +430,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDelete(tables);
+                var bulkInsertResult = connection.BulkInsert(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         #endregion
 
-        #region BulkDelete(TableName)
+        #region BulkInsert(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForTableNameDataEntities()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -488,24 +460,25 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForTableNameDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -526,30 +499,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForTableNameDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -575,26 +547,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            null,
-                            mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -627,20 +596,73 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            null,
-                            mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert("InvalidTable", (DbDataReader)reader);
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    // Open the destination connection
+                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    {
+                        // Act
+                        destinationConnection.BulkInsert("MissingTable", (DbDataReader)reader);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForTableNameDbDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -665,16 +687,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -682,14 +704,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteForTableNameDbDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -719,20 +740,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -740,7 +757,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteForTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -777,14 +794,76 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsNotValid()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            destinationConnection.BulkInsert("InvalidTable", table, DataRowState.Unchanged);
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsMissing()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            destinationConnection.BulkInsert("MissingTable", table, DataRowState.Unchanged);
                         }
                     }
                 }
@@ -793,10 +872,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkDeleteAsync<TEntity>
+        #region BulkInsertAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesViaPrimaryKeys()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -804,59 +883,31 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Setup
-                var primaryKeys = tables.Select(e => (object)e.Id);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync<BulkOperationIdentityTable>(primaryKeys).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntities()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
-
-                // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
-
-                // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
-
-                // Assert
-                Assert.AreEqual(0, countResult);
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -868,24 +919,25 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -905,17 +957,15 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
-                    null,
-                    mappings);
+                var bulkInsertResult = connection.BulkInsertAsync(tables, mappings);
 
                 // Trigger
-                var result = bulkDeleteResult.Result;
+                var result = bulkInsertResult.Result;
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -936,30 +986,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -985,25 +1034,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            null,
-                            mappings).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>((DbDataReader)reader, mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1036,19 +1083,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            null,
-                            mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>((DbDataReader)reader, mappings);
 
                         // Trigger
-                        var result = bulkDeleteResult.Result;
+                        var result = bulkInsertResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1073,16 +1118,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1090,14 +1135,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1127,19 +1171,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1147,7 +1188,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1184,13 +1225,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, DataRowState.Unchanged, mappings);
 
                             // Trigger
-                            var result = bulkDeleteResult.Result;
+                            var result = bulkInsertResult.Result;
                         }
                     }
                 }
@@ -1199,10 +1237,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkDeleteAsync<TEntity>(Extra Fields)
+        #region BulkInsertAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -1210,32 +1248,31 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -1247,28 +1284,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         #endregion
 
-        #region BulkDeleteAsync(TableName)
+        #region BulkInsertAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForTableNameDataEntities()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1276,24 +1314,25 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
-
-                // Act
-                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkDeleteResult);
+                Assert.AreEqual(tables.Count, bulkInsertResult);
 
                 // Act
-                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(0, countResult);
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForTableNameDbDataReader()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1314,30 +1353,29 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1363,26 +1401,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            null,
-                            mappings).Result;
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader, mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+                        Assert.AreEqual(tables.Count, bulkInsertResult);
 
                         // Act
-                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                        var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                         // Assert
-                        Assert.AreEqual(0, countResult);
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1415,20 +1450,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader,
-                            null,
-                            mappings);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader, mappings);
 
                         // Trigger
-                        var result = bulkDeleteResult.Result;
+                        var result = bulkInsertResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1449,17 +1481,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync("InvalidTable", (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync("InvalidTable", (DbDataReader)reader);
 
                         // Trigger
-                        var result = bulkDeleteResult.Result;
+                        var result = bulkInsertResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1480,17 +1512,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                     using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync("MissingTable", (DbDataReader)reader);
+                        var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", (DbDataReader)reader);
 
                         // Trigger
-                        var result = bulkDeleteResult.Result;
+                        var result = bulkInsertResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForTableNameDataTable()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1515,16 +1547,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1532,14 +1564,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBulkDeleteAsyncForTableNameDataTableWithMappings()
+        public void TestMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1569,20 +1600,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings).Result;
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
 
                             // Act
-                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
 
                             // Assert
-                            Assert.AreEqual(0, countResult);
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
                         }
                     }
                 }
@@ -1590,7 +1617,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1627,14 +1654,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                                table,
-                                null,
-                                DataRowState.Unchanged,
-                                mappings);
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, DataRowState.Unchanged, mappings);
 
                             // Trigger
-                            var result = bulkDeleteResult.Result;
+                            var result = bulkInsertResult.Result;
                         }
                     }
                 }
@@ -1642,7 +1665,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1667,10 +1690,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync("InvalidTable", table);
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync("InvalidTable", table);
 
                             // Trigger
-                            var result = bulkDeleteResult.Result;
+                            var result = bulkInsertResult.Result;
                         }
                     }
                 }
@@ -1678,7 +1701,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkInsertAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1703,13 +1726,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync("MissingTable",
-                                table,
-                                null,
-                                DataRowState.Unchanged);
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync("MissingTable", table, DataRowState.Unchanged);
 
                             // Trigger
-                            var result = bulkDeleteResult.Result;
+                            var result = bulkInsertResult.Result;
                         }
                     }
                 }

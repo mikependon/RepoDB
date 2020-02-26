@@ -11,7 +11,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class BaseRepositoryOperationsTest
+    public class MicrosoftSqlConnectionBaseRepositoryOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -47,7 +47,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsert
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertForEntities()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -73,7 +73,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -109,7 +109,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSqlConnectionBulkInsertForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBaseRepositoryBulkInsertForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -138,7 +138,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsert(Extra Fields)
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -165,7 +165,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -206,7 +206,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsert(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForTableNameEntities()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertForTableNameEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -236,7 +236,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsertAsync
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertAsyncForEntities()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -262,7 +262,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -298,7 +298,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBaseRepositoryBulkInsertAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -331,7 +331,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsertAsync(Extra Fields)
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -358,7 +358,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBaseRepositoryBulkInsertAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -399,7 +399,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkInsertAsync(TableName)
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForTableNameEntities()
+        public void TestMicrosoftSqlConnectionDbRepositoryBulkInsertAsyncForTableNameEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
