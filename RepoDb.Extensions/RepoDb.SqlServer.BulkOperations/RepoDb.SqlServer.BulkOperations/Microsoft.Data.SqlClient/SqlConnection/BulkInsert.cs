@@ -47,6 +47,7 @@ namespace RepoDb
                 return BulkInsertInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
+                    dbFields: null,
                     mappings: mappings,
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -83,6 +84,7 @@ namespace RepoDb
                 return BulkInsertInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,
+                    dbFields: null,
                     mappings: mappings,
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -115,6 +117,7 @@ namespace RepoDb
             return BulkInsertInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
+                    dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -150,6 +153,7 @@ namespace RepoDb
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -184,6 +188,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -218,6 +223,7 @@ namespace RepoDb
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -255,6 +261,7 @@ namespace RepoDb
                 return await BulkInsertAsyncInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
+                    dbFields: null,
                     mappings: mappings,
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -291,6 +298,7 @@ namespace RepoDb
                 return await BulkInsertAsyncInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,
+                    dbFields: null,
                     mappings: mappings,
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
@@ -323,6 +331,7 @@ namespace RepoDb
             return await BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -358,6 +367,7 @@ namespace RepoDb
             return await BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -392,6 +402,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -426,6 +437,7 @@ namespace RepoDb
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,
+                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -443,6 +455,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -452,6 +465,7 @@ namespace RepoDb
         internal static int BulkInsertInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
+            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
@@ -461,10 +475,15 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
+            // Get the DB Fields
+            dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction);
+            if (dbFields?.Any() != true)
+            {
+                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+            }
+
             // Variables needed
             var result = 0;
-            var dbFields = DbFieldCache
-                .Get(connection, tableName, transaction);
             var readerFields = Enumerable
                 .Range(0, reader.FieldCount)
                 .Select((index) => reader.GetName(index));
@@ -542,6 +561,7 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -552,6 +572,7 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
+            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
@@ -561,10 +582,15 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
+            // Get the DB Fields
+            dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction);
+            if (dbFields?.Any() != true)
+            {
+                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+            }
+
             // Variables needed
             var result = 0;
-            var dbFields = DbFieldCache
-                .Get(connection, tableName, transaction);
             var tableFields = GetDataColumns(dataTable)
                 .Select(column => column.ColumnName);
             var mappingFields = new List<Tuple<string, string>>();
@@ -648,6 +674,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -657,6 +684,7 @@ namespace RepoDb
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
+            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
@@ -666,10 +694,15 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
+            // Get the DB Fields
+            dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction);
+            if (dbFields?.Any() != true)
+            {
+                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+            }
+
             // Variables needed
             var result = 0;
-            var dbFields = await DbFieldCache
-                .GetAsync(connection, tableName, transaction);
             var readerFields = Enumerable
                 .Range(0, reader.FieldCount)
                 .Select((index) => reader.GetName(index));
@@ -747,6 +780,7 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
+        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
@@ -757,6 +791,7 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
+            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
@@ -766,10 +801,15 @@ namespace RepoDb
             // Validate the objects
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
+            // Get the DB Fields
+            dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction);
+            if (dbFields?.Any() != true)
+            {
+                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+            }
+
             // Variables needed
             var result = 0;
-            var dbFields = await DbFieldCache
-                .GetAsync(connection, tableName, transaction);
             var tableFields = GetDataColumns(dataTable)
                 .Select(column => column.ColumnName);
             var mappingFields = new List<Tuple<string, string>>();

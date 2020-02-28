@@ -12,7 +12,7 @@ using System.Linq;
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class SqlConnectionBulkDeleteOperationsTest
+    public class MicrosoftSqlConnectionBulkDeleteOperationsTest
     {
         [TestInitialize]
         public void Initialize()

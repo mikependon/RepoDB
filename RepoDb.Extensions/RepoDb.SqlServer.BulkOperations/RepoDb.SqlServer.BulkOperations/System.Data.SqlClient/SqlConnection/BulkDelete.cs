@@ -718,6 +718,12 @@ namespace RepoDb
             {
                 // Get the DB Fields
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
+                // Variables needed
                 var primaryOrIdentityDbField =
                     (
                         dbFields.FirstOrDefault(e => e.IsPrimary) ??
@@ -746,6 +752,8 @@ namespace RepoDb
                     BulkInsertInternal(connection,
                         tempTableName,
                         dataTable: dataTable,
+                        rowState: null,
+                        dbFields: primaryOrIdentityDbField.AsEnumerable(),
                         mappings: null,
                         options: options,
                         bulkCopyTimeout: bulkCopyTimeout,
@@ -860,17 +868,19 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
+                // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -928,10 +938,16 @@ namespace RepoDb
                     mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
                     tempTableName,
                     reader,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -1047,17 +1063,19 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
+                // Get the DB Fields
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
                     .Select((index) => dataTable.Columns[index].ColumnName);
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1115,11 +1133,17 @@ namespace RepoDb
                     mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
                     tempTableName,
                     dataTable,
                     rowState,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -1231,12 +1255,16 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        dbFields.FirstOrDefault(e => e.IsIdentity)
-                    );
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
+                // Variables needed
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Throw an error if there are is no primary key
                 if (primaryOrIdentityDbField == null)
@@ -1260,6 +1288,8 @@ namespace RepoDb
                     await BulkInsertAsyncInternal(connection,
                         tempTableName,
                         dataTable: dataTable,
+                        rowState: null,
+                        dbFields: primaryOrIdentityDbField.AsEnumerable(),
                         mappings: null,
                         options: options,
                         bulkCopyTimeout: bulkCopyTimeout,
@@ -1374,17 +1404,19 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
+                // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1442,10 +1474,16 @@ namespace RepoDb
                     mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,
                     tempTableName,
                     reader,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -1561,17 +1599,19 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
+                // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
                     .Select((index) => dataTable.Columns[index].ColumnName);
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1629,11 +1669,17 @@ namespace RepoDb
                     mappings = GetBulkInsertMapItemsFromFields(fields);
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,
                     tempTableName,
                     dataTable,
                     rowState,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
