@@ -177,7 +177,7 @@ namespace RepoDb
                 .From()
                 .TableNameFrom(tableName, dbSetting)
                 .Where()
-                .WriteText("1 = 0")
+                .WriteText("(1 = 0)")
                 .End();
 
             // Return the text
@@ -348,6 +348,8 @@ namespace RepoDb
             string tempTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
+            Field primaryField,
+            Field identityField,
             string hints,
             IDbSetting dbSetting)
         {
@@ -367,6 +369,7 @@ namespace RepoDb
 
             // Updatable fields
             var updateableFields = fields
+                .Where(field => field != identityField && field != primaryField)
                 .Where(field =>
                     qualifiers.Any(
                         q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);

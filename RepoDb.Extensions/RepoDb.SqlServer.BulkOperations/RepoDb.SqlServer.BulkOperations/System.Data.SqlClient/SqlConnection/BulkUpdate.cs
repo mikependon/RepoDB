@@ -598,18 +598,20 @@ namespace RepoDb
 
             try
             {
+                // Get the DB Fields
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -654,17 +656,26 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null && identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                if (options == null &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
+
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
                     tempTableName,
                     reader,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -682,6 +693,8 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     qualifiers,
+                    primaryDbField?.AsField(),
+                    identityDbField?.AsField(),
                     hints,
                     dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
@@ -780,18 +793,20 @@ namespace RepoDb
 
             try
             {
+                // Get the DB Fields
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
                     .Select((index) => dataTable.Columns[index].ColumnName);
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -843,11 +858,17 @@ namespace RepoDb
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 BulkInsertInternal(connection,
                     tempTableName,
                     dataTable,
                     rowState,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -865,6 +886,8 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     qualifiers,
+                    primaryDbField?.AsField(),
+                    identityDbField?.AsField(),
                     hints,
                     dbSetting);
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
@@ -965,18 +988,20 @@ namespace RepoDb
 
             try
             {
+                // Get the DB Fields
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1028,10 +1053,16 @@ namespace RepoDb
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,
                     tempTableName,
                     reader,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -1049,6 +1080,8 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     qualifiers,
+                    primaryDbField?.AsField(),
+                    identityDbField?.AsField(),
                     hints,
                     dbSetting);
                 result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
@@ -1147,18 +1180,20 @@ namespace RepoDb
 
             try
             {
+                // Get the DB Fields
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+                if (dbFields?.Any() != true)
+                {
+                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
+                }
+
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
                     .Select((index) => dataTable.Columns[index].ColumnName);
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-                var identityDbField = dbFields?
-                    .FirstOrDefault(dbField => dbField.IsIdentity);
-                var primaryOrIdentityDbField =
-                    (
-                        dbFields.FirstOrDefault(e => e.IsPrimary) ??
-                        identityDbField
-                    );
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
                 if (qualifiers?.Any() != true)
@@ -1210,11 +1245,17 @@ namespace RepoDb
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
 
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
                 // Do the bulk insertion first
                 await BulkInsertAsyncInternal(connection,
                     tempTableName,
                     dataTable,
                     rowState,
+                    filteredDbFields,
                     mappings,
                     options,
                     bulkCopyTimeout,
@@ -1232,6 +1273,8 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     qualifiers,
+                    primaryDbField?.AsField(),
+                    identityDbField?.AsField(),
                     hints,
                     dbSetting);
                 result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);

@@ -196,6 +196,25 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
             };
         }
 
+        /// <summary>
+        /// Updates a list of <see cref="BulkOperationIdentityTable"/> objects.
+        /// </summary>
+        public static void UpdateBulkOperationIdentityTables(List<BulkOperationIdentityTable> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                //table.RowGuid = Guid.NewGuid();
+                table.ColumnBit = true;
+                table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue));
+                table.ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue));
+                //table.ColumnInt = random.Next(int.MinValue, int.MaxValue);
+                table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
+            }
+        }
+
         #endregion
 
         #region WithExtraFieldsBulkOperationIdentityTable
@@ -250,6 +269,26 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
                 ColumnNVarChar = Guid.NewGuid().ToString()
             };
+        }
+
+        /// <summary>
+        /// Updates a list of <see cref="WithExtraFieldsBulkOperationIdentityTable"/> objects.
+        /// </summary>
+        public static void UpdateWithExtraFieldsBulkOperationIdentityTables(List<WithExtraFieldsBulkOperationIdentityTable> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                //table.RowGuid = Guid.NewGuid();
+                table.ColumnBit = true;
+                table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
+                table.ColumnDateTime2 = DateTime.UtcNow;
+                table.ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue));
+                table.ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue));
+                //table.ColumnInt = random.Next(int.MinValue, int.MaxValue);
+                table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
+                table.ExtraField = $"{table.ExtraField}-Updated";
+            }
         }
 
         #endregion
