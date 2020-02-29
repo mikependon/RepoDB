@@ -594,7 +594,14 @@ namespace RepoDb
                             }
 
                             // Set the values
-                            context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                            if (batchItems?.Count() == 1)
+                            {
+                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                            }
+                            else
+                            {
+                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                            }
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -939,7 +946,14 @@ namespace RepoDb
                             }
 
                             // Set the values
-                            context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                            if (batchItems?.Count() == 1)
+                            {
+                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                            }
+                            else
+                            {
+                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                            }
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
