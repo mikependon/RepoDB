@@ -851,9 +851,12 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null && identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                if (options == null &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
@@ -1046,9 +1049,12 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null && identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                if (options == null &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
@@ -1238,9 +1244,12 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null && identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                if (options == null &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }

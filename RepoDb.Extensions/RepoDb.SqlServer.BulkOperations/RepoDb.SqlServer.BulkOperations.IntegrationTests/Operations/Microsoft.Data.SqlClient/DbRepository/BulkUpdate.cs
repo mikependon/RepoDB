@@ -213,10 +213,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader);
+                        var bulkUpdateResult = repository.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader);
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -256,10 +256,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
+                        var bulkUpdateResult = repository.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
                             mappings: mappings);
 
                         // Assert
@@ -300,10 +300,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
+                        repository.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
                             mappings: mappings);
                     }
                 }
@@ -333,10 +333,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table);
+                            var bulkUpdateResult = repository.BulkUpdate<BulkOperationIdentityTable>(table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -381,10 +381,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
+                            var bulkUpdateResult = repository.BulkUpdate<BulkOperationIdentityTable>(table,
                                 mappings: mappings);
 
                             // Assert
@@ -430,10 +430,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
+                            repository.BulkUpdate<BulkOperationIdentityTable>(table,
                                 mappings: mappings);
                         }
                     }
@@ -642,10 +642,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkUpdateResult = repository.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader);
 
                         // Assert
@@ -686,10 +686,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkUpdateResult = repository.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
                             mappings: mappings);
 
@@ -731,10 +731,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkUpdateResult = repository.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
                             mappings: mappings);
 
@@ -764,10 +764,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkUpdate("InvalidTable", (DbDataReader)reader);
+                        repository.BulkUpdate("InvalidTable", (DbDataReader)reader);
                     }
                 }
             }
@@ -792,10 +792,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkUpdate("MissingTable", (DbDataReader)reader);
+                        repository.BulkUpdate("MissingTable", (DbDataReader)reader);
                     }
                 }
             }
@@ -824,10 +824,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            var bulkUpdateResult = repository.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -872,10 +872,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkUpdateResult = repository.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings);
 
@@ -922,10 +922,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkUpdateResult = repository.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings);
 
@@ -960,10 +960,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkUpdate("InvalidTable",
+                            repository.BulkUpdate("InvalidTable",
                                 table);
                         }
                     }
@@ -994,10 +994,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkUpdate("MissingTable",
+                            repository.BulkUpdate("MissingTable",
                                 table);
                         }
                     }
@@ -1194,10 +1194,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
+                        var bulkUpdateResult = repository.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1237,10 +1237,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                        var bulkUpdateResult = repository.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
                             mappings: mappings).Result;
 
                         // Assert
@@ -1281,10 +1281,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                        var bulkUpdateResult = repository.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
                             mappings: mappings);
 
                         // Trigger
@@ -1317,10 +1317,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkUpdateResult = repository.BulkUpdateAsync<BulkOperationIdentityTable>(table).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1365,10 +1365,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table,
+                            var bulkUpdateResult = repository.BulkUpdateAsync<BulkOperationIdentityTable>(table,
                                 mappings: mappings).Result;
 
                             // Assert
@@ -1414,10 +1414,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table,
+                            var bulkUpdateResult = repository.BulkUpdateAsync<BulkOperationIdentityTable>(table,
                                 mappings: mappings);
 
                             // Trigger
@@ -1630,10 +1630,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
+                        var bulkUpdateResult = repository.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
 
                         // Assert
                         Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1673,10 +1673,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkUpdateResult = repository.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
                             mappings: mappings).Result;
 
@@ -1718,10 +1718,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkUpdateResult = repository.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
                             mappings: mappings);
 
@@ -1751,10 +1751,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync("InvalidTable", (DbDataReader)reader);
+                        var bulkUpdateResult = repository.BulkUpdateAsync("InvalidTable", (DbDataReader)reader);
 
                         // Trigger
                         var result = bulkUpdateResult.Result;
@@ -1782,10 +1782,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync("MissingTable", (DbDataReader)reader);
+                        var bulkUpdateResult = repository.BulkUpdateAsync("MissingTable", (DbDataReader)reader);
 
                         // Trigger
                         var result = bulkUpdateResult.Result;
@@ -1817,10 +1817,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            var bulkUpdateResult = repository.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
                             // Assert
                             Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1865,10 +1865,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkUpdateResult = repository.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings).Result;
 
@@ -1915,10 +1915,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkUpdateResult = repository.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
                                 mappings: mappings);
 
@@ -1953,10 +1953,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync("InvalidTable", table);
+                            var bulkUpdateResult = repository.BulkUpdateAsync("InvalidTable", table);
 
                             // Trigger
                             var result = bulkUpdateResult.Result;
@@ -1989,10 +1989,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync("MissingTable",
+                            var bulkUpdateResult = repository.BulkUpdateAsync("MissingTable",
                                 table);
 
                             // Trigger
