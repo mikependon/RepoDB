@@ -1017,8 +1017,11 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
