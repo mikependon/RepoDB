@@ -241,6 +241,10 @@ namespace RepoDb.Reflection
                                     trueExpression,
                                     Expression.Constant(property));
                             }
+                            if (handlerGetMethod.ReturnType != property.PropertyInfo.PropertyType)
+                            {
+                                trueExpression = Expression.Convert(trueExpression, property.PropertyInfo.PropertyType);
+                            }
                         }
 
                         #endregion
@@ -357,6 +361,10 @@ namespace RepoDb.Reflection
                                 handlerGetMethod,
                                 falseExpression,
                                 Expression.Constant(property));
+                            if (handlerGetMethod.ReturnType != property.PropertyInfo.PropertyType)
+                            {
+                                falseExpression = Expression.Convert(falseExpression, property.PropertyInfo.PropertyType);
+                            }
                         }
 
                         #endregion
@@ -393,7 +401,7 @@ namespace RepoDb.Reflection
                             }
                         }
 
-                        #region PropertyHandler (FalseExpression)
+                        #region PropertyHandler
 
                         if (handlerInstance != null)
                         {
@@ -406,6 +414,10 @@ namespace RepoDb.Reflection
                                 handlerGetMethod,
                                 valueExpression,
                                 Expression.Constant(property));
+                            if (handlerGetMethod.ReturnType != property.PropertyInfo.PropertyType)
+                            {
+                                valueExpression = Expression.Convert(valueExpression, property.PropertyInfo.PropertyType);
+                            }
                         }
 
                         #endregion

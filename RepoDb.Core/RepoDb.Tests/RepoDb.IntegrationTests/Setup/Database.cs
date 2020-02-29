@@ -87,6 +87,7 @@ namespace RepoDb.IntegrationTests.Setup
             CreateIdentityTable();
             CreateNonIdentityTable();
             CreateUnorganizedTable();
+            CreatePropertyHandlerTable();
         }
 
         /// <summary>
@@ -111,6 +112,7 @@ namespace RepoDb.IntegrationTests.Setup
                 connection.Truncate("[sc].[IdentityTable]");
                 connection.Truncate("[dbo].[NonIdentityTable]");
                 connection.Truncate("[dbo].[Unorganized Table]");
+                connection.Truncate("[dbo].[PropertyHandler]");
             }
         }
 
@@ -264,6 +266,39 @@ namespace RepoDb.IntegrationTests.Setup
 		                )
 	                ) ON [PRIMARY];
 	                ALTER TABLE [dbo].[CompleteTable] ADD CONSTRAINT [DF_CompleteTable_SessionId] DEFAULT (NEWID()) FOR [SessionId];
+                END";
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        /// <summary>
+        /// Creates a table that has a complete fields. All fields are nullable.
+        /// </summary>
+        public static void CreatePropertyHandlerTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'PropertyHandler'))
+                BEGIN
+	                CREATE TABLE [dbo].[PropertyHandler]
+	                (
+		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
+		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
+		                [ColumnInt] INT NULL,
+		                [ColumnIntNotNull] INT NOT NULL,
+		                [ColumnDecimal] DECIMAL(18, 2) NULL,
+		                [ColumnDecimalNotNull] DECIMAL(18, 2) NOT NULL,
+		                [ColumnFloat] FLOAT NULL,
+		                [ColumnFloatNotNull] FLOAT NOT NULL,
+		                [ColumnDateTime] DATETIME NULL,
+		                [ColumnDateTimeNotNull] DATETIME NOT NULL,
+		                [ColumnDateTime2] DATETIME2(7) NULL,
+		                [ColumnDateTime2NotNull] DATETIME2(7) NOT NULL,
+                        CONSTRAINT [pk_PropertyHandler] PRIMARY KEY CLUSTERED 
+                        (
+	                        [Id] ASC
+                        )
+	                ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {

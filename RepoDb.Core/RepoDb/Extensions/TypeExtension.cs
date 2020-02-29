@@ -10,6 +10,16 @@ namespace RepoDb.Extensions
     public static class TypeExtension
     {
         /// <summary>
+        /// Checks whether the current type is wrapped within <see cref="Nullable{T}"/> object.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>Returns true if the current type is wrapped within <see cref="Nullable{T}"/> object.</returns>
+        public static bool IsNullable(this Type type)
+        {
+            return Nullable.GetUnderlyingType(type) == null;
+        }
+
+        /// <summary>
         /// Converts all properties of the type into an array of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="type">The current type.</param>

@@ -19,11 +19,6 @@ namespace RepoDb.IntegrationTests
         {
             Database.Initialize();
             Cleanup();
-
-            // Add the maapings
-            PropertyTypeHandlerMapper.Add(typeof(float), new PropertiesToLongTypeHandler(), true);
-            PropertyTypeHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
-            PropertyTypeHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
         }
 
         [TestCleanup]
@@ -63,7 +58,7 @@ namespace RepoDb.IntegrationTests
             public string Get(int? input,
                 ClassProperty property)
             {
-                return Convert.ToString(input);
+                return input > 0 ? Convert.ToString(input) : null;
             }
 
             public int? Set(string input,
@@ -81,7 +76,21 @@ namespace RepoDb.IntegrationTests
             public long? Get(decimal? input,
                 ClassProperty property)
             {
-                return Convert.ToInt64(input);
+                if (input > 0)
+                {
+                    return Convert.ToInt64(input);
+                }
+                else
+                {
+                    if (property.PropertyInfo.PropertyType.IsNullable())
+                    {
+                        return default(long);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
             }
 
             public decimal? Set(long? input,
@@ -99,7 +108,22 @@ namespace RepoDb.IntegrationTests
             public long? Get(object input,
                 ClassProperty property)
             {
-                return Convert.ToInt64(input);
+                var value = Convert.ToInt64(input);
+                if (value > 0)
+                {
+                    return value;
+                }
+                else
+                {
+                    if (property.PropertyInfo.PropertyType.IsNullable())
+                    {
+                        return default(long);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
             }
 
             public object Set(long? input,
@@ -140,46 +164,97 @@ namespace RepoDb.IntegrationTests
             public string Value { get; set; }
         }
 
-        [Map("[dbo].[NonIdentityTable]")]
+        [Map("[dbo].[PropertyHandler]")]
         private class EntityModelForClass
         {
-            public Guid Id { get; set; }
+            public long Id { get; set; }
 
-            [Map("ColumnNVarChar")]
-            [PropertyHandler(typeof(PropertyToClassHandler))]
-            public TargetModel Model { get; set; }
+            [Map("ColumnNVarChar"), PropertyHandler(typeof(PropertyToClassHandler))]
+            public TargetModel NVarCharAsClass { get; set; }
+
+            // Other non-nullables
+
+            public int ColumnIntNotNull { get; set; } = 0;
+
+            public decimal ColumnDecimalNotNull { get; set; } = 0;
+
+            public short ColumnFloatNotNull { get; set; } = 0;
+
+            public DateTime ColumnDateTimeNotNull { get; set; } = System.DateTime.UtcNow.Date;
+
+            public DateTime ColumnDateTime2NotNull { get; set; } = System.DateTime.UtcNow;
         }
 
-        [Map("[dbo].[NonIdentityTable]")]
+        [Map("[dbo].[PropertyHandler]")]
         private class EntityModelForIntToStringType
         {
-            public Guid Id { get; set; }
+            public long Id { get; set; }
 
-            [Map("ColumnInt")]
-            [PropertyHandler(typeof(IntToStringTypeHandler))]
+            [Map("ColumnInt"), PropertyHandler(typeof(IntToStringTypeHandler))]
             public string IntAsString { get; set; }
+
+            [Map("ColumnIntNotNull"), PropertyHandler(typeof(IntToStringTypeHandler))]
+            public string IntNotNullAsString { get; set; }
+
+            // Other non-nullables
+
+            public decimal ColumnDecimalNotNull { get; set; } = 0;
+
+            public short ColumnFloatNotNull { get; set; } = 0;
+
+            public DateTime ColumnDateTimeNotNull { get; set; } = System.DateTime.UtcNow.Date;
+
+            public DateTime ColumnDateTime2NotNull { get; set; } = System.DateTime.UtcNow;
         }
 
-        [Map("[dbo].[NonIdentityTable]")]
+        [Map("[dbo].[PropertyHandler]")]
         private class EntityModelForNumberPropertiesToLongType
         {
-            public Guid Id { get; set; }
+            public long Id { get; set; }
 
             [Map("ColumnDecimal")]
             public long? DecimalAsLong { get; set; }
 
-            [Map("ColumnFloat")]
+            [Map("ColumnFloat"), PropertyHandler(typeof(PropertiesToLongTypeHandler))]
             public long? FloatAsLong { get; set; }
+
+            // Other non-nullables
+
+            public int ColumnIntNotNull { get; set; } = 0;
+
+            public decimal ColumnDecimalNotNull { get; set; } = 0;
+
+            public short ColumnFloatNotNull { get; set; } = 0;
+
+            public DateTime ColumnDateTimeNotNull { get; set; } = System.DateTime.UtcNow.Date;
+
+            public DateTime ColumnDateTime2NotNull { get; set; } = System.DateTime.UtcNow;
         }
 
-        [Map("[dbo].[CompleteTable]")]
+        [Map("[dbo].[PropertyHandler]")]
         private class EntityModelForDateTimeKind
         {
-            [Map("SessionId")]
-            public Guid Id { get; set; }
+            public long Id { get; set; }
+
+            [Map("ColumnDateTime")]
+            public DateTime? DateTime { get; set; }
+
+            [Map("ColumnDateTimeNotNull")]
+            public DateTime DateTimeNotNull { get; set; } = System.DateTime.UtcNow.Date;
 
             [Map("ColumnDateTime2"), TypeMap(DbType.DateTime2)]
-            public DateTime? DateTime { get; set; }
+            public DateTime? DateTime2 { get; set; }
+
+            [Map("ColumnDateTime2NotNull"), TypeMap(DbType.DateTime2)]
+            public DateTime DateTime2NotNull { get; set; }
+
+            // Other non-nullables
+
+            public int ColumnIntNotNull { get; set; } = 0;
+
+            public decimal ColumnDecimalNotNull { get; set; } = 0;
+
+            public short ColumnFloatNotNull { get; set; } = 0;
         }
 
         #endregion
@@ -193,10 +268,9 @@ namespace RepoDb.IntegrationTests
             {
                 yield return new EntityModelForClass
                 {
-                    Id = Guid.NewGuid(),
-                    Model = isModelNull ? null : new TargetModel
+                    NVarCharAsClass = isModelNull ? null : new TargetModel
                     {
-                        Value = $"Address{i}-{Guid.NewGuid()}"
+                        Value = $"Value-{i}-{Guid.NewGuid()}",
                     }
                 };
             }
@@ -209,8 +283,8 @@ namespace RepoDb.IntegrationTests
             {
                 yield return new EntityModelForIntToStringType
                 {
-                    Id = Guid.NewGuid(),
-                    IntAsString = isIntNull ? null : Convert.ToString(new Random().Next(int.MaxValue))
+                    IntAsString = isIntNull ? null : Convert.ToString(new Random().Next(int.MaxValue)),
+                    IntNotNullAsString = isIntNull ? null : Convert.ToString(new Random().Next(int.MaxValue))
                 };
             }
         }
@@ -222,8 +296,8 @@ namespace RepoDb.IntegrationTests
             {
                 yield return new EntityModelForDateTimeKind
                 {
-                    Id = Guid.NewGuid(),
-                    DateTime = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow
+                    DateTime = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow.Date,
+                    DateTime2 = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow
                 };
             }
         }
@@ -235,7 +309,6 @@ namespace RepoDb.IntegrationTests
             {
                 yield return new EntityModelForNumberPropertiesToLongType
                 {
-                    Id = Guid.NewGuid(),
                     DecimalAsLong = isIntNull ? null : (long?)100,
                     FloatAsLong = isIntNull ? null : (long?)200
                 };
@@ -264,7 +337,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.Model.Value, item.Model.Value);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
                 });
             }
         }
@@ -287,7 +360,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.Model.Value, item.Model.Value);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
                 });
             }
         }
@@ -310,7 +383,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.IsNull(item.Model.Value);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
                 });
             }
         }
@@ -333,7 +406,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.IsNull(item.Model.Value);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
                 });
             }
         }
@@ -360,7 +433,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.IntAsString, item.IntAsString);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -383,7 +456,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.IntAsString, item.IntAsString);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -406,7 +479,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual("0", item.IntAsString);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -429,7 +502,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual("0", item.IntAsString);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -442,6 +515,9 @@ namespace RepoDb.IntegrationTests
         public void TestPropertyHandlerWithNumbersToLongHandler()
         {
             // Setup
+            PropertyTypeHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+
+            // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -456,8 +532,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.DecimalAsLong, item.DecimalAsLong);
-                    Assert.AreEqual(e.FloatAsLong, item.FloatAsLong);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -466,6 +541,9 @@ namespace RepoDb.IntegrationTests
         public void TestPropertyHandlerWithNumbersToLongHandlerAtomic()
         {
             // Setup
+            PropertyTypeHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+
+            // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -480,8 +558,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.DecimalAsLong, item.DecimalAsLong);
-                    Assert.AreEqual(e.FloatAsLong, item.FloatAsLong);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -489,6 +566,9 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestPropertyHandlerWithNumbersToLongHandlerAsNull()
         {
+            // Setup
+            PropertyTypeHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+
             // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10, true).AsList();
 
@@ -504,8 +584,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual((long)0, item.DecimalAsLong.GetValueOrDefault());
-                    Assert.AreEqual((long)0, item.FloatAsLong.GetValueOrDefault());
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -513,6 +592,9 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestPropertyHandlerWithNumbersToLongHandlerAsNullAtomic()
         {
+            // Setup
+            PropertyTypeHandlerMapper.Add(typeof(decimal), new DecimalToLongTypeHandler(), true);
+
             // Setup
             var models = CreateEntityModelForNumberPropertiesToLongTypes(10, true).AsList();
 
@@ -528,8 +610,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual((long)0, item.DecimalAsLong.GetValueOrDefault());
-                    Assert.AreEqual((long)0, item.FloatAsLong.GetValueOrDefault());
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -542,6 +623,9 @@ namespace RepoDb.IntegrationTests
         public void TestPropertyHandlerForDateTimeKind()
         {
             // Setup
+            PropertyTypeHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
             var models = CreateEntityModelForDateTimeKinds(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -556,7 +640,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.DateTime, item.DateTime);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -565,6 +649,9 @@ namespace RepoDb.IntegrationTests
         public void TestPropertyHandlerForDateTimeKindAtomic()
         {
             // Setup
+            PropertyTypeHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
             var models = CreateEntityModelForDateTimeKinds(10).AsList();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -579,7 +666,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.DateTime, item.DateTime);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -587,6 +674,9 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestPropertyHandlerForDateTimeKindAsNull()
         {
+            // Setup
+            PropertyTypeHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
             // Setup
             var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
 
@@ -602,7 +692,7 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.DateTime, item.DateTime);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
@@ -610,6 +700,9 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestPropertyHandlerForDateTimeKindAsNullAtomic()
         {
+            // Setup
+            PropertyTypeHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
             // Setup
             var models = CreateEntityModelForDateTimeKinds(10, true).AsList();
 
@@ -625,12 +718,11 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
-                    Assert.AreEqual(e.DateTime, item.DateTime);
+                    Helper.AssertPropertiesEquality(e, item);
                 });
             }
         }
 
         #endregion
-
     }
 }
