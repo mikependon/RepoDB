@@ -247,17 +247,6 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkInsert<Customer>(customers, qualifiers: qualifiers);
-}
-```
-
 Or via table-name
 
 ```csharp
@@ -265,17 +254,6 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
 	var rows = connection.BulkInsert("Customer", customers);
-}
-```
-
-Or via table-name with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkInsert("Customer", customers, qualifiers: qualifiers);
 }
 ```
 
@@ -289,17 +267,6 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkInsert<Customer>(table, qualifiers: qualifiers);
-}
-```
-
 Or via table-name
 
 ```csharp
@@ -307,17 +274,6 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkInsert("Customer", table);
-}
-```
-
-Or via table-name with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkInsert("Customer", table, qualifiers: qualifiers);
 }
 ```
 
@@ -333,19 +289,6 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkInsert<Customer>(reader, qualifiers: qualifiers);
-	}
-}
-```
-
 Or via table-name
 
 ```csharp
@@ -354,19 +297,6 @@ using (var connection = new SqlConnection(ConnectionString))
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
 		var rows = connection.BulkInsert("Customer", reader);
-	}
-}
-```
-
-Or via table-name with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkInsert("Customer", reader, qualifiers: qualifiers);
 	}
 }
 ```
