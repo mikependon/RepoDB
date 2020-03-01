@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for PostgreSql.</Description>
@@ -13,12 +13,20 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm npgsql npgsql-orm postgresql postgresql-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.PostgreSql v1.0.3:
-- Feature: Introduce PostgreSql support to NpgsqlDbType via PostgreSqlTypeMapAttribute. #390</PackageReleaseNotes>
+    <PackageReleaseNotes>RepoDb.PostgreSql v1.0.4:
+- Referenced the latest version of RepoDb.Core (v1.10.10).
+
+RepoDb.Core v1.10.10:
+- Features: Full support to Bulk Operations (BulkDelete, BulkInsert, BulkMerge and BulkUpdate).
+- Enhancement: AsFieldsAsAliasFields - added left and right aliases.
+- Enhancement: XML Documentation updates for the SQL Statement Builders.
+- Enhancement: Add a Type extended method named IsNullable.
+- Bug: Solve the intermittent "NullReferenceException" when calling the Batch Operations (ie: InsertAll, MergeAll, UpdateAll). #392
+- Bug: The property handlers mapped via PropertyTypeHandlerMapper is failing if both NULLABLE and NON-NULLABLE property types are present in the class. #394</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
     <PackageIconUrl />
@@ -37,7 +45,7 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="4.1.2" />
-    <PackageReference Include="RepoDb" Version="1.10.9" />
+    <PackageReference Include="RepoDb" Version="1.10.10" />
   </ItemGroup>
 
   <ItemGroup>

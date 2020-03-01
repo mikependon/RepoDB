@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for SqLite.</Description>
@@ -13,16 +13,20 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm sqlite sqlite-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.SqLite v1.0.5:
-- Referenced the latest version of RepoDb v1.10.6.
+    <PackageReleaseNotes>RepoDb.SqLite v1.0.7:
+- Referenced the latest version of RepoDb.Core (v1.10.10).
 
-RepoDb v1.10.6
-- Added the class property as an argument context in the 'Get' and 'Set' method.
-- Exposed the underlying 'DbRepository' property at the 'BaseRepository' object.</PackageReleaseNotes>
+RepoDb.Core v1.10.10:
+- Features: Full support to Bulk Operations (BulkDelete, BulkInsert, BulkMerge and BulkUpdate).
+- Enhancement: AsFieldsAsAliasFields - added left and right aliases.
+- Enhancement: XML Documentation updates for the SQL Statement Builders.
+- Enhancement: Add a Type extended method named IsNullable.
+- Bug: Solve the intermittent "NullReferenceException" when calling the Batch Operations (ie: InsertAll, MergeAll, UpdateAll). #392
+- Bug: The property handlers mapped via PropertyTypeHandlerMapper is failing if both NULLABLE and NON-NULLABLE property types are present in the class. #394</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
-    <FileVersion>1.0.6.0</FileVersion>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
+    <FileVersion>1.0.7.0</FileVersion>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
@@ -40,7 +44,7 @@ RepoDb v1.10.6
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.10.4" />
+    <PackageReference Include="RepoDb" Version="1.10.10" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
   </ItemGroup>
 
