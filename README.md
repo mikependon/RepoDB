@@ -11,10 +11,6 @@
 [![Documentation](https://img.shields.io/badge/docs-library-yellowgreen)](https://repodb.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-apache-important)](http://apache.org/licenses/LICENSE-2.0.html)
 
-## Notice of the day
-
-The out-of-the-box [Bulk Operations](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations) for SQL Server (ie: *BulkDelete*, *BulkInsert*, *BulkMerge* and *BulkUpdate*) will soon to be available via RepoDb.
-
 ## RepoDb - a hybrid ORM Library for .NET.
 
 RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
