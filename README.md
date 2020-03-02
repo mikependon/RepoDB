@@ -30,6 +30,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 	- The processes to handle the *large datasets* is very-simple with *Batch* and *Bulk* operations.
 	- The *round-trips* to the database is being minimized with *2nd-Layer cache*.
 	- The *transmission* of the data from *different* RDBMS DB Providers only take few lines of codes.
+	- The column *transformation* control can be customized with *Property Handlers*.
 
 - **Features and Capabilities**
 
