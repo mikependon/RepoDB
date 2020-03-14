@@ -80,6 +80,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -91,7 +92,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
-                var bulkInsertResult = repository.BulkInsert(tables);
+                var bulkInsertResult = repository.BulkInsert(tables, mappings: mappings);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
@@ -269,6 +270,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -280,7 +282,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             using (var repository = new BulkOperationIdentityTableRepository())
             {
                 // Act
-                var bulkInsertResult = repository.BulkInsertAsync(tables).Result;
+                var bulkInsertResult = repository.BulkInsertAsync(tables, mappings: mappings).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
