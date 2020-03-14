@@ -178,6 +178,8 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -195,7 +197,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 Helper.UpdateBulkOperationIdentityTables(tables);
 
                 // Act
-                var bulkMergeResult = repository.BulkMerge(tables);
+                var bulkMergeResult = repository.BulkMerge(tables, mappings: mappings);
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -578,6 +580,8 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -592,7 +596,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 repository.InsertAll(tables);
 
                 // Act
-                var bulkMergeResult = repository.BulkMergeAsync(tables).Result;
+                var bulkMergeResult = repository.BulkMergeAsync(tables, mappings: mappings).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
