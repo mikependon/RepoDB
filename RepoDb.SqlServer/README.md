@@ -2,7 +2,6 @@
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
 [![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
 [![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer)](https://www.nuget.org/packages/RepoDb.SqlServer)
-[![SqlServerDL](https://img.shields.io/nuget/dt/repodb.sqlserver)](https://www.nuget.org/packages/RepoDb.SqlServer)
 [![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
 [![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
