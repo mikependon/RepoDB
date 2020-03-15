@@ -34,7 +34,7 @@
         /// Cancel the current executing repository operation.
         /// </summary>
         /// <param name="throwException">If true, an exception will be thrown.</param>
-        public void Cancel(bool throwException)
+        public void Cancel(bool throwException = true)
         {
             IsCancelled = true;
             IsThrowException = throwException;
