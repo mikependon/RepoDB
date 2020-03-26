@@ -8,7 +8,7 @@ using RepoDb.Exceptions;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to map the .NET CLR Types into database types.
+    /// A static class that is used to map a .NET CLR Type into its equivalent database type.
     /// </summary>
     public static class TypeMapper
     {

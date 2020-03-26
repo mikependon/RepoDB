@@ -12,7 +12,7 @@ namespace RepoDb
     /// </summary>
     public static partial class ClassExpression
     {
-        #region GetPropertyValues
+        #region GetEntitiesPropertyValues
 
         /// <summary>
         /// Gets the values of the property of the data entities. The comparisson will be based on the mappings.

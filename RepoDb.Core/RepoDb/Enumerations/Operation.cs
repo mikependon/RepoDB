@@ -52,7 +52,7 @@ namespace RepoDb.Enumerations
         /// </summary>
         [Text("IN")] In = 1986985380,
         /// <summary>
-        /// A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
+        /// A not-in operation. Defines the (NOT IN) keyword in SQL Statement.
         /// </summary>
         [Text("NOT IN")] NotIn = 277789918
     }

@@ -14,14 +14,14 @@ namespace RepoDb.Interfaces
         bool AreTableHintsSupported { get; }
 
         /// <summary>
-        /// Gets the character used for closing quote.
-        /// </summary>
-        string ClosingQuote { get; }
-
-        /// <summary>
         /// Gets the default averageable .NET CLR types for the database.
         /// </summary>
         Type AverageableType { get; }
+
+        /// <summary>
+        /// Gets the character used for closing quote.
+        /// </summary>
+        string ClosingQuote { get; }
 
         /// <summary>
         /// Gets the default schema of the database.

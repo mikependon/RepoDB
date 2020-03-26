@@ -4,7 +4,6 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -248,7 +247,7 @@ namespace RepoDb.DbHelpers
         public object GetScopeIdentity(IDbConnection connection,
             IDbTransaction transaction = null)
         {
-            return connection.ExecuteScalar("SELECT COALESCE(SCOPE_IDENTITY(),@@IDENTITY);");
+            return connection.ExecuteScalar("SELECT COALESCE(SCOPE_IDENTITY(), @@IDENTITY);");
         }
 
         /// <summary>
@@ -260,7 +259,7 @@ namespace RepoDb.DbHelpers
         public async Task<object> GetScopeIdentityAsync(IDbConnection connection,
             IDbTransaction transaction = null)
         {
-            return await connection.ExecuteScalarAsync("SELECT COALESCE(SCOPE_IDENTITY(),@@IDENTITY);");
+            return await connection.ExecuteScalarAsync("SELECT COALESCE(SCOPE_IDENTITY(), @@IDENTITY);");
         }
 
         #endregion
