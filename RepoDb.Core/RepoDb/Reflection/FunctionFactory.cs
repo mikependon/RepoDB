@@ -439,6 +439,42 @@ namespace RepoDb.Reflection
         {
             if (TypeMapper.ConversionType == ConversionType.Default)
             {
+                if (propertyType.IsEnum)
+                {
+                    #region StringToEnum
+
+                    if (readerField.Type == typeof(string))
+                    {
+                        var enumParseMethod = typeof(Enum).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                        expression = Expression.Call(enumParseMethod, new[]
+                        {
+                            Expression.Constant(propertyType),
+                            expression,
+                            Expression.Constant(true)
+                        });
+                    }
+
+                    #endregion
+
+                    #region <Bool|Numbers>ToEnum
+
+                    else
+                    {
+                        var enumToObjectMethod = typeof(Enum).GetMethod("ToObject", new[] { typeof(Type), readerField.Type });
+                        if (readerField.Type == typeof(bool))
+                        {
+                            expression = Expression.Convert(expression, typeof(object));
+                        }
+                        expression = Expression.Call(enumToObjectMethod, new[]
+                        {
+                            Expression.Constant(propertyType),
+                            expression
+                        });
+                    }
+
+                    #endregion
+                }
+
                 return Expression.Convert(expression, propertyType);
             }
             else
