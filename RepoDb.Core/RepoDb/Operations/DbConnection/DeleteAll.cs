@@ -73,7 +73,7 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var hasImplicitTransaction = (transaction != null);
+            var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;
 
@@ -107,7 +107,7 @@ namespace RepoDb
                 // Commit the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Commit();
+                    transaction?.Commit();
                 }
 
             }
@@ -116,7 +116,7 @@ namespace RepoDb
                 // Dispose the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Dispose();
+                    transaction?.Dispose();
                 }
             }
 
@@ -183,7 +183,7 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var hasImplicitTransaction = (transaction != null);
+            var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;
 
@@ -217,7 +217,7 @@ namespace RepoDb
                 // Commit the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Commit();
+                    transaction?.Commit();
                 }
 
             }
@@ -226,7 +226,7 @@ namespace RepoDb
                 // Dispose the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Dispose();
+                    transaction?.Dispose();
                 }
             }
 
@@ -391,7 +391,7 @@ namespace RepoDb
         {
             var primary = GetAndGuardPrimaryKey(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
-            var hasImplicitTransaction = (transaction != null);
+            var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;
 
@@ -426,7 +426,7 @@ namespace RepoDb
                 // Commit the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Commit();
+                    transaction?.Commit();
                 }
 
             }
@@ -435,7 +435,7 @@ namespace RepoDb
                 // Dispose the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Dispose();
+                    transaction?.Dispose();
                 }
             }
 
@@ -470,7 +470,7 @@ namespace RepoDb
         {
             var primary = GetAndGuardPrimaryKey(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
-            var hasImplicitTransaction = (transaction != null);
+            var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;
 
@@ -505,7 +505,7 @@ namespace RepoDb
                 // Commit the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Commit();
+                    transaction?.Commit();
                 }
 
             }
@@ -514,7 +514,7 @@ namespace RepoDb
                 // Dispose the transaction
                 if (hasImplicitTransaction)
                 {
-                    transaction.Dispose();
+                    transaction?.Dispose();
                 }
             }
 
