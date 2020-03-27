@@ -18,7 +18,7 @@ namespace RepoDb.Interfaces
         DateTime Expiration { get; set; }
 
         /// <summary>
-        /// Gets a value whether this class is expired.
+        /// Identifies whether this class is expired.
         /// </summary>
         /// <returns>A boolean value that indicate whether this class is expired.</returns>
         bool IsExpired();
