@@ -209,7 +209,7 @@ namespace RepoDb
         public override bool GetBoolean(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToBoolean(GetValue(i));
+            return ObjectConverter.ToType<bool>(GetValue(i));
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace RepoDb
         public override byte GetByte(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToByte(GetValue(i));
+            return ObjectConverter.ToType<byte>(GetValue(i));
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace RepoDb
         public override char GetChar(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToChar(GetValue(i));
+            return ObjectConverter.ToType<char>(GetValue(i));
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace RepoDb
         public override DateTime GetDateTime(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToDateTime(GetValue(i));
+            return ObjectConverter.ToType<DateTime>(GetValue(i));
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace RepoDb
         public override decimal GetDecimal(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToDecimal(GetValue(i));
+            return ObjectConverter.ToType<decimal>(GetValue(i));
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace RepoDb
         public override double GetDouble(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToDouble(GetValue(i));
+            return ObjectConverter.ToType<double>(GetValue(i));
         }
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace RepoDb
         public override float GetFloat(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return float.Parse(GetValue(i)?.ToString());
+            return ObjectConverter.ToType<float>(GetValue(i));
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace RepoDb
         public override short GetInt16(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToInt16(GetValue(i));
+            return ObjectConverter.ToType<short>(GetValue(i));
         }
 
         /// <summary>
@@ -371,7 +371,7 @@ namespace RepoDb
         public override int GetInt32(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToInt32(GetValue(i));
+            return ObjectConverter.ToType<int>(GetValue(i));
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace RepoDb
         public override long GetInt64(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToInt64(GetValue(i));
+            return ObjectConverter.ToType<long>(GetValue(i));
         }
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace RepoDb
         public override string GetString(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Convert.ToString(GetValue(i));
+            return ObjectConverter.ToType<string>(GetValue(i));
         }
 
         /// <summary>

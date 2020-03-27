@@ -97,9 +97,9 @@ namespace RepoDb
         public DateTime Expiration { get; set; }
 
         /// <summary>
-        /// Gets a value whether this cache item is expired.
+        /// Identifies whether this cache item is expired.
         /// </summary>
-        /// <returns>A boolean value that indicate whether this cache value is expired.</returns>
+        /// <returns>A boolean value that indicate whether this cache item is expired.</returns>
         public bool IsExpired() => DateTime.UtcNow >= Expiration;
 
         #endregion
