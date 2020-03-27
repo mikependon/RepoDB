@@ -89,7 +89,7 @@ namespace RepoDb.IntegrationTests.Caches
                     cacheKey, /* cacheKey */
                     (IDbTransaction)null);
 
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -119,7 +119,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -149,7 +149,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -179,7 +179,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null);
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -244,7 +244,7 @@ namespace RepoDb.IntegrationTests.Caches
                     cacheKey, /* cacheKey */
                     (IDbTransaction)null).Result;
 
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -274,7 +274,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -304,7 +304,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -334,7 +334,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -364,7 +364,7 @@ namespace RepoDb.IntegrationTests.Caches
                     hints: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -395,7 +395,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.QueryAll(orderBy: null,
                     cacheKey: cacheKey,
                     transaction: null);
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -426,7 +426,7 @@ namespace RepoDb.IntegrationTests.Caches
                 var result = repository.QueryAllAsync(orderBy: null,
                     cacheKey: cacheKey,
                     transaction: null).Result;
-                var item = cache.Get(cacheKey);
+                var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

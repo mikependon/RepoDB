@@ -1169,10 +1169,10 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get(cacheKey, false);
+                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
                 if (item != null)
                 {
-                    return (IEnumerable<TEntity>)item.Value;
+                    return item.Value;
                 }
             }
 
@@ -1285,10 +1285,10 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get(cacheKey, false);
+                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
                 if (item != null)
                 {
-                    return (IEnumerable<TEntity>)item.Value;
+                    return item.Value;
                 }
             }
 
@@ -1401,10 +1401,10 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get(cacheKey, false);
+                var item = cache?.Get<dynamic>(cacheKey, false);
                 if (item != null)
                 {
-                    return (IEnumerable<dynamic>)item.Value;
+                    return item.Value;
                 }
             }
 
@@ -1524,10 +1524,10 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get(cacheKey, false);
+                var item = cache?.Get<dynamic>(cacheKey, false);
                 if (item != null)
                 {
-                    return (IEnumerable<dynamic>)item.Value;
+                    return item.Value;
                 }
             }
 

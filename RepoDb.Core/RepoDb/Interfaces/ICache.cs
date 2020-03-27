@@ -1,30 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 
 namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interface used to mark the class to be a cacher for an object.
     /// </summary>
-    public interface ICache : IEnumerable<CacheItem>
+    public interface ICache : IEnumerable
     {
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
+        /// <typeparam name="T">The type of the cache item value.</typeparam>
         /// <param name="key">The key to the cache.</param>
         /// <param name="value">The value of the cache.</param>
         /// <param name="expiration">The expiration in minutes of the cache item.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        void Add(string key,
-            object value,
+        void Add<T>(string key,
+            T value,
             int expiration = Constant.DefaultCacheItemExpirationInMinutes,
             bool throwException = true);
 
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
+        /// <typeparam name="T">The type of the cache item value.</typeparam>
         /// <param name="item">The cache item to be added in the collection.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        void Add(CacheItem item,
+        void Add<T>(CacheItem<T> item,
             bool throwException = true);
 
         /// <summary>
@@ -42,10 +44,11 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// Gets an object from the cache collection.
         /// </summary>
+        /// <typeparam name="T">The type of the cache item value.</typeparam>
         /// <param name="key">The key of the cache object to be retrieved.</param>
         /// <returns>A cached item object from the cache collection based on the given key.</returns>
         /// <param name="throwException">Throws an exception if the item is not found.</param>
-        CacheItem Get(string key,
+        CacheItem<T> Get<T>(string key,
             bool throwException = true);
 
         /// <summary>

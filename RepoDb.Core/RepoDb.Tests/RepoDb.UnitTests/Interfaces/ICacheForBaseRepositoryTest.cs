@@ -64,10 +64,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -90,10 +90,10 @@ namespace RepoDb.UnitTests.Interfaces
                 (IDbTransaction)null);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -116,10 +116,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -142,10 +142,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -168,10 +168,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -194,10 +194,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -224,10 +224,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -250,10 +250,10 @@ namespace RepoDb.UnitTests.Interfaces
                 (IDbTransaction)null).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -276,10 +276,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -302,10 +302,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -328,10 +328,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }
@@ -354,10 +354,10 @@ namespace RepoDb.UnitTests.Interfaces
                 transaction: null).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+            cache.Verify(c => c.Get<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
-                It.IsAny<object>(),
+            cache.Verify(c => c.Add<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
+                It.IsAny<IEnumerable<CacheEntity>>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
         }

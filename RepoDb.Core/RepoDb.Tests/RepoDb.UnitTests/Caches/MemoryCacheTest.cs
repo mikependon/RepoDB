@@ -20,7 +20,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add(key, value);
 
             // Assert
-            Assert.AreEqual(1, cache.Count());
+            Assert.AreEqual(1, cache.OfType<object>().Count());
         }
 
         [TestMethod]
@@ -28,13 +28,13 @@ namespace RepoDb.UnitTests.Caches
         {
             // Prepare
             var cache = new MemoryCache();
-            var item = new CacheItem("Key", new object());
+            var item = new CacheItem<object>("Key", new object());
 
             // Act
             cache.Add(item);
 
             // Assert
-            Assert.AreEqual(1, cache.Count());
+            Assert.AreEqual(1, cache.OfType<object>().Count());
         }
 
         [TestMethod]
@@ -42,13 +42,13 @@ namespace RepoDb.UnitTests.Caches
         {
             // Prepare
             var cache = new MemoryCache();
-            cache.Add(new CacheItem("Key", new object()));
+            cache.Add(new CacheItem<object>("Key", new object()));
 
             // Act
             cache.Clear();
 
             // Assert
-            Assert.IsFalse(cache.Any());
+            Assert.IsFalse(cache.OfType<object>().Any());
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.Caches
         {
             // Prepare
             var cache = new MemoryCache();
-            cache.Add(new CacheItem("Key", new object()));
+            cache.Add(new CacheItem<object>("Key", new object()));
 
             // Act
             var actual = cache.Contains("Key");
@@ -75,7 +75,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add(key, value);
 
             // Act
-            var actual = cache.Get(key);
+            var actual = cache.Get<object>(key);
 
             // Assert
             Assert.IsNotNull(actual);
@@ -90,7 +90,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add("Key", new object(), 0);
 
             // Act
-            var actual = cache.Get("Key");
+            var actual = cache.Get<object>("Key");
 
             // Assert
             Assert.IsNull(actual);
@@ -104,7 +104,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add("Key", new object(), 0);
 
             // Act
-            var actual = cache.Get("Key");
+            var actual = cache.Get<object>("Key");
 
             // Assert
             Assert.IsNull(actual);
@@ -113,7 +113,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add("Key", new object());
 
             // React
-            actual = cache.Get("Key");
+            actual = cache.Get<object>("Key");
 
             // Reassert
             Assert.IsNotNull(actual);
@@ -128,7 +128,7 @@ namespace RepoDb.UnitTests.Caches
             cache.Add("Key", new object(), expirationInMinutes);
 
             // Act
-            var actual = cache.Get("Key");
+            var actual = cache.Get<object>("Key");
 
             // Assert
             Assert.IsNotNull(actual);
@@ -141,11 +141,11 @@ namespace RepoDb.UnitTests.Caches
             // Prepare
             var cache = new MemoryCache();
             var expirationInMinutes = 60;
-            var cacheItem = new CacheItem("Key", new object(), expirationInMinutes);
+            var cacheItem = new CacheItem<object>("Key", new object(), expirationInMinutes);
             cache.Add(cacheItem);
 
             // Act
-            var actual = cache.Get("Key");
+            var actual = cache.Get<object>("Key");
 
             // Assert
             Assert.IsNotNull(actual);

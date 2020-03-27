@@ -1,11 +1,13 @@
-﻿using System;
+﻿using RepoDb.Interfaces;
+using System;
 
 namespace RepoDb
 {
     /// <summary>
     /// An item used when caching an object in the repository object. This is the default class used by the <see cref="MemoryCache"/> object.
     /// </summary>
-    public class CacheItem
+    /// <typeparam name="T">The type of the value.</typeparam>
+    public class CacheItem<T> : IExpirable
     {
         /// <summary>
         /// Creates a new instance of <see cref="CacheItem"/> object.
@@ -13,7 +15,7 @@ namespace RepoDb
         /// <param name="key">The key of the cache.</param>
         /// <param name="value">The value of the cache.</param>
         public CacheItem(string key,
-            object value)
+            T value)
             : this(key,
                   value,
                   Constant.DefaultCacheItemExpirationInMinutes)
@@ -24,26 +26,29 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key of the cache item.</param>
         /// <param name="value">The value of the cache item.</param>
-        /// <param name="expiration">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         public CacheItem(string key,
-            object value,
-            int expiration = Constant.DefaultCacheItemExpirationInMinutes)
+            T value,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
         {
-            if (expiration < 0)
+            if (cacheItemExpiration < 0)
             {
                 throw new ArgumentOutOfRangeException("Expiration in minutes must not be negative values.");
             }
             Key = key;
             Value = value;
+            CacheItemExpiration = cacheItemExpiration;
             CreatedDate = DateTime.UtcNow;
-            Expiration = CreatedDate.AddMinutes(expiration);
+            Expiration = CreatedDate.AddMinutes(cacheItemExpiration);
         }
+
+        #region Methods
 
         /// <summary>
         /// Updates the value of the current item based from the source item.
         /// </summary>
         /// <param name="item">The source item.</param>
-        internal void UpdateFrom(CacheItem item)
+        internal void UpdateFrom(CacheItem<T> item)
         {
             if (!IsExpired())
             {
@@ -57,15 +62,28 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets the key of the cache.
         /// </summary>
         public string Key { get; }
 
         /// <summary>
-        /// Gets or sets the value of the cache.
+        /// Gets the value of the cache.
         /// </summary>
-        public object Value { get; set; }
+        public T Value { get; private set; }
+
+        /// <summary>
+        /// Gets the expiration in minutes of the cache item.
+        /// </summary>
+        public int CacheItemExpiration{ get; }
+
+        #endregion
+
+        #region IExpirable
 
         /// <summary>
         /// Gets the created timestamp of this cache item. By default, it is equals to the time
@@ -82,9 +100,8 @@ namespace RepoDb
         /// Gets a value whether this cache item is expired.
         /// </summary>
         /// <returns>A boolean value that indicate whether this cache value is expired.</returns>
-        public bool IsExpired()
-        {
-            return DateTime.UtcNow >= Expiration;
-        }
+        public bool IsExpired() => DateTime.UtcNow >= Expiration;
+
+        #endregion
     }
 }
