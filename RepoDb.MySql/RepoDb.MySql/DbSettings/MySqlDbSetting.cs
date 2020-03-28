@@ -14,8 +14,8 @@ namespace RepoDb.MySql.DbSettings
         public MySqlDbSetting()
         {
             AreTableHintsSupported = false;
-            ClosingQuote = "`";
             AverageableType = typeof(double);
+            ClosingQuote = "`";
             DefaultSchema = null;
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = false;
