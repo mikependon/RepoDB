@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.10.11-beta2</Version>
+    <Version>1.10.11-beta3</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid ORM library for .NET.</Description>
@@ -17,8 +17,8 @@
     <NeutralLanguage></NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.10.11.2</AssemblyVersion>
-    <FileVersion>1.10.11.2</FileVersion>
+    <AssemblyVersion>1.10.11.3</AssemblyVersion>
+    <FileVersion>1.10.11.3</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageIconUrl></PackageIconUrl>
