@@ -31,7 +31,7 @@ RepoDb.Core v1.10.10:
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
