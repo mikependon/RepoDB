@@ -21,8 +21,11 @@ namespace RepoDb.Reflection
     /// </summary>
     internal static class FunctionFactory
     {
-        #region Helper Class
+        #region SubClasses
 
+        /// <summary>
+        /// A helper class for type enum.
+        /// </summary>
         private class EnumHelper
         {
             /// <summary>
@@ -83,6 +86,7 @@ namespace RepoDb.Reflection
         }
 
         #endregion
+
         #region GetDataReaderToDataEntityConverterFunction
 
         /// <summary>
@@ -465,7 +469,8 @@ namespace RepoDb.Reflection
                         // Set for the 'Nullable' property
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            if (targetType.IsEnum && readerField.Type != typeof(string))
+                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != typeof(string));
+                            if (setNullable == true)
                             {
                                 var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(targetType).GetConstructor(new[] { targetType });
                                 if (handlerInstance == null)
@@ -1592,11 +1597,17 @@ namespace RepoDb.Reflection
                             {
                                 throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
                             }
-                            var converterMethod = typeof(ObjectConverter).GetMethod("Convert");
-                            if (converterMethod != null)
+                            else
                             {
-                                value = Expression.Call(converterMethod, Expression.Constant(dbField.Type),
-                                    Expression.Convert(value, typeOfObject), Expression.Constant(convertToTypeMethod));
+                                var converterMethod = typeof(EnumHelper).GetMethod("Convert");
+                                if (converterMethod != null)
+                                {
+                                    value = Expression.Call(converterMethod,
+                                        Expression.Constant(instanceProperty.PropertyType),
+                                        Expression.Constant(dbField.Type),
+                                        Expression.Convert(value, typeOfObject),
+                                        Expression.Constant(convertToTypeMethod));
+                                }
                             }
                         }
 
@@ -2544,5 +2555,6 @@ namespace RepoDb.Reflection
         #endregion
 
         #endregion
+
     }
 }
