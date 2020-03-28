@@ -113,6 +113,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var person = GetPersonWithText(1).First();
                 person.ColumnText = null;
@@ -181,6 +184,9 @@ namespace RepoDb.SqLite.IntegrationTests
         {
             using (var connection = new SQLiteConnection(Database.ConnectionString))
             {
+                //  Create the table first
+                Database.CreateCompleteTable(connection);
+
                 // Setup
                 var person = GetPersonWithInteger(1).First();
                 person.ColumnInteger = null;
