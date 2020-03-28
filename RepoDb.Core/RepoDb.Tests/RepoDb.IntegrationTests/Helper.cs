@@ -451,6 +451,30 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
+        /// Creates a list of <see cref="EnumCompleteTable"/> objects with null properties.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="EnumCompleteTable"/> objects.</returns>
+        public static List<EnumCompleteTable> CreateEnumCompleteTablesAsNull(int count)
+        {
+            var tables = new List<EnumCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new EnumCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnBit = null,
+                    ColumnNVarChar = null,
+                    ColumnInt = null,
+                    ColumnBigInt = null,
+                    ColumnSmallInt = null,
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
         /// Creates an instance of <see cref="EnumCompleteTable"/> object.
         /// </summary>
         /// <returns>A new created instance of <see cref="EnumCompleteTable"/> object.</returns>
@@ -464,6 +488,23 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = Direction.West,
                 ColumnBigInt = Direction.West,
                 ColumnSmallInt = Direction.West
+            };
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="EnumCompleteTable"/> object with null properties.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="EnumCompleteTable"/> object.</returns>
+        public static EnumCompleteTable CreateEnumCompleteTableAsNull()
+        {
+            return new EnumCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBit = null,
+                ColumnNVarChar = null,
+                ColumnInt = null,
+                ColumnBigInt = null,
+                ColumnSmallInt = null
             };
         }
 
@@ -492,6 +533,26 @@ namespace RepoDb.IntegrationTests
         }
 
         /// <summary>
+        /// Creates a list of <see cref="EnumAsIntForStringCompleteTable"/> objects with null properties.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="EnumAsIntForStringCompleteTable"/> objects.</returns>
+        public static List<EnumAsIntForStringCompleteTable> CreateEnumAsIntForStringCompleteTablesAsNull(int count)
+        {
+            var tables = new List<EnumAsIntForStringCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new EnumAsIntForStringCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = null
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
         /// Creates an instance of <see cref="EnumAsIntForStringCompleteTable"/> object.
         /// </summary>
         /// <returns>A new created instance of <see cref="EnumAsIntForStringCompleteTable"/> object.</returns>
@@ -501,6 +562,19 @@ namespace RepoDb.IntegrationTests
             {
                 SessionId = Guid.NewGuid(),
                 ColumnNVarChar = Direction.West
+            };
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="EnumAsIntForStringCompleteTable"/> object with null properties.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="EnumAsIntForStringCompleteTable"/> object.</returns>
+        public static EnumAsIntForStringCompleteTable CreateEnumAsIntForStringCompleteTableAsNull()
+        {
+            return new EnumAsIntForStringCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = null
             };
         }
 

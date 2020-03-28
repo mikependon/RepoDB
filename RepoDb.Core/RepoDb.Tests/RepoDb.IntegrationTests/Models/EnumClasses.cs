@@ -10,7 +10,7 @@ namespace RepoDb.IntegrationTests.Models
     {
         public Guid SessionId { get; set; }
         public BooleanValue? ColumnBit { get; set; }
-        public Direction ColumnNVarChar { get; set; }
+        public Direction? ColumnNVarChar { get; set; }
         public Direction? ColumnInt { get; set; }
         public Direction? ColumnBigInt { get; set; }
         public Direction? ColumnSmallInt { get; set; }
@@ -21,13 +21,13 @@ namespace RepoDb.IntegrationTests.Models
     {
         public Guid SessionId { get; set; }
         [TypeMap(DbType.Int32)]
-        public Direction ColumnNVarChar { get; set; }
+        public Direction? ColumnNVarChar { get; set; }
     }
 
     [Map("[dbo].[CompleteTable]")]
     public class TypeLevelMappedForStringEnumCompleteTable
     {
         public Guid SessionId { get; set; }
-        public Continent ColumnNVarChar { get; set; }
+        public Continent? ColumnNVarChar { get; set; }
     }
 }
