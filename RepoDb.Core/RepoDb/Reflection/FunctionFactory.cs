@@ -21,6 +21,38 @@ namespace RepoDb.Reflection
     /// </summary>
     internal static class FunctionFactory
     {
+        /// <summary>
+        /// A class used to parse the string values for enumeration.
+        /// </summary>
+        public class EnumParser
+        {
+            /// <summary>
+            /// Parses the string value to a desired enum. It uses the method <see cref="Enum.Parse(Type, string)"/> underneath.
+            /// </summary>
+            /// <param name="enumType">The type of enum.</param>
+            /// <param name="value">The value to parse.</param>
+            /// <param name="ignoreCase">The case sensitivity of the parse operation.</param>
+            /// <returns>The enum value.</returns>
+            public static object Parse(Type enumType,
+                string value,
+                bool ignoreCase)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    return Enum.Parse(enumType, value, ignoreCase);
+                }
+                if (enumType.IsNullable())
+                {
+                    var nullable = typeof(Nullable<>).MakeGenericType(new[] { enumType });
+                    return Activator.CreateInstance(nullable);
+                }
+                else
+                {
+                    return Activator.CreateInstance(enumType);
+                }
+            }
+        }
+
         #region GetDataReaderToDataEntityConverterFunction
 
         /// <summary>
@@ -263,14 +295,19 @@ namespace RepoDb.Reflection
 
                                     if (readerField.Type == typeof(string))
                                     {
-                                        var enumParseMethod = typeof(Enum).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                                        var enumParseMethod = typeof(EnumParser).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
                                         falseExpression = Expression.Call(enumParseMethod, new[]
                                         {
                                             Expression.Constant(propertyType),
                                             falseExpression,
                                             Expression.Constant(true)
                                         });
-                                        falseExpression = Expression.Convert(falseExpression, propertyType);
+                                        var enumPropertyType = propertyType;
+                                        if (propertyType.IsNullable())
+                                        {
+                                            enumPropertyType = typeof(Nullable<>).MakeGenericType(propertyType);
+                                        }
+                                        falseExpression = Expression.Convert(falseExpression, enumPropertyType);
                                     }
 
                                     #endregion
@@ -340,11 +377,14 @@ namespace RepoDb.Reflection
                         isNullableAlreadySet = false;
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
-                            if (handlerInstance == null)
+                            if (propertyType.IsEnum && readerField.Type != typeof(string))
                             {
-                                falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
-                                isNullableAlreadySet = true;
+                                var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
+                                if (handlerInstance == null)
+                                {
+                                    falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
+                                    isNullableAlreadySet = true;
+                                }
                             }
                         }
 
@@ -393,11 +433,14 @@ namespace RepoDb.Reflection
                         // Set for the 'Nullable' property
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
-                            if (handlerInstance == null)
+                            if (propertyType.IsEnum && readerField.Type != typeof(string))
                             {
-                                valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
-                                isNullableAlreadySet = true;
+                                var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetConstructor(new[] { propertyType });
+                                if (handlerInstance == null)
+                                {
+                                    valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
+                                    isNullableAlreadySet = true;
+                                }
                             }
                         }
 
@@ -445,13 +488,19 @@ namespace RepoDb.Reflection
 
                     if (readerField.Type == typeof(string))
                     {
-                        var enumParseMethod = typeof(Enum).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                        var enumParseMethod = typeof(EnumParser).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
                         expression = Expression.Call(enumParseMethod, new[]
                         {
                             Expression.Constant(propertyType),
                             expression,
                             Expression.Constant(true)
                         });
+                        var enumPropertyType = propertyType;
+                        if (propertyType.IsNullable())
+                        {
+                            enumPropertyType = typeof(Nullable<>).MakeGenericType(propertyType);
+                        }
+                        expression = Expression.Convert(expression, enumPropertyType);
                     }
 
                     #endregion

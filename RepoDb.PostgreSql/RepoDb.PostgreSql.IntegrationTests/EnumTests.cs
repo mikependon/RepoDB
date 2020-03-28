@@ -109,6 +109,26 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #endregion
 
         [TestMethod]
+        public void TestInsertAndQueryEnumAsTextAsNull()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithText(1).First();
+                person.ColumnText = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithText>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnText);
+            }
+        }
+
+        [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
@@ -147,6 +167,26 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     var item = queryResult.First(e => e.Id == p.Id);
                     Assert.AreEqual(p.ColumnText, item.ColumnText);
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsIntegerAsNull()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithInteger(1).First();
+                person.ColumnInteger = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnInteger);
             }
         }
 

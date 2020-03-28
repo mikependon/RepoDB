@@ -51,7 +51,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         {
             public System.Int64 Id { get; set; }
             public System.Guid SessionId { get; set; }
-            public Hands? ColumnNVarChar { get; set; }
+            public Hands? ColumnInt { get; set; }
         }
 
         [Map("CompleteTable")]
@@ -92,7 +92,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 {
                     Id = i,
                     SessionId = Guid.NewGuid(),
-                    ColumnNVarChar = hand
+                    ColumnInt = hand
                 };
             }
         }
@@ -113,6 +113,26 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         #endregion
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsTextAsNull()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithText(1).First();
+                person.ColumnNVarChar = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithText>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnNVarChar);
+            }
+        }
 
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
@@ -157,6 +177,26 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
+        public void TestInsertAndQueryEnumAsIntegerAsNull()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithInteger(1).First();
+                person.ColumnInt = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnInt);
+            }
+        }
+
+        [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
             using (var connection = new SqlConnection(Database.ConnectionString))
@@ -171,7 +211,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var queryResult = connection.Query<PersonWithInteger>(person.Id).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnNVarChar, queryResult.ColumnNVarChar);
+                Assert.AreEqual(person.ColumnInt, queryResult.ColumnInt);
             }
         }
 
@@ -193,7 +233,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 people.ForEach(p =>
                 {
                     var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnNVarChar, item.ColumnNVarChar);
+                    Assert.AreEqual(p.ColumnInt, item.ColumnInt);
                 });
             }
         }
