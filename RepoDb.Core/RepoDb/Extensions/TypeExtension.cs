@@ -16,7 +16,7 @@ namespace RepoDb.Extensions
         /// <returns>Returns true if the current type is wrapped within <see cref="Nullable{T}"/> object.</returns>
         public static bool IsNullable(this Type type)
         {
-            return Nullable.GetUnderlyingType(type) == null;
+            return Nullable.GetUnderlyingType(type) != null;
         }
 
         /// <summary>

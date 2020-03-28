@@ -84,11 +84,11 @@ namespace RepoDb.IntegrationTests
                 {
                     if (property.PropertyInfo.PropertyType.IsNullable())
                     {
-                        return default(long);
+                        return null;
                     }
                     else
                     {
-                        return null;
+                        return default(long);
                     }
                 }
             }
@@ -117,11 +117,11 @@ namespace RepoDb.IntegrationTests
                 {
                     if (property.PropertyInfo.PropertyType.IsNullable())
                     {
-                        return default(long);
+                        return null;
                     }
                     else
                     {
-                        return null;
+                        return default(long);
                     }
                 }
             }

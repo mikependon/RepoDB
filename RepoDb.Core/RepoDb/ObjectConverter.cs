@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RepoDb.Extensions;
+using System;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -21,7 +23,7 @@ namespace RepoDb
         /// Converts a value to a target type if the value is equals to null or <see cref="DBNull.Value"/>.
         /// </summary>
         /// <typeparam name="T">The target type.</typeparam>
-        /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
+        /// <param name="value">The value to be converted.</param>
         /// <returns>The converted value.</returns>
         public static T ToType<T>(object value)
         {
@@ -29,7 +31,8 @@ namespace RepoDb
             {
                 return (T)value;
             }
-            return DbNullToNull(value) == null ? default(T) : (T)Convert.ChangeType(value, typeof(T));
+            return DbNullToNull(value) == null ? default(T) :
+                (T)Convert.ChangeType(value, typeof(T));
         }
     }
 }
