@@ -79,7 +79,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the expiration in minutes of the cache item.
         /// </summary>
-        public int CacheItemExpiration{ get; }
+        public int CacheItemExpiration { get; }
 
         #endregion
 
