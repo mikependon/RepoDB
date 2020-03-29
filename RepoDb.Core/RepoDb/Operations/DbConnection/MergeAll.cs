@@ -990,7 +990,7 @@ namespace RepoDb
                     if (batchSize == 1)
                     {
                         // Much better to use the actual single-based setter (performance)
-                        foreach (var entity in entities)
+                        foreach (var entity in entities.AsList())
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
@@ -1017,7 +1017,7 @@ namespace RepoDb
                     else
                     {
                         // Iterate the batches
-                        foreach (var batchEntities in entities.Split(batchSize))
+                        foreach (var batchEntities in entities.AsList().Split(batchSize))
                         {
                             var batchItems = batchEntities.AsList();
 
@@ -1219,7 +1219,7 @@ namespace RepoDb
                 }
 
                 // Iterate the entities
-                foreach (var entity in entities)
+                foreach (var entity in entities.AsList())
                 {
                     // Call the upsert
                     var upsertResult = connection.UpsertInternalBase<TEntity, object>(tableName,
@@ -1501,7 +1501,7 @@ namespace RepoDb
                     if (batchSize == 1)
                     {
                         // Much better to use the actual single-based setter (performance)
-                        foreach (var entity in entities)
+                        foreach (var entity in entities.AsList())
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
@@ -1528,7 +1528,7 @@ namespace RepoDb
                     else
                     {
                         // Iterate the batches
-                        foreach (var batchEntities in entities.Split(batchSize))
+                        foreach (var batchEntities in entities.AsList().Split(batchSize))
                         {
                             var batchItems = batchEntities.AsList();
 
@@ -1730,7 +1730,7 @@ namespace RepoDb
                 }
 
                 // Iterate the entities
-                foreach (var entity in entities)
+                foreach (var entity in entities.AsList())
                 {
                     // Call the upsert
                     var upsertResult = await connection.UpsertAsyncInternalBase<TEntity, object>(tableName,

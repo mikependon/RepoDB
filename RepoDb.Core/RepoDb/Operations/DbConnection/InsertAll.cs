@@ -541,7 +541,7 @@ namespace RepoDb
                     // Directly execute if the entities is only 1 (performance)
                     if (context.BatchSize == 1)
                     {
-                        foreach (var entity in entities)
+                        foreach (var entity in entities.AsList())
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
@@ -573,7 +573,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        foreach (var batchEntities in entities.Split(batchSize))
+                        foreach (var batchEntities in entities.AsList().Split(batchSize))
                         {
                             var batchItems = batchEntities.AsList();
 
@@ -893,7 +893,7 @@ namespace RepoDb
                     // Directly execute if the entities is only 1 (performance)
                     if (context.BatchSize == 1)
                     {
-                        foreach (var entity in entities)
+                        foreach (var entity in entities.AsList())
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
@@ -925,7 +925,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        foreach (var batchEntities in entities.Split(batchSize))
+                        foreach (var batchEntities in entities.AsList().Split(batchSize))
                         {
                             var batchItems = batchEntities.AsList();
 

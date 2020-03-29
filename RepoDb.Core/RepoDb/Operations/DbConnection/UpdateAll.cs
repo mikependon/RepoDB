@@ -822,7 +822,7 @@ namespace RepoDb
                     if (batchSize == 1)
                     {
                         // Much better to use the actual single-based setter (performance)
-                        foreach (var entity in entities)
+                        foreach (var entity in entities.AsList())
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
@@ -839,7 +839,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        foreach (var batchEntities in entities.Split(batchSize))
+                        foreach (var batchEntities in entities.AsList().Split(batchSize))
                         {
                             var batchItems = batchEntities.AsList();
 
@@ -1093,7 +1093,7 @@ namespace RepoDb
                     if (batchSize == 1)
                     {
                         // Much better to use the actual single-based setter (performance)
-                        foreach (var entity in entities)
+                        foreach (var entity in entities.AsList())
                         {
                             // Set the values
                             context.SingleDataEntityParametersSetterFunc(command, entity);
@@ -1110,7 +1110,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        foreach (var batchEntities in entities.Split(batchSize))
+                        foreach (var batchEntities in entities.AsList().Split(batchSize))
                         {
                             var batchItems = batchEntities.AsList();
 

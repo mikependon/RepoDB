@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
             int sizePerSplit)
         {
             var itemCount = value.Count();
-            if (itemCount < sizePerSplit)
+            if (itemCount <= sizePerSplit)
             {
                 yield return value;
             }
@@ -53,7 +53,7 @@ namespace RepoDb.Extensions
                 {
                     yield return Enumerable.Where(value, (item, index) =>
                     {
-                        return index >= (sizePerSplit * i) && 
+                        return index >= (sizePerSplit * i) &&
                             index < (sizePerSplit * i) + sizePerSplit;
                     });
                 }
@@ -61,7 +61,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the <see cref="IEnumerable{T}"/> object into a <see cref="IList{T}"/> of objects.
+        /// Converts the <see cref="IEnumerable{T}"/> object into a <see cref="IList{T}"/> object.
         /// </summary>
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
