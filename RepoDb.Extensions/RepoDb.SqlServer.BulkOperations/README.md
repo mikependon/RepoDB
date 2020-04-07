@@ -1,6 +1,6 @@
 [![SqlServerBulkBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-uai8a)](https://ci.appveyor.com/project/mikependon/repodb-uai8a)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
+[![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 [![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
 
@@ -10,16 +10,11 @@ An extension library that contains the official Bulk Operations for RepoDb.
 
 ## Why use Bulk Operations?
 
-Basically, we do the normal *Delete*, *Insert*, *Merge* and *Update* operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the CRUD operations.
+Basically, we do the normal [Delete](http://repodb.net/operation/delete), [Insert](http://repodb.net/operation/insert), [Merge](http://repodb.net/operation/merge) and [Update](http://repodb.net/operation/update) operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the CRUD operations.
 
-With bulk operations, all data is brought from the client application to the database via *BulkInsert* process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
+With bulk operations, all data is brought from the client application to the database via [BulkInsert](http://repodb.net/operation/bulkinsert) process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
 
 The bulk operations can hugely improve the performance by more than 90% when processing a large datasets.
-
-## Important Pages
-
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
 
 ## Core Features
 
@@ -46,7 +41,7 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 
 ## Installation
 
-At the *Package Manager Console*, write the command below.
+At the Package Manager Console, write the command below.
 
 ```csharp
 > Install-Package RepoDb.SqlServer.BulkOperations
@@ -58,13 +53,15 @@ Then call the bootstrapper once.
 RepoDb.SqlServerBootstrap.Initialize();
 ```
 
+Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+
 ## Special Arguments
 
-The arguments *qualifiers* and *usePhysicalPseudoTempTable* is provided at *BulkDelete*, *BulkMerge* and *BulkUpdate* operations.
+The arguments `qualifiers` and `usePhysicalPseudoTempTable` is provided at [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) operations.
 
-The argument *qualifiers* is used to define the qualifier fields to be used in the operation. It usually refers to the *WHERE* expression of SQL Statements. If not given, the primary key (or identity) field will be used.
+The argument `qualifiers` is used to define the qualifier fields to be used in the operation. It usually refers to the *WHERE* expression of SQL Statements. If not given, the primary key (or identity) field will be used.
 
-The argument *usePhysicalPseudoTempTable* is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: *#TableName*) is used.
+The argument `usePhysicalPseudoTempTable` is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: *#TableName*) is used.
 
 ## Async Methods
 
@@ -72,9 +69,9 @@ All synchronous methods has an equivalent asynchronous (Async) methods (ie: *Bul
 
 ## Caveats
 
-RepoDb is automatically setting the value of *options* argument to *SqlBulkCopyOptions.KeepIdentity* when calling the *BulkDelete*, *BulkMerge* and *BulkUpdate* if you have not passed any *qualifiers* and if your table has an *IDENTITY* primary key column. The same logic will apply if there is no primary key but has an *IDENTITY* column defined in the table.
+RepoDb is automatically setting the value of *options* argument to *SqlBulkCopyOptions.KeepIdentity* when calling the [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) if you have not passed any *qualifiers* and if your table has an *IDENTITY* primary key column. The same logic will apply if there is no primary key but has an *IDENTITY* column defined in the table.
 
-In addition, when calling the *BulkDelete*, *BulkMerge* and *BulkUpdate* operations, the library is creating a pseudo temporary table behind the scene. It requires your user to have the correct privilege to create a table in the database, otherwise a *SqlException* will be thrown.
+In addition, when calling the [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) operations, the library is creating a pseudo temporary table behind the scene. It requires your user to have the correct privilege to create a table in the database, otherwise a `SqlException` will be thrown.
 
 ## BulkDelete
 
@@ -111,6 +108,25 @@ using (var connection = new SqlConnection(ConnectionString))
 ```
 
 Or with qualifiers
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customers = GetCustomers();
+	var qualifiers = Field.From("LastName", "BirthDate");
+	var rows = connection.BulkDelete<Customer>(customers, qualifiers: qualifiers);
+}
+```
+
+Or with primary keys
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var primaryKeys = new [] { 10045, ..., 11011 };
+	var rows = connection.BulkDelete<Customer>(primaryKeys);
+}
+```
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
