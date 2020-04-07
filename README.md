@@ -90,7 +90,7 @@ Or, learn the specific feature.
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
-Otherwise, please visit our [documentation](http://repodb.net/doc) page to learn more.
+Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
 
 ## Benchmark
 
