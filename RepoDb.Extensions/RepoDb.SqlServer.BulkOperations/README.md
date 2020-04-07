@@ -58,7 +58,7 @@ Then call the bootstrapper once.
 RepoDb.SqlServerBootstrap.Initialize();
 ```
 
-Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
 
 ## Special Arguments
 

@@ -1,7 +1,7 @@
 [![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
 [![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
-[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-sqlserver)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-blueviolet)](http://repodb.net/tutorial/get-started-sqlserver)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb)](https://www.nuget.org/packages/RepoDb)
 [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
 [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
@@ -19,27 +19,20 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Core Features
  
-- Asynchronous Operations
-- Batch Operations
-- Bulk Operations
-- Caching
-- Connection Persistency
-- Database Helpers
-- Database Settings
-- Expression Trees
-- Extension Methods
-- Field Mapping
-- Inline Hints
-- Massive Operations (Generics/Explicits/MethodCalls/TableBased)
-- Multi-Resultset Query
-- Property Handlers (Transformations)
-- Query Builder
-- Repositories
-- Resolvers (CLR Types, DB Types)
-- Statement Builder
-- Tracing
-- Transaction
-- Type Mapping
+- [Batch Operations](http://repodb.net/feature/batchoperations)
+- [Bulk Operations](http://repodb.net/feature/bulkoperations)
+- [Caching](http://repodb.net/feature/caching)
+- [Connection Persistency](http://repodb.net/feature/connectionpersistency)
+- [Enumeration](http://repodb.net/feature/enumeration)
+- [Expression Trees](http://repodb.net/feature/expressiontrees)
+- [Field/Class Mapping](http://repodb.net/feature/fieldclassmapping)
+- [Hints](http://repodb.net/feature/hints)
+- [Multiple Query](http://repodb.net/feature/multiplequery)
+- [Property Handlers](http://repodb.net/feature/propertyhandlers)
+- [Repositories](http://repodb.net/feature/repositories)
+- [Tracing](http://repodb.net/feature/tracing)
+- [Transaction](http://repodb.net/feature/transaction)
+- [Type Mapping](http://repodb.net/feature/typemapping)
 
 ## Community engagements
 
@@ -62,7 +55,9 @@ At the Package Manager Console, write the command below.
 Install-Package RepoDb
 ```
 
-## Getting Started
+Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+
+## Get Started
 
 After the installation, any library operation can then be called. Please see below for the samples.
 
@@ -112,4 +107,4 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
+Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for SQL Server.

@@ -1,7 +1,7 @@
 [![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
 [![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
-[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-postgresql)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-blueviolet)](http://repodb.net/tutorial/get-started-postgresql)
 [![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql)](https://www.nuget.org/packages/RepoDb.PostgreSql)
 [![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
 [![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
@@ -43,9 +43,9 @@ At the Package Manager Console, write the command below.
 > Install-Package RepoDb.PostgreSql
 ```
 
-Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
 
-## Getting Started
+## Get Started
 
 First, the bootstrapper must be initialized.
 

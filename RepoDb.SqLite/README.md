@@ -1,7 +1,7 @@
 [![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
 [![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
-[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-sqlite)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-blueviolet)](http://repodb.net/tutorial/get-started-sqlite)
 [![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite)](https://www.nuget.org/packages/RepoDb.SqLite)
 [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
 [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
@@ -43,9 +43,9 @@ At the Package Manager Console, write the command below.
 > Install-Package RepoDb.SqLite
 ```
 
-Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
+Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
 
-## Getting Started
+## Get Started
 
 First, the bootstrapper must be initialized.
 
