@@ -60,8 +60,22 @@ Please get in touch with us via:
 
 ## Supported Databases
 
-The execute methods (ie: [ExecuteQuery](http://repodb.net/operation/executequery), [ExecuteNonQuery](http://repodb.net/operation/executenonquery), [ExecuteScalar](http://repodb.net/operation/executescalar), [ExecuteReader](http://repodb.net/operation/executereader) and [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)) supports all RDBMS data providers, whereas the fluent methods (ie: [Query](http://repodb.net/operation/query), [Insert](http://repodb.net/operation/insert), [Merge](http://repodb.net/operation/merge), [Delete](http://repodb.net/operation/delete), [Update](http://repodb.net/operation/update), etc) only supports the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
+The execute methods below supports all RDBMS data providers.
 
+- [ExecuteQuery](http://repodb.net/operation/executequery)
+- [ExecuteNonQuery](http://repodb.net/operation/executenonquery)
+- [ExecuteScalar](http://repodb.net/operation/executescalar)
+- [ExecuteReader](http://repodb.net/operation/executereader)
+- [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
+
+Whereas the fluent methods below only supports the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
+
+- [Query](http://repodb.net/operation/query)
+- [Insert](http://repodb.net/operation/insert)
+- [Merge](http://repodb.net/operation/merge)
+- [Delete](http://repodb.net/operation/delete)
+- [Update](http://repodb.net/operation/update)
+ 
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## Get Started
