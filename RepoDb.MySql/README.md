@@ -1,6 +1,7 @@
 [![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
+[![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-mysql)
 [![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql)](https://www.nuget.org/packages/RepoDb.MySql)
 [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
 [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
@@ -14,7 +15,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
+- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
@@ -25,8 +26,8 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Dependencies
 
-- [MySql.Data](https://www.nuget.org/packages/MySql.Data/) - the data provider used for *MySql*.
-- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of *RepoDb*.
+- [MySql.Data](https://www.nuget.org/packages/MySql.Data/) - the data provider used for MySql.
+- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
 
 ## License
 
@@ -36,11 +37,13 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Installation
 
-At the *Package Manager Console*, write the command below.
+At the Package Manager Console, write the command below.
 
 ```csharp
 > Install-Package RepoDb.MySql
 ```
+
+Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
 
 ## Getting Started
 
@@ -53,6 +56,8 @@ RepoDb.MySqlBootstrap.Initialize();
 **Note:** The call must be done once.
 
 After the bootstrap initialization, any library operation can then be called.
+
+Or, visit the official [get-started](http://repodb.net/tutorial/get-started-mysql) page for MySQL.
 
 ### Query
 

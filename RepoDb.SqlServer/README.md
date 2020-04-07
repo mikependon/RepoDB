@@ -1,20 +1,21 @@
 [![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
+[![Website](https://img.shields.io/badge/website-repodb.net-yellow)](http://repodb.net)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-sqlserver)
 [![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer)](https://www.nuget.org/packages/RepoDb.SqlServer)
 [![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
 [![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
 ## RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
+- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
@@ -25,8 +26,8 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Dependencies
 
-- [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) - the data provider used for *SqlServer*.
-- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of *RepoDb*.
+- [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) - the data provider used for SqlServer.
+- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDb.
 
 ## License
 
@@ -36,11 +37,13 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Installation
 
-At the *Package Manager Console*, write the command below.
+At the Package Manager Console, write the command below.
 
 ```csharp
 > Install-Package RepoDb.SqlServer
 ```
+
+Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
 
 ## Getting Started
 
@@ -53,6 +56,8 @@ RepoDb.SqlServerBootstrap.Initialize();
 **Note:** The call must be done once.
 
 After the bootstrap initialization, any library operation can then be called.
+
+Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqlserver) page for SQL Server.
 
 ### Query
 
@@ -99,5 +104,3 @@ using (var connection = new SqlConnection(ConnectionString))
 	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
-
-To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.

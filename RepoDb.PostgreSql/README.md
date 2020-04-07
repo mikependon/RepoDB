@@ -1,6 +1,7 @@
 [![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
+[![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-postgresql)
 [![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql)](https://www.nuget.org/packages/RepoDb.PostgreSql)
 [![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
 [![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
@@ -14,7 +15,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
+- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
@@ -25,8 +26,8 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Dependencies
 
-- [Npgsql](https://www.nuget.org/packages/Npgsql/) - the data provider used for *PostgreSql*.
-- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of *RepoDb*.
+- [Npgsql](https://www.nuget.org/packages/Npgsql/) - the data provider used for PostgreSql.
+- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDb.
 
 ## License
 
@@ -36,11 +37,13 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Installation
 
-At the *Package Manager Console*, write the command below.
+At the Package Manager Console, write the command below.
 
 ```csharp
 > Install-Package RepoDb.PostgreSql
 ```
+
+Or visit our [installation](http://repodb.net/tutorial/installation) page for more information.
 
 ## Getting Started
 
@@ -53,6 +56,8 @@ RepoDb.PostgreSqlBootstrap.Initialize();
 **Note:** The call must be done once.
 
 After the bootstrap initialization, any library operation can then be called.
+
+Or, visit the official [get-started](http://repodb.net/tutorial/get-started-postgresql) page for PostgreSQL.
 
 ### Query
 
@@ -99,5 +104,3 @@ using (var connection = new NpgsqlConnection(ConnectionString))
 	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
-
-To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.

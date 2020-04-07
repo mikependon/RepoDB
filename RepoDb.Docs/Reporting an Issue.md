@@ -110,7 +110,7 @@ Anyone can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitt
 
 ## StackOverflow
 
-Any one can create a *Question* or *Bug* in [*StackOverflow*](https://stackoverflow.com/questions/tagged/repodb) by tagging *RepoDb*. We are visiting the site from time-to-time.
+Any one can create a *Question* or *Bug* in [*StackOverflow*](https://stackoverflow.com/questions/tagged/repodb) by tagging RepoDb. We are visiting the site from time-to-time.
 
 **What will we do if there is an issue in StackOverflow?**
 

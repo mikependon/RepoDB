@@ -1,12 +1,17 @@
 [![SqlServerBulkBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-uai8a)](https://ci.appveyor.com/project/mikependon/repodb-uai8a)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
+[![Website](https://img.shields.io/badge/website-repodb.net-yellow)](http://repodb.net)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 [![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
 
 ## RepoDb.SqlServer.BulkOperations
 
 An extension library that contains the official Bulk Operations for RepoDb.
+
+## Important Pages
+
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Why use Bulk Operations?
 
@@ -61,15 +66,15 @@ The arguments `qualifiers` and `usePhysicalPseudoTempTable` is provided at [Bulk
 
 The argument `qualifiers` is used to define the qualifier fields to be used in the operation. It usually refers to the *WHERE* expression of SQL Statements. If not given, the primary key (or identity) field will be used.
 
-The argument `usePhysicalPseudoTempTable` is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: *#TableName*) is used.
+The argument `usePhysicalPseudoTempTable` is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: `#TableName`) is used.
 
 ## Async Methods
 
-All synchronous methods has an equivalent asynchronous (Async) methods (ie: *BulkDeleteAsync*, *BulkInsertAsync*, *BulkMergeAsync* and *BulkUpdateAsync*).
+All synchronous methods has an equivalent asynchronous (Async) methods.
 
 ## Caveats
 
-RepoDb is automatically setting the value of *options* argument to *SqlBulkCopyOptions.KeepIdentity* when calling the [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) if you have not passed any *qualifiers* and if your table has an *IDENTITY* primary key column. The same logic will apply if there is no primary key but has an *IDENTITY* column defined in the table.
+RepoDb is automatically setting the value of `options` argument to `SqlBulkCopyOptions.KeepIdentity` when calling the [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) if you have not passed any `qualifiers` and if your table has an `IDENTITY` primary key column. The same logic will apply if there is no primary key but has an `IDENTITY` column defined in the table.
 
 In addition, when calling the [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) operations, the library is creating a pseudo temporary table behind the scene. It requires your user to have the correct privilege to create a table in the database, otherwise a `SqlException` will be thrown.
 

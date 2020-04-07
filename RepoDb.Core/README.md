@@ -1,6 +1,7 @@
 [![CoreBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-ek0nw)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Wiki](https://img.shields.io/badge/wiki-information-yellow)](https://github.com/mikependon/RepoDb/wiki)
+[![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
+[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-pink)](http://repodb.net/tutorial/get-started-sqlserver)
 [![CoreVersion](https://img.shields.io/nuget/v/RepoDb)](https://www.nuget.org/packages/RepoDb)
 [![CoreUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
 [![CoreIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
@@ -14,7 +15,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
-- [Wiki Page](https://github.com/mikependon/RepoDb/wiki) - usabilities, benefits, features, capabilities, learnings, topics and FAQs. 
+- [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Core Features
  
@@ -55,7 +56,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Installation
 
-At the *Package Manager Console*, write the command below.
+At the Package Manager Console, write the command below.
 
 ```
 Install-Package RepoDb
