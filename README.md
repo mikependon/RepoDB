@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Icons/RepoDb-64x64.png" height="64px" />
+	<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/Icons/RepoDb-64x64.png" height="64px" />
 </p>
 
 -----------------
@@ -7,15 +7,13 @@
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?label=sln%20builds)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Website](https://img.shields.io/badge/website-repodb.net-yellow)](http://repodb.net)
 [![GetStarted](https://img.shields.io/badge/tutorial-getstarted-blueviolet)](http://repodb.net/tutorial/get-started-sqlserver)
-[![Docs](https://img.shields.io/badge/docs-library-yellowgreen)](http://repodb.net/docs)
 [![Releases](https://img.shields.io/badge/releases-core-green)](http://repodb.net/release/core)
-[![CodeSize](https://img.shields.io/github/languages/code-size/mikependon/repodb)](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?color=48B293)](https://gitter.im/RepoDb/community)
 [![License](https://img.shields.io/badge/license-apache-important)](http://apache.org/licenses/LICENSE-2.0.html)
 
 ## RepoDb - a hybrid ORM Library for .NET.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
@@ -33,9 +31,9 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 ## Contributions
 
-We would like to make RepoDb the mainstream hybrid-ORM library for .NET. So please help us build and realize the solution.
+We would like to make RepoDb the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
-To contribute, please open the [issues](https://github.com/mikependon/RepoDb/issues) tab and filter the list of items with [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 Your biggest contribution is to utilize and share this solution to other developers.
 
@@ -44,8 +42,6 @@ Your biggest contribution is to utilize and share this solution to other develop
 - Document it
 - Share it
 - Use it
-
-We are really thanking you for that!
 
 ### Engagements
 
@@ -64,7 +60,7 @@ Please get in touch with us via:
 
 ## Supported Databases
 
-The execute methods (ie: [ExecuteQuery](http://repodb.net/operation/executequery), [ExecuteNonQuery](http://repodb.net/operation/executenonquery), [ExecuteScalar](http://repodb.net/operation/executescalar), [ExecuteReader](http://repodb.net/operation/executereader) and [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)) supports all RDBMS data providers, whereas, the fluent methods (ie: [Query](http://repodb.net/operation/query), [Insert](http://repodb.net/operation/insert), [Merge](http://repodb.net/operation/merge), [Delete](http://repodb.net/operation/delete), [Update](http://repodb.net/operation/update), etc) only supports the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
+The execute methods (ie: [ExecuteQuery](http://repodb.net/operation/executequery), [ExecuteNonQuery](http://repodb.net/operation/executenonquery), [ExecuteScalar](http://repodb.net/operation/executescalar), [ExecuteReader](http://repodb.net/operation/executereader) and [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)) supports all RDBMS data providers, whereas the fluent methods (ie: [Query](http://repodb.net/operation/query), [Insert](http://repodb.net/operation/insert), [Merge](http://repodb.net/operation/merge), [Delete](http://repodb.net/operation/delete), [Update](http://repodb.net/operation/update), etc) only supports the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
 
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
@@ -77,7 +73,7 @@ Please click any of the link below to fast-track your learnings.
 - [MySql](http://repodb.net/tutorial/get-started-mysql)
 - [PostgreSql](http://repodb.net/tutorial/get-started-postgresql)
 
-Or learn the specific feature.
+Or, learn the specific feature.
 
 - [Batch Operations](http://repodb.net/feature/batchoperations)
 - [Bulk Operations](http://repodb.net/feature/bulkoperations)
@@ -102,7 +98,7 @@ The benchmark result to be shown on this page will always be referring to the co
 
 Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="460px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/RDAB/RDAB-Result.PNG" height="460px" />
 
 This section will always be updated with the latest official result.
 
