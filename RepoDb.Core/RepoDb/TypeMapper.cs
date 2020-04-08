@@ -8,41 +8,77 @@ using RepoDb.Exceptions;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that is used to map a .NET CLR Type into its equivalent database type.
+    /// A static class that is used to map a .NET CLR type into its equivalent <see cref="DbType"/> object.
     /// </summary>
     public static class TypeMapper
     {
+        #region Privates
+
         private static readonly ConcurrentDictionary<int, DbType?> m_maps = new ConcurrentDictionary<int, DbType?>();
+
+        #endregion
 
         static TypeMapper()
         {
             ConversionType = ConversionType.Default;
         }
 
+        #region Properties
+
         /// <summary>
-        /// Gets or sets the conversion type when converting the instance of <see cref="DbDataReader"/> object into its destination .NET CLR types.
+        /// Gets or sets the conversion type when converting the instance of <see cref="DbDataReader"/> object into its destination .NET CLR Types.
         /// The default value is <see cref="ConversionType.Default"/>.
         /// </summary>
         public static ConversionType ConversionType { get; set; }
 
+        #endregion
+
+        #region Methods
+
+        /*
+         * Add
+         */
+
         /// <summary>
-        /// Adds a mapping between .NET CLR Type and database type.
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type to be mapped.</param>
-        /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
-        public static void Map(Type type,
-            DbType dbType)
+        /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        public static void Add<T>(DbType dbType)
         {
-            Map(type, dbType, false);
+            Add(typeof(T), dbType);
         }
 
         /// <summary>
-        /// Adds a mapping between .NET CLR Type and database type.
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type to be mapped.</param>
-        /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
+        /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Map(Type type,
+        public static void Add<T>(DbType dbType,
+            bool force)
+        {
+            Add(typeof(T), dbType, force);
+        }
+
+        /// <summary>
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <param name="type">The .NET CLR type to be mapped.</param>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        public static void Add(Type type,
+            DbType dbType)
+        {
+            Add(type, dbType, false);
+        }
+
+        /// <summary>
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <param name="type">The .NET CLR type to be mapped.</param>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        public static void Add(Type type,
             DbType dbType,
             bool force)
         {
@@ -60,7 +96,7 @@ namespace RepoDb
                 else
                 {
                     // Throws an exception
-                    throw new MissingMappingException($"Mapping to '{type.FullName}' already exists.");
+                    throw new MappingExistsException($"Mapping to '{type.FullName}' already exists.");
                 }
             }
             else
@@ -70,11 +106,79 @@ namespace RepoDb
             }
         }
 
+        /*
+         * Map
+         */
+
         /// <summary>
-        /// Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type used for mapping.</param>
-        /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
+        /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        [Obsolete("Use the 'Add' method instead.")]
+        public static void Map<T>(DbType dbType)
+        {
+            Add(typeof(T), dbType);
+        }
+
+        /// <summary>
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        [Obsolete("Use the 'Add' method instead.")]
+        public static void Map<T>(DbType dbType,
+            bool force)
+        {
+            Add(typeof(T), dbType, force);
+        }
+
+        /// <summary>
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <param name="type">The .NET CLR type to be mapped.</param>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        [Obsolete("Use the 'Add' method instead.")]
+        public static void Map(Type type,
+            DbType dbType)
+        {
+            Add(type, dbType, false);
+        }
+
+        /// <summary>
+        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <param name="type">The .NET CLR type to be mapped.</param>
+        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        [Obsolete("Use the 'Add' method instead.")]
+        public static void Map(Type type,
+            DbType dbType,
+            bool force)
+        {
+            Add(type, dbType, force);
+        }
+
+        /*
+         * Get
+         */
+
+        /// <summary>
+        /// Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
+        /// </summary>
+        /// <typeparam name="T">The dynamic .NET CLR type used for mapping.</typeparam>
+        /// <returns>The instance of the mapped <see cref="DbType"/> object.</returns>
+        public static DbType? Get<T>()
+        {
+            return Get(typeof(T));
+        }
+
+        /// <summary>
+        /// Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
+        /// </summary>
+        /// <param name="type">The .NET CLR type used for mapping.</param>
+        /// <returns>The instance of the mapped <see cref="DbType"/> object.</returns>
         public static DbType? Get(Type type)
         {
             var value = (DbType?)null;
@@ -87,21 +191,24 @@ namespace RepoDb
             return value;
         }
 
+        /*
+         * Remove
+         */
+
         /// <summary>
-        /// Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
+        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
-        /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
-        /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static DbType? Get<T>()
+        /// <typeparam name="T">The .NET CLR type mapping to be removed.</typeparam>
+        public static void Remove<T>()
         {
-            return Get(typeof(T));
+            Remove(typeof(T));
         }
 
         /// <summary>
-        /// Removes a mapping of targetted .NET CLR Type from the collection.
+        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type mapping to be removed.</param>
-        public static void Unmap(Type type)
+        /// <param name="type">The .NET CLR type mapping to be removed.</param>
+        public static void Remove(Type type)
         {
             var key = type.FullName.GetHashCode();
             var value = (DbType?)null;
@@ -109,5 +216,31 @@ namespace RepoDb
             // Try get the value
             m_maps.TryRemove(key, out value);
         }
+
+        /*
+         * Unmap
+         */
+
+        /// <summary>
+        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <typeparam name="T">The .NET CLR type mapping to be removed.</typeparam>
+        [Obsolete("Use the 'Remove' method instead.")]
+        public static void Unmap<T>()
+        {
+            Remove(typeof(T));
+        }
+
+        /// <summary>
+        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
+        /// </summary>
+        /// <param name="type">The .NET CLR type mapping to be removed.</param>
+        [Obsolete("Use the 'Remove' method instead.")]
+        public static void Unmap(Type type)
+        {
+            Remove(type);
+        }
+
+        #endregion
     }
 }
