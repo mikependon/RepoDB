@@ -7,12 +7,12 @@ namespace RepoDb.UnitTests.Attributes
     public class MapAttributeTest
     {
         [Map("Name")]
-        public class TestMapAttributeUnquotedNameClass
+        private class TestMapAttributeUnquotedNameClass
         {
         }
 
         [Map("[dbo].[Name]")]
-        public class TestMapAttributeQuotedNameClass
+        private class TestMapAttributeQuotedNameClass
         {
         }
 

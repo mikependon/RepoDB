@@ -4,7 +4,7 @@ using RepoDb.Attributes;
 namespace RepoDb.UnitTests.Others
 {
     [TestClass]
-    public partial class ClassMappingTest
+    public partial class ClassMappedNameCacheTest
     {
         private class Fruit
         {
