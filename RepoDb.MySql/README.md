@@ -6,9 +6,9 @@
 [![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
 [![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
 
-## RepoDb.MySql - a hybrid .NET ORM library for MySql.
+# RepoDb.MySql - a hybrid .NET ORM library for MySQL.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 

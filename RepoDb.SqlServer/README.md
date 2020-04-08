@@ -6,9 +6,9 @@
 [![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
 [![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
-## RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
+# RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 

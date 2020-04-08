@@ -4,7 +4,7 @@
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 [![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
 
-## RepoDb.SqlServer.BulkOperations
+# RepoDb.SqlServer.BulkOperations
 
 An extension library that contains the official Bulk Operations of RepoDb for SQL Server.
 

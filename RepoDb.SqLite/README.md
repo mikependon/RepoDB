@@ -6,9 +6,9 @@
 [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
 [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
 
-## RepoDb.SqLite - a hybrid .NET ORM library for SqLite.
+# RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and macro-ORMs. It helps the developer to simplify the switch-over of when to use the “BASIC” and “ADVANCE” operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 

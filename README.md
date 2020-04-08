@@ -1,5 +1,7 @@
 <p align="center">
-	<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/Icons/RepoDb-64x64.png" height="64px" />
+	<a href="http://repodb.net">
+		<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/Icons/RepoDb-64x64.png" height="64px" />
+	</a>
 </p>
 
 -----------------
@@ -11,18 +13,18 @@
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?color=48B293)](https://gitter.im/RepoDb/community)
 [![License](https://img.shields.io/badge/license-apache-important)](http://apache.org/licenses/LICENSE-2.0.html)
 
-## RepoDb - a hybrid ORM Library for .NET.
+# [RepoDb](http://repodb.net) - a hybrid ORM Library for .NET.
 
 RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
 <details>
-<summary><b>The benefits of this library</b></summary>
+<summary><b>The benefits of using this library</b></summary>
 
 - The development experience is like Dapper but the feature is almost like EntityFramework.
-- The installation is easy and fast! It can then be used right-away.
-- The layer like DbContext is eliminated, those make the developers speed-up the usability.
+- The installation is easy and fast, it can then be used right-away.
+- The layer of like DbContext has been eliminated, those give the developers more control on the implementation.
 - The calls to fluent and raw-SQL methods is just a dot away.
 - The implementation of repository is becoming more simple by leveraging the built-in repositories.
 - The control to query optimizations is easy via hints.
