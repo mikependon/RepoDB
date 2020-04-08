@@ -43,7 +43,7 @@ RepoDb.Core v1.10.10:
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="..\..\RepoDb.Raw\Icons\RepoDb-64x64.png">
+    <None Include="..\..\..\RepoDb.Raw\Icons\RepoDb-64x64.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
