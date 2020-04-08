@@ -1099,7 +1099,24 @@ namespace RepoDb
             where TEntity : class
         {
             var queryGroup = (QueryGroup)null;
-            var value = rightValue ?? expression.GetValue();
+            var value = rightValue;
+            var isForBoolean = expression.Type == typeof(bool) && 
+                (expressionType == ExpressionType.Not || expressionType == ExpressionType.AndAlso || expressionType == ExpressionType.OrElse);
+            var ignoreIsNot = false;
+
+            // Handle for boolean
+            if (value == null)
+            {
+                if (isForBoolean)
+                {
+                    value = false;
+                    ignoreIsNot = true;
+                }
+                else
+                {
+                    value = expression.GetValue();
+                }
+            }
 
             // Check if there are values
             if (value != null)
@@ -1107,20 +1124,33 @@ namespace RepoDb
                 // Specialized for enum
                 if (expression.Type.GetTypeInfo().IsEnum)
                 {
-                    var dbType = TypeMapper.Get(expression.Type);
                     value = Enum.ToObject(expression.Type, value);
                 }
 
                 // Create a new field
-                var field = new QueryField(expression.Member.GetMappedName(),
-                    QueryField.GetOperation(expressionType),
-                    value);
+                var field = (QueryField)null;
+
+                if (isForBoolean)
+                {
+                    field = new QueryField(expression.Member.GetMappedName(),
+                        value);
+                    ignoreIsNot = true;
+                }
+                else
+                {
+                    field = new QueryField(expression.Member.GetMappedName(),
+                        QueryField.GetOperation(expressionType),
+                        value);
+                }
 
                 // Set the query group
                 queryGroup = new QueryGroup(field);
 
                 // Set the query group IsNot property
-                queryGroup.SetIsNot(isEqualsTo == false);
+                if (ignoreIsNot == false)
+                {
+                    queryGroup.SetIsNot(isEqualsTo == false);
+                }
             }
 
             // Return the result

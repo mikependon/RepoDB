@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests
 {
@@ -69,6 +68,39 @@ namespace RepoDb.UnitTests
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == value).GetString(m_dbSetting);
             var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionBooleanNegation()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyBoolean).GetString(m_dbSetting);
+            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionBooleanNegationWithOtherPropertyForAnd()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString != "A" && !e.PropertyBoolean).GetString(m_dbSetting);
+            var expected = "(([PropertyString] <> @PropertyString) AND ([PropertyBoolean] = @PropertyBoolean))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionBooleanNegationWithOtherPropertyForOr()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString != "A" || !e.PropertyBoolean).GetString(m_dbSetting);
+            var expected = "(([PropertyString] <> @PropertyString) OR ([PropertyBoolean] = @PropertyBoolean))";
 
             // Assert
             Assert.AreEqual(expected, actual);
