@@ -112,7 +112,7 @@ The benchmark result to be shown on this page will always be referring to the co
 
 Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190520_netcore.txt).
 
-<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/RDAB/RDAB-Result.PNG" height="460px" />
+<img src="https://raw.githubusercontent.com/mikependon/RepoDb/master/RepoDb.Raw/RDAB/RDAB-Result.PNG" height="460px" />
 
 This section will always be updated with the latest official result.
 
