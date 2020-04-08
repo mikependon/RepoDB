@@ -24,13 +24,14 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 - The installation is easy and fast! It can then be used right-away.
 - The layer like DbContext is eliminated, those make the developers speed-up the usability.
 - The calls to fluent and raw-SQL methods is just a dot away.
-- The implementation of repository is more simple by leveraging the built-in repositories.
-- The support to dynamics is rich; can even work without the models.
+- The implementation of repository is becoming more simple by leveraging the built-in repositories.
+- The control to query optimizations is easy via hints.
 - The processes to handle the large datasets is very-simple with batch and bulk operations.
 - The round-trips to the database is being minimized with 2nd-Layer cache.
 - The column transformation can be customized with property handlers.
 - The auditing and tracing is much more simpler using the trace capability.
-- The transmission of the data from different RDBMS data roviders only take few lines of codes.
+- The support to dynamics is rich and can even work without the models.
+- The transmission of the data from different RDBMS data providers only take few lines of codes.
 
 </details>
 
