@@ -30,39 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs"
 		..\RepoDb.Docs\Reporting an Issue.md = ..\RepoDb.Docs\Reporting an Issue.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.ReadTheDocs", "RepoDb.ReadTheDocs", "{D0EB4CFD-A1B1-46F9-BD43-D1B03324FF30}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\index.rst = ..\Docs\index.rst
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{0C8FF83A-9C61-4ABA-B18D-89A3520CC36A}"
-	ProjectSection(SolutionItems) = preProject
-		..\Docs\pages\attributes.rst = ..\Docs\pages\attributes.rst
-		..\Docs\pages\cache.rst = ..\Docs\pages\cache.rst
-		..\Docs\pages\connection.rst = ..\Docs\pages\connection.rst
-		..\Docs\pages\contact.rst = ..\Docs\pages\contact.rst
-		..\Docs\pages\dbhelper.rst = ..\Docs\pages\dbhelper.rst
-		..\Docs\pages\dbsetting.rst = ..\Docs\pages\dbsetting.rst
-		..\Docs\pages\enumeration.rst = ..\Docs\pages\enumeration.rst
-		..\Docs\pages\extensibility.rst = ..\Docs\pages\extensibility.rst
-		..\Docs\pages\field.rst = ..\Docs\pages\field.rst
-		..\Docs\pages\hints.rst = ..\Docs\pages\hints.rst
-		..\Docs\pages\installation.rst = ..\Docs\pages\installation.rst
-		..\Docs\pages\introduction.rst = ..\Docs\pages\introduction.rst
-		..\Docs\pages\orderfield.rst = ..\Docs\pages\orderfield.rst
-		..\Docs\pages\performance.rst = ..\Docs\pages\performance.rst
-		..\Docs\pages\persistency.rst = ..\Docs\pages\persistency.rst
-		..\Docs\pages\propertyhandler.rst = ..\Docs\pages\propertyhandler.rst
-		..\Docs\pages\querygroup.rst = ..\Docs\pages\querygroup.rst
-		..\Docs\pages\rawsql.rst = ..\Docs\pages\rawsql.rst
-		..\Docs\pages\repository.rst = ..\Docs\pages\repository.rst
-		..\Docs\pages\statementbuilder.rst = ..\Docs\pages\statementbuilder.rst
-		..\Docs\pages\support.rst = ..\Docs\pages\support.rst
-		..\Docs\pages\trace.rst = ..\Docs\pages\trace.rst
-		..\Docs\pages\transaction.rst = ..\Docs\pages\transaction.rst
-		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqLite", "SqLite", "{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC}"
@@ -136,7 +103,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0C8FF83A-9C61-4ABA-B18D-89A3520CC36A} = {D0EB4CFD-A1B1-46F9-BD43-D1B03324FF30}
 		{5EA323B8-B4B6-4083-97A3-018C9423B20A} = {810FF947-4368-477F-9193-07532892B492}
 		{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}

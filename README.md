@@ -17,6 +17,23 @@ RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and fu
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
+<details>
+<summary><b>The benefits of this library</b></summary>
+
+- The development experience is like Dapper but the feature is almost like EntityFramework.
+- The installation is easy and fast! It can then be used right-away.
+- The layer like DbContext is eliminated, those make the developers speed-up the usability.
+- The calls to fluent and raw-SQL methods is just a dot away.
+- The implementation of repository is more simple by leveraging the built-in repositories.
+- The support to dynamics is rich; can even work without the models.
+- The processes to handle the large datasets is very-simple with batch and bulk operations.
+- The round-trips to the database is being minimized with 2nd-Layer cache.
+- The column transformation can be customized with property handlers.
+- The auditing and tracing is much more simpler using the trace capability.
+- The transmission of the data from different RDBMS data roviders only take few lines of codes.
+
+</details>
+
 ### It is easy-to-use
 
 RepoDb operations were implemented as extended methods of the IDbConnection object. For as long the connection is open, the developers can do all the activities towards the database.
