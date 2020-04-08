@@ -6,7 +6,7 @@
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
-    <Description>An extension library that contains the official Bulk Operations for RepoDb.</Description>
+    <Description>An extension library that contains the official Bulk Operations of RepoDb for SQL Server.</Description>
     <Copyright>Copyright © 2020</Copyright>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageProjectUrl>http://repodb.net/</PackageProjectUrl>

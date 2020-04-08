@@ -6,7 +6,7 @@
 
 ## RepoDb.SqlServer.BulkOperations
 
-An extension library that contains the official Bulk Operations for RepoDb.
+An extension library that contains the official Bulk Operations of RepoDb for SQL Server.
 
 ## Important Pages
 
@@ -64,7 +64,7 @@ Or, visit our [installation](http://repodb.net/tutorial/installation) page for m
 
 The arguments `qualifiers` and `usePhysicalPseudoTempTable` is provided at [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) operations.
 
-The argument `qualifiers` is used to define the qualifier fields to be used in the operation. It usually refers to the *WHERE* expression of SQL Statements. If not given, the primary key (or identity) field will be used.
+The argument `qualifiers` is used to define the qualifier fields to be used in the operation. It usually refers to the `WHERE` expression of SQL Statements. If not given, the primary key (or identity) field will be used.
 
 The argument `usePhysicalPseudoTempTable` is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: `#TableName`) is used.
 
