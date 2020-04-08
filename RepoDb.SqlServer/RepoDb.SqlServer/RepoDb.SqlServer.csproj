@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
     <PackageIconUrl />
@@ -11,22 +11,13 @@
     <Company>RepoDb</Company>
     <Authors>Michael Camara Pendon</Authors>
     <Copyright>Copyright © 2020</Copyright>
-    <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
+    <PackageProjectUrl>http://repodb.net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm sqlserver sqlserver-orm</PackageTags>
-    <PackageReleaseNotes>RepoDb.SqlServer v1.0.4:
-- Referenced with the latest version of RepoDb.Core v1.10.10.
-
-RepoDb.Core v1.10.10:
-- Features: Full support to Bulk Operations (BulkDelete, BulkInsert, BulkMerge and BulkUpdate).
-- Enhancement: AsFieldsAsAliasFields - added left and right aliases.
-- Enhancement: XML Documentation updates for the SQL Statement Builders.
-- Enhancement: Add a Type extended method named IsNullable.
-- Bug: Solve the intermittent "NullReferenceException" when calling the Batch Operations (ie: InsertAll, MergeAll, UpdateAll). #392
-- Bug: The property handlers mapped via PropertyTypeHandlerMapper is failing if both NULLABLE and NON-NULLABLE property types are present in the class. #394</PackageReleaseNotes>
-    <AssemblyVersion>1.0.4.0</AssemblyVersion>
-    <FileVersion>1.0.4.0</FileVersion>
+    <PackageReleaseNotes>http://repodb.net/release/sqlserver</PackageReleaseNotes>
+    <AssemblyVersion>1.0.5.0</AssemblyVersion>
+    <FileVersion>1.0.5.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
