@@ -23,10 +23,7 @@ namespace RepoDb
         /// <typeparam name="T">The .NET CLR Type to be mapped.</typeparam>
         /// <param name="objectName">The name of the database object (ie: Table, View).</param>
         public static void Add<T>(string objectName)
-            where T : class
-        {
-            Add(typeof(T), objectName);
-        }
+            where T : class => Add(typeof(T), objectName);
 
         /// <summary>
         /// Adds a mapping between a class and the database object.
@@ -36,10 +33,7 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<T>(string objectName,
             bool force)
-            where T : class
-        {
-            Add(typeof(T), objectName, force);
-        }
+            where T : class => Add(typeof(T), objectName, force);
 
         /// <summary>
         /// Adds a mapping between a class and the database object.
@@ -47,10 +41,7 @@ namespace RepoDb
         /// <param name="type">The .NET CLR Type to be mapped.</param>
         /// <param name="objectName">The name of the database object (ie: Table, View).</param>
         public static void Add(Type type,
-            string objectName)
-        {
-            Add(type, objectName, false);
-        }
+            string objectName) => Add(type, objectName, false);
 
         /// <summary>
         /// Adds a mapping between a class and the database object.
@@ -94,18 +85,15 @@ namespace RepoDb
         /// Gets the mapped name of the class.
         /// </summary>
         /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
-        /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
+        /// <returns>The mapped name of the class.</returns>
         public static string Get<T>()
-            where T : class
-        {
-            return Get(typeof(T));
-        }
+            where T : class => Get(typeof(T));
 
         /// <summary>
-        /// Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
+        /// Gets the mapped name of the class.
         /// </summary>
         /// <param name="type">The .NET CLR Type used for mapping.</param>
-        /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
+        /// <returns>The mapped name of the class.</returns>
         public static string Get(Type type)
         {
             var value = (string)null;
@@ -127,10 +115,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The .NET CLR Type mapping to be removed.</typeparam>
         public static void Remove<T>()
-            where T : class
-        {
-            Remove(typeof(T));
-        }
+            where T : class => Remove(typeof(T));
 
         /// <summary>
         /// Removes a mapping of targetted .NET CLR Type from the collection.

@@ -81,7 +81,9 @@ namespace RepoDb.Extensions
         public static string GetMappedName(this PropertyInfo property)
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
-            return (attribute?.Name ?? property.Name);
+            return attribute?.Name ?? 
+                PropertyMapper.Get(property) ??
+                property.Name;
         }
 
         /// <summary>
