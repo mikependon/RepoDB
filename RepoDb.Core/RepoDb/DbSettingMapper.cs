@@ -32,7 +32,7 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            if (type.GetTypeInfo().IsSubclassOf(m_type) == false)
+            if (type.IsSubclassOf(m_type) == false)
             {
                 throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
             }

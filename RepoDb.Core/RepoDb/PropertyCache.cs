@@ -28,7 +28,7 @@ namespace RepoDb
             var key = type.FullName.GetHashCode();
 
             // Try get the value
-            if (type.GetTypeInfo().IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
+            if (type.IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = ClassExpression.GetProperties<TEntity>();
                 m_cache.TryAdd(key, properties);
@@ -49,7 +49,7 @@ namespace RepoDb
             var key = type.FullName.GetHashCode();
 
             // Try get the value
-            if (type.GetTypeInfo().IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
+            if (type.IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = type.GetClassProperties().AsList();
                 m_cache.TryAdd(key, properties);

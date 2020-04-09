@@ -34,7 +34,7 @@ namespace RepoDb.Extensions
         // GetMappedName
         internal static string GetMappedName(Type type)
         {
-            return type.GetTypeInfo().GetCustomAttribute<MapAttribute>()?.Name ??
+            return type.GetCustomAttribute<MapAttribute>()?.Name ??
                 ClassMapper.Get(type) ??
                 type.Name;
         }

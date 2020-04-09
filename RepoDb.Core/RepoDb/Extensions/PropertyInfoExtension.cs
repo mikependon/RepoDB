@@ -253,6 +253,16 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// Generates a hashcode of the <see cref="PropertyInfo"/> object based on the parent class name and its own name.
+        /// </summary>
+        /// <param name="property">The instance of the <see cref="PropertyInfo"/> object.</param>
+        /// <returns>The generated hashcode.</returns>
+        internal static int GenerateCustomizedHashCode(this PropertyInfo property)
+        {
+            return (property.DeclaringType.DeclaringType.FullName.GetHashCode() ^ property.Name.GetHashCode());
+        }
+
+        /// <summary>
         /// Converts an instance of <see cref="PropertyInfo"/> object into <see cref="Field"/> object.
         /// </summary>
         /// <param name="property">The instance of <see cref="PropertyInfo"/> object to be converted.</param>

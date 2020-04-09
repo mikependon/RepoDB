@@ -196,7 +196,7 @@ namespace RepoDb
                 TypeMapper.Get(propertyType);
 
             // Try to resolve if not found
-            if (m_dbType == null && propertyType.GetTypeInfo().IsEnum == false)
+            if (m_dbType == null && propertyType.IsEnum == false)
             {
                 m_dbType = m_clientTypeToSqlDbTypeResolver.Resolve(PropertyInfo.PropertyType);
             }

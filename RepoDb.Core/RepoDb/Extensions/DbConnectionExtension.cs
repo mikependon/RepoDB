@@ -1298,7 +1298,7 @@ namespace RepoDb
             var properties = (IEnumerable<ClassProperty>)null;
 
             // Identify
-            if (type.GetTypeInfo().IsGenericType)
+            if (type.IsGenericType)
             {
                 properties = type.GetClassProperties();
             }
@@ -1360,7 +1360,7 @@ namespace RepoDb
             {
                 return null;
             }
-            if (whereOrPrimaryKey.GetType().GetTypeInfo().IsGenericType)
+            if (whereOrPrimaryKey.GetType().IsGenericType)
             {
                 return QueryGroup.Parse(whereOrPrimaryKey);
             }
@@ -1395,7 +1395,7 @@ namespace RepoDb
             {
                 return null;
             }
-            if (whereOrPrimaryKey.GetType().GetTypeInfo().IsGenericType)
+            if (whereOrPrimaryKey.GetType().IsGenericType)
             {
                 return QueryGroup.Parse(whereOrPrimaryKey);
             }
@@ -1430,7 +1430,7 @@ namespace RepoDb
             {
                 return null;
             }
-            if (where.GetType().GetTypeInfo().IsGenericType)
+            if (where.GetType().IsGenericType)
             {
                 return QueryGroup.Parse(where);
             }
@@ -1632,7 +1632,7 @@ namespace RepoDb
                     }
 
                     // Skip if it is an array
-                    if (property.DeclaringType.GetTypeInfo().IsGenericType == false && property.PropertyType == typeof(byte[]))
+                    if (property.DeclaringType.IsGenericType == false && property.PropertyType == typeof(byte[]))
                     {
                         continue;
                     }

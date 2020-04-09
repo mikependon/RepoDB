@@ -184,7 +184,7 @@ namespace RepoDb.Extensions
                 var type = param.GetType();
 
                 // Check the validity of the type
-                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
                 {
                     throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }
@@ -193,7 +193,7 @@ namespace RepoDb.Extensions
                 var properties = (IEnumerable<ClassProperty>)null;
 
                 // Add this check for performance
-                if (type.GetTypeInfo().IsGenericType == true)
+                if (type.IsGenericType == true)
                 {
                     properties = type.GetClassProperties();
                 }
@@ -230,7 +230,7 @@ namespace RepoDb.Extensions
                     if (dbType == null)
                     {
                         var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
-                        if (propertyType?.GetTypeInfo().IsEnum == true)
+                        if (propertyType?.IsEnum == true)
                         {
                             dbType = DbType.String;
                         }
@@ -298,7 +298,7 @@ namespace RepoDb.Extensions
                 // Check for the specialized types
                 if (dbType == null)
                 {
-                    if (valueType?.GetTypeInfo().IsEnum == true)
+                    if (valueType?.IsEnum == true)
                     {
                         dbType = DbType.String;
                     }
@@ -378,7 +378,7 @@ namespace RepoDb.Extensions
             // Check for the specialized types
             if (dbType == null)
             {
-                if (valueType?.GetTypeInfo().IsEnum == true)
+                if (valueType?.IsEnum == true)
                 {
                     dbType = DbType.String;
                 }
@@ -495,7 +495,7 @@ namespace RepoDb.Extensions
                 var type = param.GetType();
 
                 // Check the validity of the type
-                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
                 {
                     throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }

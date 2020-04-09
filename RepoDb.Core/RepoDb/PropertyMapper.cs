@@ -57,16 +57,6 @@ namespace RepoDb
             throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
-        /// <summary>
-        /// A helper method that returns the hashcode of the <see cref="PropertyInfo"/> based on names.
-        /// </summary>
-        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> object.</param>
-        /// <returns>The hashcode based on names.</returns>
-        private static int GetHashCode(PropertyInfo propertyInfo)
-        {
-            return (propertyInfo.DeclaringType.FullName.GetHashCode() ^ propertyInfo.Name.GetHashCode());
-        }
-
         #endregion
 
         #region Methods
@@ -185,7 +175,7 @@ namespace RepoDb
             string columnName,
             bool force)
         {
-            var key = GetHashCode(propertyInfo);
+            var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (string)null;
 
             // Try get the cache
@@ -254,7 +244,7 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get(PropertyInfo propertyInfo)
         {
-            var key = GetHashCode(propertyInfo);
+            var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (string)null;
 
             // Try get the value
@@ -305,7 +295,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         public static void Remove(PropertyInfo propertyInfo)
         {
-            var key = GetHashCode(propertyInfo);
+            var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (string)null;
 
             // Try get the value

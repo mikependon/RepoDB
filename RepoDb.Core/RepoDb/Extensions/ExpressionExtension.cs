@@ -536,7 +536,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
         public static object GetValue(this DefaultExpression expression)
         {
-            return expression.Type.GetTypeInfo().IsValueType ? Activator.CreateInstance(expression.Type) : null;
+            return expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
         }
 
         #endregion

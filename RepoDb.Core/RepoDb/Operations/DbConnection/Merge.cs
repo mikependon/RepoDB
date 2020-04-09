@@ -1290,7 +1290,7 @@ namespace RepoDb
             var primaryKey = (ClassProperty)null;
 
             // Get the properties
-            if (type.GetTypeInfo().IsGenericType == true)
+            if (type.IsGenericType == true)
             {
                 properties = type.GetClassProperties();
             }
@@ -1652,7 +1652,7 @@ namespace RepoDb
             var primaryKey = (ClassProperty)null;
 
             // Get the properties
-            if (type.GetTypeInfo().IsGenericType == true)
+            if (type.IsGenericType == true)
             {
                 properties = type.GetClassProperties();
             }

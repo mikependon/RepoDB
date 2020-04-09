@@ -1122,7 +1122,7 @@ namespace RepoDb
             if (value != null)
             {
                 // Specialized for enum
-                if (expression.Type.GetTypeInfo().IsEnum)
+                if (expression.Type.IsEnum)
                 {
                     value = Enum.ToObject(expression.Type, value);
                 }
