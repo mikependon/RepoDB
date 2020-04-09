@@ -7,12 +7,30 @@ namespace RepoDb.UnitTests.Others
     [TestClass]
     public partial class PropertyMappedNameCacheTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            PropertyMappedNameCache.Flush();
+        }
+
+        #region SubClasses
+
         private class PropertyMappedNameCacheTestClass
         {
             public string ColumnString { get; set; }
             [Map("PropertyName")]
             public string PropertyString { get; set; }
         }
+
+        #endregion
+
+        #region Methods
 
         [TestMethod]
         public void TestWithoutMapAttribute()
@@ -37,5 +55,7 @@ namespace RepoDb.UnitTests.Others
             // Assert
             Assert.AreEqual(expected, property.GetMappedName());
         }
+
+        #endregion
     }
 }

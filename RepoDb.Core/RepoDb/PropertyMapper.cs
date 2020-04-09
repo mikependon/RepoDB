@@ -15,50 +15,6 @@ namespace RepoDb
     {
         private static readonly ConcurrentDictionary<int, string> m_maps = new ConcurrentDictionary<int, string>();
 
-        #region Helpers
-
-        /// <summary>
-        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
-        /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
-        /// <param name="propertyName">The name of the class property to be mapped.</param>
-        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        private static PropertyInfo GetProperty<T>(string propertyName)
-            where T : class
-        {
-            return typeof(T)
-                .GetProperties()
-                .FirstOrDefault(p => string.Equals(p.Name, propertyName));
-        }
-
-        /// <summary>
-        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on expression.
-        /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
-        /// <param name="expression">The expression to be extracted.</param>
-        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        private static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
-            where T : class
-        {
-            if (expression.Body.IsUnary())
-            {
-                var unary = expression.Body.ToUnary();
-                if (unary.Operand.IsMember())
-                {
-                    // return 
-                    throw new NotImplementedException();
-                }
-            }
-            else if (expression.Body.IsMember())
-            {
-                // return
-                throw new NotImplementedException();
-            }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
-        }
-
-        #endregion
-
         #region Methods
 
         /*
@@ -300,6 +256,67 @@ namespace RepoDb
 
             // Try get the value
             m_maps.TryRemove(key, out value);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached property mapped names.
+        /// </summary>
+        public static void Flush()
+        {
+            m_maps.Clear();
+        }
+
+        /// <summary>
+        /// Validates the target property that is being passed.
+        /// </summary>
+        /// <param name="propertyInfo">The target property.</param>
+        private static void Validate(PropertyInfo propertyInfo)
+        {
+            if (propertyInfo == null)
+            {
+                throw new NullReferenceException("The target property cannot be null.");
+            }
+        }
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        private static PropertyInfo GetProperty<T>(string propertyName)
+            where T : class
+        {
+            return typeof(T)
+                .GetProperties()
+                .FirstOrDefault(p => string.Equals(p.Name, propertyName));
+        }
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on expression.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="expression">The expression to be extracted.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        private static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
+            where T : class
+        {
+            if (expression.Body.IsMember())
+            {
+                var member = expression.Body.ToMember();
+                if (member.Member is PropertyInfo)
+                {
+                    return PropertyCache.Get<T>()
+                        .FirstOrDefault(p =>
+                            string.Equals(p.PropertyInfo.Name, member.Member.Name, StringComparison.OrdinalIgnoreCase))?
+                        .PropertyInfo;
+                }
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         #endregion

@@ -16,18 +16,17 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name of the property.
         /// </summary>
-        /// <param name="property">The target property.</param>
+        /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(PropertyInfo property)
+        public static string Get(PropertyInfo propertyInfo)
         {
-            var key = property.DeclaringType.FullName.GetHashCode() +
-                property.Name.GetHashCode();
+            var key = propertyInfo.GenerateCustomizedHashCode();
             var result = (string)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = PropertyInfoExtension.GetMappedName(property);
+                result = PropertyInfoExtension.GetMappedName(propertyInfo);
                 m_cache.TryAdd(key, result);
             }
 

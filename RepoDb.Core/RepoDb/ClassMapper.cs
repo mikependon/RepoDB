@@ -53,6 +53,10 @@ namespace RepoDb
             string objectName,
             bool force)
         {
+            // Validate
+            Validate(objectName);
+
+            // Variables
             var key = type.FullName.GetHashCode();
             var value = (string)null;
 
@@ -128,6 +132,30 @@ namespace RepoDb
 
             // Try get the value
             m_maps.TryRemove(key, out value);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Flushes all the existing cached class mapped names.
+        /// </summary>
+        public static void Flush()
+        {
+            m_maps.Clear();
+        }
+
+        /// <summary>
+        /// Validates the database object name that is being passed.
+        /// </summary>
+        /// <param name="objectName">The target database object name.</param>
+        private static void Validate(string objectName)
+        {
+            if (string.IsNullOrEmpty(objectName?.Trim()))
+            {
+                throw new NullReferenceException("The database object name cannot be null.");
+            }
         }
 
         #endregion

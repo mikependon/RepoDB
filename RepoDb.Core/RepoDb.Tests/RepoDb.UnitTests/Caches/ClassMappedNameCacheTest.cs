@@ -1,26 +1,45 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 
-namespace RepoDb.UnitTests.Others
+namespace RepoDb.UnitTests.Caches
 {
     [TestClass]
     public partial class ClassMappedNameCacheTest
     {
-        private class Fruit
+        [TestInitialize]
+        public void Initialize()
+        {
+            Cleanup();
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            ClassMappedNameCache.Flush();
+            ClassMapper.Flush();
+        }
+
+        #region SubClasses
+
+        private class ClassMappedNameCacheTestClass
         {
         }
 
-        [Map("[dbo].[Fruit]")]
-        private class Whatever
+        [Map("[dbo].[Person]")]
+        private class ClassMappedNameCacheTestWithMapAttribute
         {
         }
+
+        #endregion
+
+        #region Methods
 
         [TestMethod]
         public void TestWithoutMapAttribute()
         {
             // Act
-            var actual = ClassMappedNameCache.Get<Fruit>();
-            var expected = "Fruit";
+            var actual = ClassMappedNameCache.Get<ClassMappedNameCacheTestClass>();
+            var expected = "ClassMappedNameCacheTestClass";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -30,8 +49,8 @@ namespace RepoDb.UnitTests.Others
         public void TestWithMapAttribute()
         {
             // Act
-            var actual = ClassMappedNameCache.Get<Whatever>();
-            var expected = "[dbo].[Fruit]";
+            var actual = ClassMappedNameCache.Get<ClassMappedNameCacheTestWithMapAttribute>();
+            var expected = "[dbo].[Person]";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -40,12 +59,12 @@ namespace RepoDb.UnitTests.Others
         [TestMethod]
         public void TestWithClassMapperMapping()
         {
-            // Setyp
-            ClassMapper.Add<Fruit>("[edibles].[Fruit]");
+            // Setup
+            ClassMapper.Add<ClassMappedNameCacheTestClass>("[dbo].[Person]");
 
             // Act
-            var actual = ClassMappedNameCache.Get<Fruit>();
-            var expected = "[edibles].[Fruit]";
+            var actual = ClassMappedNameCache.Get<ClassMappedNameCacheTestClass>();
+            var expected = "[dbo].[Person]";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -54,15 +73,17 @@ namespace RepoDb.UnitTests.Others
         [TestMethod]
         public void TestWithMapAttributeAndWithClassMapperMapping()
         {
-            // Setyp
-            ClassMapper.Add<Whatever>("[edibles].[Fruit]");
+            // Setup
+            ClassMapper.Add<ClassMappedNameCacheTestWithMapAttribute>("[sales].[Person]");
 
             // Act
-            var actual = ClassMappedNameCache.Get<Whatever>();
-            var expected = "[dbo].[Fruit]";
+            var actual = ClassMappedNameCache.Get<ClassMappedNameCacheTestWithMapAttribute>();
+            var expected = "[dbo].[Person]";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        #endregion
     }
 }
