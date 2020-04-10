@@ -190,6 +190,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(Expression<Func<T, object>> expression)
             where T : class => Get(ExpressionExtension.GetProperty<T>(expression));
 
