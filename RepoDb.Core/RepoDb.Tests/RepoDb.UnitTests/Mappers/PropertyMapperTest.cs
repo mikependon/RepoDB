@@ -410,6 +410,138 @@ namespace RepoDb.UnitTests.Others
             PropertyMapper.Add<PropertyMapperTestClass>(new Field("Whatever"), "PropertyText");
         }
 
+        /*
+         * Null ColumnName
+         */
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyNameWithNullTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>("ColumnString", null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaFieldWithNullTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(new Field("ColumnString"), null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaExpressionWithNullTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(e => e.ColumnString, null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaClassPropertyWithNullTargetColumnName()
+        {
+            // Setup
+            var classProperty = PropertyCache.Get<PropertyMapperTestClass>()
+                .First(p => p.PropertyInfo.Name == "ColumnString");
+            PropertyMapper.Add(classProperty, null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyInfoWithNullTargetColumnName()
+        {
+            // Setup
+            var propertyInfo = typeof(PropertyMapperTestClass)
+                .GetProperties()
+                .First(p => p.Name == "ColumnString");
+            PropertyMapper.Add(propertyInfo, null);
+        }
+
+        /*
+         * Empty ColumnName
+         */
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyNameWithEmptyTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>("ColumnString", "");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaFieldWithEmptyTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(new Field("ColumnString"), "");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaExpressionWithEmptyTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(e => e.ColumnString, "");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaClassPropertyWithEmptyTargetColumnName()
+        {
+            // Setup
+            var classProperty = PropertyCache.Get<PropertyMapperTestClass>()
+                .First(p => p.PropertyInfo.Name == "ColumnString");
+            PropertyMapper.Add(classProperty, "");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyInfoWithEmptyTargetColumnName()
+        {
+            // Setup
+            var propertyInfo = typeof(PropertyMapperTestClass)
+                .GetProperties()
+                .First(p => p.Name == "ColumnString");
+            PropertyMapper.Add(propertyInfo, "");
+        }
+
+        /*
+         * Empty-spaces ColumnName
+         */
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyNameWithEmptySpacesTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>("ColumnString", "  ");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaFieldWithEmptySpacesTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(new Field("ColumnString"), "  ");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaExpressionWithEmptySpacesTargetColumnName()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(e => e.ColumnString, "  ");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaClassPropertyWithEmptySpacesTargetColumnName()
+        {
+            // Setup
+            var classProperty = PropertyCache.Get<PropertyMapperTestClass>()
+                .First(p => p.PropertyInfo.Name == "ColumnString");
+            PropertyMapper.Add(classProperty, "  ");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyInfoWithEmptySpacesTargetColumnName()
+        {
+            // Setup
+            var propertyInfo = typeof(PropertyMapperTestClass)
+                .GetProperties()
+                .First(p => p.Name == "ColumnString");
+            PropertyMapper.Add(propertyInfo, "  ");
+        }
+
         #endregion
     }
 }

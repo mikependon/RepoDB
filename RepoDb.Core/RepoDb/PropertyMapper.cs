@@ -154,6 +154,7 @@ namespace RepoDb
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
+            ValidateTargetColumnName(columnName);
 
             // Variables
             var key = propertyInfo.GenerateCustomizedHashCode();
@@ -293,6 +294,18 @@ namespace RepoDb
         public static void Flush()
         {
             m_maps.Clear();
+        }
+
+        /// <summary>
+        /// Validates the value of the target column name.
+        /// </summary>
+        /// <param name="columnName">The column name to be validated.</param>
+        private static void ValidateTargetColumnName(string columnName)
+        {
+            if (string.IsNullOrEmpty(columnName?.Trim()))
+            {
+                throw new NullReferenceException("The target column name cannot be null or empty.");
+            }
         }
 
         /// <summary>
