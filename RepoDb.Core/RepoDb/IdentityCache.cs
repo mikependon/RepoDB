@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
@@ -32,13 +31,26 @@ namespace RepoDb
         /// <returns>The cached identity property.</returns>
         public static ClassProperty Get(Type type)
         {
+            // Variables for the cache
             var key = type.FullName.GetHashCode();
             var property = (ClassProperty)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                property = PropertyCache.Get(type).FirstOrDefault(p => p.IsIdentity() == true);
+                // Get all with IsPrimary() flags
+                var properties = PropertyCache.Get(type).Where(p => p.IsIdentity() == true);
+
+                // Check if there is forced [Identity] attribute
+                property = properties.FirstOrDefault(p => p.GetIdentityAttribute() != null);
+
+                // Otherwise, get the first one
+                if (property == null)
+                {
+                    property = properties?.FirstOrDefault();
+                }
+
+                // Add to the cache (whatever)
                 m_cache.TryAdd(key, property);
             }
 

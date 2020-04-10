@@ -58,7 +58,18 @@ namespace RepoDb
             bool force)
             where T : class
         {
-            Add(TypeExtension.GetProperty<T>(propertyName), force);
+            // Validates
+            ThrowNullReferenceException(propertyName, "PropertyName");
+
+            // Get the property
+            var property = TypeExtension.GetProperty<T>(propertyName);
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(T).FullName}'.");
+            }
+
+            // Add to the mapping
+            Add(property, force);
         }
 
         /// <summary>
@@ -79,7 +90,18 @@ namespace RepoDb
             bool force)
             where T : class
         {
-            Add(TypeExtension.GetProperty<T>(field.Name), force);
+            // Validates
+            ThrowNullReferenceException(field, "Field");
+
+            // Get the property
+            var property = TypeExtension.GetProperty<T>(field.Name);
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(T).FullName}'.");
+            }
+
+            // Add to the mapping
+            Add(property, force);
         }
 
         /// <summary>
@@ -117,7 +139,7 @@ namespace RepoDb
         /// Adds an identity property mapping into a <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
-        public static void Add(ClassProperty classProperty) => Add(classProperty.PropertyInfo, false);
+        public static void Add(ClassProperty classProperty) => Add(classProperty, false);
 
         /// <summary>
         /// Adds an identity property mapping into a <see cref="ClassProperty"/> object.
