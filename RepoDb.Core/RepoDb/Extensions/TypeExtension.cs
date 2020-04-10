@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -141,6 +142,32 @@ namespace RepoDb.Extensions
         }
 
         #region Helpers
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        internal static PropertyInfo GetProperty<T>(string propertyName)
+            where T : class
+        {
+            return GetProperty(typeof(T), propertyName);
+        }
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
+        /// </summary>
+        /// <param name="type">The target .NET CLR type.</param>
+        /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        internal static PropertyInfo GetProperty(Type type,
+            string propertyName)
+        {
+            return type
+                .GetProperties()
+                .FirstOrDefault(p => string.Equals(p.Name, propertyName));
+        }
 
         /// <summary>
         /// Checks whether the generic arguments length are equal to both types.

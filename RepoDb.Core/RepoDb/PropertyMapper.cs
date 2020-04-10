@@ -1,4 +1,5 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.Attributes;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
@@ -9,7 +10,8 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that is used to map a class into its equivalent database column (ie: Table, View).
+    /// A static class that is used to map a class into its equivalent database object (ie: Table, View) column.
+    /// This is an alternative class to <see cref="MapAttribute"/> object for property mapping.
     /// </summary>
     public static class PropertyMapper
     {
@@ -41,7 +43,7 @@ namespace RepoDb
         public static void Add<T>(Expression<Func<T, object>> expression,
             string columnName,
             bool force)
-            where T : class => Add(GetProperty<T>(expression), columnName, force);
+            where T : class => Add(ExpressionExtension.GetProperty<T>(expression), columnName, force);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column.
@@ -66,7 +68,7 @@ namespace RepoDb
             where T : class
         {
             // Do not use 'FieldCache' or 'PropertyCache' as this is the underlying mapper
-            Add(GetProperty<T>(propertyName), columnName, force);
+            Add(TypeExtension.GetProperty<T>(propertyName), columnName, force);
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace RepoDb
             where T : class
         {
             // Do not use 'FieldCache' or 'PropertyCache' as this is the underlying mapper
-            Add(GetProperty<T>(field.Name), columnName, force);
+            Add(TypeExtension.GetProperty<T>(field.Name), columnName, force);
         }
 
         /// <summary>
@@ -165,7 +167,7 @@ namespace RepoDb
         /// <typeparam name="T">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Get<T>(Expression<Func<T, object>> expression)
-            where T : class => Get(GetProperty<T>(expression));
+            where T : class => Get(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
         /// Gets the mapped name of the property.
@@ -174,7 +176,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(string propertyName)
-            where T : class => Get(GetProperty<T>(propertyName));
+            where T : class => Get(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
         /// Gets the mapped name of the property.
@@ -183,7 +185,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(Field field)
-            where T : class => Get(GetProperty<T>(field.Name));
+            where T : class => Get(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
         /// Gets the mapped name of the property.
@@ -220,7 +222,7 @@ namespace RepoDb
         /// <typeparam name="T">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<T>(Expression<Func<T, object>> expression)
-            where T : class => Remove(GetProperty<T>(expression));
+            where T : class => Remove(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
         /// Removes the mapping between the class property and database column.
@@ -228,7 +230,7 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<T>(string propertyName)
-            where T : class => Remove(GetProperty<T>(propertyName));
+            where T : class => Remove(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
         /// Removes the mapping between the class property and database column.
@@ -236,7 +238,7 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<T>(Field field)
-            where T : class => Remove(GetProperty<T>(field.Name));
+            where T : class => Remove(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
         /// Removes the mapping between the class property and database column.
@@ -280,43 +282,6 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The target property cannot be null.");
             }
-        }
-
-        /// <summary>
-        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
-        /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
-        /// <param name="propertyName">The name of the class property to be mapped.</param>
-        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        private static PropertyInfo GetProperty<T>(string propertyName)
-            where T : class
-        {
-            return typeof(T)
-                .GetProperties()
-                .FirstOrDefault(p => string.Equals(p.Name, propertyName));
-        }
-
-        /// <summary>
-        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on expression.
-        /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
-        /// <param name="expression">The expression to be extracted.</param>
-        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        private static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
-            where T : class
-        {
-            if (expression.Body.IsMember())
-            {
-                var member = expression.Body.ToMember();
-                if (member.Member is PropertyInfo)
-                {
-                    return PropertyCache.Get<T>()
-                        .FirstOrDefault(p =>
-                            string.Equals(p.PropertyInfo.Name, member.Member.Name, StringComparison.OrdinalIgnoreCase))?
-                        .PropertyInfo;
-                }
-            }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         #endregion

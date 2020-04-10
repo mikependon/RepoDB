@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -801,6 +802,33 @@ namespace RepoDb.Extensions
         public static DefaultExpression ToDefault(this Expression expression)
         {
             return (DefaultExpression)expression;
+        }
+
+        #endregion
+
+        #region Helper
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on expression.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="expression">The expression to be extracted.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        internal static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
+            where T : class
+        {
+            if (expression.Body.IsMember())
+            {
+                var member = expression.Body.ToMember();
+                if (member.Member is PropertyInfo)
+                {
+                    return PropertyCache.Get<T>()
+                        .FirstOrDefault(p =>
+                            string.Equals(p.PropertyInfo.Name, member.Member.Name, StringComparison.OrdinalIgnoreCase))?
+                        .PropertyInfo;
+                }
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         #endregion
