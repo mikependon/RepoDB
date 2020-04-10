@@ -9,7 +9,6 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -863,7 +862,7 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return ObjectConverter.DbNullToNull(command.ExecuteScalar());
+                return Converter.DbNullToNull(command.ExecuteScalar());
             }
         }
 
@@ -932,7 +931,7 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+                return Converter.DbNullToNull(await command.ExecuteScalarAsync());
             }
         }
 
@@ -1002,7 +1001,7 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return ObjectConverter.ToType<TResult>(command.ExecuteScalar());
+                return Converter.ToType<TResult>(command.ExecuteScalar());
             }
         }
 
@@ -1072,7 +1071,7 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
+                return Converter.ToType<TResult>(await command.ExecuteScalarAsync());
             }
         }
 

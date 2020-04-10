@@ -1,14 +1,26 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Enumerations;
 using System;
-using System.Reflection;
+using System.Data.Common;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class used for converting an object.
+    /// A generalized converter class.
     /// </summary>
-    internal static class ObjectConverter
+    public static class Converter
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the conversion type when converting the instance of <see cref="DbDataReader"/> object into its destination .NET CLR Types.
+        /// The default value is <see cref="ConversionType.Default"/>.
+        /// </summary>
+        public static ConversionType ConversionType { get; set; } = ConversionType.Default;
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Converts a value to null if the value is equals to <see cref="DBNull.Value"/>.
         /// </summary>
@@ -34,5 +46,7 @@ namespace RepoDb
             return DbNullToNull(value) == null ? default(T) :
                 (T)Convert.ChangeType(value, typeof(T));
         }
+
+        #endregion
     }
 }

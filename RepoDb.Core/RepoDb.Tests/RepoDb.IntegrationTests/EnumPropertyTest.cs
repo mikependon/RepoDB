@@ -20,7 +20,7 @@ namespace RepoDb.IntegrationTests
         public void Initialize()
         {
             Database.Initialize();
-            TypeMapper.Map(typeof(Continent), System.Data.DbType.Int16, true);
+            TypeMapper.Add(typeof(Continent), System.Data.DbType.Int16, true);
             Cleanup();
         }
 

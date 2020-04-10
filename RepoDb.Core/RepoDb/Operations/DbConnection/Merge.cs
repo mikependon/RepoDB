@@ -1231,7 +1231,7 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
+                result = Converter.ToType<TResult>(command.ExecuteScalar());
 
                 // Set the return value
                 if (Equals(result, default(TResult)) == false)
@@ -1404,7 +1404,7 @@ namespace RepoDb
                     if (primaryKey != null)
                     {
                         // Set the result
-                        result = ObjectConverter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
                     }
                 }
             }
@@ -1434,7 +1434,7 @@ namespace RepoDb
                 }
 
                 // Set the result
-                result = ObjectConverter.ToType<TResult>(insertResult);
+                result = Converter.ToType<TResult>(insertResult);
             }
 
             // After Execution
@@ -1593,7 +1593,7 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = ObjectConverter.ToType<TResult>(await command.ExecuteScalarAsync());
+                result = Converter.ToType<TResult>(await command.ExecuteScalarAsync());
 
                 // Set the return value
                 if (Equals(result, default(TResult)) == false)
@@ -1766,7 +1766,7 @@ namespace RepoDb
                     if (primaryKey != null)
                     {
                         // Set the result
-                        result = ObjectConverter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
                     }
                 }
             }
@@ -1796,7 +1796,7 @@ namespace RepoDb
                 }
 
                 // Set the result
-                result = ObjectConverter.ToType<TResult>(insertResult);
+                result = Converter.ToType<TResult>(insertResult);
             }
 
             // After Execution

@@ -249,7 +249,7 @@ namespace RepoDb
             if (m_reader.Read())
             {
                 // TODO: This can be compiled expression using the 'Get<Type>()' method
-                value = ObjectConverter.ToType<TResult>(m_reader[0]);
+                value = Converter.ToType<TResult>(m_reader[0]);
             }
 
             // Move to next result
@@ -272,7 +272,7 @@ namespace RepoDb
             if (await m_reader.ReadAsync())
             {
                 // TODO: This can be compiled expression using the 'Get<Type>()' method
-                value = ObjectConverter.ToType<TResult>(m_reader[0]);
+                value = Converter.ToType<TResult>(m_reader[0]);
             }
 
             // Move to next result
@@ -297,7 +297,7 @@ namespace RepoDb
             // Only if there are record
             if (m_reader.Read())
             {
-                value = ObjectConverter.DbNullToNull(m_reader.GetValue(0));
+                value = Converter.DbNullToNull(m_reader.GetValue(0));
             }
 
             // Move to next result
@@ -318,7 +318,7 @@ namespace RepoDb
             // Only if there are record
             if (await m_reader.ReadAsync())
             {
-                value = ObjectConverter.DbNullToNull(m_reader.GetValue(0));
+                value = Converter.DbNullToNull(m_reader.GetValue(0));
             }
 
             // Move to next result

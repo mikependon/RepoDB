@@ -79,7 +79,7 @@ namespace RepoDb.Reflection
                 }
                 else
                 {
-                    return ObjectConverter.DbNullToNull(value) == null ? Activator.CreateInstance(targetType) :
+                    return Converter.DbNullToNull(value) == null ? Activator.CreateInstance(targetType) :
                         System.Convert.ChangeType(value, targetType);
                 }
             }
@@ -185,7 +185,7 @@ namespace RepoDb.Reflection
                     var underlyingType = Nullable.GetUnderlyingType(propertyType);
                     var targetType = underlyingType ?? propertyType;
                     var convertType = readerField.Type;
-                    var isDefaultConversion = (TypeMapper.ConversionType == ConversionType.Default);
+                    var isDefaultConversion = (Converter.ConversionType == ConversionType.Default);
                     var isConversionNeeded = readerField.Type != targetType;
                     var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
                     var propertyHandlerAttribute = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
@@ -533,7 +533,7 @@ namespace RepoDb.Reflection
             Type propertyType,
             Type convertType)
         {
-            if (TypeMapper.ConversionType == ConversionType.Default)
+            if (Converter.ConversionType == ConversionType.Default)
             {
                 if (propertyType.IsEnum)
                 {
@@ -906,7 +906,7 @@ namespace RepoDb.Reflection
 
                         if (handlerInstance == null)
                         {
-                            if (TypeMapper.ConversionType == ConversionType.Automatic)
+                            if (Converter.ConversionType == ConversionType.Automatic)
                             {
                                 var valueToConvert = Expression.Property(instance, instanceProperty);
 
@@ -1093,7 +1093,7 @@ namespace RepoDb.Reflection
                 var dbType = (DbType?)null;
 
                 // Identify the conversion
-                if (TypeMapper.ConversionType == ConversionType.Automatic)
+                if (Converter.ConversionType == ConversionType.Automatic)
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
@@ -1585,7 +1585,7 @@ namespace RepoDb.Reflection
 
                         if (handlerInstance == null)
                         {
-                            if (TypeMapper.ConversionType == ConversionType.Automatic)
+                            if (Converter.ConversionType == ConversionType.Automatic)
                             {
                                 var valueToConvert = Expression.Property(instance, instanceProperty);
 
@@ -1772,7 +1772,7 @@ namespace RepoDb.Reflection
                 var dbType = (DbType?)null;
 
                 // Identify the conversion
-                if (TypeMapper.ConversionType == ConversionType.Automatic)
+                if (Converter.ConversionType == ConversionType.Automatic)
                 {
                     // Identity the conversion
                     if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
@@ -2186,7 +2186,7 @@ namespace RepoDb.Reflection
             // Variables for type
             var typeOfEntity = typeof(TEntity);
             var typeOfObject = typeof(object);
-            var typeOfObjectConverter = typeof(ObjectConverter);
+            var typeOfConverter = typeof(Converter);
 
             // Variables for argument
             var entityParameter = Expression.Parameter(typeOfEntity, "entity");
@@ -2196,7 +2196,7 @@ namespace RepoDb.Reflection
             var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetPropertyByMapping(field.Name)?.PropertyInfo)?.SetMethod;
 
             // Get the converter
-            var toTypeMethod = typeOfObjectConverter.GetMethod("ToType", new[] { typeOfObject }).MakeGenericMethod(field.Type.GetUnderlyingType());
+            var toTypeMethod = typeOfConverter.GetMethod("ToType", new[] { typeOfObject }).MakeGenericMethod(field.Type.GetUnderlyingType());
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,

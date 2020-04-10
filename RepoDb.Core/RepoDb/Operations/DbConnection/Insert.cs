@@ -559,12 +559,12 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
+                result = Converter.ToType<TResult>(command.ExecuteScalar());
 
                 // Get explicity if needed
                 if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
-                    result = ObjectConverter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                    result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
                 }
 
                 // Set the return value
@@ -730,12 +730,12 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = ObjectConverter.ToType<TResult>(command.ExecuteScalar());
+                result = Converter.ToType<TResult>(command.ExecuteScalar());
 
                 // Get explicity if needed
                 if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
-                    result = ObjectConverter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                    result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
                 }
 
                 // Set the return value

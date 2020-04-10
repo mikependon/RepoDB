@@ -18,14 +18,14 @@ namespace RepoDb.IntegrationTests
         {
             Database.Initialize();
             Cleanup();
-            TypeMapper.ConversionType = ConversionType.Automatic;
+            Converter.ConversionType = ConversionType.Automatic;
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
-            TypeMapper.ConversionType = ConversionType.Default;
+            Converter.ConversionType = ConversionType.Default;
         }
 
         #region StringToBigIntClass

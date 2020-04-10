@@ -14,7 +14,7 @@ namespace RepoDb.IntegrationTests
         [TestInitialize]
         public void Initialize()
         {
-            TypeMapper.Map(typeof(DateTime), DbType.DateTime2, true);
+            TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
             Database.Initialize();
             Cleanup();
         }

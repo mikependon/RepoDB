@@ -25,7 +25,7 @@ namespace RepoDb.IntegrationTests.Setup
             ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
 
             // Set the proper values for type mapper
-            TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
+            TypeMapper.Add(typeof(DateTime), System.Data.DbType.DateTime2, true);
 
             // Initialize the SqlServer
             SqlServerBootstrap.Initialize();

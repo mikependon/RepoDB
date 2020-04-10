@@ -553,12 +553,12 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = ObjectConverter.DbNullToNull(command.ExecuteScalar());
+                            var returnValue = Converter.DbNullToNull(command.ExecuteScalar());
 
                             // Get explicity if needed
                             if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
-                                returnValue = ObjectConverter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                                returnValue = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
                             }
 
                             // Set the return value
@@ -625,7 +625,7 @@ namespace RepoDb
                                     {
                                         if (reader.Read())
                                         {
-                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
                                             result++;
                                         }
@@ -905,12 +905,12 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync());
 
                             // Get explicity if needed
                             if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
-                                returnValue = ObjectConverter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
+                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
                             }
 
                             // Set the return value
@@ -977,7 +977,7 @@ namespace RepoDb
                                     {
                                         if (await reader.ReadAsync())
                                         {
-                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
                                             result++;
                                         }

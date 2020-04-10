@@ -1002,7 +1002,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = ObjectConverter.DbNullToNull(command.ExecuteScalar());
+                            var returnValue = Converter.DbNullToNull(command.ExecuteScalar());
 
                             // Set the return value
                             if (returnValue != null)
@@ -1069,7 +1069,7 @@ namespace RepoDb
                                     {
                                         if (reader.Read())
                                         {
-                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
                                             result++;
                                         }
@@ -1232,7 +1232,7 @@ namespace RepoDb
                         statementBuilder);
 
                     // Iterate the result
-                    if (ObjectConverter.DbNullToNull(upsertResult) != null)
+                    if (Converter.DbNullToNull(upsertResult) != null)
                     {
                         result += 1;
                     }
@@ -1513,7 +1513,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync());
 
                             // Set the return value
                             if (returnValue != null)
@@ -1580,7 +1580,7 @@ namespace RepoDb
                                     {
                                         if (await reader.ReadAsync())
                                         {
-                                            var value = ObjectConverter.DbNullToNull(reader.GetValue(0));
+                                            var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
                                             result++;
                                         }
@@ -1743,7 +1743,7 @@ namespace RepoDb
                         statementBuilder);
 
                     // Iterate the result
-                    if (ObjectConverter.DbNullToNull(upsertResult) != null)
+                    if (Converter.DbNullToNull(upsertResult) != null)
                     {
                         result += 1;
                     }

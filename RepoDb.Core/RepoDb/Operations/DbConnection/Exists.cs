@@ -819,7 +819,7 @@ namespace RepoDb
             }
 
             // Result
-            return ObjectConverter.DbNullToNull(result) != null;
+            return Converter.DbNullToNull(result) != null;
         }
 
         #endregion
@@ -884,7 +884,7 @@ namespace RepoDb
             }
 
             // Result
-            return ObjectConverter.DbNullToNull(result) != null;
+            return Converter.DbNullToNull(result) != null;
         }
 
         #endregion
