@@ -166,11 +166,11 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between a class property and the database column.
+        /// Gets the mapped name of the property.
         /// </summary>
         /// <typeparam name="T">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        public static void Get<T>(Expression<Func<T, object>> expression)
+        public static string Get<T>(Expression<Func<T, object>> expression)
             where T : class => Get(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
