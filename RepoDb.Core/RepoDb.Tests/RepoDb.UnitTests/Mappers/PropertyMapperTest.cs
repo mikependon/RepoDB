@@ -241,6 +241,7 @@ namespace RepoDb.UnitTests.Others
             var propertyInfo = typeof(PropertyMapperTestClass)
                 .GetProperties()
                 .First(p => p.Name == "ColumnString");
+            PropertyMapper.Add<PropertyMapperTestClass>(new Field("ColumnString"), "PropertyString", true);
             PropertyMapper.Add<PropertyMapperTestClass>(new Field("ColumnString"), "PropertyText", true);
 
             // Act
