@@ -227,6 +227,10 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get(PropertyInfo propertyInfo)
         {
+            // Validate
+            ThrowNullReferenceException(propertyInfo, "PropertyInfo");
+
+            // Variables
             var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (string)null;
 
