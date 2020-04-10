@@ -246,7 +246,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes a mapping between a class property and the database column via expression.
+        /// Removes the mapping between a class property and the database column via expression.
         /// </summary>
         /// <typeparam name="T">The type of the entity object.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -254,7 +254,7 @@ namespace RepoDb
             where T : class => Remove(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
-        /// Removes the mapping between the class property and database column via property name.
+        /// Removes the mapping between a class property and database column via property name.
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
@@ -262,7 +262,7 @@ namespace RepoDb
             where T : class => Remove(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
-        /// Removes the mapping between the class property and database column via <see cref="Field"/> object.
+        /// Removes the mapping between a class property and database column via <see cref="Field"/> object.
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
@@ -270,14 +270,14 @@ namespace RepoDb
             where T : class => Remove(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
-        /// Removes the mapping between the class property and database column via <see cref="ClassProperty"/> object.
+        /// Removes the mapping between a class property and database column via <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
         public static void Remove(ClassProperty classProperty) =>
             Remove(classProperty.PropertyInfo);
 
         /// <summary>
-        /// Removes the mapping between the class property and database column via <see cref="PropertyInfo"/> object.
+        /// Removes the mapping between a class property and database column via <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         public static void Remove(PropertyInfo propertyInfo)
