@@ -66,7 +66,7 @@ After the installation, any library operation can then be called. Please see bel
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer] WHERE (Id = @Id);", new { Id = 10045 });
+	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer] WHERE (Id = @Id);", new { Id = 10045 }).FirstOrDefault();
 }
 ```
 
@@ -106,6 +106,24 @@ using (var connection = new SqlConnection(ConnectionString))
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var deletedRows = connection.ExecuteNonQuery("DELETE FROM [dbo].[Customer] WHERE (Id = @Id)", new { Id = 10045 });
+}
+```
+
+### StoredProcedure
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcdure).FirstOrDefault();
+}
+```
+
+Or via direct calls.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var customer = connection.ExecuteQuery<Customer>("EXEC [dbo].[sp_GetCustomer](@Id);", new { Id = 10045 }).FirstOrDefault();
 }
 ```
 
