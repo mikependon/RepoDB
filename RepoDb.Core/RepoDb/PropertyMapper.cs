@@ -25,7 +25,7 @@ namespace RepoDb
         /// <summary>
         /// Adds a mapping between a class property and the database column (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity object.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="columnName">The name of the database column.</param>
         public static void Add<T>(Expression<Func<T, object>> expression,
@@ -35,7 +35,7 @@ namespace RepoDb
         /// <summary>
         /// Adds a mapping between a class property and the database column (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity object.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="columnName">The name of the database column.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -188,7 +188,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the mapped name of the property (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity object.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(Expression<Func<T, object>> expression)
@@ -248,7 +248,7 @@ namespace RepoDb
         /// <summary>
         /// Removes the mapping between the class property and the database column (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity object.</typeparam>
+        /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<T>(Expression<Func<T, object>> expression)
             where T : class => Remove(ExpressionExtension.GetProperty<T>(expression));
