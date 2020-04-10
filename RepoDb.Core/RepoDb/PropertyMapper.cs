@@ -3,7 +3,6 @@ using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -67,8 +66,18 @@ namespace RepoDb
             bool force)
             where T : class
         {
-            // Do not use 'FieldCache' or 'PropertyCache' as this is the underlying mapper
-            Add(TypeExtension.GetProperty<T>(propertyName), columnName, force);
+            // Validates
+            ThrowNullReferenceException(propertyName, "PropertyName");
+
+            // Get the property
+            var property = TypeExtension.GetProperty<T>(propertyName);
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(T).FullName}'.");
+            }
+
+            // Add to the mapping
+            Add(property, columnName, force);
         }
 
         /// <summary>
@@ -93,8 +102,18 @@ namespace RepoDb
             bool force)
             where T : class
         {
-            // Do not use 'FieldCache' or 'PropertyCache' as this is the underlying mapper
-            Add(TypeExtension.GetProperty<T>(field.Name), columnName, force);
+            // Validates
+            ThrowNullReferenceException(field, "Field");
+
+            // Get the property
+            var property = TypeExtension.GetProperty<T>(field.Name);
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(T).FullName}'.");
+            }
+
+            // Add to the mapping
+            Add(property, columnName, force);
         }
 
         /// <summary>
@@ -134,7 +153,7 @@ namespace RepoDb
             bool force)
         {
             // Validate
-            Validate(propertyInfo);
+            ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
             var key = propertyInfo.GenerateCustomizedHashCode();
@@ -277,14 +296,17 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Validates the target property that is being passed.
+        /// Validates the target object presence.
         /// </summary>
-        /// <param name="propertyInfo">The target property.</param>
-        private static void Validate(PropertyInfo propertyInfo)
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <param name="obj">The object to be checked.</param>
+        /// <param name="argument">The name of the argument.</param>
+        private static void ThrowNullReferenceException<T>(T obj,
+            string argument)
         {
-            if (propertyInfo == null)
+            if (obj == null)
             {
-                throw new NullReferenceException("The target property cannot be null.");
+                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
             }
         }
 

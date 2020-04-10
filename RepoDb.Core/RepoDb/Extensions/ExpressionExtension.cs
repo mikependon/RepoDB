@@ -820,15 +820,12 @@ namespace RepoDb.Extensions
             if (expression.Body.IsMember())
             {
                 var member = expression.Body.ToMember();
-                if (member.Member is PropertyInfo)
+                if (member.Member.IsPropertyInfo())
                 {
-                    return PropertyCache.Get<T>()
-                        .FirstOrDefault(p =>
-                            string.Equals(p.PropertyInfo.Name, member.Member.Name, StringComparison.OrdinalIgnoreCase))?
-                        .PropertyInfo;
+                    return member.Member.ToPropertyInfo();
                 }
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
         }
 
         #endregion

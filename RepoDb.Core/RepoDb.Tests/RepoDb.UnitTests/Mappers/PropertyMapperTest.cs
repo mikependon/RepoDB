@@ -354,42 +354,60 @@ namespace RepoDb.UnitTests.Others
         }
 
         /*
-         * Missing Property
+         * Null Properties
          */
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsNull()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperTestClass>(propertyName: null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldThatIsIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaFieldThatIsNull()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperTestClass>(field: null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaExpressionThatIsIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaExpressionThatIsNull()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperTestClass>(expression: null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaClassPropertyThatIsIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaClassPropertyThatIsNull()
         {
             // Setup
             PropertyMapper.Add((ClassProperty)null, "PropertyString");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyInfoThatIsIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaPropertyInfoThatIsNull()
         {
             // Setup
             PropertyMapper.Add((PropertyInfo)null, "PropertyString");
+        }
+
+        /*
+         * Missing Properties
+         */
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsMissing()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>("Whatever", "PropertyText");
+        }
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnPropertyMapperViaFieldThatIsIsMissing()
+        {
+            // Setup
+            PropertyMapper.Add<PropertyMapperTestClass>(new Field("Whatever"), "PropertyText");
         }
 
         #endregion
