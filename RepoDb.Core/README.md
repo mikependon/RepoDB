@@ -43,7 +43,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright Â© 2019 - Michael Camara Pendon
 
 --------
 
@@ -66,14 +66,14 @@ After the installation, any library operation can then be called. Please see bel
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(c => c.Id == 10045);
+	var customer = connection.ExecuteQuery<Customer>("SELECT * FROM [dbo].[Customer] WHERE (Id = @Id);", new { Id = 10045 });
 }
 ```
 
 ### Insert
 
 ```csharp
-var customer = new Customer
+var customer = new
 {
 	FirstName = "John",
 	LastName = "Doe",
@@ -81,7 +81,7 @@ var customer = new Customer
 };
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var id = connection.Insert<Customer>(customer);
+	var id = connection.ExecuteScalar<int>("INSERT INTO [dbo].[Customer](FirstName, LastName, IsActive) VALUES (@FirstName, @LastName, @IsActive); SELECT SCOPE_IDENTITY();", customer);
 }
 ```
 
@@ -90,10 +90,13 @@ using (var connection = new SqlConnection(ConnectionString))
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(10045);
-	customer.FirstName = "John";
-	customer.LastUpdatedUtc = DateTime.UtcNow;
-	var affectedRows = connection.Update<Customer>(customer);
+	var customer = new
+	{
+		Id = 10045,
+		FirstName = "John",
+		LastName = "Doe"
+	};
+	var affectedRows = connection.ExecuteNonQuery("UPDATE [dbo].[Customer] SET FirstName = @FirstName, LastName = @LastName, LastUpdatedUtc = GETUTCDATE() WHERE (Id = @Id);", customer);
 }
 ```
 
@@ -102,8 +105,7 @@ using (var connection = new SqlConnection(ConnectionString))
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
-	var customer = connection.Query<Customer>(10045);
-	var deletedCount = connection.Delete<Customer>(customer);
+	var deletedRows = connection.ExecuteNonQuery("DELETE FROM [dbo].[Customer] WHERE (Id = @Id)", new { Id = 10045 });
 }
 ```
 
