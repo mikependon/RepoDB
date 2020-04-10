@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [Map("[dbo].[Person]")]
-        private class ClassMapperTestWithMapAttribute
+        private class ClassMapperTestWithMapAttributeClass
         {
         }
 
@@ -62,10 +62,10 @@ namespace RepoDb.UnitTests.Others
         public void TestClassMapperMappingWithMapAttribute()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttribute>("[sales].[Person]");
+            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("[sales].[Person]");
 
             // Act
-            var actual = ClassMappedNameCache.Get<ClassMapperTestWithMapAttribute>();
+            var actual = ClassMappedNameCache.Get<ClassMapperTestWithMapAttributeClass>();
             var expected = "[dbo].[Person]";
 
             // Assert
@@ -99,8 +99,8 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnClassMapperThatIsAlreadyExisting()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttribute>("[sales].[Person]");
-            ClassMapper.Add<ClassMapperTestWithMapAttribute>("[sales].[Person]");
+            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("[sales].[Person]");
+            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("[sales].[Person]");
         }
 
         /*
@@ -111,21 +111,21 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnClassMapperThatIsEmpty()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttribute>("");
+            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnClassMapperThatIsEmptySpaces()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttribute>("  ");
+            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>("  ");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnClassMapperThatIsNull()
         {
             // Setup
-            ClassMapper.Add<ClassMapperTestWithMapAttribute>(null);
+            ClassMapper.Add<ClassMapperTestWithMapAttributeClass>(null);
         }
 
         #endregion
