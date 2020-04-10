@@ -1,6 +1,5 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Data;
@@ -121,6 +120,14 @@ namespace RepoDb
                 return m_isPrimary;
             }
 
+            // PrimaryMapper
+            var classProperty = PrimaryMapper.Get(PropertyInfo.DeclaringType);
+            m_isPrimary = (classProperty == this);
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
+            }
+
             // Id Property
             m_isPrimary = string.Equals(PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase);
             if (m_isPrimary == true)
@@ -162,7 +169,24 @@ namespace RepoDb
             {
                 return m_isIdentity;
             }
-            return m_isIdentity = (GetIdentityAttribute() != null);
+
+            // Identity Attribute
+            m_isIdentity = (GetIdentityAttribute() != null);
+            if (m_isIdentity == true)
+            {
+                return m_isIdentity;
+            }
+
+            // PrimaryMapper
+            var classProperty = IdentityMapper.Get(PropertyInfo.DeclaringType);
+            m_isIdentity = (classProperty == this);
+            if (m_isIdentity == true)
+            {
+                return m_isIdentity;
+            }
+
+            // Return false
+            return (m_isIdentity = false);
         }
 
         /*
@@ -243,7 +267,7 @@ namespace RepoDb
         /// <returns>The hash code value.</returns>
         public override int GetHashCode()
         {
-            return PropertyInfo.GetHashCode();
+            return PropertyInfo.GenerateCustomizedHashCode();
         }
 
         /// <summary>
