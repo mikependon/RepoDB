@@ -282,6 +282,10 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         public static void Remove(PropertyInfo propertyInfo)
         {
+            // Validate
+            ThrowNullReferenceException(propertyInfo, "PropertyInfo");
+
+            // Variables
             var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (string)null;
 
