@@ -52,6 +52,10 @@ RepoDb has its own compiler and pre-caches the already-generated compiled expres
 
 RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
+### It is high-quality
+
+RepoDb is a high-quality micro-ORM supported by 8K+ real-life based Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
+
 ## Get Started
 
 Please click any of the link below to fast-track your learnings.
