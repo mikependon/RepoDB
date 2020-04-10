@@ -361,21 +361,21 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsNull()
         {
             // Setup
-            PropertyMapper.Add<PropertyMapperTestClass>(propertyName: null, "PropertyText");
+            PropertyMapper.Add<PropertyMapperTestClass>((string)null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPropertyMapperViaFieldThatIsNull()
         {
             // Setup
-            PropertyMapper.Add<PropertyMapperTestClass>(field: null, "PropertyText");
+            PropertyMapper.Add<PropertyMapperTestClass>((Field)null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPropertyMapperViaExpressionThatIsNull()
         {
             // Setup
-            PropertyMapper.Add<PropertyMapperTestClass>(expression: null, "PropertyText");
+            PropertyMapper.Add<PropertyMapperTestClass>(expression: null, columnName: "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
