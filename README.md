@@ -54,7 +54,7 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 ### It is high-quality
 
-RepoDb is a high-quality micro-ORM supported by 8K+ real-life based Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
+RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
 
 ## Get Started
 
