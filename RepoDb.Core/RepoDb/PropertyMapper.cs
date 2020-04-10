@@ -133,6 +133,10 @@ namespace RepoDb
             string columnName,
             bool force)
         {
+            // Validate
+            Validate(propertyInfo);
+
+            // Variables
             var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (string)null;
 
@@ -147,7 +151,7 @@ namespace RepoDb
                 else
                 {
                     // Throws an exception
-                    throw new MappingExistsException($"Mapping to '{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}' already exists.");
+                    throw new MappingExistsException($"A property mapping to '{propertyInfo.DeclaringType.FullName}.{propertyInfo.Name}' already exists.");
                 }
             }
             else

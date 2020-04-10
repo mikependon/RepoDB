@@ -73,7 +73,7 @@ namespace RepoDb
                 else
                 {
                     // Throws an exception
-                    throw new MappingExistsException($"Mapping to '{type.FullName}' already exists.");
+                    throw new MappingExistsException($"A class mapping to '{type.FullName}' already exists.");
                 }
             }
             else
