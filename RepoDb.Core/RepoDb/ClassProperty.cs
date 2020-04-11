@@ -217,7 +217,8 @@ namespace RepoDb
 
             // Property and Type level mapping
             m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(propertyType);
+                TypeMapper.Get(PropertyInfo) ?? // Property Level
+                TypeMapper.Get(propertyType); // Type Level
 
             // Try to resolve if not found
             if (m_dbType == null && propertyType.IsEnum == false)

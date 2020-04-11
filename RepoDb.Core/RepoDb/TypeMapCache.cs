@@ -3,6 +3,7 @@ using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -91,14 +92,6 @@ namespace RepoDb
             Get(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="ClassProperty"/> object.
-        /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
-        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get(ClassProperty classProperty) =>
-            Get(classProperty.PropertyInfo);
-
-        /// <summary>
         /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
@@ -109,28 +102,31 @@ namespace RepoDb
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var classProperty = PropertyCache.Get(propertyInfo.DeclaringType)
+                .FirstOrDefault(p => p.PropertyInfo == propertyInfo);
+
+            // Reuse
+            return Get(classProperty);
+        }
+
+        /// <summary>
+        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="ClassProperty"/> object.
+        /// </summary>
+        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
+        public static DbType? Get(ClassProperty classProperty)
+        {
+            // Validate
+            ThrowNullReferenceException(classProperty, "ClassProperty");
+
+            // Variables
+            var key = classProperty.GetHashCode();
             var result = (DbType?)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                // Get the attribute first
-                result = propertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType;
-
-                // Get from the mapper (property level)
-                if (result == null)
-                {
-                    result = TypeMapper.Get(propertyInfo);
-                }
-
-                // Get from the mapper (type level)
-                if (result == null)
-                {
-                    result = TypeMapper.Get(propertyInfo.PropertyType);
-                }
-
-                // Add to cache
+                result = classProperty.GetDbType();
                 m_cache.TryAdd(key, result);
             }
 
