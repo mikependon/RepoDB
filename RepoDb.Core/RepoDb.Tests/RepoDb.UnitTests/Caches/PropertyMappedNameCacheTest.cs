@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using System;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.UnitTests.Others
 {
@@ -41,7 +43,7 @@ namespace RepoDb.UnitTests.Others
             var expected = "ColumnString";
 
             // Assert
-            Assert.AreEqual(expected, property.GetMappedName());
+            Assert.AreEqual(expected, PropertyMappedNameCache.Get(property.PropertyInfo)); // property.GetMappedName()
         }
 
         [TestMethod]
@@ -54,6 +56,13 @@ namespace RepoDb.UnitTests.Others
 
             // Assert
             Assert.AreEqual(expected, property.GetMappedName());
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExcpetionOnPropertyMappingCacheIfThePropertyIsNull()
+        {
+            // Setup
+            PropertyMappedNameCache.Get((PropertyInfo)null);
         }
 
         #endregion

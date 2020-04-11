@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using System;
 
 namespace RepoDb.UnitTests.Caches
 {
@@ -82,6 +83,13 @@ namespace RepoDb.UnitTests.Caches
 
             // Assert
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExcpetionOnClassMappingCacheIfTheTypeIsNull()
+        {
+            // Setup
+            ClassMappedNameCache.Get(null);
         }
 
         #endregion

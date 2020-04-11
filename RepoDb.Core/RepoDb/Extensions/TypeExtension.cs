@@ -25,10 +25,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>A list of <see cref="Field"/> objects.</returns>
-        internal static IEnumerable<Field> AsFields(this Type type)
-        {
-            return PropertyCache.Get(type).AsFields();
-        }
+        internal static IEnumerable<Field> AsFields(this Type type) =>
+            PropertyCache.Get(type).AsFields();
 
         /// <summary>
         /// Converts all properties of the type into an array of <see cref="ClassProperty"/> objects.
@@ -150,10 +148,8 @@ namespace RepoDb.Extensions
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         internal static PropertyInfo GetProperty<T>(string propertyName)
-            where T : class
-        {
-            return GetProperty(typeof(T), propertyName);
-        }
+            where T : class =>
+            GetProperty(typeof(T), propertyName);
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
@@ -166,7 +162,7 @@ namespace RepoDb.Extensions
         {
             return type
                 .GetProperties()
-                .FirstOrDefault(p => string.Equals(p.Name, propertyName));
+                .FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

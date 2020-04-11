@@ -14,7 +14,11 @@ namespace RepoDb
     /// </summary>
     public static class PropertyMapper
     {
+        #region Privates
+
         private static readonly ConcurrentDictionary<int, string> m_maps = new ConcurrentDictionary<int, string>();
+
+        #endregion
 
         #region Methods
 
@@ -30,7 +34,8 @@ namespace RepoDb
         /// <param name="columnName">The name of the database column.</param>
         public static void Add<T>(Expression<Func<T, object>> expression,
             string columnName)
-            where T : class => Add(expression, columnName, false);
+            where T : class =>
+            Add(expression, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via expression).
@@ -42,7 +47,8 @@ namespace RepoDb
         public static void Add<T>(Expression<Func<T, object>> expression,
             string columnName,
             bool force)
-            where T : class => Add(ExpressionExtension.GetProperty<T>(expression), columnName, force);
+            where T : class =>
+            Add(ExpressionExtension.GetProperty<T>(expression), columnName, force);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via property name).
@@ -52,7 +58,8 @@ namespace RepoDb
         /// <param name="columnName">The name of the database column.</param>
         public static void Add<T>(string propertyName,
             string columnName)
-            where T : class => Add<T>(propertyName, columnName, false);
+            where T : class =>
+            Add<T>(propertyName, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via property name).
@@ -88,7 +95,8 @@ namespace RepoDb
         /// <param name="columnName">The name of the database column.</param>
         public static void Add<T>(Field field,
             string columnName)
-            where T : class => Add<T>(field, columnName, false);
+            where T : class =>
+            Add<T>(field, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via <see cref="Field"/> object).
@@ -122,7 +130,8 @@ namespace RepoDb
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
         public static void Add(ClassProperty classProperty,
-            string columnName) => Add(classProperty.PropertyInfo, columnName, false);
+            string columnName) =>
+            Add(classProperty.PropertyInfo, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
@@ -132,7 +141,8 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(ClassProperty classProperty,
             string columnName,
-            bool force) => Add(classProperty?.PropertyInfo, columnName, force);
+            bool force) =>
+            Add(classProperty?.PropertyInfo, columnName, force);
 
         /// <summary>
         /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
@@ -140,7 +150,8 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
         public static void Add(PropertyInfo propertyInfo,
-            string columnName) => Add(propertyInfo, columnName, false);
+            string columnName) =>
+            Add(propertyInfo, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
@@ -192,7 +203,8 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(Expression<Func<T, object>> expression)
-            where T : class => Get(ExpressionExtension.GetProperty<T>(expression));
+            where T : class =>
+            Get(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
         /// Gets the mapped name of the property (via property name).
@@ -201,7 +213,8 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(string propertyName)
-            where T : class => Get(TypeExtension.GetProperty<T>(propertyName));
+            where T : class =>
+            Get(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
         /// Gets the mapped name of the property (via <see cref="Field"/> object).
@@ -210,7 +223,8 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped name of the property.</returns>
         public static string Get<T>(Field field)
-            where T : class => Get(TypeExtension.GetProperty<T>(field.Name));
+            where T : class =>
+            Get(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
         /// Gets the mapped name of the property via <see cref="ClassProperty"/> object.
@@ -251,7 +265,8 @@ namespace RepoDb
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<T>(Expression<Func<T, object>> expression)
-            where T : class => Remove(ExpressionExtension.GetProperty<T>(expression));
+            where T : class =>
+            Remove(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
         /// Removes the mapping between the class property and database column (via property name).
@@ -259,7 +274,8 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<T>(string propertyName)
-            where T : class => Remove(TypeExtension.GetProperty<T>(propertyName));
+            where T : class =>
+            Remove(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
         /// Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
@@ -267,7 +283,8 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<T>(Field field)
-            where T : class => Remove(TypeExtension.GetProperty<T>(field.Name));
+            where T : class =>
+            Remove(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
         /// Removes the mapping between the <see cref="ClassProperty"/> object and the database column.

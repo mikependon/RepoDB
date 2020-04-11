@@ -38,7 +38,29 @@ namespace RepoDb.UnitTests.Others
 
         #region TypeLevel
 
-        // TODO: Add the type level here
+        [TestMethod]
+        public void TestTypeMapperTypeMapping()
+        {
+            // Setup
+            TypeMapper.Add<DateTime>(DbType.DateTime2);
+
+            // Act
+            var actual = TypeMapper.Get<DateTime>();
+            var expected = DbType.DateTime2;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestTypeMapperTypeMappingWithoutMapping()
+        {
+            // Act
+            var actual = TypeMapper.Get<DateTime>();
+
+            // Assert
+            Assert.IsNull(actual);
+        }
 
         #endregion
 
@@ -49,16 +71,14 @@ namespace RepoDb.UnitTests.Others
          */
 
         [TestMethod]
-        public void TestTypeMapperMappingViaPropertyName()
+        public void TestTypeMapperPropertyMappingViaPropertyName()
         {
             // Setup
-            var propertyInfo = typeof(TypeMapperTestClass)
-                .GetProperties()
-                .First(p => p.Name == "ColumnString");
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", DbType.StringFixedLength);
+            var propertyName = "ColumnString";
+            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.StringFixedLength);
 
             // Act
-            var actual = TypeMapper.Get(propertyInfo);
+            var actual = TypeMapper.Get<TypeMapperTestClass>(propertyName);
             var expected = DbType.StringFixedLength;
 
             // Assert
@@ -66,16 +86,14 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaField()
+        public void TestTypeMapperPropertyMappingViaField()
         {
             // Setup
-            var propertyInfo = typeof(TypeMapperTestClass)
-                .GetProperties()
-                .First(p => p.Name == "ColumnString");
-            TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), DbType.StringFixedLength);
+            var field = new Field("ColumnString");
+            TypeMapper.Add<TypeMapperTestClass>(field, DbType.StringFixedLength);
 
             // Act
-            var actual = TypeMapper.Get(propertyInfo);
+            var actual = TypeMapper.Get<TypeMapperTestClass>(field);
             var expected = DbType.StringFixedLength;
 
             // Assert
@@ -83,16 +101,13 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaExpression()
+        public void TestTypeMapperPropertyMappingViaExpression()
         {
             // Setup
-            var propertyInfo = typeof(TypeMapperTestClass)
-                .GetProperties()
-                .First(p => p.Name == "ColumnString");
             TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, DbType.StringFixedLength);
 
             // Act
-            var actual = TypeMapper.Get(propertyInfo);
+            var actual = TypeMapper.Get<TypeMapperTestClass>(e => e.ColumnString);
             var expected = DbType.StringFixedLength;
 
             // Assert
@@ -100,7 +115,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaClassProperty()
+        public void TestTypeMapperPropertyMappingViaClassProperty()
         {
             // Setup
             var classProperty = PropertyCache.Get<TypeMapperTestClass>()
@@ -108,7 +123,7 @@ namespace RepoDb.UnitTests.Others
             TypeMapper.Add(classProperty, DbType.StringFixedLength);
 
             // Act
-            var actual = TypeMapper.Get(classProperty.PropertyInfo);
+            var actual = TypeMapper.Get(classProperty);
             var expected = DbType.StringFixedLength;
 
             // Assert
@@ -116,7 +131,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaPropertyInfo()
+        public void TestTypeMapperPropertyMappingViaPropertyInfo()
         {
             // Setup
             var propertyInfo = typeof(TypeMapperTestClass)
@@ -137,26 +152,32 @@ namespace RepoDb.UnitTests.Others
          */
 
         [TestMethod]
-        public void TestTypeMapperMappingViaPropertyNameWithMapAttribute()
+        public void TestTypeMapperPropertyMappingViaPropertyNameWithMapAttribute()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", DbType.StringFixedLength);
+            var propertyName = "PropertyString";
+            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.StringFixedLength);
 
             // Act
-            var actual = TypeMapper.Get<TypeMapperTestClass>("ColumnString");
+            var actual = TypeMapper.Get<TypeMapperTestClass>(propertyName);
             var expected = DbType.StringFixedLength;
 
             // Assert
             Assert.AreEqual(expected, actual);
 
-            // TODO: Add the TypeMapCache assertion here
+            // Act
+            actual = TypeMapCache.Get<TypeMapperTestClass>(propertyName);
+            expected = DbType.String;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaFieldWithMapAttribute()
+        public void TestTypeMapperPropertyMappingViaFieldWithMapAttribute()
         {
             // Setup
-            var field = new Field("ColumnString");
+            var field = new Field("PropertyString");
             TypeMapper.Add<TypeMapperTestClass>(field, DbType.StringFixedLength);
 
             // Act
@@ -166,11 +187,16 @@ namespace RepoDb.UnitTests.Others
             // Assert
             Assert.AreEqual(expected, actual);
 
-            // TODO: Add the TypeMapCache assertion here
+            // Act
+            actual = TypeMapCache.Get<TypeMapperTestClass>(field);
+            expected = DbType.String;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaExpressionWithMapAttribute()
+        public void TestTypeMapperPropertyMappingViaExpressionWithMapAttribute()
         {
             // Setup
             TypeMapper.Add<TypeMapperTestClass>(e => e.PropertyString, DbType.StringFixedLength);
@@ -182,11 +208,16 @@ namespace RepoDb.UnitTests.Others
             // Assert
             Assert.AreEqual(expected, actual);
 
-            // TODO: Add the TypeMapCache assertion here
+            // Act
+            actual = TypeMapCache.Get<TypeMapperTestClass>(e => e.PropertyString);
+            expected = DbType.String;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaClassPropertyWithMapAttribute()
+        public void TestTypeMapperPropertyMappingViaClassPropertyWithMapAttribute()
         {
             // Setup
             var classProperty = PropertyCache.Get<TypeMapperTestClass>()
@@ -200,11 +231,16 @@ namespace RepoDb.UnitTests.Others
             // Assert
             Assert.AreEqual(expected, actual);
 
-            // TODO: Add the TypeMapCache assertion here
+            // Act
+            actual = TypeMapCache.Get(classProperty);
+            expected = DbType.String;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaPropertyInfoWithMapAttribute()
+        public void TestTypeMapperPropertyMappingViaPropertyInfoWithMapAttribute()
         {
             // Setup
             var propertyInfo = typeof(TypeMapperTestClass)
@@ -219,7 +255,12 @@ namespace RepoDb.UnitTests.Others
             // Assert
             Assert.AreEqual(expected, actual);
 
-            // TODO: Add the TypeMapCache assertion here
+            // Act
+            actual = TypeMapCache.Get(propertyInfo);
+            expected = DbType.String;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         /*
@@ -227,14 +268,15 @@ namespace RepoDb.UnitTests.Others
          */
 
         [TestMethod]
-        public void TestTypeMapperMappingViaPropertyNameOverride()
+        public void TestTypeMapperPropertyMappingViaPropertyNameOverride()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", DbType.StringFixedLength);
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", DbType.AnsiStringFixedLength, true);
+            var propertyName = "ColumnString";
+            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.StringFixedLength);
+            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.AnsiStringFixedLength, true);
 
             // Act
-            var actual = TypeMapper.Get<TypeMapperTestClass>("ColumnString");
+            var actual = TypeMapper.Get<TypeMapperTestClass>(propertyName);
             var expected = DbType.AnsiStringFixedLength;
 
             // Assert
@@ -242,7 +284,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaFieldOverride()
+        public void TestTypeMapperPropertyMappingViaFieldOverride()
         {
             // Setup
             var field = new Field("ColumnString");
@@ -258,7 +300,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaExpressionOverride()
+        public void TestTypeMapperPropertyMappingViaExpressionOverride()
         {
             // Setup
             TypeMapper.Add<TypeMapperTestClass>(e => e.ColumnString, DbType.StringFixedLength);
@@ -273,7 +315,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaClassPropertyOverride()
+        public void TestTypeMapperPropertyMappingViaClassPropertyOverride()
         {
             // Setup
             var classProperty = PropertyCache.Get<TypeMapperTestClass>()
@@ -290,7 +332,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestTypeMapperMappingViaPropertyInfoOverride()
+        public void TestTypeMapperPropertyMappingViaPropertyInfoOverride()
         {
             // Setup
             var propertyInfo = typeof(TypeMapperTestClass)
@@ -315,16 +357,18 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnTypeMapperViaPropertyNameThatIsAlreadyExisting()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", DbType.StringFixedLength);
-            TypeMapper.Add<TypeMapperTestClass>("ColumnString", DbType.AnsiStringFixedLength);
+            var propertyName = "ColumnString";
+            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.StringFixedLength);
+            TypeMapper.Add<TypeMapperTestClass>(propertyName, DbType.AnsiStringFixedLength);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
         public void ThrowExceptionOnTypeMapperViaFieldThatIsAlreadyExisting()
         {
             // Setup
-            TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), DbType.StringFixedLength);
-            TypeMapper.Add<TypeMapperTestClass>(new Field("ColumnString"), DbType.AnsiStringFixedLength);
+            var field = new Field("ColumnString");
+            TypeMapper.Add<TypeMapperTestClass>(field, DbType.StringFixedLength);
+            TypeMapper.Add<TypeMapperTestClass>(field, DbType.AnsiStringFixedLength);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]

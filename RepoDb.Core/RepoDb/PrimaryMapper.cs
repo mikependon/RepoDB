@@ -28,7 +28,8 @@ namespace RepoDb
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Add<T>(Expression<Func<T, object>> expression)
-            where T : class => Add(expression, false);
+            where T : class =>
+            Add(expression, false);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via expression).
@@ -38,7 +39,8 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<T>(Expression<Func<T, object>> expression,
             bool force)
-            where T : class => Add(ExpressionExtension.GetProperty<T>(expression), force);
+            where T : class =>
+            Add(ExpressionExtension.GetProperty<T>(expression), force);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via property name).
@@ -46,7 +48,8 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         public static void Add<T>(string propertyName)
-            where T : class => Add<T>(propertyName, false);
+            where T : class =>
+            Add<T>(propertyName, false);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via property name).
@@ -78,7 +81,8 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
         public static void Add<T>(Field field)
-            where T : class => Add<T>(field, false);
+            where T : class =>
+            Add<T>(field, false);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via <see cref="Field"/> object).
@@ -108,7 +112,8 @@ namespace RepoDb
         /// Adds a primary property mapping into a <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        public static void Add(PropertyInfo propertyInfo) => Add(propertyInfo, false);
+        public static void Add(PropertyInfo propertyInfo) =>
+            Add(propertyInfo, false);
 
         /// <summary>
         /// Adds a primary property mapping into a <see cref="PropertyInfo"/> object.
@@ -139,7 +144,8 @@ namespace RepoDb
         /// Adds a primary property mapping into a <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
-        public static void Add(ClassProperty classProperty) => Add(classProperty, false);
+        public static void Add(ClassProperty classProperty) =>
+            Add(classProperty, false);
 
         /// <summary>
         /// Adds a primary property mapping into a <see cref="ClassProperty"/> object.
@@ -187,7 +193,8 @@ namespace RepoDb
         /// <typeparam name="T">The type of the data entity object.</typeparam>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<T>()
-            where T : class => Get(typeof(T));
+            where T : class =>
+            Get(typeof(T));
 
         /// <summary>
         /// Gets the instance of <see cref="ClassProperty"/> that is mapped as primary key.
@@ -219,7 +226,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         public static void Remove<T>()
-            where T : class => Remove(typeof(T));
+            where T : class =>
+            Remove(typeof(T));
 
         /// <summary>
         /// Removes the exising mapped primary property of the entity type.

@@ -49,10 +49,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
-        public static void Add<T>(DbType dbType)
-        {
+        public static void Add<T>(DbType dbType) =>
             Add(typeof(T), dbType);
-        }
 
         /// <summary>
         /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
@@ -61,10 +59,8 @@ namespace RepoDb
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<T>(DbType dbType,
-            bool force)
-        {
+            bool force) =>
             Add(typeof(T), dbType, force);
-        }
 
         /// <summary>
         /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
@@ -72,10 +68,8 @@ namespace RepoDb
         /// <param name="type">The .NET CLR type to be mapped.</param>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
         public static void Add(Type type,
-            DbType dbType)
-        {
+            DbType dbType) =>
             Add(type, dbType, false);
-        }
 
         /// <summary>
         /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
@@ -120,10 +114,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The dynamic .NET CLR type used for mapping.</typeparam>
         /// <returns>The instance of the mapped <see cref="DbType"/> object.</returns>
-        public static DbType? Get<T>()
-        {
-            return Get(typeof(T));
-        }
+        public static DbType? Get<T>() =>
+            Get(typeof(T));
 
         /// <summary>
         /// Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
@@ -132,8 +124,12 @@ namespace RepoDb
         /// <returns>The instance of the mapped <see cref="DbType"/> object.</returns>
         public static DbType? Get(Type type)
         {
+            // Validate
+            ThrowNullReferenceException(type, "Type");
+
+            // Variables
             var value = (DbType?)null;
-            var key = type.FullName.GetHashCode();
+            var key = type.GetUnderlyingType().FullName.GetHashCode();
 
             // Try get the value
             m_maps.TryGetValue(key, out value);
@@ -150,10 +146,8 @@ namespace RepoDb
         /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <typeparam name="T">The .NET CLR type mapping to be removed.</typeparam>
-        public static void Remove<T>()
-        {
+        public static void Remove<T>() =>
             Remove(typeof(T));
-        }
 
         /// <summary>
         /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
@@ -180,10 +174,8 @@ namespace RepoDb
         /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
         [Obsolete("Use the 'Add' method instead.")]
-        public static void Map<T>(DbType dbType)
-        {
+        public static void Map<T>(DbType dbType) =>
             Add(typeof(T), dbType);
-        }
 
         /// <summary>
         /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
@@ -193,10 +185,8 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         [Obsolete("Use the 'Add' method instead.")]
         public static void Map<T>(DbType dbType,
-            bool force)
-        {
+            bool force) =>
             Add(typeof(T), dbType, force);
-        }
 
         /// <summary>
         /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
@@ -205,10 +195,8 @@ namespace RepoDb
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
         [Obsolete("Use the 'Add' method instead.")]
         public static void Map(Type type,
-            DbType dbType)
-        {
+            DbType dbType) =>
             Add(type, dbType, false);
-        }
 
         /// <summary>
         /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
@@ -219,10 +207,8 @@ namespace RepoDb
         [Obsolete("Use the 'Add' method instead.")]
         public static void Map(Type type,
             DbType dbType,
-            bool force)
-        {
+            bool force) =>
             Add(type, dbType, force);
-        }
 
         /*
          * Unmap
@@ -233,26 +219,22 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The .NET CLR type mapping to be removed.</typeparam>
         [Obsolete("Use the 'Remove' method instead.")]
-        public static void Unmap<T>()
-        {
+        public static void Unmap<T>() =>
             Remove(typeof(T));
-        }
 
         /// <summary>
         /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <param name="type">The .NET CLR type mapping to be removed.</param>
         [Obsolete("Use the 'Remove' method instead.")]
-        public static void Unmap(Type type)
-        {
+        public static void Unmap(Type type) =>
             Remove(type);
-        }
 
         #endregion
 
         #endregion
 
-        #region PropertyLevel
+        #region Property Level
 
         /*
          * Add
@@ -266,7 +248,8 @@ namespace RepoDb
         /// <param name="dbType">The target database type.</param>
         public static void Add<T>(Expression<Func<T, object>> expression,
             DbType? dbType)
-            where T : class => Add(expression, dbType, false);
+            where T : class =>
+            Add(expression, dbType, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database type (via expression).
@@ -278,7 +261,8 @@ namespace RepoDb
         public static void Add<T>(Expression<Func<T, object>> expression,
             DbType? dbType,
             bool force)
-            where T : class => Add(ExpressionExtension.GetProperty<T>(expression), dbType, force);
+            where T : class =>
+            Add(ExpressionExtension.GetProperty<T>(expression), dbType, force);
 
         /// <summary>
         /// Adds a mapping between a class property and the database type (via property name).
@@ -288,7 +272,8 @@ namespace RepoDb
         /// <param name="dbType">The target database type.</param>
         public static void Add<T>(string propertyName,
             DbType? dbType)
-            where T : class => Add<T>(propertyName, dbType, false);
+            where T : class =>
+            Add<T>(propertyName, dbType, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database type (via property name).
@@ -324,7 +309,8 @@ namespace RepoDb
         /// <param name="dbType">The target database type.</param>
         public static void Add<T>(Field field,
             DbType? dbType)
-            where T : class => Add<T>(field, dbType, false);
+            where T : class =>
+            Add<T>(field, dbType, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
@@ -358,7 +344,8 @@ namespace RepoDb
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         public static void Add(ClassProperty classProperty,
-            DbType? dbType) => Add(classProperty.PropertyInfo, dbType, false);
+            DbType? dbType) =>
+            Add(classProperty.PropertyInfo, dbType, false);
 
         /// <summary>
         /// Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
@@ -368,7 +355,8 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(ClassProperty classProperty,
             DbType? dbType,
-            bool force) => Add(classProperty?.PropertyInfo, dbType, force);
+            bool force) =>
+            Add(classProperty?.PropertyInfo, dbType, force);
 
         /// <summary>
         /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
@@ -376,7 +364,8 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         public static void Add(PropertyInfo propertyInfo,
-            DbType? dbType) => Add(propertyInfo, dbType, false);
+            DbType? dbType) =>
+            Add(propertyInfo, dbType, false);
 
         /// <summary>
         /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
@@ -426,33 +415,36 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>The mapped database type of the property.</returns>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<T>(Expression<Func<T, object>> expression)
-            where T : class => Get(ExpressionExtension.GetProperty<T>(expression));
+            where T : class =>
+            Get(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
         /// Gets the mapped database type of the property (via property name).
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
-        /// <returns>The mapped database type of the property.</returns>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<T>(string propertyName)
-            where T : class => Get(TypeExtension.GetProperty<T>(propertyName));
+            where T : class =>
+            Get(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
         /// Gets the mapped database type of the property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
-        /// <returns>The mapped database type of the property.</returns>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<T>(Field field)
-            where T : class => Get(TypeExtension.GetProperty<T>(field.Name));
+            where T : class =>
+            Get(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
         /// Gets the mapped database type of the property via <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
-        /// <returns>The mapped database type of the property.</returns>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get(ClassProperty classProperty) =>
             Get(classProperty.PropertyInfo);
 
@@ -460,7 +452,7 @@ namespace RepoDb
         /// Gets the mapped database type of the property via <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        /// <returns>The mapped database type of the property.</returns>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get(PropertyInfo propertyInfo)
         {
             // Validate
@@ -487,7 +479,8 @@ namespace RepoDb
         /// <typeparam name="T">The type of the entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<T>(Expression<Func<T, object>> expression)
-            where T : class => Remove(ExpressionExtension.GetProperty<T>(expression));
+            where T : class =>
+            Remove(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
         /// Removes the mapping between the class property and database column (via property name).
@@ -495,7 +488,8 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<T>(string propertyName)
-            where T : class => Remove(TypeExtension.GetProperty<T>(propertyName));
+            where T : class =>
+            Remove(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
         /// Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
@@ -503,7 +497,8 @@ namespace RepoDb
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<T>(Field field)
-            where T : class => Remove(TypeExtension.GetProperty<T>(field.Name));
+            where T : class =>
+            Remove(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
         /// Removes the mapping between the <see cref="ClassProperty"/> object and the database column.
