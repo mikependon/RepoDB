@@ -202,7 +202,7 @@ namespace RepoDb.Reflection
                     if (propertyHandlerAttribute != null)
                     {
                         // Get from the attribute
-                        handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                        handlerInstance = PropertyHandlerCache.Get<object>(property);
                         handlerGetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Get");
                     }
                     else
@@ -875,7 +875,7 @@ namespace RepoDb.Reflection
                     if (propertyHandlerAttribute != null)
                     {
                         // Get from the attribute
-                        handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                        handlerInstance = PropertyHandlerCache.Get<object>(classProperty);
                         handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
                     }
                     else
@@ -1554,7 +1554,7 @@ namespace RepoDb.Reflection
                     if (propertyHandlerAttribute != null)
                     {
                         // Get from the attribute
-                        handlerInstance = PropertyHandlerInstanceCache.Get(propertyHandlerAttribute.HandlerType);
+                        handlerInstance = PropertyHandlerCache.Get<object>(classProperty);
                         handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
                     }
                     else

@@ -197,6 +197,12 @@ namespace RepoDb.UnitTests.Others
 
             // Assert
             Assert.IsNotNull(actual);
+
+            // Act (Existing)
+            actual = PropertyHandlerCache.Get<PropertyTypeHandlerCacheTestClass, TextPropertyHandler>(propertyName);
+
+            // Assert
+            Assert.IsNotNull(actual);
         }
 
         [TestMethod]
@@ -210,6 +216,12 @@ namespace RepoDb.UnitTests.Others
 
             // Assert
             Assert.IsNotNull(actual);
+
+            // Act (Existing)
+            actual = PropertyHandlerCache.Get<PropertyTypeHandlerCacheTestClass, TextPropertyHandler>(field);
+
+            // Assert
+            Assert.IsNotNull(actual);
         }
 
         [TestMethod]
@@ -217,6 +229,12 @@ namespace RepoDb.UnitTests.Others
         {
             // Act
             var actual = PropertyHandlerCache.Get<PropertyTypeHandlerCacheTestClass, TextPropertyHandler>(e => e.PropertyString);
+
+            // Assert
+            Assert.IsNotNull(actual);
+
+            // Act (Existing)
+            actual = PropertyHandlerCache.Get<PropertyTypeHandlerCacheTestClass, TextPropertyHandler>(e => e.PropertyString);
 
             // Assert
             Assert.IsNotNull(actual);
@@ -234,6 +252,12 @@ namespace RepoDb.UnitTests.Others
 
             // Assert
             Assert.IsNotNull(actual);
+
+            // Act (Existing)
+            actual = PropertyHandlerCache.Get<TextPropertyHandler>(classProperty);
+
+            // Assert
+            Assert.IsNotNull(actual);
         }
 
         [TestMethod]
@@ -247,6 +271,12 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             var actual = PropertyHandlerCache.Get<TextPropertyHandler>(propertyInfo);
+
+            // Assert
+            Assert.IsNotNull(actual);
+
+            // Act (Existing)
+            actual = PropertyHandlerCache.Get<TextPropertyHandler>(propertyInfo);
 
             // Assert
             Assert.IsNotNull(actual);

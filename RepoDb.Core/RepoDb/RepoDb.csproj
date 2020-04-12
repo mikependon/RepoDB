@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Remove="PerformanceMonitor.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="PropertyHandlerInstanceCache.cs" />
     <Compile Remove="Reflection\DataCommand.cs" />
     <Compile Remove="Reflection\DelegateCache.cs" />
     <Compile Remove="Reflection\DelegateFactory.cs" />

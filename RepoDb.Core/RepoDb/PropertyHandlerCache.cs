@@ -145,6 +145,11 @@ namespace RepoDb
                 // Add to cache
                 m_cache.TryAdd(key, result);
             }
+            else
+            {
+                // Set the result
+                result = Converter.ToType<TPropertyHandler>(value);
+            }
 
             // Return the value
             return result;

@@ -81,7 +81,7 @@ namespace RepoDb.Extensions
         public static string GetMappedName(this PropertyInfo property)
         {
             var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
-            return attribute?.Name ?? 
+            return attribute?.Name ??
                 PropertyMapper.Get(property) ??
                 property.Name;
         }
@@ -259,7 +259,9 @@ namespace RepoDb.Extensions
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateCustomizedHashCode(this PropertyInfo property)
         {
-            return (property.DeclaringType.FullName.GetHashCode() ^ property.Name.GetHashCode());
+            return (property.DeclaringType.FullName.GetHashCode() ^
+                property.Name.GetHashCode() ^
+                property.PropertyType.FullName.GetHashCode());
         }
 
         /// <summary>
