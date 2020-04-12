@@ -81,6 +81,10 @@ namespace RepoDb
             DbType dbType,
             bool force)
         {
+            // Validate
+            ThrowNullReferenceException(type, "Type");
+
+            // Variables
             var key = type.FullName.GetHashCode();
             var value = (DbType?)null;
 

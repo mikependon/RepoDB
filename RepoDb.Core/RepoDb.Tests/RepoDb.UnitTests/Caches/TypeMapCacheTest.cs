@@ -41,10 +41,9 @@ namespace RepoDb.UnitTests.Others
         {
             // Act
             var result = TypeMapCache.Get<TypeMapCacheTest>();
-            var expected = (DbType?)null;
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
