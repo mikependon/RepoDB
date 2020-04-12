@@ -65,7 +65,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached property handler object that is being mapped on a specific class property (via expression).
         /// </summary>
-        /// <typeparam name="TType">The type of the entity.</typeparam>
+        /// <typeparam name="TType">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped property handler object of the property.</returns>
@@ -76,7 +76,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached property handler object that is being mapped on a specific class property (via property name).
         /// </summary>
-        /// <typeparam name="TType">The type of the entity.</typeparam>
+        /// <typeparam name="TType">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped property handler object of the property.</returns>
@@ -87,7 +87,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached property handler object that is being mapped on a specific class property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="TType">The type of the entity.</typeparam>
+        /// <typeparam name="TType">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped property handler object of the property.</returns>

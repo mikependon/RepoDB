@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests.Caches
         public void Cleanup()
         {
             ClassMappedNameCache.Flush();
-            ClassMapper.Flush();
+            ClassMapper.Clear();
         }
 
         #region SubClasses

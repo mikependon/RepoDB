@@ -20,7 +20,7 @@ namespace RepoDb.UnitTests.Others
         public void Cleanup()
         {
             PrimaryCache.Flush();
-            PrimaryMapper.Flush();
+            PrimaryMapper.Clear();
         }
 
         #region SubClasses

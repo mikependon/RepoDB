@@ -511,7 +511,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for maximum operation.</returns>
@@ -560,7 +560,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for maximum-all operation.</returns>
         public virtual string CreateMaxAll(QueryBuilder queryBuilder,
@@ -606,7 +606,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for minimum operation.</returns>
@@ -655,7 +655,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for minimum-all operation.</returns>
         public virtual string CreateMinAll(QueryBuilder queryBuilder,
@@ -835,7 +835,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for sum operation.</returns>
@@ -884,7 +884,7 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for sum-all operation.</returns>
         public virtual string CreateSumAll(QueryBuilder queryBuilder,

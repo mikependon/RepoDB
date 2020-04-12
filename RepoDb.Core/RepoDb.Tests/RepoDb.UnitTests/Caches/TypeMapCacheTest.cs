@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests.Others
         [TestCleanup]
         public void Cleanup()
         {
-            TypeMapper.Flush();
+            TypeMapper.Clear();
             TypeMapCache.Flush();
         }
 

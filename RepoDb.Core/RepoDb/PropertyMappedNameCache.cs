@@ -18,7 +18,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name of the property (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get<T>(Expression<Func<T, object>> expression)
@@ -28,7 +28,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name of the property (via property name).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get<T>(string propertyName)
@@ -38,7 +38,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name of the property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get<T>(Field field)

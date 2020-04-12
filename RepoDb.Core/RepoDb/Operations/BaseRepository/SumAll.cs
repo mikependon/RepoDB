@@ -15,7 +15,7 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from all data of the database table.
         /// </summary>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value.</returns>
@@ -31,7 +31,7 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from all data of the database table.
         /// </summary>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The sum value.</returns>
@@ -51,7 +51,7 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -67,7 +67,7 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>

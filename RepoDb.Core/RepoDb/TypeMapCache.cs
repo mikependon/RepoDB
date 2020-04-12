@@ -63,7 +63,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<T>(Expression<Func<T, object>> expression)
@@ -73,7 +73,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via property name).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<T>(string propertyName)
@@ -83,7 +83,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<T>(Field field)

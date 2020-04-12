@@ -61,7 +61,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Gets the field to be minimumd.
+        /// Gets the field to be minimized.
         /// </summary>
         public Field Field { get; }
 

@@ -2118,7 +2118,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The target <see cref="Field"/>.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="index">The index of the batches.</param>
@@ -2177,7 +2177,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The target <see cref="Field"/>.</param>
         /// <returns>A compiled function that is used to set the data entity object property value.</returns>
         public static Action<TEntity, object> GetDataEntityPropertyValueSetterFunction<TEntity>(Field field)

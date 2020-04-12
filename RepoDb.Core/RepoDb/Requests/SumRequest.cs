@@ -67,7 +67,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Gets the field to be sumd.
+        /// Gets the field to be summarized.
         /// </summary>
         public Field Field { get; }
 

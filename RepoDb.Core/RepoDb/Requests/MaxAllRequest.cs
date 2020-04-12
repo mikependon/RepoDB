@@ -61,7 +61,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Gets the field to be maximumd.
+        /// Gets the field to be maximized.
         /// </summary>
         public Field Field { get; }
 

@@ -11,7 +11,11 @@ namespace RepoDb
     /// </summary>
     public static class ClassMapper
     {
+        #region Privates
+
         private static readonly ConcurrentDictionary<int, string> m_maps = new ConcurrentDictionary<int, string>();
+
+        #endregion
 
         #region Methods
 
@@ -20,41 +24,41 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between a class and the database object.
+        /// Adds a mapping between a data entity and the database object.
         /// </summary>
-        /// <typeparam name="T">The .NET CLR Type to be mapped.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="objectName">The name of the database object (ie: Table, View).</param>
-        public static void Add<T>(string objectName)
-            where T : class =>
-            Add(typeof(T), objectName);
+        public static void Add<TEntity>(string objectName)
+            where TEntity : class =>
+            Add(typeof(TEntity), objectName);
 
         /// <summary>
-        /// Adds a mapping between a class and the database object.
+        /// Adds a mapping between a data entity and the database object.
         /// </summary>
-        /// <typeparam name="T">The .NET CLR Type to be mapped.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="objectName">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(string objectName,
+        public static void Add<TEntity>(string objectName,
             bool force)
-            where T : class =>
-            Add(typeof(T), objectName, force);
+            where TEntity : class =>
+            Add(typeof(TEntity), objectName, force);
 
         /// <summary>
-        /// Adds a mapping between a class and the database object.
+        /// Adds a mapping between a data entity and the database object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type to be mapped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="objectName">The name of the database object (ie: Table, View).</param>
-        public static void Add(Type type,
+        public static void Add(Type entityType,
             string objectName) =>
-            Add(type, objectName, false);
+            Add(entityType, objectName, false);
 
         /// <summary>
-        /// Adds a mapping between a class and the database object.
+        /// Adds a mapping between a data entity and the database object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type to be mapped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="objectName">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add(Type type,
+        public static void Add(Type entityType,
             string objectName,
             bool force)
         {
@@ -62,7 +66,7 @@ namespace RepoDb
             Validate(objectName);
 
             // Variables
-            var key = type.FullName.GetHashCode();
+            var key = entityType.FullName.GetHashCode();
             var value = (string)null;
 
             // Try get the cache
@@ -76,7 +80,7 @@ namespace RepoDb
                 else
                 {
                     // Throws an exception
-                    throw new MappingExistsException($"A class mapping to '{type.FullName}' already exists.");
+                    throw new MappingExistsException($"A class mapping to '{entityType.FullName}' already exists.");
                 }
             }
             else
@@ -91,23 +95,23 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped name of the class.
+        /// Gets the mapped name of the data entity.
         /// </summary>
-        /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The mapped name of the class.</returns>
-        public static string Get<T>()
-            where T : class =>
-            Get(typeof(T));
+        public static string Get<TEntity>()
+            where TEntity : class =>
+            Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the mapped name of the class.
+        /// Gets the mapped name of the data entity.
         /// </summary>
-        /// <param name="type">The .NET CLR Type used for mapping.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The mapped name of the class.</returns>
-        public static string Get(Type type)
+        public static string Get(Type entityType)
         {
             var value = (string)null;
-            var key = type.FullName.GetHashCode();
+            var key = entityType.FullName.GetHashCode();
 
             // Try get the value
             m_maps.TryGetValue(key, out value);
@@ -121,37 +125,41 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes a mapping of targetted .NET CLR Type from the collection.
+        /// Removes the mapping of the data entity.
         /// </summary>
-        /// <typeparam name="T">The .NET CLR Type mapping to be removed.</typeparam>
-        public static void Remove<T>()
-            where T : class =>
-            Remove(typeof(T));
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        public static void Remove<TEntity>()
+            where TEntity : class =>
+            Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes a mapping of targetted .NET CLR Type from the collection.
+        /// Removes the mapping of the data entity.
         /// </summary>
-        /// <param name="type">The .NET CLR Type mapping to be removed.</param>
-        public static void Remove(Type type)
+        /// <param name="entityType">The type of the data entity.</param>
+        public static void Remove(Type entityType)
         {
-            var key = type.FullName.GetHashCode();
+            var key = entityType.FullName.GetHashCode();
             var value = (string)null;
 
             // Try get the value
             m_maps.TryRemove(key, out value);
         }
 
-        #endregion
-
-        #region Helpers
+        /*
+         * Clear
+         */
 
         /// <summary>
-        /// Flushes all the existing cached class mapped names.
+        /// Clears all the existing cached class mapped names.
         /// </summary>
-        public static void Flush()
+        public static void Clear()
         {
             m_maps.Clear();
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Validates the database object name that is being passed.

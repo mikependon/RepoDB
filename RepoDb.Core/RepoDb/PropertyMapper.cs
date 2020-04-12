@@ -29,58 +29,58 @@ namespace RepoDb
         /// <summary>
         /// Adds a mapping between a class property and the database column (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="columnName">The name of the database column.</param>
-        public static void Add<T>(Expression<Func<T, object>> expression,
+        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             string columnName)
-            where T : class =>
+            where TEntity : class =>
             Add(expression, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="columnName">The name of the database column.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(Expression<Func<T, object>> expression,
+        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             string columnName,
             bool force)
-            where T : class =>
-            Add(ExpressionExtension.GetProperty<T>(expression), columnName, force);
+            where TEntity : class =>
+            Add(ExpressionExtension.GetProperty<TEntity>(expression), columnName, force);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via property name).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
-        public static void Add<T>(string propertyName,
+        public static void Add<TEntity>(string propertyName,
             string columnName)
-            where T : class =>
-            Add<T>(propertyName, columnName, false);
+            where TEntity : class =>
+            Add<TEntity>(propertyName, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via property name).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="columnName">The name of the class property to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(string propertyName,
+        public static void Add<TEntity>(string propertyName,
             string columnName,
             bool force)
-            where T : class
+            where TEntity : class
         {
             // Validates
             ThrowNullReferenceException(propertyName, "PropertyName");
 
             // Get the property
-            var property = TypeExtension.GetProperty<T>(propertyName);
+            var property = TypeExtension.GetProperty<TEntity>(propertyName);
             if (property == null)
             {
-                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(T).FullName}'.");
+                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(TEntity).FullName}'.");
             }
 
             // Add to the mapping
@@ -90,34 +90,34 @@ namespace RepoDb
         /// <summary>
         /// Adds a mapping between a class property and the database column (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
-        public static void Add<T>(Field field,
+        public static void Add<TEntity>(Field field,
             string columnName)
-            where T : class =>
-            Add<T>(field, columnName, false);
+            where TEntity : class =>
+            Add<TEntity>(field, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(Field field,
+        public static void Add<TEntity>(Field field,
             string columnName,
             bool force)
-            where T : class
+            where TEntity : class
         {
             // Validates
             ThrowNullReferenceException(field, "Field");
 
             // Get the property
-            var property = TypeExtension.GetProperty<T>(field.Name);
+            var property = TypeExtension.GetProperty<TEntity>(field.Name);
             if (property == null)
             {
-                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(T).FullName}'.");
+                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(TEntity).FullName}'.");
             }
 
             // Add to the mapping
@@ -199,32 +199,32 @@ namespace RepoDb
         /// <summary>
         /// Gets the mapped name of the property (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped name of the property.</returns>
-        public static string Get<T>(Expression<Func<T, object>> expression)
-            where T : class =>
-            Get(ExpressionExtension.GetProperty<T>(expression));
+        public static string Get<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
+            Get(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Gets the mapped name of the property (via property name).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped name of the property.</returns>
-        public static string Get<T>(string propertyName)
-            where T : class =>
-            Get(TypeExtension.GetProperty<T>(propertyName));
+        public static string Get<TEntity>(string propertyName)
+            where TEntity : class =>
+            Get(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Gets the mapped name of the property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped name of the property.</returns>
-        public static string Get<T>(Field field)
-            where T : class =>
-            Get(TypeExtension.GetProperty<T>(field.Name));
+        public static string Get<TEntity>(Field field)
+            where TEntity : class =>
+            Get(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Gets the mapped name of the property via <see cref="ClassProperty"/> object.
@@ -262,29 +262,29 @@ namespace RepoDb
         /// <summary>
         /// Removes the mapping between the class property and the database column (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        public static void Remove<T>(Expression<Func<T, object>> expression)
-            where T : class =>
-            Remove(ExpressionExtension.GetProperty<T>(expression));
+        public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
+            Remove(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Removes the mapping between the class property and database column (via property name).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
-        public static void Remove<T>(string propertyName)
-            where T : class =>
-            Remove(TypeExtension.GetProperty<T>(propertyName));
+        public static void Remove<TEntity>(string propertyName)
+            where TEntity : class =>
+            Remove(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
-        public static void Remove<T>(Field field)
-            where T : class =>
-            Remove(TypeExtension.GetProperty<T>(field.Name));
+        public static void Remove<TEntity>(Field field)
+            where TEntity : class =>
+            Remove(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Removes the mapping between the <see cref="ClassProperty"/> object and the database column.
@@ -310,17 +310,21 @@ namespace RepoDb
             m_maps.TryRemove(key, out value);
         }
 
-        #endregion
-
-        #region Helpers
+        /*
+         * Clear
+         */
 
         /// <summary>
-        /// Flushes all the existing cached property mapped names.
+        /// Clears all the existing cached property mapped names.
         /// </summary>
-        public static void Flush()
+        public static void Clear()
         {
             m_maps.Clear();
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Validates the value of the target column name.

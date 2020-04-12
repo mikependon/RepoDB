@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests.Others
         [TestCleanup]
         public void Cleanup()
         {
-            PropertyHandlerMapper.Flush();
+            PropertyHandlerMapper.Clear();
             PropertyHandlerCache.Flush();
         }
 

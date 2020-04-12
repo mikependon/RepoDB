@@ -25,50 +25,50 @@ namespace RepoDb
         /// <summary>
         /// Adds a primary property mapping into an entity type (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        public static void Add<T>(Expression<Func<T, object>> expression)
-            where T : class =>
+        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
             Add(expression, false);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(Expression<Func<T, object>> expression,
+        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             bool force)
-            where T : class =>
-            Add(ExpressionExtension.GetProperty<T>(expression), force);
+            where TEntity : class =>
+            Add(ExpressionExtension.GetProperty<TEntity>(expression), force);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via property name).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
-        public static void Add<T>(string propertyName)
-            where T : class =>
-            Add<T>(propertyName, false);
+        public static void Add<TEntity>(string propertyName)
+            where TEntity : class =>
+            Add<TEntity>(propertyName, false);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via property name).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(string propertyName,
+        public static void Add<TEntity>(string propertyName,
             bool force)
-            where T : class
+            where TEntity : class
         {
             // Validates
             ThrowNullReferenceException(propertyName, "PropertyName");
 
             // Get the property
-            var property = TypeExtension.GetProperty<T>(propertyName);
+            var property = TypeExtension.GetProperty<TEntity>(propertyName);
             if (property == null)
             {
-                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(T).FullName}'.");
+                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(TEntity).FullName}'.");
             }
 
             // Add to the mapping
@@ -78,30 +78,30 @@ namespace RepoDb
         /// <summary>
         /// Adds a primary property mapping into an entity type (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
-        public static void Add<T>(Field field)
-            where T : class =>
-            Add<T>(field, false);
+        public static void Add<TEntity>(Field field)
+            where TEntity : class =>
+            Add<TEntity>(field, false);
 
         /// <summary>
         /// Adds a primary property mapping into an entity type (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<T>(Field field,
+        public static void Add<TEntity>(Field field,
             bool force)
-            where T : class
+            where TEntity : class
         {
             // Validates
             ThrowNullReferenceException(field, "Field");
 
             // Get the property
-            var property = TypeExtension.GetProperty<T>(field.Name);
+            var property = TypeExtension.GetProperty<TEntity>(field.Name);
             if (property == null)
             {
-                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(T).FullName}'.");
+                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(TEntity).FullName}'.");
             }
 
             // Add to the mapping
@@ -190,24 +190,24 @@ namespace RepoDb
         /// <summary>
         /// Gets the instance of <see cref="ClassProperty"/> that is mapped as primary key.
         /// </summary>
-        /// <typeparam name="T">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<T>()
-            where T : class =>
-            Get(typeof(T));
+        public static ClassProperty Get<TEntity>()
+            where TEntity : class =>
+            Get(typeof(TEntity));
 
         /// <summary>
         /// Gets the instance of <see cref="ClassProperty"/> that is mapped as primary key.
         /// </summary>
-        /// <param name="type">The target type.</param>
+        /// <param name="entityType">The target type.</param>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type type)
+        public static ClassProperty Get(Type entityType)
         {
             // Validate
-            ThrowNullReferenceException(type, "Type");
+            ThrowNullReferenceException(entityType, "Type");
 
             // Variables
-            var key = type.FullName.GetHashCode();
+            var key = entityType.FullName.GetHashCode();
             var value = (ClassProperty)null;
 
             // Try get the value
@@ -222,41 +222,45 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the exising mapped primary property of the entity type.
+        /// Removes the exising mapped primary property of the data entity.
         /// </summary>
-        /// <typeparam name="T">The type of the entity.</typeparam>
-        public static void Remove<T>()
-            where T : class =>
-            Remove(typeof(T));
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        public static void Remove<TEntity>()
+            where TEntity : class =>
+            Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes the exising mapped primary property of the entity type.
+        /// Removes the exising mapped primary property of the data entity.
         /// </summary>
-        /// <param name="type">The target type.</param>
-        public static void Remove(Type type)
+        /// <param name="entityType">The target type.</param>
+        public static void Remove(Type entityType)
         {
             // Validate
-            ThrowNullReferenceException(type, "Type");
+            ThrowNullReferenceException(entityType, "Type");
 
             // Variables
-            var key = type.FullName.GetHashCode();
+            var key = entityType.FullName.GetHashCode();
             var value = (ClassProperty)null;
 
             // Try get the value
             m_maps.TryRemove(key, out value);
         }
 
-        #endregion
-
-        #region Helpers
+        /*
+         * Clear
+         */
 
         /// <summary>
-        /// Flushes all the existing cached primary properties.
+        /// Clears all the existing cached primary properties.
         /// </summary>
-        public static void Flush()
+        public static void Clear()
         {
             m_maps.Clear();
         }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Validates the target object presence.

@@ -16,7 +16,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -35,7 +35,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -54,7 +54,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -73,7 +73,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -92,7 +92,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -111,7 +111,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -130,7 +130,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -149,7 +149,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -168,7 +168,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -187,7 +187,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -210,7 +210,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -229,7 +229,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -248,7 +248,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -267,7 +267,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -286,7 +286,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -305,7 +305,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -324,7 +324,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -343,7 +343,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -362,7 +362,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -381,7 +381,7 @@ namespace RepoDb
         /// <summary>
         /// Minimizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <param name="field">The field to be minimumd.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
