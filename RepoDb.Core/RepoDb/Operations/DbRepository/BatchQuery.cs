@@ -17,7 +17,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -61,7 +61,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -108,7 +108,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -155,7 +155,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -202,7 +202,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -300,7 +300,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -344,7 +344,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -392,7 +392,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -440,7 +440,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -488,7 +488,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -536,7 +536,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>

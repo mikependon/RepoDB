@@ -55,7 +55,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
@@ -95,7 +95,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database in asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database in asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
@@ -1032,7 +1032,7 @@ namespace RepoDb
         /// <summary>
         /// Throws an exception if the entities argument is null or empty.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The enumerable list of entity objects.</param>
         private static void GuardInsertAll<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class

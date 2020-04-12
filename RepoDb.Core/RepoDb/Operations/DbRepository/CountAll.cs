@@ -15,7 +15,7 @@ namespace RepoDb
         /// <summary>
         /// Counts all the number of data from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>
@@ -54,7 +54,7 @@ namespace RepoDb
         /// <summary>
         /// Counts all the number of data from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of data from the database.</returns>

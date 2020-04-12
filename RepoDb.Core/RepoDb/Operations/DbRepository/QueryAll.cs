@@ -16,7 +16,7 @@ namespace RepoDb
         /// <summary>
         /// Query all the data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -66,7 +66,7 @@ namespace RepoDb
         /// <summary>
         /// Query all the data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">

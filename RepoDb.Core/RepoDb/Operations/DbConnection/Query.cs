@@ -21,7 +21,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -69,7 +69,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -117,7 +117,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -165,7 +165,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -212,7 +212,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -260,7 +260,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -313,7 +313,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -361,7 +361,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -409,7 +409,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -457,7 +457,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -505,7 +505,7 @@ namespace RepoDb
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -552,7 +552,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -1133,7 +1133,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -1249,7 +1249,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="where">The query expression to be used.</param>

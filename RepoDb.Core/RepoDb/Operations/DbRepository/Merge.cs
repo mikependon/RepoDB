@@ -16,7 +16,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -93,7 +93,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -134,7 +134,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -173,7 +173,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
@@ -215,7 +215,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -261,7 +261,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -299,7 +299,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -340,7 +340,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -381,7 +381,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -420,7 +420,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
@@ -462,7 +462,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>

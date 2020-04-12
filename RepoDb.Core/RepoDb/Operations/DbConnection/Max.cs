@@ -20,9 +20,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -53,9 +53,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -86,9 +86,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -119,9 +119,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -152,9 +152,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -185,9 +185,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -218,9 +218,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -251,9 +251,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -284,9 +284,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -317,9 +317,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -350,9 +350,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -402,9 +402,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -435,9 +435,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -468,9 +468,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -501,9 +501,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -534,9 +534,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -567,9 +567,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -600,9 +600,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -633,9 +633,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -666,9 +666,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -699,9 +699,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -732,9 +732,9 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -786,7 +786,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -820,7 +820,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -854,7 +854,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -888,7 +888,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -922,7 +922,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -974,7 +974,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -1008,7 +1008,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -1042,7 +1042,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -1076,7 +1076,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
@@ -1110,7 +1110,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>

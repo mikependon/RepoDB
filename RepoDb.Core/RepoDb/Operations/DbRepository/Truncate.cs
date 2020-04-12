@@ -15,7 +15,7 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The number of rows affected.</returns>
         public int Truncate<TEntity>()
             where TEntity : class
@@ -46,7 +46,7 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected.</returns>
         public int Truncate<TEntity>(IDbTransaction transaction = null)
@@ -82,7 +82,7 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The number of rows affected.</returns>
         public async Task<int> TruncateAsync<TEntity>()
             where TEntity : class
@@ -113,7 +113,7 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected.</returns>
         public async Task<int> TruncateAsync<TEntity>(IDbTransaction transaction = null)

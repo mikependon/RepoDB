@@ -17,8 +17,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -58,8 +58,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -99,8 +99,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -140,8 +140,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -181,8 +181,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -222,8 +222,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -263,8 +263,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -304,8 +304,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -345,8 +345,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -386,8 +386,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -431,8 +431,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -472,8 +472,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -513,8 +513,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -554,8 +554,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -595,8 +595,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -636,8 +636,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -677,8 +677,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -718,8 +718,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -759,8 +759,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -800,8 +800,8 @@ namespace RepoDb
         /// <summary>
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be sumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -846,7 +846,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -888,7 +888,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -930,7 +930,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -972,7 +972,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1018,7 +1018,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1060,7 +1060,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1102,7 +1102,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1144,7 +1144,7 @@ namespace RepoDb
         /// Summarizes the target field from the database table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be sumd.</param>
+        /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>

@@ -16,7 +16,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -61,7 +61,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="hints">The table hints to be used.</param>

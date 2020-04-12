@@ -249,7 +249,7 @@ namespace RepoDb
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -283,7 +283,7 @@ namespace RepoDb
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -333,7 +333,7 @@ namespace RepoDb
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -367,7 +367,7 @@ namespace RepoDb
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -1203,7 +1203,7 @@ namespace RepoDb
         /// <summary>
         /// Throws an exception if there is no defined primary key on the data entity type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
@@ -1253,7 +1253,7 @@ namespace RepoDb
         /// <summary>
         /// Extract the property value from the instances
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be extracted.</param>
         /// <param name="property">The class property to be used.</param>
         /// <returns>An array of the results based on the target types.</returns>
@@ -1380,7 +1380,7 @@ namespace RepoDb
         /// <summary>
         /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
@@ -1442,7 +1442,7 @@ namespace RepoDb
         /// <summary>
         /// Converts the primary key to <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
         private static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
@@ -1458,7 +1458,7 @@ namespace RepoDb
         /// <summary>
         /// Converts the primary key to <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="property">The instance of <see cref="ClassProperty"/> to be converted.</param>
         /// <param name="entity">The instance of the actual entity.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>

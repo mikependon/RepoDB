@@ -16,8 +16,8 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from all data of the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The maximum value.</returns>
@@ -54,8 +54,8 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from all data of the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The maximum value.</returns>
@@ -96,8 +96,8 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The maximum value.</returns>
@@ -134,8 +134,8 @@ namespace RepoDb
         /// <summary>
         /// Maximizes the target field from all data of the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The maximum value.</returns>
@@ -178,7 +178,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public object MaxAll(string tableName,
@@ -221,7 +221,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
+        /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<object> MaxAllAsync(string tableName,

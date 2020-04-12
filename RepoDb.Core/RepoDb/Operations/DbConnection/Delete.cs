@@ -20,7 +20,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -51,7 +51,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -82,7 +82,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -112,7 +112,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -142,7 +142,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -172,7 +172,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -202,7 +202,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -251,7 +251,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -282,7 +282,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -313,7 +313,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -343,7 +343,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -373,7 +373,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -403,7 +403,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -433,7 +433,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>

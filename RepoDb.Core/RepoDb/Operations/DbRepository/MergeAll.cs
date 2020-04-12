@@ -16,7 +16,7 @@ namespace RepoDb
         /// <summary>
         /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
         /// <summary>
         /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
@@ -105,7 +105,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -146,7 +146,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>

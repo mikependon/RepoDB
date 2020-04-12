@@ -23,7 +23,7 @@ namespace RepoDb
         /// <summary>
         /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
         /// <summary>
         /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
@@ -93,7 +93,7 @@ namespace RepoDb
         /// <summary>
         /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -129,7 +129,7 @@ namespace RepoDb
         /// <summary>
         /// Merges the multiple data entity objects into the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -197,7 +197,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
@@ -231,7 +231,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
@@ -267,7 +267,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -303,7 +303,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data entity object into an existing data in the database in an asychronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -1791,7 +1791,7 @@ namespace RepoDb
         /// <summary>
         /// Throws an exception if the entities argument is null or empty.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The enumerable list of entity objects.</param>
         private static void GuardMergeAll<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class

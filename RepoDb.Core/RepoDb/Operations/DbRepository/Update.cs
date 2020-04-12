@@ -17,7 +17,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -55,7 +55,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -137,7 +137,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -178,7 +178,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -219,7 +219,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -264,7 +264,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -302,7 +302,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -343,7 +343,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -384,7 +384,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -425,7 +425,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -466,7 +466,7 @@ namespace RepoDb
         /// <summary>
         /// Updates an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>

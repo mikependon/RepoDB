@@ -22,7 +22,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
@@ -92,7 +92,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -175,7 +175,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
@@ -209,7 +209,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
@@ -245,7 +245,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -281,7 +281,7 @@ namespace RepoDb
         /// <summary>
         /// Updates existing multiple data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -1194,7 +1194,7 @@ namespace RepoDb
         /// <summary>
         /// Throws an exception if the entities argument is null or empty.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The enumerable list of entity objects.</param>
         private static void GuardUpdateAll<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class

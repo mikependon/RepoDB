@@ -18,7 +18,7 @@ namespace RepoDb
         /// <summary>
         /// Averages the target field from all data of the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -48,7 +48,7 @@ namespace RepoDb
         /// <summary>
         /// Averages the target field from all data of the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -78,7 +78,7 @@ namespace RepoDb
         /// <summary>
         /// Averages the target field from all data of the database table.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <summary>
         /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -151,7 +151,7 @@ namespace RepoDb
         /// <summary>
         /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -181,7 +181,7 @@ namespace RepoDb
         /// <summary>
         /// Averages the target field from the database table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
