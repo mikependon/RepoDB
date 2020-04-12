@@ -9,7 +9,7 @@ using System.Reflection;
 namespace RepoDb.UnitTests.Others
 {
     [TestClass]
-    public partial class PropertyTypeHandlerMapperTest
+    public partial class PropertyHandlerMapperTest
     {
         [TestInitialize]
         public void Initialize()
@@ -20,8 +20,8 @@ namespace RepoDb.UnitTests.Others
         [TestCleanup]
         public void Cleanup()
         {
-            PropertyTypeHandlerCache.Flush();
-            PropertyTypeHandlerMapper.Flush();
+            PropertyHandlerCache.Flush();
+            PropertyHandlerMapper.Flush();
         }
 
         #region PropertyHandler
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.Others
 
         #region SubClasses
 
-        private class PropertyTypeHandlerMapperTestClass
+        private class PropertyHandlerMapperTestClass
         {
             public string ColumnString { get; set; }
             [PropertyHandler(typeof(TextPropertyHandler))]
@@ -70,14 +70,14 @@ namespace RepoDb.UnitTests.Others
         #region Type Level
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperTypeMapping()
+        public void TestPropertyHandlerMapperTypeMapping()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<string, StringPropertyHandler>(stringPropertyHandler);
+            PropertyHandlerMapper.Add<string, StringPropertyHandler>(stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<string, StringPropertyHandler>();
+            var actual = PropertyHandlerMapper.Get<string, StringPropertyHandler>();
             var expected = stringPropertyHandler;
 
             // Assert
@@ -85,10 +85,10 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperTypeMappingWithoutMapping()
+        public void TestPropertyHandlerMapperTypeMappingWithoutMapping()
         {
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<DateTime, object>();
+            var actual = PropertyHandlerMapper.Get<DateTime, object>();
 
             // Assert
             Assert.IsNull(actual);
@@ -103,15 +103,15 @@ namespace RepoDb.UnitTests.Others
          */
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaPropertyName()
+        public void TestPropertyHandlerMapperPropertyMappingViaPropertyName()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var propertyName = "ColumnString";
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(propertyName);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, StringPropertyHandler>(propertyName);
             var expected = stringPropertyHandler;
 
             // Assert
@@ -119,15 +119,15 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaField()
+        public void TestPropertyHandlerMapperPropertyMappingViaField()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var field = new Field("ColumnString");
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(field);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, StringPropertyHandler>(field);
             var expected = stringPropertyHandler;
 
             // Assert
@@ -135,14 +135,14 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaExpression()
+        public void TestPropertyHandlerMapperPropertyMappingViaExpression()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString);
             var expected = stringPropertyHandler;
 
             // Assert
@@ -150,16 +150,16 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaClassProperty()
+        public void TestPropertyHandlerMapperPropertyMappingViaClassProperty()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerMapperTestClass>()
+            var classProperty = PropertyCache.Get<PropertyHandlerMapperTestClass>()
                 .First(p => p.PropertyInfo.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add(classProperty, stringPropertyHandler);
+            PropertyHandlerMapper.Add(classProperty, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<StringPropertyHandler>(classProperty);
+            var actual = PropertyHandlerMapper.Get<StringPropertyHandler>(classProperty);
             var expected = stringPropertyHandler;
 
             // Assert
@@ -167,17 +167,17 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaPropertyInfo()
+        public void TestPropertyHandlerMapperPropertyMappingViaPropertyInfo()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            var propertyInfo = typeof(PropertyTypeHandlerMapperTestClass)
+            var propertyInfo = typeof(PropertyHandlerMapperTestClass)
                 .GetProperties()
                 .First(p => p.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add(propertyInfo, stringPropertyHandler);
+            PropertyHandlerMapper.Add(propertyInfo, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<StringPropertyHandler>(propertyInfo);
+            var actual = PropertyHandlerMapper.Get<StringPropertyHandler>(propertyInfo);
             var expected = stringPropertyHandler;
 
             // Assert
@@ -189,107 +189,107 @@ namespace RepoDb.UnitTests.Others
          */
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaPropertyNameWithPropertyHandlerAttribute()
+        public void TestPropertyHandlerMapperPropertyMappingViaPropertyNameWithPropertyHandlerAttribute()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var propertyName = "PropertyString";
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(propertyName);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, StringPropertyHandler>(propertyName);
 
             // Assert
             Assert.IsNotNull(actual);
 
             // Act
-            var textHandler = PropertyTypeHandlerCache.Get<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(propertyName);
+            var textHandler = PropertyHandlerCache.Get<PropertyHandlerMapperTestClass, TextPropertyHandler>(propertyName);
 
             // Assert
             Assert.IsNotNull(textHandler);
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaFieldWithPropertyHandlerAttribute()
+        public void TestPropertyHandlerMapperPropertyMappingViaFieldWithPropertyHandlerAttribute()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var field = new Field("PropertyString");
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(field);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, StringPropertyHandler>(field);
 
             // Assert
             Assert.IsNotNull(actual);
 
             // Act
-            var textHandler = PropertyTypeHandlerCache.Get<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(field);
+            var textHandler = PropertyHandlerCache.Get<PropertyHandlerMapperTestClass, TextPropertyHandler>(field);
 
             // Assert
             Assert.IsNotNull(textHandler);
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaExpressionWithPropertyHandlerAttribute()
+        public void TestPropertyHandlerMapperPropertyMappingViaExpressionWithPropertyHandlerAttribute()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.PropertyString, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.PropertyString, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.PropertyString);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.PropertyString);
 
             // Assert
             Assert.IsNotNull(actual);
 
             // Act
-            var textHandler = PropertyTypeHandlerCache.Get<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(e => e.PropertyString);
+            var textHandler = PropertyHandlerCache.Get<PropertyHandlerMapperTestClass, TextPropertyHandler>(e => e.PropertyString);
 
             // Assert
             Assert.IsNotNull(textHandler);
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaClassPropertyWithPropertyHandlerAttribute()
+        public void TestPropertyHandlerMapperPropertyMappingViaClassPropertyWithPropertyHandlerAttribute()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerMapperTestClass>()
+            var classProperty = PropertyCache.Get<PropertyHandlerMapperTestClass>()
                 .First(p => p.PropertyInfo.Name == "PropertyString");
-            PropertyTypeHandlerMapper.Add(classProperty, stringPropertyHandler);
+            PropertyHandlerMapper.Add(classProperty, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<StringPropertyHandler>(classProperty);
+            var actual = PropertyHandlerMapper.Get<StringPropertyHandler>(classProperty);
 
             // Assert
             Assert.IsNotNull(actual);
 
             // Act
-            var textHandler = PropertyTypeHandlerCache.Get<TextPropertyHandler>(classProperty);
+            var textHandler = PropertyHandlerCache.Get<TextPropertyHandler>(classProperty);
 
             // Assert
             Assert.IsNotNull(textHandler);
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaPropertyInfoWithPropertyHandlerAttribute()
+        public void TestPropertyHandlerMapperPropertyMappingViaPropertyInfoWithPropertyHandlerAttribute()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            var propertyInfo = typeof(PropertyTypeHandlerMapperTestClass)
+            var propertyInfo = typeof(PropertyHandlerMapperTestClass)
                 .GetProperties()
                 .First(p => p.Name == "PropertyString");
-            PropertyTypeHandlerMapper.Add(propertyInfo, stringPropertyHandler);
+            PropertyHandlerMapper.Add(propertyInfo, stringPropertyHandler);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<StringPropertyHandler>(propertyInfo);
+            var actual = PropertyHandlerMapper.Get<StringPropertyHandler>(propertyInfo);
 
             // Assert
             Assert.IsNotNull(actual);
 
             // Act
-            var textHandler = PropertyTypeHandlerCache.Get<TextPropertyHandler>(propertyInfo);
+            var textHandler = PropertyHandlerCache.Get<TextPropertyHandler>(propertyInfo);
 
             // Assert
             Assert.IsNotNull(textHandler);
@@ -300,17 +300,17 @@ namespace RepoDb.UnitTests.Others
          */
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaPropertyNameOverride()
+        public void TestPropertyHandlerMapperPropertyMappingViaPropertyNameOverride()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
             var propertyName = "ColumnString";
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(propertyName, textPropertyHandler, true);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, TextPropertyHandler>(propertyName, textPropertyHandler, true);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, object>(propertyName);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, object>(propertyName);
             var expected = (actual is TextPropertyHandler);
 
             // Assert
@@ -318,17 +318,17 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaFieldOverride()
+        public void TestPropertyHandlerMapperPropertyMappingViaFieldOverride()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
             var field = new Field("ColumnString");
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(field, textPropertyHandler, true);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, TextPropertyHandler>(field, textPropertyHandler, true);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, object>(field);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, object>(field);
             var expected = (actual is TextPropertyHandler);
 
             // Assert
@@ -336,16 +336,16 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaExpressionOverride()
+        public void TestPropertyHandlerMapperPropertyMappingViaExpressionOverride()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(e => e.ColumnString, textPropertyHandler, true);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, TextPropertyHandler>(e => e.ColumnString, textPropertyHandler, true);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<PropertyTypeHandlerMapperTestClass, object>(e => e.ColumnString);
+            var actual = PropertyHandlerMapper.Get<PropertyHandlerMapperTestClass, object>(e => e.ColumnString);
             var expected = (actual is TextPropertyHandler);
 
             // Assert
@@ -353,18 +353,18 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaClassPropertyOverride()
+        public void TestPropertyHandlerMapperPropertyMappingViaClassPropertyOverride()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerMapperTestClass>()
+            var classProperty = PropertyCache.Get<PropertyHandlerMapperTestClass>()
                 .First(p => p.PropertyInfo.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add(classProperty, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add(classProperty, textPropertyHandler, true);
+            PropertyHandlerMapper.Add(classProperty, stringPropertyHandler);
+            PropertyHandlerMapper.Add(classProperty, textPropertyHandler, true);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<object>(classProperty);
+            var actual = PropertyHandlerMapper.Get<object>(classProperty);
             var expected = (actual is TextPropertyHandler);
 
             // Assert
@@ -372,19 +372,19 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void PropertyTypeHandlerMapperPropertyMappingViaPropertyInfoOverride()
+        public void TestPropertyHandlerMapperPropertyMappingViaPropertyInfoOverride()
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
-            var propertyInfo = typeof(PropertyTypeHandlerMapperTestClass)
+            var propertyInfo = typeof(PropertyHandlerMapperTestClass)
                 .GetProperties()
                 .First(p => p.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add(propertyInfo, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add(propertyInfo, textPropertyHandler, true);
+            PropertyHandlerMapper.Add(propertyInfo, stringPropertyHandler);
+            PropertyHandlerMapper.Add(propertyInfo, textPropertyHandler, true);
 
             // Act
-            var actual = PropertyTypeHandlerMapper.Get<object>(propertyInfo);
+            var actual = PropertyHandlerMapper.Get<object>(propertyInfo);
             var expected = (actual is TextPropertyHandler);
 
             // Assert
@@ -402,8 +402,8 @@ namespace RepoDb.UnitTests.Others
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
             var propertyName = "ColumnString";
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(propertyName, textPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(propertyName, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, TextPropertyHandler>(propertyName, textPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
@@ -413,8 +413,8 @@ namespace RepoDb.UnitTests.Others
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
             var field = new Field("ColumnString");
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(field, textPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(field, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, TextPropertyHandler>(field, textPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
@@ -423,8 +423,8 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, TextPropertyHandler>(e => e.ColumnString, textPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, TextPropertyHandler>(e => e.ColumnString, textPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
@@ -433,10 +433,10 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerMapperTestClass>()
+            var classProperty = PropertyCache.Get<PropertyHandlerMapperTestClass>()
                 .First(p => p.PropertyInfo.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add(classProperty, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add(classProperty, textPropertyHandler);
+            PropertyHandlerMapper.Add(classProperty, stringPropertyHandler);
+            PropertyHandlerMapper.Add(classProperty, textPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
@@ -445,11 +445,11 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
             var textPropertyHandler = new TextPropertyHandler();
-            var propertyInfo = typeof(PropertyTypeHandlerMapperTestClass)
+            var propertyInfo = typeof(PropertyHandlerMapperTestClass)
                 .GetProperties()
                 .First(p => p.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add(propertyInfo, stringPropertyHandler);
-            PropertyTypeHandlerMapper.Add(propertyInfo, textPropertyHandler);
+            PropertyHandlerMapper.Add(propertyInfo, stringPropertyHandler);
+            PropertyHandlerMapper.Add(propertyInfo, textPropertyHandler);
         }
 
         /*
@@ -461,7 +461,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>((string)null, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>((string)null, stringPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -469,7 +469,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>((Field)null, stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>((Field)null, stringPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -477,7 +477,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(expression: null, propertyHandler: stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(expression: null, propertyHandler: stringPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -485,7 +485,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add((ClassProperty)null, stringPropertyHandler);
+            PropertyHandlerMapper.Add((ClassProperty)null, stringPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -493,7 +493,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add((PropertyInfo)null, stringPropertyHandler);
+            PropertyHandlerMapper.Add((PropertyInfo)null, stringPropertyHandler);
         }
 
         /*
@@ -505,7 +505,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>("Whatever", stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>("Whatever", stringPropertyHandler);
         }
 
         [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
@@ -513,7 +513,7 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var stringPropertyHandler = new StringPropertyHandler();
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(new Field("Whatever"), stringPropertyHandler);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(new Field("Whatever"), stringPropertyHandler);
         }
 
         /*
@@ -524,40 +524,40 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaPropertyNameWithNullPropertyHandler()
         {
             // Setup
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>("ColumnString", null);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>("ColumnString", null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaFieldWithNullPropertyHandler()
         {
             // Setup
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(new Field("ColumnString"), null);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(new Field("ColumnString"), null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaExpressionWithNullPropertyHandler()
         {
             // Setup
-            PropertyTypeHandlerMapper.Add<PropertyTypeHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, null);
+            PropertyHandlerMapper.Add<PropertyHandlerMapperTestClass, StringPropertyHandler>(e => e.ColumnString, null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaClassPropertyWithNullPropertyHandler()
         {
             // Setup
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerMapperTestClass>()
+            var classProperty = PropertyCache.Get<PropertyHandlerMapperTestClass>()
                 .First(p => p.PropertyInfo.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add<StringPropertyHandler>(classProperty, null);
+            PropertyHandlerMapper.Add<StringPropertyHandler>(classProperty, null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPropertyTypeHandlerMapperViaPropertyInfoWithNullPropertyHandler()
         {
             // Setup
-            var propertyInfo = typeof(PropertyTypeHandlerMapperTestClass)
+            var propertyInfo = typeof(PropertyHandlerMapperTestClass)
                 .GetProperties()
                 .First(p => p.Name == "ColumnString");
-            PropertyTypeHandlerMapper.Add<StringPropertyHandler>(propertyInfo, null);
+            PropertyHandlerMapper.Add<StringPropertyHandler>(propertyInfo, null);
         }
 
         #endregion

@@ -210,7 +210,7 @@ namespace RepoDb.Reflection
                         // Get from the type level mappings (DB type)
                         if (readerField.Type != null)
                         {
-                            handlerInstance = PropertyTypeHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
+                            handlerInstance = PropertyHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
                             if (handlerInstance != null)
                             {
                                 handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
@@ -881,7 +881,7 @@ namespace RepoDb.Reflection
                     else
                     {
                         // Get from the type level mappings (DB type)
-                        handlerInstance = PropertyTypeHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
+                        handlerInstance = PropertyHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
                         if (handlerInstance != null)
                         {
                             handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
@@ -1560,7 +1560,7 @@ namespace RepoDb.Reflection
                     else
                     {
                         // Get from the type level mappings (DB type)
-                        handlerInstance = PropertyTypeHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
+                        handlerInstance = PropertyHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
                         if (handlerInstance != null)
                         {
                             handlerSetMethod = handlerInstance.GetType().GetMethod("Set");

@@ -10,7 +10,7 @@ namespace RepoDb
     /// <summary>
     /// A class that is being used to cache the mappings between the class property and property handler object.
     /// </summary>
-    public static class PropertyTypeHandlerCache
+    public static class PropertyHandlerCache
     {
         #region Privates
 
@@ -50,7 +50,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out value) == false)
             {
-                result = PropertyTypeHandlerMapper.Get<TPropertyHandler>(type);
+                result = PropertyHandlerMapper.Get<TPropertyHandler>(type);
                 m_cache.TryAdd(key, result);
             }
 
@@ -133,13 +133,13 @@ namespace RepoDb
                 // Property Level
                 if (result == null)
                 {
-                    result = PropertyTypeHandlerMapper.Get<TPropertyHandler>(propertyInfo);
+                    result = PropertyHandlerMapper.Get<TPropertyHandler>(propertyInfo);
                 }
 
                 // Type Level
                 if (result == null)
                 {
-                    result = PropertyTypeHandlerMapper.Get<TPropertyHandler>(propertyInfo.PropertyType);
+                    result = PropertyHandlerMapper.Get<TPropertyHandler>(propertyInfo.PropertyType);
                 }
 
                 // Add to cache
