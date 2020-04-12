@@ -24,7 +24,7 @@ namespace RepoDb
         #region TypeLevel
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific .NET CLR type.
+        /// Type Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific .NET CLR type.
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <returns>The mapped <see cref="DbType"/> object of the .NET CLR type.</returns>
@@ -32,7 +32,7 @@ namespace RepoDb
             Get(typeof(T));
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific .NET CLR type.
+        /// Type Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific .NET CLR type.
         /// </summary>
         /// <param name="type">The target .NET CLR type.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the .NET CLR type.</returns>
@@ -61,7 +61,7 @@ namespace RepoDb
         #region Property Level
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via expression).
+        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via expression).
         /// </summary>
         /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -71,7 +71,7 @@ namespace RepoDb
             Get(ExpressionExtension.GetProperty<T>(expression));
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via property name).
+        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via property name).
         /// </summary>
         /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
@@ -81,7 +81,7 @@ namespace RepoDb
             Get(TypeExtension.GetProperty<T>(propertyName));
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
+        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="T">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
@@ -91,7 +91,7 @@ namespace RepoDb
             Get(TypeExtension.GetProperty<T>(field.Name));
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
+        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
@@ -109,7 +109,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="ClassProperty"/> object.
+        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>

@@ -5,7 +5,7 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the primary property of the entity.
+    /// A class that is used to cache the primary property of the data entity.
     /// </summary>
     public static class PrimaryCache
     {

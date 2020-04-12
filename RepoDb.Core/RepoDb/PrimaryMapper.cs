@@ -10,7 +10,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that is used to set a class property to be a primary property. This is an alternative class to <see cref="PrimaryAttribute"/> object.
+    /// A class that is used to set a class property to be a primary property. This is an alternative class to <see cref="PrimaryAttribute"/> object.
     /// </summary>
     public static class PrimaryMapper
     {

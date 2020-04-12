@@ -9,8 +9,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that is used to map a class into its equivalent database object (ie: Table, View) column.
-    /// This is an alternative class to <see cref="MapAttribute"/> object for property mapping.
+    /// A class that is used to map a class into its equivalent database object (ie: Table, View) column. This is an alternative class to <see cref="MapAttribute"/> object for property mapping.
     /// </summary>
     public static class PropertyMapper
     {

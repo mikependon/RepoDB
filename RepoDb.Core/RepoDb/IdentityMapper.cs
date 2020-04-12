@@ -10,7 +10,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that is used to set a class property to be a identity property. This is an alternative class to <see cref="IdentityAttribute"/> object.
+    /// A class that is used to set a class property to be an identity property. This is an alternative class to <see cref="IdentityAttribute"/> object.
     /// </summary>
     public static class IdentityMapper
     {

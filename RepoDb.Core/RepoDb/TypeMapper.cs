@@ -11,7 +11,7 @@ using RepoDb.Extensions;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that is used to map a .NET CLR type into its equivalent <see cref="DbType"/> object.
+    /// A class that is used to map a .NET CLR type or class property into its equivalent <see cref="DbType"/> object.
     /// </summary>
     public static class TypeMapper
     {
@@ -45,7 +45,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// Type Level: Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <typeparam name="TType">The .NET CLR type to be mapped.</typeparam>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
@@ -53,7 +53,7 @@ namespace RepoDb
             Add(typeof(TType), dbType);
 
         /// <summary>
-        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// Type Level: Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <typeparam name="TType">The .NET CLR type to be mapped.</typeparam>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
@@ -63,7 +63,7 @@ namespace RepoDb
             Add(typeof(TType), dbType, force);
 
         /// <summary>
-        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// Type Level: Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <param name="type">The .NET CLR type to be mapped.</param>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
@@ -72,7 +72,7 @@ namespace RepoDb
             Add(type, dbType, false);
 
         /// <summary>
-        /// Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
+        /// Type Level: Adds a mapping between the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <param name="type">The .NET CLR type to be mapped.</param>
         /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
@@ -114,7 +114,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
+        /// Type Level: Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
         /// </summary>
         /// <typeparam name="TType">The dynamic .NET CLR type used for mapping.</typeparam>
         /// <returns>The instance of the mapped <see cref="DbType"/> object.</returns>
@@ -122,7 +122,7 @@ namespace RepoDb
             Get(typeof(TType));
 
         /// <summary>
-        /// Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
+        /// Type Level: Gets the mapped <see cref="DbType"/> object based on the .NET CLR type.
         /// </summary>
         /// <param name="type">The .NET CLR type used for mapping.</param>
         /// <returns>The instance of the mapped <see cref="DbType"/> object.</returns>
@@ -147,14 +147,14 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
+        /// Type Level: Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <typeparam name="TType">The .NET CLR type mapping to be removed.</typeparam>
         public static void Remove<TType>() =>
             Remove(typeof(TType));
 
         /// <summary>
-        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
+        /// Type Level: Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
         /// </summary>
         /// <param name="type">The .NET CLR type mapping to be removed.</param>
         public static void Remove(Type type)
@@ -245,7 +245,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between a class property and the database type (via expression).
+        /// Property Level: Adds a mapping between a class property and the database type (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -256,7 +256,7 @@ namespace RepoDb
             Add(expression, dbType, false);
 
         /// <summary>
-        /// Adds a mapping between a class property and the database type (via expression).
+        /// Property Level: Adds a mapping between a class property and the database type (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -269,7 +269,7 @@ namespace RepoDb
             Add(ExpressionExtension.GetProperty<TEntity>(expression), dbType, force);
 
         /// <summary>
-        /// Adds a mapping between a class property and the database type (via property name).
+        /// Property Level: Adds a mapping between a class property and the database type (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -280,7 +280,7 @@ namespace RepoDb
             Add<TEntity>(propertyName, dbType, false);
 
         /// <summary>
-        /// Adds a mapping between a class property and the database type (via property name).
+        /// Property Level: Adds a mapping between a class property and the database type (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -306,7 +306,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
+        /// Property Level: Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
@@ -317,7 +317,7 @@ namespace RepoDb
             Add<TEntity>(field, dbType, false);
 
         /// <summary>
-        /// Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
+        /// Property Level: Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
@@ -343,7 +343,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
+        /// Property Level: Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -352,7 +352,7 @@ namespace RepoDb
             Add(classProperty.PropertyInfo, dbType, false);
 
         /// <summary>
-        /// Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
+        /// Property Level: Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -363,7 +363,7 @@ namespace RepoDb
             Add(classProperty?.PropertyInfo, dbType, force);
 
         /// <summary>
-        /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
+        /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -372,7 +372,7 @@ namespace RepoDb
             Add(propertyInfo, dbType, false);
 
         /// <summary>
-        /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
+        /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -415,7 +415,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped database type of the property (via expression).
+        /// Property Level: Gets the mapped database type of the property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -425,7 +425,7 @@ namespace RepoDb
             Get(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Gets the mapped database type of the property (via property name).
+        /// Property Level: Gets the mapped database type of the property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
@@ -435,7 +435,7 @@ namespace RepoDb
             Get(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
-        /// Gets the mapped database type of the property (via <see cref="Field"/> object).
+        /// Property Level: Gets the mapped database type of the property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
@@ -445,7 +445,7 @@ namespace RepoDb
             Get(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
-        /// Gets the mapped database type of the property via <see cref="ClassProperty"/> object.
+        /// Property Level: Gets the mapped database type of the property via <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
@@ -453,7 +453,7 @@ namespace RepoDb
             Get(classProperty.PropertyInfo);
 
         /// <summary>
-        /// Gets the mapped database type of the property via <see cref="PropertyInfo"/> object.
+        /// Property Level: Gets the mapped database type of the property via <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
@@ -478,7 +478,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the mapping between the class property and the database column (via expression).
+        /// Property Level: Removes the mapping between the class property and the database column (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -487,7 +487,7 @@ namespace RepoDb
             Remove(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Removes the mapping between the class property and database column (via property name).
+        /// Property Level: Removes the mapping between the class property and database column (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
@@ -496,7 +496,7 @@ namespace RepoDb
             Remove(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
-        /// Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
+        /// Property Level: Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
@@ -505,14 +505,14 @@ namespace RepoDb
             Remove(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
-        /// Removes the mapping between the <see cref="ClassProperty"/> object and the database column.
+        /// Property Level: Removes the mapping between the <see cref="ClassProperty"/> object and the database column.
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
         public static void Remove(ClassProperty classProperty) =>
             Remove(classProperty.PropertyInfo);
 
         /// <summary>
-        /// Removes the mapping between the <see cref="PropertyInfo"/> object and the database column.
+        /// Property Level: Removes the mapping between the <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         public static void Remove(PropertyInfo propertyInfo)
