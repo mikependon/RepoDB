@@ -1,5 +1,4 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
