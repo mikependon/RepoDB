@@ -72,20 +72,15 @@ namespace RepoDb
         /// Type Level: Removes an existing property handler mapping.
         /// </summary>
         /// <typeparam name="T">The .NET CLR type.</typeparam>
-        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
-        /// <returns>True if the removal is successful, otherwise false.</returns>
-        public static bool Remove<T>(bool throwException = true) =>
-            PropertyHandlerMapper.Remove(typeof(T), throwException);
+        public static void Remove<T>() =>
+            PropertyHandlerMapper.Remove(typeof(T));
 
         /// <summary>
         /// Type Level: Removes an existing property handler mapping.
         /// </summary>
         /// <param name="type">The .NET CLR Type.</param>
-        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
-        /// <returns>True if the removal is successful, otherwise false.</returns>
-        public static bool Remove(Type type,
-            bool throwException = true) =>
-            PropertyHandlerMapper.Remove(type, throwException);
+        public static void Remove(Type type) =>
+            PropertyHandlerMapper.Remove(type);
 
         #endregion
 

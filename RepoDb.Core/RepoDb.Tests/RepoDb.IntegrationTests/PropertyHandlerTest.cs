@@ -24,9 +24,9 @@ namespace RepoDb.IntegrationTests
         [TestCleanup]
         public void Cleanup()
         {
-            PropertyHandlerMapper.Remove(typeof(float), false);
-            PropertyHandlerMapper.Remove(typeof(decimal), false);
-            PropertyHandlerMapper.Remove(typeof(DateTime), false);
+            PropertyHandlerMapper.Remove(typeof(float));
+            PropertyHandlerMapper.Remove(typeof(decimal));
+            PropertyHandlerMapper.Remove(typeof(DateTime));
             Database.Cleanup();
         }
 

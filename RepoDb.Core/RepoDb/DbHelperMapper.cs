@@ -116,20 +116,15 @@ namespace RepoDb
         /// Removes the mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbHelper"/> object.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
-        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
-        /// <returns>True if the removal is successful, otherwise false.</returns>
-        public static bool Remove<TDbConnection>(bool throwException = true)
+        public static void Remove<TDbConnection>()
             where TDbConnection : DbConnection =>
-            Remove(typeof(TDbConnection), throwException);
+            Remove(typeof(TDbConnection));
 
         /// <summary>
         /// Removes the mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbHelper"/> object.
         /// </summary>
         /// <param name="connectionType">The type of <see cref="DbConnection"/> object.</param>
-        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
-        /// <returns>True if the removal is successful, otherwise false.</returns>
-        public static bool Remove(Type connectionType,
-            bool throwException = true)
+        public static void Remove(Type connectionType)
         {
             // Check the presence
             GuardPresence(connectionType);
@@ -137,16 +132,9 @@ namespace RepoDb
             // Variables for cache
             var key = connectionType.FullName.GetHashCode();
             var existing = (IDbHelper)null;
-            var result = m_maps.TryRemove(key, out existing);
 
-            // Throws an exception if necessary
-            if (result == false && throwException == true)
-            {
-                throw new MissingMappingException($"There is no mapping defined for '{connectionType.FullName}'.");
-            }
-
-            // Return false
-            return result;
+            // Try get the the value
+            m_maps.TryRemove(key, out existing);
         }
 
         /*

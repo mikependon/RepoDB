@@ -33,20 +33,20 @@ namespace RepoDb
         /// <typeparam name="TType">The .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
-        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TType, TPropertyHandler>(TPropertyHandler propertyHandler,
-            bool @override = false) =>
-            Add(typeof(TType), propertyHandler, @override);
+            bool force = false) =>
+            Add(typeof(TType), propertyHandler, force);
 
         /// <summary>
         /// Type Level: Adds a mapping between the .NET CLR Type and a property handler.
         /// </summary>
         /// <param name="type">The .NET CLR Type.</param>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
-        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(Type type,
             object propertyHandler,
-            bool @override = false)
+            bool force = false)
         {
             // Guard the type
             GuardPresence(type);
@@ -59,7 +59,7 @@ namespace RepoDb
             // Try get the mappings
             if (m_maps.TryGetValue(key, out value))
             {
-                if (@override)
+                if (force)
                 {
                     // Override the existing one
                     m_maps.TryUpdate(key, propertyHandler, value);
@@ -125,19 +125,14 @@ namespace RepoDb
         /// Type Level: Removes an existing property handler mapping.
         /// </summary>
         /// <typeparam name="T">The .NET CLR type.</typeparam>
-        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
-        /// <returns>True if the removal is successful, otherwise false.</returns>
-        public static bool Remove<T>(bool throwException = true) =>
-            Remove(typeof(T), throwException);
+        public static void Remove<T>() =>
+            Remove(typeof(T));
 
         /// <summary>
         /// Type Level: Removes an existing property handler mapping.
         /// </summary>
         /// <param name="type">The .NET CLR Type.</param>
-        /// <param name="throwException">If true, it throws an exception if the mapping is not present.</param>
-        /// <returns>True if the removal is successful, otherwise false.</returns>
-        public static bool Remove(Type type,
-            bool throwException = true)
+        public static void Remove(Type type)
         {
             // Check the presence
             GuardPresence(type);
@@ -145,16 +140,9 @@ namespace RepoDb
             // Variables for cache
             var key = type.FullName.GetHashCode();
             var existing = (object)null;
-            var result = m_maps.TryRemove(key, out existing);
 
-            // Throws an exception if necessary
-            if (result == false && throwException == true)
-            {
-                throw new MissingMappingException($"There is no mapping defined for '{type.FullName}'.");
-            }
-
-            // Return false
-            return result;
+            // Try get the value
+            m_maps.TryRemove(key, out existing);
         }
 
         #endregion
@@ -488,7 +476,7 @@ namespace RepoDb
             var key = propertyInfo.GenerateCustomizedHashCode();
             var value = (object)null;
 
-            // Try get the value
+            // Try to remove the value
             m_maps.TryRemove(key, out value);
         }
 
