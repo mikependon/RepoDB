@@ -27,15 +27,15 @@ namespace RepoDb.UnitTests.Others
 
         private class IdentityMapperTestClass
         {
-            public string IdentityColumn { get; set; }
-            public string ColumnName { get; set; }
+            public string ColumnString { get; set; }
+            public int ColumnInt { get; set; }
         }
 
         private class IdentityMapperTestWithAttributeClass
         {
             [Identity]
-            public string IdentityColumn { get; set; }
-            public string ColumnName { get; set; }
+            public string ColumnString { get; set; }
+            public int ColumnInt { get; set; }
         }
 
         #endregion
@@ -50,11 +50,11 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaPropertyName()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>("ColumnName");
+            IdentityMapper.Add<IdentityMapperTestClass>("ColumnInt");
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -65,11 +65,11 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaField()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnName"));
+            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnInt"));
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -80,11 +80,11 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaExpression()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnName);
+            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnInt);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -97,12 +97,12 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var propertyInfo = typeof(IdentityMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             IdentityMapper.Add(propertyInfo);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -114,12 +114,12 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var classProperty = PropertyCache.Get<IdentityMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             IdentityMapper.Add(classProperty);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -134,11 +134,11 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaPropertyNameWithMapAttribute()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestWithAttributeClass>("ColumnName");
+            IdentityMapper.Add<IdentityMapperTestWithAttributeClass>("ColumnInt");
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
-            expected = "IdentityColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -157,11 +157,11 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaFieldWithMapAttribute()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestWithAttributeClass>(new Field("ColumnName"));
+            IdentityMapper.Add<IdentityMapperTestWithAttributeClass>(new Field("ColumnInt"));
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -169,7 +169,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
-            expected = "IdentityColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -180,11 +180,11 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaExpressionWithMapAttribute()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestWithAttributeClass>(e => e.ColumnName);
+            IdentityMapper.Add<IdentityMapperTestWithAttributeClass>(e => e.ColumnInt);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -192,7 +192,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
-            expected = "IdentityColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -205,12 +205,12 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var propertyInfo = typeof(IdentityMapperTestWithAttributeClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             IdentityMapper.Add(propertyInfo);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -218,7 +218,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
-            expected = "IdentityColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -230,12 +230,12 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var classProperty = PropertyCache.Get<IdentityMapperTestWithAttributeClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             IdentityMapper.Add(classProperty);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -243,7 +243,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = IdentityCache.Get<IdentityMapperTestWithAttributeClass>();
-            expected = "IdentityColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -258,12 +258,12 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaPropertyNameOverride()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>("ColumnName");
-            IdentityMapper.Add<IdentityMapperTestClass>("IdentityColumn", true);
+            IdentityMapper.Add<IdentityMapperTestClass>("ColumnInt");
+            IdentityMapper.Add<IdentityMapperTestClass>("ColumnString", true);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "IdentityColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -274,12 +274,12 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaFieldOverride()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnName"));
-            IdentityMapper.Add<IdentityMapperTestClass>(new Field("IdentityColumn"), true);
+            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnInt"));
+            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnString"), true);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "IdentityColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -290,12 +290,12 @@ namespace RepoDb.UnitTests.Others
         public void TestIdentityMapperMappingViaExpressionOverride()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnName);
-            IdentityMapper.Add<IdentityMapperTestClass>(e => e.IdentityColumn, true);
+            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnInt);
+            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnString, true);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "IdentityColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -308,16 +308,16 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var columnNamePropertyInfo = typeof(IdentityMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             var primaryColumnPropertyInfo = typeof(IdentityMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "IdentityColumn");
+                .First(p => p.Name == "ColumnString");
             IdentityMapper.Add(columnNamePropertyInfo);
             IdentityMapper.Add(primaryColumnPropertyInfo, true);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "IdentityColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -329,15 +329,15 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var columnNameClassProperty = PropertyCache.Get<IdentityMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             var primaryColumnClassProperty = PropertyCache.Get<IdentityMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "IdentityColumn");
+                .First(p => p.PropertyInfo.Name == "ColumnString");
             IdentityMapper.Add(columnNameClassProperty);
             IdentityMapper.Add(primaryColumnClassProperty, true);
 
             // Act
             var actual = IdentityMapper.Get<IdentityMapperTestClass>();
-            var expected = "IdentityColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsIdentity() == true);
@@ -352,24 +352,24 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnIdentityMapperViaPropertyNameThatIsAlreadyExisting()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>("ColumnName");
-            IdentityMapper.Add<IdentityMapperTestClass>("IdentityColumn");
+            IdentityMapper.Add<IdentityMapperTestClass>("ColumnInt");
+            IdentityMapper.Add<IdentityMapperTestClass>("ColumnString");
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
         public void ThrowExceptionOnIdentityMapperViaFieldThatIsAlreadyExisting()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnName"));
-            IdentityMapper.Add<IdentityMapperTestClass>(new Field("IdentityColumn"));
+            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnInt"));
+            IdentityMapper.Add<IdentityMapperTestClass>(new Field("ColumnString"));
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
         public void ThrowExceptionOnIdentityMapperViaExpressionThatIsAlreadyExisting()
         {
             // Setup
-            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnName);
-            IdentityMapper.Add<IdentityMapperTestClass>(e => e.IdentityColumn);
+            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnInt);
+            IdentityMapper.Add<IdentityMapperTestClass>(e => e.ColumnString);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
@@ -378,10 +378,10 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var columnNamePropertyInfo = typeof(IdentityMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             var primaryColumnPropertyInfo = typeof(IdentityMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "IdentityColumn");
+                .First(p => p.Name == "ColumnString");
             IdentityMapper.Add(columnNamePropertyInfo);
             IdentityMapper.Add(primaryColumnPropertyInfo);
         }
@@ -391,9 +391,9 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var columnNameClassProperty = PropertyCache.Get<IdentityMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             var primaryColumnClassProperty = PropertyCache.Get<IdentityMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "IdentityColumn");
+                .First(p => p.PropertyInfo.Name == "ColumnString");
             IdentityMapper.Add(columnNameClassProperty);
             IdentityMapper.Add(primaryColumnClassProperty);
         }

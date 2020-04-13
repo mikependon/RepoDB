@@ -808,6 +808,10 @@ namespace RepoDb.Extensions
 
         #region Helper
 
+        /*
+         * GetProperty
+         */
+
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on expression.
         /// </summary>
@@ -817,13 +821,73 @@ namespace RepoDb.Extensions
         internal static PropertyInfo GetProperty<T>(Expression<Func<T, object>> expression)
             where T : class
         {
-            if (expression.Body.IsMember())
+            if (expression.Body.IsUnary())
             {
-                var member = expression.Body.ToMember();
-                if (member.Member.IsPropertyInfo())
-                {
-                    return member.Member.ToPropertyInfo();
-                }
+                return GetProperty<T>(expression.Body.ToUnary());
+            }
+            else if (expression.Body.IsMember())
+            {
+                return GetProperty<T>(expression.Body.ToMember());
+            }
+            else if (expression.Body.IsBinary())
+            {
+                return GetProperty<T>(expression.Body.ToBinary());
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+        }
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on <see cref="BinaryExpression"/> object.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="expression">The expression to be extracted.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        internal static PropertyInfo GetProperty<T>(BinaryExpression expression)
+            where T : class
+        {
+            if (expression.Left.IsMember())
+            {
+                return GetProperty<T>(expression.Left.ToMember());
+            }
+            else if (expression.Left.IsUnary())
+            {
+                return GetProperty<T>(expression.Left.ToUnary());
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+        }
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on <see cref="UnaryExpression"/> object.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="expression">The expression to be extracted.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        internal static PropertyInfo GetProperty<T>(UnaryExpression expression)
+            where T : class
+        {
+            if (expression.Operand.IsMember())
+            {
+                return GetProperty<T>(expression.Operand.ToMember());
+            }
+            else if (expression.Operand.IsBinary())
+            {
+                return GetProperty<T>(expression.Operand.ToBinary());
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+        }
+
+        /// <summary>
+        /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on <see cref="MemberExpression"/> object.
+        /// </summary>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <param name="expression">The expression to be extracted.</param>
+        /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
+        internal static PropertyInfo GetProperty<T>(MemberExpression expression)
+            where T : class
+        {
+            if (expression.Member.IsPropertyInfo())
+            {
+                return expression.Member.ToPropertyInfo();
             }
             throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
         }

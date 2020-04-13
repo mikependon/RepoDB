@@ -27,15 +27,15 @@ namespace RepoDb.UnitTests.Others
 
         private class PrimaryMapperTestClass
         {
-            public string PrimaryColumn { get; set; }
-            public string ColumnName { get; set; }
+            public string ColumnString { get; set; }
+            public int ColumnInt { get; set; }
         }
 
         private class PrimaryMapperTestWithAttributeClass
         {
             [Primary]
-            public string PrimaryColumn { get; set; }
-            public string ColumnName { get; set; }
+            public string ColumnString { get; set; }
+            public int ColumnInt { get; set; }
         }
 
         #endregion
@@ -50,11 +50,11 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaPropertyName()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnName");
+            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnInt");
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -65,11 +65,11 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaField()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnName"));
+            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnInt"));
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -80,11 +80,11 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaExpression()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnName);
+            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnInt);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -97,12 +97,12 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var propertyInfo = typeof(PrimaryMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             PrimaryMapper.Add(propertyInfo);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -114,12 +114,12 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var classProperty = PropertyCache.Get<PrimaryMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             PrimaryMapper.Add(classProperty);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -134,11 +134,11 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaPropertyNameWithMapAttribute()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestWithAttributeClass>("ColumnName");
+            PrimaryMapper.Add<PrimaryMapperTestWithAttributeClass>("ColumnInt");
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = PrimaryCache.Get<PrimaryMapperTestWithAttributeClass>();
-            expected = "PrimaryColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -157,11 +157,11 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaFieldWithMapAttribute()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestWithAttributeClass>(new Field("ColumnName"));
+            PrimaryMapper.Add<PrimaryMapperTestWithAttributeClass>(new Field("ColumnInt"));
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -169,7 +169,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = PrimaryCache.Get<PrimaryMapperTestWithAttributeClass>();
-            expected = "PrimaryColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -180,11 +180,11 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaExpressionWithMapAttribute()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestWithAttributeClass>(e => e.ColumnName);
+            PrimaryMapper.Add<PrimaryMapperTestWithAttributeClass>(e => e.ColumnInt);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -192,7 +192,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = PrimaryCache.Get<PrimaryMapperTestWithAttributeClass>();
-            expected = "PrimaryColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -205,12 +205,12 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var propertyInfo = typeof(PrimaryMapperTestWithAttributeClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             PrimaryMapper.Add(propertyInfo);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -218,7 +218,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = PrimaryCache.Get<PrimaryMapperTestWithAttributeClass>();
-            expected = "PrimaryColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -230,12 +230,12 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var classProperty = PropertyCache.Get<PrimaryMapperTestWithAttributeClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             PrimaryMapper.Add(classProperty);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestWithAttributeClass>();
-            var expected = "ColumnName";
+            var expected = "ColumnInt";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -243,7 +243,7 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             actual = PrimaryCache.Get<PrimaryMapperTestWithAttributeClass>();
-            expected = "PrimaryColumn";
+            expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -258,12 +258,12 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaPropertyNameOverride()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnName");
-            PrimaryMapper.Add<PrimaryMapperTestClass>("PrimaryColumn", true);
+            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnInt");
+            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnString", true);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "PrimaryColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -274,12 +274,12 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaFieldOverride()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnName"));
-            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("PrimaryColumn"), true);
+            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnInt"));
+            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnString"), true);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "PrimaryColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -290,12 +290,12 @@ namespace RepoDb.UnitTests.Others
         public void TestPrimaryMapperMappingViaExpressionOverride()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnName);
-            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.PrimaryColumn, true);
+            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnInt);
+            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnString, true);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "PrimaryColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -308,16 +308,16 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var columnNamePropertyInfo = typeof(PrimaryMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             var primaryColumnPropertyInfo = typeof(PrimaryMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "PrimaryColumn");
+                .First(p => p.Name == "ColumnString");
             PrimaryMapper.Add(columnNamePropertyInfo);
             PrimaryMapper.Add(primaryColumnPropertyInfo, true);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "PrimaryColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -329,15 +329,15 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var columnNameClassProperty = PropertyCache.Get<PrimaryMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             var primaryColumnClassProperty = PropertyCache.Get<PrimaryMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "PrimaryColumn");
+                .First(p => p.PropertyInfo.Name == "ColumnString");
             PrimaryMapper.Add(columnNameClassProperty);
             PrimaryMapper.Add(primaryColumnClassProperty, true);
 
             // Act
             var actual = PrimaryMapper.Get<PrimaryMapperTestClass>();
-            var expected = "PrimaryColumn";
+            var expected = "ColumnString";
 
             // Assert
             Assert.IsTrue(actual?.IsPrimary() == true);
@@ -352,24 +352,24 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExceptionOnPrimaryMapperViaPropertyNameThatIsAlreadyExisting()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnName");
-            PrimaryMapper.Add<PrimaryMapperTestClass>("PrimaryColumn");
+            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnInt");
+            PrimaryMapper.Add<PrimaryMapperTestClass>("ColumnString");
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
         public void ThrowExceptionOnPrimaryMapperViaFieldThatIsAlreadyExisting()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnName"));
-            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("PrimaryColumn"));
+            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnInt"));
+            PrimaryMapper.Add<PrimaryMapperTestClass>(new Field("ColumnString"));
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
         public void ThrowExceptionOnPrimaryMapperViaExpressionThatIsAlreadyExisting()
         {
             // Setup
-            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnName);
-            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.PrimaryColumn);
+            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnInt);
+            PrimaryMapper.Add<PrimaryMapperTestClass>(e => e.ColumnString);
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
@@ -378,10 +378,10 @@ namespace RepoDb.UnitTests.Others
             // Setup
             var columnNamePropertyInfo = typeof(PrimaryMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "ColumnName");
+                .First(p => p.Name == "ColumnInt");
             var primaryColumnPropertyInfo = typeof(PrimaryMapperTestClass)
                 .GetProperties()
-                .First(p => p.Name == "PrimaryColumn");
+                .First(p => p.Name == "ColumnString");
             PrimaryMapper.Add(columnNamePropertyInfo);
             PrimaryMapper.Add(primaryColumnPropertyInfo);
         }
@@ -391,9 +391,9 @@ namespace RepoDb.UnitTests.Others
         {
             // Setup
             var columnNameClassProperty = PropertyCache.Get<PrimaryMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnName");
+                .First(p => p.PropertyInfo.Name == "ColumnInt");
             var primaryColumnClassProperty = PropertyCache.Get<PrimaryMapperTestClass>()
-                .First(p => p.PropertyInfo.Name == "PrimaryColumn");
+                .First(p => p.PropertyInfo.Name == "ColumnString");
             PrimaryMapper.Add(columnNameClassProperty);
             PrimaryMapper.Add(primaryColumnClassProperty);
         }

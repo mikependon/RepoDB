@@ -10,8 +10,8 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to define the a expression for all operations. It holds the instances of field (<see cref="Field"/>),
-    /// parameter (<see cref="QueryField"/>) and the target operation (<see cref="Operation"/>) of the query expression.
+    /// A class used to define the a expression for all operations. It holds the instances of field <see cref="RepoDb.Field"/>,
+    /// parameter <see cref="RepoDb.Parameter"/> and the target operation <see cref="RepoDb.Enumerations.Operation"/> of the query expression.
     /// </summary>
     public class QueryField : IEquatable<QueryField>
     {

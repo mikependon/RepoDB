@@ -156,41 +156,71 @@ namespace RepoDb
         {
             if (expression.Body.IsUnary())
             {
-                var unary = expression.Body.ToUnary();
-                if (unary.Operand.IsMember())
-                {
-                    var member = unary.Operand.ToMember().Member;
-                    if (member is PropertyInfo)
-                    {
-                        return ((PropertyInfo)member).AsField();
-                    }
-                    else
-                    {
-                        return new Field(member.Name);
-                    }
-                }
-                else if (unary.Operand.IsBinary())
-                {
-                    return new Field(unary.Operand.ToBinary().GetName());
-                }
+                return Parse<TEntity>(expression.Body.ToUnary());
             }
-            if (expression.Body.IsMember())
+            else if (expression.Body.IsMember())
             {
-                var member = expression.Body.ToMember().Member;
-                if (member is PropertyInfo)
-                {
-                    return ((PropertyInfo)member).AsField();
-                }
-                else
-                {
-                    return new Field(member.Name);
-                }
+                return Parse<TEntity>(expression.Body.ToMember());
             }
-            if (expression.Body.IsBinary())
+            else if (expression.Body.IsBinary())
             {
-                return new Field(expression.Body.ToBinary().GetName());
+                return Parse<TEntity>(expression.Body.ToBinary());
             }
             throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="UnaryExpression"/> and converts the result 
+        /// to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="Field"/> object.</returns>
+        internal static Field Parse<TEntity>(UnaryExpression expression)
+            where TEntity : class
+        {
+            if (expression.Operand.IsMember())
+            {
+                return Parse<TEntity>(expression.Operand.ToMember());
+            }
+            else if (expression.Operand.IsBinary())
+            {
+                return Parse<TEntity>(expression.Operand.ToBinary());
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="MemberExpression"/> and converts the result 
+        /// to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="Field"/> object.</returns>
+        internal static Field Parse<TEntity>(MemberExpression expression)
+            where TEntity : class
+        {
+            if (expression.Member is PropertyInfo)
+            {
+                return expression.Member.ToPropertyInfo().AsField();
+            }
+            else
+            {
+                return new Field(expression.Member.Name);
+            }
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
+        /// to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="OrderField"/> object.</returns>
+        internal static Field Parse<TEntity>(BinaryExpression expression)
+            where TEntity : class
+        {
+            return new Field(expression.GetName());
         }
 
         #endregion

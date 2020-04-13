@@ -87,25 +87,70 @@ namespace RepoDb
         {
             if (expression.Body.IsUnary())
             {
-                var unary = expression.Body.ToUnary();
-                if (unary.Operand.IsMember())
-                {
-                    return new OrderField(unary.Operand.ToMember().Member.Name, order);
-                }
-                else if (unary.Operand.IsBinary())
-                {
-                    return new OrderField(unary.Operand.ToBinary().GetName(), order);
-                }
+                return Parse<TEntity>(expression.Body.ToUnary(), order);
             }
-            if (expression.Body.IsMember())
+            else if (expression.Body.IsMember())
             {
-                return new OrderField(expression.Body.ToMember().Member.Name, order);
+                return Parse<TEntity>(expression.Body.ToMember(), order);
             }
-            if (expression.Body.IsBinary())
+            else if (expression.Body.IsBinary())
             {
-                return new OrderField(expression.Body.ToBinary().GetName(), order);
+                return Parse<TEntity>(expression.Body.ToBinary(), order);
             }
             throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="UnaryExpression"/> and converts the result 
+        /// to <see cref="OrderField"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <param name="order">The order of the property.</param>
+        /// <returns>An instance of <see cref="OrderField"/> object.</returns>
+        internal static OrderField Parse<TEntity>(UnaryExpression expression,
+            Order order)
+            where TEntity : class
+        {
+            if (expression.Operand.IsMember())
+            {
+                return Parse<TEntity>(expression.Operand.ToMember(), order);
+            }
+            else if (expression.Operand.IsBinary())
+            {
+                return Parse<TEntity>(expression.Operand.ToBinary(), order);
+            }
+            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="MemberExpression"/> and converts the result 
+        /// to <see cref="OrderField"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <param name="order">The order of the property.</param>
+        /// <returns>An instance of <see cref="OrderField"/> object.</returns>
+        internal static OrderField Parse<TEntity>(MemberExpression expression,
+            Order order)
+            where TEntity : class
+        {
+            return new OrderField(expression.ToMember().Member.Name, order);
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
+        /// to <see cref="OrderField"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <param name="order">The order of the property.</param>
+        /// <returns>An instance of <see cref="OrderField"/> object.</returns>
+        internal static OrderField Parse<TEntity>(BinaryExpression expression,
+            Order order)
+            where TEntity : class
+        {
+            return new OrderField(expression.GetName(), order);
         }
 
         /// <summary>
