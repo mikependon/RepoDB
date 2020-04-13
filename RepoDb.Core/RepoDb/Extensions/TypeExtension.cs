@@ -37,7 +37,7 @@ namespace RepoDb.Extensions
         {
             foreach (var property in type.GetProperties())
             {
-                yield return new ClassProperty(property);
+                yield return new ClassProperty(type, property);
             }
         }
 

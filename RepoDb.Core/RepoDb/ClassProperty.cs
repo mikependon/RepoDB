@@ -16,12 +16,28 @@ namespace RepoDb
         /// Creates a new instance of <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="property">The wrapped property.</param>
-        public ClassProperty(PropertyInfo property)
+        public ClassProperty(PropertyInfo property) :
+            this(property.DeclaringType, property)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ClassProperty"/> object.
+        /// </summary>
+        /// <param name="parentType">The declaring type (avoiding the interface collision).</param>
+        /// <param name="property">The wrapped property.</param>
+        public ClassProperty(Type parentType,
+            PropertyInfo property)
         {
+            DeclaringType = parentType;
             PropertyInfo = property;
         }
 
         #region Properties
+
+        /// <summary>
+        /// Gets the original declaring type (avoiding the interface collision).
+        /// </summary>
+        public Type DeclaringType { get; }
 
         /// <summary>
         /// Gets the wrapped property of this object.
@@ -121,7 +137,7 @@ namespace RepoDb
             }
 
             // PrimaryMapper
-            var classProperty = PrimaryMapper.Get(PropertyInfo.DeclaringType);
+            var classProperty = PrimaryMapper.Get((DeclaringType ?? PropertyInfo.DeclaringType));
             m_isPrimary = (classProperty == this);
             if (m_isPrimary == true)
             {
@@ -178,7 +194,7 @@ namespace RepoDb
             }
 
             // PrimaryMapper
-            var classProperty = IdentityMapper.Get(PropertyInfo.DeclaringType);
+            var classProperty = IdentityMapper.Get((DeclaringType ?? PropertyInfo.DeclaringType));
             m_isIdentity = (classProperty == this);
             if (m_isIdentity == true)
             {

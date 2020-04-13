@@ -18,32 +18,32 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name of the property (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get<T>(Expression<Func<T, object>> expression)
-            where T : class =>
-            Get(ExpressionExtension.GetProperty<T>(expression));
+        public static string Get<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
+            Get(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Gets the cached mapped-name of the property (via property name).
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get<T>(string propertyName)
-            where T : class =>
-            Get(TypeExtension.GetProperty<T>(propertyName));
+        public static string Get<TEntity>(string propertyName)
+            where TEntity : class =>
+            Get(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Gets the cached mapped-name of the property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get<T>(Field field)
-            where T : class =>
-            Get(TypeExtension.GetProperty<T>(field.Name));
+        public static string Get<TEntity>(Field field)
+            where TEntity : class =>
+            Get(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Gets the cached mapped-name of the <see cref="ClassProperty"/> object.

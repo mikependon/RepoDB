@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
 
@@ -15,9 +13,13 @@ namespace RepoDb.Extensions
         // GetProperties
         internal static IEnumerable<ClassProperty> GetProperties(Type type)
         {
-            return type
-                .GetProperties()
-                .Select(property => new ClassProperty(property));
+            //return type
+            //    .GetProperties()
+            //    .Select(property => new ClassProperty(type, property));
+            foreach (var property in type.GetProperties())
+            {
+                yield return new ClassProperty(type, property);
+            }
         }
 
         /// <summary>
