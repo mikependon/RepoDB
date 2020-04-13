@@ -233,7 +233,7 @@ namespace RepoDb
 
             // Property and Type level mapping
             m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(PropertyInfo) ?? // Property Level
+                TypeMapper.Get((DeclaringType ?? PropertyInfo.DeclaringType), PropertyInfo) ?? // Property Level
                 TypeMapper.Get(propertyType); // Type Level
 
             // Try to resolve if not found
@@ -284,7 +284,8 @@ namespace RepoDb
         /// <returns>The hash code value.</returns>
         public override int GetHashCode()
         {
-            return PropertyInfo.GenerateCustomizedHashCode();
+            return (DeclaringType ?? PropertyInfo.DeclaringType).FullName.GetHashCode() ^
+                PropertyInfo.GenerateCustomizedHashCode();
         }
 
         /// <summary>

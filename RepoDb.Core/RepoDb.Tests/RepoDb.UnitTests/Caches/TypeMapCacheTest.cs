@@ -112,39 +112,6 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void TestTypeMapperPropertyMappingViaClassProperty()
-        {
-            // Setup
-            var classProperty = PropertyCache.Get<TypeMapCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnString");
-            TypeMapper.Add(classProperty, DbType.StringFixedLength);
-
-            // Act
-            var actual = TypeMapCache.Get(classProperty);
-            var expected = DbType.StringFixedLength;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestTypeMapperPropertyMappingViaPropertyInfo()
-        {
-            // Setup
-            var propertyInfo = typeof(TypeMapCacheTestClass)
-                .GetProperties()
-                .First(p => p.Name == "ColumnString");
-            TypeMapper.Add(propertyInfo, DbType.StringFixedLength);
-
-            // Act
-            var actual = TypeMapCache.Get(propertyInfo);
-            var expected = DbType.StringFixedLength;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
         /*
          * With MapAttribute
          */
@@ -187,39 +154,6 @@ namespace RepoDb.UnitTests.Others
 
             // Act
             var actual = TypeMapCache.Get<TypeMapCacheTestClass>(e => e.PropertyString);
-            var expected = DbType.String;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestTypeMapperPropertyMappingViaClassPropertyWithMapAttribute()
-        {
-            // Setup
-            var classProperty = PropertyCache.Get<TypeMapCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "PropertyString");
-            TypeMapper.Add(classProperty, DbType.StringFixedLength);
-
-            // Act
-            var actual = TypeMapCache.Get(classProperty);
-            var expected = DbType.String;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestTypeMapperPropertyMappingViaPropertyInfoWithMapAttribute()
-        {
-            // Setup
-            var propertyInfo = typeof(TypeMapCacheTestClass)
-                .GetProperties()
-                .First(p => p.Name == "PropertyString");
-            TypeMapper.Add(propertyInfo, DbType.StringFixedLength);
-
-            // Act
-            var actual = TypeMapCache.Get(propertyInfo);
             var expected = DbType.String;
 
             // Assert

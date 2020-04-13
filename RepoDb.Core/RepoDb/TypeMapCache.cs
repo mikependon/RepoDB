@@ -26,10 +26,10 @@ namespace RepoDb
         /// <summary>
         /// Type Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific .NET CLR type.
         /// </summary>
-        /// <typeparam name="T">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <returns>The mapped <see cref="DbType"/> object of the .NET CLR type.</returns>
-        public static DbType? Get<T>() =>
-            Get(typeof(T));
+        public static DbType? Get<TType>() =>
+            Get(typeof(TType));
 
         /// <summary>
         /// Type Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific .NET CLR type.
@@ -63,46 +63,48 @@ namespace RepoDb
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via expression).
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get<T>(Expression<Func<T, object>> expression)
-            where T : class =>
-            Get(ExpressionExtension.GetProperty<T>(expression));
+        public static DbType? Get<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
+            Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via property name).
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get<T>(string propertyName)
-            where T : class =>
-            Get(TypeExtension.GetProperty<T>(propertyName));
+        public static DbType? Get<TEntity>(string propertyName)
+            where TEntity : class =>
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get<T>(Field field)
-            where T : class =>
-            Get(TypeExtension.GetProperty<T>(field.Name));
+        public static DbType? Get<TEntity>(Field field)
+            where TEntity : class =>
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get(PropertyInfo propertyInfo)
+        internal static DbType? Get<TEntity>(PropertyInfo propertyInfo)
+            where TEntity : class
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var classProperty = PropertyCache.Get(propertyInfo.DeclaringType)
-                .FirstOrDefault(p => p.PropertyInfo == propertyInfo);
+            var classProperty = PropertyCache.Get<TEntity>()
+                .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, propertyInfo.Name, StringComparison.OrdinalIgnoreCase));
 
             // Reuse
             return Get(classProperty);
@@ -113,7 +115,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get(ClassProperty classProperty)
+        internal static DbType? Get(ClassProperty classProperty)
         {
             // Validate
             ThrowNullReferenceException(classProperty, "ClassProperty");

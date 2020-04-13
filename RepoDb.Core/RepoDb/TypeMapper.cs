@@ -85,7 +85,7 @@ namespace RepoDb
             ThrowNullReferenceException(type, "Type");
 
             // Variables
-            var key = type.FullName.GetHashCode();
+            var key = GenerateHashCode(type);
             var value = (DbType?)null;
 
             // Try get the cache
@@ -133,7 +133,7 @@ namespace RepoDb
 
             // Variables
             var value = (DbType?)null;
-            var key = type.GetUnderlyingType().FullName.GetHashCode();
+            var key = GenerateHashCode(type);
 
             // Try get the value
             m_maps.TryGetValue(key, out value);
@@ -253,7 +253,7 @@ namespace RepoDb
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             DbType? dbType)
             where TEntity : class =>
-            Add(expression, dbType, false);
+            Add<TEntity>(expression, dbType, false);
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and the database type (via expression).
@@ -266,12 +266,12 @@ namespace RepoDb
             DbType? dbType,
             bool force)
             where TEntity : class =>
-            Add(ExpressionExtension.GetProperty<TEntity>(expression), dbType, force);
+            Add<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression), dbType, force);
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and the database type (via property name).
         /// </summary>
-        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         public static void Add<TEntity>(string propertyName,
@@ -282,7 +282,7 @@ namespace RepoDb
         /// <summary>
         /// Property Level: Adds a mapping between a class property and the database type (via property name).
         /// </summary>
-        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="dbType">The name of the class property to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -302,13 +302,13 @@ namespace RepoDb
             }
 
             // Add to the mapping
-            Add(property, dbType, force);
+            Add<TEntity>(property, dbType, force);
         }
 
         /// <summary>
         /// Property Level: Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         public static void Add<TEntity>(Field field,
@@ -319,7 +319,7 @@ namespace RepoDb
         /// <summary>
         /// Property Level: Adds a mapping between a class property and the database type (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -339,45 +339,42 @@ namespace RepoDb
             }
 
             // Add to the mapping
-            Add(property, dbType, force);
+            Add<TEntity>(property, dbType, force);
         }
 
         /// <summary>
-        /// Property Level: Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
+        /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
-        public static void Add(ClassProperty classProperty,
-            DbType? dbType) =>
-            Add(classProperty.PropertyInfo, dbType, false);
+        internal static void Add<TEntity>(PropertyInfo propertyInfo,
+            DbType? dbType)
+            where TEntity : class =>
+            Add<TEntity>(propertyInfo, dbType, false);
 
         /// <summary>
-        /// Property Level: Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
+        /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add(ClassProperty classProperty,
+        internal static void Add<TEntity>(PropertyInfo propertyInfo,
             DbType? dbType,
-            bool force) =>
-            Add(classProperty?.PropertyInfo, dbType, force);
+            bool force)
+            where TEntity : class =>
+            Add(typeof(TEntity), propertyInfo, dbType, force);
 
         /// <summary>
         /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
-        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        /// <param name="dbType">The target database type.</param>
-        public static void Add(PropertyInfo propertyInfo,
-            DbType? dbType) =>
-            Add(propertyInfo, dbType, false);
-
-        /// <summary>
-        /// Property Level: Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
-        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add(PropertyInfo propertyInfo,
+        internal static void Add(Type entityType,
+            PropertyInfo propertyInfo,
             DbType? dbType,
             bool force)
         {
@@ -386,7 +383,7 @@ namespace RepoDb
             ValidateTargetColumnName(dbType);
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(entityType, propertyInfo);
             var value = (DbType?)null;
 
             // Try get the cache
@@ -422,7 +419,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Get(ExpressionExtension.GetProperty<TEntity>(expression));
+            Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Property Level: Gets the mapped database type of the property (via property name).
@@ -432,7 +429,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(TypeExtension.GetProperty<TEntity>(propertyName));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Gets the mapped database type of the property (via <see cref="Field"/> object).
@@ -442,28 +439,22 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(Field field)
             where TEntity : class =>
-            Get(TypeExtension.GetProperty<TEntity>(field.Name));
-
-        /// <summary>
-        /// Property Level: Gets the mapped database type of the property via <see cref="ClassProperty"/> object.
-        /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
-        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get(ClassProperty classProperty) =>
-            Get(classProperty.PropertyInfo);
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Property Level: Gets the mapped database type of the property via <see cref="PropertyInfo"/> object.
         /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        public static DbType? Get(PropertyInfo propertyInfo)
+        internal static DbType? Get(Type entityType,
+            PropertyInfo propertyInfo)
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(entityType, propertyInfo);
             var value = (DbType?)null;
 
             // Try get the value
@@ -484,7 +475,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Remove(ExpressionExtension.GetProperty<TEntity>(expression));
+            Remove(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Property Level: Removes the mapping between the class property and database column (via property name).
@@ -493,7 +484,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<TEntity>(string propertyName)
             where TEntity : class =>
-            Remove(TypeExtension.GetProperty<TEntity>(propertyName));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
@@ -502,26 +493,21 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class =>
-            Remove(TypeExtension.GetProperty<TEntity>(field.Name));
-
-        /// <summary>
-        /// Property Level: Removes the mapping between the <see cref="ClassProperty"/> object and the database column.
-        /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
-        public static void Remove(ClassProperty classProperty) =>
-            Remove(classProperty.PropertyInfo);
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Property Level: Removes the mapping between the <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        public static void Remove(PropertyInfo propertyInfo)
+        public static void Remove(Type entityType,
+            PropertyInfo propertyInfo)
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(entityType, propertyInfo);
             var value = (DbType?)null;
 
             // Try get the value
@@ -543,6 +529,28 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return type.GetUnderlyingType().FullName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type entityType,
+            PropertyInfo propertyInfo)
+        {
+            return entityType.GetUnderlyingType().FullName.GetHashCode() ^ propertyInfo.GenerateCustomizedHashCode();
+        }
 
         /// <summary>
         /// Validates the value of the target column name.
