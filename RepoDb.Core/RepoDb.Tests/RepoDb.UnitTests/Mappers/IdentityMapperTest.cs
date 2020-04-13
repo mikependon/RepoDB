@@ -438,6 +438,42 @@ namespace RepoDb.UnitTests.Others
         }
 
         /*
+         * Empty Properties
+         */
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnIdentityMapperViaPropertyNameThatIsEmpty()
+        {
+            // Setup
+            IdentityMapper.Add<IdentityMapperTestClass>(propertyName: "");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnIdentityMapperViaFieldThatIsEmpty()
+        {
+            // Setup
+            IdentityMapper.Add<IdentityMapperTestClass>(field: new Field(""));
+        }
+
+        /*
+         * Empty Spaces Properties
+         */
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnIdentityMapperViaPropertyNameThatIsEmptySpaces()
+        {
+            // Setup
+            IdentityMapper.Add<IdentityMapperTestClass>(propertyName: "  ");
+        }
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnIdentityMapperViaFieldThatIsEmptySpaces()
+        {
+            // Setup
+            IdentityMapper.Add<IdentityMapperTestClass>(field: new Field("  "));
+        }
+
+        /*
          * Missing Properties
          */
 

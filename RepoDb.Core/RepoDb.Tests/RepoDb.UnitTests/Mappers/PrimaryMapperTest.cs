@@ -438,6 +438,42 @@ namespace RepoDb.UnitTests.Others
         }
 
         /*
+         * Empty Properties
+         */
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnPrimaryMapperViaPropertyNameThatIsEmpty()
+        {
+            // Setup
+            PrimaryMapper.Add<PrimaryMapperTestClass>(propertyName: "");
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnPrimaryMapperViaFieldThatIsEmpty()
+        {
+            // Setup
+            PrimaryMapper.Add<PrimaryMapperTestClass>(field: new Field(""));
+        }
+
+        /*
+         * Empty Spaces Properties
+         */
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnPrimaryMapperViaPropertyNameThatIsEmptySpaces()
+        {
+            // Setup
+            PrimaryMapper.Add<PrimaryMapperTestClass>(propertyName: "  ");
+        }
+
+        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        public void ThrowExceptionOnPrimaryMapperViaFieldThatIsEmptySpaces()
+        {
+            // Setup
+            PrimaryMapper.Add<PrimaryMapperTestClass>(field: new Field("  "));
+        }
+
+        /*
          * Missing Properties
          */
 
