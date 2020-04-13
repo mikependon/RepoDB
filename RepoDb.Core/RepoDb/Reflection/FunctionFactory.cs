@@ -170,10 +170,10 @@ namespace RepoDb.Reflection
                     string.Equals(field.AsUnquoted(true, dbSetting), property.GetMappedName().AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
 
             // Iterate each properties
-            foreach (var property in properties)
+            foreach (var classProperty in properties)
             {
                 // Gets the mapped name and the ordinal
-                var mappedName = property.GetMappedName().AsUnquoted(true, dbSetting);
+                var mappedName = classProperty.GetMappedName().AsUnquoted(true, dbSetting);
                 var ordinal = fieldNames.IndexOf(mappedName.ToLower());
 
                 // Process only if there is a correct ordinal
@@ -181,14 +181,14 @@ namespace RepoDb.Reflection
                 {
                     // Variables needed for the iteration
                     var readerField = readerFields.First(f => string.Equals(f.Name.AsUnquoted(true, dbSetting), mappedName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    var propertyType = property.PropertyInfo.PropertyType;
+                    var propertyType = classProperty.PropertyInfo.PropertyType;
                     var underlyingType = Nullable.GetUnderlyingType(propertyType);
                     var targetType = underlyingType ?? propertyType;
                     var convertType = readerField.Type;
                     var isDefaultConversion = (Converter.ConversionType == ConversionType.Default);
                     var isConversionNeeded = readerField.Type != targetType;
                     var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
-                    var propertyHandlerAttribute = property.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
+                    var propertyHandlerAttribute = classProperty.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
                     var handlerInstance = (object)null;
                     var handlerGetMethod = (MethodInfo)null;
                     var getParameter = (ParameterInfo)null;
@@ -202,7 +202,7 @@ namespace RepoDb.Reflection
                     if (propertyHandlerAttribute != null)
                     {
                         // Get from the attribute
-                        handlerInstance = PropertyHandlerCache.Get<object>(property);
+                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
                         handlerGetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Get");
                     }
                     else
@@ -305,18 +305,18 @@ namespace RepoDb.Reflection
                                 trueExpression = Expression.Call(Expression.Constant(handlerInstance),
                                     handlerGetMethod,
                                     Expression.Convert(trueExpression, getParameter.ParameterType.GetUnderlyingType()),
-                                    Expression.Constant(property));
+                                    Expression.Constant(classProperty));
                             }
                             else
                             {
                                 trueExpression = Expression.Call(Expression.Constant(handlerInstance),
                                     handlerGetMethod,
                                     trueExpression,
-                                    Expression.Constant(property));
+                                    Expression.Constant(classProperty));
                             }
-                            if (handlerGetMethod.ReturnType != property.PropertyInfo.PropertyType)
+                            if (handlerGetMethod.ReturnType != classProperty.PropertyInfo.PropertyType)
                             {
-                                trueExpression = Expression.Convert(trueExpression, property.PropertyInfo.PropertyType);
+                                trueExpression = Expression.Convert(trueExpression, classProperty.PropertyInfo.PropertyType);
                             }
                         }
 
@@ -452,10 +452,10 @@ namespace RepoDb.Reflection
                             falseExpression = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerGetMethod,
                                 falseExpression,
-                                Expression.Constant(property));
-                            if (handlerGetMethod.ReturnType != property.PropertyInfo.PropertyType)
+                                Expression.Constant(classProperty));
+                            if (handlerGetMethod.ReturnType != classProperty.PropertyInfo.PropertyType)
                             {
-                                falseExpression = Expression.Convert(falseExpression, property.PropertyInfo.PropertyType);
+                                falseExpression = Expression.Convert(falseExpression, classProperty.PropertyInfo.PropertyType);
                             }
                         }
 
@@ -509,10 +509,10 @@ namespace RepoDb.Reflection
                             valueExpression = Expression.Call(Expression.Constant(handlerInstance),
                                 handlerGetMethod,
                                 valueExpression,
-                                Expression.Constant(property));
-                            if (handlerGetMethod.ReturnType != property.PropertyInfo.PropertyType)
+                                Expression.Constant(classProperty));
+                            if (handlerGetMethod.ReturnType != classProperty.PropertyInfo.PropertyType)
                             {
-                                valueExpression = Expression.Convert(valueExpression, property.PropertyInfo.PropertyType);
+                                valueExpression = Expression.Convert(valueExpression, classProperty.PropertyInfo.PropertyType);
                             }
                         }
 
@@ -520,7 +520,7 @@ namespace RepoDb.Reflection
                     }
 
                     // Set the actual property value
-                    memberAssignments.Add(Expression.Bind(property.PropertyInfo, valueExpression));
+                    memberAssignments.Add(Expression.Bind(classProperty.PropertyInfo, valueExpression));
                 }
             }
 
@@ -875,7 +875,7 @@ namespace RepoDb.Reflection
                     if (propertyHandlerAttribute != null)
                     {
                         // Get from the attribute
-                        handlerInstance = PropertyHandlerCache.Get<object>(classProperty);
+                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
                         handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
                     }
                     else
@@ -1554,7 +1554,7 @@ namespace RepoDb.Reflection
                     if (propertyHandlerAttribute != null)
                     {
                         // Get from the attribute
-                        handlerInstance = PropertyHandlerCache.Get<object>(classProperty);
+                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
                         handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
                     }
                     else

@@ -43,7 +43,7 @@ namespace RepoDb
             ThrowNullReferenceException(type, "Type");
 
             // Variables
-            var key = type.GetUnderlyingType().FullName.GetHashCode();
+            var key = GenerateHashCode(type);
             var value = (object)null;
             var result = default(TPropertyHandler);
 
@@ -65,58 +65,63 @@ namespace RepoDb
         /// <summary>
         /// Property Level: Gets the cached property handler object that is being mapped on a specific class property (via expression).
         /// </summary>
-        /// <typeparam name="TType">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TType, TPropertyHandler>(Expression<Func<TType, object>> expression)
-            where TType : class =>
-            Get<TPropertyHandler>(ExpressionExtension.GetProperty<TType>(expression));
+        public static TPropertyHandler Get<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
+            Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Property Level: Gets the cached property handler object that is being mapped on a specific class property (via property name).
         /// </summary>
-        /// <typeparam name="TType">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TType, TPropertyHandler>(string propertyName)
-            where TType : class =>
-            Get<TPropertyHandler>(TypeExtension.GetProperty<TType>(propertyName));
+        public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
+            where TEntity : class =>
+            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Gets the cached property handler object that is being mapped on a specific class property (via <see cref="Field"/> object).
         /// </summary>
-        /// <typeparam name="TType">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TType, TPropertyHandler>(Field field)
-            where TType : class =>
-            Get<TPropertyHandler>(TypeExtension.GetProperty<TType>(field.Name));
+        public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
+            where TEntity : class =>
+            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+
 
         /// <summary>
-        /// Property Level: Gets the cached property handler object that is being mapped on a specific <see cref="ClassProperty"/> object.
+        /// Property Level: Gets the cached property handler object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TPropertyHandler>(ClassProperty classProperty) =>
-            Get<TPropertyHandler>(classProperty.PropertyInfo);
+        internal static TPropertyHandler Get<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
+            where TEntity : class =>
+            Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
 
         /// <summary>
         /// Property Level: Gets the cached property handler object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped property handler object of the property.</returns>
-        public static TPropertyHandler Get<TPropertyHandler>(PropertyInfo propertyInfo)
+        internal static TPropertyHandler Get<TPropertyHandler>(Type entityType,
+            PropertyInfo propertyInfo)
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(entityType, propertyInfo);
             var value = (object)null;
             var result = default(TPropertyHandler);
 
@@ -133,7 +138,7 @@ namespace RepoDb
                 // Property Level
                 if (result == null)
                 {
-                    result = PropertyHandlerMapper.Get<TPropertyHandler>(propertyInfo);
+                    result = PropertyHandlerMapper.Get<TPropertyHandler>(entityType, propertyInfo);
                 }
 
                 // Type Level
@@ -167,6 +172,28 @@ namespace RepoDb
         public static void Flush()
         {
             m_cache.Clear();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return type.GetUnderlyingType().FullName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type entityType,
+            PropertyInfo propertyInfo)
+        {
+            return entityType.GetUnderlyingType().FullName.GetHashCode() ^ propertyInfo.GenerateCustomizedHashCode();
         }
 
         /// <summary>

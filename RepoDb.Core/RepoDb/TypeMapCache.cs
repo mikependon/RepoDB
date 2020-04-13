@@ -42,7 +42,7 @@ namespace RepoDb
             ThrowNullReferenceException(type, "Type");
 
             // Variables
-            var key = type.GetUnderlyingType().FullName.GetHashCode();
+            var key = GenerateHashCode(type);
             var result = (DbType?)null;
 
             // Try get the value
@@ -103,31 +103,15 @@ namespace RepoDb
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var classProperty = PropertyCache.Get<TEntity>()
-                .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, propertyInfo.Name, StringComparison.OrdinalIgnoreCase));
-
-            // Reuse
-            return Get(classProperty);
-        }
-
-        /// <summary>
-        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="ClassProperty"/> object.
-        /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
-        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
-        internal static DbType? Get(ClassProperty classProperty)
-        {
-            // Validate
-            ThrowNullReferenceException(classProperty, "ClassProperty");
-
-            // Variables
-            var key = classProperty.GetHashCode();
+            var key = GenerateHashCode(typeof(TEntity), propertyInfo);
             var result = (DbType?)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = classProperty.GetDbType();
+                var classProperty = PropertyCache.Get<TEntity>()
+                    .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, propertyInfo.Name, StringComparison.OrdinalIgnoreCase));
+                result = classProperty?.GetDbType();
                 m_cache.TryAdd(key, result);
             }
 
@@ -147,6 +131,28 @@ namespace RepoDb
         public static void Flush()
         {
             m_cache.Clear();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return type.GetUnderlyingType().FullName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type entityType,
+            PropertyInfo propertyInfo)
+        {
+            return entityType.GetUnderlyingType().FullName.GetHashCode() ^ propertyInfo.GenerateCustomizedHashCode();
         }
 
         /// <summary>

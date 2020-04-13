@@ -147,41 +147,6 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void TestPropertyHandlerCachePropertyMappingViaClassProperty()
-        {
-            // Setup
-            var stringPropertyHandler = new StringPropertyHandler();
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnString");
-            PropertyHandlerMapper.Add(classProperty, stringPropertyHandler);
-
-            // Act
-            var actual = PropertyHandlerCache.Get<StringPropertyHandler>(classProperty);
-            var expected = stringPropertyHandler;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestPropertyHandlerCachePropertyMappingViaPropertyInfo()
-        {
-            // Setup
-            var stringPropertyHandler = new StringPropertyHandler();
-            var propertyInfo = typeof(PropertyTypeHandlerCacheTestClass)
-                .GetProperties()
-                .First(p => p.Name == "ColumnString");
-            PropertyHandlerMapper.Add(propertyInfo, stringPropertyHandler);
-
-            // Act
-            var actual = PropertyHandlerCache.Get<StringPropertyHandler>(propertyInfo);
-            var expected = stringPropertyHandler;
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
         /*
          * With MapAttribute
          */
@@ -235,48 +200,6 @@ namespace RepoDb.UnitTests.Others
 
             // Act (Existing)
             actual = PropertyHandlerCache.Get<PropertyTypeHandlerCacheTestClass, TextPropertyHandler>(e => e.PropertyString);
-
-            // Assert
-            Assert.IsNotNull(actual);
-        }
-
-        [TestMethod]
-        public void TestPropertyHandlerCachePropertyMappingViaClassPropertyWithMapAttribute()
-        {
-            // Setup
-            var classProperty = PropertyCache.Get<PropertyTypeHandlerCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "PropertyString");
-
-            // Act
-            var actual = PropertyHandlerCache.Get<TextPropertyHandler>(classProperty);
-
-            // Assert
-            Assert.IsNotNull(actual);
-
-            // Act (Existing)
-            actual = PropertyHandlerCache.Get<TextPropertyHandler>(classProperty);
-
-            // Assert
-            Assert.IsNotNull(actual);
-        }
-
-        [TestMethod]
-        public void TestPropertyHandlerCachePropertyMappingViaPropertyInfoWithMapAttribute()
-        {
-            // Setup
-            var stringPropertyHandler = new StringPropertyHandler();
-            var propertyInfo = typeof(PropertyTypeHandlerCacheTestClass)
-                .GetProperties()
-                .First(p => p.Name == "PropertyString");
-
-            // Act
-            var actual = PropertyHandlerCache.Get<TextPropertyHandler>(propertyInfo);
-
-            // Assert
-            Assert.IsNotNull(actual);
-
-            // Act (Existing)
-            actual = PropertyHandlerCache.Get<TextPropertyHandler>(propertyInfo);
 
             // Assert
             Assert.IsNotNull(actual);
