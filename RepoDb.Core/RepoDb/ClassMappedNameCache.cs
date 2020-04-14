@@ -16,7 +16,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name for the entity.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached mapped name of the entity.</returns>
         public static string Get<TEntity>()
             where TEntity : class =>
@@ -25,21 +25,21 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached mapped-name for the entity.
         /// </summary>
-        /// <param name="type">The type of the target entity.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached mapped name of the entity.</returns>
-        public static string Get(Type type)
+        public static string Get(Type entityType)
         {
             // Validate
-            ThrowNullReferenceException(type, "Type");
+            ThrowNullReferenceException(entityType, "EntityType");
 
             // Variables
-            var key = type.FullName.GetHashCode();
+            var key = GenerateHashCode(entityType);
             var result = (string)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = DataEntityExtension.GetMappedName(type);
+                result = DataEntityExtension.GetMappedName(entityType);
                 m_cache.TryAdd(key, result);
             }
 
@@ -57,6 +57,16 @@ namespace RepoDb
         public static void Flush()
         {
             m_cache.Clear();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
         }
 
         /// <summary>

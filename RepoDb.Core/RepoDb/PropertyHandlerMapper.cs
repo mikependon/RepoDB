@@ -346,7 +346,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        public static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
+        internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
             where TEntity : class =>
             Add<TEntity, TPropertyHandler>(propertyInfo, Activator.CreateInstance<TPropertyHandler>(), false);
 
@@ -357,7 +357,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
-        public static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
+        internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler)
             where TEntity : class =>
             Add<TEntity, TPropertyHandler>(propertyInfo, propertyHandler, false);
@@ -370,7 +370,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
+        internal static void Add<TEntity, TPropertyHandler>(PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler,
             bool force)
             where TEntity : class =>
@@ -385,7 +385,7 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TPropertyHandler>(Type entityType,
+        internal static void Add<TPropertyHandler>(Type entityType,
             PropertyInfo propertyInfo,
             TPropertyHandler propertyHandler,
             bool force)
@@ -603,7 +603,7 @@ namespace RepoDb
         /// <returns>The generated hashcode.</returns>
         private static int GenerateHashCode(Type type)
         {
-            return type.GetUnderlyingType().FullName.GetHashCode();
+            return TypeExtension.GenerateHashCode(type);
         }
 
         /// <summary>
@@ -615,7 +615,7 @@ namespace RepoDb
         private static int GenerateHashCode(Type entityType,
             PropertyInfo propertyInfo)
         {
-            return entityType.GetUnderlyingType().FullName.GetHashCode() ^ propertyInfo.GenerateCustomizedHashCode();
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
         }
 
         /// <summary>

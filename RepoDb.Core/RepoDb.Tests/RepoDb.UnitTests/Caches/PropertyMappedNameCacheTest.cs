@@ -38,12 +38,11 @@ namespace RepoDb.UnitTests.Others
         public void TestWithoutMapAttribute()
         {
             // Act
-            var property = PropertyCache.Get<PropertyMappedNameCacheTestClass>()
-                .First(p => p.PropertyInfo.Name == "ColumnString");
+            var actual = PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>(e => e.ColumnString);
             var expected = "ColumnString";
 
             // Assert
-            Assert.AreEqual(expected, PropertyMappedNameCache.Get(property.PropertyInfo)); // property.GetMappedName()
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -62,7 +61,7 @@ namespace RepoDb.UnitTests.Others
         public void ThrowExcpetionOnPropertyMappingCacheIfThePropertyIsNull()
         {
             // Setup
-            PropertyMappedNameCache.Get((PropertyInfo)null);
+            PropertyMappedNameCache.Get<PropertyMappedNameCacheTestClass>((Field)null);
         }
 
         #endregion

@@ -483,7 +483,7 @@ namespace RepoDb
         /// <summary>
         /// Gets a command text from the cache for the query-multiple operation.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         internal static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)

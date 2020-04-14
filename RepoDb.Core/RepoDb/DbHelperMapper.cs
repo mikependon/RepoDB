@@ -1,4 +1,5 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -49,7 +50,7 @@ namespace RepoDb
             Guard(connectionType);
 
             // Variables
-            var key = connectionType.FullName.GetHashCode();
+            var key = GenerateHashCode(connectionType);
             var existing = (IDbHelper)null;
 
             // Try get the mappings
@@ -102,7 +103,7 @@ namespace RepoDb
             var value = (IDbHelper)null;
 
             // get the value
-            m_maps.TryGetValue(connectionType.FullName.GetHashCode(), out value);
+            m_maps.TryGetValue(GenerateHashCode(connectionType), out value);
 
             // Return the value
             return value;
@@ -130,7 +131,7 @@ namespace RepoDb
             GuardPresence(connectionType);
 
             // Variables for cache
-            var key = connectionType.FullName.GetHashCode();
+            var key = GenerateHashCode(connectionType);
             var existing = (IDbHelper)null;
 
             // Try get the the value
@@ -152,6 +153,16 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Throws an exception if null.

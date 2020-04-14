@@ -165,6 +165,10 @@ namespace RepoDb.Reflection
             var dbSetting = connection?.GetDbSetting();
 
             // Filter the properties by reader fields
+            foreach(var p in properties)
+            {
+                var mappedName = p.GetMappedName().AsUnquoted(true, dbSetting);
+            }
             properties = properties.Where(property =>
                 fieldNames.FirstOrDefault(field =>
                     string.Equals(field.AsUnquoted(true, dbSetting), property.GetMappedName().AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);

@@ -103,7 +103,9 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static async Task<IEnumerable<DbField>> GetInternalAsync<TDbConnection>(TDbConnection connection, string tableName, IDbTransaction transaction = null)
+        internal static async Task<IEnumerable<DbField>> GetInternalAsync<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
             var type = connection.GetType();

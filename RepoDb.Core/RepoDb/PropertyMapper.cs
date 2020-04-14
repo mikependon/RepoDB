@@ -34,7 +34,7 @@ namespace RepoDb
         public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
             string columnName)
             where TEntity : class =>
-            Add(expression, columnName, false);
+            Add<TEntity>(expression, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via expression).
@@ -47,7 +47,7 @@ namespace RepoDb
             string columnName,
             bool force)
             where TEntity : class =>
-            Add(ExpressionExtension.GetProperty<TEntity>(expression), columnName, force);
+            Add<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression), columnName, force);
 
         /// <summary>
         /// Adds a mapping between a class property and the database column (via property name).
@@ -83,7 +83,7 @@ namespace RepoDb
             }
 
             // Add to the mapping
-            Add(property, columnName, force);
+            Add<TEntity>(property, columnName, force);
         }
 
         /// <summary>
@@ -120,54 +120,38 @@ namespace RepoDb
             }
 
             // Add to the mapping
-            Add(property, columnName, force);
+            Add<TEntity>(property, columnName, force);
         }
 
         /// <summary>
-        /// Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
+        /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
-        public static void Add(ClassProperty classProperty,
-            string columnName) =>
-            Add(classProperty.PropertyInfo, columnName, false);
-
-        /// <summary>
-        /// Adds a mapping between a <see cref="ClassProperty"/> object and the database column.
-        /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
-        /// <param name="columnName">The name of the database column.</param>
-        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add(ClassProperty classProperty,
-            string columnName,
-            bool force) =>
-            Add(classProperty?.PropertyInfo, columnName, force);
+        internal static void Add<TEntity>(PropertyInfo propertyInfo,
+            string columnName)
+            where TEntity : class =>
+            Add<TEntity>(propertyInfo, columnName, false);
 
         /// <summary>
         /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
-        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
-        /// <param name="columnName">The name of the database column.</param>
-        public static void Add(PropertyInfo propertyInfo,
-            string columnName) =>
-            Add(propertyInfo, columnName, false);
-
-        /// <summary>
-        /// Adds a mapping between a <see cref="PropertyInfo"/> object and the database column.
-        /// </summary>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add(PropertyInfo propertyInfo,
+        internal static void Add<TEntity>(PropertyInfo propertyInfo,
             string columnName,
             bool force)
+            where TEntity : class
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
             ValidateTargetColumnName(columnName);
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(typeof(TEntity), propertyInfo);
             var value = (string)null;
 
             // Try get the cache
@@ -203,7 +187,7 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Get(ExpressionExtension.GetProperty<TEntity>(expression));
+            Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Gets the mapped name of the property (via property name).
@@ -213,7 +197,7 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(TypeExtension.GetProperty<TEntity>(propertyName));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Gets the mapped name of the property (via <see cref="Field"/> object).
@@ -223,28 +207,41 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get<TEntity>(Field field)
             where TEntity : class =>
-            Get(TypeExtension.GetProperty<TEntity>(field.Name));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
+
 
         /// <summary>
-        /// Gets the mapped name of the property via <see cref="ClassProperty"/> object.
+        /// Gets the mapped name of the property via <see cref="PropertyInfo"/> object.
         /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped name of the property.</returns>
-        public static string Get(ClassProperty classProperty) =>
-            Get(classProperty.PropertyInfo);
+        internal static string Get<TEntity>(PropertyInfo propertyInfo)
+            where TEntity : class =>
+            Get(typeof(TEntity), propertyInfo);
 
         /// <summary>
         /// Gets the mapped name of the property via <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped name of the property.</returns>
-        public static string Get(PropertyInfo propertyInfo)
+        internal static string Get(PropertyInfo propertyInfo) =>
+            Get(propertyInfo.DeclaringType, propertyInfo);
+
+        /// <summary>
+        /// Gets the mapped name of the property via <see cref="PropertyInfo"/> object.
+        /// </summary>
+        /// <param name="entityType">The target .NET CLR type.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The mapped name of the property.</returns>
+        internal static string Get(Type entityType,
+            PropertyInfo propertyInfo)
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(entityType, propertyInfo);
             var value = (string)null;
 
             // Try get the value
@@ -265,7 +262,7 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         public static void Remove<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Remove(ExpressionExtension.GetProperty<TEntity>(expression));
+            Remove<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Removes the mapping between the class property and database column (via property name).
@@ -274,7 +271,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<TEntity>(string propertyName)
             where TEntity : class =>
-            Remove(TypeExtension.GetProperty<TEntity>(propertyName));
+            Remove<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
@@ -283,26 +280,21 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class =>
-            Remove(TypeExtension.GetProperty<TEntity>(field.Name));
-
-        /// <summary>
-        /// Removes the mapping between the <see cref="ClassProperty"/> object and the database column.
-        /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
-        public static void Remove(ClassProperty classProperty) =>
-            Remove(classProperty.PropertyInfo);
+            Remove<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Removes the mapping between the <see cref="PropertyInfo"/> object and the database column.
         /// </summary>
+        /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        public static void Remove(PropertyInfo propertyInfo)
+        internal static void Remove<TEntity>(PropertyInfo propertyInfo)
+            where TEntity : class
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(typeof(TEntity), propertyInfo);
             var value = (string)null;
 
             // Try get the value
@@ -324,6 +316,18 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type entityType,
+            PropertyInfo propertyInfo)
+        {
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
+        }
 
         /// <summary>
         /// Validates the value of the target column name.

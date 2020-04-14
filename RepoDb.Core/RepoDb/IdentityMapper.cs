@@ -154,7 +154,7 @@ namespace RepoDb
             ThrowNullReferenceException(classProperty, "ClassProperty");
 
             // Variables
-            var key = entityType.FullName.GetHashCode();
+            var key = GenerateHashCode(entityType);
             var value = (ClassProperty)null;
 
             // Try get the cache
@@ -202,7 +202,7 @@ namespace RepoDb
             ThrowNullReferenceException(entityType, "Type");
 
             // Variables
-            var key = entityType.FullName.GetHashCode();
+            var key = GenerateHashCode(entityType);
             var value = (ClassProperty)null;
 
             // Try get the value
@@ -234,7 +234,7 @@ namespace RepoDb
             ThrowNullReferenceException(entityType, "Type");
 
             // Variables
-            var key = entityType.FullName.GetHashCode();
+            var key = GenerateHashCode(entityType);
             var value = (ClassProperty)null;
 
             // Try get the value
@@ -256,6 +256,16 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Gets the instance of <see cref="ClassProperty"/> object from of the data entity based on name.

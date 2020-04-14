@@ -140,7 +140,7 @@ namespace RepoDb
         /// <returns>The generated hashcode.</returns>
         private static int GenerateHashCode(Type type)
         {
-            return type.GetUnderlyingType().FullName.GetHashCode();
+            return TypeExtension.GenerateHashCode(type);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace RepoDb
         private static int GenerateHashCode(Type entityType,
             PropertyInfo propertyInfo)
         {
-            return entityType.GetUnderlyingType().FullName.GetHashCode() ^ propertyInfo.GenerateCustomizedHashCode();
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
         }
 
         /// <summary>

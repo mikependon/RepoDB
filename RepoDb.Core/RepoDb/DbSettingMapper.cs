@@ -1,4 +1,5 @@
 ﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -38,18 +39,18 @@ namespace RepoDb
         /// <summary>
         /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
         /// </summary>
-        /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
+        /// <param name="connectionType">The type of <see cref="DbConnection"/> object.</param>
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to mapped to.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
-        public static void Add(Type type,
+        public static void Add(Type connectionType,
             IDbSetting dbSetting,
             bool @override)
         {
             // Guard the type
-            Guard(type);
+            Guard(connectionType);
 
             // Variables for cache
-            var key = type.FullName.GetHashCode();
+            var key = GenerateHashCode(connectionType);
             var existing = (IDbSetting)null;
 
             // Try get the mappings
@@ -63,7 +64,7 @@ namespace RepoDb
                 else
                 {
                     // Throw an exception
-                    throw new MappingExistsException($"The database setting mapping to provider '{type.FullName}' already exists.");
+                    throw new MappingExistsException($"The database setting mapping to provider '{connectionType.FullName}' already exists.");
                 }
             }
             else
@@ -91,18 +92,18 @@ namespace RepoDb
         /// <summary>
         /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="DbConnection"/>.
         /// </summary>
-        /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
+        /// <param name="connectionType">The type of <see cref="DbConnection"/> object.</param>
         /// <returns>An instance of mapped <see cref="IDbSetting"/></returns>
-        public static IDbSetting Get(Type type)
+        public static IDbSetting Get(Type connectionType)
         {
             // Guard the type
-            Guard(type);
+            Guard(connectionType);
 
             // Variables for the cache
             var value = (IDbSetting)null;
 
             // get the value
-            m_maps.TryGetValue(type.FullName.GetHashCode(), out value);
+            m_maps.TryGetValue(GenerateHashCode(connectionType), out value);
 
             // Return the value
             return value;
@@ -123,14 +124,14 @@ namespace RepoDb
         /// <summary>
         /// Removes the mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
         /// </summary>
-        /// <param name="type">The type of <see cref="DbConnection"/> object.</param>
-        public static void Remove(Type type)
+        /// <param name="connectionType">The type of <see cref="DbConnection"/> object.</param>
+        public static void Remove(Type connectionType)
         {
             // Check the presence
-            GuardPresence(type);
+            GuardPresence(connectionType);
 
             // Variables for cache
-            var key = type.FullName.GetHashCode();
+            var key = GenerateHashCode(connectionType);
             var existing = (IDbSetting)null;
 
             // Try get the the value
@@ -152,6 +153,16 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type type)
+        {
+            return TypeExtension.GenerateHashCode(type);
+        }
 
         /// <summary>
         /// Throws an exception if null.

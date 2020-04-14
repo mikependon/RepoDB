@@ -11,7 +11,11 @@ namespace RepoDb
     /// </summary>
     public static class PropertyMappedNameCache
     {
+        #region Privates
+
         private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
+
+        #endregion
 
         #region Methods
 
@@ -23,7 +27,7 @@ namespace RepoDb
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Get(ExpressionExtension.GetProperty<TEntity>(expression));
+            Get<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
         /// Gets the cached mapped-name of the property (via property name).
@@ -33,7 +37,7 @@ namespace RepoDb
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(TypeExtension.GetProperty<TEntity>(propertyName));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Gets the cached mapped-name of the property (via <see cref="Field"/> object).
@@ -43,28 +47,41 @@ namespace RepoDb
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get<TEntity>(Field field)
             where TEntity : class =>
-            Get(TypeExtension.GetProperty<TEntity>(field.Name));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
+
 
         /// <summary>
-        /// Gets the cached mapped-name of the <see cref="ClassProperty"/> object.
+        /// Gets the cached mapped-name of the property.
         /// </summary>
-        /// <param name="classProperty">The instance of <see cref="ClassProperty"/>.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(ClassProperty classProperty) =>
-            Get(classProperty.PropertyInfo);
+        internal static string Get<TEntity>(PropertyInfo propertyInfo)
+            where TEntity : class =>
+            Get(typeof(TEntity), propertyInfo);
 
         /// <summary>
         /// Gets the cached mapped-name of the property.
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached mapped-name of the property.</returns>
-        public static string Get(PropertyInfo propertyInfo)
+        internal static string Get(PropertyInfo propertyInfo) =>
+            Get(propertyInfo.DeclaringType, propertyInfo);
+
+        /// <summary>
+        /// Gets the cached mapped-name of the property.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The target property.</param>
+        /// <returns>The cached mapped-name of the property.</returns>
+        internal static string Get(Type entityType,
+            PropertyInfo propertyInfo)
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = propertyInfo.GenerateCustomizedHashCode();
+            var key = GenerateHashCode(entityType, propertyInfo);
             var result = (string)null;
 
             // Try get the value
@@ -88,6 +105,18 @@ namespace RepoDb
         public static void Flush()
         {
             m_cache.Clear();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The generated hashcode.</returns>
+        private static int GenerateHashCode(Type entityType,
+            PropertyInfo propertyInfo)
+        {
+            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
         }
 
         /// <summary>

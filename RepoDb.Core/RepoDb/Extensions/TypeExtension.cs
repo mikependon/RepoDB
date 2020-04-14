@@ -142,6 +142,28 @@ namespace RepoDb.Extensions
         #region Helpers
 
         /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="type">The type of the data entity.</param>
+        /// <returns>The generated hashcode.</returns>
+        internal static int GenerateHashCode(Type type)
+        {
+            return type.GetUnderlyingType().FullName.GetHashCode();
+        }
+
+        /// <summary>
+        /// Generates a hashcode for caching.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The generated hashcode.</returns>
+        internal static int GenerateHashCode(Type entityType,
+            PropertyInfo propertyInfo)
+        {
+            return entityType.GetUnderlyingType().FullName.GetHashCode() + propertyInfo.GenerateCustomizedHashCode();
+        }
+
+        /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
