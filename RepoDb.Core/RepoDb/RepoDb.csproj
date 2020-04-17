@@ -65,6 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Entity\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 
