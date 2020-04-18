@@ -16,6 +16,14 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        /*
+         * The supposed maximum parameters of 2100 is not workin with Microsoft.Data.SqlClient.
+         * I reported this issue to SqlClient repository at Github.
+         * Link: https://github.com/dotnet/SqlClient/issues/531
+         */
+
+        private const int ParameterBatchCount = Constant.MaxParametersCount - 2;
+
         #region DeleteAll<TEntity> (Delete<TEntity>)
 
         /// <summary>
@@ -80,14 +88,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > Constant.MaxParametersCount)
+                if (transaction == null && count > ParameterBatchCount)
                 {
-                    transaction = connection.BeginTransaction();
+                    transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                var splitted = primaryKeys.Split(ParameterBatchCount).AsList();
                 foreach (var keys in splitted)
                 {
                     if (keys.Any() != true)
@@ -190,14 +198,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > Constant.MaxParametersCount)
+                if (transaction == null && count > ParameterBatchCount)
                 {
-                    transaction = connection.BeginTransaction();
+                    transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                var splitted = primaryKeys.Split(ParameterBatchCount).AsList();
                 foreach (var keys in splitted)
                 {
                     if (keys.Any() != true)
@@ -398,14 +406,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > Constant.MaxParametersCount)
+                if (transaction == null && count > ParameterBatchCount)
                 {
-                    transaction = connection.BeginTransaction();
+                    transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                var splitted = primaryKeys.Split(ParameterBatchCount).AsList();
                 foreach (var keys in splitted)
                 {
                     if (keys.Any() != true)
@@ -477,14 +485,14 @@ namespace RepoDb
             try
             {
                 // Creates a transaction (if needed)
-                if (transaction == null && count > Constant.MaxParametersCount)
+                if (transaction == null && count > ParameterBatchCount)
                 {
-                    transaction = connection.BeginTransaction();
+                    transaction = connection.EnsureOpen().BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 
                 // Call the underlying method
-                var splitted = primaryKeys.Split(Constant.MaxParametersCount).AsList();
+                var splitted = primaryKeys.Split(ParameterBatchCount).AsList();
                 foreach (var keys in splitted)
                 {
                     if (keys.Any() != true)

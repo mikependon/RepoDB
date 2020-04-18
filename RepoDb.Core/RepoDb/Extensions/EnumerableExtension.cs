@@ -48,14 +48,14 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + (itemCount % sizePerSplit);
+                var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + ((itemCount % sizePerSplit) != 0 ? 1 : 0);
                 for (var i = 0; i < batchCount; i++)
                 {
                     yield return Enumerable.Where(value, (item, index) =>
                     {
                         return index >= (sizePerSplit * i) &&
                             index < (sizePerSplit * i) + sizePerSplit;
-                    });
+                    }).AsList();
                 }
             }
         }
