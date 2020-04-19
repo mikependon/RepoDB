@@ -88,6 +88,20 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">item type</typeparam>
         /// <param name="collection">collection</param>
         /// <param name="eachAction">iterative action</param>
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> eachAction)
+        {
+            foreach (var item in collection)
+            {
+                eachAction?.Invoke(item);
+            }
+        }
+
+        /// <summary>
+        /// For each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="collection">collection</param>
+        /// <param name="eachAction">iterative action</param>
         public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int> eachAction)
         {
             var index = 0;
