@@ -649,8 +649,8 @@ namespace RepoDb.Reflection
                         // False expression
                         var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
 
-                        // Only if there are conversions, execute the logics inside
-                        if (isConversionNeeded)
+                        // Only if there are conversions, execute the logic inside
+                        if (isConversionNeeded && converterMethod == null)
                         {
                             if (targetType.IsEnum)
                             {
@@ -752,7 +752,7 @@ namespace RepoDb.Reflection
                             ordinalExpression);
 
                         // Convert to correct type if necessary
-                        if (isConversionNeeded)
+                        if (isConversionNeeded && converterMethod == null)
                         {
                             valueExpression = ConvertValueExpressionForDataEntity(valueExpression,
                                 readerField,
