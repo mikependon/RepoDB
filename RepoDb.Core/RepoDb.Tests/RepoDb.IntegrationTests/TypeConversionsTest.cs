@@ -392,7 +392,7 @@ namespace RepoDb.IntegrationTests
         #region StringToDateClass
 
         [Map("CompleteTable")]
-        private class StringToDateClass : EntityBase<StringToDateClass>
+        private class StringToDateClass : BaseEntity<StringToDateClass>
         {
             [Primary]
             public Guid SessionId { get; set; }
@@ -432,7 +432,7 @@ namespace RepoDb.IntegrationTests
         #region StringToDateTimeClass
 
         [Map("CompleteTable")]
-        private class StringToDateTimeClass : EntityBase<StringToDateTimeClass>
+        private class StringToDateTimeClass : BaseEntity<StringToDateTimeClass>
         {
             [Primary]
             public Guid SessionId { get; set; }
@@ -472,7 +472,7 @@ namespace RepoDb.IntegrationTests
         #region StringToDateTime2Class
 
         [Map("CompleteTable")]
-        private class StringToDateTime2Class : EntityBase<StringToDateTime2Class>
+        private class StringToDateTime2Class : BaseEntity<StringToDateTime2Class>
         {
             [Primary]
             public Guid SessionId { get; set; }

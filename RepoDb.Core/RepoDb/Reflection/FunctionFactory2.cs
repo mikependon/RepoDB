@@ -239,18 +239,29 @@ namespace RepoDb.Reflection
                     }
                 }
 
-                var parameterAssignment = BuildParameterAssignmentExpression<TEntity>(
-                    instanceVariable,
-                    propertyVariable,
-                    field,
-                    classProperty,
-                    (direction == ParameterDirection.Output),
-                    direction,
-                    dbSetting,
-                    dbTypeResolver,
-                    commandParameterExpression,
-                    dbParameterCollection
-                );
+                var parameterAssignment = typeOfEntity.IsSubclassOf(typeof(BaseEntity<TEntity>))
+                    ? BuildParameterAssignmentExpression2<TEntity>(
+                        instanceVariable,
+                        propertyVariable,
+                        field,
+                        classProperty,
+                        (direction == ParameterDirection.Output),
+                        direction,
+                        dbSetting,
+                        dbTypeResolver,
+                        commandParameterExpression,
+                        dbParameterCollection)
+                    : BuildParameterAssignmentExpression<TEntity>(
+                        instanceVariable,
+                        propertyVariable,
+                        field,
+                        classProperty,
+                        (direction == ParameterDirection.Output),
+                        direction,
+                        dbSetting,
+                        dbTypeResolver,
+                        commandParameterExpression,
+                        dbParameterCollection);
 
                 // Add the necessary variables
                 if (propertyVariable != null)
@@ -412,19 +423,31 @@ namespace RepoDb.Reflection
                     }
 
                     // Execute the function
-                    var parameterAssignment = BuildParameterAssignmentExpression<TEntity>(
-                        entityIndex /* index */,
-                        instanceVariable /* instance */,
-                        propertyVariable /* property */,
-                        field /* field */,
-                        classProperty /* classProperty */,
-                        (direction == ParameterDirection.Output) /* skipValueAssignment */,
-                        direction /* direction */,
-                        dbSetting,
-                        dbTypeResolver,
-                        commandParameterExpression,
-                        dbParameterCollection
-                    );
+                    var parameterAssignment = typeOfEntity.IsSubclassOf(typeof(BaseEntity<TEntity>))
+                        ? BuildParameterAssignmentExpression2<TEntity>(
+                            entityIndex /* index */,
+                            instanceVariable /* instance */,
+                            propertyVariable /* property */,
+                            field /* field */,
+                            classProperty /* classProperty */,
+                            (direction == ParameterDirection.Output) /* skipValueAssignment */,
+                            direction /* direction */,
+                            dbSetting,
+                            dbTypeResolver,
+                            commandParameterExpression,
+                            dbParameterCollection)
+                        : BuildParameterAssignmentExpression<TEntity>(
+                            entityIndex /* index */,
+                            instanceVariable /* instance */,
+                            propertyVariable /* property */,
+                            field /* field */,
+                            classProperty /* classProperty */,
+                            (direction == ParameterDirection.Output) /* skipValueAssignment */,
+                            direction /* direction */,
+                            dbSetting,
+                            dbTypeResolver,
+                            commandParameterExpression,
+                            dbParameterCollection);
 
                     // Add the necessary variables
                     if (propertyVariable != null)
@@ -959,6 +982,7 @@ namespace RepoDb.Reflection
         ) where TEntity : class
         {
             // Parameters for the block
+            var typeOfEntity = typeof(TEntity);
             var parameterAssignments = new List<Expression>();
 
             // Parameter variables
@@ -983,13 +1007,12 @@ namespace RepoDb.Reflection
             #region Value
 
             // Set the value
-            if (skipValueAssignment == false)
+            if (!skipValueAssignment)
             {
                 // Set the value
-                var valueAssignment = (Expression)null;
 
                 // Check the proper type of the entity
-                if (typeof(TEntity) != Types.TypeOfObject && typeof(TEntity).IsGenericType == false)
+                if (typeOfEntity != Types.TypeOfObject && typeOfEntity.IsGenericType == false)
                 {
                     instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
                 }
@@ -1166,7 +1189,447 @@ namespace RepoDb.Reflection
                 }
 
                 // Add to the collection
-                valueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod, valueBlock);
+                var valueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod, valueBlock);
+
+                #endregion
+
+                // Check if it is a direct assignment or not
+                if (typeOfEntity != Types.TypeOfObject)
+                {
+                    parameterAssignments.Add(valueAssignment);
+                }
+                else
+                {
+                    var dbNullValueAssignment = (Expression)null;
+
+                    #region DBNull.Value
+
+                    // Set the default type value
+                    if (dbField.IsNullable == false && dbField.Type != null)
+                    {
+                        dbNullValueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod,
+                            Expression.Convert(Expression.Default(dbField.Type), Types.TypeOfObject));
+                    }
+
+                    // Set the DBNull value
+                    if (dbNullValueAssignment == null)
+                    {
+                        dbNullValueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod, dbNullValue);
+                    }
+
+                    #endregion
+
+                    // Check the presence of the property
+                    var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
+
+                    // Add to parameter assignment
+                    parameterAssignments.Add(Expression.Condition(propertyIsNull, dbNullValueAssignment, valueAssignment));
+                }
+            }
+
+            #endregion
+
+            #region DbType
+
+            #region DbType
+
+            // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
+            // It is actually me who file this issue to Microsoft :)
+            //if (fieldOrPropertyType != typeOfTimeSpan)
+            //{
+            // Identify the DB Type
+            var fieldOrPropertyType = (Type)null;
+            var dbType = (DbType?)null;
+
+            // Identify the conversion
+            if (Converter.ConversionType == ConversionType.Automatic)
+            {
+                // Identity the conversion
+                if (propertyType == Types.TypeOfDateTime && fieldType == Types.TypeOfString /* DateTimeToString */ ||
+                    propertyType == Types.TypeOfDecimal && (fieldType == Types.TypeOfFloat || fieldType == Types.TypeOfDouble) /* DecimalToFloat/DecimalToDouble */ ||
+                    propertyType == Types.TypeOfDouble && fieldType == Types.TypeOfLong /* DoubleToBigint */||
+                    propertyType == Types.TypeOfDouble && fieldType == Types.TypeOfInt /* DoubleToBigint */ ||
+                    propertyType == Types.TypeOfDouble && fieldType == Types.TypeOfShort /* DoubleToShort */||
+                    propertyType == Types.TypeOfFloat && fieldType == Types.TypeOfLong /* FloatToBigint */ ||
+                    propertyType == Types.TypeOfFloat && fieldType == Types.TypeOfShort /* FloatToShort */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfDateTime /* StringToDate */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfShort /* StringToShort */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfInt /* StringToInt */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfLong /* StringToLong */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfDouble /* StringToDouble */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfDecimal /* StringToDecimal */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfFloat /* StringToFloat */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfBoolean /* StringToBoolean */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfGuid /* StringToGuid */ ||
+                    propertyType == Types.TypeOfGuid && fieldType == Types.TypeOfString /* GuidToString */)
+                {
+                    fieldOrPropertyType = fieldType;
+                }
+                else if (propertyType == Types.TypeOfGuid && fieldType == Types.TypeOfString /* UniqueIdentifierToString */)
+                {
+                    fieldOrPropertyType = propertyType;
+                }
+                if (fieldOrPropertyType != null)
+                {
+                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                }
+            }
+
+            // Get the class property
+            if (dbType == null && handlerInstance == null)
+            {
+                if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
+                {
+                    dbType = classProperty?.GetDbType();
+                }
+            }
+
+            // Set to normal if null
+            if (fieldOrPropertyType == null)
+            {
+                fieldOrPropertyType = dbField.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
+            }
+
+            if (fieldOrPropertyType != null)
+            {
+                // Get the type mapping
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.Get(fieldOrPropertyType);
+                }
+
+                // Use the resolver
+                if (dbType == null)
+                {
+                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                }
+            }
+
+            // Set the DB Type
+            if (dbType != null)
+            {
+                var dbTypeAssignment = Expression.Call(parameterVariable, Types.DbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                parameterAssignments.Add(dbTypeAssignment);
+            }
+            //}
+
+            #endregion
+
+            #region SqlDbType (System)
+
+            // Get the SqlDbType value from SystemSqlServerTypeMapAttribute
+            var systemSqlServerTypeMapAttribute = GetSystemSqlServerTypeMapAttribute(classProperty);
+            if (systemSqlServerTypeMapAttribute != null)
+            {
+                var systemSqlDbTypeValue = GetSystemSqlServerDbTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                var systemSqlParameterType = GetSystemSqlServerParameterTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                var dbParameterSystemSqlDbTypeSetMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(systemSqlServerTypeMapAttribute);
+                var systemSqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, systemSqlParameterType),
+                    dbParameterSystemSqlDbTypeSetMethod,
+                    Expression.Constant(systemSqlDbTypeValue));
+                parameterAssignments.Add(systemSqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #region SqlDbType (Microsoft)
+
+            // Get the SqlDbType value from MicrosoftSqlServerTypeMapAttribute
+            var microsoftSqlServerTypeMapAttribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
+            if (microsoftSqlServerTypeMapAttribute != null)
+            {
+                var microsoftSqlDbTypeValue = GetMicrosoftSqlServerDbTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                var microsoftSqlParameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                var dbParameterMicrosoftSqlDbTypeSetMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(microsoftSqlServerTypeMapAttribute);
+                var microsoftSqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, microsoftSqlParameterType),
+                    dbParameterMicrosoftSqlDbTypeSetMethod,
+                    Expression.Constant(microsoftSqlDbTypeValue));
+                parameterAssignments.Add(microsoftSqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #region MySqlDbType
+
+            // Get the MySqlDbType value from MySqlDbTypeAttribute
+            var mysqlDbTypeTypeMapAttribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
+            if (mysqlDbTypeTypeMapAttribute != null)
+            {
+                var mySqlDbTypeValue = GetMySqlDbTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                var mySqlParameterType = GetMySqlParameterTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                var dbParameterMySqlDbTypeSetMethod = GetMySqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
+                var mySqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, mySqlParameterType),
+                    dbParameterMySqlDbTypeSetMethod,
+                    Expression.Constant(mySqlDbTypeValue));
+                parameterAssignments.Add(mySqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #region NpgsqlDbType
+
+            // Get the NpgsqlDbType value from NpgsqlTypeMapAttribute
+            var npgsqlDbTypeTypeMapAttribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
+            if (npgsqlDbTypeTypeMapAttribute != null)
+            {
+                var npgsqlDbTypeValue = GetNpgsqlDbTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                var npgsqlParameterType = GetNpgsqlParameterTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                var dbParameterNpgsqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(npgsqlDbTypeTypeMapAttribute);
+                var npgsqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, npgsqlParameterType),
+                    dbParameterNpgsqlDbTypeSetMethod,
+                    Expression.Constant(npgsqlDbTypeValue));
+                parameterAssignments.Add(npgsqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Direction
+
+            if (dbSetting.IsDirectionSupported)
+            {
+                // Set the Parameter Direction
+                var directionAssignment = Expression.Call(parameterVariable, Types.DbParameterDirectionSetMethod, Expression.Constant(direction));
+                parameterAssignments.Add(directionAssignment);
+            }
+
+            #endregion
+
+            #region Size
+
+            // Set only for non-image
+            // By default, SQL Server only put (16 size), and that would fail if the user
+            // used this type for their binary columns and assign a much longer values
+            //if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
+            //{
+            // Set the Size
+            if (dbField.Size != null)
+            {
+                var sizeAssignment = Expression.Call(parameterVariable, Types.DbParameterSizeSetMethod, Expression.Constant(dbField.Size.Value));
+                parameterAssignments.Add(sizeAssignment);
+            }
+            //}
+
+            #endregion
+
+            #region Precision
+
+            // Set the Precision
+            if (dbField.Precision != null)
+            {
+                var precisionAssignment = Expression.Call(parameterVariable, Types.DbParameterPrecisionSetMethod, Expression.Constant(dbField.Precision.Value));
+                parameterAssignments.Add(precisionAssignment);
+            }
+
+            #endregion
+
+            #region Scale
+
+            // Set the Scale
+            if (dbField.Scale != null)
+            {
+                var scaleAssignment = Expression.Call(parameterVariable, Types.DbParameterScaleSetMethod, Expression.Constant(dbField.Scale.Value));
+                parameterAssignments.Add(scaleAssignment);
+            }
+
+            #endregion
+
+            // Add the actual addition
+            parameterAssignments.Add(Expression.Call(dbParameterCollection, Types.DbParameterCollectionAddMethod, parameterVariable));
+
+            // Return the value
+            return Expression.Block(new[] { parameterVariable }, parameterAssignments);
+        }
+
+        private static Expression BuildParameterAssignmentExpression2<TEntity>
+        (
+            Expression instance,
+            Expression property,
+            DbField dbField,
+            ClassProperty classProperty,
+            bool skipValueAssignment,
+            ParameterDirection direction,
+            IDbSetting dbSetting,
+            ClientTypeToDbTypeResolver dbTypeResolver,
+            Expression commandParameterExpression,
+            Expression dbParameterCollection
+        ) where TEntity : class
+        {
+            // Parameters for the block
+            var typeOfEntity = typeof(TEntity);
+            var parameterAssignments = new List<Expression>();
+
+            // Parameter variables
+            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
+            var parameterVariable = Expression.Variable(Types.TypeOfDbParameter, string.Concat("parameter", parameterName));
+            var parameterInstance = Expression.Call(commandParameterExpression, Types.DbCommandCreateParameterMethod);
+            parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
+
+            // Set the name
+            var nameAssignment = Expression.Call(parameterVariable, Types.DbParameterParameterNameSetMethod, Expression.Constant(parameterName));
+            parameterAssignments.Add(nameAssignment);
+
+            // Property instance
+            var instanceProperty = (PropertyInfo)null;
+            var propertyType = (Type)null;
+            var fieldType = dbField.Type?.GetUnderlyingType();
+
+            //  Property handlers
+            var propertyMap = (EntityPropertyMap<TEntity>)BaseEntity<TEntity>.PropertyMap;
+            var converterMethod = (Delegate)((EntityPropertyConverter)propertyMap?.Find(classProperty.PropertyInfo))?.ToObject;
+
+            #region Value
+
+            // Set the value
+            if (skipValueAssignment == false)
+            {
+                // Set the value
+
+                // Check the proper type of the entity
+                if (typeOfEntity != Types.TypeOfObject && typeOfEntity.IsGenericType == false)
+                {
+                    instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                }
+
+                #region Instance.Property or PropertyInfo.GetValue()
+
+                // Set the value
+                Expression value;
+
+                // If the property is missing directly, then it could be a dynamic object
+                if (instanceProperty == null)
+                {
+                    value = Expression.Call(property, Types.PropertyInfoGetValueMethod, instance);
+                }
+                else
+                {
+                    propertyType = instanceProperty.PropertyType.GetUnderlyingType();
+
+                    if (converterMethod == null)
+                    {
+                        if (Converter.ConversionType == ConversionType.Automatic)
+                        {
+                            var valueToConvert = Expression.Property(instance, instanceProperty);
+
+                            #region StringToGuid
+
+                            // Create a new guid here
+                            if (propertyType == Types.TypeOfString && fieldType == Types.TypeOfGuid /* StringToGuid */)
+                            {
+                                value = Expression.New(Types.TypeOfGuid.GetConstructor(new[] { Types.TypeOfString }), new[] { valueToConvert });
+                            }
+
+                            #endregion
+
+                            #region GuidToString
+
+                            // Call the System.Convert conversion
+                            else if (propertyType == Types.TypeOfGuid && fieldType == Types.TypeOfString/* GuidToString*/)
+                            {
+                                var convertMethod = typeof(Convert).GetMethod("ToString", new[] { Types.TypeOfObject });
+                                value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, Types.TypeOfObject));
+                                value = Expression.Convert(value, fieldType);
+                            }
+
+                            #endregion
+
+                            else
+                            {
+                                value = valueToConvert;
+                            }
+                        }
+                        else
+                        {
+                            // Get the Class.Property
+                            value = Expression.Property(instance, instanceProperty);
+                        }
+
+                        #region EnumAsIntForString
+
+                        if (propertyType.IsEnum)
+                        {
+                            var convertToTypeMethod = (MethodInfo)null;
+                            if (convertToTypeMethod == null)
+                            {
+                                var mappedToType = classProperty?.GetDbType();
+                                if (mappedToType == null)
+                                {
+                                    mappedToType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+                                }
+                                if (mappedToType != null)
+                                {
+                                    convertToTypeMethod = Types.TypeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { Types.TypeOfObject });
+                                }
+                            }
+                            if (convertToTypeMethod == null)
+                            {
+                                convertToTypeMethod = Types.TypeOfConvert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { Types.TypeOfObject });
+                            }
+                            if (convertToTypeMethod == null)
+                            {
+                                throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
+                            }
+                            else
+                            {
+                                var convertMethod = typeof(EnumHelper).GetMethod("Convert");
+                                if (convertMethod != null)
+                                {
+                                    value = Expression.Call(convertMethod,
+                                        Expression.Constant(instanceProperty.PropertyType),
+                                        Expression.Constant(dbField.Type),
+                                        Expression.Convert(value, Types.TypeOfObject),
+                                        Expression.Constant(convertToTypeMethod));
+                                }
+                            }
+                        }
+
+                        #endregion
+                    }
+                    else
+                    {
+                        // Get the value directly from the property
+                        value = Expression.Property(instance, instanceProperty);
+                        value = Expression.Call(Expression.Constant(converterMethod.Target), converterMethod.Method, value);
+                    }
+
+                    // Convert to object
+                    value = Expression.Convert(value, Types.TypeOfObject);
+                }
+
+                // Declare the variable for the value assignment
+                Expression valueBlock;
+                var isNullable = dbField.IsNullable 
+                                 || instanceProperty == null 
+                                 || instanceProperty.PropertyType.IsValueType == false 
+                                 || Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null;
+
+                // The value for DBNull.Value
+                var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), Types.TypeOfObject);
+
+                // Check if the property is nullable
+                if (isNullable)
+                {
+                    // Identification of the DBNull
+                    var valueVariable = Expression.Variable(Types.TypeOfObject, string.Concat("valueOf", parameterName));
+                    var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
+
+                    // Set the property value
+                    valueBlock = Expression.Block(new[] { valueVariable },
+                        Expression.Assign(valueVariable, value),
+                        Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                }
+                else
+                {
+                    valueBlock = value;
+                }
+
+                // Add to the collection
+                var valueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod, valueBlock);
 
                 #endregion
 
@@ -1253,7 +1716,7 @@ namespace RepoDb.Reflection
             }
 
             // Get the class property
-            if (dbType == null && handlerInstance == null)
+            if (dbType == null && converterMethod == null)
             {
                 if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1904,5 +2367,458 @@ namespace RepoDb.Reflection
             // Return the value
             return Expression.Block(new[] { parameterVariable }, parameterAssignments);
         }
+
+        private static Expression BuildParameterAssignmentExpression2<TEntity>
+        (
+            int entityIndex,
+            Expression instance,
+            Expression property,
+            DbField dbField,
+            ClassProperty classProperty,
+            bool skipValueAssignment,
+            ParameterDirection direction,
+            IDbSetting dbSetting,
+            ClientTypeToDbTypeResolver dbTypeResolver,
+            Expression commandParameterExpression,
+            Expression dbParameterCollection
+        ) where TEntity : class
+        {
+            // Parameters for the block
+            var parameterAssignments = new List<Expression>();
+            var typeOfEntity = typeof(TEntity);
+
+            // Parameter variables
+            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
+            var parameterVariable = Expression.Variable(Types.TypeOfDbParameter, string.Concat("parameter", parameterName));
+            var parameterInstance = Expression.Call(commandParameterExpression, Types.DbCommandCreateParameterMethod);
+            parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
+
+            // Set the name
+            var nameAssignment = Expression.Call(parameterVariable, Types.DbParameterParameterNameSetMethod,
+                Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
+            parameterAssignments.Add(nameAssignment);
+
+            // Property instance
+            var instanceProperty = (PropertyInfo)null;
+            var propertyType = (Type)null;
+            var fieldType = dbField.Type?.GetUnderlyingType();
+
+            //  Property handlers
+            var propertyMap = (EntityPropertyMap<TEntity>)BaseEntity<TEntity>.PropertyMap;
+            var converterMethod = (Delegate)((EntityPropertyConverter)propertyMap?.Find(classProperty.PropertyInfo))?.ToObject;
+
+
+            #region Value
+
+            // Set the value
+            if (skipValueAssignment == false)
+            {
+                // Set the value
+                var valueAssignment = (Expression)null;
+
+                // Check the proper type of the entity
+                if (typeOfEntity != Types.TypeOfObject && typeOfEntity.IsGenericType == false)
+                {
+                    instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                }
+
+                #region Instance.Property or PropertyInfo.GetValue()
+
+                // Set the value
+                var value = (Expression)null;
+
+                // If the property is missing directly, then it could be a dynamic object
+                if (instanceProperty == null)
+                {
+                    value = Expression.Call(property, Types.PropertyInfoGetValueMethod, instance);
+                }
+                else
+                {
+                    propertyType = instanceProperty?.PropertyType.GetUnderlyingType();
+
+                    if (converterMethod == null)
+                    {
+                        if (Converter.ConversionType == ConversionType.Automatic)
+                        {
+                            var valueToConvert = Expression.Property(instance, instanceProperty);
+
+                            #region StringToGuid
+
+                            // Create a new guid here
+                            if (propertyType == Types.TypeOfString && fieldType == Types.TypeOfGuid /* StringToGuid */)
+                            {
+                                value = Expression.New(Types.TypeOfGuid.GetConstructor(new[] { Types.TypeOfString }), valueToConvert);
+                            }
+
+                            #endregion
+
+                            #region GuidToString
+
+                            // Call the System.Convert conversion
+                            else if (propertyType == Types.TypeOfGuid && fieldType == Types.TypeOfString/* GuidToString*/)
+                            {
+                                var convertMethod = typeof(Convert).GetMethod("ToString", new[] { Types.TypeOfObject });
+                                value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, Types.TypeOfObject));
+                                value = Expression.Convert(value, fieldType);
+                            }
+
+                            #endregion
+
+                            else
+                            {
+                                value = valueToConvert;
+                            }
+                        }
+                        else
+                        {
+                            // Get the Class.Property
+                            value = Expression.Property(instance, instanceProperty);
+                        }
+
+                        #region EnumAsIntForString
+
+                        if (propertyType.IsEnum)
+                        {
+                            var convertToTypeMethod = (MethodInfo)null;
+                            if (convertToTypeMethod == null)
+                            {
+                                var mappedToType = classProperty?.GetDbType();
+                                if (mappedToType == null)
+                                {
+                                    mappedToType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+                                }
+                                if (mappedToType != null)
+                                {
+                                    convertToTypeMethod = Types.TypeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { Types.TypeOfObject });
+                                }
+                            }
+                            if (convertToTypeMethod == null)
+                            {
+                                convertToTypeMethod = Types.TypeOfConvert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { Types.TypeOfObject });
+                            }
+                            if (convertToTypeMethod == null)
+                            {
+                                throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
+                            }
+                            else
+                            {
+                                var convertMethod = typeof(EnumHelper).GetMethod("Convert");
+                                if (convertMethod != null)
+                                {
+                                    value = Expression.Call(convertMethod,
+                                        Expression.Constant(instanceProperty.PropertyType),
+                                        Expression.Constant(dbField.Type),
+                                        Expression.Convert(value, Types.TypeOfObject),
+                                        Expression.Constant(convertToTypeMethod));
+                                }
+                            }
+                        }
+
+                        #endregion
+                    }
+                    else
+                    {
+                        // Get the value directly from the property
+                        value = Expression.Property(instance, instanceProperty);
+
+                        // Get the value directly from the property
+                        value = Expression.Property(instance, instanceProperty);
+                        value = Expression.Call(Expression.Constant(converterMethod.Target), converterMethod.Method, value);
+                    }
+
+                    // Convert to object
+                    value = Expression.Convert(value, Types.TypeOfObject);
+                }
+
+                // Declare the variable for the value assignment
+                var valueBlock = (Expression)null;
+                var isNullable = dbField.IsNullable == true ||
+                    instanceProperty == null ||
+                    (
+                        instanceProperty != null &&
+                        (
+                            instanceProperty.PropertyType.IsValueType == false ||
+                            Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null
+                        )
+                    );
+
+                // The value for DBNull.Value
+                var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), Types.TypeOfObject);
+
+                // Check if the property is nullable
+                if (isNullable == true)
+                {
+                    // Identification of the DBNull
+                    var valueVariable = Expression.Variable(Types.TypeOfObject, string.Concat("valueOf", parameterName));
+                    var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
+
+                    // Set the propert value
+                    valueBlock = Expression.Block(new[] { valueVariable },
+                        Expression.Assign(valueVariable, value),
+                        Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+                }
+                else
+                {
+                    valueBlock = value;
+                }
+
+                // Add to the collection
+                valueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod, valueBlock);
+
+                #endregion
+
+                // Check if it is a direct assignment or not
+                if (typeOfEntity != Types.TypeOfObject)
+                {
+                    parameterAssignments.Add(valueAssignment);
+                }
+                else
+                {
+                    var dbNullValueAssignment = (Expression)null;
+
+                    #region DBNull.Value
+
+                    // Set the default type value
+                    if (dbField.IsNullable == false && dbField.Type != null)
+                    {
+                        dbNullValueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod,
+                            Expression.Convert(Expression.Default(dbField.Type), Types.TypeOfObject));
+                    }
+
+                    // Set the DBNull value
+                    if (dbNullValueAssignment == null)
+                    {
+                        dbNullValueAssignment = Expression.Call(parameterVariable, Types.DbParameterValueSetMethod, dbNullValue);
+                    }
+
+                    #endregion
+
+                    // Check the presence of the property
+                    var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
+
+                    // Add to parameter assignment
+                    parameterAssignments.Add(Expression.Condition(propertyIsNull, dbNullValueAssignment, valueAssignment));
+                }
+            }
+
+            #endregion
+
+            #region DbType
+
+            #region DbType
+
+            // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
+            // It is actually me who file this issue to Microsoft :)
+            //if (fieldOrPropertyType != typeOfTimeSpan)
+            //{
+            // Identify the DB Type
+            var fieldOrPropertyType = (Type)null;
+            var dbType = (DbType?)null;
+
+            // Identify the conversion
+            if (Converter.ConversionType == ConversionType.Automatic)
+            {
+                // Identity the conversion
+                if (propertyType == Types.TypeOfDateTime && fieldType == Types.TypeOfString /* DateTimeToString */ ||
+                    propertyType == Types.TypeOfDecimal && (fieldType == Types.TypeOfFloat || fieldType == Types.TypeOfDouble) /* DecimalToFloat/DecimalToDouble */ ||
+                    propertyType == Types.TypeOfDouble && fieldType == Types.TypeOfLong /* DoubleToBigint */||
+                    propertyType == Types.TypeOfDouble && fieldType == Types.TypeOfInt /* DoubleToBigint */ ||
+                    propertyType == Types.TypeOfDouble && fieldType == Types.TypeOfShort /* DoubleToShort */||
+                    propertyType == Types.TypeOfFloat && fieldType == Types.TypeOfLong /* FloatToBigint */ ||
+                    propertyType == Types.TypeOfFloat && fieldType == Types.TypeOfShort /* FloatToShort */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfDateTime /* StringToDate */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfShort /* StringToShort */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfInt /* StringToInt */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfLong /* StringToLong */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfDouble /* StringToDouble */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfDecimal /* StringToDecimal */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfFloat /* StringToFloat */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfBoolean /* StringToBoolean */ ||
+                    propertyType == Types.TypeOfString && fieldType == Types.TypeOfGuid /* StringToGuid */ ||
+                    propertyType == Types.TypeOfGuid && fieldType == Types.TypeOfString /* GuidToString */)
+                {
+                    fieldOrPropertyType = fieldType;
+                }
+                else if (propertyType == Types.TypeOfGuid && fieldType == Types.TypeOfString /* UniqueIdentifierToString */)
+                {
+                    fieldOrPropertyType = propertyType;
+                }
+                if (fieldOrPropertyType != null)
+                {
+                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                }
+            }
+
+            // Get the class property
+            if (dbType == null && converterMethod == null)
+            {
+                if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
+                {
+                    dbType = classProperty?.GetDbType();
+                }
+            }
+
+            // Set to normal if null
+            if (fieldOrPropertyType == null)
+            {
+                fieldOrPropertyType = dbField.Type?.GetUnderlyingType() ?? instanceProperty?.PropertyType.GetUnderlyingType();
+            }
+
+            if (fieldOrPropertyType != null)
+            {
+                // Get the type mapping
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.Get(fieldOrPropertyType);
+                }
+
+                // Use the resolver
+                if (dbType == null)
+                {
+                    dbType = dbTypeResolver.Resolve(fieldOrPropertyType);
+                }
+            }
+
+            // Set the DB Type
+            if (dbType != null)
+            {
+                var dbTypeAssignment = Expression.Call(parameterVariable, Types.DbParameterDbTypeSetMethod, Expression.Constant(dbType));
+                parameterAssignments.Add(dbTypeAssignment);
+            }
+            //}
+
+            #endregion
+
+            #region SqlDbType (System)
+
+            // Get the SqlDbType value from SystemSqlServerTypeMapAttribute
+            var systemSqlServerTypeMapAttribute = GetSystemSqlServerTypeMapAttribute(classProperty);
+            if (systemSqlServerTypeMapAttribute != null)
+            {
+                var systemSqlDbTypeValue = GetSystemSqlServerDbTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                var systemSqlParameterType = GetSystemSqlServerParameterTypeFromAttribute(systemSqlServerTypeMapAttribute);
+                var dbParameterSystemSqlDbTypeSetMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(systemSqlServerTypeMapAttribute);
+                var systemSqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, systemSqlParameterType),
+                    dbParameterSystemSqlDbTypeSetMethod,
+                    Expression.Constant(systemSqlDbTypeValue));
+                parameterAssignments.Add(systemSqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #region SqlDbType (Microsoft)
+
+            // Get the SqlDbType value from MicrosoftSqlServerTypeMapAttribute
+            var microsoftSqlServerTypeMapAttribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
+            if (microsoftSqlServerTypeMapAttribute != null)
+            {
+                var microsoftSqlDbTypeValue = GetMicrosoftSqlServerDbTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                var microsoftSqlParameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(microsoftSqlServerTypeMapAttribute);
+                var dbParameterMicrosoftSqlDbTypeSetMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(microsoftSqlServerTypeMapAttribute);
+                var microsoftSqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, microsoftSqlParameterType),
+                    dbParameterMicrosoftSqlDbTypeSetMethod,
+                    Expression.Constant(microsoftSqlDbTypeValue));
+                parameterAssignments.Add(microsoftSqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #region MySqlDbType
+
+            // Get the MySqlDbType value from MySqlDbTypeAttribute
+            var mysqlDbTypeTypeMapAttribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
+            if (mysqlDbTypeTypeMapAttribute != null)
+            {
+                var mySqlDbTypeValue = GetMySqlDbTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                var mySqlParameterType = GetMySqlParameterTypeFromAttribute(mysqlDbTypeTypeMapAttribute);
+                var dbParameterMySqlDbTypeSetMethod = GetMySqlDbTypeFromAttributeSetMethod(mysqlDbTypeTypeMapAttribute);
+                var mySqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, mySqlParameterType),
+                    dbParameterMySqlDbTypeSetMethod,
+                    Expression.Constant(mySqlDbTypeValue));
+                parameterAssignments.Add(mySqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #region NpgsqlDbType
+
+            // Get the NpgsqlDbType value from NpgsqlTypeMapAttribute
+            var npgsqlDbTypeTypeMapAttribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
+            if (npgsqlDbTypeTypeMapAttribute != null)
+            {
+                var npgsqlDbTypeValue = GetNpgsqlDbTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                var npgsqlParameterType = GetNpgsqlParameterTypeFromAttribute(npgsqlDbTypeTypeMapAttribute);
+                var dbParameterNpgsqlDbTypeSetMethod = GetNpgsqlDbTypeFromAttributeSetMethod(npgsqlDbTypeTypeMapAttribute);
+                var npgsqlDbTypeAssignment = Expression.Call(
+                    Expression.Convert(parameterVariable, npgsqlParameterType),
+                    dbParameterNpgsqlDbTypeSetMethod,
+                    Expression.Constant(npgsqlDbTypeValue));
+                parameterAssignments.Add(npgsqlDbTypeAssignment);
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Direction
+
+            if (dbSetting.IsDirectionSupported)
+            {
+                // Set the Parameter Direction
+                var directionAssignment = Expression.Call(parameterVariable, Types.DbParameterDirectionSetMethod, Expression.Constant(direction));
+                parameterAssignments.Add(directionAssignment);
+            }
+
+            #endregion
+
+            #region Size
+
+            // Set only for non-image
+            // By default, SQL Server only put (16 size), and that would fail if the user
+            // used this type for their binary columns and assign a much longer values
+            //if (!string.Equals(field.DatabaseType, "image", StringComparison.OrdinalIgnoreCase))
+            //{
+            // Set the Size
+            if (dbField.Size != null)
+            {
+                var sizeAssignment = Expression.Call(parameterVariable, Types.DbParameterSizeSetMethod, Expression.Constant(dbField.Size.Value));
+                parameterAssignments.Add(sizeAssignment);
+            }
+            //}
+
+            #endregion
+
+            #region Precision
+
+            // Set the Precision
+            if (dbField.Precision != null)
+            {
+                var precisionAssignment = Expression.Call(parameterVariable, Types.DbParameterPrecisionSetMethod, Expression.Constant(dbField.Precision.Value));
+                parameterAssignments.Add(precisionAssignment);
+            }
+
+            #endregion
+
+            #region Scale
+
+            // Set the Scale
+            if (dbField.Scale != null)
+            {
+                var scaleAssignment = Expression.Call(parameterVariable, Types.DbParameterScaleSetMethod, Expression.Constant(dbField.Scale.Value));
+                parameterAssignments.Add(scaleAssignment);
+            }
+
+            #endregion
+
+            // Add the actual addition
+            parameterAssignments.Add(Expression.Call(dbParameterCollection, Types.DbParameterCollectionAddMethod, parameterVariable));
+
+            // Return the value
+            return Expression.Block(new[] { parameterVariable }, parameterAssignments);
+        }
+
     }
 }

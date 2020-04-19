@@ -9,14 +9,14 @@ namespace RepoDb.Entity
     /// 
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public abstract class EntityBase<TEntity> where TEntity : class
+    public abstract class BaseEntity<TEntity> where TEntity : class
     {
         /// <summary>
         /// 
         /// </summary>
         public static readonly IPropertyMap<TEntity> PropertyMap = new EntityPropertyMap<TEntity>();
 
-        static EntityBase()
+        static BaseEntity()
         {
             typeof(TEntity).GetProperties().ForEach(x => PropertyMap.Map(x));
         }

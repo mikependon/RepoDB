@@ -123,7 +123,7 @@ namespace RepoDb.Reflection
                 });
 
             // Get the member assignments
-            var memberAssignments = typeof(TEntity).IsSubclassOf(typeof(EntityBase<TEntity>))
+            var memberAssignments = typeof(TEntity).IsSubclassOf(typeof(BaseEntity<TEntity>))
                 ? GetMemberAssignmentsForDataEntity2<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection)
                 : GetMemberAssignmentsForDataEntity<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection);
 
@@ -580,7 +580,7 @@ namespace RepoDb.Reflection
                     var readerField = dataReaderFields.First(f => string.Equals(f.Name.AsUnquoted(true, dbSetting), mappedName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     var propertyType = classProperty.PropertyInfo.PropertyType;
                     var underlyingType = Nullable.GetUnderlyingType(propertyType);
-                    var propertyMap = (EntityPropertyMap<TEntity>)EntityBase<TEntity>.PropertyMap;
+                    var propertyMap = (EntityPropertyMap<TEntity>)BaseEntity<TEntity>.PropertyMap;
                     var converterMethod = (Delegate)((EntityPropertyConverter)propertyMap?.Find(classProperty.PropertyInfo))?.ToProperty;
                     var parameters = converterMethod?.Method.GetParameters();
                     var targetType = parameters?[0].ParameterType ?? underlyingType ?? propertyType;
