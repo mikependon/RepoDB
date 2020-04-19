@@ -220,7 +220,7 @@ namespace RepoDb
                 }
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntityDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, dbSetting);
+                    func = FunctionFactory2.GetDataEntityDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, dbSetting);
                     m_cache.TryAdd(key, func);
                 }
                 return func;
@@ -284,7 +284,7 @@ namespace RepoDb
                 var func = (Action<DbCommand, IList<TEntity>>)null;
                 if (m_cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize, dbSetting);
+                    func = FunctionFactory2.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize, dbSetting);
                     m_cache.TryAdd(key, func);
                 }
                 return func;
