@@ -3,6 +3,7 @@ using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Setup;
 using System;
+using System.Globalization;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using RepoDb.Entity;
@@ -401,6 +402,7 @@ namespace RepoDb.IntegrationTests
             public StringToDateClass()
             {
                 Map(p => p.ColumnDate).Convert<DateTime, string>(o => o.ToString("M'/'d'/'yyyy h:mm:ss tt"));
+                Map(p => p.ColumnDate).Convert<string>(o => DateTime.Parse(o, CultureInfo.InvariantCulture));
             }
         }
 
@@ -441,6 +443,7 @@ namespace RepoDb.IntegrationTests
             public StringToDateTimeClass()
             {
                 Map(p => p.ColumnDateTime).Convert<DateTime, string>(o => o.ToString("M'/'d'/'yyyy h:mm:ss tt"));
+                Map(p => p.ColumnDateTime).Convert<string>(o => DateTime.Parse(o, CultureInfo.InvariantCulture));
             }
         }
 
@@ -481,6 +484,7 @@ namespace RepoDb.IntegrationTests
             public StringToDateTime2Class()
             {
                 Map(p => p.ColumnDateTime2).Convert<DateTime, string>(o => o.ToString("M'/'d'/'yyyy h:mm:ss tt"));
+                Map(p => p.ColumnDateTime2).Convert<string>(o => DateTime.Parse(o, CultureInfo.InvariantCulture));
             }
         }
 
