@@ -99,21 +99,10 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(2) ? false : reader.GetBoolean(2),
                 reader.IsDBNull(3) ? false : reader.GetBoolean(3),
                 reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
-                reader.IsDBNull(5) ? 0 : GetConvertedSize(reader.GetString(4), reader.GetInt32(5)),
+                reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
                 reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
                 reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
                 reader.IsDBNull(7) ? "text" : reader.GetString(4));
-        }
-
-        /// <summary>
-        /// Gets the converted size of the column specially for the 'N' types.
-        /// </summary>
-        /// <param name="type">The type of the column.</param>
-        /// <param name="size">The current size.</param>
-        /// <returns>The converted size of the column.</returns>
-        private int? GetConvertedSize(string type, int size)
-        {
-            return (size == -1) ? 8000 : size;
         }
 
         /// <summary>
