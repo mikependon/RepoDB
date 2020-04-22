@@ -15,25 +15,26 @@ namespace RepoDb
         #region GetEntitiesPropertyValues
 
         /// <summary>
-        /// Gets the values of the property of the data entities. The comparisson will be based on the mappings.
+        /// Gets the values of the property of the data entities (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entities.</typeparam>
         /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
         /// <param name="entities">The list of the data entities.</param>
-        /// <param name="dbField">The name of the target property defined as <see cref="DbField"/>.</param>
+        /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The values of the property of the data entities.</returns>
         public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
-            DbField dbField)
+            Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
-            var property = PropertyCache.Get<TEntity>()
-                .Where(e => string.Equals(e.GetMappedName(), dbField.Name))
+            var property = ExpressionExtension.GetProperty<TEntity>(expression);
+            var propertyCache = PropertyCache.Get<TEntity>()
+                .Where(p => p.PropertyInfo == property || string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
-            return GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+            return GetEntitiesPropertyValues<TEntity, TResult>(entities, propertyCache);
         }
 
         /// <summary>
-        /// Gets the values of the property of the data entities.
+        /// Gets the values of the property of the data entities (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entities.</typeparam>
         /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
@@ -44,14 +45,14 @@ namespace RepoDb
             Field field)
             where TEntity : class
         {
-            var property = PropertyCache.Get<TEntity>()
-                .Where(e => string.Equals(e.PropertyInfo.Name, field.Name))
+            var classProperty = PropertyCache.Get<TEntity>()
+                .Where(p => string.Equals(p.PropertyInfo.Name, field.Name, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
-            return GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+            return GetEntitiesPropertyValues<TEntity, TResult>(entities, classProperty);
         }
 
         /// <summary>
-        /// Gets the values of the property of the data entities.
+        /// Gets the values of the property of the data entities (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entities.</typeparam>
         /// <typeparam name="TResult">The result type of the extracted property.</typeparam>
@@ -62,10 +63,10 @@ namespace RepoDb
             string propertyName)
             where TEntity : class
         {
-            var property = PropertyCache.Get<TEntity>()
-                .Where(e => string.Equals(e.PropertyInfo.Name, propertyName))
+            var classProperty = PropertyCache.Get<TEntity>()
+                .Where(p => string.Equals(p.PropertyInfo.Name, propertyName, StringComparison.OrdinalIgnoreCase))
                 .FirstOrDefault();
-            return GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+            return GetEntitiesPropertyValues<TEntity, TResult>(entities, classProperty);
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities.</param>
         /// <param name="property">The target property.</param>
         /// <returns>The values of the property of the data entities.</returns>
-        public static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+        internal static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
             where TEntity : class
         {

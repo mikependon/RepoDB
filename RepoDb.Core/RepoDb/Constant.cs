@@ -8,7 +8,7 @@
         /// <summary>
         /// The default value of the batch operation size.
         /// </summary>
-        public const int DefaultBatchOperationSize = 30;
+        public const int DefaultBatchOperationSize = 10;
 
         /// <summary>
         /// The default value of the cache expiration in minutes.

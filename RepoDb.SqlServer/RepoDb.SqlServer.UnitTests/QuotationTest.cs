@@ -16,6 +16,19 @@ namespace RepoDb.SqlServer.UnitTests
         #region AsQuoted
 
         [TestMethod]
+        public void TestSqlServerQuotationForQuoted()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqlConnection>();
+
+            // Act
+            var result = "Field".AsQuoted(true, setting);
+
+            // Assert
+            Assert.AreEqual("[Field]", result);
+        }
+
+        [TestMethod]
         public void TestSqlServerQuotationForQuotedAndTrimmed()
         {
             // Setup
@@ -83,6 +96,19 @@ namespace RepoDb.SqlServer.UnitTests
         #endregion
 
         #region AsUnquoted
+
+        [TestMethod]
+        public void TestSqlServerQuotationForUnquoted()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<SqlConnection>();
+
+            // Act
+            var result = "[Field]".AsUnquoted(true, setting);
+
+            // Assert
+            Assert.AreEqual("Field", result);
+        }
 
         [TestMethod]
         public void TestSqlServerQuotationForUnquotedAndTrimmed()

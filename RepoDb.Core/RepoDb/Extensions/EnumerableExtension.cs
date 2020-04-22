@@ -44,19 +44,21 @@ namespace RepoDb.Extensions
             var itemCount = value.Count();
             if (itemCount <= sizePerSplit)
             {
-                yield return value;
+                return new[] { value };
             }
             else
             {
-                var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + (itemCount % sizePerSplit);
+                var batchCount = Convert.ToInt32(itemCount / sizePerSplit) + ((itemCount % sizePerSplit) != 0 ? 1 : 0);
+                var array = new IEnumerable<T>[batchCount];
                 for (var i = 0; i < batchCount; i++)
                 {
-                    yield return Enumerable.Where(value, (item, index) =>
+                    array[i] = Enumerable.Where(value, (item, index) =>
                     {
                         return index >= (sizePerSplit * i) &&
                             index < (sizePerSplit * i) + sizePerSplit;
-                    });
+                    }).AsList();
                 }
+                return array;
             }
         }
 

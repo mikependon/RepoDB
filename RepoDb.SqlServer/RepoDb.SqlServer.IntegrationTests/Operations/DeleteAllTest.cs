@@ -42,6 +42,40 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAll<CompleteTable>(primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllViaPrimaryKeysBeyondLimits()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(5000);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAll<CompleteTable>(primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
         #endregion
 
         #region Async
@@ -56,6 +90,40 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.DeleteAllAsync<CompleteTable>().Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllAsyncViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(5000);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -86,6 +154,40 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllViaTableNameViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllViaTableNameViaPrimaryKeysBeyondLimits()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(5000);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
         #endregion
 
         #region Async
@@ -100,6 +202,40 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(10);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlServerConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
+        {
+            // Setup
+            var tables = Database.CreateCompleteTables(5000);
+            var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
+
+            using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
+            {
+                // Act
+                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

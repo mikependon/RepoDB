@@ -26,43 +26,43 @@ namespace RepoDb
         /// Adds a mapping between a data entity and the database object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="objectName">The name of the database object (ie: Table, View).</param>
-        public static void Add<TEntity>(string objectName)
+        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
+        public static void Add<TEntity>(string databaseObjectName)
             where TEntity : class =>
-            Add(typeof(TEntity), objectName);
+            Add(typeof(TEntity), databaseObjectName);
 
         /// <summary>
         /// Adds a mapping between a data entity and the database object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="objectName">The name of the database object (ie: Table, View).</param>
+        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(string objectName,
+        public static void Add<TEntity>(string databaseObjectName,
             bool force)
             where TEntity : class =>
-            Add(typeof(TEntity), objectName, force);
+            Add(typeof(TEntity), databaseObjectName, force);
 
         /// <summary>
         /// Adds a mapping between a data entity and the database object.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="objectName">The name of the database object (ie: Table, View).</param>
+        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
         public static void Add(Type entityType,
-            string objectName) =>
-            Add(entityType, objectName, false);
+            string databaseObjectName) =>
+            Add(entityType, databaseObjectName, false);
 
         /// <summary>
         /// Adds a mapping between a data entity and the database object.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="objectName">The name of the database object (ie: Table, View).</param>
+        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(Type entityType,
-            string objectName,
+            string databaseObjectName,
             bool force)
         {
             // Validate
-            Validate(objectName);
+            Validate(databaseObjectName);
 
             // Variables
             var key = entityType.FullName.GetHashCode();
@@ -74,7 +74,7 @@ namespace RepoDb
                 if (force)
                 {
                     // Update the existing one
-                    m_maps.TryUpdate(key, objectName, value);
+                    m_maps.TryUpdate(key, databaseObjectName, value);
                 }
                 else
                 {
@@ -85,7 +85,7 @@ namespace RepoDb
             else
             {
                 // Add the mapping
-                m_maps.TryAdd(key, objectName);
+                m_maps.TryAdd(key, databaseObjectName);
             }
         }
 
@@ -163,10 +163,10 @@ namespace RepoDb
         /// <summary>
         /// Validates the database object name that is being passed.
         /// </summary>
-        /// <param name="objectName">The target database object name.</param>
-        private static void Validate(string objectName)
+        /// <param name="databaseObjectName">The target database object name.</param>
+        private static void Validate(string databaseObjectName)
         {
-            if (string.IsNullOrEmpty(objectName?.Trim()))
+            if (string.IsNullOrEmpty(databaseObjectName?.Trim()))
             {
                 throw new NullReferenceException("The database object name cannot be null.");
             }
