@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Linq.Expressions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {

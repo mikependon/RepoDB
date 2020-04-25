@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 { 
@@ -18,10 +19,10 @@ namespace RepoDb
             return this;
         }
         
-        protected IIdOptions<T> Id(Expression<Func<T, object>> expression)
+        protected IIdentityOptions<T> Id(Expression<Func<T, object>> expression)
         {
             IdentityMapper.Add<T>(expression);
-            return new IdOptions<T>(expression);
+            return new IdentityOptions<T>(expression);
         }
 
         protected IPrimaryOptions<T> Primary(Expression<Func<T, object>> expression)

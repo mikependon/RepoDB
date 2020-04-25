@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace RepoDb
+namespace RepoDb.Interfaces
 {
     public interface IPrimaryOptions<T> where T : class
     {
