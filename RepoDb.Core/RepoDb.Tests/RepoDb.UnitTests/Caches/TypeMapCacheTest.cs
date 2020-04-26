@@ -3,7 +3,7 @@ using RepoDb.Attributes;
 using System.Data;
 using System.Linq;
 
-namespace RepoDb.UnitTests.Others
+namespace RepoDb.UnitTests.Caches
 {
     [TestClass]
     public partial class TypeMapCacheTest

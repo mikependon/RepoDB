@@ -3,7 +3,7 @@ using RepoDb.Attributes;
 using RepoDb.Exceptions;
 using System;
 
-namespace RepoDb.UnitTests.Others
+namespace RepoDb.UnitTests.Mappers
 {
     [TestClass]
     public partial class ClassMapperTest
