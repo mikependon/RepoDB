@@ -19,7 +19,7 @@ namespace RepoDb
             return this;
         }
         
-        protected IIdentityOptions<T> Id(Expression<Func<T, object>> expression)
+        protected IIdentityOptions<T> Identity(Expression<Func<T, object>> expression)
         {
             IdentityMapper.Add<T>(expression);
             return new IdentityOptions<T>(expression);
@@ -31,7 +31,7 @@ namespace RepoDb
             return new PrimaryOptions<T>(expression);
         }
 
-        protected IPropertyOptions<T> Map(Expression<Func<T, object>> expression)
+        protected IPropertyOptions<T> Property(Expression<Func<T, object>> expression)
         {
             return new PropertyOptions<T>(expression);
         }
