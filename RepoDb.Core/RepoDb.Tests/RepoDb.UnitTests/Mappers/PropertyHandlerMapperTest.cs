@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace RepoDb.UnitTests.Others
+namespace RepoDb.UnitTests.Mappers
 {
     [TestClass]
     public partial class PropertyHandlerMapperTest

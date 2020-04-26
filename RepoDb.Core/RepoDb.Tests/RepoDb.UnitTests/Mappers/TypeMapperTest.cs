@@ -4,7 +4,7 @@ using RepoDb.Exceptions;
 using System;
 using System.Data;
 
-namespace RepoDb.UnitTests.Others
+namespace RepoDb.UnitTests.Mappers
 {
     [TestClass]
     public partial class TypeMapperTest

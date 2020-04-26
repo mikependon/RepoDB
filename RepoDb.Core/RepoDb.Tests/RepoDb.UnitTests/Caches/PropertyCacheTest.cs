@@ -2,7 +2,7 @@
 using RepoDb.Attributes;
 using System.Linq;
 
-namespace RepoDb.UnitTests.Others
+namespace RepoDb.UnitTests.Caches
 {
     [TestClass]
     public class PropertyCacheTest
