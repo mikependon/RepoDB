@@ -5,31 +5,80 @@ using RepoDb.Interfaces;
 
 namespace RepoDb
 {
-    public class PropertyOptions<T> : IPropertyOptions<T> where T : class
+    internal class PropertyOptions<T> : IPropertyOptions<T>
+        where T : class
     {
+        #region Privates
+
         private readonly Expression<Func<T, object>> m_expression;
+
+        #endregion
 
         public PropertyOptions(Expression<Func<T, object>> expression)
         {
             m_expression = expression;
         }
-        
+
+        #region Methods
+
+        /*
+         * Column
+         */
+
         public IPropertyOptions<T> Column(string column)
         {
-            PropertyMapper.Add<T>(m_expression, column);
-            return this;
+            return Column(column, false);
         }
-        
-        public IPropertyOptions<T> DbType(DbType dbType)
+
+        public IPropertyOptions<T> Column(string column,
+            bool force)
         {
-            TypeMapper.Add<T>(m_expression, dbType);
+            PropertyMapper.Add<T>(m_expression, column, force);
             return this;
         }
 
-        public IPropertyOptions<T> PropertyHandler<THandler>(THandler propertyHandler)
+        /*
+         * DbType
+         */
+
+        public IPropertyOptions<T> DbType(DbType dbType)
+        {
+            return DbType(dbType, false);
+        }
+
+        public IPropertyOptions<T> DbType(DbType dbType,
+            bool force)
+        {
+            TypeMapper.Add<T>(m_expression, dbType, force);
+            return this;
+        }
+
+        /*
+         * PropertyHandler
+         */
+
+        public IPropertyOptions<T> PropertyHandler<TPropertyHandler>()
+        {
+            return PropertyHandler<TPropertyHandler>(false);
+        }
+
+        public IPropertyOptions<T> PropertyHandler<TPropertyHandler>(bool force)
+        {
+            return PropertyHandler<TPropertyHandler>(Activator.CreateInstance<TPropertyHandler>(), force);
+        }
+
+        public IPropertyOptions<T> PropertyHandler<TPropertyHandler>(TPropertyHandler propertyHandler)
+        {
+            return PropertyHandler<TPropertyHandler>(propertyHandler, false);
+        }
+
+        public IPropertyOptions<T> PropertyHandler<TPropertyHandler>(TPropertyHandler propertyHandler,
+            bool force)
         {
             PropertyHandlerMapper.Add(m_expression, propertyHandler);
             return this;
         }
+
+        #endregion
     }
 }
