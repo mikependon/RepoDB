@@ -5,16 +5,24 @@ using RepoDb.Interfaces;
 
 namespace RepoDb
 {
-    internal class PrimaryOptions<T> : IPrimaryOptions<T>
-        where T : class
+    /// <summary>
+    /// A class that implements the primary mapping options.
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+    internal class PrimaryOptions<TEntity> : IPrimaryOptions<TEntity>
+        where TEntity : class
     {
         #region Privates
 
-        private readonly Expression<Func<T, object>> m_expression;
+        private readonly Expression<Func<TEntity, object>> m_expression;
 
         #endregion
 
-        public PrimaryOptions(Expression<Func<T, object>> expression)
+        /// <summary>
+        /// Creates a new instance of <see cref="PrimaryOptions{TEntity}"/> class.
+        /// </summary>
+        /// <param name="expression">The expression that defines the primary property.</param>
+        public PrimaryOptions(Expression<Func<TEntity, object>> expression)
         {
             m_expression = expression;
         }
@@ -25,15 +33,26 @@ namespace RepoDb
          * Column
          */
 
-        public IPrimaryOptions<T> Column(string column)
+        /// <summary>
+        /// Maps the equivalent database column of the current primary property.
+        /// </summary>
+        /// <param name="column">The name of the database column.</param>
+        /// <returns>The current instance.</returns>
+        public IPrimaryOptions<TEntity> Column(string column)
         {
             return Column(column, false);
         }
 
-        public IPrimaryOptions<T> Column(string column,
+        /// <summary>
+        /// Maps the equivalent database column of the current primary property.
+        /// </summary>
+        /// <param name="column">The name of the database column.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <returns>The current instance.</returns>
+        public IPrimaryOptions<TEntity> Column(string column,
             bool force)
         {
-            PropertyMapper.Add<T>(m_expression, column, force);
+            PropertyMapper.Add<TEntity>(m_expression, column, force);
             return this;
         }
 
@@ -41,15 +60,26 @@ namespace RepoDb
          * DbType
          */
 
-        public IPrimaryOptions<T> DbType(DbType dbType)
+        /// <summary>
+        /// Maps the equivalent database type of the current primary property.
+        /// </summary>
+        /// <param name="dbType">The target database type.</param>
+        /// <returns>The current instance.</returns>
+        public IPrimaryOptions<TEntity> DbType(DbType dbType)
         {
             return DbType(dbType, false);
         }
 
-        public IPrimaryOptions<T> DbType(DbType dbType,
+        /// <summary>
+        /// Maps the equivalent database type of the current primary property.
+        /// </summary>
+        /// <param name="dbType">The target database type.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <returns>The current instance.</returns>
+        public IPrimaryOptions<TEntity> DbType(DbType dbType,
             bool force)
         {
-            TypeMapper.Add<T>(m_expression, dbType, force);
+            TypeMapper.Add<TEntity>(m_expression, dbType, force);
             return this;
         }
 
