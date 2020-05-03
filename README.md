@@ -75,7 +75,6 @@ Or, learn the specific feature.
 - [Connection Persistency](http://repodb.net/feature/connectionpersistency)
 - [Enumeration](http://repodb.net/feature/enumeration)
 - [Expression Trees](http://repodb.net/feature/expressiontrees)
-- [Field/Class Mapping](http://repodb.net/feature/fieldclassmapping)
 - [Hints](http://repodb.net/feature/hints)
 - [Implicit Mapping](http://repodb.net/feature/implicitmapping)
 - [Multiple Query](http://repodb.net/feature/multiplequery)
