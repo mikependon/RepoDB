@@ -61,6 +61,8 @@ namespace RepoDb.DbHelpers
                 , DATA_TYPE AS DatabaseType
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE
+				TABLE_SCHEMA = @TableSchema
+			AND
 	            TABLE_NAME = @TableName
             ORDER BY ORDINAL_POSITION;";
         }
@@ -171,6 +173,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new
             {
+				TableSchema = connection.Database,
                 TableName = GetTableName(tableName)
             };
 
