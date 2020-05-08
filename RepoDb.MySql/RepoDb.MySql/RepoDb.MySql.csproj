@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="MySql.Data" Version="8.0.20" />
     <PackageReference Include="RepoDb" Version="1.10.11" />
   </ItemGroup>
 
