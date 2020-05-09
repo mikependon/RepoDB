@@ -51,7 +51,7 @@ namespace RepoDb.DbHelpers
         private string GetCommandText()
         {
             return $@"SELECT COLUMN_NAME AS ColumnName
-	            , CASE WHEN COLUMN_KEY = 'PRI' THEN 1 ELSE 0 END AS IsPrimary
+                , CASE WHEN COLUMN_KEY = 'PRI' THEN 1 ELSE 0 END AS IsPrimary
                 , CASE WHEN EXTRA LIKE '%auto_increment%' THEN 1 ELSE 0 END AS IsIdentity
                 , CASE WHEN IS_NULLABLE = 'YES' THEN 1 ELSE 0 END AS IsNullable
                 , DATA_TYPE AS ColumnType /*COLUMN_TYPE AS ColumnType*/
@@ -61,7 +61,9 @@ namespace RepoDb.DbHelpers
                 , DATA_TYPE AS DatabaseType
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE
-	            TABLE_NAME = @TableName
+                TABLE_SCHEMA = @TableSchema
+            AND
+                TABLE_NAME = @TableName
             ORDER BY ORDINAL_POSITION;";
         }
 
@@ -171,6 +173,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new
             {
+                TableSchema = connection.Database,
                 TableName = GetTableName(tableName)
             };
 
