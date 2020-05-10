@@ -80,14 +80,6 @@
             <param name="reader">The instance of <see cref="T:System.Data.IDataReader"/> object.</param>
             <returns>The instance of converted <see cref="T:RepoDb.DbField"/> object.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetConvertedSize(System.String,System.Int32)">
-            <summary>
-            Gets the converted size of the column specially for the 'N' types.
-            </summary>
-            <param name="type">The type of the column.</param>
-            <param name="size">The current size.</param>
-            <returns>The converted size of the column.</returns>
-        </member>
         <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetSchema(System.String,RepoDb.Interfaces.IDbSetting)">
             <summary>
             Gets the actual schema of the table from the database.
