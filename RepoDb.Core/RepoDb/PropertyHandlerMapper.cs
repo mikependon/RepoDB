@@ -28,19 +28,19 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Type Level: Adds a mapping between the .NET CLR Type and a property handler. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
-        /// <typeparam name="TType">The .NET CLR type.</typeparam>
+        /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TType, TPropertyHandler>(bool force = false) =>
             Add(typeof(TType), Activator.CreateInstance<TPropertyHandler>(), force);
 
         /// <summary>
-        /// Type Level: Adds a mapping between the .NET CLR Type and a property handler.
+        /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
         /// </summary>
-        /// <typeparam name="TType">The .NET CLR type.</typeparam>
+        /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -49,9 +49,9 @@ namespace RepoDb
             Add(typeof(TType), propertyHandler, force);
 
         /// <summary>
-        /// Type Level: Adds a mapping between the .NET CLR Type and a property handler.
+        /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type.</param>
+        /// <param name="type">The target .NET CLR type.</param>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add(Type type,
@@ -92,20 +92,20 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Type Level: Gets the mapped property handler for .NET CLR Type.
+        /// Type Level: Gets the mapped property handler of the .NET CLR type.
         /// </summary>
-        /// <typeparam name="TType">The .NET CLR type.</typeparam>
+        /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
-        /// <returns>An instance of mapped property handler for .NET CLR Type.</returns>
+        /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
         public static TPropertyHandler Get<TType, TPropertyHandler>() =>
             Get<TPropertyHandler>(typeof(TType));
 
         /// <summary>
-        /// Type Level: Gets the mapped property handler for .NET CLR Type.
+        /// Type Level: Gets the mapped property handler of the .NET CLR type.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
-        /// <param name="type">The .NET CLR type.</param>
-        /// <returns>An instance of mapped property handler for .NET CLR Type.</returns>
+        /// <param name="type">The target .NET CLR type.</param>
+        /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
         public static TPropertyHandler Get<TPropertyHandler>(Type type)
         {
             // Check the presence
@@ -132,16 +132,16 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Type Level: Removes an existing property handler mapping.
+        /// Type Level: Removes the existing mapped property handler of the .NET CLR type.
         /// </summary>
-        /// <typeparam name="T">The .NET CLR type.</typeparam>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
         public static void Remove<T>() =>
             Remove(typeof(T));
 
         /// <summary>
-        /// Type Level: Removes an existing property handler mapping.
+        /// Type Level: Removes the existing mapped property handler of the .NET CLR type.
         /// </summary>
-        /// <param name="type">The .NET CLR Type.</param>
+        /// <param name="type">The target .NET CLR type.</param>
         public static void Remove(Type type)
         {
             // Check the presence
@@ -164,7 +164,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via expression). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a data entity type property (via expression). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -175,7 +175,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(expression, Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via expression).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -187,7 +187,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(expression, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via expression). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a data entity type property (via expression). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -200,7 +200,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(expression, Activator.CreateInstance<TPropertyHandler>(), force);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via expression).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -214,7 +214,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression), propertyHandler, force);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via property name). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a data entity type property (via property name). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
@@ -225,7 +225,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(propertyName, Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via property name).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -237,7 +237,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(propertyName, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via property name). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a data entity type property (via property name). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
@@ -250,7 +250,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(propertyName, Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via property name).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -277,7 +277,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via <see cref="Field"/> object). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
@@ -288,7 +288,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(field, Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via <see cref="Field"/> object).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -300,7 +300,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(field, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via <see cref="Field"/> object). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object). It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
@@ -313,7 +313,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(field, Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via <see cref="Field"/> object).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -340,7 +340,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Property Level: Adds a property handler into a <see cref="PropertyInfo"/> object. It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Property Level: Adds a property handler mapping into a <see cref="PropertyInfo"/> object. It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
         /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
@@ -351,7 +351,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(propertyInfo, Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
-        /// Property Level: Adds a property handler into a <see cref="PropertyInfo"/> object.
+        /// Property Level: Adds a property handler mapping into a <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -363,7 +363,7 @@ namespace RepoDb
             Add<TEntity, TPropertyHandler>(propertyInfo, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler into a <see cref="PropertyInfo"/> object.
+        /// Property Level: Adds a property handler mapping into a <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -378,7 +378,7 @@ namespace RepoDb
 
 
         /// <summary>
-        /// Property Level: Adds a property handler into a <see cref="PropertyInfo"/> object.
+        /// Property Level: Adds a property handler mapping into a <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="entityType">The target .NET CLR type.</param>
@@ -424,7 +424,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Property Level: Gets the mapped property handler of the class property (via expression).
+        /// Property Level: Gets the mapped property handler object of the data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -435,7 +435,7 @@ namespace RepoDb
             Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Property Level: Gets the mapped property handler of the class property (via property name).
+        /// Property Level: Gets the mapped property handler object of the data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -446,7 +446,7 @@ namespace RepoDb
             Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
-        /// Property Level: Gets the mapped property handler of the class property (via <see cref="Field"/> object).
+        /// Property Level: Gets the mapped property handler object of the data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -500,7 +500,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Property Level: Removes a mapped property handler from a class property (via expression).
+        /// Property Level: Removes the existing mapped property handler from a data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -509,7 +509,7 @@ namespace RepoDb
             Remove<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Property Level: Removes a mapped property handler from a class property (via property name).
+        /// Property Level: Removes the existing mapped property handler from a data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
@@ -531,7 +531,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Property Level: Removes a mapped property handler from a class property (via <see cref="Field"/> object).
+        /// Property Level: Removes the existing mapped property handler from a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>

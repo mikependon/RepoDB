@@ -17,9 +17,9 @@ namespace RepoDb.Resolvers
          */
 
         /// <summary>
-        /// Returns the equivalent <see cref="DbType"/> of the target .NET CLR Type.
+        /// Returns the equivalent <see cref="DbType"/> of the target .NET CLR type.
         /// </summary>
-        /// <param name="type">The .NET CLR Type.</param>
+        /// <param name="type">The .NET CLR type.</param>
         /// <returns>The equivalent <see cref="DbType"/> Type.</returns>
         public DbType? Resolve(Type type)
         {

@@ -23,7 +23,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between a data entity and the database object.
+        /// Adds a mapping between a data entity type and a database object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
@@ -32,7 +32,7 @@ namespace RepoDb
             Add(typeof(TEntity), databaseObjectName);
 
         /// <summary>
-        /// Adds a mapping between a data entity and the database object.
+        /// Adds a mapping between a data entity type and a database object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
@@ -43,7 +43,7 @@ namespace RepoDb
             Add(typeof(TEntity), databaseObjectName, force);
 
         /// <summary>
-        /// Adds a mapping between a data entity and the database object.
+        /// Adds a mapping between a data entity type and a database object.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
@@ -52,7 +52,7 @@ namespace RepoDb
             Add(entityType, databaseObjectName, false);
 
         /// <summary>
-        /// Adds a mapping between a data entity and the database object.
+        /// Adds a mapping between a data entity type and a database object.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
@@ -94,7 +94,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped name of the data entity.
+        /// Gets the mapped database object of the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The mapped name of the class.</returns>
@@ -103,7 +103,7 @@ namespace RepoDb
             Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the mapped name of the data entity.
+        /// Gets the mapped database object of the data entity type.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The mapped name of the class.</returns>
@@ -124,7 +124,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the mapping of the data entity.
+        /// Removes the mapped database object on the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         public static void Remove<TEntity>()
@@ -132,7 +132,7 @@ namespace RepoDb
             Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes the mapping of the data entity.
+        /// Removes the mapped database object on the data entity type.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         public static void Remove(Type entityType)

@@ -27,7 +27,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a primary property mapping into an entity type (via expression).
+        /// Adds a primary property mapping into a target data entity type (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -36,7 +36,7 @@ namespace RepoDb
             Add<TEntity>(expression, false);
 
         /// <summary>
-        /// Adds a primary property mapping into an entity type (via expression).
+        /// Adds a primary property mapping into a target data entity type (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -63,7 +63,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a primary property mapping into an entity type (via property name).
+        /// Adds a primary property mapping into a target data entity type (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -72,7 +72,7 @@ namespace RepoDb
             Add<TEntity>(propertyName, false);
 
         /// <summary>
-        /// Adds a primary property mapping into an entity type (via property name).
+        /// Adds a primary property mapping into a target data entity type (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -96,7 +96,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a primary property mapping into an entity type (via <see cref="Field"/> object).
+        /// Adds a primary property mapping into a target data entity type (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
@@ -105,7 +105,7 @@ namespace RepoDb
             Add<TEntity>(field, false);
 
         /// <summary>
-        /// Adds a primary property mapping into an entity type (via <see cref="Field"/> object).
+        /// Adds a primary property mapping into a target data entity type (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
@@ -183,7 +183,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the instance of <see cref="ClassProperty"/> that is mapped as primary key.
+        /// Gets the mapped primary property on the target data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
@@ -192,7 +192,7 @@ namespace RepoDb
             Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the instance of <see cref="ClassProperty"/> that is mapped as primary key.
+        /// Gets the mapped primary property on the target data entity type.
         /// </summary>
         /// <param name="entityType">The target type.</param>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
@@ -217,7 +217,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the exising mapped primary property of the data entity.
+        /// Removes the exising mapped primary property of the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         public static void Remove<TEntity>()
@@ -225,7 +225,7 @@ namespace RepoDb
             Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes the exising mapped primary property of the data entity.
+        /// Removes the exising mapped primary property of the data entity type.
         /// </summary>
         /// <param name="entityType">The target type.</param>
         public static void Remove(Type entityType)

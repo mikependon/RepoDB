@@ -5,15 +5,15 @@ using System;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the .NET CLR Type into its averageable .NET CLR Type.
+    /// A class used to resolve the .NET CLR type into its averageable .NET CLR type.
     /// </summary>
     public class ClientTypeToAverageableClientTypeResolver : IResolver<Type, Type>
     {
         /// <summary>
-        /// Returns the avergeable .NET CLR Type.
+        /// Returns the avergeable .NET CLR type.
         /// </summary>
-        /// <param name="type">The .NET CLR Type.</param>
-        /// <returns>The avergeable .NET CLR Type.</returns>
+        /// <param name="type">The .NET CLR type.</param>
+        /// <returns>The avergeable .NET CLR type.</returns>
         public Type Resolve(Type type)
         {
             if (type == null)

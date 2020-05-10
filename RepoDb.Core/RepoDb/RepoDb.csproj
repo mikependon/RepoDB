@@ -45,9 +45,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="ClassMap.cs" />
+    <Compile Remove="IdentityOptions.cs" />
+    <Compile Remove="Interfaces\IIdentityOptions.cs" />
+    <Compile Remove="Interfaces\IPrimaryOptions.cs" />
+    <Compile Remove="Interfaces\IPropertyOptions.cs" />
     <Compile Remove="PerformanceMonitor.cs" />
+    <Compile Remove="PrimaryOptions.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />
     <Compile Remove="PropertyHandlerInstanceCache.cs" />
+    <Compile Remove="PropertyOptions.cs" />
     <Compile Remove="Reflection\DataCommand.cs" />
     <Compile Remove="Reflection\DelegateCache.cs" />
     <Compile Remove="Reflection\DelegateFactory.cs" />

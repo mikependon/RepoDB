@@ -2,7 +2,6 @@
 using RepoDb.Interfaces;
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace RepoDb
 {
@@ -21,46 +20,46 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Type Level: Adds a mapping between the .NET CLR Type and a property handler.
+        /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
         /// </summary>
-        /// <typeparam name="TType">The .NET CLR type.</typeparam>
-        /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
+        /// <typeparam name="TType">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
-        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        /// <param name="force">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
         public static void Add<TType, TPropertyHandler>(TPropertyHandler propertyHandler,
-            bool @override = false) =>
-            PropertyHandlerMapper.Add(typeof(TType), propertyHandler, @override);
+            bool force = false) =>
+            PropertyHandlerMapper.Add(typeof(TType), propertyHandler, force);
 
         /// <summary>
-        /// Type Level: Adds a mapping between the .NET CLR Type and a property handler.
+        /// Type Level: Adds a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
         /// </summary>
-        /// <param name="type">The .NET CLR Type.</param>
+        /// <param name="type">The target .NET CLR type.</param>
         /// <param name="propertyHandler">The instance of the property handler. The type must implement the <see cref="IPropertyHandler{TInput, TResult}"/> interface.</param>
-        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        /// <param name="force">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
         public static void Add(Type type,
             object propertyHandler,
-            bool @override = false) =>
-            PropertyHandlerMapper.Add(type, propertyHandler, @override);
+            bool force = false) =>
+            PropertyHandlerMapper.Add(type, propertyHandler, force);
 
         /*
          * Get
          */
 
         /// <summary>
-        /// Type Level: Gets the mapped property handler for .NET CLR Type.
+        /// Type Level: Gets the mapped property handler object of the .NET CLR type.
         /// </summary>
-        /// <typeparam name="TType">The .NET CLR type.</typeparam>
-        /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
-        /// <returns>An instance of mapped property handler for .NET CLR Type.</returns>
+        /// <typeparam name="TType">The target .NET CLR type.</typeparam>
+        /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
+        /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
         public static TPropertyHandler Get<TType, TPropertyHandler>() =>
             PropertyHandlerMapper.Get<TType, TPropertyHandler>();
 
         /// <summary>
-        /// Type Level: Gets the mapped property handler for .NET CLR Type.
+        /// Type Level: Gets the mapped property handler object of the .NET CLR type.
         /// </summary>
-        /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
-        /// <param name="type">The .NET CLR type.</param>
-        /// <returns>An instance of mapped property handler for .NET CLR Type.</returns>
+        /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
+        /// <param name="type">The target .NET CLR type.</param>
+        /// <returns>An instance of mapped property handler for .NET CLR type.</returns>
         public static TPropertyHandler Get<TPropertyHandler>(Type type) =>
             PropertyHandlerMapper.Get<TPropertyHandler>(type);
 
@@ -69,16 +68,16 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Type Level: Removes an existing property handler mapping.
+        /// Type Level: Removes the existing mapped property handler of the .NET CLR type.
         /// </summary>
-        /// <typeparam name="T">The .NET CLR type.</typeparam>
+        /// <typeparam name="T">The target .NET CLR type.</typeparam>
         public static void Remove<T>() =>
             PropertyHandlerMapper.Remove(typeof(T));
 
         /// <summary>
-        /// Type Level: Removes an existing property handler mapping.
+        /// Type Level: Removes the existing mapped property handler of the .NET CLR type.
         /// </summary>
-        /// <param name="type">The .NET CLR Type.</param>
+        /// <param name="type">The target .NET CLR type.</param>
         public static void Remove(Type type) =>
             PropertyHandlerMapper.Remove(type);
 
@@ -91,7 +90,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via expression).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -103,7 +102,7 @@ namespace RepoDb
             PropertyHandlerMapper.Add<TEntity, TPropertyHandler>(expression, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via expression).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -117,7 +116,7 @@ namespace RepoDb
             PropertyHandlerMapper.Add<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression), propertyHandler, force);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via property name).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -129,7 +128,7 @@ namespace RepoDb
             PropertyHandlerMapper.Add<TEntity, TPropertyHandler>(propertyName, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via property name).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -143,7 +142,7 @@ namespace RepoDb
             PropertyHandlerMapper.Add<TEntity, TPropertyHandler>(propertyName, propertyHandler, force);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via <see cref="Field"/> object).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -155,7 +154,7 @@ namespace RepoDb
             PropertyHandlerMapper.Add<TEntity, TPropertyHandler>(field, propertyHandler, false);
 
         /// <summary>
-        /// Property Level: Adds a property handler mapping into a class property (via <see cref="Field"/> object).
+        /// Property Level: Adds a property handler mapping into a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -173,7 +172,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Property Level: Gets the mapped property handler of the class property (via expression).
+        /// Property Level: Gets the mapped property handler object of the data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -184,7 +183,7 @@ namespace RepoDb
             PropertyHandlerMapper.Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Property Level: Gets the mapped property handler of the class property (via property name).
+        /// Property Level: Gets the mapped property handler object of the data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -195,7 +194,7 @@ namespace RepoDb
             PropertyHandlerMapper.Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
-        /// Property Level: Gets the mapped property handler of the class property (via <see cref="Field"/> object).
+        /// Property Level: Gets the mapped property handler object of the data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
@@ -210,7 +209,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Property Level: Removes a mapped property handler from a class property (via expression).
+        /// Property Level: Removes the existing mapped property handler from a data entity type property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -219,7 +218,7 @@ namespace RepoDb
             PropertyHandlerMapper.Remove<TEntity>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Property Level: Removes a mapped property handler from a class property (via property name).
+        /// Property Level: Removes the existing mapped property handler from a data entity type property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
@@ -228,7 +227,7 @@ namespace RepoDb
             PropertyHandlerMapper.Remove<TEntity>(propertyName);
 
         /// <summary>
-        /// Property Level: Removes a mapped property handler from a class property (via <see cref="Field"/> object).
+        /// Property Level: Removes the existing mapped property handler from a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
