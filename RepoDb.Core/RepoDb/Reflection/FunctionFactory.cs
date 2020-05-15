@@ -165,7 +165,7 @@ namespace RepoDb.Reflection
             var dbSetting = connection?.GetDbSetting();
 
             // Filter the properties by reader fields
-            foreach(var p in properties)
+            foreach (var p in properties)
             {
                 var mappedName = p.GetMappedName().AsUnquoted(true, dbSetting);
             }
@@ -192,7 +192,6 @@ namespace RepoDb.Reflection
                     var isDefaultConversion = (Converter.ConversionType == ConversionType.Default);
                     var isConversionNeeded = readerField.Type != targetType;
                     var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
-                    var propertyHandlerAttribute = classProperty.PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
                     var handlerInstance = (object)null;
                     var handlerGetMethod = (MethodInfo)null;
                     var getParameter = (ParameterInfo)null;
@@ -203,23 +202,11 @@ namespace RepoDb.Reflection
 
                     #region PropertyHandler
 
-                    if (propertyHandlerAttribute != null)
+                    handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo) ??
+                        PropertyHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
+                    if (handlerInstance != null)
                     {
-                        // Get from the attribute
-                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
-                        handlerGetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Get");
-                    }
-                    else
-                    {
-                        // Get from the type level mappings (DB type)
-                        if (readerField.Type != null)
-                        {
-                            handlerInstance = PropertyHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
-                            if (handlerInstance != null)
-                            {
-                                handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
-                            }
-                        }
+                        handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
                     }
 
                     if (handlerInstance != null)
@@ -874,22 +861,17 @@ namespace RepoDb.Reflection
 
                     #region PropertyHandler
 
-                    var propertyHandlerAttribute = instanceProperty?.GetCustomAttribute<PropertyHandlerAttribute>();
-
-                    if (propertyHandlerAttribute != null)
+                    if (classProperty != null)
                     {
-                        // Get from the attribute
                         handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
-                        handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
                     }
-                    else
+                    if (handlerInstance == null)
                     {
-                        // Get from the type level mappings (DB type)
                         handlerInstance = PropertyHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
-                        if (handlerInstance != null)
-                        {
-                            handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
-                        }
+                    }
+                    if (handlerInstance != null)
+                    {
+                        handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
                     }
 
                     #endregion
@@ -1553,22 +1535,17 @@ namespace RepoDb.Reflection
 
                     #region PropertyHandler
 
-                    var propertyHandlerAttribute = instanceProperty?.GetCustomAttribute<PropertyHandlerAttribute>();
-
-                    if (propertyHandlerAttribute != null)
+                    if (classProperty != null)
                     {
-                        // Get from the attribute
                         handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
-                        handlerSetMethod = propertyHandlerAttribute.HandlerType.GetMethod("Set");
                     }
-                    else
+                    if (handlerInstance == null)
                     {
-                        // Get from the type level mappings (DB type)
                         handlerInstance = PropertyHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
-                        if (handlerInstance != null)
-                        {
-                            handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
-                        }
+                    }
+                    if (handlerInstance != null)
+                    {
+                        handlerSetMethod = handlerInstance.GetType().GetMethod("Set");
                     }
 
                     #endregion
