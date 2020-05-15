@@ -27,7 +27,6 @@ namespace RepoDb
 
         #endregion
 
-
         #region DbType
 
         /// <summary>
@@ -54,6 +53,15 @@ namespace RepoDb
         #endregion
 
         #region PropertyHandler
+
+        /// <summary>
+        /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the<see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
+        /// Make sure that the default constructor is available for the property handler, otherwise an exception will be thrown.
+        /// </summary>
+        /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
+        /// <returns>The current instance.</returns>
+        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>() =>
+            PropertyHandler<TPropertyHandler>(Activator.CreateInstance<TPropertyHandler>(), false);
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
