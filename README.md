@@ -121,6 +121,7 @@ This section will always be updated with the latest official result.
 We would like to make RepoDb the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
 To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository.
 
 Your biggest contribution is to utilize and share this solution to other developers.
 
