@@ -92,9 +92,8 @@ namespace RepoDb
             }
             m_isPrimaryAttributeWasSet = true;
 
-            return m_primaryAttribute = PropertyInfo.GetCustomAttribute(typeof(KeyAttribute)) != null
-                ? new PrimaryAttribute()
-                : PropertyInfo.GetCustomAttribute(typeof(PrimaryAttribute)) as PrimaryAttribute;
+            return m_primaryAttribute = PropertyInfo.GetCustomAttribute<PrimaryAttribute>() ?? 
+                                        (PropertyInfo.GetCustomAttribute<KeyAttribute>() != null ? new PrimaryAttribute() : null);
         }
 
         /*
