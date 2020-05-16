@@ -27,52 +27,6 @@ namespace RepoDb.Extensions
         #region CreateParameters
 
         /// <summary>
-        /// Creates the command object list of parameters based on type.
-        /// </summary>
-        /// <param name="command">The command object instance to be used.</param>
-        /// <param name="properties">The target list of properties.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        internal static void CreateParametersFromClassProperties(this IDbCommand command,
-            IEnumerable<ClassProperty> properties,
-            IEnumerable<string> propertiesToSkip)
-        {
-            // Filter the target properties
-            if (propertiesToSkip?.Any() == true)
-            {
-                properties = properties?.Where(p =>
-                    propertiesToSkip.Contains(PropertyMappedNameCache.Get(p.PropertyInfo), StringComparer.OrdinalIgnoreCase) == false);
-            }
-
-            // Check if there are properties
-            if (properties?.Any() == true)
-            {
-                // Iterate the properties
-                foreach (var property in properties)
-                {
-                    // Get the database type
-                    var dbType = property.GetDbType() ??
-                        TypeMapper.Get(property.PropertyInfo.PropertyType.GetUnderlyingType());
-
-                    // Ensure the type mapping
-                    if (dbType == null)
-                    {
-                        if (property.PropertyInfo.PropertyType == m_bytesType)
-                        {
-                            dbType = DbType.Binary;
-                        }
-                    }
-
-                    // Create the parameter
-                    var name = PropertyMappedNameCache.Get(property.PropertyInfo);
-                    var parameter = CreateParameter(command, name, null, dbType);
-
-                    // Add the parameter
-                    command.Parameters.Add(parameter);
-                }
-            }
-        }
-
-        /// <summary>
         /// Creates a parameter for a command object.
         /// </summary>
         /// <param name="command">The command object instance to be used.</param>
