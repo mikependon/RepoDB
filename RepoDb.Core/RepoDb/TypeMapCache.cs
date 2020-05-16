@@ -97,19 +97,29 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         internal static DbType? Get<TEntity>(PropertyInfo propertyInfo)
-            where TEntity : class
+            where TEntity : class =>
+            Get(typeof(TEntity), propertyInfo);
+
+        /// <summary>
+        /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
+        /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
+        internal static DbType? Get(Type entityType,
+            PropertyInfo propertyInfo)
         {
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Variables
-            var key = GenerateHashCode(typeof(TEntity), propertyInfo);
+            var key = GenerateHashCode(entityType, propertyInfo);
             var result = (DbType?)null;
 
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                var classProperty = PropertyCache.Get<TEntity>()
+                var classProperty = PropertyCache.Get(entityType)
                     .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, propertyInfo.Name, StringComparison.OrdinalIgnoreCase));
                 result = classProperty?.GetDbType();
                 m_cache.TryAdd(key, result);
