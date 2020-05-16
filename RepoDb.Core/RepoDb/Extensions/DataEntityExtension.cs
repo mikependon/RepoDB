@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using RepoDb.Attributes;
 
@@ -36,9 +37,10 @@ namespace RepoDb.Extensions
         // GetMappedName
         internal static string GetMappedName(Type type)
         {
-            return type.GetCustomAttribute<MapAttribute>()?.Name ??
-                ClassMapper.Get(type) ??
-                type.Name;
+            return type.GetCustomAttribute<TableAttribute>()?.Name ??
+                   type.GetCustomAttribute<MapAttribute>()?.Name ??
+                   ClassMapper.Get(type) ??
+                   type.Name;
         }
 
         /// <summary>

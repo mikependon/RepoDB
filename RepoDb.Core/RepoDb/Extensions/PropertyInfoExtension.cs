@@ -4,6 +4,7 @@ using System.Reflection;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
@@ -80,8 +81,10 @@ namespace RepoDb.Extensions
         /// <returns>A string containing the mapped name.</returns>
         public static string GetMappedName(this PropertyInfo property)
         {
-            var attribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
-            return attribute?.Name ??
+            var columnAttribute = (ColumnAttribute) GetCustomAttribute(property, typeof(ColumnAttribute));
+            var mapAttribute = (MapAttribute)GetCustomAttribute(property, typeof(MapAttribute));
+            var attributeName = columnAttribute?.Name ?? mapAttribute?.Name;
+            return attributeName ??
                 PropertyMapper.Get(property) ??
                 property.Name;
         }

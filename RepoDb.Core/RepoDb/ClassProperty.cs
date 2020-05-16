@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using RepoDb.Resolvers;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Reflection;
 
@@ -90,7 +91,10 @@ namespace RepoDb
                 return m_primaryAttribute;
             }
             m_isPrimaryAttributeWasSet = true;
-            return m_primaryAttribute = PropertyInfo.GetCustomAttribute(typeof(PrimaryAttribute)) as PrimaryAttribute;
+
+            return m_primaryAttribute = PropertyInfo.GetCustomAttribute(typeof(KeyAttribute)) != null
+                ? new PrimaryAttribute()
+                : PropertyInfo.GetCustomAttribute(typeof(PrimaryAttribute)) as PrimaryAttribute;
         }
 
         /*
