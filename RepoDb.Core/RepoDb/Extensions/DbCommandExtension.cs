@@ -217,6 +217,8 @@ namespace RepoDb.Extensions
                     var name = property.GetMappedName();
                     var value = property.PropertyInfo.GetValue(param);
 
+                    #region DbType
+
                     // Get property db type
                     var dbType = property.GetDbType();
 
@@ -240,6 +242,20 @@ namespace RepoDb.Extensions
                         }
                     }
 
+                    #endregion
+
+                    #region PropertyHandler
+
+                    // Check the property handler
+                    var propertyHandler = PropertyHandlerCache.Get<object>(type, property.PropertyInfo);
+
+                    if (propertyHandler != null)
+                    {
+                        // TODO: Ensure to reuse the existing PropertyHandler (if given)
+                    }
+
+                    #endregion
+
                     // Add the new parameter
                     command.Parameters.Add(command.CreateParameter(name, value, dbType));
                 }
@@ -257,55 +273,67 @@ namespace RepoDb.Extensions
             IEnumerable<string> propertiesToSkip)
         {
             // Variables needed
-            var dbType = (DbType?)null;
             var kvps = dictionary.Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the key value pairs
             foreach (var kvp in kvps)
             {
+                var dbType = (DbType?)null;
                 var value = kvp.Value;
                 var valueType = (Type)null;
+                var property = (PropertyInfo)null;
 
                 // Cast the proper object and identify the properties
                 if (kvp.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)kvp.Value;
-                    var property = commandParameter.MappedToType.GetProperty(kvp.Key);
 
-                    // Get the value
+                    // Get the property and value
+                    property = commandParameter.MappedToType.GetProperty(kvp.Key);
                     value = commandParameter.Value;
 
-                    // Get the DB Type
-                    dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType;
-
-                    // Get the property-level mapping
-                    if (property != null)
-                    {
-                        dbType = TypeMapper.Get(property.PropertyType.GetUnderlyingType());
-                    }
-
-                    // Set the value type if the DB Type is not found
-                    if (dbType == null)
-                    {
-                        valueType = value?.GetType()?.GetUnderlyingType();
-                    }
+                    // Set the value type
+                    valueType = value?.GetType()?.GetUnderlyingType();
                 }
                 else
                 {
+                    // In this area, it could be a 'dynamic' object
                     valueType = kvp.Value?.GetType()?.GetUnderlyingType();
                 }
 
-                // Check for the specialized types
-                if (dbType == null)
+                // Get the property-level mapping
+                if (property != null)
                 {
-                    if (valueType?.IsEnum == true)
+                    #region DbType
+
+                    dbType = TypeMapCache.Get(property.DeclaringType, property);
+
+                    // Check for the specialized types
+                    if (dbType == null)
                     {
-                        dbType = DbType.String;
+                        if (valueType?.IsEnum == true)
+                        {
+                            dbType = DbType.String;
+                        }
+                        else if (valueType == m_bytesType)
+                        {
+                            dbType = DbType.Binary;
+                        }
                     }
-                    else if (valueType == m_bytesType)
+
+                    #endregion
+
+                    #region PropertyHandler
+
+                    // Check the property handler
+                    var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
+
+                    if (propertyHandler != null)
                     {
-                        dbType = DbType.Binary;
+                        // TODO: Ensure to reuse the existing PropertyHandler (if given)
                     }
+
+                    #endregion
                 }
 
                 // Add the parameter
@@ -373,7 +401,11 @@ namespace RepoDb.Extensions
             // Get the values
             var value = queryField.Parameter.Value;
             var valueType = value?.GetType()?.GetUnderlyingType();
-            var dbType = TypeMapper.Get(valueType);
+            var dbType = (DbType?)null;
+
+            #region DbType
+
+            dbType = TypeMapCache.Get(valueType);
 
             // Check for the specialized types
             if (dbType == null)
@@ -387,6 +419,20 @@ namespace RepoDb.Extensions
                     dbType = DbType.Binary;
                 }
             }
+
+            #endregion
+
+            #region PropertyHandler
+
+            // Check the property handler
+            var typeHandler = PropertyHandlerCache.Get<object>(valueType);
+
+            if (typeHandler != null)
+            {
+                // TODO: Ensure to reuse the existing PropertyHandler (if given)
+            }
+
+            #endregion
 
             // Create the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
