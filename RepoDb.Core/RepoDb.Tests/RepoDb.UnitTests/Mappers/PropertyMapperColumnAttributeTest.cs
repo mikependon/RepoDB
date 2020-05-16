@@ -31,6 +31,13 @@ namespace RepoDb.UnitTests.Mappers
             public string PropertyString { get; set; }
         }
 
+        private class PropertyMapperColumnAndMapAttributeCollisionClass
+        {
+            public string ColumnString { get; set; }
+            [Column("PropertyText"), Map("ColumnText")]
+            public string PropertyString { get; set; }
+        }
+
         #endregion
 
         #region Methods
@@ -40,7 +47,7 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaPropertyName()
+        public void TestPropertyMapperMappingViaColumnAttributeViaPropertyName()
         {
             // Setup
             var propertyName = "ColumnString";
@@ -55,7 +62,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaField()
+        public void TestPropertyMapperMappingViaColumnAttributeViaField()
         {
             // Setup
             var field = new Field("ColumnString");
@@ -70,7 +77,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaExpression()
+        public void TestPropertyMapperMappingViaColumnAttributeViaExpression()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.ColumnString, "PropertyString");
@@ -89,7 +96,7 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaPropertyNameWithColumnAttribute()
+        public void TestPropertyMapperMappingViaColumnAttributeViaPropertyNameWithColumnAttribute()
         {
             // Setup
             var propertyName = "PropertyString";
@@ -104,7 +111,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaFieldWithMapAttribute()
+        public void TestPropertyMapperMappingViaColumnAttributeViaFieldWithMapAttribute()
         {
             // Setup
             var field = new Field("PropertyString");
@@ -119,7 +126,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaExpressionWithMapAttribute()
+        public void TestPropertyMapperMappingViaColumnAttributeViaExpressionWithMapAttribute()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.PropertyString, "ColumnText");
@@ -137,7 +144,7 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaPropertyNameOverride()
+        public void TestPropertyMapperMappingViaColumnAttributeViaPropertyNameOverride()
         {
             // Setup
             var propertyName = "ColumnString";
@@ -153,7 +160,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaFieldOverride()
+        public void TestPropertyMapperMappingViaColumnAttributeViaFieldOverride()
         {
             // Setup
             var field = new Field("ColumnString");
@@ -169,7 +176,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod]
-        public void TestPropertyMapperMappingViaExpressionOverride()
+        public void TestPropertyMapperMappingViaColumnAttributeViaExpressionOverride()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.ColumnString, "PropertyString");
@@ -188,7 +195,7 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsAlreadyExisting()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaPropertyNameThatIsAlreadyExisting()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>("ColumnString", "PropertyString");
@@ -196,7 +203,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldThatIsAlreadyExisting()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaFieldThatIsAlreadyExisting()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(new Field("ColumnString"), "PropertyString");
@@ -204,7 +211,7 @@ namespace RepoDb.UnitTests.Mappers
         }
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
-        public void ThrowExceptionOnPropertyMapperViaExpressionThatIsAlreadyExisting()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaExpressionThatIsAlreadyExisting()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.ColumnString, "PropertyString");
@@ -216,21 +223,21 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsNull()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaPropertyNameThatIsNull()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>((string)null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldThatIsNull()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaFieldThatIsNull()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>((Field)null, "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaExpressionThatIsNull()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaExpressionThatIsNull()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(expression: null, columnName: "PropertyText");
@@ -241,14 +248,14 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameThatIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaPropertyNameThatIsMissing()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>("Whatever", "PropertyText");
         }
 
         [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldThatIsIsMissing()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaFieldThatIsIsMissing()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(new Field("Whatever"), "PropertyText");
@@ -259,21 +266,21 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameWithNullTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaPropertyNameWithNullTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>("ColumnString", null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldWithNullTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaFieldWithNullTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(new Field("ColumnString"), null);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaExpressionWithNullTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaExpressionWithNullTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.ColumnString, null);
@@ -284,21 +291,21 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameWithEmptyTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaPropertyNameWithEmptyTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>("ColumnString", "");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldWithEmptyTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaFieldWithEmptyTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(new Field("ColumnString"), "");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaExpressionWithEmptyTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaExpressionWithEmptyTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.ColumnString, "");
@@ -309,24 +316,67 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaPropertyNameWithEmptySpacesTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaPropertyNameWithEmptySpacesTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>("ColumnString", "  ");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaFieldWithEmptySpacesTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaFieldWithEmptySpacesTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(new Field("ColumnString"), "  ");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnPropertyMapperViaExpressionWithEmptySpacesTargetColumnName()
+        public void ThrowExceptionOnPropertyMapperViaColumnAttributeViaExpressionWithEmptySpacesTargetColumnName()
         {
             // Setup
             PropertyMapper.Add<PropertyMapperColumnAttributeClass>(e => e.ColumnString, "  ");
+        }
+
+        /*
+         * Collision
+         */
+
+        [TestMethod]
+        public void TestPropertyMapperMappingViaColumnAndMapAttributeViaExpression()
+        {
+            // Act
+            var actual = PropertyMappedNameCache.Get<PropertyMapperColumnAndMapAttributeCollisionClass>(e => e.PropertyString);
+            var expected = "PropertyText";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestPropertyMapperMappingViaColumnAndMapAttributeViaPropertyName()
+        {
+            // Setup
+            var propertyName = "PropertyString";
+
+            // Act
+            var actual = PropertyMappedNameCache.Get<PropertyMapperColumnAndMapAttributeCollisionClass>(propertyName);
+            var expected = "PropertyText";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestPropertyMapperMappingViaColumnAndMapAttributeViaField()
+        {
+            // Setup
+            var field = new Field("PropertyString");
+
+            // Act
+            var actual = PropertyMappedNameCache.Get<PropertyMapperColumnAndMapAttributeCollisionClass>(field);
+            var expected = "PropertyText";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         #endregion

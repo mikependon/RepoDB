@@ -202,14 +202,19 @@ namespace RepoDb.Reflection
 
                     #region PropertyHandler
 
-                    handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo) ??
-                        PropertyHandlerMapper.Get<object>(readerField.Type.GetUnderlyingType());
+                    if (classProperty != null)
+                    {
+                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
+                    }
+                    if (handlerInstance == null)
+                    {
+                        handlerInstance = PropertyHandlerCache.Get<object>(readerField.Type.GetUnderlyingType());
+                    }
                     if (handlerInstance != null)
                     {
                         handlerGetMethod = handlerInstance.GetType().GetMethod("Get");
                     }
-
-                    if (handlerInstance != null)
+                    if (handlerGetMethod != null)
                     {
                         getParameter = handlerGetMethod.GetParameters().First();
                         getParameterUnderlyingType = Nullable.GetUnderlyingType(getParameter.ParameterType);
@@ -867,7 +872,7 @@ namespace RepoDb.Reflection
                     }
                     if (handlerInstance == null)
                     {
-                        handlerInstance = PropertyHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
+                        handlerInstance = PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
                     }
                     if (handlerInstance != null)
                     {
@@ -1541,7 +1546,7 @@ namespace RepoDb.Reflection
                     }
                     if (handlerInstance == null)
                     {
-                        handlerInstance = PropertyHandlerMapper.Get<object>(dbField.Type.GetUnderlyingType());
+                        handlerInstance = PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
                     }
                     if (handlerInstance != null)
                     {

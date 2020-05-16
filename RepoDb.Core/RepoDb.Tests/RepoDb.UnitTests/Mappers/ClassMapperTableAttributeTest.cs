@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Attributes;
 using RepoDb.Exceptions;
 
 namespace RepoDb.UnitTests.Mappers
@@ -28,6 +29,11 @@ namespace RepoDb.UnitTests.Mappers
         {
         }
 
+        [Table("[dbo].[Person]"), Map("[sales].[Person]")]
+        private class ClassMapperTableAndMapAttributeCollisionTestClass
+        {
+        }
+
         #endregion
 
         #region Methods
@@ -40,7 +46,7 @@ namespace RepoDb.UnitTests.Mappers
         public void TestClassMappingWithTableAttribute()
         {
             // Setup
-            ClassMapper.Add <ClassMapperTableAttributeTestClass>("[sales].[Person]");
+            ClassMapper.Add<ClassMapperTableAttributeTestClass>("[sales].[Person]");
 
             // Act
             var actual = ClassMappedNameCache.Get<ClassMapperTableAttributeTestClass>();
@@ -55,7 +61,7 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod]
-        public void TestClassMapperMappingOverride()
+        public void TestClassMapperViaTableMappingOverride()
         {
             // Setup
             ClassMapper.Add<ClassMapperTableAttributeTestClass>("[sales].[Person]");
@@ -74,7 +80,7 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(MappingExistsException))]
-        public void ThrowExceptionOnClassMapperThatIsAlreadyExisting()
+        public void ThrowExceptionOnClassMapperViaTableThatIsAlreadyExisting()
         {
             // Setup
             ClassMapper.Add<ClassMapperTableAttributeTestClass>("[sales].[Person]");
@@ -86,24 +92,39 @@ namespace RepoDb.UnitTests.Mappers
          */
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnClassMapperThatIsEmpty()
+        public void ThrowExceptionOnClassMapperViaTableThatIsEmpty()
         {
             // Setup
             ClassMapper.Add<ClassMapperTableAttributeTestClass>("");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnClassMapperThatIsEmptySpaces()
+        public void ThrowExceptionOnClassMapperViaTableThatIsEmptySpaces()
         {
             // Setup
             ClassMapper.Add<ClassMapperTableAttributeTestClass>("  ");
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnClassMapperThatIsNull()
+        public void ThrowExceptionOnClassMapperViaTableThatIsNull()
         {
             // Setup
             ClassMapper.Add<ClassMapperTableAttributeTestClass>(null);
+        }
+
+        /*
+         * Collision
+         */
+
+        [TestMethod]
+        public void TestClassMappingWithTableAndMapAttribute()
+        {
+            // Act
+            var actual = ClassMappedNameCache.Get<ClassMapperTableAndMapAttributeCollisionTestClass>();
+            var expected = "[dbo].[Person]";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
         }
 
         #endregion
