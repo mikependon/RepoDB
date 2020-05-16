@@ -169,42 +169,45 @@ namespace RepoDb.Extensions
                     // Get the property vaues
                     var name = property.GetMappedName();
                     var value = property.PropertyInfo.GetValue(param);
-
-                    #region DbType
-
-                    // Get property db type
-                    var dbType = property.GetDbType();
-
-                    // Ensure mapping based on the value type
-                    if (dbType == null)
-                    {
-                        dbType = TypeMapCache.Get(value?.GetType().GetUnderlyingType());
-                    }
-
-                    // Check for specialized
-                    if (dbType == null)
-                    {
-                        var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
-                        if (propertyType?.IsEnum == true)
-                        {
-                            dbType = DbType.String;
-                        }
-                        else if (propertyType == m_bytesType)
-                        {
-                            dbType = DbType.Binary;
-                        }
-                    }
-
-                    #endregion
+                    var dbType = (DbType?)null;
 
                     #region PropertyHandler
 
                     // Check the property handler
                     var propertyHandler = PropertyHandlerCache.Get<object>(type, property.PropertyInfo);
-
                     if (propertyHandler != null)
                     {
                         // TODO: Ensure to reuse the existing PropertyHandler (if given)
+                    }
+
+                    #endregion
+
+                    #region DbType
+
+                    else
+                    {
+                        // Get property db type
+                        dbType = property.GetDbType();
+
+                        // Ensure mapping based on the value type
+                        if (dbType == null)
+                        {
+                            dbType = TypeMapCache.Get(value?.GetType().GetUnderlyingType());
+                        }
+
+                        // Check for specialized
+                        if (dbType == null)
+                        {
+                            var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
+                            if (propertyType?.IsEnum == true)
+                            {
+                                dbType = DbType.String;
+                            }
+                            else if (propertyType == m_bytesType)
+                            {
+                                dbType = DbType.Binary;
+                            }
+                        }
                     }
 
                     #endregion
@@ -363,25 +366,6 @@ namespace RepoDb.Extensions
             var valueType = value?.GetType()?.GetUnderlyingType();
             var dbType = (DbType?)null;
 
-            #region DbType
-
-            dbType = TypeMapCache.Get(valueType);
-
-            // Check for the specialized types
-            if (dbType == null)
-            {
-                if (valueType?.IsEnum == true)
-                {
-                    dbType = DbType.String;
-                }
-                else if (valueType == m_bytesType)
-                {
-                    dbType = DbType.Binary;
-                }
-            }
-
-            #endregion
-
             #region PropertyHandler
 
             // Check the property handler
@@ -390,6 +374,28 @@ namespace RepoDb.Extensions
             if (typeHandler != null)
             {
                 // TODO: Ensure to reuse the existing PropertyHandler (if given)
+            }
+
+            #endregion
+
+            #region DbType
+
+            else
+            {
+                dbType = TypeMapCache.Get(valueType);
+
+                // Check for the specialized types
+                if (dbType == null)
+                {
+                    if (valueType?.IsEnum == true)
+                    {
+                        dbType = DbType.String;
+                    }
+                    else if (valueType == m_bytesType)
+                    {
+                        dbType = DbType.Binary;
+                    }
+                }
             }
 
             #endregion
