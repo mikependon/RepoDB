@@ -176,7 +176,7 @@ namespace RepoDb.Extensions
                     // Ensure mapping based on the value type
                     if (dbType == null)
                     {
-                        dbType = TypeMapper.Get(value?.GetType().GetUnderlyingType());
+                        dbType = TypeMapCache.Get(value?.GetType().GetUnderlyingType());
                     }
 
                     // Check for specialized
