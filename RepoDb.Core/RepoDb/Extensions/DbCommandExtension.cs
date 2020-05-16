@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,6 +19,7 @@ namespace RepoDb.Extensions
 
         internal static Type m_bytesType = typeof(byte[]);
         internal static Type m_dictionaryType = typeof(Dictionary<,>);
+        internal static ClientTypeToDbTypeResolver m_clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
 
         #endregion
 
@@ -255,36 +257,43 @@ namespace RepoDb.Extensions
                 // Get the property-level mapping
                 if (property != null)
                 {
-                    #region DbType
-
-                    dbType = TypeMapCache.Get(property.DeclaringType, property);
-
-                    // Check for the specialized types
-                    if (dbType == null)
-                    {
-                        if (valueType?.IsEnum == true)
-                        {
-                            dbType = DbType.String;
-                        }
-                        else if (valueType == m_bytesType)
-                        {
-                            dbType = DbType.Binary;
-                        }
-                    }
-
-                    #endregion
-
                     #region PropertyHandler
 
                     // Check the property handler
                     var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
-
                     if (propertyHandler != null)
                     {
-                        // TODO: Ensure to reuse the existing PropertyHandler (if given)
+                        // It is hard to pre-compile this as the property handler is dynamic
+                        var setMethod = propertyHandler.GetType().GetMethod("Set");
+                        var returnType = setMethod.ReturnType;
+                        var classProperty = PropertyCache.Get(property.DeclaringType, property);
+                        dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
+                        value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
 
                     #endregion
+
+                    else
+                    {
+                        #region DbType
+
+                        dbType = TypeMapCache.Get(property.DeclaringType, property);
+
+                        // Check for the specialized types
+                        if (dbType == null)
+                        {
+                            if (valueType?.IsEnum == true)
+                            {
+                                dbType = DbType.String;
+                            }
+                            else if (valueType == m_bytesType)
+                            {
+                                dbType = DbType.Binary;
+                            }
+                        }
+
+                        #endregion
+                    }
                 }
 
                 // Add the parameter
