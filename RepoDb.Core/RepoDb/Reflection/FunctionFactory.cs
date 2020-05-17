@@ -1,5 +1,4 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -204,7 +203,7 @@ namespace RepoDb.Reflection
 
                     if (classProperty != null)
                     {
-                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
+                        handlerInstance = classProperty.GetPropertyHandler();
                     }
                     if (handlerInstance == null)
                     {
@@ -861,14 +860,14 @@ namespace RepoDb.Reflection
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
                     {
-                        instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                        instanceProperty = classProperty.PropertyInfo;
                     }
 
                     #region PropertyHandler
 
                     if (classProperty != null)
                     {
-                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
+                        handlerInstance = classProperty.GetPropertyHandler();
                     }
                     if (handlerInstance == null)
                     {
@@ -1535,14 +1534,14 @@ namespace RepoDb.Reflection
                     // Check the proper type of the entity
                     if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
                     {
-                        instanceProperty = classProperty.PropertyInfo; // typeOfEntity.GetProperty(classProperty.PropertyInfo.Name);
+                        instanceProperty = classProperty.PropertyInfo;
                     }
 
                     #region PropertyHandler
 
                     if (classProperty != null)
                     {
-                        handlerInstance = PropertyHandlerCache.Get<TEntity, object>(classProperty.PropertyInfo);
+                        handlerInstance = classProperty.GetPropertyHandler();
                     }
                     if (handlerInstance == null)
                     {
