@@ -1,20 +1,23 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Concurrent;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to cache the mapped-name for the entity.
+    /// A class that is used to cache the database object name mappings of the data entity type.
     /// </summary>
     public static class ClassMappedNameCache
     {
         private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
+        private static IResolver<Type, string> m_resolver = new ClassMappedNameResolver();
 
         #region Methods
 
         /// <summary>
-        /// Gets the cached mapped-name for the entity.
+        /// Get the cached database object name mappings of the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached mapped name of the entity.</returns>
@@ -23,7 +26,7 @@ namespace RepoDb
             Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the cached mapped-name for the entity.
+        /// Gets the cached databse object name mappings of the data entity type.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached mapped name of the entity.</returns>
@@ -39,7 +42,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = DataEntityExtension.GetMappedName(entityType);
+                result = m_resolver.Resolve(entityType);
                 m_cache.TryAdd(key, result);
             }
 
