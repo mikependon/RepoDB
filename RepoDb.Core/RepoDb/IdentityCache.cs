@@ -1,4 +1,6 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -11,6 +13,7 @@ namespace RepoDb
     public static class IdentityCache
     {
         private static readonly ConcurrentDictionary<int, ClassProperty> m_cache = new ConcurrentDictionary<int, ClassProperty>();
+        private static IResolver<Type, ClassProperty> resolver = new IdentityResolver();
 
         #region Methods
 
@@ -39,17 +42,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                // Get all with IsIdentity() flags
-                property = PropertyCache.Get(entityType)?
-                    .FirstOrDefault(p => p.GetIdentityAttribute() != null);
-
-                // Otherwise, get the first one
-                if (property == null)
-                {
-                    property = IdentityMapper.Get(entityType);
-                }
-
-                // Add to the cache (whatever)
+                property = resolver.Resolve(entityType);
                 m_cache.TryAdd(key, property);
             }
 
