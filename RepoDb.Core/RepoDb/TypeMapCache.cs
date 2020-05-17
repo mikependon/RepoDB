@@ -119,7 +119,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                var classProperty = PropertyCache.Get(entityType)
+                var classProperty = PropertyCache.Get(entityType)?
                     .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, propertyInfo.Name, StringComparison.OrdinalIgnoreCase));
                 result = classProperty?.GetDbType();
                 m_cache.TryAdd(key, result);

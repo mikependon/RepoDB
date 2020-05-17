@@ -91,9 +91,8 @@ namespace RepoDb
                 return m_primaryAttribute;
             }
             m_isPrimaryAttributeWasSet = true;
-
-            return m_primaryAttribute = PropertyInfo.GetCustomAttribute<PrimaryAttribute>() ?? 
-                                        (PropertyInfo.GetCustomAttribute<KeyAttribute>() != null ? new PrimaryAttribute() : null);
+            return m_primaryAttribute = PropertyInfo.GetCustomAttribute<PrimaryAttribute>() ??
+                (PropertyInfo.GetCustomAttribute<KeyAttribute>() != null ? new PrimaryAttribute() : null);
         }
 
         /*
@@ -196,7 +195,7 @@ namespace RepoDb
                 return m_isIdentity;
             }
 
-            // PrimaryMapper
+            // IdentityMapper
             var classProperty = IdentityMapper.Get(GetDeclaringType());
             m_isIdentity = (classProperty == this);
             if (m_isIdentity == true)
@@ -234,8 +233,8 @@ namespace RepoDb
             // Get the type (underlying type)
             var propertyType = PropertyInfo.PropertyType.GetUnderlyingType();
 
-            // Property and Type level mapping
-            m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+            // Attribute Level, Property Level and Type level mapping
+            m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ?? // Attribute Level
                 TypeMapper.Get(GetDeclaringType(), PropertyInfo) ?? // Property Level
                 TypeMapper.Get(propertyType); // Type Level
 
@@ -266,6 +265,41 @@ namespace RepoDb
                 return m_mappedName;
             }
             return m_mappedName = PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+        }
+
+        /*
+         * GetPropertyHandler
+         */
+        private bool m_propertyHandlerWasSet;
+        private object m_propertyHandler;
+
+        /// <summary>
+        /// Gets the mapped property handler object for the current property.
+        /// </summary>
+        /// <returns>The mapped property handler object.</returns>
+        public object GetPropertyHandler() =>
+            GetPropertyHandler<object>();
+
+        /// <summary>
+        /// Gets the mapped property handler object for the current property.
+        /// </summary>
+        /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
+        /// <returns>The mapped property handler object.</returns>
+        public TPropertyHandler GetPropertyHandler<TPropertyHandler>()
+        {
+            if (m_propertyHandlerWasSet == true)
+            {
+                return Converter.ToType<TPropertyHandler>(m_propertyHandler);
+            }
+
+            // Set the flag
+            m_propertyHandlerWasSet = true;
+
+            // Set the instance
+            m_propertyHandler = PropertyHandlerCache.Get<TPropertyHandler>(GetDeclaringType(), PropertyInfo);
+
+            // Return the value
+            return Converter.ToType<TPropertyHandler>(m_propertyHandler);
         }
 
         /// <summary>

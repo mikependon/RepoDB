@@ -39,7 +39,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                // Get all with IsPrimary() flags
+                // Get all with IsIdentity() flags
                 var properties = PropertyCache.Get(entityType).Where(p => p.IsIdentity() == true);
 
                 // Check if there is forced [Identity] attribute
