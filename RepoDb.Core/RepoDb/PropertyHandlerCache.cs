@@ -1,5 +1,6 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
@@ -15,6 +16,8 @@ namespace RepoDb
         #region Privates
 
         private static readonly ConcurrentDictionary<int, object> m_cache = new ConcurrentDictionary<int, object>();
+        private static readonly IResolver<Type, PropertyInfo, object> m_propertyLevelResolver = new PropertyHandlerPropertyLevelResolver();
+        private static readonly IResolver<Type, object> m_typeLevelResolver = new PropertyHandlerTypeLevelResolver();
 
         #endregion
 
@@ -50,7 +53,8 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out value) == false)
             {
-                result = PropertyHandlerMapper.Get<TPropertyHandler>(type);
+                value = m_typeLevelResolver.Resolve(type);
+                result = Converter.ToType<TPropertyHandler>(value);
                 m_cache.TryAdd(key, result);
             }
 
@@ -128,26 +132,8 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out value) == false)
             {
-                // Attribute
-                var attribute = propertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
-                if (attribute != null)
-                {
-                    result = Converter.ToType<TPropertyHandler>(Activator.CreateInstance(attribute.HandlerType));
-                }
-
-                // Property Level
-                if (result == null)
-                {
-                    result = PropertyHandlerMapper.Get<TPropertyHandler>(entityType, propertyInfo);
-                }
-
-                // Type Level
-                if (result == null)
-                {
-                    result = PropertyHandlerMapper.Get<TPropertyHandler>(propertyInfo.PropertyType);
-                }
-
-                // Add to cache
+                value = m_propertyLevelResolver.Resolve(entityType, propertyInfo);
+                result = Converter.ToType<TPropertyHandler>(value);
                 m_cache.TryAdd(key, result);
             }
             else
