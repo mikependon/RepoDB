@@ -1,4 +1,5 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Attributes;
+using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
@@ -119,9 +120,26 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                var classProperty = PropertyCache.Get(entityType)?
-                    .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, propertyInfo.Name, StringComparison.OrdinalIgnoreCase));
-                result = classProperty?.GetDbType();
+                // Attribute Level
+                var attribute = propertyInfo.GetCustomAttribute<TypeMapAttribute>();
+                if (attribute != null)
+                {
+                    result = attribute.DbType;
+                }
+
+                // Property Level
+                if (result == null)
+                {
+                    result = TypeMapper.Get(propertyInfo.DeclaringType, propertyInfo);
+                }
+
+                // Type Level
+                if (result == null)
+                {
+                    result = TypeMapper.Get(propertyInfo.PropertyType);
+                }
+
+                // Set the cache
                 m_cache.TryAdd(key, result);
             }
 

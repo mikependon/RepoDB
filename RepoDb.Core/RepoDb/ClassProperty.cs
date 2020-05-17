@@ -1,6 +1,5 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Extensions;
-using RepoDb.Resolvers;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -49,6 +48,25 @@ namespace RepoDb
 
         #region Methods
 
+        /// <summary>
+        /// Returns the string that represent the current <see cref="ClassProperty"/> object.
+        /// </summary>
+        /// <returns>The unquoted name.</returns>
+        public override string ToString()
+        {
+            return string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
+        }
+
+        /// <summary>
+        /// Gets the declaring parent type of the current property info. If the class inherits an interface, then this will return 
+        /// the derived class type instead (if there is), otherwise the <see cref="PropertyInfo.DeclaringType"/> property.
+        /// </summary>
+        /// <returns>The declaring type.</returns>
+        public Type GetDeclaringType()
+        {
+            return (DeclaringType ?? PropertyInfo.DeclaringType);
+        }
+
         /*
          * AsField
          */
@@ -81,9 +99,9 @@ namespace RepoDb
         private PrimaryAttribute m_primaryAttribute;
 
         /// <summary>
-        /// Gets the primary attribute if present.
+        /// Gets the <see cref="PrimaryAttribute"/> if present.
         /// </summary>
-        /// <returns>The primary attribute if present.</returns>
+        /// <returns>The instance of <see cref="PrimaryAttribute"/>.</returns>
         public PrimaryAttribute GetPrimaryAttribute()
         {
             if (m_isPrimaryAttributeWasSet)
@@ -102,9 +120,9 @@ namespace RepoDb
         private IdentityAttribute m_identityAttribute;
 
         /// <summary>
-        /// Gets the identity attribute if present.
+        /// Gets the <see cref="IdentityAttribute"/> if present.
         /// </summary>
-        /// <returns>The identity attribute if present.</returns>
+        /// <returns>The instance of <see cref="IdentityAttribute"/>.</returns>
         public IdentityAttribute GetIdentityAttribute()
         {
             if (m_isIdentityAttributeWasSet)
@@ -113,6 +131,46 @@ namespace RepoDb
             }
             m_isIdentityAttributeWasSet = true;
             return m_identityAttribute = PropertyInfo.GetCustomAttribute(typeof(IdentityAttribute)) as IdentityAttribute;
+        }
+
+        /*
+         * GetTypeMapAttribute
+         */
+        private bool m_isTypeMapAttributeWasSet;
+        private TypeMapAttribute m_typeMapAttribute;
+
+        /// <summary>
+        /// Gets the <see cref="TypeMapAttribute"/> if present.
+        /// </summary>
+        /// <returns>The instance of <see cref="TypeMapAttribute"/>.</returns>
+        public TypeMapAttribute GetTypeMapAttribute()
+        {
+            if (m_isTypeMapAttributeWasSet)
+            {
+                return m_typeMapAttribute;
+            }
+            m_isTypeMapAttributeWasSet = true;
+            return m_typeMapAttribute = PropertyInfo.GetCustomAttribute(typeof(TypeMapAttribute)) as TypeMapAttribute;
+        }
+
+        /*
+         * GetPropertyHandlerAttribute
+         */
+        private bool m_isPropertyHandlerAttributeWasSet;
+        private PropertyHandlerAttribute m_propertyHandlerAttribute;
+
+        /// <summary>
+        /// Gets the <see cref="PropertyHandlerAttribute"/> if present.
+        /// </summary>
+        /// <returns>The instance of <see cref="PropertyHandlerAttribute"/>.</returns>
+        public PropertyHandlerAttribute GetPropertyHandlerAttribute()
+        {
+            if (m_isPropertyHandlerAttributeWasSet)
+            {
+                return m_propertyHandlerAttribute;
+            }
+            m_isPropertyHandlerAttributeWasSet = true;
+            return m_propertyHandlerAttribute = PropertyInfo.GetCustomAttribute(typeof(PropertyHandlerAttribute)) as PropertyHandlerAttribute;
         }
 
         /*
@@ -131,44 +189,8 @@ namespace RepoDb
                 return m_isPrimary;
             }
 
-            // Primary Attribute
-            m_isPrimary = (GetPrimaryAttribute() != null);
-            if (m_isPrimary == true)
-            {
-                return m_isPrimary;
-            }
-
-            // PrimaryMapper
-            var classProperty = PrimaryMapper.Get(GetDeclaringType());
-            m_isPrimary = (classProperty == this);
-            if (m_isPrimary == true)
-            {
-                return m_isPrimary;
-            }
-
-            // Id Property
-            m_isPrimary = string.Equals(PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase);
-            if (m_isPrimary == true)
-            {
-                return m_isPrimary;
-            }
-
-            // Type.Name + Id
-            m_isPrimary = string.Equals(PropertyInfo.Name, string.Concat(GetDeclaringType().Name, "id"), StringComparison.OrdinalIgnoreCase);
-            if (m_isPrimary == true)
-            {
-                return m_isPrimary;
-            }
-
-            // Mapping.Name + Id
-            m_isPrimary = string.Equals(PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(GetDeclaringType()), "id"), StringComparison.OrdinalIgnoreCase);
-            if (m_isPrimary == true)
-            {
-                return m_isPrimary;
-            }
-
-            // Return false
-            return (m_isPrimary = false);
+            // Get the value from the cache
+            return (m_isPrimary = PrimaryCache.Get(GetDeclaringType()) != null);
         }
 
         /*
@@ -188,29 +210,13 @@ namespace RepoDb
                 return m_isIdentity;
             }
 
-            // Identity Attribute
-            m_isIdentity = (GetIdentityAttribute() != null);
-            if (m_isIdentity == true)
-            {
-                return m_isIdentity;
-            }
-
-            // IdentityMapper
-            var classProperty = IdentityMapper.Get(GetDeclaringType());
-            m_isIdentity = (classProperty == this);
-            if (m_isIdentity == true)
-            {
-                return m_isIdentity;
-            }
-
-            // Return false
-            return (m_isIdentity = false);
+            // Get the value from the cache
+            return (m_isIdentity = IdentityCache.Get(GetDeclaringType()) != null);
         }
 
         /*
          * GetDbType
          */
-        private ClientTypeToDbTypeResolver m_clientTypeToSqlDbTypeResolver = new ClientTypeToDbTypeResolver();
         private bool m_isDbTypeWasSet;
         private DbType? m_dbType;
 
@@ -220,9 +226,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> value.</returns>
         public DbType? GetDbType()
         {
-            // We cannot use the NULL comparer for m_dbType object
-            // as the value could actually be null in reality
-            if (m_isDbTypeWasSet)
+            if (m_isDbTypeWasSet == true)
             {
                 return m_dbType;
             }
@@ -230,41 +234,8 @@ namespace RepoDb
             // Set the flag
             m_isDbTypeWasSet = true;
 
-            // Get the type (underlying type)
-            var propertyType = PropertyInfo.PropertyType.GetUnderlyingType();
-
-            // Attribute Level, Property Level and Type level mapping
-            m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ?? // Attribute Level
-                TypeMapper.Get(GetDeclaringType(), PropertyInfo) ?? // Property Level
-                TypeMapper.Get(propertyType); // Type Level
-
-            // Try to resolve if not found
-            if (m_dbType == null && propertyType.IsEnum == false)
-            {
-                m_dbType = m_clientTypeToSqlDbTypeResolver.Resolve(propertyType);
-            }
-
             // Return the value
-            return m_dbType;
-        }
-
-        /*
-         * GetName
-         */
-
-        private string m_mappedName;
-
-        /// <summary>
-        /// Gets the mapped-name for the current property.
-        /// </summary>
-        /// <returns>The mapped-name value.</returns>
-        public string GetMappedName()
-        {
-            if (m_mappedName != null)
-            {
-                return m_mappedName;
-            }
-            return m_mappedName = PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+            return m_dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo);
         }
 
         /*
@@ -302,23 +273,23 @@ namespace RepoDb
             return Converter.ToType<TPropertyHandler>(m_propertyHandler);
         }
 
-        /// <summary>
-        /// Returns the string that represent the current <see cref="ClassProperty"/> object.
-        /// </summary>
-        /// <returns>The unquoted name.</returns>
-        public override string ToString()
-        {
-            return string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
-        }
+        /*
+         * GetMappedName
+         */
+
+        private string m_mappedName;
 
         /// <summary>
-        /// Gets the declaring parent type of the current property info. If the class inherits an interface, then this will return 
-        /// the derived class type instead (if there is), otherwise the <see cref="PropertyInfo.DeclaringType"/> property.
+        /// Gets the mapped-name for the current property.
         /// </summary>
-        /// <returns>The declaring type.</returns>
-        public Type GetDeclaringType()
+        /// <returns>The mapped-name value.</returns>
+        public string GetMappedName()
         {
-            return (DeclaringType ?? PropertyInfo.DeclaringType);
+            if (m_mappedName != null)
+            {
+                return m_mappedName;
+            }
+            return m_mappedName = PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
         }
 
         #endregion

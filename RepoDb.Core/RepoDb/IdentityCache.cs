@@ -40,15 +40,13 @@ namespace RepoDb
             if (m_cache.TryGetValue(key, out property) == false)
             {
                 // Get all with IsIdentity() flags
-                var properties = PropertyCache.Get(entityType).Where(p => p.IsIdentity() == true);
-
-                // Check if there is forced [Identity] attribute
-                property = properties.FirstOrDefault(p => p.GetIdentityAttribute() != null);
+                property = PropertyCache.Get(entityType)?
+                    .FirstOrDefault(p => p.GetIdentityAttribute() != null);
 
                 // Otherwise, get the first one
                 if (property == null)
                 {
-                    property = properties?.FirstOrDefault();
+                    property = IdentityMapper.Get(entityType);
                 }
 
                 // Add to the cache (whatever)

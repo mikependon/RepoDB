@@ -190,9 +190,9 @@ namespace RepoDb.Extensions
                         dbType = property.GetDbType();
 
                         // Ensure mapping based on the value type
-                        if (dbType == null)
+                        if (dbType == null && value != null)
                         {
-                            dbType = TypeMapCache.Get(value?.GetType().GetUnderlyingType());
+                            dbType = TypeMapCache.Get(value.GetType().GetUnderlyingType());
                         }
 
                         // Check for specialized

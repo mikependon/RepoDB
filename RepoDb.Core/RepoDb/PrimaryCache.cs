@@ -39,16 +39,37 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                // Get all with IsPrimary() flags
-                var properties = PropertyCache.Get(entityType).Where(p => p.IsPrimary() == true);
+                var properties = PropertyCache.Get(entityType);
 
-                // Check if there is forced [Primary] attribute
-                property = properties.FirstOrDefault(p => p.GetPrimaryAttribute() != null);
+                // Get all with IsIdentity() flags
+                property = properties?
+                    .FirstOrDefault(p => p.GetPrimaryAttribute() != null);
 
                 // Otherwise, get the first one
                 if (property == null)
                 {
-                    property = properties?.FirstOrDefault();
+                    property = PrimaryMapper.Get(entityType);
+                }
+
+                // Id Property
+                if (property == null)
+                {
+                    property = properties?
+                       .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase));
+                }
+
+                // Type.Name + Id
+                if (property == null)
+                {
+                    property = properties?
+                       .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, string.Concat(p.GetDeclaringType().Name, "id"), StringComparison.OrdinalIgnoreCase));
+                }
+
+                // Mapping.Name + Id
+                if (property == null)
+                {
+                    property = properties?
+                       .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(p.GetDeclaringType()), "id"), StringComparison.OrdinalIgnoreCase));
                 }
 
                 // Add to the cache (whatever)
