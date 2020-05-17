@@ -1,7 +1,7 @@
 ﻿namespace RepoDb
 {
     /// <summary>
-    /// A class used to define a mapping for the bulk insert operation.
+    /// A class that is used to define a mapping for the bulk insert operation.
     /// </summary>
     public class BulkInsertMapItem
     {

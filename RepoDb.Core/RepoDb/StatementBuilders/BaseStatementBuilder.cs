@@ -8,7 +8,7 @@ using RepoDb.Exceptions;
 namespace RepoDb.StatementBuilders
 {
     /// <summary>
-    /// A class used to be as base <see cref="IStatementBuilder"/> for the database.
+    /// A base class for all <see cref="IStatementBuilder"/>-based objects.
     /// </summary>
     public abstract class BaseStatementBuilder : IStatementBuilder
     {

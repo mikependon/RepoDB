@@ -7,7 +7,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the mapped-name of the property.
+    /// A class that is used to cache the mapped-name of the property.
     /// </summary>
     public static class PropertyMappedNameCache
     {

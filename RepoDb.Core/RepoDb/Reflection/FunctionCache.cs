@@ -12,7 +12,7 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the compiled functions.
+    /// A class that is used to cache the compiled functions.
     /// </summary>
     internal static class FunctionCache
     {

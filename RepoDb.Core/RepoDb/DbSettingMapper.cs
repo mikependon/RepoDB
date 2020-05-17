@@ -8,7 +8,7 @@ using System.Data.Common;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to map a type of <see cref="DbConnection"/> into an instance of <see cref="IDbSetting"/> object.
+    /// A class that is used to map a type of <see cref="DbConnection"/> into an instance of <see cref="IDbSetting"/> object.
     /// </summary>
     public static class DbSettingMapper
     {

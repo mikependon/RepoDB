@@ -4,7 +4,7 @@ using System.Data.Common;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to hold the definition of the <see cref="DbCommand"/> parameters.
+    /// A class that is used to hold the definition of the <see cref="DbCommand"/> parameters.
     /// </summary>
     internal class CommandParameter
     {

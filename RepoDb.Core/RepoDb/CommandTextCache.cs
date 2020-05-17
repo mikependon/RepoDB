@@ -10,7 +10,7 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the already-built command texts.
+    /// A class that is used to cache the already-built command texts.
     /// </summary>
     public static class CommandTextCache
     {

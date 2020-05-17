@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the properties of the data entity as a list <see cref="Field"/> objects.
+    /// A class that is used to cache the properties of the data entity as a list <see cref="Field"/> objects.
     /// </summary>
     public static class FieldCache
     {

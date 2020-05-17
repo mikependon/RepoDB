@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the mapped-name for the entity.
+    /// A class that is used to cache the mapped-name for the entity.
     /// </summary>
     public static class ClassMappedNameCache
     {

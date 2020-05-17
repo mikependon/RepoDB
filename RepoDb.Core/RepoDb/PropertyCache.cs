@@ -9,7 +9,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to cache the properties of the entity.
+    /// A class that is used to cache the properties of the entity.
     /// </summary>
     public static class PropertyCache
     {

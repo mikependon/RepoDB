@@ -6,7 +6,7 @@ using System.Linq;
 namespace RepoDb.Contexts.Execution
 {
     /// <summary>
-    /// A class used to cache the context of the update-all executions.
+    /// A class that is used to cache the context of the update-all executions.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
     public static class UpdateAllExecutionContextCache<TEntity>

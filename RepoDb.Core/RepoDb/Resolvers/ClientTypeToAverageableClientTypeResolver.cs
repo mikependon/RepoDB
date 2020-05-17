@@ -5,7 +5,7 @@ using System;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the .NET CLR type into its averageable .NET CLR type.
+    /// A class that is used to resolve the .NET CLR type into its averageable .NET CLR type.
     /// </summary>
     public class ClientTypeToAverageableClientTypeResolver : IResolver<Type, Type>
     {

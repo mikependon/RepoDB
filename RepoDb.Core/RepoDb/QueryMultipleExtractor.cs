@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to extract the multiple resultsets of the query operation.
+    /// A class that is used to extract the multiple resultsets of the query operation.
     /// </summary>
     public sealed class QueryMultipleExtractor : IDisposable
     {
