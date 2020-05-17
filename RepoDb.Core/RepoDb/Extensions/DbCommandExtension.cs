@@ -174,7 +174,7 @@ namespace RepoDb.Extensions
                     #region PropertyHandler
 
                     // Check the property handler
-                    var propertyHandler = PropertyHandlerCache.Get<object>(type, property.PropertyInfo);
+                    var propertyHandler = property.GetPropertyHandler();
                     if (propertyHandler != null)
                     {
                         // TODO: Ensure to reuse the existing PropertyHandler (if given)
@@ -263,7 +263,7 @@ namespace RepoDb.Extensions
                     #region PropertyHandler
 
                     // Check the property handler
-                    var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
+                    var propertyHandler =  PropertyHandlerCache.Get<object>(property.DeclaringType, property);
                     if (propertyHandler != null)
                     {
                         // It is hard to pre-compile this as the property handler is dynamic
