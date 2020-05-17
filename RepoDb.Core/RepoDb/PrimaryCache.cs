@@ -1,7 +1,8 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 
 namespace RepoDb
 {
@@ -11,6 +12,7 @@ namespace RepoDb
     public static class PrimaryCache
     {
         private static readonly ConcurrentDictionary<int, ClassProperty> m_cache = new ConcurrentDictionary<int, ClassProperty>();
+        private static IResolver<Type, ClassProperty> m_resolver = new PrimaryResolver();
 
         #region Methods
 
@@ -39,38 +41,8 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                var properties = PropertyCache.Get(entityType);
-
-                // Get all with IsIdentity() flags
-                property = properties?
-                    .FirstOrDefault(p => p.GetPrimaryAttribute() != null);
-
-                // Otherwise, get the first one
-                if (property == null)
-                {
-                    property = PrimaryMapper.Get(entityType);
-                }
-
-                // Id Property
-                if (property == null)
-                {
-                    property = properties?
-                       .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, "id", StringComparison.OrdinalIgnoreCase));
-                }
-
-                // Type.Name + Id
-                if (property == null)
-                {
-                    property = properties?
-                       .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, string.Concat(p.GetDeclaringType().Name, "id"), StringComparison.OrdinalIgnoreCase));
-                }
-
-                // Mapping.Name + Id
-                if (property == null)
-                {
-                    property = properties?
-                       .FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, string.Concat(ClassMappedNameCache.Get(p.GetDeclaringType()), "id"), StringComparison.OrdinalIgnoreCase));
-                }
+                // Resolve the property
+                property = m_resolver.Resolve(entityType);
 
                 // Add to the cache (whatever)
                 m_cache.TryAdd(key, property);
