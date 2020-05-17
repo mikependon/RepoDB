@@ -1,9 +1,9 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -17,6 +17,8 @@ namespace RepoDb
         #region Privates
 
         private static readonly ConcurrentDictionary<int, DbType?> m_cache = new ConcurrentDictionary<int, DbType?>();
+        private static readonly IResolver<PropertyInfo, DbType?> m_propertyLevelResolver = new TypeMapPropertyLevelResolver();
+        private static readonly IResolver<Type, DbType?> m_typeLevelResolver = new TypeMapTypeLevelResolver();
 
         #endregion
 
@@ -49,7 +51,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = TypeMapper.Get(type);
+                result = m_typeLevelResolver.Resolve(type);
                 m_cache.TryAdd(key, result);
             }
 
@@ -120,26 +122,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                // Attribute Level
-                var attribute = propertyInfo.GetCustomAttribute<TypeMapAttribute>();
-                if (attribute != null)
-                {
-                    result = attribute.DbType;
-                }
-
-                // Property Level
-                if (result == null)
-                {
-                    result = TypeMapper.Get(propertyInfo.DeclaringType, propertyInfo);
-                }
-
-                // Type Level
-                if (result == null)
-                {
-                    result = TypeMapper.Get(propertyInfo.PropertyType);
-                }
-
-                // Set the cache
+                result = m_propertyLevelResolver.Resolve(propertyInfo);
                 m_cache.TryAdd(key, result);
             }
 
