@@ -121,7 +121,7 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Act
             var actual = ClassMappedNameCache.Get<ClassMapperTableAndMapAttributeCollisionTestClass>();
-            var expected = "[dbo].[Person]";
+            var expected = "[sales].[Person]";
 
             // Assert
             Assert.AreEqual(expected, actual);

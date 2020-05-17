@@ -345,7 +345,7 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Act
             var actual = PropertyMappedNameCache.Get<PropertyMapperColumnAndMapAttributeCollisionClass>(e => e.PropertyString);
-            var expected = "PropertyText";
+            var expected = "ColumnText";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -359,7 +359,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Act
             var actual = PropertyMappedNameCache.Get<PropertyMapperColumnAndMapAttributeCollisionClass>(propertyName);
-            var expected = "PropertyText";
+            var expected = "ColumnText";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -373,7 +373,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Act
             var actual = PropertyMappedNameCache.Get<PropertyMapperColumnAndMapAttributeCollisionClass>(field);
-            var expected = "PropertyText";
+            var expected = "ColumnText";
 
             // Assert
             Assert.AreEqual(expected, actual);

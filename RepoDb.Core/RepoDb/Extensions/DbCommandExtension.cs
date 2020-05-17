@@ -370,7 +370,6 @@ namespace RepoDb.Extensions
 
             // Check the property handler
             var typeHandler = PropertyHandlerCache.Get<object>(valueType);
-
             if (typeHandler != null)
             {
                 // TODO: Ensure to reuse the existing PropertyHandler (if given)
