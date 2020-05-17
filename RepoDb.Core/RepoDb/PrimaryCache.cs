@@ -41,10 +41,7 @@ namespace RepoDb
             // Try get the value
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                // Resolve the property
                 property = m_resolver.Resolve(entityType);
-
-                // Add to the cache (whatever)
                 m_cache.TryAdd(key, property);
             }
 
