@@ -99,7 +99,7 @@ namespace RepoDb
         /// Adds an identity property mapping into a target data entity type (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         public static void Add<TEntity>(Field field)
             where TEntity : class =>
             Add<TEntity>(field, false);
@@ -108,7 +108,7 @@ namespace RepoDb
         /// Adds an identity property mapping into a target data entity type (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity>(Field field,
             bool force)

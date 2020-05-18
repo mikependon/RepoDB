@@ -282,7 +282,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         public static void Add<TEntity, TPropertyHandler>(Field field)
             where TEntity : class =>
             Add<TEntity, TPropertyHandler>(field, Activator.CreateInstance<TPropertyHandler>(), false);
@@ -292,7 +292,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         public static void Add<TEntity, TPropertyHandler>(Field field,
             TPropertyHandler propertyHandler)
@@ -305,7 +305,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity, TPropertyHandler>(Field field,
             bool force)
@@ -317,7 +317,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="propertyHandler">The instance of the property handler.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity, TPropertyHandler>(Field field,
@@ -534,7 +534,7 @@ namespace RepoDb
         /// Property Level: Removes the existing mapped property handler from a data entity type property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class
         {

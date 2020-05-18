@@ -90,7 +90,7 @@ namespace RepoDb
         /// Adds a mapping between a class property and a database column (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
         public static void Add<TEntity>(Field field,
             string columnName)
@@ -101,7 +101,7 @@ namespace RepoDb
         /// Adds a mapping between a class property and a database column (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target .NET CLR type.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity>(Field field,

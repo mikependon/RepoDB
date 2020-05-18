@@ -309,7 +309,7 @@ namespace RepoDb
         /// Property Level: Adds a mapping between a data entity type property and a <see cref="DbType"/> object (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         public static void Add<TEntity>(Field field,
             DbType? dbType)
@@ -320,7 +320,7 @@ namespace RepoDb
         /// Property Level: Adds a mapping between a data entity type property and a <see cref="DbType"/> object (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The instance of <see cref="Field"/> to be mapped.</param>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity>(Field field,
