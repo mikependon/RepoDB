@@ -18,11 +18,18 @@ namespace RepoDb.IntegrationTests.Setup
             var connectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process);
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
+            //// Master connection
+            //ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=False;User Id=michael;Password=Password123;");
+
+            //// RepoDb connection
+            //ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
+
             // Master connection
-            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=False;User Id=michael;Password=Password123;");
+            ConnectionStringForMaster = (connectionStringForMaster ?? @"Data Source=CHRISWA;Initial Catalog=master;Trusted_Connection=True;");
 
             // RepoDb connection
-            ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
+            ConnectionStringForRepoDb = (connectionString ?? @"Data Source=CHRISWA;Initial Catalog=RepoDb;Trusted_Connection=True;");
+
 
             // Set the proper values for type mapper
             TypeMapper.Add(typeof(DateTime), System.Data.DbType.DateTime2, true);

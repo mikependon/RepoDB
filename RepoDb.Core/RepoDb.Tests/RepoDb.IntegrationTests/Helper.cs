@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -391,7 +392,7 @@ namespace RepoDb.IntegrationTests
                 {
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
-                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime = EpocDate.AddDays(index).ToString(CultureInfo.InvariantCulture),
                     ColumnDateTime2 = DateTime.UtcNow,
                     ColumnDecimal = index,
                     ColumnFloat = index,
@@ -413,7 +414,7 @@ namespace RepoDb.IntegrationTests
             {
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = true,
-                ColumnDateTime = EpocDate,
+                ColumnDateTime = EpocDate.ToString(CultureInfo.InvariantCulture),
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),

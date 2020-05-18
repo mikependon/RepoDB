@@ -12,6 +12,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using RepoDb.Entity;
 
 namespace RepoDb.Reflection
 {
@@ -111,7 +112,7 @@ namespace RepoDb.Reflection
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
-                .Select((index) => reader.GetName(index))
+                .Select(reader.GetName)
                 .Select((name, ordinal) => new DataReaderField
                 {
                     Name = name,
@@ -121,7 +122,9 @@ namespace RepoDb.Reflection
                 });
 
             // Get the member assignments
-            var memberAssignments = GetMemberAssignmentsForDataEntity<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection);
+            var memberAssignments = typeof(TEntity).IsSubclassOf(typeof(BaseEntity<TEntity>))
+                ? GetMemberAssignmentsForDataEntity2<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection)
+                : GetMemberAssignmentsForDataEntity<TEntity>(newEntityExpression, readerParameterExpression, readerFields, connection);
 
             // Throw an error if there are no matching atleast one
             if (memberAssignments.Any() != true)
@@ -512,6 +515,258 @@ namespace RepoDb.Reflection
                         }
 
                         #endregion
+                    }
+
+                    // Set the actual property value
+                    memberAssignments.Add(Expression.Bind(classProperty.PropertyInfo, valueExpression));
+                }
+            }
+
+            // Return the result
+            return memberAssignments;
+        }
+
+        /// <summary>
+        /// Returns the list of the bindings for the entity.
+        /// </summary>
+        /// <typeparam name="TEntity">The target entity type.</typeparam>
+        /// <param name="newEntityExpression">The new entity expression.</param>
+        /// <param name="readerParameterExpression">The data reader parameter.</param>
+        /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <returns>The enumerable list of member assignment and bindings.</returns>
+        private static IEnumerable<MemberAssignment> GetMemberAssignmentsForDataEntity2<TEntity>(Expression newEntityExpression,
+            ParameterExpression readerParameterExpression,
+            IEnumerable<DataReaderField> readerFields,
+            IDbConnection connection)
+            where TEntity : class
+        {
+            // Initialize variables
+            var memberAssignments = new List<MemberAssignment>();
+            var typeOfDbDataReader = typeof(DbDataReader);
+            var typeOfDateTime = typeof(DateTime);
+            var typeOfTimeSpan = typeof(TimeSpan);
+            var typeOfSingle = typeof(Single);
+            var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
+            var dataReaderFields = readerFields as DataReaderField[] ?? readerFields.ToArray();
+            var fieldNames = dataReaderFields.Select(f => f.Name.ToLower()).AsList();
+            var dbSetting = connection?.GetDbSetting();
+
+            // Filter the properties by reader fields
+            properties = properties.Where(property =>
+                fieldNames.FirstOrDefault(field =>
+                    string.Equals(field.AsUnquoted(true, dbSetting), property.GetMappedName().AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
+
+            // Iterate each properties
+            foreach (var classProperty in properties)
+            {
+                // Gets the mapped name and the ordinal
+                var mappedName = classProperty.GetMappedName().AsUnquoted(true, dbSetting);
+                var ordinal = fieldNames.IndexOf(mappedName.ToLower());
+
+                // Process only if there is a correct ordinal
+                if (ordinal >= 0)
+                {
+                    // Variables needed for the iteration
+                    var readerField = dataReaderFields.First(f => string.Equals(f.Name.AsUnquoted(true, dbSetting), mappedName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+                    var propertyType = classProperty.PropertyInfo.PropertyType;
+                    var underlyingType = Nullable.GetUnderlyingType(propertyType);
+                    var propertyMap = (EntityPropertyMap<TEntity>)BaseEntity<TEntity>.PropertyMap;
+                    var converterMethod = (Delegate)((EntityPropertyConverter)propertyMap?.Find(classProperty.PropertyInfo))?.ToProperty;
+                    var parameters = converterMethod?.Method.GetParameters();
+                    var targetType = parameters?[0].ParameterType ?? underlyingType ?? propertyType;
+
+                    var convertType = readerField.Type;
+                    var isConversionNeeded = readerField.Type != targetType;
+                    var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
+
+                    // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
+                    var readerGetValueMethod = (MethodInfo)null;
+
+                    // Ignore for the TimeSpan
+                    if (targetType != typeOfTimeSpan)
+                    {
+                        readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", readerField.Type?.Name));
+                    }
+
+                    // If null, use the object
+                    if (readerGetValueMethod == null)
+                    {
+                        // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
+                        if (readerField.Type != typeOfSingle)
+                        {
+                            readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", targetType.Name));
+                        }
+
+                        // If present, then use the property type, otherwise, use the object
+                        if (readerGetValueMethod != null)
+                        {
+                            convertType = targetType;
+                        }
+                        else
+                        {
+                            readerGetValueMethod = typeOfDbDataReader.GetMethod("GetValue");
+                            convertType = typeof(object);
+                        }
+
+                        // Force the conversion flag
+                        isConversionNeeded = true;
+                    }
+
+                    // Expressions
+                    var ordinalExpression = Expression.Constant(ordinal);
+                    Expression valueExpression;
+
+                    // Check for nullables
+                    if (isNullable)
+                    {
+                        var isDbNullExpression = Expression.Call(readerParameterExpression, typeOfDbDataReader.GetMethod("IsDBNull"), ordinalExpression);
+
+                        // True expression
+                        var trueExpression = (Expression)null;
+
+                        // Check for nullable
+                        if (underlyingType != null && underlyingType.IsValueType)
+                        {
+                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(targetType));
+                        }
+
+                        // Check if it has been set
+                        if (trueExpression == null)
+                        {
+                            trueExpression = Expression.Default(targetType);
+                        }
+
+                        // False expression
+                        var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
+
+                        // Only if there are conversions, execute the logic inside
+                        if (isConversionNeeded && converterMethod == null)
+                        {
+                            if (targetType.IsEnum)
+                            {
+                                #region StringToEnum
+
+                                if (readerField.Type == typeof(string))
+                                {
+                                    var enumParseMethod = typeof(EnumHelper).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                                    falseExpression = Expression.Call(enumParseMethod, new[]
+                                    {
+                                    Expression.Constant(propertyType),
+                                    falseExpression,
+                                    Expression.Constant(true)
+                                });
+                                    var enumPropertyType = targetType;
+                                    if (propertyType.IsNullable())
+                                    {
+                                        enumPropertyType = typeof(Nullable<>).MakeGenericType(targetType);
+                                    }
+                                    falseExpression = Expression.Convert(falseExpression, enumPropertyType);
+                                }
+
+                                #endregion
+
+                                #region <Bool|Numbers>ToEnum
+
+                                else
+                                {
+                                    var enumUnderlyingType = Enum.GetUnderlyingType(targetType);
+                                    var enumToObjectMethod = typeof(Enum).GetMethod("ToObject", new[] { typeof(Type), readerField.Type });
+                                    if (readerField.Type == typeof(bool))
+                                    {
+                                        falseExpression = Expression.Convert(falseExpression, typeof(object));
+                                    }
+                                    falseExpression = Expression.Call(enumToObjectMethod, new[]
+                                    {
+                                    Expression.Constant(targetType),
+                                    falseExpression
+                                });
+                                    falseExpression = Expression.Convert(falseExpression, targetType);
+                                }
+
+                                #endregion
+                            }
+                            else
+                            {
+                                #region TimeSpanToDateTime
+
+                                if (readerField.Type == typeOfDateTime && targetType == typeOfTimeSpan)
+                                {
+                                    falseExpression = Expression.Convert(falseExpression, typeOfDateTime);
+                                }
+
+                                #endregion
+
+                                #region Default
+
+                                else
+                                {
+                                    falseExpression = Expression.Convert(falseExpression, targetType);
+                                }
+
+                                #endregion
+                            }
+
+                            #region DateTimeToTimeSpan
+
+                            // In SqLite, the Time column is represented as System.DateTime in .NET. If in any case that the models
+                            // has been designed to have it as System.TimeSpan, then we should somehow be able to set it properly.
+
+                            if (readerField.Type == typeOfDateTime && targetType == typeOfTimeSpan)
+                            {
+                                var timeOfDayProperty = typeof(DateTime).GetProperty("TimeOfDay");
+                                falseExpression = Expression.Property(falseExpression, timeOfDayProperty);
+                            }
+
+                            #endregion
+                        }
+
+                        // Reset nullable variable
+                        if (underlyingType != null && underlyingType.IsValueType)
+                        {
+                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != typeof(string));
+                            if (setNullable)
+                            {
+                                var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(targetType).GetConstructor(new[] { targetType });
+                                falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
+                            }
+                        }
+
+                        // Set the value
+                        valueExpression = Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
+                    }
+                    else
+                    {
+                        // Call the actual Get<Type>/GetValue method by ordinal
+                        valueExpression = Expression.Call(readerParameterExpression,
+                            readerGetValueMethod,
+                            ordinalExpression);
+
+                        // Convert to correct type if necessary
+                        if (isConversionNeeded && converterMethod == null)
+                        {
+                            valueExpression = ConvertValueExpressionForDataEntity(valueExpression,
+                                readerField,
+                                targetType,
+                                convertType);
+                        }
+
+                        // Set for the 'Nullable' property
+                        if (underlyingType != null && underlyingType.IsValueType)
+                        {
+                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != typeof(string));
+                            if (setNullable)
+                            {
+                                var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(targetType).GetConstructor(new[] { targetType });
+                                valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
+                            }
+                        }
+                    }
+
+                    // Call convert method if one exists.
+                    if (converterMethod != null)
+                    {
+                        valueExpression = Expression.Call(Expression.Constant(converterMethod.Target), converterMethod.Method, valueExpression);
                     }
 
                     // Set the actual property value

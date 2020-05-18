@@ -83,5 +83,47 @@ namespace RepoDb.Extensions
         {
             return value is T[]? (T[])value : value.ToArray();
         }
+
+        /// <summary>
+        /// For each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="collection">collection</param>
+        /// <param name="eachAction">iterative action</param>
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> eachAction)
+        {
+            foreach (var item in collection)
+            {
+                eachAction?.Invoke(item);
+            }
+        }
+
+        /// <summary>
+        /// For each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <param name="collection">collection</param>
+        /// <param name="eachAction">iterative action</param>
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T, int> eachAction)
+        {
+            var index = 0;
+            foreach (var item in collection)
+            {
+                eachAction?.Invoke(item, index++);
+            }
+        }
+
+        /// <summary>
+        /// For each extension.
+        /// </summary>
+        /// <typeparam name="T">item type</typeparam>
+        /// <typeparam name="TU">result type</typeparam>
+        /// <param name="collection">collection</param>
+        /// <param name="eachFunc">select function</param>
+        /// <returns>returns list of results</returns>
+        public static IEnumerable<TU> ForEach<T, TU>(this IEnumerable<T> collection, Func<T, TU> eachFunc)
+        {
+            return collection.Select(eachFunc.Invoke).ToList();
+        }
     }
 }

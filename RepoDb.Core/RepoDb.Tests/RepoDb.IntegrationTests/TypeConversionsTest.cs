@@ -3,8 +3,10 @@ using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Setup;
 using System;
+using System.Globalization;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using RepoDb.Entity;
 
 namespace RepoDb.IntegrationTests
 {
@@ -391,15 +393,21 @@ namespace RepoDb.IntegrationTests
         #region StringToDateClass
 
         [Map("CompleteTable")]
-        private class StringToDateClass
+        private class StringToDateClass : BaseEntity<StringToDateClass>
         {
             [Primary]
             public Guid SessionId { get; set; }
             public string ColumnDate { get; set; }
+
+            public StringToDateClass()
+            {
+                Map(p => p.ColumnDate).Convert<DateTime, string>(o => o.ToString("M'/'d'/'yyyy h:mm:ss tt"));
+                Map(p => p.ColumnDate).Convert<string>(o => DateTime.Parse(o, CultureInfo.InvariantCulture));
+            }
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDate()
+        public void TestSqlConnectionCrudConversionFromStringToDate()
         {
             // Setup
             var entity = new StringToDateClass
@@ -426,15 +434,21 @@ namespace RepoDb.IntegrationTests
         #region StringToDateTimeClass
 
         [Map("CompleteTable")]
-        private class StringToDateTimeClass
+        private class StringToDateTimeClass : BaseEntity<StringToDateTimeClass>
         {
             [Primary]
             public Guid SessionId { get; set; }
             public string ColumnDateTime { get; set; }
+
+            public StringToDateTimeClass()
+            {
+                Map(p => p.ColumnDateTime).Convert<DateTime, string>(o => o.ToString("M'/'d'/'yyyy h:mm:ss tt"));
+                Map(p => p.ColumnDateTime).Convert<string>(o => DateTime.Parse(o, CultureInfo.InvariantCulture));
+            }
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateTime()
+        public void TestSqlConnectionCrudConversionFromStringToDateTime()
         {
             // Setup
             var entity = new StringToDateTimeClass
@@ -461,15 +475,21 @@ namespace RepoDb.IntegrationTests
         #region StringToDateTime2Class
 
         [Map("CompleteTable")]
-        private class StringToDateTime2Class
+        private class StringToDateTime2Class : BaseEntity<StringToDateTime2Class>
         {
             [Primary]
             public Guid SessionId { get; set; }
             public string ColumnDateTime2 { get; set; }
+
+            public StringToDateTime2Class()
+            {
+                Map(p => p.ColumnDateTime2).Convert<DateTime, string>(o => o.ToString("M'/'d'/'yyyy h:mm:ss tt"));
+                Map(p => p.ColumnDateTime2).Convert<string>(o => DateTime.Parse(o, CultureInfo.InvariantCulture));
+            }
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateTime2()
+        public void TestSqlConnectionCrudConversionFromStringToDateTime2()
         {
             // Setup
             var entity = new StringToDateTime2Class
