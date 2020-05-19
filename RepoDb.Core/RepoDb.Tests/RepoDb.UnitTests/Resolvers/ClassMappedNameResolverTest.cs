@@ -38,7 +38,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "EntityModel";
 
             // Assert
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(expected, result);
         }
 
         /*
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[dbo].[Map]";
 
             // Assert
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[dbo].[Table]";
 
             // Assert
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[dbo].[Map]";
 
             // Assert
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(expected, result);
         }
 
         /*
@@ -105,7 +105,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[dbo].[Map]";
 
             // Assert
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.Resolvers
             var expected = "[dbo].[Table]";
 
             // Assert
-            Assert.AreEqual(result, expected);
+            Assert.AreEqual(expected, result);
         }
     }
 }
