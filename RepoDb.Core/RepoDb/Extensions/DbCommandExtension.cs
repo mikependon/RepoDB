@@ -177,7 +177,12 @@ namespace RepoDb.Extensions
                     var propertyHandler = property.GetPropertyHandler();
                     if (propertyHandler != null)
                     {
-                        // TODO: Ensure to reuse the existing PropertyHandler (if given)
+                        // It is hard to pre-compile this as the property handler is dynamic
+                        var setMethod = propertyHandler.GetType().GetMethod("Set");
+                        var returnType = setMethod.ReturnType;
+                        var classProperty = PropertyCache.Get(property.DeclaringType, property.PropertyInfo);
+                        dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
+                        value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
 
                     #endregion
@@ -372,7 +377,11 @@ namespace RepoDb.Extensions
             var typeHandler = PropertyHandlerCache.Get<object>(valueType);
             if (typeHandler != null)
             {
-                // TODO: Ensure to reuse the existing PropertyHandler (if given)
+                // It is hard to pre-compile this as the property handler is dynamic
+                var setMethod = typeHandler.GetType().GetMethod("Set");
+                var returnType = setMethod.ReturnType;
+                dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
+                value = setMethod.Invoke(typeHandler, new[] { value, null });
             }
 
             #endregion

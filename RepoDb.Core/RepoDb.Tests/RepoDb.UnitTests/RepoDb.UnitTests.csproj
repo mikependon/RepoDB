@@ -24,4 +24,7 @@
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>
