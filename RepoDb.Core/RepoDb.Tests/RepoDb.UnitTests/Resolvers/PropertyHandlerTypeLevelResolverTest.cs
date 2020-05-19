@@ -1,21 +1,44 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 
 namespace RepoDb.UnitTests.Resolvers
 {
     [TestClass]
     public class PropertyHandlerTypeLevelResolverTest
     {
-        [TestInitialize]
-        public void Initialize()
+        #region PropertyHandlers
+
+        private class IntPropertyHandler : IPropertyHandler<int, int>
         {
-            throw new NotImplementedException();
+            public int Get(int input, ClassProperty property)
+            {
+                return input;
+            }
+
+            public int Set(int input, ClassProperty property)
+            {
+                return input;
+            }
         }
 
-        [TestCleanup]
-        public void Cleanup()
+        #endregion
+
+        [TestMethod]
+        public void TestPropertyHandlerTypeLevelResolverWithAttributes()
         {
-            throw new NotImplementedException();
+            // Setup
+            var resolver = new PropertyHandlerTypeLevelResolver();
+            FluentMapper
+                .Type<int>()
+                .PropertyHandler<IntPropertyHandler>();
+
+            // Act
+            var result = resolver.Resolve(typeof(int))?.GetType();
+            var expected = typeof(IntPropertyHandler);
+
+            // Assert
+            Assert.AreEqual(expected, result);
         }
     }
 }

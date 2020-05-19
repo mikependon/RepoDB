@@ -34,24 +34,24 @@ namespace RepoDb.UnitTests.Resolvers
             public int SecondaryId { get; set; }
         }
 
-        private class EntityModelWithIdentityProperty
+        private class EntityModelWithPrimaryProperty
         {
             public int Id { get; set; }
         }
 
-        private class EntityModelWithClassIdentityProperty
+        private class EntityModelWithClassAndPrimaryProperty
         {
-            public int EntityModelWithClassIdentityPropertyId { get; set; }
+            public int EntityModelWithClassAndPrimaryPropertyId { get; set; }
         }
 
-        [Map("[dbo].[Map]")]
-        private class EntityModelWithMapAttributeAndIdentityProperty
+        [Map("Map")]
+        private class EntityModelWithMapAttributeAndPrimaryProperty
         {
             public int MapId { get; set; }
         }
 
-        [Map("[dbo].[Table]")]
-        private class EntityModelWithTableAttributeAndIdentityProperty
+        [Map("Table")]
+        private class EntityModelWithTableAttributeAndPrimaryProperty
         {
             public int TableId { get; set; }
         }
@@ -143,17 +143,17 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         /*
-         * With Identity Property
+         * With Primary Property
          */
 
         [TestMethod]
-        public void TestPrimaryResolverWithIdentityProperty()
+        public void TestPrimaryResolverWithPrimaryProperty()
         {
             // Setup
             var resolver = new PrimaryResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithIdentityProperty))?.GetMappedName();
+            var result = resolver.Resolve(typeof(EntityModelWithPrimaryProperty))?.GetMappedName();
             var expected = "Id";
 
             // Assert
@@ -161,35 +161,35 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         /*
-         * With Class + Identity Property
+         * With Class + Primary Property
          */
 
         [TestMethod]
-        public void TestPrimaryResolverWithClassIdentityProperty()
+        public void TestPrimaryResolverWithClassAndPrimaryProperty()
         {
             // Setup
             var resolver = new PrimaryResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithClassIdentityProperty))?.GetMappedName();
-            var expected = "EntityModelWithClassIdentityPropertyId";
+            var result = resolver.Resolve(typeof(EntityModelWithClassAndPrimaryProperty))?.GetMappedName();
+            var expected = "EntityModelWithClassAndPrimaryPropertyId";
 
             // Assert
             Assert.AreEqual(expected, result);
         }
 
         /*
-         * With MapAttribute + Identity Property
+         * With MapAttribute + Primary Property
          */
 
         [TestMethod]
-        public void TestPrimaryResolverWithMapAttributeAndWithIdentityProperty()
+        public void TestPrimaryResolverWithMapAttributeAndWithPrimaryProperty()
         {
             // Setup
             var resolver = new PrimaryResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithMapAttributeAndIdentityProperty))?.GetMappedName();
+            var result = resolver.Resolve(typeof(EntityModelWithMapAttributeAndPrimaryProperty))?.GetMappedName();
             var expected = "MapId";
 
             // Assert
@@ -197,17 +197,17 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         /*
-         * With TableAttribute + Identity Property
+         * With TableAttribute + Primary Property
          */
 
         [TestMethod]
-        public void TestPrimaryResolverWithTableAttributeAndWithIdentityProperty()
+        public void TestPrimaryResolverWithTableAttributeAndWithPrimaryProperty()
         {
             // Setup
             var resolver = new PrimaryResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithTableAttributeAndIdentityProperty))?.GetMappedName();
+            var result = resolver.Resolve(typeof(EntityModelWithTableAttributeAndPrimaryProperty))?.GetMappedName();
             var expected = "TableId";
 
             // Assert
