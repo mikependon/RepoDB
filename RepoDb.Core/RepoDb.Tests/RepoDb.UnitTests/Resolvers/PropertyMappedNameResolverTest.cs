@@ -1,21 +1,140 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using RepoDb.Attributes;
+using RepoDb.Resolvers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RepoDb.UnitTests.Resolvers
 {
     [TestClass]
     public class PropertyMappedNameResolverTest
     {
-        [TestInitialize]
-        public void Initialize()
+        #region SubClasses
+
+        private class EntityModel
         {
-            throw new NotImplementedException();
+            public int Id { get; set; }
         }
 
-        [TestCleanup]
-        public void Cleanup()
+        private class EntityModelWithMapAttribute
         {
-            throw new NotImplementedException();
+            [Map("[PrimaryId]")]
+            public int Id { get; set; }
+        }
+
+        private class EntityModelWithColumnAttribute
+        {
+            [Column("[PrimaryId]")]
+            public int Id { get; set; }
+        }
+
+        private class EntityModelWithMapAndColumnAttribute
+        {
+            [Map("[MapId]"), Column("[ColumnId]")]
+            public int Id { get; set; }
+        }
+
+        #endregion
+
+        /*
+         * No Attributes
+         */
+
+        [TestMethod]
+        public void TestPropertyMappedNameResolverWithoutAttribute()
+        {
+            // Setup
+            var resolver = new PropertyMappedNameResolver();
+
+            // Act
+            var result = resolver.Resolve(typeof(EntityModel).GetProperty("Id"));
+            var expected = "Id";
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        /*
+         * With Attributes
+         */
+
+        [TestMethod]
+        public void TestPropertyMappedNameResolverWithMapAttribute()
+        {
+            // Setup
+            var resolver = new PropertyMappedNameResolver();
+
+            // Act
+            var result = resolver.Resolve(typeof(EntityModelWithMapAttribute).GetProperty("Id"));
+            var expected = "[PrimaryId]";
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void TestPropertyMappedNameResolverWithColumnAttribute()
+        {
+            // Setup
+            var resolver = new PropertyMappedNameResolver();
+
+            // Act
+            var result = resolver.Resolve(typeof(EntityModelWithColumnAttribute).GetProperty("Id"));
+            var expected = "[PrimaryId]";
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void TestPropertyMappedNameResolverWithMapAndColumnAttribute()
+        {
+            // Setup
+            var resolver = new PropertyMappedNameResolver();
+
+            // Act
+            var result = resolver.Resolve(typeof(EntityModelWithMapAndColumnAttribute).GetProperty("Id"));
+            var expected = "[MapId]";
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        /*
+         * With Mappings
+         */
+
+        [TestMethod]
+        public void TestPropertyMappedNameResolverWithMapAttributeAndMappings()
+        {
+            // Setup
+            var resolver = new PropertyMappedNameResolver();
+            FluentMapper
+                .Entity<EntityModelWithMapAttribute>()
+                .Column(e => e.Id, "[MapId]");
+
+            // Act
+            var result = resolver.Resolve(typeof(EntityModelWithMapAttribute).GetProperty("Id"));
+            var expected = "[PrimaryId]";
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void TestPropertyMappedNameResolverWithColumnAttributeAndMappings()
+        {
+            // Setup
+            var resolver = new PropertyMappedNameResolver();
+            FluentMapper
+                .Entity<EntityModelWithColumnAttribute>()
+                .Column(e => e.Id, "[ColumnId]");
+
+            // Act
+            var result = resolver.Resolve(typeof(EntityModelWithColumnAttribute).GetProperty("Id"));
+            var expected = "[PrimaryId]";
+
+            // Assert
+            Assert.AreEqual(expected, result);
         }
     }
 }
