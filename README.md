@@ -25,10 +25,9 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 <details>
 <summary><b>The benefits of using this library</b></summary>
 
-- The development experience is like Dapper but the feature is almost like EntityFramework.
 - The installation is easy and fast, it can then be used right-away.
-- The layer of like DbContext has been eliminated, those give the developers more control on the implementation.
-- The calls to fluent and raw-SQL methods is just a dot away.
+- The layer of like DbContext has been eliminated, thus give the developers more control on the implementation.
+- The calls to fluent and raw-SQL methods are just a dot away.
 - The implementation of repository is becoming more simple by leveraging the built-in repositories.
 - The control to query optimizations is easy via hints.
 - The processes to handle the large datasets is very-simple with batch and bulk operations.
