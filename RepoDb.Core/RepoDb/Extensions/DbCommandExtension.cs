@@ -180,7 +180,7 @@ namespace RepoDb.Extensions
                         // It is hard to pre-compile this as the property handler is dynamic
                         var setMethod = propertyHandler.GetType().GetMethod("Set");
                         var returnType = setMethod.ReturnType;
-                        var classProperty = PropertyCache.Get(property.DeclaringType, property.PropertyInfo);
+                        var classProperty = PropertyCache.Get((type ?? property.DeclaringType), property.PropertyInfo);
                         dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
                         value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
@@ -242,6 +242,7 @@ namespace RepoDb.Extensions
                 var dbType = (DbType?)null;
                 var value = kvp.Value;
                 var valueType = (Type)null;
+                var declaringType = (Type)null;
                 var property = (PropertyInfo)null;
 
                 // Cast the proper object and identify the properties
@@ -250,7 +251,8 @@ namespace RepoDb.Extensions
                     var commandParameter = (CommandParameter)kvp.Value;
 
                     // Get the property and value
-                    property = commandParameter.MappedToType.GetProperty(kvp.Key);
+                    declaringType = commandParameter.MappedToType;
+                    property = declaringType.GetProperty(kvp.Key);
                     value = commandParameter.Value;
 
                     // Set the value type
@@ -268,7 +270,7 @@ namespace RepoDb.Extensions
                     #region PropertyHandler
 
                     // Check the property handler
-                    var propertyHandler =  PropertyHandlerCache.Get<object>(property.DeclaringType, property);
+                    var propertyHandler = PropertyHandlerCache.Get<object>((declaringType ?? property.DeclaringType), property);
                     if (propertyHandler != null)
                     {
                         // It is hard to pre-compile this as the property handler is dynamic
