@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests.Resolvers
         private readonly ClientTypeToDbTypeResolver m_resolver = new ClientTypeToDbTypeResolver();
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForBigInt()
+        public void TestClientTypeToDbTypeResolverForBigInt()
         {
             // Setup
             var clientType = typeof(long);
@@ -30,7 +30,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForByte()
+        public void TestClientTypeToDbTypeResolverForByte()
         {
             // Setup
             var clientType = typeof(byte);
@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForBytes()
+        public void TestClientTypeToDbTypeResolverForBytes()
         {
             // Setup
             var clientType = typeof(byte[]);
@@ -56,7 +56,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForBoolean()
+        public void TestClientTypeToDbTypeResolverForBoolean()
         {
             // Setup
             var clientType = typeof(bool);
@@ -69,7 +69,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForString()
+        public void TestClientTypeToDbTypeResolverForString()
         {
             // Setup
             var clientType = typeof(string);
@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForChars()
+        public void TestClientTypeToDbTypeResolverForChars()
         {
             // Setup
             var clientType = typeof(char[]);
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForDateTime()
+        public void TestClientTypeToDbTypeResolverForDateTime()
         {
             // Setup
             var clientType = typeof(DateTime);
@@ -108,7 +108,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForDateTimeOffset()
+        public void TestClientTypeToDbTypeResolverForDateTimeOffset()
         {
             // Setup
             var clientType = typeof(DateTimeOffset);
@@ -121,7 +121,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForDecimal()
+        public void TestClientTypeToDbTypeResolverForDecimal()
         {
             // Setup
             var clientType = typeof(decimal);
@@ -134,7 +134,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForDouble()
+        public void TestClientTypeToDbTypeResolverForDouble()
         {
             // Setup
             var clientType = typeof(double);
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForInt()
+        public void TestClientTypeToDbTypeResolverForInt()
         {
             // Setup
             var clientType = typeof(int);
@@ -160,7 +160,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForSingle()
+        public void TestClientTypeToDbTypeResolverForSingle()
         {
             // Setup
             var clientType = typeof(float);
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForShort()
+        public void TestClientTypeToDbTypeResolverForShort()
         {
             // Setup
             var clientType = typeof(short);
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForObject()
+        public void TestClientTypeToDbTypeResolverForObject()
         {
             // Setup
             var clientType = typeof(object);
@@ -199,7 +199,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForTimeSpan()
+        public void TestClientTypeToDbTypeResolverForTimeSpan()
         {
             // Setup
             var clientType = typeof(TimeSpan);
@@ -212,7 +212,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForGuid()
+        public void TestClientTypeToDbTypeResolverForGuid()
         {
             // Setup
             var clientType = typeof(Guid);
@@ -225,7 +225,7 @@ namespace RepoDb.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void ClientTypeToDbTypeResolverForSqlVariant()
+        public void TestClientTypeToDbTypeResolverForSqlVariant()
         {
             // Setup
             var clientType = typeof(SqlVariant);
