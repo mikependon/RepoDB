@@ -96,10 +96,25 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
+        /// <param name="entityType">The type of the data entity.</param>
+        public static void CreateParameters(this IDbCommand command,
+            object param,
+            Type entityType)
+        {
+            CreateParameters(command, param, null, entityType);
+        }
+
+        /// <summary>
+        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="param">The object to be used when creating the parameters.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         internal static void CreateParameters(this IDbCommand command,
             object param,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            Type entityType)
         {
             // Check for presence
             if (param == null)
@@ -110,25 +125,25 @@ namespace RepoDb.Extensions
             // Supporting the IDictionary<string, object>
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip);
+                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip, entityType);
             }
 
             // Supporting the QueryField
             else if (param is QueryField)
             {
-                CreateParameters(command, (QueryField)param, propertiesToSkip);
+                CreateParameters(command, (QueryField)param, propertiesToSkip, entityType);
             }
 
             // Supporting the IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
-                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip);
+                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, entityType);
             }
 
             // Supporting the QueryGroup
             else if (param is QueryGroup)
             {
-                CreateParameters(command, (QueryGroup)param, propertiesToSkip);
+                CreateParameters(command, (QueryGroup)param, propertiesToSkip, entityType);
             }
 
             // Otherwise, iterate the properties
@@ -177,10 +192,9 @@ namespace RepoDb.Extensions
                     var propertyHandler = property.GetPropertyHandler();
                     if (propertyHandler != null)
                     {
-                        // It is hard to pre-compile this as the property handler is dynamic
                         var setMethod = propertyHandler.GetType().GetMethod("Set");
                         var returnType = setMethod.ReturnType;
-                        var classProperty = PropertyCache.Get((type ?? property.DeclaringType), property.PropertyInfo);
+                        var classProperty = PropertyCache.Get(property.GetDeclaringType(), property.PropertyInfo);
                         dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
                         value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
@@ -229,9 +243,11 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         internal static void CreateParameters(this IDbCommand command,
             IDictionary<string, object> dictionary,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            Type entityType)
         {
             // Variables needed
             var kvps = dictionary.Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
@@ -242,7 +258,7 @@ namespace RepoDb.Extensions
                 var dbType = (DbType?)null;
                 var value = kvp.Value;
                 var valueType = (Type)null;
-                var declaringType = (Type)null;
+                var declaringType = entityType;
                 var property = (PropertyInfo)null;
 
                 // Cast the proper object and identify the properties
@@ -251,8 +267,8 @@ namespace RepoDb.Extensions
                     var commandParameter = (CommandParameter)kvp.Value;
 
                     // Get the property and value
-                    declaringType = commandParameter.MappedToType;
-                    property = declaringType.GetProperty(kvp.Key);
+                    property = commandParameter.MappedToType.GetProperty(kvp.Key);
+                    declaringType = commandParameter.MappedToType ?? property.DeclaringType;
                     value = commandParameter.Value;
 
                     // Set the value type
@@ -270,13 +286,12 @@ namespace RepoDb.Extensions
                     #region PropertyHandler
 
                     // Check the property handler
-                    var propertyHandler = PropertyHandlerCache.Get<object>((declaringType ?? property.DeclaringType), property);
+                    var propertyHandler = PropertyHandlerCache.Get<object>(declaringType, property);
                     if (propertyHandler != null)
                     {
-                        // It is hard to pre-compile this as the property handler is dynamic
                         var setMethod = propertyHandler.GetType().GetMethod("Set");
                         var returnType = setMethod.ReturnType;
-                        var classProperty = PropertyCache.Get(property.DeclaringType, property);
+                        var classProperty = PropertyCache.Get(declaringType, property);
                         dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
                         value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
@@ -317,12 +332,14 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         internal static void CreateParameters(this IDbCommand command,
             QueryGroup queryGroup,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            Type entityType)
         {
             // Call the overloaded methods for the query fields
-            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip);
+            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType);
         }
 
         /// <summary>
@@ -331,9 +348,11 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            Type entityType)
         {
             // Filter the query fields
             var filteredQueryFields = queryFields
@@ -342,7 +361,7 @@ namespace RepoDb.Extensions
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
             {
-                CreateParameters(command, queryField, null);
+                CreateParameters(command, queryField, null, entityType);
             }
         }
 
@@ -352,9 +371,11 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
         /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         internal static void CreateParameters(this IDbCommand command,
             QueryField queryField,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            Type entityType)
         {
             // Exclude those to be skipped
             if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
@@ -379,11 +400,15 @@ namespace RepoDb.Extensions
             var typeHandler = PropertyHandlerCache.Get<object>(valueType);
             if (typeHandler != null)
             {
-                // It is hard to pre-compile this as the property handler is dynamic
+                var classProperty = (ClassProperty)null;
                 var setMethod = typeHandler.GetType().GetMethod("Set");
                 var returnType = setMethod.ReturnType;
+                if (entityType != null)
+                {
+                    classProperty = PropertyCache.Get(entityType, queryField.Field);
+                }
                 dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
-                value = setMethod.Invoke(typeHandler, new[] { value, null });
+                value = setMethod.Invoke(typeHandler, new[] { value, classProperty });
             }
 
             #endregion

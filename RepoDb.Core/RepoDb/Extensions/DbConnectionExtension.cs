@@ -152,6 +152,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = command.ExecuteReader())
@@ -232,6 +233,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = await command.ExecuteReaderAsync())
@@ -316,6 +318,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: typeof(TEntity),
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = command.ExecuteReader())
@@ -400,6 +403,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: typeof(TEntity),
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 using (var reader = await command.ExecuteReaderAsync())
@@ -550,6 +554,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             var hasError = false;
 
@@ -637,6 +642,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             var hasError = false;
 
@@ -722,6 +728,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return command.ExecuteNonQuery();
@@ -791,6 +798,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return await command.ExecuteNonQueryAsync();
@@ -860,6 +868,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.DbNullToNull(command.ExecuteScalar());
@@ -929,6 +938,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.DbNullToNull(await command.ExecuteScalarAsync());
@@ -999,6 +1009,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.ToType<TResult>(command.ExecuteScalar());
@@ -1069,6 +1080,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.ToType<TResult>(await command.ExecuteScalarAsync());
@@ -1510,6 +1522,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="commandTimeout">The command timeout to be used.</param>
         /// <param name="transaction">The transaction object to be used.</param>
+        /// <param name="entityType">The type of the data entity.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>An instance of <see cref="DbCommand"/> object.</returns>
         private static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
@@ -1518,6 +1531,7 @@ namespace RepoDb
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            Type entityType = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Check Transaction
@@ -1536,7 +1550,7 @@ namespace RepoDb
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
 
             // Add the parameters
-            command.CreateParameters(param, commandArrayParameters?.Select(cap => cap.ParameterName));
+            command.CreateParameters(param, commandArrayParameters?.Select(cap => cap.ParameterName), entityType);
 
             // Identify target statement, for now, only support array with single parameters
             if (commandArrayParameters != null)
