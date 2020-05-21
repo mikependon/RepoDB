@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests.CustomObjects
         }
         protected override DbCommand CreateDbCommand()
         {
-            return new CustomDbCommand();
+            return new CustomDbCommand() { Connection = this };
         }
     }
 }

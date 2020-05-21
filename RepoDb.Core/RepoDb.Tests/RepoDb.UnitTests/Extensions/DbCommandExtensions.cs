@@ -1,21 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.UnitTests.CustomObjects;
 
 namespace RepoDb.UnitTests.Extensions
 {
     [TestClass]
     public class DbCommandExtensionsTest
     {
-        class TestClass
+        [TestCleanup]
+        public void Cleanup()
+        {
+            PropertyHandlerMapper.Clear();
+            PropertyHandlerCache.Flush();
+        }
+
+        #region SubClasses
+
+        private class PropertyHandlerConnection : CustomDbConnection { }
+
+        #endregion
+
+        #region SubClasses
+
+        private class TestClass
         {
             public Guid Id { get; set; } = Guid.NewGuid();
         }
 
-        class StringToGuidPropertyHandler : IPropertyHandler<string, Guid>
+        #endregion
+
+        #region PropertyHandlers
+
+        private class StringToGuidPropertyHandler : IPropertyHandler<string, Guid>
         {
             public Guid Get(string input, ClassProperty property)
             {
@@ -29,34 +49,156 @@ namespace RepoDb.UnitTests.Extensions
             }
         }
 
+        #endregion
+
+        #region PropertyHandlerTests
+
+        #region PropertyLevel
+
         [TestMethod]
-        public void CreateParametersPropertyHandlerWillBeUsedOnParameterResolution()
+        public void TestDbCommandCreateParametersPropertyHandlerPropertyLevelInvocationViaDictionary()
         {
             // Arrange
-            FluentMapper.Entity<TestClass>().PropertyHandler<StringToGuidPropertyHandler>(e => e.Id).;
-            var cmd = new SqlConnection().CreateCommand();
+            var param = new Dictionary<string, object> { { "Id", "9963c864-ab4f-43f8-9dc9-43038565b971" } };
+            FluentMapper
+                .Entity<TestClass>()
+                .PropertyHandler<StringToGuidPropertyHandler>(e => e.Id);
 
             // Act
-            cmd.CreateParameters(new TestClass { Id = Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971") });
+            using (var connection = new PropertyHandlerConnection())
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CreateParameters(param);
 
-            // Assert
-            Assert.AreEqual(1, cmd.Parameters.Count);
-            Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                    // Assert
+                    Assert.AreEqual(1, cmd.Parameters.Count);
+                    Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                }
+            }
         }
 
         [TestMethod]
-        public void CreateParametersQueryFieldPropertyHandlerWillBeUsedOnParameterResolution()
+        public void TestDbCommandCreateParametersPropertyHandlerPropertyLevelInvocationViaClass()
         {
             // Arrange
-            PropertyHandlerMapper.Add(typeof(Guid), new StringToGuidPropertyHandler(), true);
-            var cmd = new SqlConnection().CreateCommand();
+            var param = new TestClass { Id = Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971") };
+            FluentMapper
+                .Entity<TestClass>()
+                .PropertyHandler<StringToGuidPropertyHandler>(e => e.Id);
 
             // Act
-            cmd.CreateParameters(new QueryField("Id", Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971")));
+            using (var connection = new PropertyHandlerConnection())
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CreateParameters(param);
 
-            // Assert
-            Assert.AreEqual(1, cmd.Parameters.Count);
-            Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                    // Assert
+                    Assert.AreEqual(1, cmd.Parameters.Count);
+                    Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                }
+            }
         }
+
+        #endregion
+
+        #region Type Level
+
+        [TestMethod]
+        public void TestDbCommandCreateParametersPropertyHandlerTypeLevelInvocationViaDynamic()
+        {
+            // Arrange
+            var param = new { Id = Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971") };
+            FluentMapper
+                .Type<Guid>()
+                .PropertyHandler<StringToGuidPropertyHandler>();
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CreateParameters(param);
+
+                    // Assert
+                    Assert.AreEqual(1, cmd.Parameters.Count);
+                    Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbCommandCreateParametersPropertyHandlerTypeLevelInvocationViaQueryField()
+        {
+            // Arrange
+            var param = new QueryField("Id", Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971"));
+            FluentMapper
+                .Type<Guid>()
+                .PropertyHandler<StringToGuidPropertyHandler>();
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CreateParameters(param);
+
+                    // Assert
+                    Assert.AreEqual(1, cmd.Parameters.Count);
+                    Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbCommandCreateParametersPropertyHandlerTypeLevelInvocationViaQueryFields()
+        {
+            // Arrange
+            var param = new QueryField("Id", Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971")).AsEnumerable();
+            FluentMapper
+                .Type<Guid>()
+                .PropertyHandler<StringToGuidPropertyHandler>();
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CreateParameters(param);
+
+                    // Assert
+                    Assert.AreEqual(1, cmd.Parameters.Count);
+                    Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDbCommandCreateParametersPropertyHandlerTypeLevelInvocationViaQueryGroup()
+        {
+            // Arrange
+            var param = new QueryGroup(new QueryField("Id", Guid.Parse("9963c864-ab4f-43f8-9dc9-43038565b971")));
+            FluentMapper
+                .Type<Guid>()
+                .PropertyHandler<StringToGuidPropertyHandler>();
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                using (var cmd = connection.CreateCommand())
+                {
+                    cmd.CreateParameters(param);
+
+                    // Assert
+                    Assert.AreEqual(1, cmd.Parameters.Count);
+                    Assert.AreEqual("9963c864-ab4f-43f8-9dc9-43038565b971", cmd.Parameters[0].Value);
+                }
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

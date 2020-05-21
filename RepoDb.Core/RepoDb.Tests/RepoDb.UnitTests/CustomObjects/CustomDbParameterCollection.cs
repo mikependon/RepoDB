@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -8,14 +9,28 @@ namespace RepoDb.UnitTests.CustomObjects
 {
     public class CustomDbParameterCollection : DbParameterCollection
     {
+        #region Privates
+
         private List<object> m_parameters = new List<object>();
-        public override int Count { get; }
+
+        #endregion
+
+        #region Properties
+
+        public override int Count => m_parameters.Count;
+
         public override object SyncRoot { get; }
+
+        #endregion
+
+        #region Methods
+
         public override int Add(object value)
         {
             m_parameters.Add(value);
-            return default(int);
+            return m_parameters.IndexOf(value);
         }
+
         public new CustomDbParameter this[string name]
         {
             get
@@ -23,61 +38,103 @@ namespace RepoDb.UnitTests.CustomObjects
                 return m_parameters.OfType<CustomDbParameter>().First();
             }
         }
+
         public override void AddRange(Array values)
         {
+            m_parameters.AddRange(values.AsEnumerable());
         }
+
         public override void Clear()
         {
+            m_parameters.Clear();
         }
+
         public override bool Contains(object value)
         {
-            return default(bool);
+            return m_parameters.Contains(value);
         }
+
         public override bool Contains(string value)
         {
-            return default(bool);
+            return m_parameters
+                .OfType<DbParameter>()
+                .Any(p => string.Equals(p.ParameterName, value, StringComparison.OrdinalIgnoreCase));
         }
-        public override void CopyTo(Array array, int index)
+
+        public override void CopyTo(Array array,
+            int index)
         {
+            throw new NotImplementedException();
         }
+
         public override IEnumerator GetEnumerator()
         {
-            return null;
+            return m_parameters.GetEnumerator();
         }
+
         public override int IndexOf(object value)
         {
-            return default(int);
+            return m_parameters.IndexOf(value);
         }
+
         public override int IndexOf(string parameterName)
         {
-            return default(int);
+            var value = m_parameters
+                .OfType<DbParameter>()
+                .FirstOrDefault(p => string.Equals(p.ParameterName, parameterName, StringComparison.OrdinalIgnoreCase));
+            return IndexOf(value);
         }
-        public override void Insert(int index, object value)
+
+        public override void Insert(int index,
+            object value)
         {
+            m_parameters.Insert(index, value);
         }
+
         public override void Remove(object value)
         {
+            m_parameters.Remove(value);
         }
+
         public override void RemoveAt(int index)
         {
+            m_parameters.RemoveAt(index);
         }
+
         public override void RemoveAt(string parameterName)
         {
+            var value = m_parameters
+                .OfType<DbParameter>()
+                .FirstOrDefault(p => string.Equals(p.ParameterName, parameterName, StringComparison.OrdinalIgnoreCase));
+            Remove(value);
         }
+
         protected override DbParameter GetParameter(int index)
         {
-            return default(DbParameter);
+            return m_parameters[index] as DbParameter;
         }
+
         protected override DbParameter GetParameter(string parameterName)
         {
-            return default(DbParameter);
+            return m_parameters
+                .OfType<DbParameter>()
+                .FirstOrDefault(p => string.Equals(p.ParameterName, parameterName, StringComparison.OrdinalIgnoreCase));
         }
-        protected override void SetParameter(int index, DbParameter value)
-        {
-        }
-        protected override void SetParameter(string parameterName, DbParameter value)
-        {
-        }
-    }
 
+        protected override void SetParameter(int index,
+            DbParameter value)
+        {
+            var parameter = GetParameter(index);
+            parameter.Value = value;
+        }
+
+        protected override void SetParameter(string parameterName,
+            DbParameter value)
+        {
+            var parameter = GetParameter(parameterName);
+            parameter.Value = value;
+        }
+
+        #endregion
+    }
 }
