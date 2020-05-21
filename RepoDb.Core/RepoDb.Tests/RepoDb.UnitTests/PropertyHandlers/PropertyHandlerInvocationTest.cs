@@ -26,13 +26,6 @@ namespace RepoDb.UnitTests.PropertyHandlers
 
         private class PropertyHandlerConnection : CustomDbConnection { }
 
-        private class PropertyHandlerTestClassRepository : BaseRepository<PropertyHandlerTestClass, PropertyHandlerConnection>
-        {
-            public PropertyHandlerTestClassRepository()
-                : base("ConnectionString")
-            { }
-        }
-
         #endregion
 
         #region SubClasses
@@ -42,6 +35,16 @@ namespace RepoDb.UnitTests.PropertyHandlers
             public int Id { get; set; }
         }
 
+        private class PropertyHandlerTestClassForDynamic : PropertyHandlerTestClass { }
+
+        private class PropertyHandlerTestClassForLinq : PropertyHandlerTestClass { }
+
+        private class PropertyHandlerTestClassForQueryField : PropertyHandlerTestClass { }
+
+        private class PropertyHandlerTestClassForQueryFields : PropertyHandlerTestClass { }
+
+        private class PropertyHandlerTestClassForQueryGroup : PropertyHandlerTestClass { }
+
         #endregion
 
         [TestMethod]
@@ -49,12 +52,15 @@ namespace RepoDb.UnitTests.PropertyHandlers
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
-            var repository = new PropertyHandlerTestClassRepository();
-            FluentMapper.Entity<PropertyHandlerTestClass>()
+            FluentMapper
+                .Entity<PropertyHandlerTestClassForLinq>()
                 .PropertyHandler(e => e.Id, propertyHandler.Object);
 
             // Act
-            repository.Query(e => e.Id == 1);
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Query<PropertyHandlerTestClassForLinq>(e => e.Id == 1);
+            }
 
             // Assert
             propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
@@ -65,12 +71,15 @@ namespace RepoDb.UnitTests.PropertyHandlers
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
-            var repository = new PropertyHandlerTestClassRepository();
-            FluentMapper.Entity<PropertyHandlerTestClass>()
+            FluentMapper
+                .Entity<PropertyHandlerTestClassForDynamic>()
                 .PropertyHandler(e => e.Id, propertyHandler.Object);
 
             // Act
-            repository.Query(new { Id = 1 });
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Query<PropertyHandlerTestClassForDynamic>(new { Id = 1 });
+            }
 
             // Assert
             propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
@@ -81,12 +90,15 @@ namespace RepoDb.UnitTests.PropertyHandlers
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
-            var repository = new PropertyHandlerTestClassRepository();
-            FluentMapper.Entity<PropertyHandlerTestClass>()
+            FluentMapper
+                .Entity<PropertyHandlerTestClassForQueryField>()
                 .PropertyHandler(e => e.Id, propertyHandler.Object);
 
             // Act
-            repository.Query(new QueryField("Id", 1));
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Query<PropertyHandlerTestClassForQueryField>(new QueryField("Id", 1));
+            }
 
             // Assert
             propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
@@ -97,12 +109,15 @@ namespace RepoDb.UnitTests.PropertyHandlers
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
-            var repository = new PropertyHandlerTestClassRepository();
-            FluentMapper.Entity<PropertyHandlerTestClass>()
+            FluentMapper
+                .Entity<PropertyHandlerTestClassForQueryFields>()
                 .PropertyHandler(e => e.Id, propertyHandler.Object);
 
             // Act
-            repository.Query((new QueryField("Id", 1)).AsEnumerable());
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Query<PropertyHandlerTestClassForQueryFields>((new QueryField("Id", 1)).AsEnumerable());
+            }
 
             // Assert
             propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
@@ -113,12 +128,15 @@ namespace RepoDb.UnitTests.PropertyHandlers
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
-            var repository = new PropertyHandlerTestClassRepository();
-            FluentMapper.Entity<PropertyHandlerTestClass>()
+            FluentMapper
+                .Entity<PropertyHandlerTestClassForQueryGroup>()
                 .PropertyHandler(e => e.Id, propertyHandler.Object);
 
             // Act
-            repository.Query(new QueryGroup(new QueryField("Id", 1)));
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Query<PropertyHandlerTestClassForQueryGroup>(new QueryGroup(new QueryField("Id", 1)));
+            }
 
             // Assert
             propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
