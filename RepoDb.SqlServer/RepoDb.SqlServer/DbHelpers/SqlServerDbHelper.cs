@@ -1,9 +1,11 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -51,12 +53,12 @@ namespace RepoDb.DbHelpers
 	                , CONVERT(BIT, COALESCE(TC.is_primary, 0)) AS IsPrimary
 	                , CONVERT(BIT, COALESCE(TMP.is_identity, 1)) AS IsIdentity
 	                , CONVERT(BIT, COALESCE(TMP.is_nullable, 1)) AS IsNullable
+	                , C.DATA_TYPE AS DataType
 					, CASE WHEN TMP.max_length > COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length) THEN
 						TMP.max_length
 	                  ELSE
 						COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length)
 	                  END AS Size
-	                , CONVERT(INT, COALESCE(TMP.max_length, 1)) AS Size
 	                , CONVERT(TINYINT, COALESCE(TMP.precision, 1)) AS Precision
 	                , CONVERT(TINYINT, COALESCE(TMP.scale, 1)) AS Scale
                 FROM INFORMATION_SCHEMA.COLUMNS C
@@ -149,6 +151,20 @@ namespace RepoDb.DbHelpers
             return tableName.AsUnquoted(true, dbSetting);
         }
 
+        /// <summary>
+        /// Throws an exception of any of the validation needed is failing.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="dbFields">The list of <see cref="DbField"/> objects to be validated.</param>
+        private void ValidateDbFields(string tableName,
+            IEnumerable<DbField> dbFields)
+        {
+            if (dbFields?.Any() != true)
+            {
+                throw new MissingFieldsException($"There are no database fields found for table '{tableName}'. Make sure that the target table is available and atleast a single field is present.");
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -186,6 +202,9 @@ namespace RepoDb.DbHelpers
                     dbFields.Add(ReaderToDbField(reader));
                 }
 
+                // Validate the fields
+                //ValidateDbFields(tableName, dbFields);
+
                 // Return the list of fields
                 return dbFields;
             }
@@ -221,6 +240,9 @@ namespace RepoDb.DbHelpers
                 {
                     dbFields.Add(ReaderToDbField(reader));
                 }
+
+                // Validate the fields
+                //ValidateDbFields(tableName, dbFields);
 
                 // Return the list of fields
                 return dbFields;
