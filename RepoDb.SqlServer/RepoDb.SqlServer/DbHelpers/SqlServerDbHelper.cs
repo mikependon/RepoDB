@@ -51,7 +51,11 @@ namespace RepoDb.DbHelpers
 	                , CONVERT(BIT, COALESCE(TC.is_primary, 0)) AS IsPrimary
 	                , CONVERT(BIT, COALESCE(TMP.is_identity, 1)) AS IsIdentity
 	                , CONVERT(BIT, COALESCE(TMP.is_nullable, 1)) AS IsNullable
-	                , C.DATA_TYPE AS DataType
+					, CASE WHEN TMP.max_length > COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length) THEN
+						TMP.max_length
+	                  ELSE
+						COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length)
+	                  END AS Size
 	                , CONVERT(INT, COALESCE(TMP.max_length, 1)) AS Size
 	                , CONVERT(TINYINT, COALESCE(TMP.precision, 1)) AS Precision
 	                , CONVERT(TINYINT, COALESCE(TMP.scale, 1)) AS Scale
