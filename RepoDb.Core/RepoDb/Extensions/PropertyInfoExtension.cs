@@ -122,7 +122,7 @@ namespace RepoDb.Extensions
             bool appendUnderscore)
         {
             var field = new Field(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
-            return new QueryField(field, Operation.Equal, property.GetValue(entity), appendUnderscore);
+            return new QueryField(field, Operation.Equal, property.GetHandledValue(entity), appendUnderscore);
         }
 
         /// <summary>
@@ -300,6 +300,23 @@ namespace RepoDb.Extensions
             {
                 yield return property.AsField();
             }
+        }
+
+        public static object GetHandledValue(this PropertyInfo propertyInfo, object entity)
+            => propertyInfo.GetHandledValue(propertyInfo.DeclaringType, entity);
+
+        public static object GetHandledValue(this PropertyInfo propertyInfo, Type declaringType, object entity)
+        {
+            var classProperty = PropertyCache.Get(declaringType, propertyInfo);
+            var propertyHandler = classProperty.GetPropertyHandler();
+
+            if (propertyHandler != null)
+            {
+                var setMethod = propertyHandler.GetType().GetMethod("Set");
+                return setMethod.Invoke(propertyHandler, new[] { propertyInfo.GetValue(entity), classProperty });
+            }
+
+            return propertyInfo.GetValue(entity);
         }
     }
 }
