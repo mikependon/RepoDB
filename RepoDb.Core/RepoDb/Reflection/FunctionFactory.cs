@@ -94,20 +94,38 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The raw connection string.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
         public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
             IDbConnection connection,
-            IDbTransaction transaction)
+            string connectionString,
+            IDbTransaction transaction,
+            bool enableValidation)
             where TEntity : class
         {
             // Expression variables
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
             var newEntityExpression = Expression.New(typeof(TEntity));
 
-            // DB Variables
+            // Variables neede
             var dbSetting = connection.GetDbSetting();
-            var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            var dbFields = (IEnumerable<DbField>)null;
+
+            // Get the fields
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, enableValidation);
+            }
+            else
+            {
+                using (var dbConnection = (DbConnection)Activator.CreateInstance(connection.GetType()))
+                {
+                    dbConnection.ConnectionString = connectionString;
+                    DbFieldCache.Get(dbConnection, ClassMappedNameCache.Get<TEntity>(), transaction, enableValidation);
+                }
+            }
 
             // Matching the fields
             var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -205,7 +223,7 @@ namespace RepoDb.Reflection
                     {
                         handlerInstance = classProperty.GetPropertyHandler();
                     }
-                    if (handlerInstance == null)
+                    if (handlerInstance == null && readerField.Type != null)
                     {
                         handlerInstance = PropertyHandlerCache.Get<object>(readerField.Type.GetUnderlyingType());
                     }
@@ -869,7 +887,7 @@ namespace RepoDb.Reflection
                     {
                         handlerInstance = classProperty.GetPropertyHandler();
                     }
-                    if (handlerInstance == null)
+                    if (handlerInstance == null && dbField.Type != null)
                     {
                         handlerInstance = PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
                     }
@@ -1543,7 +1561,7 @@ namespace RepoDb.Reflection
                     {
                         handlerInstance = classProperty.GetPropertyHandler();
                     }
-                    if (handlerInstance == null)
+                    if (handlerInstance == null && dbField.Type != null)
                     {
                         handlerInstance = PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
                     }

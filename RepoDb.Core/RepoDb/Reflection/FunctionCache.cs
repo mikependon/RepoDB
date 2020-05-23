@@ -26,59 +26,32 @@ namespace RepoDb
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        public static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
-            IDbConnection connection)
-            where TEntity : class
-        {
-            return GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection);
-        }
-
-        /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
-        /// </summary>
-        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The raw connection string.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
         internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
             IDbConnection connection,
-            IDbTransaction transaction)
+            string connectionString,
+            IDbTransaction transaction,
+            bool enableValidation)
             where TEntity : class
         {
-            return GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader, connection, transaction);
+            return GetDataReaderToDataEntityFunctionConverterCache<TEntity>.Get(reader, connection, connectionString, transaction, enableValidation);
         }
 
-        #region GetDataReaderToDataEntityConverterFunctionCache
+        #region GetDataReaderToDataEntityFunctionConverterCache
 
-        private static class GetDataReaderToDataEntityConverterFunctionCache<TEntity>
-            where TEntity : class
-        {
-            private static Func<DbDataReader, TEntity> m_func;
-
-            public static Func<DbDataReader, TEntity> Get(DbDataReader reader, IDbConnection connection, IDbTransaction transaction)
-            {
-                if (m_func == null)
-                {
-                    m_func = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, transaction);
-                }
-                return m_func;
-            }
-        }
-
-        #endregion
-
-        #region GetFieldBasedDataReaderToDataEntityFunctionCache
-
-        private static class GetFieldBasedDataReaderToDataEntityFunctionCache<TEntity>
+        private static class GetDataReaderToDataEntityFunctionConverterCache<TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
 
             public static Func<DbDataReader, TEntity> Get(DbDataReader reader,
                 IDbConnection connection,
-                IDbTransaction transaction)
+                string connectionString,
+                IDbTransaction transaction,
+                bool enableValidation)
             {
                 var result = (Func<DbDataReader, TEntity>)null;
                 var fields = Enumerable.Range(0, reader.FieldCount)
@@ -92,7 +65,7 @@ namespace RepoDb
                 }
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, transaction);
+                    result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, connectionString, transaction, enableValidation);
                     m_cache.TryAdd(key, result);
                 }
                 return result;

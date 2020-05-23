@@ -308,8 +308,15 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
-            // Trigger the cache to void reusing the connection
-            DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            // Variables needed on this operation
+            var connectionString = connection.ConnectionString;
+
+            // Trigger the cache to avoid reusing the connection
+            if (connection.State == ConnectionState.Open || transaction != null)
+            {
+                connectionString = null;
+                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
+            }
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -323,7 +330,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    return DataReader.ToEnumerable<TEntity>(reader, connection, transaction).AsList();
+                    return DataReader.ToEnumerableInternal<TEntity>(reader, connection, connectionString, transaction, false).AsList();
                 }
             }
         }
@@ -393,8 +400,15 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
             where TEntity : class
         {
+            // Variables needed on this operation
+            var connectionString = connection.ConnectionString;
+
             // Trigger the cache to void reusing the connection
-            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            if (connection.State == ConnectionState.Open || transaction != null)
+            {
+                connectionString = null;
+                await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
+            }
 
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -408,7 +422,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction);
+                    return (await DataReader.ToEnumerableInternalAsync<TEntity>(reader, connection, connectionString, transaction, false)).AsList();
                 }
             }
         }
@@ -437,7 +451,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
+            // Variables needed on this operation
             var connectionString = connection.ConnectionString;
 
             // Read the result
@@ -473,7 +487,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            // As the connection string is being modified by ADO.Net if the (Integrated Security=False), right after opening the connection unless (Persist Security Info=True)
+            // Variables needed on this operation
             var connectionString = connection.ConnectionString;
 
             // Read the result

@@ -24,13 +24,33 @@ namespace RepoDb.Reflection
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null)
+            where TEntity : class =>
+            ToEnumerableInternal<TEntity>(reader, connection, null, transaction, true);
+
+        /// <summary>
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object.
+        /// </summary>
+        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The raw connection string.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
+        /// <returns>An array of data entity objects.</returns>
+        public static IEnumerable<TEntity> ToEnumerableInternal<TEntity>(DbDataReader reader,
+            IDbConnection connection = null,
+            string connectionString = null,
+            IDbTransaction transaction = null,
+            bool enableValidation = true)
             where TEntity : class
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
                     connection,
-                    transaction);
+                    connectionString,
+                    transaction,
+                    enableValidation);
                 while (reader.Read())
                 {
                     yield return func(reader);
@@ -50,9 +70,27 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An array of data entity objects.</returns>
-        public static async Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
+        public static Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null)
+            where TEntity : class =>
+            ToEnumerableInternalAsync<TEntity>(reader, connection, null, transaction, true);
+
+        /// <summary>
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The raw connection string.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
+        /// <returns>An array of data entity objects.</returns>
+        internal static async Task<IEnumerable<TEntity>> ToEnumerableInternalAsync<TEntity>(DbDataReader reader,
+            IDbConnection connection = null,
+            string connectionString = null,
+            IDbTransaction transaction = null,
+            bool enableValidation = true)
             where TEntity : class
         {
             var list = new List<TEntity>();
@@ -60,7 +98,9 @@ namespace RepoDb.Reflection
             {
                 var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
                     connection,
-                    transaction);
+                    connectionString,
+                    transaction,
+                    enableValidation);
                 while (await reader.ReadAsync())
                 {
                     list.Add(func(reader));

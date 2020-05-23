@@ -118,7 +118,7 @@ namespace RepoDb
             {
                 using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
                 {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
                     m_cache.TryAdd(key, dbFields);
                 }
             }
@@ -140,7 +140,7 @@ namespace RepoDb
             {
                 using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
                 {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
                     m_cache.TryAdd(key, dbFields);
                 }
             }
