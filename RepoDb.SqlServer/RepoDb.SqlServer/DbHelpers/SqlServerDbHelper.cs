@@ -151,20 +151,6 @@ namespace RepoDb.DbHelpers
             return tableName.AsUnquoted(true, dbSetting);
         }
 
-        /// <summary>
-        /// Throws an exception of any of the validation needed is failing.
-        /// </summary>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="dbFields">The list of <see cref="DbField"/> objects to be validated.</param>
-        private void ValidateDbFields(string tableName,
-            IEnumerable<DbField> dbFields)
-        {
-            if (dbFields?.Any() != true)
-            {
-                throw new MissingFieldsException($"There are no database fields found for table '{tableName}'. Make sure that the target table is available and atleast a single field is present.");
-            }
-        }
-
         #endregion
 
         #region Methods
@@ -202,9 +188,6 @@ namespace RepoDb.DbHelpers
                     dbFields.Add(ReaderToDbField(reader));
                 }
 
-                // Validate the fields
-                //ValidateDbFields(tableName, dbFields);
-
                 // Return the list of fields
                 return dbFields;
             }
@@ -240,9 +223,6 @@ namespace RepoDb.DbHelpers
                 {
                     dbFields.Add(ReaderToDbField(reader));
                 }
-
-                // Validate the fields
-                //ValidateDbFields(tableName, dbFields);
 
                 // Return the list of fields
                 return dbFields;
