@@ -46,6 +46,8 @@
 
   <ItemGroup>
     <Compile Remove="ClassMap.cs" />
+    <Compile Remove="Extensions\DateTimeExtensions.cs" />
+    <Compile Remove="Extensions\TimeSpanExtenstion.cs" />
     <Compile Remove="IdentityOptions.cs" />
     <Compile Remove="Interfaces\IIdentityOptions.cs" />
     <Compile Remove="Interfaces\IPrimaryOptions.cs" />

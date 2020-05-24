@@ -29,7 +29,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity type as <see cref="ClassProperty"/> objects.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The list of <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> GetProperties<TEntity>()
             where TEntity : class =>
