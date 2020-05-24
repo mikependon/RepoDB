@@ -15,10 +15,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is wrapped within <see cref="Nullable{T}"/> object.</returns>
-        public static bool IsNullable(this Type type)
-        {
-            return Nullable.GetUnderlyingType(type) != null;
-        }
+        public static bool IsNullable(this Type type) =>
+            Nullable.GetUnderlyingType(type) != null;
 
         /// <summary>
         /// Converts all properties of the type into an array of <see cref="Field"/> objects.
@@ -46,10 +44,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type to check.</param>
         /// <returns>The underlying type or the current type.</returns>
-        public static Type GetUnderlyingType(this Type type)
-        {
-            return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
-        }
+        public static Type GetUnderlyingType(this Type type) =>
+            type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
 
         /// <summary>
         /// Returns the mapped property if the property is not present.
@@ -58,11 +54,8 @@ namespace RepoDb.Extensions
         /// <param name="mappedName">The name of the property mapping.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
         internal static ClassProperty GetPropertyByMapping(this Type type,
-            string mappedName)
-        {
-            return PropertyCache.Get(type)
-                .FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
-        }
+            string mappedName) =>
+            PropertyCache.Get(type).FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>
         /// Checks whether the current type has implemented the target interface.
@@ -70,10 +63,8 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The type of the interface.</typeparam>
         /// <param name="type">The current type.</param>
         /// <returns>True if the current type has implemented the target interface.</returns>
-        public static bool IsInterfacedTo<T>(this Type type)
-        {
-            return IsInterfacedTo(type, typeof(T));
-        }
+        public static bool IsInterfacedTo<T>(this Type type) =>
+            IsInterfacedTo(type, typeof(T));
 
         /// <summary>
         /// Checks whether the current type has implemented the target interface.
@@ -146,10 +137,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        internal static int GenerateHashCode(Type type)
-        {
-            return type.GetUnderlyingType().FullName.GetHashCode();
-        }
+        internal static int GenerateHashCode(Type type) =>
+            type.GetUnderlyingType().FullName.GetHashCode();
 
         /// <summary>
         /// Generates a hashcode for caching.
@@ -158,10 +147,8 @@ namespace RepoDb.Extensions
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo)
-        {
-            return entityType.GetUnderlyingType().FullName.GetHashCode() + propertyInfo.GenerateCustomizedHashCode();
-        }
+            PropertyInfo propertyInfo) =>
+            entityType.GetUnderlyingType().FullName.GetHashCode() + propertyInfo.GenerateCustomizedHashCode();
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
@@ -180,12 +167,9 @@ namespace RepoDb.Extensions
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         internal static PropertyInfo GetProperty(Type type,
-            string propertyName)
-        {
-            return type
-                .GetProperties()
-                .FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
-        }
+            string propertyName) =>
+
+            type.GetProperties().FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>
         /// Checks whether the generic arguments length are equal to both types.

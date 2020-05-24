@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoDb.Extensions
 {
@@ -25,12 +26,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="properties">The current instance of <see cref="ClassProperty"/>.</param>
         /// <returns>A list of <see cref="string"/> objects.</returns>
-        public static IEnumerable<Field> AsFields(this IList<ClassProperty> properties)
-        {
-            foreach (var property in properties)
-            {
-                yield return property.AsField();
-            }
-        }
+        public static IEnumerable<Field> AsFields(this IList<ClassProperty> properties) =>
+            AsFields(properties.AsEnumerable());
     }
 }

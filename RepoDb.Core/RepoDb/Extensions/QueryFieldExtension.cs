@@ -37,34 +37,26 @@ namespace RepoDb.Extensions
 
         // AsField
         internal static string AsField(this QueryField queryField,
-            IDbSetting dbSetting)
-        {
-            return queryField.Field.Name.AsField(dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            queryField.Field.Name.AsField(dbSetting);
 
         // AsParameter
         internal static string AsParameter(this QueryField queryField,
             int index,
-            IDbSetting dbSetting)
-        {
-            return queryField.Parameter.Name.AsParameter(index, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            queryField.Parameter.Name.AsParameter(index, dbSetting);
 
         // AsParameterAsField
         internal static string AsParameterAsField(this QueryField queryField,
             int index,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(queryField.AsParameter(index, dbSetting), " AS ", queryField.AsField(dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            string.Concat(queryField.AsParameter(index, dbSetting), " AS ", queryField.AsField(dbSetting));
 
         // AsBetweenParameter
         internal static string AsBetweenParameter(this QueryField queryField,
             int index,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_Left AND ", queryField.Parameter.Name.AsParameter(index, dbSetting), "_Right");
-        }
+            IDbSetting dbSetting) =>
+            string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_Left AND ", queryField.Parameter.Name.AsParameter(index, dbSetting), "_Right");
 
         // AsInParameter
         internal static string AsInParameter(this QueryField queryField,
@@ -112,10 +104,8 @@ namespace RepoDb.Extensions
 
         // AsDbParameter
         internal static IDbDataParameter AsDbParameter(this QueryField queryField,
-            IDbCommand command)
-        {
-            return AsDbParameter(queryField, command.CreateParameter());
-        }
+            IDbCommand command) =>
+            AsDbParameter(queryField, command.CreateParameter());
 
         internal static IDbDataParameter AsDbParameter(this QueryField queryField,
             IDbDataParameter parameter)
@@ -127,10 +117,8 @@ namespace RepoDb.Extensions
 
         // AsFieldsAndParameters
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<QueryField> queryFields,
-            IDbSetting dbSetting)
-        {
-            return queryFields.Select(field => field.AsFieldAndParameter(0, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            queryFields.Select(field => field.AsFieldAndParameter(0, dbSetting));
 
         // AsObject
         internal static object AsObject(this IEnumerable<QueryField> queryFields)

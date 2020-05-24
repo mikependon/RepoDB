@@ -18,10 +18,8 @@ namespace RepoDb.Extensions
         /// <param name="separator">The separator to be used.</param>
         /// <returns>A joined string from a given array of strings separated by the defined separator.</returns>
         public static string Join(this IEnumerable<string> strings,
-            string separator)
-        {
-            return Join(strings, separator, true);
-        }
+            string separator) =>
+            Join(strings, separator, true);
 
         /// <summary>
         /// Joins an array string with a given separator.
@@ -46,10 +44,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value">The string value where the non-alphanumeric characters will be removed.</param>
         /// <returns>The alphanumeric string.</returns>
-        public static string AsAlphaNumeric(this string value)
-        {
-            return AsAlphaNumeric(value, true);
-        }
+        public static string AsAlphaNumeric(this string value) =>
+            AsAlphaNumeric(value, true);
 
         /// <summary>
         /// Removes the non-alphanumeric characters.
@@ -74,10 +70,8 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The unquoted string.</returns>
         public static string AsUnquoted(this string value,
-            IDbSetting dbSetting)
-        {
-            return AsUnquoted(value, false, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            AsUnquoted(value, false, dbSetting);
 
         /// <summary>
         /// Unquotes a string.
@@ -137,10 +131,8 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
-            IDbSetting dbSetting)
-        {
-            return AsQuoted(value, false, false, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            AsQuoted(value, false, false, dbSetting);
 
         /// <summary>
         /// Quotes a string.
@@ -151,10 +143,8 @@ namespace RepoDb.Extensions
         /// <returns>The quoted string.</returns>
         public static string AsQuoted(this string value,
             bool trim,
-            IDbSetting dbSetting)
-        {
-            return AsQuoted(value, trim, false, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            AsQuoted(value, trim, false, dbSetting);
 
         /// <summary>
         /// Quotes a string.
@@ -244,10 +234,8 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>The string value represented as database field.</returns>
         public static string AsField(this string value,
-            IDbSetting dbSetting)
-        {
-            return value.AsQuoted(true, true, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            value.AsQuoted(true, true, dbSetting);
 
         /// <summary>
         /// Returns the string as a parameter name in the database.
@@ -256,10 +244,8 @@ namespace RepoDb.Extensions
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>The string value represented as database parameter.</returns>
         public static string AsParameter(this string value,
-            IDbSetting dbSetting)
-        {
-            return AsParameter(value, 0, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            AsParameter(value, 0, dbSetting);
 
         /// <summary>
         /// Returns the string as a parameter name in the database.
@@ -294,85 +280,64 @@ namespace RepoDb.Extensions
         // AsAliasField
         internal static string AsAliasField(this string value,
             string alias,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
 
         // AsParameterAsField
         internal static string AsParameterAsField(this string value,
             int index,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(AsParameter(value, index, dbSetting), " AS ", AsField(value, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            string.Concat(AsParameter(value, index, dbSetting), " AS ", AsField(value, dbSetting));
 
         // AsFieldAndParameter
         internal static string AsFieldAndParameter(this string value,
             int index,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(AsField(value, dbSetting), " = ", AsParameter(value, index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            string.Concat(AsField(value, dbSetting), " = ", AsParameter(value, index, dbSetting));
 
         // AsFieldAndAliasField
         internal static string AsFieldAndAliasField(this string value,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting)
-        {
-            return string.Concat(leftAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting),
-                " = ", rightAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            string.Concat(leftAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting));
 
         /* IEnumerable<string> */
 
         // AsFields
         internal static IEnumerable<string> AsFields(this IEnumerable<string> values,
-            IDbSetting dbSetting)
-        {
-            return values?.Select(value => value.AsField(dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            values?.Select(value => value.AsField(dbSetting));
 
         // AsParameters
         internal static IEnumerable<string> AsParameters(this IEnumerable<string> values,
             int index,
-            IDbSetting dbSetting)
-        {
-            return values?.Select(value => value.AsParameter(index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            values?.Select(value => value.AsParameter(index, dbSetting));
 
         // AsAliasFields
         internal static IEnumerable<string> AsAliasFields(this IEnumerable<string> values,
             string alias,
-            IDbSetting dbSetting)
-        {
-            return values?.Select(value => value.AsAliasField(alias, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            values?.Select(value => value.AsAliasField(alias, dbSetting));
 
         // AsParametersAsFields
         internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<string> values,
             int index,
-            IDbSetting dbSetting)
-        {
-            return values?.Select(value => value.AsParameterAsField(index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            values?.Select(value => value.AsParameterAsField(index, dbSetting));
 
         // AsFieldsAndParameters
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<string> values,
             int index,
-            IDbSetting dbSetting)
-        {
-            return values?.Select(value => value.AsFieldAndParameter(index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            values?.Select(value => value.AsFieldAndParameter(index, dbSetting));
 
         // AsFieldsAndAliasFields
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<string> values,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting)
-        {
-            return values?.Select(value => value.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            values?.Select(value => value.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
     }
 }

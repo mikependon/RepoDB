@@ -21,51 +21,39 @@ namespace RepoDb.Extensions
 
         // AsField
         private static string AsField(this Field field,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsQuoted(true, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsQuoted(true, dbSetting);
 
         // AsParameter
         private static string AsParameter(this Field field,
             int index,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsParameter(index, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsParameter(index, dbSetting);
 
         // AsAliasField
         private static string AsAliasField(this Field field,
             string alias,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsAliasField(alias, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsAliasField(alias, dbSetting);
 
         // AsParameterAsField
         private static string AsParameterAsField(this Field field,
             int index,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsParameterAsField(index, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsParameterAsField(index, dbSetting);
 
         // AsFieldAndParameter
         private static string AsFieldAndParameter(this Field field,
             int index,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsFieldAndParameter(index, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsFieldAndParameter(index, dbSetting);
 
         // AsFieldAndAliasField
         private static string AsFieldAndAliasField(this Field field,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting);
 
         // AsJoinQualifier
 
@@ -80,60 +68,46 @@ namespace RepoDb.Extensions
         public static string AsJoinQualifier(this Field field,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting)
-        {
-            return field.Name.AsJoinQualifier(leftAlias, rightAlias, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            field.Name.AsJoinQualifier(leftAlias, rightAlias, dbSetting);
 
         /* IEnumerable<PropertyInfo> */
 
         // AsFields
         internal static IEnumerable<string> AsFields(this IEnumerable<Field> fields,
-            IDbSetting dbSetting)
-        {
-            return fields?.Select(field => field.AsField(dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            fields?.Select(field => field.AsField(dbSetting));
 
         // AsParameters
         internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields,
             int index,
-            IDbSetting dbSetting)
-        {
-            return fields?.Select(field => field.AsParameter(index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            fields?.Select(field => field.AsParameter(index, dbSetting));
 
         // AsAliasFields
         internal static IEnumerable<string> AsAliasFields(this IEnumerable<Field> fields,
             string alias,
-            IDbSetting dbSetting)
-        {
-            return fields?.Select(field => field.AsAliasField(alias, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            fields?.Select(field => field.AsAliasField(alias, dbSetting));
 
         // AsParametersAsFields
         internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<Field> fields,
             int index,
-            IDbSetting dbSetting)
-        {
-            return fields?.Select(field => field.AsParameterAsField(index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            fields?.Select(field => field.AsParameterAsField(index, dbSetting));
 
         // AsFieldsAndParameters
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<Field> fields,
             int index,
-            IDbSetting dbSetting)
-        {
-            return fields?.Select(field => field.AsFieldAndParameter(index, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            fields?.Select(field => field.AsFieldAndParameter(index, dbSetting));
 
         // AsFieldsAndAliasFields
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<Field> fields,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting)
-        {
-            return fields?.Select(field => field.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            fields?.Select(field => field.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
     }
 }
 

@@ -41,30 +41,24 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be extracted as <see cref="QueryField"/> object.</returns>
-        internal static bool IsExtractable(this Expression expression)
-        {
-            return m_extractableExpressionTypes.Contains(expression.NodeType);
-        }
+        internal static bool IsExtractable(this Expression expression) =>
+            m_extractableExpressionTypes.Contains(expression.NodeType);
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> can be grouped as <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be grouped as <see cref="QueryGroup"/> object.</returns>
-        internal static bool IsGroupable(this Expression expression)
-        {
-            return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
-        }
+        internal static bool IsGroupable(this Expression expression) =>
+            expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is using the <see cref="Math"/> object operations.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is using the <see cref="Math"/> object operations.</returns>
-        internal static bool IsMathematical(this Expression expression)
-        {
-            return m_mathematicalExpressionTypes.Contains(expression.NodeType);
-        }
+        internal static bool IsMathematical(this Expression expression) =>
+            m_mathematicalExpressionTypes.Contains(expression.NodeType);
 
         #region GetField
 
@@ -370,40 +364,32 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="ConstantExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="ConstantExpression"/> object.</returns>
-        public static object GetValue(this ConstantExpression expression)
-        {
-            return expression.Value;
-        }
+        public static object GetValue(this ConstantExpression expression) =>
+            expression.Value;
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="UnaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="UnaryExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="UnaryExpression"/> object.</returns>
-        public static object GetValue(this UnaryExpression expression)
-        {
-            return expression.Operand.GetValue();
-        }
+        public static object GetValue(this UnaryExpression expression) =>
+            expression.Operand.GetValue();
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MethodCallExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="MethodCallExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MethodCallExpression"/> object.</returns>
-        public static object GetValue(this MethodCallExpression expression)
-        {
-            return expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
-        }
+        public static object GetValue(this MethodCallExpression expression) =>
+            expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="MemberExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MemberExpression"/> object.</returns>
-        public static object GetValue(this MemberExpression expression)
-        {
-            return expression.Member.GetValue(expression.Expression?.GetValue());
-        }
+        public static object GetValue(this MemberExpression expression) =>
+            expression.Member.GetValue(expression.Expression?.GetValue());
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="NewArrayExpression"/> object.
@@ -549,260 +535,208 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="LambdaExpression"/>.</returns>
-        public static bool IsLambda(this Expression expression)
-        {
-            return expression is LambdaExpression;
-        }
+        public static bool IsLambda(this Expression expression) =>
+            expression is LambdaExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="LambdaExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="LambdaExpression"/> object.</returns>
-        public static LambdaExpression ToLambda(this Expression expression)
-        {
-            return (LambdaExpression)expression;
-        }
+        public static LambdaExpression ToLambda(this Expression expression) =>
+            (LambdaExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="BinaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="BinaryExpression"/>.</returns>
-        public static bool IsBinary(this Expression expression)
-        {
-            return expression is BinaryExpression;
-        }
+        public static bool IsBinary(this Expression expression) =>
+            expression is BinaryExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="BinaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="BinaryExpression"/> object.</returns>
-        public static BinaryExpression ToBinary(this Expression expression)
-        {
-            return (BinaryExpression)expression;
-        }
+        public static BinaryExpression ToBinary(this Expression expression) =>
+            (BinaryExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ConstantExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="ConstantExpression"/>.</returns>
-        public static bool IsConstant(this Expression expression)
-        {
-            return expression is ConstantExpression;
-        }
+        public static bool IsConstant(this Expression expression) =>
+            expression is ConstantExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="ConstantExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="ConstantExpression"/> object.</returns>
-        public static ConstantExpression ToConstant(this Expression expression)
-        {
-            return (ConstantExpression)expression;
-        }
+        public static ConstantExpression ToConstant(this Expression expression) =>
+            (ConstantExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="UnaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="UnaryExpression"/>.</returns>
-        public static bool IsUnary(this Expression expression)
-        {
-            return expression is UnaryExpression;
-        }
+        public static bool IsUnary(this Expression expression) =>
+            expression is UnaryExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="UnaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="UnaryExpression"/> object.</returns>
-        public static UnaryExpression ToUnary(this Expression expression)
-        {
-            return (UnaryExpression)expression;
-        }
+        public static UnaryExpression ToUnary(this Expression expression) =>
+            (UnaryExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="MethodCallExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="MethodCallExpression"/>.</returns>
-        public static bool IsMethodCall(this Expression expression)
-        {
-            return expression is MethodCallExpression;
-        }
+        public static bool IsMethodCall(this Expression expression) =>
+            expression is MethodCallExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="MethodCallExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="MethodCallExpression"/> object.</returns>
-        public static MethodCallExpression ToMethodCall(this Expression expression)
-        {
-            return (MethodCallExpression)expression;
-        }
+        public static MethodCallExpression ToMethodCall(this Expression expression) =>
+            (MethodCallExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="MemberExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="MemberExpression"/>.</returns>
-        public static bool IsMember(this Expression expression)
-        {
-            return expression is MemberExpression;
-        }
+        public static bool IsMember(this Expression expression) =>
+            expression is MemberExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="MemberExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="MemberExpression"/> object.</returns>
-        public static MemberExpression ToMember(this Expression expression)
-        {
-            return (MemberExpression)expression;
-        }
+        public static MemberExpression ToMember(this Expression expression) =>
+            (MemberExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="NewArrayExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="NewArrayExpression"/>.</returns>
-        public static bool IsNewArray(this Expression expression)
-        {
-            return expression is NewArrayExpression;
-        }
+        public static bool IsNewArray(this Expression expression) =>
+            expression is NewArrayExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="NewArrayExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="NewArrayExpression"/> object.</returns>
-        public static NewArrayExpression ToNewArray(this Expression expression)
-        {
-            return (NewArrayExpression)expression;
-        }
+        public static NewArrayExpression ToNewArray(this Expression expression) =>
+            (NewArrayExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ListInitExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="ListInitExpression"/>.</returns>
-        public static bool IsListInit(this Expression expression)
-        {
-            return expression is ListInitExpression;
-        }
+        public static bool IsListInit(this Expression expression) =>
+            expression is ListInitExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="ListInitExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="ListInitExpression"/> object.</returns>
-        public static ListInitExpression ToListInit(this Expression expression)
-        {
-            return (ListInitExpression)expression;
-        }
+        public static ListInitExpression ToListInit(this Expression expression) =>
+            (ListInitExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="NewExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="NewExpression"/>.</returns>
-        public static bool IsNew(this Expression expression)
-        {
-            return expression is NewExpression;
-        }
+        public static bool IsNew(this Expression expression) =>
+            expression is NewExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="NewExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="NewExpression"/> object.</returns>
-        public static NewExpression ToNew(this Expression expression)
-        {
-            return (NewExpression)expression;
-        }
+        public static NewExpression ToNew(this Expression expression) =>
+            (NewExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="MemberInitExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="MemberInitExpression"/>.</returns>
-        public static bool IsMemberInit(this Expression expression)
-        {
-            return expression is MemberInitExpression;
-        }
+        public static bool IsMemberInit(this Expression expression) =>
+            expression is MemberInitExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="MemberInitExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="MemberInitExpression"/> object.</returns>
-        public static MemberInitExpression ToMemberInit(this Expression expression)
-        {
-            return (MemberInitExpression)expression;
-        }
+        public static MemberInitExpression ToMemberInit(this Expression expression) =>
+            (MemberInitExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ConditionalExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="ConditionalExpression"/>.</returns>
-        public static bool IsConditional(this Expression expression)
-        {
-            return expression is ConditionalExpression;
-        }
+        public static bool IsConditional(this Expression expression) =>
+            expression is ConditionalExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="ConditionalExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="ConditionalExpression"/> object.</returns>
-        public static ConditionalExpression ToConditional(this Expression expression)
-        {
-            return (ConditionalExpression)expression;
-        }
+        public static ConditionalExpression ToConditional(this Expression expression) =>
+            (ConditionalExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ParameterExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="ParameterExpression"/>.</returns>
-        public static bool IsParameter(this Expression expression)
-        {
-            return expression is ParameterExpression;
-        }
+        public static bool IsParameter(this Expression expression) =>
+            expression is ParameterExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="ParameterExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="ParameterExpression"/> object.</returns>
-        public static ParameterExpression ToParameter(this Expression expression)
-        {
-            return (ParameterExpression)expression;
-        }
+        public static ParameterExpression ToParameter(this Expression expression) =>
+            (ParameterExpression)expression;
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="DefaultExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="DefaultExpression"/>.</returns>
-        public static bool IsDefault(this Expression expression)
-        {
-            return expression is DefaultExpression;
-        }
+        public static bool IsDefault(this Expression expression) =>
+            expression is DefaultExpression;
 
         /// <summary>
         /// Converts the <see cref="Expression"/> object into <see cref="DefaultExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="DefaultExpression"/> object.</returns>
-        public static DefaultExpression ToDefault(this Expression expression)
-        {
-            return (DefaultExpression)expression;
-        }
+        public static DefaultExpression ToDefault(this Expression expression) =>
+            (DefaultExpression)expression;
 
         #endregion
 

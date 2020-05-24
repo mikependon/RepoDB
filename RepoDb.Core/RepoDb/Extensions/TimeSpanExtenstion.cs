@@ -12,11 +12,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="timeSpan">The <see cref="TimeSpan"/> object to be flattened.</param>
         /// <returns>The flatted <see cref="TimeSpan"/> value.</returns>
-        public static TimeSpan Flatten(this TimeSpan timeSpan)
-        {
-            return new TimeSpan(timeSpan.Hours,
-                timeSpan.Minutes,
-                timeSpan.Seconds);
-        }
+        public static TimeSpan Flatten(this TimeSpan timeSpan) =>
+            new TimeSpan(timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
     }
 }

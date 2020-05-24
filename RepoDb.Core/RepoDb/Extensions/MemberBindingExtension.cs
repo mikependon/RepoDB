@@ -28,20 +28,16 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The instance of <see cref="MemberBinding"/> object to be identified.</param>
         /// <returns>Returns true if the expression is a <see cref="MemberAssignment"/>.</returns>
-        public static bool IsMemberAssignment(this MemberBinding member)
-        {
-            return member is MemberAssignment;
-        }
+        public static bool IsMemberAssignment(this MemberBinding member) =>
+            member is MemberAssignment;
 
         /// <summary>
         /// Converts the <see cref="MemberBinding"/> object into <see cref="MemberAssignment"/> object.
         /// </summary>
         /// <param name="member">The instance of <see cref="MemberBinding"/> object to be converted.</param>
         /// <returns>A converted instance of <see cref="MemberAssignment"/> object.</returns>
-        public static MemberAssignment ToMemberAssignment(this MemberBinding member)
-        {
-            return (MemberAssignment)member;
-        }
+        public static MemberAssignment ToMemberAssignment(this MemberBinding member) =>
+            (MemberAssignment)member;
 
         #endregion
     }

@@ -64,10 +64,8 @@ namespace RepoDb.Extensions
         /// <returns>An instance of converted dynamic object.</returns>
         internal static object Merge<TEntity>(this TEntity obj,
             QueryGroup queryGroup)
-            where TEntity : class
-        {
-            return Merge(obj, PropertyCache.Get<TEntity>().Select(p => p.PropertyInfo), queryGroup);
-        }
+            where TEntity : class =>
+            Merge(obj, PropertyCache.Get<TEntity>().Select(p => p.PropertyInfo), queryGroup);
 
         /// <summary>
         /// Merge the <see cref="QueryGroup"/> object into the current object.
@@ -76,10 +74,8 @@ namespace RepoDb.Extensions
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
         /// <returns>A dynamic object with the merged fields from <see cref="QueryGroup"/>.</returns>
         internal static object Merge(this object obj,
-            QueryGroup queryGroup)
-        {
-            return Merge(obj, obj?.GetType().GetProperties(), queryGroup);
-        }
+            QueryGroup queryGroup) =>
+            Merge(obj, obj?.GetType().GetProperties(), queryGroup);
 
         /// <summary>
         /// Merge the <see cref="QueryGroup"/> object into the current object.
@@ -112,10 +108,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object obj)
-        {
-            return Merge(obj, null);
-        }
+        internal static object AsObject(this object obj) =>
+            Merge(obj, null);
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of query fields.
@@ -151,30 +145,24 @@ namespace RepoDb.Extensions
         /// <param name="entity">The instance to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
         internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
-            where TEntity : class
-        {
-            return FieldCache.Get<TEntity>();
-        }
+            where TEntity : class =>
+            FieldCache.Get<TEntity>();
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of field.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static IEnumerable<Field> AsFields(this object obj)
-        {
-            return Field.Parse(obj);
-        }
+        internal static IEnumerable<Field> AsFields(this object obj) =>
+            Field.Parse(obj);
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of order fields.
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An enumerable list of order fields.</returns>
-        internal static IEnumerable<OrderField> AsOrderFields(this object obj)
-        {
-            return OrderField.Parse(obj);
-        }
+        internal static IEnumerable<OrderField> AsOrderFields(this object obj) =>
+            OrderField.Parse(obj);
 
         /// <summary>
         /// Returns the first non-null occurence.
@@ -183,10 +171,8 @@ namespace RepoDb.Extensions
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-null object.</returns>
         internal static object Coalesce(this object obj,
-            params object[] parameters)
-        {
-            return parameters.First(param => param != null);
-        }
+            params object[] parameters) =>
+            parameters.First(param => param != null);
 
         /// <summary>
         /// Returns the first non-defaulted occurence.
@@ -196,19 +182,15 @@ namespace RepoDb.Extensions
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-defaulted object.</returns>
         internal static T Coalesce<T>(this object obj,
-            params T[] parameters)
-        {
-            return parameters.First(param => Equals(param, default(T)) == false);
-        }
+            params T[] parameters) =>
+            parameters.First(param => Equals(param, default(T)) == false);
 
         /// <summary>
         /// Converts an object to a <see cref="long"/>.
         /// </summary>
         /// <param name="value">The value to be converted.</param>
         /// <returns>A <see cref="long"/> value of the object.</returns>
-        internal static long ToNumber(this object value)
-        {
-            return Convert.ToInt64(value);
-        }
+        internal static long ToNumber(this object value) =>
+            Convert.ToInt64(value);
     }
 }

@@ -86,10 +86,8 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
         public static void CreateParameters(this IDbCommand command,
-            object param)
-        {
+            object param) =>
             CreateParameters(command, param, null);
-        }
 
         /// <summary>
         /// Creates a parameter from object by mapping the property from the target entity type.
@@ -99,10 +97,8 @@ namespace RepoDb.Extensions
         /// <param name="entityType">The type of the data entity.</param>
         public static void CreateParameters(this IDbCommand command,
             object param,
-            Type entityType)
-        {
+            Type entityType) =>
             CreateParameters(command, param, null, entityType);
-        }
 
         /// <summary>
         /// Creates a parameter from object by mapping the property from the target entity type.
@@ -336,11 +332,8 @@ namespace RepoDb.Extensions
         internal static void CreateParameters(this IDbCommand command,
             QueryGroup queryGroup,
             IEnumerable<string> propertiesToSkip,
-            Type entityType)
-        {
-            // Call the overloaded methods for the query fields
+            Type entityType) =>
             CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType);
-        }
 
         /// <summary>
         /// Create the command parameters from the list of <see cref="QueryField"/> objects.
