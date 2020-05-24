@@ -121,8 +121,7 @@ namespace RepoDb.Extensions
             object entity,
             bool appendUnderscore)
         {
-            var field = new Field(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
-            return new QueryField(field, Operation.Equal, property.GetHandledValue(entity), appendUnderscore);
+            return new QueryField(property.AsField(), Operation.Equal, property.GetHandledValue(entity), appendUnderscore);
         }
 
         /// <summary>
@@ -302,21 +301,37 @@ namespace RepoDb.Extensions
             }
         }
 
-        public static object GetHandledValue(this PropertyInfo propertyInfo, object entity)
-            => propertyInfo.GetHandledValue(propertyInfo.DeclaringType, entity);
+        /// <summary>
+        /// Returns the value of the data entity property. If the property handler is defined in the property, then the
+        /// handled value will be returned.
+        /// </summary>
+        /// <param name="property">The target <see cref="PropertyInfo"/> object.</param>
+        /// <param name="entity">The instance of the data entity object.</param>
+        /// <returns>The handled value of the data entity property.</returns>
+        public static object GetHandledValue(this PropertyInfo property,
+            object entity)
+            => GetHandledValue(property, entity, property.DeclaringType);
 
-        public static object GetHandledValue(this PropertyInfo propertyInfo, Type declaringType, object entity)
+        /// <summary>
+        /// Returns the value of the data entity property. If the property handler is defined in the property, then the
+        /// handled value will be returned.
+        /// </summary>
+        /// <param name="property">The target <see cref="PropertyInfo"/> object.</param>
+        /// <param name="entity">The instance of the data entity object.</param>
+        /// <param name="declaringType">The customized declaring type of the <see cref="PropertyInfo"/> object.</param>
+        /// <returns>The handled value of the data entity property.</returns>
+        public static object GetHandledValue(this PropertyInfo property,
+            object entity,
+            Type declaringType)
         {
-            var classProperty = PropertyCache.Get(declaringType, propertyInfo);
+            var classProperty = PropertyCache.Get((declaringType ?? property.DeclaringType), property);
             var propertyHandler = classProperty.GetPropertyHandler();
-
             if (propertyHandler != null)
             {
                 var setMethod = propertyHandler.GetType().GetMethod("Set");
-                return setMethod.Invoke(propertyHandler, new[] { propertyInfo.GetValue(entity), classProperty });
+                return setMethod.Invoke(propertyHandler, new[] { property.GetValue(entity), classProperty });
             }
-
-            return propertyInfo.GetValue(entity);
+            return property.GetValue(entity);
         }
     }
 }
