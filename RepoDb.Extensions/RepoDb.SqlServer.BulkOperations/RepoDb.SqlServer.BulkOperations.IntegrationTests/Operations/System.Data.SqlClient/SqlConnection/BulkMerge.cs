@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Data.SqlClient;
+using RepoDb.Exceptions;
 
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
@@ -799,7 +800,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
@@ -827,7 +828,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
@@ -991,7 +992,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
@@ -1025,7 +1026,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkMergeForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup

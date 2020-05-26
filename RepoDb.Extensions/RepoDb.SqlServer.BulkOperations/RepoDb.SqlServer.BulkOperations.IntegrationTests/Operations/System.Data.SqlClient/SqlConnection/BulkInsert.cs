@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
@@ -606,7 +607,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
@@ -634,7 +635,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkInsertForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
@@ -805,7 +806,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsNotValid()
         {
             // Setup
@@ -838,7 +839,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkInsertForTableNameDbDataTableIfTheTableNameIsMissing()
         {
             // Setup
