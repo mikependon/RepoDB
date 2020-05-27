@@ -1,0 +1,11 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+before_build:
+- cmd: dotnet restore RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests\RepoDb.MySqlConnector.IntegrationTests.csproj
+build:
+  project: RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests\RepoDb.MySqlConnector.IntegrationTests.csproj
+  verbosity: normal
+services:
+  - mssql2017
