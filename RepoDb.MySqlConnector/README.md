@@ -1,10 +1,10 @@
-[![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
+[![MySqlConnectorBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-7ooj1)](https://ci.appveyor.com/project/mikependon/repodb-7ooj1)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
 [![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
 [![GetStarted](https://img.shields.io/badge/tutorial-getstarted-blueviolet)](http://repodb.net/tutorial/get-started-mysql)
-[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySqlConnector)](https://www.nuget.org/packages/RepoDb.MySqlConnector)
-[![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
-[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
+[![MySqlConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MySqlConnector)](https://www.nuget.org/packages/RepoDb.MySqlConnector)
+[![MySqlConnectorUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-pqvj7?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-pqvj7/build/tests)
+[![MySqlConnectorIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-4iutn?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-4iutn/build/tests)
 
 # RepoDb.MySqlConnector - a hybrid .NET ORM library for MySQL (using MySqlConnector)
 
@@ -26,7 +26,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ## Dependencies
 
-- [MySql.Data](https://www.nuget.org/packages/MySql.Data/) - the data provider used for MySql.
+- [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/) - the data provider used for MySqlConnector.
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
 
 ## License
