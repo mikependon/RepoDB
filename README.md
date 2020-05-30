@@ -39,19 +39,39 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 </details>
 
-### It is easy-to-use
+### Latest News / Highlights
+
+RepoDb has just supported the awaited capability by integrating the popular MySQL driver [MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) with the help of the author itself.
+
+The project is under the [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector) folder with complete [Unit](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.UnitTests) and [Integration](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests) test suites.
+
+To start with, simply install the package below via Package Manager Console.
+
+```csharp
+> Install-Package RepoDb.MySqlConnector
+```
+
+Then call the bootstrapper once.
+
+```csharp
+RepoDb.MySqlBootstrap.Initialize();
+```
+
+Or, you can also visit the official MySQL tutorial [page](http://repodb.net/tutorial/get-started-mysql).
+
+### It is Easy-To-Use
 
 RepoDb operations were implemented as extended methods of the IDbConnection object. For as long the connection is open, the developers can do all the activities towards the database.
 
-### It is high-performant
+### It is High-Performant
 
 RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
 
-### It is efficient
+### It is Efficient
 
 RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
-### It is high-quality
+### It is High-Quality
 
 RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
 
