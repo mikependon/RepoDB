@@ -55,7 +55,7 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
 
-## Latest News / Highlights
+## Latest News
 
 RepoDb has just supported the awaited capability by integrating the popular MySQL driver [MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) with the help of the author itself.
 
