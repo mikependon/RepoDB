@@ -39,7 +39,23 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 </details>
 
-### Latest News / Highlights
+### It is easy-to-use
+
+RepoDb operations were implemented as extended methods of the IDbConnection object. For as long the connection is open, the developers can do all the activities towards the database.
+
+### It is high-performant
+
+RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
+
+### It is efficient
+
+RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+
+### It is high-quality
+
+RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
+
+## Latest News / Highlights
 
 RepoDb has just supported the awaited capability by integrating the popular MySQL driver [MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) with the help of the author itself.
 
@@ -58,22 +74,6 @@ RepoDb.MySqlBootstrap.Initialize();
 ```
 
 Or, you can also visit the official MySQL tutorial [page](http://repodb.net/tutorial/get-started-mysql).
-
-### It is Easy-To-Use
-
-RepoDb operations were implemented as extended methods of the IDbConnection object. For as long the connection is open, the developers can do all the activities towards the database.
-
-### It is High-Performant
-
-RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
-
-### It is Efficient
-
-RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
-
-### It is High-Quality
-
-RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
 
 ## Get Started
 
