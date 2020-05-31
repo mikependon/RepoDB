@@ -31,6 +31,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
@@ -39,6 +41,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -52,6 +56,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
         }
@@ -67,6 +73,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
@@ -76,6 +84,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -89,6 +99,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
         }
@@ -172,6 +184,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this SqlConnection connection,
@@ -181,6 +195,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -193,6 +209,8 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
 
@@ -207,6 +225,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert(this SqlConnection connection,
@@ -217,6 +237,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             return BulkInsertInternal(connection: connection,
@@ -228,6 +250,8 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
 
@@ -245,6 +269,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
@@ -253,6 +279,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -266,6 +294,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
         }
@@ -281,6 +311,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
@@ -290,6 +322,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -303,6 +337,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
         }
@@ -386,6 +422,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
@@ -395,6 +433,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -407,6 +447,8 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
 
@@ -421,6 +463,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync(this SqlConnection connection,
@@ -431,6 +475,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             return await BulkInsertAsyncInternal(connection: connection,
@@ -442,6 +488,8 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
 
@@ -460,6 +508,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal(SqlConnection connection,
@@ -470,6 +520,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Validate the objects
@@ -562,6 +614,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal(SqlConnection connection,
@@ -573,6 +627,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Validate the objects
@@ -671,6 +727,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
@@ -681,6 +739,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Validate the objects
@@ -773,6 +833,8 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
@@ -784,6 +846,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Validate the objects

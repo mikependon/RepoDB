@@ -944,6 +944,8 @@ namespace RepoDb
                     options,
                     bulkCopyTimeout,
                     batchSize,
+                    false,
+                    false,
                     transaction);
 
                 // Create the clustered index
@@ -1136,6 +1138,8 @@ namespace RepoDb
                     options,
                     bulkCopyTimeout,
                     batchSize,
+                    false,
+                    false,
                     transaction);
 
                 // Create the clustered index
@@ -1468,6 +1472,8 @@ namespace RepoDb
                     options,
                     bulkCopyTimeout,
                     batchSize,
+                    false,
+                    false,
                     transaction);
 
                 // Create the clustered index
@@ -1660,6 +1666,8 @@ namespace RepoDb
                     options,
                     bulkCopyTimeout,
                     batchSize,
+                    false,
+                    false,
                     transaction);
 
                 // Create the clustered index

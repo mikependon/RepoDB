@@ -23,6 +23,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
@@ -30,6 +32,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -44,6 +48,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -74,6 +80,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
@@ -82,6 +90,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -97,6 +107,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -232,6 +244,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
@@ -240,6 +254,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -255,6 +271,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -285,6 +303,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert(this DbRepository<SqlConnection> repository,
@@ -294,6 +314,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Create a connection
@@ -309,6 +331,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -342,6 +366,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
@@ -349,6 +375,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -363,6 +391,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -393,6 +423,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
@@ -401,6 +433,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -416,6 +450,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -551,6 +587,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
@@ -559,6 +597,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
@@ -574,6 +614,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
@@ -604,6 +646,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync(this DbRepository<SqlConnection> repository,
@@ -613,6 +657,8 @@ namespace RepoDb
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Create a connection
@@ -628,6 +674,8 @@ namespace RepoDb
                     options: options,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
+                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
             catch
