@@ -22,15 +22,17 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -46,6 +48,7 @@ namespace RepoDb
                 return connection.BulkInsert<TEntity>(entities: entities,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -79,9 +82,10 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
@@ -89,6 +93,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -105,6 +110,7 @@ namespace RepoDb
                     entities: entities,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -243,9 +249,10 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<SqlConnection> repository,
@@ -253,6 +260,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -269,6 +277,7 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -302,9 +311,10 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert(this DbRepository<SqlConnection> repository,
@@ -313,6 +323,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -329,6 +340,7 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -365,15 +377,17 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -389,6 +403,7 @@ namespace RepoDb
                 return await connection.BulkInsertAsync<TEntity>(entities: entities,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -422,9 +437,10 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
@@ -432,6 +448,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -448,6 +465,7 @@ namespace RepoDb
                     entities: entities,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -586,9 +604,10 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<SqlConnection> repository,
@@ -596,6 +615,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -612,6 +632,7 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,
@@ -645,9 +666,10 @@ namespace RepoDb
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'True'.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync(this DbRepository<SqlConnection> repository,
@@ -656,6 +678,7 @@ namespace RepoDb
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
+            string hints = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -672,6 +695,7 @@ namespace RepoDb
                     rowState: rowState,
                     mappings: mappings,
                     options: options,
+                    hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: isReturnIdentity,

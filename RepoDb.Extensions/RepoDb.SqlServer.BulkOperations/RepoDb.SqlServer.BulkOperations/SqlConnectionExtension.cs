@@ -308,6 +308,58 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        private static string GetBulkInsertSqlText(string tableName,
+            string tempTableName,
+            IEnumerable<Field> fields,
+            Field identityField,
+            string hints,
+            IDbSetting dbSetting)
+        {
+            // Validate the presence
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldException("There are no field(s) defined.");
+            }
+
+            // Variables needed
+            var setFields = fields
+                .Select(field => field.AsJoinQualifier("T", "S", dbSetting))
+                .Join(", ");
+            var builder = new QueryBuilder();
+
+            // Insertable fields
+            var insertableFields = fields
+                .Where(field => string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
+
+            // Compose the statement
+            builder.Clear()
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, dbSetting)
+                .OpenParen()
+                .FieldsFrom(insertableFields, dbSetting)
+                .CloseParen();
+
+            // Set the output
+            if (identityField != null)
+            {
+                builder
+                    .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
+                    .As("[Result]");
+            }
+
+            // Continuation
+            builder
+                .Select()
+                .FieldsFrom(insertableFields, dbSetting)
+                .From()
+                .TableNameFrom(tempTableName, dbSetting)
+                .End();
+
+            // Return the sql
+            return builder.ToString();
+        }
+
         private static string GetBulkMergeSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
@@ -321,7 +373,7 @@ namespace RepoDb
             // Validate the presence
             if (fields?.Any() != true)
             {
-                throw new MissingFieldException("There is no field(s) defined.");
+                throw new MissingFieldException("There are no field(s) defined.");
             }
 
             if (qualifiers?.Any() != true)
@@ -417,7 +469,7 @@ namespace RepoDb
             // Validate the presence
             if (fields?.Any() != true)
             {
-                throw new MissingFieldException("There is no field(s) defined.");
+                throw new MissingFieldException("There are no field(s) defined.");
             }
 
             if (qualifiers?.Any() != true)
