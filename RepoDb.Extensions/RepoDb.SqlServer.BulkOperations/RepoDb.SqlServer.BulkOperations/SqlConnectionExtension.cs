@@ -1,5 +1,7 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -75,6 +77,52 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Set the data entities identities.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="entities">The list of the data entities.</param>
+        /// <param name="identitiesResult">The result of the bulk operation.</param>
+        private static void SetIdentities<TEntity>(IEnumerable<TEntity> entities,
+            BulkOperationIdentitiesResult identitiesResult)
+            where TEntity : class
+        {
+            // TODO: Compile this by using the FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+
+            // Check if there are entities
+            if (entities?.Any() != true)
+            {
+                return;
+            }
+
+            // Get the results
+            var results = identitiesResult.Identities?.OfType<object>();
+            if (results == null)
+            {
+                throw new NullReferenceException("No identities returned.");
+            }
+
+            // Get the property
+            var property = PropertyCache.Get<TEntity>(identitiesResult.IdentityPropertyName);
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"Identity property not found for type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Check the equality
+            if (entities.Count() != results.Count())
+            {
+                throw new InvalidOperationException("The returned identities does not matched the number of the data entities.");
+            }
+
+            // Set the identity
+            for (var i = 0; i < entities.Count(); i++)
+            {
+                var entity = entities.ElementAt(i);
+                property.PropertyInfo.SetValue(entity, results?.ElementAt(i));
+            }
+        }
 
         /// <summary>
         /// Gets the actual name of the table from the database.
@@ -267,7 +315,8 @@ namespace RepoDb
             Field primaryField,
             Field identityField,
             string hints,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            bool isReturnIdentity)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -339,8 +388,18 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting)
-                .End();
+                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
+
+            // Set the output
+            if (isReturnIdentity && identityField != null)
+            {
+                builder
+                    .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
+                    .As("[Result]");
+            }
+
+            // End the builder
+            builder.End();
 
             // Return the sql
             return builder.ToString();

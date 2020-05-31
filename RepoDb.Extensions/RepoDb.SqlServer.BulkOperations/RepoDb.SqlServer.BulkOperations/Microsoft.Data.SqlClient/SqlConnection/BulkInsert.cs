@@ -476,11 +476,7 @@ namespace RepoDb
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
             // Get the DB Fields
-            dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction);
-            if (dbFields?.Any() != true)
-            {
-                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-            }
+            dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
 
             // Variables needed
             var result = 0;
@@ -583,11 +579,7 @@ namespace RepoDb
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
             // Get the DB Fields
-            dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction);
-            if (dbFields?.Any() != true)
-            {
-                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-            }
+            dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
 
             // Variables needed
             var result = 0;
@@ -695,11 +687,7 @@ namespace RepoDb
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
             // Get the DB Fields
-            dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction);
-            if (dbFields?.Any() != true)
-            {
-                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-            }
+            dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
             // Variables needed
             var result = 0;
@@ -802,11 +790,7 @@ namespace RepoDb
             SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
 
             // Get the DB Fields
-            dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction);
-            if (dbFields?.Any() != true)
-            {
-                throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-            }
+            dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
             // Variables needed
             var result = 0;

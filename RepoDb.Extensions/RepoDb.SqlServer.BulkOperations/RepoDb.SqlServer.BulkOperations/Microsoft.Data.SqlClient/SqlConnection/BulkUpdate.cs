@@ -599,11 +599,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -794,11 +790,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
@@ -851,12 +843,9 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null &&
-                    identityDbField?.IsIdentity == true &&
-                    qualifiers?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                    fields?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
@@ -992,11 +981,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -1049,12 +1034,9 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null &&
-                    identityDbField?.IsIdentity == true &&
-                    qualifiers?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                    fields?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }
@@ -1187,11 +1169,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
@@ -1244,12 +1222,9 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                if (options == null &&
-                    identityDbField?.IsIdentity == true &&
-                    qualifiers?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                    fields?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                if (options == null && identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
                 {
                     options = SqlBulkCopyOptions.KeepIdentity;
                 }

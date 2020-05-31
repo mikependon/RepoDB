@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
+using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -28,6 +29,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -39,13 +41,14 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
-                return BulkMergeInternal(connection: connection,
+                var result = BulkMergeInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
                     qualifiers: qualifiers,
@@ -54,8 +57,14 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
+                if (isReturnIdentity == true)
+                {
+                    SetIdentities<TEntity>(entities, result);
+                }
+                return result.Count;
             }
         }
 
@@ -72,6 +81,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -84,13 +94,14 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
-                return BulkMergeInternal(connection: connection,
+                var result = BulkMergeInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,
                     qualifiers: qualifiers,
@@ -99,8 +110,14 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
+                if (isReturnIdentity == true)
+                {
+                    SetIdentities<TEntity>(entities, result);
+                }
+                return result.Count;
             }
         }
 
@@ -140,8 +157,9 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction).Count;
         }
 
         #endregion
@@ -184,8 +202,9 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction).Count;
         }
 
         /// <summary>
@@ -201,6 +220,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -213,6 +233,7 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -227,6 +248,7 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -244,6 +266,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -257,6 +280,7 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
@@ -270,6 +294,7 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -290,6 +315,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -301,13 +327,14 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
-                return await BulkMergeAsyncInternal(connection: connection,
+                var result = await BulkMergeAsyncInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
                     qualifiers: qualifiers,
@@ -316,8 +343,14 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
+                if (isReturnIdentity == true)
+                {
+                    SetIdentities<TEntity>(entities, result);
+                }
+                return result.Count;
             }
         }
 
@@ -334,6 +367,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -346,13 +380,14 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
-                return await BulkMergeAsyncInternal(connection: connection,
+                var result = await BulkMergeAsyncInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,
                     qualifiers: qualifiers,
@@ -361,8 +396,14 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
+                if (isReturnIdentity == true)
+                {
+                    SetIdentities<TEntity>(entities, result);
+                }
+                return result.Count;
             }
         }
 
@@ -393,7 +434,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return (await BulkMergeAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 qualifiers: qualifiers,
@@ -402,8 +443,9 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction)).Count;
         }
 
         #endregion
@@ -437,7 +479,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return (await BulkMergeAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 qualifiers: qualifiers,
@@ -446,8 +488,9 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction)).Count;
         }
 
         /// <summary>
@@ -463,6 +506,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -475,6 +519,7 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -489,6 +534,7 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -506,6 +552,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -519,6 +566,7 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
@@ -532,6 +580,7 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -552,10 +601,11 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static int BulkMergeInternal(SqlConnection connection,
+        /// <returns>The instance of <see cref="BulkOperationIdentitiesResult"/> object.</returns>
+        internal static BulkOperationIdentitiesResult BulkMergeInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -564,13 +614,15 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
-            var result = default(int);
+            var count = default(int);
+            var identities = new List<object>();
 
             // Check the transaction
             if (transaction == null)
@@ -599,11 +651,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -696,8 +744,26 @@ namespace RepoDb
                     primaryDbField?.AsField(),
                     identityDbField?.AsField(),
                     hints,
-                    dbSetting);
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    dbSetting,
+                    isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
+                if (isReturnIdentity != true)
+                {
+                    count = connection.ExecuteNonQuery(sql, transaction: transaction);
+                }
+                else
+                {
+                    using (var dataReader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                    {
+                        while (dataReader.Read())
+                        {
+                            var value = Converter.DbNullToNull(dataReader.GetFieldValue<object>(0));
+                            identities.Add(value);
+                            count++;
+                        }
+                    }
+                }
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -708,6 +774,9 @@ namespace RepoDb
                 {
                     transaction?.Commit();
                 }
+
+                // Result
+                return new BulkOperationIdentitiesResult(count, identityDbField?.Name, identities);
             }
             catch
             {
@@ -728,9 +797,6 @@ namespace RepoDb
                     transaction?.Dispose();
                 }
             }
-
-            // Result
-            return result;
         }
 
         /// <summary>
@@ -746,6 +812,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -759,6 +826,7 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
@@ -794,11 +862,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
@@ -892,8 +956,35 @@ namespace RepoDb
                     primaryDbField?.AsField(),
                     identityDbField?.AsField(),
                     hints,
-                    dbSetting);
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    dbSetting,
+                    isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
+                if (isReturnIdentity != true)
+                {
+                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                }
+                else
+                {
+                    var column = dataTable.Columns[identityDbField.Name];
+                    if (column?.ReadOnly != true)
+                    {
+                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                        {
+                            while (reader.Read())
+                            {
+                                var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                                var row = dataTable.Rows[result];
+                                row[column] = value;
+                                result++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    }
+                }
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -945,10 +1036,11 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static async Task<int> BulkMergeAsyncInternal(SqlConnection connection,
+        /// <returns>The instance of <see cref="BulkOperationIdentitiesResult"/> object.</returns>
+        internal static async Task<BulkOperationIdentitiesResult> BulkMergeAsyncInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -957,13 +1049,15 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
-            var result = default(int);
+            var count = default(int);
+            var identities = new List<object>();
 
             // Check the transaction
             if (transaction == null)
@@ -992,11 +1086,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -1089,8 +1179,26 @@ namespace RepoDb
                     primaryDbField?.AsField(),
                     identityDbField?.AsField(),
                     hints,
-                    dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                    dbSetting,
+                    isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
+                if (isReturnIdentity != true)
+                {
+                    count = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                }
+                else
+                {
+                    using (var dataReader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                    {
+                        while (await dataReader.ReadAsync())
+                        {
+                            var value = Converter.DbNullToNull((await dataReader.GetFieldValueAsync<object>(0)));
+                            identities.Add(value);
+                            count++;
+                        }
+                    }
+                }
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1101,6 +1209,9 @@ namespace RepoDb
                 {
                     transaction?.Commit();
                 }
+
+                // Result
+                return new BulkOperationIdentitiesResult(count, identityDbField?.Name, identities);
             }
             catch
             {
@@ -1121,9 +1232,6 @@ namespace RepoDb
                     transaction?.Dispose();
                 }
             }
-
-            // Result
-            return result;
         }
 
         /// <summary>
@@ -1139,6 +1247,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -1152,6 +1261,7 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
@@ -1187,11 +1297,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-                if (dbFields?.Any() != true)
-                {
-                    throw new InvalidOperationException($"No database fields found for '{tableName}'.");
-                }
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
@@ -1285,8 +1391,35 @@ namespace RepoDb
                     primaryDbField?.AsField(),
                     identityDbField?.AsField(),
                     hints,
-                    dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                    dbSetting,
+                    isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
+                if (isReturnIdentity != true)
+                {
+                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                }
+                else
+                {
+                    var column = dataTable.Columns[identityDbField.Name];
+                    if (column?.ReadOnly != true)
+                    {
+                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0)));
+                                var row = dataTable.Rows[result];
+                                row[column] = value;
+                                result++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    }
+                }
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);

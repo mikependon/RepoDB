@@ -25,6 +25,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -35,6 +36,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -52,6 +54,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -85,6 +88,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -96,6 +100,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -114,6 +119,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -270,6 +276,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -281,6 +288,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -299,6 +307,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -332,6 +341,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -344,6 +354,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
@@ -362,6 +373,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -398,6 +410,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -408,6 +421,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -425,6 +439,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -458,6 +473,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -469,6 +485,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -487,6 +504,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -643,6 +661,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -654,6 +673,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class
@@ -672,6 +692,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
@@ -705,6 +726,7 @@ namespace RepoDb
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
@@ -717,6 +739,7 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             string hints = null,
             int? batchSize = null,
+            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
         {
@@ -735,6 +758,7 @@ namespace RepoDb
                     hints: hints,
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
+                    isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
