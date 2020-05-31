@@ -55,26 +55,6 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
 
-## Latest News
-
-RepoDb has just supported the awaited capability by integrating the popular MySQL driver [MySqlConnector](https://www.nuget.org/packages/RepoDb.MySqlConnector) with the help of the author itself.
-
-The project is under the [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector) folder with complete [Unit](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.UnitTests) and [Integration](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests) test suites.
-
-To start with, simply install the package below via Package Manager Console.
-
-```csharp
-> Install-Package RepoDb.MySqlConnector
-```
-
-Then call the bootstrapper once.
-
-```csharp
-RepoDb.MySqlBootstrap.Initialize();
-```
-
-Or, you can also visit the official MySQL tutorial [page](http://repodb.net/tutorial/get-started-mysql).
-
 ## Get Started
 
 Please click any of the link below to fast-track your learnings.
