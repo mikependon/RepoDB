@@ -641,7 +641,7 @@ namespace RepoDb
                 // Throw an error if there are no fields
                 if (fields?.Any() != true)
                 {
-                    throw new MissingFieldException("There is no field(s) found for this operation.");
+                    throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
                 // Create a temporary table
@@ -834,7 +834,7 @@ namespace RepoDb
                 // Throw an error if there are no fields
                 if (fields?.Any() != true)
                 {
-                    throw new MissingFieldException("There is no field(s) found for this operation.");
+                    throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
                 // Create a temporary table
@@ -1027,7 +1027,7 @@ namespace RepoDb
                 // Throw an error if there are no fields
                 if (fields?.Any() != true)
                 {
-                    throw new MissingFieldException("There is no field(s) found for this operation.");
+                    throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
                 // Create a temporary table
@@ -1217,7 +1217,7 @@ namespace RepoDb
                 // Throw an error if there are no fields
                 if (fields?.Any() != true)
                 {
-                    throw new MissingFieldException("There is no field(s) found for this operation.");
+                    throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
                 // Create a temporary table
