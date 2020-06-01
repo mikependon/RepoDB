@@ -16,9 +16,9 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
-    <Version>1.0.8</Version>
-    <FileVersion>1.0.8.0</FileVersion>
-    <AssemblyVersion>1.0.8.0</AssemblyVersion>
+    <Version>1.0.9</Version>
+    <FileVersion>1.0.9.0</FileVersion>
+    <AssemblyVersion>1.0.9.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
