@@ -1,11 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
@@ -47,7 +47,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkMerge<TEntity>
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesForEmptyTable()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -73,7 +73,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesForEmptyTableWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesForEmptyTableWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -101,7 +101,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntities()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -133,7 +133,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -167,7 +167,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -200,7 +200,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -233,7 +233,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -277,7 +277,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnSystemSqlConnectionBulkMergeForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -306,7 +306,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkMerge<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -338,7 +338,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBulkMergeForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -384,7 +384,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkMerge(TableName)
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForTableNameDataEntitiesForEmptyTable()
+        public void TestMicrosoftSqlConnectionBulkMergeForTableNameDataEntitiesForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -410,7 +410,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForTableNameDataEntitiesForEmptyTableWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeForTableNameDataEntitiesForEmptyTableWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -439,7 +439,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForTableNameDataEntities()
+        public void TestMicrosoftSqlConnectionBulkMergeForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -471,7 +471,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForTableNameDataEntitiesWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeForTableNameDataEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -505,7 +505,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForTableNameDataEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkMergeForTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -539,7 +539,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkMergeForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -577,7 +577,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkMergeAsync<TEntity>
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesForEmptyTable()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -603,7 +603,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesForEmptyTableWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesForEmptyTableWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -631,7 +631,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntities()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -660,7 +660,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -691,7 +691,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -724,7 +724,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -757,7 +757,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesWithMappings()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -798,7 +798,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSystemSqlConnectionBulkMergeAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -831,7 +831,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkMergeAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesWithExtraFields()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -863,7 +863,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
@@ -910,7 +910,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkMergeAsync(TableName)
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameDataEntitiesForEmptyTable()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForTableNameDataEntitiesForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -936,7 +936,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameDataEntitiesForEmptyTableWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForTableNameDataEntitiesForEmptyTableWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -964,7 +964,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameDataEntities()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -996,7 +996,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameDataEntitiesWithReturnIdentity()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForTableNameDataEntitiesWithReturnIdentity()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1030,7 +1030,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameDataEntitiesWithQualifiers()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1064,7 +1064,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestMicrosoftSqlConnectionBulkMergeAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);

@@ -726,6 +726,7 @@ namespace RepoDb
                     filteredDbFields,
                     mappings,
                     options,
+                    null,
                     bulkCopyTimeout,
                     batchSize,
                     false,
@@ -940,6 +941,7 @@ namespace RepoDb
                     filteredDbFields,
                     mappings,
                     options,
+                    null,
                     bulkCopyTimeout,
                     batchSize,
                     false,
@@ -964,30 +966,22 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (isReturnIdentity != true)
+                var column = dataTable.Columns[identityDbField.Name];
+                if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                    {
+                        while (reader.Read())
+                        {
+                            var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                            dataTable.Rows[result][column] = value;
+                            result++;
+                        }
+                    }
                 }
                 else
                 {
-                    var column = dataTable.Columns[identityDbField.Name];
-                    if (column?.ReadOnly != true)
-                    {
-                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
-                        {
-                            while (reader.Read())
-                            {
-                                var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                                var row = dataTable.Rows[result];
-                                row[column] = value;
-                                result++;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        result = connection.ExecuteNonQuery(sql, transaction: transaction);
-                    }
+                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
                 }
 
                 // Drop the table after used
@@ -1165,6 +1159,7 @@ namespace RepoDb
                     filteredDbFields,
                     mappings,
                     options,
+                    null,
                     bulkCopyTimeout,
                     batchSize,
                     false,
@@ -1368,6 +1363,7 @@ namespace RepoDb
                     filteredDbFields,
                     mappings,
                     options,
+                    null,
                     bulkCopyTimeout,
                     batchSize,
                     false,
@@ -1403,30 +1399,22 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (isReturnIdentity != true)
+                var column = dataTable.Columns[identityDbField.Name];
+                if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0)));
+                            dataTable.Rows[result][column] = value;
+                            result++;
+                        }
+                    }
                 }
                 else
                 {
-                    var column = dataTable.Columns[identityDbField.Name];
-                    if (column?.ReadOnly != true)
-                    {
-                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0)));
-                                var row = dataTable.Rows[result];
-                                row[column] = value;
-                                result++;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        result = connection.ExecuteNonQuery(sql, transaction: transaction);
-                    }
+                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
                 }
 
                 // Drop the table after used

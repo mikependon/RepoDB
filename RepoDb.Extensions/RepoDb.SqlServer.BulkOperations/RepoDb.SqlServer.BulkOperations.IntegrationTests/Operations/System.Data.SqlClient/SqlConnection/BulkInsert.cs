@@ -85,6 +85,62 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForEntitiesWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSystemSqlConnectionBulkInsertForEntitiesWithMappings()
         {
             // Setup
@@ -314,6 +370,156 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForEntitiesDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForEntitiesDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForEntitiesDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert<BulkOperationIdentityTable>(table, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestSystemSqlConnectionBulkInsertForEntitiesDataTableWithMappings()
         {
             // Setup
@@ -503,6 +709,90 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForTableNameDataEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -734,6 +1024,156 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForTableNameDbDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForTableNameDbDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertForTableNameDbDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true, usePhysicalPseudoTempTable: true);
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestSystemSqlConnectionBulkInsertForTableNameDbDataTableWithMappings()
         {
             // Setup
@@ -926,6 +1366,90 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentityWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1166,6 +1690,156 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync<BulkOperationIdentityTable>(table, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void TestSystemSqlConnectionBulkInsertAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
@@ -1358,6 +2032,90 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataEntitiesWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkInsertResult = connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkInsertResult);
+                Assert.IsFalse(tables.Any(e => e.Id <= 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    var item = queryResult.FirstOrDefault(e => e.Id == t.Id);
+                    Helper.AssertPropertiesEquality(t, item);
                 });
             }
         }
@@ -1588,6 +2346,156 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                             // Assert
                             Assert.AreEqual(tables.Count * 2, queryResult.Count());
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentityAndWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, hints: SqlServerTableHints.TabLock, isReturnIdentity: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkInsertAsyncForTableNameDataTableWithReturnIdentityViaPhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            // Insert the records first
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.InsertAll(tables);
+            }
+
+            // Open the source connection
+            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Read the data from source connection
+                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
+                {
+                    using (var table = new DataTable())
+                    {
+                        table.Load(reader);
+
+                        // Open the destination connection
+                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        {
+                            // Act
+                            var bulkInsertResult = destinationConnection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table, isReturnIdentity: true, usePhysicalPseudoTempTable: true).Result;
+
+                            // Assert
+                            Assert.AreEqual(tables.Count, bulkInsertResult);
+
+                            // Act
+                            var queryResult = destinationConnection.QueryAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(tables.Count * 2, queryResult.Count());
+
+                            // Assert
+                            var rows = table.Rows.OfType<DataRow>();
+                            queryResult.AsList().ForEach(item =>
+                            {
+                                var row = rows.Where(r => Equals(item.Id, r["Id"]));
+                                Assert.IsNotNull(row);
+                            });
                         }
                     }
                 }

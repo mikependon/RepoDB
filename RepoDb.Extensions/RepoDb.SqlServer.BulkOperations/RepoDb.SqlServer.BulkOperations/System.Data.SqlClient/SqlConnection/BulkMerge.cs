@@ -966,22 +966,22 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (isReturnIdentity != true)
-                {
-                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
-                }
-                else
+                var column = dataTable.Columns[identityDbField.Name];
+                if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
                     using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
                     {
                         while (reader.Read())
                         {
                             var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                            var row = dataTable.Rows[result];
-                            row[identityDbField.Name] = value;
+                            dataTable.Rows[result][column] = value;
                             result++;
                         }
                     }
+                }
+                else
+                {
+                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
                 }
 
                 // Drop the table after used
@@ -1399,22 +1399,22 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (isReturnIdentity != true)
-                {
-                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
-                }
-                else
+                var column = dataTable.Columns[identityDbField.Name];
+                if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
                     using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
                     {
                         while (await reader.ReadAsync())
                         {
                             var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0)));
-                            var row = dataTable.Rows[result];
-                            row[identityDbField.Name] = value;
+                            dataTable.Rows[result][column] = value;
                             result++;
                         }
                     }
+                }
+                else
+                {
+                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
                 }
 
                 // Drop the table after used

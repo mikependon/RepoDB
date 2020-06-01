@@ -104,7 +104,7 @@ namespace RepoDb
             }
 
             // Get the property
-            var property = PropertyCache.Get<TEntity>(identitiesResult.IdentityPropertyName);
+            var property = IdentityCache.Get<TEntity>() ?? PropertyCache.Get<TEntity>(identitiesResult.IdentityPropertyName);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Identity property not found for type '{typeof(TEntity).FullName}'.");
@@ -336,6 +336,7 @@ namespace RepoDb
                 .Insert()
                 .Into()
                 .TableNameFrom(tableName, dbSetting)
+                .HintsFrom(hints)
                 .OpenParen()
                 .FieldsFrom(insertableFields, dbSetting)
                 .CloseParen();
