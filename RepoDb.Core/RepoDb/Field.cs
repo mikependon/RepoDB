@@ -126,22 +126,22 @@ namespace RepoDb
         /// <summary>
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
+        /// <param name="obj">An object to be parsed.</param>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        public static IEnumerable<Field> Parse(object obj)
+        {
+            return Parse(obj?.GetType());
+        }
+
+        /// <summary>
+        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse<TEntity>()
             where TEntity : class
         {
             return Parse(typeof(TEntity));
-        }
-
-        /// <summary>
-        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
-        /// </summary>
-        /// <param name="obj">An object to be parsed.</param>
-        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse(object obj)
-        {
-            return Parse(obj?.GetType());
         }
 
         /// <summary>

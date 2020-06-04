@@ -8,6 +8,17 @@ namespace RepoDb.UnitTests.Others
     [TestClass]
     public partial class FieldTest
     {
+        #region SubClasses
+
+        private class FieldTestClass
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        #endregion
+
         [TestMethod]
         public void TestFieldAndStringEquality()
         {
@@ -35,7 +46,7 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestFieldFromMethodParsing()
+        public void TestFieldFromMethod()
         {
             // Prepare
             var fields = new[] { "Field1", "Field2", "Field3" };
@@ -46,6 +57,74 @@ namespace RepoDb.UnitTests.Others
             // Assert
             Assert.AreEqual(3, parsed.Count());
             Assert.IsTrue(parsed.All(field => fields.Contains(field.Name)));
+        }
+
+        [TestMethod]
+        public void TestFieldParseMethodForObject()
+        {
+            // Prepare
+            var obj = new FieldTestClass();
+            var fields = obj
+                .GetType()
+                .GetProperties()
+                .AsFields()
+                .AsList();
+
+            // Act
+            var parsed = Field.Parse(obj);
+
+            // Assert
+            Assert.AreEqual(3, parsed.Count());
+            Assert.IsTrue(parsed.All(field => fields.Contains(field)));
+        }
+
+        [TestMethod]
+        public void TestFieldParseMethodForEntity()
+        {
+            // Prepare
+            var fields = PropertyCache
+                .Get<FieldTestClass>()
+                .AsFields()
+                .AsList();
+
+            // Act
+            var parsed = Field.Parse<FieldTestClass>();
+
+            // Assert
+            Assert.AreEqual(3, parsed.Count());
+            Assert.IsTrue(parsed.All(field => fields.Contains(field)));
+        }
+
+        [TestMethod]
+        public void TestFieldParseMethodForDynamic()
+        {
+            // Prepare
+            var obj = new { Field1 = 1, Field2 = "Field2", Field3 = DateTime.UtcNow };
+            var fields = obj
+                .GetType()
+                .GetProperties()
+                .AsFields()
+                .AsList();
+
+            // Act
+            var parsed = Field.Parse(obj);
+
+            // Assert
+            Assert.AreEqual(3, parsed.Count());
+            Assert.IsTrue(parsed.All(field => fields.Contains(field)));
+        }
+
+        [TestMethod]
+        public void TestFieldParseMethodForExpression()
+        {
+            // Prepare
+            var field = new Field("Field1", typeof(int));
+
+            // Act
+            var parsed = Field.Parse<FieldTestClass>(e => e.Field1);
+
+            // Assert
+            Assert.AreEqual(field, parsed);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
