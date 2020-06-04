@@ -194,7 +194,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     (object)null);
 
                 // Assert
@@ -212,7 +212,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     (object)null,
                     SqlServerTableHints.TabLock);
 
@@ -232,7 +232,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     new QueryField("Id", Operation.In, ids));
 
                 // Assert
@@ -251,7 +251,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     new QueryField("Id", Operation.In, ids),
                     SqlServerTableHints.TabLock);
 
@@ -274,7 +274,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     (object)null).Result;
 
                 // Assert
@@ -292,7 +292,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     (object)null,
                     SqlServerTableHints.TabLock).Result;
 
@@ -312,7 +312,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     new QueryField("Id", Operation.In, ids)).Result;
 
                 // Assert
@@ -331,7 +331,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     new QueryField("Id", Operation.In, ids),
                     SqlServerTableHints.TabLock).Result;
 

@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -67,7 +68,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MaxAllInternal<TEntity>(connection: connection,
-                field: Field.Parse<TEntity>(field),
+                field: Field.Parse<TEntity>(field).First(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -170,7 +171,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MaxAllAsyncInternal<TEntity>(connection: connection,
-                field: Field.Parse<TEntity>(field),
+                field: Field.Parse<TEntity>(field).First(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

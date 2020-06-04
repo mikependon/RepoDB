@@ -115,7 +115,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MaxAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt));
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -132,7 +132,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MaxAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.NoLock);
 
                 // Assert
@@ -154,7 +154,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -171,7 +171,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MaxAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.NoLock).Result;
 
                 // Assert

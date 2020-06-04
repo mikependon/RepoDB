@@ -121,10 +121,34 @@ namespace RepoDb.UnitTests.Others
             var field = new Field("Field1", typeof(int));
 
             // Act
-            var parsed = Field.Parse<FieldTestClass>(e => e.Field1);
+            var parsed = Field.Parse<FieldTestClass>(e => e.Field1)?.FirstOrDefault();
 
             // Assert
             Assert.AreEqual(field, parsed);
+        }
+
+        [TestMethod]
+        public void TestFieldParseMethodForExpressionMultiple()
+        {
+            // Prepare
+            var fields = new[]
+            {
+                new Field("Field1", typeof(int)),
+                new Field("Field2", typeof(string)),
+                new Field("Field3", typeof(DateTime))
+            };
+
+            // Act
+            var parsed = Field.Parse<FieldTestClass>(e => new
+            {
+                e.Field1,
+                e.Field2,
+                e.Field3
+            });
+
+            // Assert
+            Assert.AreEqual(3, parsed.Count());
+            Assert.IsTrue(parsed.All(field => fields.Contains(field)));
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]

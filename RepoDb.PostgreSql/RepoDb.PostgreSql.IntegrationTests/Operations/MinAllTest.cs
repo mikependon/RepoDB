@@ -109,7 +109,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger));
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInteger), Convert.ToInt32(result));
@@ -126,7 +126,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.MinAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     hints: "WhatEver");
             }
         }
@@ -145,7 +145,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger)).Result;
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInteger), Convert.ToInt32(result));
@@ -162,7 +162,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     hints: "WhatEver").Wait();
             }
         }

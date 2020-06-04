@@ -150,23 +150,28 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>An instance of <see cref="Field"/> object.</returns>
-        public static Field Parse<TEntity>(Expression<Func<TEntity, object>> expression)
+        /// <returns>A list of <see cref="Field"/> objects.</returns>
+        public static IEnumerable<Field> Parse<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
+            var field = (Field)null;
             if (expression.Body.IsUnary())
             {
-                return Parse<TEntity>(expression.Body.ToUnary());
+                field = Parse<TEntity>(expression.Body.ToUnary());
             }
             else if (expression.Body.IsMember())
             {
-                return Parse<TEntity>(expression.Body.ToMember());
+                field = Parse<TEntity>(expression.Body.ToMember());
             }
             else if (expression.Body.IsBinary())
             {
-                return Parse<TEntity>(expression.Body.ToBinary());
+                field = Parse<TEntity>(expression.Body.ToBinary());
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            if (field == null)
+            {
+                throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            }
+            return field.AsEnumerable();
         }
 
         /// <summary>

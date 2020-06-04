@@ -5,6 +5,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -338,7 +339,7 @@ namespace RepoDb
             where TEntity : class
         {
             return SumInternal<TEntity>(connection: connection,
-                field: Field.Parse<TEntity>(field),
+                field: Field.Parse<TEntity>(field).First(),
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -720,7 +721,7 @@ namespace RepoDb
             where TEntity : class
         {
             return SumAsyncInternal<TEntity>(connection: connection,
-                field: Field.Parse<TEntity>(field),
+                field: Field.Parse<TEntity>(field).First(),
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,

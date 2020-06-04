@@ -126,11 +126,11 @@ namespace RepoDb.UnitTests.Others
         public void TestFieldParseAsExpression()
         {
             // Act
-            var field = Field.Parse<DerivedClass>(e => e.PrimaryId);
+            var field = Field.Parse<DerivedClass>(e => e.PrimaryId)?.FirstOrDefault();
 
             // Assert
-            Assert.AreEqual("PrimaryId", field.Name);
-            Assert.AreEqual(typeof(int), field.Type);
+            Assert.AreEqual("PrimaryId", field?.Name);
+            Assert.AreEqual(typeof(int), field?.Type);
         }
 
         #endregion

@@ -109,7 +109,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger));
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -126,7 +126,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     hints: "WhatEver");
             }
         }
@@ -145,7 +145,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger)).Result;
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInteger), Convert.ToDouble(result));
@@ -162,7 +162,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     hints: "WhatEver").Wait();
             }
         }

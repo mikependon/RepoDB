@@ -140,10 +140,10 @@ namespace RepoDb.UnitTests.Others
         public void TestFieldParseForDerivedClassAsExpression()
         {
             // Act
-            var field = Field.Parse<DerivedClass>(e => e.PrimaryId);
+            var field = Field.Parse<DerivedClass>(e => e.PrimaryId).FirstOrDefault();
 
             // Assert
-            Assert.AreEqual("PrimaryId", field.Name);
+            Assert.AreEqual("PrimaryId", field?.Name);
         }
 
         #endregion

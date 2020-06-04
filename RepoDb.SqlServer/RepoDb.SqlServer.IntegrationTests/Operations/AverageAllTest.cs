@@ -115,7 +115,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt));
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -132,7 +132,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.TabLock);
 
                 // Assert
@@ -154,7 +154,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -171,7 +171,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     SqlServerTableHints.TabLock).Result;
 
                 // Assert

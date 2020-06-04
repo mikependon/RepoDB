@@ -109,7 +109,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt));
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -126,7 +126,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             {
                 // Act
                 connection.SumAll(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     hints: "WhatEver");
             }
         }
@@ -145,7 +145,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt)).Result;
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -162,7 +162,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             {
                 // Act
                 connection.SumAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInt),
+                    Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     hints: "WhatEver").Wait();
             }
         }

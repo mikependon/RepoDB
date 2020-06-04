@@ -150,7 +150,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     (object)null);
 
                 // Assert
@@ -169,7 +169,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     new QueryField("Id", Operation.In, ids));
 
                 // Assert
@@ -187,7 +187,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.Average(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     (object)null,
                     hints: "WhatEver");
             }
@@ -207,7 +207,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     (object)null).Result;
 
                 // Assert
@@ -226,7 +226,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
                 var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     new QueryField("Id", Operation.In, ids)).Result;
 
                 // Assert
@@ -244,7 +244,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
                     (object)null,
                     hints: "WhatEver").Wait();
             }
