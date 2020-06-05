@@ -26,6 +26,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <None Remove="Interfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BulkOperationCancellableTraceLog.cs" />
+    <Compile Remove="BulkOperationTraceLog.cs" />
+    <Compile Remove="System.Data.SqlClient\SqlConnection\BulkDeleteWithTrace.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="RepoDb.SqlServer" Version="1.0.9" />
   </ItemGroup>
 

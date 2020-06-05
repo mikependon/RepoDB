@@ -1,6 +1,4 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -677,7 +675,6 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkDeleteInternal(SqlConnection connection,
             string tableName,
@@ -686,32 +683,12 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
-            IBulkOperationTrace trace = null)
+            SqlTransaction transaction = null)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
-
-            // Before Execution Time
-            var beforeBulkDeleteExecutionTime = DateTime.UtcNow;
-
-            // BeforeBulkDelete
-            if (trace != null)
-            {
-                var cancellableTraceLog = new BulkOperationCancellableTraceLog("BulkDelete", primaryKeys, null);
-                trace.BeforeBulkDelete(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BulkDelete");
-                    }
-                    return default;
-                }
-                primaryKeys = (IEnumerable<object>)cancellableTraceLog.Parameter ?? primaryKeys;
-            }
 
             // Check the transaction
             if (transaction == null)
@@ -724,6 +701,9 @@ namespace RepoDb
                 // Validate the objects
                 SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
             }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
@@ -752,25 +732,6 @@ namespace RepoDb
                     throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
                 }
 
-                #region Pseudo Temp Table Creation
-
-                var bulkDeletePseudoTableCreationExecutionTime = DateTime.UtcNow;
-
-                // BeforeBulkDeletePseudoTableCreation
-                if (trace != null)
-                {
-                    var cancellableTraceLog = new BulkOperationCancellableTraceLog("BulkDeletePseudoTableCreation", null, null);
-                    trace.BeforeBulkDeletePseudoTableCreation(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
-                    {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException("BulkDeletePseudoTableCreation");
-                        }
-                        return default;
-                    }
-                }
-
                 // Create a temporary table
                 var primaryOrIdentityField = primaryOrIdentityDbField.AsField();
                 var sql = GetCreateTemporaryTableSqlText(tableName,
@@ -778,17 +739,6 @@ namespace RepoDb
                     primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
-
-                // AfterBulkDeletePseudoTableCreation
-                if (trace != null)
-                {
-                    trace.AfterBulkDeletePseudoTableCreation(new BulkOperationTraceLog("BulkDeletePseudoTableCreation", primaryKeys, null,
-                        DateTime.UtcNow.Subtract(bulkDeletePseudoTableCreationExecutionTime)));
-                }
-
-                #endregion
-
-                #region BulkInsert
 
                 // Do the bulk insertion first
                 using (var dataTable = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
@@ -807,47 +757,11 @@ namespace RepoDb
                         transaction: transaction);
                 }
 
-                #endregion
-
-                #region Index Creation
-
-                var bulkDeleteIndexCreationExecutionTime = DateTime.UtcNow;
-
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
-
-                // BeforeBulkDeleteIndexCreation
-                if (trace != null)
-                {
-                    var cancellableTraceLog = new BulkOperationCancellableTraceLog(sql, null, null);
-                    trace.BeforeBulkDeleteIndexCreation(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
-                    {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException("BeforeBulkDeleteIndexCreation");
-                        }
-                        return default;
-                    }
-                }
-
-                // Execute the SQL
                 connection.ExecuteNonQuery(sql, transaction: transaction);
-
-                // AfterBulkDeleteIndexCreation
-                if (trace != null)
-                {
-                    trace.AfterBulkDeletePseudoTableCreation(new BulkOperationTraceLog("BulkDeletePseudoTableCreation", primaryKeys, null,
-                        DateTime.UtcNow.Subtract(bulkDeleteIndexCreationExecutionTime)));
-                }
-
-                #endregion
-
-                #region Actual SQL Execution
-
-                var bulkDeleteStatementExecutionExecutionTime = DateTime.UtcNow;
 
                 // Delete the actual delete
                 sql = GetBulkDeleteSqlText(tableName,
@@ -855,67 +769,11 @@ namespace RepoDb
                     primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
-
-                // BeforeBulkDeleteStatementExecution
-                if (trace != null)
-                {
-                    var cancellableTraceLog = new BulkOperationCancellableTraceLog(sql, null, null);
-                    trace.BeforeBulkDeleteStatementExecution(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
-                    {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException("BeforeBulkDeleteStatementExecution");
-                        }
-                        return default;
-                    }
-                }
-
-                // Execute the SQL
                 result = connection.ExecuteNonQuery(sql, transaction: transaction);
-
-                // AfterBulkDeleteIndexCreation
-                if (trace != null)
-                {
-                    trace.AfterBulkDeleteStatementExecution(new BulkOperationTraceLog("BeforeBulkDeleteStatementExecution", primaryKeys, null,
-                        DateTime.UtcNow.Subtract(bulkDeleteStatementExecutionExecutionTime)));
-                }
-
-                #endregion
-
-                #region Pseudo Temp Table Deletion
-
-                var bulkDeletePseudoTableDeletionExecutionTime = DateTime.UtcNow;
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-
-                // BeforeBulkDeleteStatementExecution
-                if (trace != null)
-                {
-                    var cancellableTraceLog = new BulkOperationCancellableTraceLog(sql, null, null);
-                    trace.BeforeBulkDeletePseudoTableDeletion(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
-                    {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException("BeforeBulkDeletePseudoTableDeletion");
-                        }
-                        return default;
-                    }
-                }
-
-                // Execute the SQL
                 connection.ExecuteNonQuery(sql, transaction: transaction);
-
-                // AfterBulkDeleteIndexCreation
-                if (trace != null)
-                {
-                    trace.AfterBulkDeletePseudoTableDeletion(new BulkOperationTraceLog("AfterBulkDeletePseudoTableDeletion", primaryKeys, null,
-                        DateTime.UtcNow.Subtract(bulkDeletePseudoTableDeletionExecutionTime)));
-                }
-
-                #endregion
 
                 // Commit the transaction
                 if (hasTransaction == false)
