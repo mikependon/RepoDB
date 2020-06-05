@@ -9,15 +9,15 @@
         #region Average
 
         /// <summary>
-        /// A method being raised before the actual average operation execution.
+        /// A method being raised before the actual Average operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the average execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Average execution.</param>
         void BeforeAverage(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual average operation execution.
+        /// A method being raised after the actual Average operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the average execution.</param>
+        /// <param name="log">The log object referenced by the Average execution.</param>
         void AfterAverage(TraceLog log);
 
         #endregion
@@ -25,15 +25,15 @@
         #region AverageAll
 
         /// <summary>
-        /// A method being raised before the actual average-all operation execution.
+        /// A method being raised before the actual AverageAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the average-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the AverageAll execution.</param>
         void BeforeAverageAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual average-all operation execution.
+        /// A method being raised after the actual AverageAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the average-all execution.</param>
+        /// <param name="log">The log object referenced by the AverageAll execution.</param>
         void AfterAverageAll(TraceLog log);
 
         #endregion
@@ -41,15 +41,15 @@
         #region BatchQuery
 
         /// <summary>
-        /// A method being raised before the actual batch query operation execution.
+        /// A method being raised before the actual BatchQuery operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the batch query execution.</param>
+        /// <param name="log">The cancellable log object referenced by the BatchQuery execution.</param>
         void BeforeBatchQuery(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual batch query operation execution.
+        /// A method being raised after the actual BatchQuery operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the batch query execution.</param>
+        /// <param name="log">The log object referenced by the BatchQuery execution.</param>
 
         void AfterBatchQuery(TraceLog log);
 
@@ -58,15 +58,15 @@
         #region Count
 
         /// <summary>
-        /// A method being raised before the actual count operation execution.
+        /// A method being raised before the actual Count operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the count execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Count execution.</param>
         void BeforeCount(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual count operation execution.
+        /// A method being raised after the actual Count operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the count execution.</param>
+        /// <param name="log">The log object referenced by the Count execution.</param>
         void AfterCount(TraceLog log);
 
         #endregion
@@ -74,15 +74,15 @@
         #region CountAll
 
         /// <summary>
-        /// A method being raised before the actual count-all operation execution.
+        /// A method being raised before the actual CountAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the count-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the CountAll execution.</param>
         void BeforeCountAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual count-all operation execution.
+        /// A method being raised after the actual CountAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the count-all execution.</param>
+        /// <param name="log">The log object referenced by the CountAll execution.</param>
         void AfterCountAll(TraceLog log);
 
         #endregion
@@ -90,15 +90,15 @@
         #region Delete
 
         /// <summary>
-        /// A method being raised before the actual delete operation execution.
+        /// A method being raised before the actual Delete operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the delete execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Delete execution.</param>
         void BeforeDelete(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual delete operation execution.
+        /// A method being raised after the actual Delete operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the delete execution.</param>
+        /// <param name="log">The log object referenced by the Delete execution.</param>
         void AfterDelete(TraceLog log);
 
         #endregion
@@ -106,15 +106,15 @@
         #region DeleteAll
 
         /// <summary>
-        /// A method being raised before the actual delete-all operation execution.
+        /// A method being raised before the actual DeleteAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the delete-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the DeleteAll execution.</param>
         void BeforeDeleteAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual delete-all operation execution.
+        /// A method being raised after the actual DeleteAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the delete-all execution.</param>
+        /// <param name="log">The log object referenced by the DeleteAll execution.</param>
         void AfterDeleteAll(TraceLog log);
 
         #endregion
@@ -122,15 +122,15 @@
         #region Exists
 
         /// <summary>
-        /// A method being raised before the actual exists operation execution.
+        /// A method being raised before the actual Exists operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the count execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Exists execution.</param>
         void BeforeExists(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual exists operation execution.
+        /// A method being raised after the actual Exists operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the count execution.</param>
+        /// <param name="log">The log object referenced by the Exists execution.</param>
         void AfterExists(TraceLog log);
 
         #endregion
@@ -138,15 +138,15 @@
         #region ExecuteNonQuery
 
         /// <summary>
-        /// A method being raised before the actual execute non-query operation execution.
+        /// A method being raised before the actual ExecuteNonQuery operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the execute non-query execution.</param>
+        /// <param name="log">The cancellable log object referenced by the ExecuteNonQuery execution.</param>
         void BeforeExecuteNonQuery(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual execute non-query operation execution.
+        /// A method being raised after the actual ExecuteNonQuery operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the execute non-query execution.</param>
+        /// <param name="log">The log object referenced by the ExecuteNonQuery execution.</param>
         void AfterExecuteNonQuery(TraceLog log);
 
         #endregion
@@ -154,15 +154,15 @@
         #region ExecuteQuery
 
         /// <summary>
-        /// A method being raised before the actual execute operation execution.
+        /// A method being raised before the actual ExecuteQuery operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the execute query execution.</param>
+        /// <param name="log">The cancellable log object referenced by the ExecuteQuery execution.</param>
         void BeforeExecuteQuery(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual execute query operation execution.
+        /// A method being raised after the actual ExecuteQuery operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the execute query execution.</param>
+        /// <param name="log">The log object referenced by the ExecuteQuery execution.</param>
         void AfterExecuteQuery(TraceLog log);
 
         #endregion
@@ -170,15 +170,15 @@
         #region ExecuteReader
 
         /// <summary>
-        /// A method being raised before the actual execute reader operation execution.
+        /// A method being raised before the actual ExecuteReader operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the execute reader execution.</param>
+        /// <param name="log">The cancellable log object referenced by the ExecuteReader execution.</param>
         void BeforeExecuteReader(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual execute reader operation execution.
+        /// A method being raised after the actual ExecuteReader operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the execute reader execution.</param>
+        /// <param name="log">The log object referenced by the ExecuteReader execution.</param>
         void AfterExecuteReader(TraceLog log);
 
         #endregion
@@ -186,15 +186,15 @@
         #region ExecuteScalar
 
         /// <summary>
-        /// A method being raised before the actual execute scalar operation execution.
+        /// A method being raised before the actual ExecuteScalar operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the execute scalar execution.</param>
+        /// <param name="log">The cancellable log object referenced by the ExecuteScalar execution.</param>
         void BeforeExecuteScalar(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual execute scalar operation execution.
+        /// A method being raised after the actual ExecuteScalar operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the execute scalar execution.</param>
+        /// <param name="log">The log object referenced by the ExecuteScalar execution.</param>
         void AfterExecuteScalar(TraceLog log);
 
         #endregion
@@ -202,15 +202,15 @@
         #region Insert
 
         /// <summary>
-        /// A method being raised before the actual insert operation execution.
+        /// A method being raised before the actual Insert operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the insert execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Insert execution.</param>
         void BeforeInsert(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual insert operation execution.
+        /// A method being raised after the actual Insert operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the insert execution.</param>
+        /// <param name="log">The log object referenced by the Insert execution.</param>
         void AfterInsert(TraceLog log);
 
         #endregion
@@ -218,15 +218,15 @@
         #region InsertAll
 
         /// <summary>
-        /// A method being raised before the actual insert-all operation execution.
+        /// A method being raised before the actual InsertAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the insert-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the InsertAll execution.</param>
         void BeforeInsertAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual insert-all operation execution.
+        /// A method being raised after the actual InsertAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the insert-all execution.</param>
+        /// <param name="log">The log object referenced by the InsertAll execution.</param>
         void AfterInsertAll(TraceLog log);
 
         #endregion
@@ -234,15 +234,15 @@
         #region Max
 
         /// <summary>
-        /// A method being raised before the actual maximum operation execution.
+        /// A method being raised before the actual Max operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the maximum execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Max execution.</param>
         void BeforeMax(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual maximum operation execution.
+        /// A method being raised after the actual Max operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the maximum execution.</param>
+        /// <param name="log">The log object referenced by the Max execution.</param>
         void AfterMax(TraceLog log);
 
         #endregion
@@ -250,15 +250,15 @@
         #region MaxAll
 
         /// <summary>
-        /// A method being raised before the actual maximum-all operation execution.
+        /// A method being raised before the actual MaxAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the maximum-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the MaxAll execution.</param>
         void BeforeMaxAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual maximum-all operation execution.
+        /// A method being raised after the actual MaxAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the maximum-all execution.</param>
+        /// <param name="log">The log object referenced by the MaxAll execution.</param>
         void AfterMaxAll(TraceLog log);
 
         #endregion
@@ -266,15 +266,15 @@
         #region Merge
 
         /// <summary>
-        /// A method being raised before the actual merge operation execution.
+        /// A method being raised before the actual Merge operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the merge execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Merge execution.</param>
         void BeforeMerge(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual merge operation execution.
+        /// A method being raised after the actual Merge operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the merge execution.</param>
+        /// <param name="log">The log object referenced by the Merge execution.</param>
         void AfterMerge(TraceLog log);
 
         #endregion
@@ -282,15 +282,15 @@
         #region MergeAll
 
         /// <summary>
-        /// A method being raised before the actual merge-all operation execution.
+        /// A method being raised before the actual MergeAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the merge-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the MergeAll execution.</param>
         void BeforeMergeAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual merge-all operation execution.
+        /// A method being raised after the actual MergeAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the merge-all execution.</param>
+        /// <param name="log">The log object referenced by the MergeAll execution.</param>
         void AfterMergeAll(TraceLog log);
 
         #endregion
@@ -298,15 +298,15 @@
         #region Min
 
         /// <summary>
-        /// A method being raised before the actual minimum operation execution.
+        /// A method being raised before the actual Min operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the minimum execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Min execution.</param>
         void BeforeMin(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual minimum operation execution.
+        /// A method being raised after the actual Min operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the minimum execution.</param>
+        /// <param name="log">The log object referenced by the Min execution.</param>
         void AfterMin(TraceLog log);
 
         #endregion
@@ -314,15 +314,15 @@
         #region MinAll
 
         /// <summary>
-        /// A method being raised before the actual minimum-all operation execution.
+        /// A method being raised before the actual MinAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the minimum-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the MinAll execution.</param>
         void BeforeMinAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual minimum-all operation execution.
+        /// A method being raised after the actual MinAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the minimum-all execution.</param>
+        /// <param name="log">The log object referenced by the MinAll execution.</param>
         void AfterMinAll(TraceLog log);
 
         #endregion
@@ -330,15 +330,15 @@
         #region Query
 
         /// <summary>
-        /// A method being raised before the actual query operation execution.
+        /// A method being raised before the actual Query operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the query execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Query execution.</param>
         void BeforeQuery(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual query operation execution.
+        /// A method being raised after the actual Query operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the query execution.</param>
+        /// <param name="log">The log object referenced by the Query execution.</param>
         void AfterQuery(TraceLog log);
 
         #endregion
@@ -346,15 +346,15 @@
         #region QueryAll
 
         /// <summary>
-        /// A method being raised before the actual query-all operation execution.
+        /// A method being raised before the actual QueryAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the query-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the QueryAll execution.</param>
         void BeforeQueryAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual query-all operation execution.
+        /// A method being raised after the actual QueryAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the query-all execution.</param>
+        /// <param name="log">The log object referenced by the QueryAll execution.</param>
         void AfterQueryAll(TraceLog log);
 
         #endregion
@@ -362,15 +362,15 @@
         #region QueryMultiple
 
         /// <summary>
-        /// A method being raised before the actual query-multiple operation execution.
+        /// A method being raised before the actual QueryMultiple operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the query execution.</param>
+        /// <param name="log">The cancellable log object referenced by the QueryMultiple execution.</param>
         void BeforeQueryMultiple(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual query-multiple operation execution.
+        /// A method being raised after the actual QueryMultiple operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the query execution.</param>
+        /// <param name="log">The log object referenced by the QueryMultiple execution.</param>
         void AfterQueryMultiple(TraceLog log);
 
         #endregion
@@ -378,15 +378,15 @@
         #region Sum
 
         /// <summary>
-        /// A method being raised before the actual sum operation execution.
+        /// A method being raised before the actual Sum operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the sum execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Sum execution.</param>
         void BeforeSum(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual sum operation execution.
+        /// A method being raised after the actual Sum operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the sum execution.</param>
+        /// <param name="log">The log object referenced by the Sum execution.</param>
         void AfterSum(TraceLog log);
 
         #endregion
@@ -394,15 +394,15 @@
         #region SumAll
 
         /// <summary>
-        /// A method being raised before the actual sum-all operation execution.
+        /// A method being raised before the actual SumAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the sum-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the SumAll execution.</param>
         void BeforeSumAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual sum-all operation execution.
+        /// A method being raised after the actual SumAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the sum-all execution.</param>
+        /// <param name="log">The log object referenced by the SumAll execution.</param>
         void AfterSumAll(TraceLog log);
 
         #endregion
@@ -410,15 +410,15 @@
         #region Truncate
 
         /// <summary>
-        /// A method being raised before the actual truncate operation execution.
+        /// A method being raised before the actual Truncate operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the truncate execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Truncate execution.</param>
         void BeforeTruncate(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual truncate operation execution.
+        /// A method being raised after the actual Truncate operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the truncate execution.</param>
+        /// <param name="log">The log object referenced by the Truncate execution.</param>
         void AfterTruncate(TraceLog log);
 
         #endregion
@@ -426,15 +426,15 @@
         #region Update
 
         /// <summary>
-        /// A method being raised before the actual update operation execution.
+        /// A method being raised before the actual Update operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the update execution.</param>
+        /// <param name="log">The cancellable log object referenced by the Update execution.</param>
         void BeforeUpdate(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual update operation execution.
+        /// A method being raised after the actual Update operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the update execution.</param>
+        /// <param name="log">The log object referenced by the Update execution.</param>
         void AfterUpdate(TraceLog log);
 
         #endregion
@@ -442,15 +442,15 @@
         #region UpdateAll
 
         /// <summary>
-        /// A method being raised before the actual update-all operation execution.
+        /// A method being raised before the actual UpdateAll operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the update-all execution.</param>
+        /// <param name="log">The cancellable log object referenced by the UpdateAll execution.</param>
         void BeforeUpdateAll(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised after the actual update-all operation execution.
+        /// A method being raised after the actual UpdateAll operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the update-all execution.</param>
+        /// <param name="log">The log object referenced by the UpdateAll execution.</param>
         void AfterUpdateAll(TraceLog log);
 
         #endregion
