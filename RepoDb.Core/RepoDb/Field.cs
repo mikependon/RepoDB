@@ -5,6 +5,7 @@ using RepoDb.Extensions;
 using System.Linq.Expressions;
 using System.Reflection;
 using RepoDb.Exceptions;
+using System.Net.Http.Headers;
 
 namespace RepoDb
 {
@@ -150,28 +151,34 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>A list of <see cref="Field"/> objects.</returns>
+        /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
-            var field = (Field)null;
+            var result = (IEnumerable<Field>)null;
+
             if (expression.Body.IsUnary())
             {
-                field = Parse<TEntity>(expression.Body.ToUnary());
+                result = Parse<TEntity>(expression.Body.ToUnary());
             }
             else if (expression.Body.IsMember())
             {
-                field = Parse<TEntity>(expression.Body.ToMember());
+                result = Parse<TEntity>(expression.Body.ToMember());
             }
             else if (expression.Body.IsBinary())
             {
-                field = Parse<TEntity>(expression.Body.ToBinary());
+                result = Parse<TEntity>(expression.Body.ToBinary());
             }
-            if (field == null)
+            else if (expression.Body.IsNew())
+            {
+                result = Parse<TEntity>(expression.Body.ToNew());
+            }
+            if (result == null)
             {
                 throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
             }
-            return field.AsEnumerable();
+
+            return result;
         }
 
         /// <summary>
@@ -180,8 +187,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>An instance of <see cref="Field"/> object.</returns>
-        internal static Field Parse<TEntity>(UnaryExpression expression)
+        /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> Parse<TEntity>(UnaryExpression expression)
             where TEntity : class
         {
             if (expression.Operand.IsMember())
@@ -192,7 +199,7 @@ namespace RepoDb
             {
                 return Parse<TEntity>(expression.Operand.ToBinary());
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            return null;
         }
 
         /// <summary>
@@ -201,17 +208,17 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>An instance of <see cref="Field"/> object.</returns>
-        internal static Field Parse<TEntity>(MemberExpression expression)
+        /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> Parse<TEntity>(MemberExpression expression)
             where TEntity : class
         {
             if (expression.Member is PropertyInfo)
             {
-                return expression.Member.ToPropertyInfo().AsField();
+                return expression.Member.ToPropertyInfo().AsField().AsEnumerable();
             }
             else
             {
-                return new Field(expression.Member.Name);
+                return (new Field(expression.Member.Name)).AsEnumerable();
             }
         }
 
@@ -221,11 +228,31 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>An instance of <see cref="OrderField"/> object.</returns>
-        internal static Field Parse<TEntity>(BinaryExpression expression)
+        /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> Parse<TEntity>(BinaryExpression expression)
             where TEntity : class
         {
-            return new Field(expression.GetName());
+            return (new Field(expression.GetName())).AsEnumerable();
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="NewExpression"/> and converts the result 
+        /// to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
+        internal static IEnumerable<Field> Parse<TEntity>(NewExpression expression)
+            where TEntity : class
+        {
+            if (expression.Members?.Count() >= 0)
+            {
+                return expression
+                    .Members
+                    .OfType<PropertyInfo>()
+                    .Select(e => new Field(e.Name, e.PropertyType));
+            }
+            return null;
         }
 
         #endregion
