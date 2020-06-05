@@ -1,7 +1,7 @@
 ﻿namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface that is being used to mark the class as property handler.
+    /// An interface that is used to mark a class to be a property handler.
     /// </summary>
     /// <typeparam name="TInput">Usually refers to the type of the database column. The input type for the getter; the output type for the setter.</typeparam>
     /// <typeparam name="TResult">Usually refers to the type of the data entity type property. The input type for the setter; the output type for the getter.</typeparam>

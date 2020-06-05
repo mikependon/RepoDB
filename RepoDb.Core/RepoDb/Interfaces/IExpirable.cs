@@ -3,7 +3,7 @@
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface used to mark the class to be expirable.
+    /// An interface that is used to mark a class to be expirable.
     /// </summary>
     public interface IExpirable
     {

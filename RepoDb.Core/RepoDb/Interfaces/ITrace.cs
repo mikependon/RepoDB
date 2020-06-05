@@ -1,9 +1,8 @@
 ﻿namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface used to mark a class to be usable for tracing operations. A trace object is being used by the repositories on every operations
-    /// (before or after) the actual execution. It provides the flexibility of the operations to be traceable and debuggable. The caller can modify
-    /// the SQL Statements or the parameters being passed prior the actual execution, or even cancel the prior-execution.
+    /// An interface that is used to mark a class to be usable for tracing the operations. A trace object is being used to provide a auditing and debugging capability
+    /// when executing the actual operation. The caller can modify the SQL Statements or the parameters being passed prior the actual execution, or even cancel the prior-execution.
     /// </summary>
     public interface ITrace
     {
@@ -53,22 +52,6 @@
         /// <param name="log">The log object referenced by the batch query execution.</param>
 
         void AfterBatchQuery(TraceLog log);
-
-        #endregion
-
-        #region BulkInsert
-
-        /// <summary>
-        /// A method being raised before the actual bulk-insert operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the bulk-insert execution.</param>
-        void BeforeBulkInsert(CancellableTraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual bulk-insert operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the bulk-insert execution.</param>
-        void AfterBulkInsert(TraceLog log);
 
         #endregion
 

@@ -3,7 +3,7 @@
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface used to mark the class to be a cacher for an object.
+    /// An interface that is used to mark a class to be a caching class object.
     /// </summary>
     public interface ICache : IEnumerable
     {

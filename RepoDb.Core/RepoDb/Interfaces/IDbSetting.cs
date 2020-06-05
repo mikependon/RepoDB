@@ -4,7 +4,7 @@ using System.Data.Common;
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface used to mark the class to become a database setting object.
+    /// An interface that is used to mark a class to be a database setting object.
     /// </summary>
     public interface IDbSetting
     {

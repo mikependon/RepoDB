@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface used to mark a class be a helper class on some database related activity.
+    /// An interface that is used to mark a class be a helper class of a specific database provider.
     /// </summary>
     public interface IDbHelper
     {
