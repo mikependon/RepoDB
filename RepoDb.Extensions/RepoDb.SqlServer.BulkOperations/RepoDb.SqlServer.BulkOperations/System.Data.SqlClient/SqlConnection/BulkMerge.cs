@@ -46,26 +46,18 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                var result = BulkMergeInternal(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
-                    reader: reader,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-                if (isReturnIdentity == true)
-                {
-                    SetIdentities<TEntity>(entities, result);
-                }
-                return result.Count;
-            }
+            return BulkMergeInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -99,26 +91,18 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                var result = BulkMergeInternal(connection: connection,
-                    tableName: tableName,
-                    reader: reader,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-                if (isReturnIdentity == true)
-                {
-                    SetIdentities<TEntity>(entities, result);
-                }
-                return result.Count;
-            }
+            return BulkMergeInternal<TEntity>(connection: connection,
+                tableName: tableName,
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -594,6 +578,221 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The target table for bulk-merge operation.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        internal static int BulkMergeInternal<TEntity>(SqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions? options = null,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+            where TEntity : class
+        {
+            // Variables
+            var dbSetting = connection.GetDbSetting();
+            var hasTransaction = (transaction != null);
+            var result = default(int);
+
+            // Check the transaction
+            if (transaction == null)
+            {
+                // Add the transaction if not present
+                transaction = (SqlTransaction)connection.EnsureOpen().BeginTransaction();
+            }
+            else
+            {
+                // Validate the objects
+                SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Must be fixed name so the RepoDb.Core caches will not be bloated
+            var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
+
+            // Add a # prefix if not physical
+            if (usePhysicalPseudoTempTable != true)
+            {
+                tempTableName = string.Concat("#", tempTableName);
+            }
+
+            try
+            {
+                // Get the DB Fields
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+
+                // Variables needed
+                var entityFields = FieldCache.Get<TEntity>().Select(f => f.Name);
+                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
+
+                // Validate the primary keys
+                if (qualifiers?.Any() != true)
+                {
+                    if (primaryOrIdentityDbField == null)
+                    {
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
+                    }
+                    else
+                    {
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
+                    }
+                }
+
+                // Filter the fields (based on the data reader)
+                if (entityFields?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            entityFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Filter the fields (based on the mappings)
+                if (mappings?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Throw an error if there are no fields
+                if (fields?.Any() != true)
+                {
+                    throw new MissingFieldException("There are no field(s) found for this operation.");
+                }
+
+                // Create a temporary table
+                var sql = GetCreateTemporaryTableSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    dbSetting);
+                connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
+
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
+                // Do the bulk insertion first
+                BulkInsertInternal(connection,
+                    tempTableName,
+                    entities,
+                    filteredDbFields,
+                    mappings,
+                    options,
+                    null,
+                    bulkCopyTimeout,
+                    batchSize,
+                    false,
+                    false,
+                    transaction);
+
+                // Create the clustered index
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
+                    qualifiers,
+                    dbSetting);
+                connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Merge the actual merge
+                sql = GetBulkMergeSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    primaryDbField?.AsField(),
+                    identityDbField?.AsField(),
+                    hints,
+                    dbSetting,
+                    isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
+                if (isReturnIdentity != true)
+                {
+                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                }
+                else
+                {
+                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                    {
+                        var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
+                        var list = entities.AsList();
+                        while (reader.Read())
+                        {
+                            var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                            var entity = list[result];
+                            func(entity, value);
+                            result++;
+                        }
+                    }
+                }
+
+                // Drop the table after used
+                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                connection.ExecuteNonQuery(sql, transaction: transaction);
+
+                // Commit the transaction
+                if (hasTransaction == false)
+                {
+                    transaction?.Commit();
+                }
+            }
+            catch
+            {
+                // Rollback the transaction
+                if (hasTransaction == false)
+                {
+                    transaction?.Rollback();
+                }
+
+                // Throw
+                throw;
+            }
+            finally
+            {
+                // Dispose the transaction
+                if (hasTransaction == false)
+                {
+                    transaction?.Dispose();
+                }
+            }
+
+            // Return the result
+            return result;
+        }
+
+        /// <summary>
+        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-merge operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
@@ -1021,6 +1220,221 @@ namespace RepoDb
         #endregion
 
         #region BulkMergeAsyncInternal
+
+        /// <summary>
+        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The target table for bulk-merge operation.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="options">The bulk-copy options to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
+        /// <param name="batchSize">The size per batch to be used.</param>
+        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
+        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        internal static async Task<int> BulkMergeAsyncInternal<TEntity>(SqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            SqlBulkCopyOptions? options = null,
+            string hints = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            bool? isReturnIdentity = null,
+            bool? usePhysicalPseudoTempTable = null,
+            SqlTransaction transaction = null)
+            where TEntity : class
+        {
+            // Variables
+            var dbSetting = connection.GetDbSetting();
+            var hasTransaction = (transaction != null);
+            var result = default(int);
+
+            // Check the transaction
+            if (transaction == null)
+            {
+                // Add the transaction if not present
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+            }
+            else
+            {
+                // Validate the objects
+                SqlConnectionExtension.ValidateTransactionConnectionObject(connection, transaction);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Must be fixed name so the RepoDb.Core caches will not be bloated
+            var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
+
+            // Add a # prefix if not physical
+            if (usePhysicalPseudoTempTable != true)
+            {
+                tempTableName = string.Concat("#", tempTableName);
+            }
+
+            try
+            {
+                // Get the DB Fields
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+
+                // Variables needed
+                var entityFields = FieldCache.Get<TEntity>().Select(f => f.Name);
+                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
+
+                // Validate the primary keys
+                if (qualifiers?.Any() != true)
+                {
+                    if (primaryOrIdentityDbField == null)
+                    {
+                        throw new MissingPrimaryKeyException($"No primary key or identity key found for table '{tableName}'.");
+                    }
+                    else
+                    {
+                        qualifiers = new[] { primaryOrIdentityDbField.AsField() };
+                    }
+                }
+
+                // Filter the fields (based on the data reader)
+                if (entityFields?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            entityFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Filter the fields (based on the mappings)
+                if (mappings?.Any() == true)
+                {
+                    fields = fields
+                        .Where(e =>
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+
+                // Throw an error if there are no fields
+                if (fields?.Any() != true)
+                {
+                    throw new MissingFieldException("There are no field(s) found for this operation.");
+                }
+
+                // Create a temporary table
+                var sql = GetCreateTemporaryTableSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    dbSetting);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Set the options to KeepIdentity if needed
+                if (options == null &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = SqlBulkCopyOptions.KeepIdentity;
+                }
+
+                // Filter the DB Fields
+                var filteredDbFields = dbFields?
+                    .Where(dbField =>
+                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
+
+                // Do the bulk insertion first
+                await BulkInsertAsyncInternal(connection,
+                    tempTableName,
+                    entities,
+                    filteredDbFields,
+                    mappings,
+                    options,
+                    null,
+                    bulkCopyTimeout,
+                    batchSize,
+                    false,
+                    false,
+                    transaction);
+
+                // Create the clustered index
+                sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
+                    qualifiers,
+                    dbSetting);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Merge the actual merge
+                sql = GetBulkMergeSqlText(tableName,
+                    tempTableName,
+                    fields,
+                    qualifiers,
+                    primaryDbField?.AsField(),
+                    identityDbField?.AsField(),
+                    hints,
+                    dbSetting,
+                    isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
+                if (isReturnIdentity != true)
+                {
+                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                }
+                else
+                {
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                    {
+                        var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
+                        var list = entities.AsList();
+                        while (await reader.ReadAsync())
+                        {
+                            var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
+                            var entity = list[result];
+                            func(entity, value);
+                            result++;
+                        }
+                    }
+                }
+
+                // Drop the table after used
+                sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+
+                // Commit the transaction
+                if (hasTransaction == false)
+                {
+                    transaction?.Commit();
+                }
+            }
+            catch
+            {
+                // Rollback the transaction
+                if (hasTransaction == false)
+                {
+                    transaction?.Rollback();
+                }
+
+                // Throw
+                throw;
+            }
+            finally
+            {
+                // Dispose the transaction
+                if (hasTransaction == false)
+                {
+                    transaction?.Dispose();
+                }
+            }
+
+            // Return the result
+            return result;
+        }
 
         /// <summary>
         /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.

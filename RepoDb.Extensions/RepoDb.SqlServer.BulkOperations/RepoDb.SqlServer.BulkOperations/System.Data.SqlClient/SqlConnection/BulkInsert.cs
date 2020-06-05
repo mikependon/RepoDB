@@ -677,13 +677,13 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var dataReader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
                         {
                             var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                             var list = entities.AsList();
-                            while (dataReader.Read())
+                            while (reader.Read())
                             {
-                                var value = Converter.DbNullToNull(dataReader.GetFieldValue<object>(0));
+                                var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
                                 var entity = list[result];
                                 func(entity, value);
                                 result++;
@@ -1123,11 +1123,11 @@ namespace RepoDb
                             // Identify the column
                             if (column?.ReadOnly == false)
                             {
-                                using (var dataReader = (DbDataReader)(connection.ExecuteReader(sql, transaction: transaction)))
+                                using (var reader = (DbDataReader)(connection.ExecuteReader(sql, transaction: transaction)))
                                 {
-                                    while (dataReader.Read())
+                                    while (reader.Read())
                                     {
-                                        var value = Converter.DbNullToNull(dataReader.GetFieldValue<object>(0));
+                                        var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
                                         dataTable.Rows[result][column] = value;
                                         result++;
                                     }
@@ -1349,13 +1349,13 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var dataReader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
                         {
                             var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                             var list = entities.AsList();
-                            while (await dataReader.ReadAsync())
+                            while (await reader.ReadAsync())
                             {
-                                var value = Converter.DbNullToNull(await dataReader.GetFieldValueAsync<object>(0));
+                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
                                 var entity = list[result];
                                 func(entity, value);
                                 result++;
@@ -1795,11 +1795,11 @@ namespace RepoDb
                             // Identify the column
                             if (column?.ReadOnly == false)
                             {
-                                using (var dataReader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                                using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
                                 {
-                                    while (await dataReader.ReadAsync())
+                                    while (await reader.ReadAsync())
                                     {
-                                        var value = Converter.DbNullToNull(await dataReader.GetFieldValueAsync<object>(0));
+                                        var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
                                         dataTable.Rows[result][column] = value;
                                         result++;
                                     }
