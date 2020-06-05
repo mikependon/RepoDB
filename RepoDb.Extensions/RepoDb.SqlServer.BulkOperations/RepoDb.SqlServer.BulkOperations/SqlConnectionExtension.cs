@@ -79,52 +79,6 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Set the data entities identities.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="entities">The list of the data entities.</param>
-        /// <param name="identitiesResult">The result of the bulk operation.</param>
-        private static void SetIdentities<TEntity>(IEnumerable<TEntity> entities,
-            BulkOperationIdentitiesResult identitiesResult)
-            where TEntity : class
-        {
-            // TODO: Compile this by using the FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
-
-            // Check if there are entities
-            if (entities?.Any() != true)
-            {
-                return;
-            }
-
-            // Get the results
-            var results = identitiesResult.Identities?.OfType<object>();
-            if (results == null)
-            {
-                throw new NullReferenceException("No identities returned.");
-            }
-
-            // Get the property
-            var property = IdentityCache.Get<TEntity>() ?? PropertyCache.Get<TEntity>(identitiesResult.IdentityPropertyName);
-            if (property == null)
-            {
-                throw new PropertyNotFoundException($"Identity property not found for type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Check the equality
-            if (entities.Count() != results.Count())
-            {
-                throw new InvalidOperationException("The returned identities does not matched the number of the data entities.");
-            }
-
-            // Set the identity
-            for (var i = 0; i < entities.Count(); i++)
-            {
-                var entity = entities.ElementAt(i);
-                property.PropertyInfo.SetValue(entity, results?.ElementAt(i));
-            }
-        }
-
-        /// <summary>
         /// Gets the actual name of the table from the database.
         /// </summary>
         /// <param name="tableName">The passed table name.</param>

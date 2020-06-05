@@ -895,14 +895,7 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var dataReader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
-                        {
-                            while (dataReader.Read())
-                            {
-                                var value = Converter.DbNullToNull(dataReader.GetFieldValue<object>(0));
-                                result++;
-                            }
-                        }
+                        result = connection.ExecuteNonQuery(sql, transaction: transaction);
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1567,14 +1560,7 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var dataReader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
-                        {
-                            while (await dataReader.ReadAsync())
-                            {
-                                var value = Converter.DbNullToNull(await dataReader.GetFieldValueAsync<object>(0));
-                                result++;
-                            }
-                        }
+                        result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
