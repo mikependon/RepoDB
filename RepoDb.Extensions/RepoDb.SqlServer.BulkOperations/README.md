@@ -62,9 +62,11 @@ Or, visit our [installation](http://repodb.net/tutorial/installation) page for m
 
 ## Special Arguments
 
-The arguments `qualifiers` and `usePhysicalPseudoTempTable` is provided at [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) operations.
+The arguments `qualifiers`, `isReturnIdentity` and `usePhysicalPseudoTempTable` is provided at [BulkDelete](http://repodb.net/operation/bulkdelete), [BulkMerge](http://repodb.net/operation/bulkmerge) and [BulkUpdate](http://repodb.net/operation/bulkupdate) operations.
 
 The argument `qualifiers` is used to define the qualifier fields to be used in the operation. It usually refers to the `WHERE` expression of SQL Statements. If not given, the primary key (or identity) field will be used.
+
+The argument `isReturnIdentity` is used to define the behaviour of the execution whether the newly generated identity will be set-back to the data entities. By default, it is disabled.
 
 The argument `usePhysicalPseudoTempTable` is used to define whether a physical pseudo-table will be created during the operation. By default, a temporary table (ie: `#TableName`) is used.
 
@@ -118,8 +120,7 @@ Or with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkDelete<Customer>(customers, qualifiers: qualifiers);
+	var rows = connection.BulkDelete<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -137,8 +138,7 @@ using (var connection = new SqlConnection(ConnectionString))
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkDelete<Customer>(customers, qualifiers: qualifiers);
+	var rows = connection.BulkDelete<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -158,8 +158,7 @@ Or via table-name with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkDelete("Customer", customers, qualifiers: qualifiers);
+	var rows = connection.BulkDelete("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
@@ -179,8 +178,7 @@ Or with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkDelete<Customer>(table, qualifiers: qualifiers);
+	var rows = connection.BulkDelete<Customer>(table, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -200,8 +198,7 @@ Or via table-name with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkDelete("Customer", table, qualifiers: qualifiers);
+	var rows = connection.BulkDelete("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
@@ -224,8 +221,7 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkDelete<Customer>(reader, qualifiers: qualifiers);
+		var rows = connection.BulkDelete<Customer>(reader, qualifiers: e => new { e.LastName, e.DateOfBirth });
 	}
 }
 ```
@@ -249,8 +245,7 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkDelete("Customer", reader, qualifiers: qualifiers);
+		var rows = connection.BulkDelete("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
 }
 ```
@@ -343,8 +338,7 @@ Or with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkMerge<Customer>(customers, qualifiers: qualifiers);
+	var rows = connection.BulkMerge<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -364,8 +358,7 @@ Or via table-name with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkMerge("Customer", customers, qualifiers: qualifiers);
+	var rows = connection.BulkMerge("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
@@ -385,8 +378,7 @@ Or with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkMerge<Customer>(table, qualifiers: qualifiers);
+	var rows = connection.BulkMerge<Customer>(table, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -406,8 +398,7 @@ Or via table-name with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkMerge("Customer", table, qualifiers: qualifiers);
+	var rows = connection.BulkMerge("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
@@ -430,8 +421,7 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkMerge<Customer>(reader, qualifiers: qualifiers);
+		var rows = connection.BulkMerge<Customer>(reader, qualifiers: e => new { e.LastName, e.DateOfBirth });
 	}
 }
 ```
@@ -455,8 +445,7 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkMerge("Customer", reader, qualifiers: qualifiers);
+		var rows = connection.BulkMerge("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
 }
 ```
@@ -481,8 +470,7 @@ Or with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkUpdate<Customer>(customers, qualifiers: qualifiers);
+	var rows = connection.BulkUpdate<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -502,8 +490,7 @@ Or via table-name with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkUpdate("Customer", customers, qualifiers: qualifiers);
+	var rows = connection.BulkUpdate("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
@@ -523,8 +510,7 @@ Or with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkUpdate<Customer>(table, qualifiers: qualifiers);
+	var rows = connection.BulkUpdate<Customer>(table, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
@@ -544,8 +530,7 @@ Or via table-name with qualifiers
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var qualifiers = Field.From("LastName", "BirthDate");
-	var rows = connection.BulkUpdate("Customer", table, qualifiers: qualifiers);
+	var rows = connection.BulkUpdate("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
@@ -568,8 +553,7 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkUpdate<Customer>(reader, qualifiers: qualifiers);
+		var rows = connection.BulkUpdate<Customer>(reader, qualifiers: e => new { e.LastName, e.DateOfBirth });
 	}
 }
 ```
@@ -593,8 +577,7 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var qualifiers = Field.From("LastName", "BirthDate");
-		var rows = connection.BulkUpdate("Customer", reader, qualifiers: qualifiers);
+		var rows = connection.BulkUpdate("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
 }
 ```
