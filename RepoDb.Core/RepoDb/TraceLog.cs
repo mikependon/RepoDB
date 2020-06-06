@@ -14,7 +14,7 @@ namespace RepoDb
         /// <param name="parameter">The parameters passed.</param>
         /// <param name="result">The actual result if present.</param>
         /// <param name="executionTime">The elapsed time of the execution.</param>
-        internal TraceLog(string statement,
+        protected internal TraceLog(string statement,
             object parameter,
             object result,
             TimeSpan? executionTime)

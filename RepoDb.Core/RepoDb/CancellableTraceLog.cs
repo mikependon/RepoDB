@@ -3,7 +3,7 @@
     /// <summary>
     /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
     /// </summary>
-    public sealed class CancellableTraceLog : TraceLog
+    public class CancellableTraceLog : TraceLog
     {
         /// <summary>
         /// Creates a new instance of <see cref="CancellableTraceLog"/> object.
@@ -11,7 +11,7 @@
         /// <param name="statement">A SQL statement that was used in the trace operation.</param>
         /// <param name="parameter">An object that was used as a parameter in the operation.</param>
         /// <param name="result">A result of the operation.</param>
-        internal CancellableTraceLog(string statement,
+        protected internal CancellableTraceLog(string statement,
             object parameter,
             object result)
             : base(statement,
