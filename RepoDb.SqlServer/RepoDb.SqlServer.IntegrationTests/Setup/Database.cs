@@ -40,7 +40,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             SqlServerBootstrap.Initialize();
 
             // Set the DateTime type
-            TypeMapper.Map(typeof(DateTime), DbType.DateTime2, true);
+            TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
 
             // Create databases
             CreateDatabase();

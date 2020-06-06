@@ -787,7 +787,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The instance of <see cref="BulkOperationIdentitiesResult"/> object.</returns>
+        /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkMergeInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,

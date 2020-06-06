@@ -1,7 +1,6 @@
-﻿using RepoDb.Exceptions;
+﻿using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
