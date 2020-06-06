@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for MySql.</Description>
@@ -16,8 +16,8 @@
     <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.11.0</AssemblyVersion>
-    <FileVersion>1.0.11.0</FileVersion>
+    <AssemblyVersion>1.0.12.0</AssemblyVersion>
+    <FileVersion>1.0.12.0</FileVersion>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.20" />
-    <PackageReference Include="RepoDb" Version="1.11.2" />
+    <PackageReference Include="RepoDb" Version="1.11.3" />
   </ItemGroup>
 
   <ItemGroup>

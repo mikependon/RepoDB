@@ -95,7 +95,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -599,7 +599,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     entities: tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -996,7 +996,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);
@@ -1522,7 +1522,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     entities: tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);

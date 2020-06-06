@@ -78,7 +78,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -575,7 +575,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1060,7 +1060,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);
@@ -1565,7 +1565,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkUpdateResult);

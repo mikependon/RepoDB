@@ -182,7 +182,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkMergeResult = repository.BulkMerge(tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -521,7 +521,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkMergeResult = repository.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt"));
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -706,7 +706,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var bulkMergeResult = repository.BulkMergeAsync(tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
@@ -1046,7 +1046,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkMergeResult = repository.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     tables,
-                    qualifiers: Field.From("RowGuid", "ColumnInt")).Result;
+                    qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkMergeResult);
