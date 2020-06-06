@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -117,6 +118,42 @@ namespace RepoDb
             return UpdateAllInternal<TEntity>(connection: connection,
                 entities: entities,
                 qualifiers: qualifiers,
+                batchSize: batchSize,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates existing multiple data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int UpdateAll<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return UpdateAllInternal<TEntity>(connection: connection,
+                entities: entities,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -270,6 +307,42 @@ namespace RepoDb
             return UpdateAllAsyncInternal<TEntity>(connection: connection,
                 entities: entities,
                 qualifiers: qualifiers,
+                batchSize: batchSize,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates existing multiple data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return UpdateAllAsyncInternal<TEntity>(connection: connection,
+                entities: entities,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
                 hints: hints,
                 commandTimeout: commandTimeout,

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace RepoDb
         {
             return MergeAll<TEntity>(connection: connection,
                 entities: entities,
-                qualifiers: null,
+                qualifiers: (IEnumerable<Field>)null,
                 batchSize: batchSize,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -118,6 +119,42 @@ namespace RepoDb
             return MergeAllInternal<TEntity>(connection: connection,
                 entities: entities,
                 qualifiers: qualifiers,
+                batchSize: batchSize,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges the multiple data entity objects into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of data entity objects to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static int MergeAll<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAllInternal<TEntity>(connection: connection,
+                entities: entities,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -219,7 +256,7 @@ namespace RepoDb
         {
             return MergeAllAsync(connection: connection,
                 entities: entities,
-                qualifiers: null,
+                qualifiers: (IEnumerable<Field>)null,
                 batchSize: batchSize,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -292,6 +329,42 @@ namespace RepoDb
             return MergeAllAsyncInternal(connection: connection,
                 entities: entities,
                 qualifiers: qualifiers,
+                batchSize: batchSize,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entities">The list of data entity objects to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAllAsyncInternal(connection: connection,
+                entities: entities,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
                 hints: hints,
                 commandTimeout: commandTimeout,

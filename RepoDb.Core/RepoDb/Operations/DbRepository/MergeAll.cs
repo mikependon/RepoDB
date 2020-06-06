@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -98,6 +99,50 @@ namespace RepoDb
             }
         }
 
+        /// <summary>
+        /// Merges the multiple data entity objects into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="entities">The list of data entity objects to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.MergeAll<TEntity>(entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
         #endregion
 
         #region MergeAllAsync<TEntity>
@@ -155,6 +200,50 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.MergeAllAsync<TEntity>(entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="entities">The list of data entity objects to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
             IDbTransaction transaction = null)

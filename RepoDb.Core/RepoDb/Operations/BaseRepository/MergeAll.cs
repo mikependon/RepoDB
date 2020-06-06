@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -38,19 +39,41 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public int MergeAll(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             return DbRepository.MergeAll<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 hints: hints,
-				transaction: transaction);
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges the multiple data entity objects into the database.
+        /// </summary>
+        /// <param name="entities">The list of entity objects to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public int MergeAll(IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAll<TEntity>(entities: entities,
+                qualifiers: qualifiers,
+                batchSize: batchSize,
+                hints: hints,
+                transaction: transaction);
         }
 
         #endregion
@@ -96,6 +119,28 @@ namespace RepoDb
                 batchSize: batchSize,
                 hints: hints,
 				transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="entities">The list of entity objects to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows affected by the execution.</returns>
+        public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAllAsync<TEntity>(entities: entities,
+                qualifiers: qualifiers,
+                batchSize: batchSize,
+                hints: hints,
+                transaction: transaction);
         }
 
         #endregion
