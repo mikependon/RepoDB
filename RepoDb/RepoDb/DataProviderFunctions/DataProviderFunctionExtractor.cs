@@ -4,9 +4,10 @@ using System.Linq.Expressions;
 
 namespace RepoDb.DataProviderFunctions {
     /// <summary>
-    /// Visitor that traverses a MethodCall expression tree and extracts functions from the call-chain
+    /// Visitor class that traverses a MethodCall expression tree and extracts functions from the call-chain
     /// that are classified as data-provider functions based on a configurable Vocabulary. 
-    /// The extracted functions will then be translated to data-provider syntax during SQL-generation.
+    /// The extracted functions will then be translated to data-provider syntax during SQL-generation
+    /// but the translation itself is not part of this type's responsibility.
     /// </summary>
     public class DataProviderFunctionExtractor : ExpressionVisitor {
 
