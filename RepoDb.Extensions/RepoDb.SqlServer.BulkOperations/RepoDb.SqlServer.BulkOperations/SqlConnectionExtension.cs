@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace RepoDb
@@ -76,6 +77,18 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Parses the expression to be an enumerable of <see cref="Field"/> objects.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="qualifiers">The expression to be parsed.</param>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        private static IEnumerable<Field> ParseExpression<TEntity>(Expression<Func<TEntity, object>> qualifiers)
+            where TEntity : class
+        {
+            return qualifiers != null ? Field.Parse<TEntity>(qualifiers) : default;
+        }
 
         /// <summary>
         /// Gets the actual name of the table from the database.

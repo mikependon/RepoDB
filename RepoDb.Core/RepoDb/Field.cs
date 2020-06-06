@@ -155,11 +155,6 @@ namespace RepoDb
         public static IEnumerable<Field> Parse<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class
         {
-            if (expression==null)
-            {
-                return default;
-            }
-
             var result = (IEnumerable<Field>)null;
 
             if (expression.Body.IsUnary())
