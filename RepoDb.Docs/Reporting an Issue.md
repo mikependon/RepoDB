@@ -12,6 +12,7 @@ We considered the following issues.
 - [Request](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#request)
 - [Question](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#question)
 - [Nice-To-Have](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#nice-to-have)
+- [For-Grabs](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#for-grabs)
 
 ### Bug
 
@@ -31,15 +32,6 @@ See below, the usual items we asked.
 - Log or call stacks.
 
 Please help us speed-up the fix.
-
-**For-Grabs**
-
-Depends on our internal assessment, we sometimes place the bug as an item for [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) so the community can fix it for us.
-
-Below are some of the considerations for us to place a bug as a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item.
-
-- If somebody has voluteered to fix the bug.
-- If we found the bug is not a breaking-change.
 
 **Templates**
 
@@ -97,6 +89,16 @@ We are not requiring a strict template for the nice-to-have items. However, we w
 
 We are thanking you for this!
 
+### For-Grabs
+
+Depends on our internal assessment, we sometimes place an issue (i.e: Bug, Request, Question) as an item for [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) so the community can fix it for us.
+
+Below are some of the considerations for us to place an issue as a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item.
+
+- If somebody has voluteered to fix the issue.
+- If we found the issue is not a breaking-change.
+- If it is a pre-collaborated with the issuer.
+
 ## Gitter and Twitter
 
 Anyone can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitter](https://twitter.com/home) anytime. Usually, the issue reported here is [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion). However, depends on the outcome of the discussion, we will create an issue on our [GitHub](https://github.com/mikependon/RepoDb/issues) page and placing the right type-of-issue.
@@ -105,7 +107,7 @@ Anyone can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitt
 
 - Consolidate all the information discussed.
 - Create our own **Title** and **Description**.
-- Issue a propery label.
+- Issue a proper label.
 - Tag the person whom we have collaborated with.
 
 ## StackOverflow
