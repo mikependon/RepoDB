@@ -1,4 +1,4 @@
-## Building the Solutions
+# Building the Solutions
 
 In this page, we will guide you on how to build the RepoDb Solutions.
 
@@ -282,4 +282,52 @@ Execute the unit tests.
 ```
 > cd c:\src\RepoDb\RepoDb.MySqlConnector\RepoDb.MySqlConnector.UnitTests
 > dotnet test RepoDb.MySqlConnector.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql)
+
+```
+> cd c:\src\RepoDb\RepoDb.PostgreSql
+> dotnet build RepoDb.PostgreSql.sln -v n
+```
+
+#### Pre-requisites
+
+First, install the [PostgreSql](https://www.postgresql.org/) by following this [tutorial](https://www.postgresqltutorial.com/install-postgresql/).
+
+#### Building and executing the [RepoDb.PostgreSql.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql/RepoDb.PostgreSql.IntegrationTests)
+
+Add the environment variables under `System`.
+
+- REPODB_CONSTR_POSTGRESDB = `postgres_connection_string`
+- REPODB_CONSTR = `repodb_connection_string`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.PostgreSql\RepoDb.PostgreSql.IntegrationTests
+> dotnet build RepoDb.PostgreSql.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.PostgreSql\RepoDb.PostgreSql.IntegrationTests
+> dotnet test RepoDb.PostgreSql.IntegrationTests.csproj -v n
+```
+
+#### Building and executing the [RepoDb.PostgreSql.UnitTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql/RepoDb.PostgreSql.UnitTests)
+
+Build the unit tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.PostgreSql\RepoDb.PostgreSql.UnitTests
+> dotnet build RepoDb.PostgreSql.UnitTests.csproj -v n
+```
+
+Execute the unit tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.PostgreSql\RepoDb.PostgreSql.UnitTests
+> dotnet test RepoDb.PostgreSql.UnitTests.csproj -v n
 ```
