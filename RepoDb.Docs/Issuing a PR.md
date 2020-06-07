@@ -6,7 +6,7 @@ The issues that were labelled as [for-grabs](https://github.com/mikependon/RepoD
 
 - Be knowledgeable with the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Coding%20Standards.md).
 - Be open by notifying us which issue you wish to grab.
-- Be collaborative with and propose a solution.
+- Be collaborative with proposed solutions.
 - Be professional if there are disagreements.
 - Be patient, we are reviewing!
 
