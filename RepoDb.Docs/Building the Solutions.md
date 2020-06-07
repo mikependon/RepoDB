@@ -12,32 +12,24 @@ In this page, we will guide you on how to build the RepoDb Solutions.
 
 ## Install the Git
 
-To install, please follow this [guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-
-## Create the 'src' folder
-
-```
-> mkdir c:\src
-> cd c:\src
-```
+To install the [Git](https://git-scm.com/), please follow this [guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 ## Clone the Repository
 
 ```
+> mkdir c:\src
 > cd c:\src
 > git clone https://github.com/mikependon/RepoDb.git
 ```
 
---------
-
-## Building the RepoDb.Core
+## Building the [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
 
 ```
 > cd c:\src\RepoDb\RepoDb.Core
 > dotnet build RepoDb.Core.sln
 ```
 
-### Building and executing the RepoDb.IntegrationTests
+#### Building and executing the [RepoDb.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests)
 
 Add the environment variables under `System`.
 
@@ -57,7 +49,7 @@ Execute the integration tests.
 > dotnet test RepoDb.IntegrationTests.csproj -v n
 ```
 
-### Building and executing the RepoDb.UnitTests
+#### Building and executing the [RepoDb.UnitTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests)
 
 Build the unit tests.
 
