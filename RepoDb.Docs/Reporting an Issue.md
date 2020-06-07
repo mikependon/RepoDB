@@ -1,4 +1,4 @@
-## Introduction
+# Reporting an Issue
 
 In this page, we will guide you with the standards on how to report an issue.
 

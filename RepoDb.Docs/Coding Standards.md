@@ -1,4 +1,4 @@
-## Coding Standards
+# Coding Standards
 
 Below are some of the things the developer needs to consider when doing a code change on the project. Some of the written standard on this page is a preference of the author itself.
 
