@@ -20,7 +20,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 ## Community engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 

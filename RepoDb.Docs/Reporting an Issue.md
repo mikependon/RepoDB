@@ -112,11 +112,11 @@ Anyone can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitt
 
 ## StackOverflow
 
-Any one can create a [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) or [bug](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Abug) in [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) by tagging **RepoDb**. We are visiting the site from time-to-time.
+Any one can create a [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) or [bug](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Abug) in [StackOverflow](https://stackoverflow.com/search?q=RepoDb) by tagging **RepoDb**. We are visiting the site from time-to-time.
 
 **What will we do if there is an issue in StackOverflow?**
 
 - We will answer you directly in StackOverlow.
 - We will not report the issue on our GitHub page.
 
-> The questions or bugs issued at [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) is not tracked from our history. We recommend that you file an issue directly to our [GitHub](https://github.com/mikependon/RepoDb/issues) page.
+> The questions or bugs issued at [StackOverflow](https://stackoverflow.com/search?q=RepoDb) is not tracked from our history. We recommend that you file an issue directly to our [GitHub](https://github.com/mikependon/RepoDb/issues) page.
