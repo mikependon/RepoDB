@@ -97,7 +97,7 @@ Below are some of the considerations for us to place an issue as a [for-grabs](h
 
 - If somebody has voluteered to fix the issue.
 - If we found the issue is not a breaking-change.
-- If it is a pre-collaborated with the issuer.
+- If there is an agreement with the issuer.
 
 ## Gitter and Twitter
 
