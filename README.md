@@ -131,7 +131,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 Please get in touch with us via:
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/questions/tagged/repodb) - for any technical questions.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
