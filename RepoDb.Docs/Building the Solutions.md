@@ -2,12 +2,12 @@
 
 In this page, we will guide you on how to build the RepoDb Solutions.
 
-- [RepoDb.Core](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core)
-- [RepoDb.SqlServer](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer)
-- [RepoDb.SqlServer.BulkOperations](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations)
-- [RepoDb.SqLite](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite)
-- [RepoDb.MySql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql)
-- [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector)
+- [RepoDb.Core](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbcore)
+- [RepoDb.SqlServer](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlserver)
+- [RepoDb.SqlServer.BulkOperations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlserverbulkoperations)
+- [RepoDb.SqLite](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
+- [RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysql)
+- [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysqlconnector)
 - [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql)
 
 ## Install the Git
@@ -243,7 +243,9 @@ Execute the unit tests.
 
 #### Pre-requisites
 
-First, install the [MySqlConnector](https://www.mysql.com) by downloading the package [here](https://dev.mysql.com/downloads/installer/).
+First, install the [MySql](https://www.mysql.com) by downloading the package [here](https://dev.mysql.com/downloads/installer/).
+
+> Please ignore this pre-requisites if you have done it already in the prior section.
 
 #### Building and executing the [RepoDb.MySqlConnector.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests)
 
