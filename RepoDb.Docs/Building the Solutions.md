@@ -8,7 +8,7 @@ In this page, we will guide you on how to build the RepoDb Solutions.
 - [RepoDb.SqLite](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
 - [RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysql)
 - [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysqlconnector)
-- [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql)
+- [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbpostgresql)
 
 ## Install the Git
 
