@@ -33,8 +33,8 @@ To install the [Git](https://git-scm.com/), please follow this [guide](https://g
 
 Add the environment variables under `System`.
 
-- REPODB_CONSTR_MASTER = <master_connection_string>
-- REPODB_CONSTR = <repodb_connection_string>
+- REPODB_CONSTR_MASTER = `master_connection_string`
+- REPODB_CONSTR = `repodb_connection_string`
 
 Build the integration tests.
 
@@ -46,6 +46,7 @@ Build the integration tests.
 Execute the integration tests.
 
 ```
+> cd c:\src\RepoDb\RepoDb.Core\RepoDb.Tests\RepoDb.IntegrationTests
 > dotnet test RepoDb.IntegrationTests.csproj -v n
 ```
 
@@ -76,8 +77,8 @@ Execute the unit tests.
 
 Add the environment variables under `System`.
 
-- REPODB_CONSTR_MASTER = <master_connection_string>
-- REPODB_CONSTR = <repodb_connection_string>
+- REPODB_CONSTR_MASTER = `master_connection_string`
+- REPODB_CONSTR = `repodb_connection_string`
 
 Build the integration tests.
 
@@ -92,7 +93,7 @@ Execute the integration tests.
 > dotnet test RepoDb.SqlServer.IntegrationTests.csproj -v n
 ```
 
-#### Building and executing the [RepoDb.SqlServer.UnitTests](C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.SqlServer\RepoDb.SqlServer.UnitTests)
+#### Building and executing the [RepoDb.SqlServer.UnitTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer/RepoDb.SqlServer.UnitTests)
 
 Build the unit tests.
 
@@ -119,8 +120,8 @@ Execute the unit tests.
 
 Add the environment variables under `System`.
 
-- REPODB_CONSTR_MASTER = <master_connection_string>
-- REPODB_CONSTR = <repodb_connection_string>
+- REPODB_CONSTR_MASTER = `master_connection_string`
+- REPODB_CONSTR = `repodb_connection_string`
 
 Build the integration tests.
 
@@ -132,6 +133,7 @@ Build the integration tests.
 Execute the integration tests.
 
 ```
+> cd c:\src\RepoDb\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.IntegrationTests
 > dotnet test RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj -v n
 ```
 
@@ -146,13 +148,13 @@ Execute the integration tests.
 
 First, install the [SqLite](https://www.sqlite.org/) by downloading the package [here](https://www.sqlite.org/download.html).
 
-Open the `SQLiteStudio` and create a database named `RepoDb`.
+> Open the `SQLiteStudio` and create a database named `RepoDb`.
 
 #### Building and executing the [RepoDb.SqLite.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite/RepoDb.SqLite.IntegrationTests)
 
 Add the environment variables under `System`.
 
-- REPODB_IS_IN_MEMORY = <true>
+- REPODB_IS_IN_MEMORY = `TRUE`
 
 Build the integration tests.
 
@@ -164,10 +166,11 @@ Build the integration tests.
 Execute the integration tests.
 
 ```
+> cd c:\src\RepoDb\RepoDb.SqLite\RepoDb.SqLite.IntegrationTests
 > dotnet test RepoDb.SqLite.IntegrationTests.csproj -v n
 ```
 
-#### Building and executing the [RepoDb.SqLite.UnitTests](C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.SqLite\RepoDb.SqLite.UnitTests)
+#### Building and executing the [RepoDb.SqLite.UnitTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite/RepoDb.SqLite.UnitTests)
 
 Build the unit tests.
 
@@ -181,4 +184,100 @@ Execute the unit tests.
 ```
 > cd c:\src\RepoDb\RepoDb.SqLite\RepoDb.SqLite.UnitTests
 > dotnet test RepoDb.SqLite.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.MySql](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql)
+
+```
+> cd c:\src\RepoDb\RepoDb.MySql
+> dotnet build RepoDb.MySql.sln -v n
+```
+
+#### Pre-requisites
+
+First, install the [MySql](https://www.mysql.com) by downloading the package [here](https://dev.mysql.com/downloads/installer/).
+
+#### Building and executing the [RepoDb.MySql.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.IntegrationTests)
+
+Add the environment variables under `System`.
+
+- REPODB_CONSTR_SYS = `sys_connection_string`
+- REPODB_CONSTR = `repodb_connection_string`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySql\RepoDb.MySql.IntegrationTests
+> dotnet build RepoDb.MySql.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySql\RepoDb.MySql.IntegrationTests
+> dotnet test RepoDb.MySql.IntegrationTests.csproj -v n
+```
+
+#### Building and executing the [RepoDb.MySql.UnitTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql/RepoDb.MySql.UnitTests)
+
+Build the unit tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySql\RepoDb.MySql.UnitTests
+> dotnet build RepoDb.MySql.UnitTests.csproj -v n
+```
+
+Execute the unit tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySql\RepoDb.MySql.UnitTests
+> dotnet test RepoDb.MySql.UnitTests.csproj -v n
+```
+
+## Building the [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector)
+
+```
+> cd c:\src\RepoDb\RepoDb.MySqlConnector
+> dotnet build RepoDb.MySqlConnector.sln -v n
+```
+
+#### Pre-requisites
+
+First, install the [MySqlConnector](https://www.mysql.com) by downloading the package [here](https://dev.mysql.com/downloads/installer/).
+
+#### Building and executing the [RepoDb.MySqlConnector.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests)
+
+Add the environment variables under `System`.
+
+- REPODB_CONSTR_SYS = `sys_connection_string`
+- REPODB_CONSTR = `repodb_connection_string`
+
+Build the integration tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests
+> dotnet build RepoDb.MySqlConnector.IntegrationTests.csproj -v n
+```
+
+Execute the integration tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests
+> dotnet test RepoDb.MySqlConnector.IntegrationTests.csproj -v n
+```
+
+#### Building and executing the [RepoDb.MySqlConnector.UnitTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector/RepoDb.MySqlConnector.UnitTests)
+
+Build the unit tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySqlConnector\RepoDb.MySqlConnector.UnitTests
+> dotnet build RepoDb.MySqlConnector.UnitTests.csproj -v n
+```
+
+Execute the unit tests.
+
+```
+> cd c:\src\RepoDb\RepoDb.MySqlConnector\RepoDb.MySqlConnector.UnitTests
+> dotnet test RepoDb.MySqlConnector.UnitTests.csproj -v n
 ```
