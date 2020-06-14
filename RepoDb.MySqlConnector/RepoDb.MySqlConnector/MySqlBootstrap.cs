@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using RepoDb.DbHelpers;
 using RepoDb.MySqlConnector.DbSettings;
 using RepoDb.StatementBuilders;

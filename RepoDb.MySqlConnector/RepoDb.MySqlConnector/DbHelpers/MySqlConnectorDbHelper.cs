@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;

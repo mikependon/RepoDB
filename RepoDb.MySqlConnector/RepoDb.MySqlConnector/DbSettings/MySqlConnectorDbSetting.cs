@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MySqlConnector;
 using RepoDb.DbSettings;
 
 namespace RepoDb.MySqlConnector.DbSettings
