@@ -54,10 +54,10 @@ namespace RepoDb.DbHelpers
 	                , CONVERT(BIT, COALESCE(TMP.is_identity, 1)) AS IsIdentity
 	                , CONVERT(BIT, COALESCE(TMP.is_nullable, 1)) AS IsNullable
 	                , C.DATA_TYPE AS DataType
-					, CASE WHEN TMP.max_length > COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length) THEN
-						TMP.max_length
+	                , CASE WHEN TMP.max_length > COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length) THEN
+		                TMP.max_length
 	                  ELSE
-						COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length)
+		                COALESCE(C.CHARACTER_MAXIMUM_LENGTH, TMP.max_length)
 	                  END AS Size
 	                , CONVERT(TINYINT, COALESCE(TMP.precision, 1)) AS Precision
 	                , CONVERT(TINYINT, COALESCE(TMP.scale, 1)) AS Scale
@@ -85,8 +85,10 @@ namespace RepoDb.DbHelpers
 		                , SC.precision
 	                FROM [sys].[columns] SC
 	                INNER JOIN [sys].[tables] ST ON ST.object_id = SC.object_id
+	                INNER JOIN [sys].[schemas] S ON S.schema_id = ST.schema_id
 	                WHERE SC.name = C.COLUMN_NAME
 		                AND ST.name = C.TABLE_NAME
+		                AND S.name = C.TABLE_SCHEMA
                 ) TMP
                 WHERE
 	                C.TABLE_SCHEMA = @Schema
