@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.10</Version>
+    <Version>1.0.11-beta1</Version>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
     <PackageIconUrl />
@@ -16,8 +16,8 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm sqlserver sqlserver-orm</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/sqlserver</PackageReleaseNotes>
-    <AssemblyVersion>1.0.10.0</AssemblyVersion>
-    <FileVersion>1.0.10.0</FileVersion>
+    <AssemblyVersion>1.0.11.1</AssemblyVersion>
+    <FileVersion>1.0.11.1</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
