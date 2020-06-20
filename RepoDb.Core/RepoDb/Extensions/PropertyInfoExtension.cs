@@ -287,14 +287,15 @@ namespace RepoDb.Extensions
             object entity,
             Type declaringType)
         {
-            var classProperty = PropertyCache.Get((declaringType ?? property.DeclaringType), property);
+            var classProperty = PropertyCache.Get((declaringType ?? property?.DeclaringType), property);
             var propertyHandler = classProperty.GetPropertyHandler();
+            var value = property?.GetValue(entity);
             if (propertyHandler != null)
             {
                 var setMethod = propertyHandler.GetType().GetMethod("Set");
-                return setMethod.Invoke(propertyHandler, new[] { property.GetValue(entity), classProperty });
+                return setMethod.Invoke(propertyHandler, new[] { value, classProperty });
             }
-            return property.GetValue(entity);
+            return value;
         }
     }
 }

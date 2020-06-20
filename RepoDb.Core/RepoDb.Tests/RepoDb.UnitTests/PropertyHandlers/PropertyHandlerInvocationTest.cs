@@ -36,6 +36,8 @@ namespace RepoDb.UnitTests.PropertyHandlers
             public int Id { get; set; }
         }
 
+        private class PropertyHandlerTestClassForPrimaryKey : PropertyHandlerTestClass { }
+
         private class PropertyHandlerTestClassForDynamic : PropertyHandlerTestClass { }
 
         private class PropertyHandlerTestClassForLinq : PropertyHandlerTestClass { }
@@ -47,6 +49,25 @@ namespace RepoDb.UnitTests.PropertyHandlers
         private class PropertyHandlerTestClassForQueryGroup : PropertyHandlerTestClass { }
 
         #endregion
+
+        [TestMethod]
+        public void TestPropertyHandlerInvocationOnPrimaryKey()
+        {
+            // Prepare
+            var propertyHandler = new Mock<IPropertyHandler<int, int>>();
+            FluentMapper
+                .Entity<PropertyHandlerTestClassForPrimaryKey>()
+                .PropertyHandler(e => e.Id, propertyHandler.Object);
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Query<PropertyHandlerTestClassForPrimaryKey>(1);
+            }
+
+            // Assert
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
+        }
 
         [TestMethod]
         public void TestPropertyHandlerInvocationOnLinqExpression()

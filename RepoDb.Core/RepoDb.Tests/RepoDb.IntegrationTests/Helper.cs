@@ -424,6 +424,56 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region InheritedIdentityTable
+
+        /// <summary>
+        /// Creates a list of <see cref="InheritedIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="InheritedIdentityTable"/> objects.</returns>
+        public static List<InheritedIdentityTable> CreateInheritedIdentityTables(int count)
+        {
+            var tables = new List<InheritedIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new InheritedIdentityTable
+                {
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = true,
+                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = index,
+                    ColumnFloat = index,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="InheritedIdentityTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="InheritedIdentityTable"/> object.</returns>
+        public static InheritedIdentityTable CreateInheritedIdentityTable()
+        {
+            var random = new Random();
+            return new InheritedIdentityTable
+            {
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        #endregion
+
         #region EnumCompleteTable
 
         /// <summary>
