@@ -288,7 +288,7 @@ namespace RepoDb.Extensions
             Type declaringType)
         {
             var classProperty = PropertyCache.Get((declaringType ?? property?.DeclaringType), property);
-            var propertyHandler = classProperty.GetPropertyHandler();
+            var propertyHandler = classProperty?.GetPropertyHandler();
             var value = property?.GetValue(entity);
             if (propertyHandler != null)
             {

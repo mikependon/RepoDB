@@ -3,13 +3,32 @@ using System;
 
 namespace RepoDb.IntegrationTests.Models
 {
-    public abstract class BaseInheritedIdentityTable
+    public abstract class Entity<T> : IEquatable<T>
+        where T : class
     {
         public long Id { get; set; }
         public Guid RowGuid { get; set; }
+
+        public bool Equals(T other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (GetType() != other.GetType())
+            {
+                return false;
+            }
+            return false;
+        }
     }
 
-    public abstract class LayeredPropertiesIdentityTable : BaseInheritedIdentityTable
+    [Map("[sc].[IdentityTable]")]
+    public class InheritedIdentityTable : Entity<InheritedIdentityTable>
     {
         public bool? ColumnBit { get; set; }
         public DateTime? ColumnDateTime { get; set; }
@@ -19,8 +38,4 @@ namespace RepoDb.IntegrationTests.Models
         public int? ColumnInt { get; set; }
         public string ColumnNVarChar { get; set; }
     }
-
-    [Map("[sc].[IdentityTable]")]
-    public class InheritedIdentityTable : LayeredPropertiesIdentityTable
-    { }
 }

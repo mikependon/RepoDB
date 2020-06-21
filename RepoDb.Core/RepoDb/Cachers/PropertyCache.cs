@@ -109,19 +109,7 @@ namespace RepoDb
         public static IEnumerable<ClassProperty> Get<TEntity>()
             where TEntity : class
         {
-            var type = typeof(TEntity);
-            var properties = (IEnumerable<ClassProperty>)null;
-            var key = GenerateHashCode(type);
-
-            // Try get the value
-            if (type.IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
-            {
-                properties = ClassExpression.GetProperties<TEntity>();
-                m_cache.TryAdd(key, properties);
-            }
-
-            // Return the value
-            return properties;
+            return Get(typeof(TEntity));
         }
 
         /// <summary>
@@ -133,9 +121,10 @@ namespace RepoDb
         {
             var properties = (IEnumerable<ClassProperty>)null;
             var key = GenerateHashCode(entityType);
+            var supportedGenericType = entityType.IsGenericType == false || entityType.GenericTypeArguments?.Any() == true;
 
             // Try get the value
-            if (entityType.IsGenericType == false && m_cache.TryGetValue(key, out properties) == false)
+            if (supportedGenericType && m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = entityType.GetClassProperties().AsList();
                 m_cache.TryAdd(key, properties);
