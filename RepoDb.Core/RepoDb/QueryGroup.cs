@@ -1100,7 +1100,7 @@ namespace RepoDb
         {
             var queryGroup = (QueryGroup)null;
             var value = rightValue;
-            var isForBoolean = expression.Type == typeof(bool) && 
+            var isForBoolean = expression.Type == typeof(bool) &&
                 (expressionType == ExpressionType.Not || expressionType == ExpressionType.AndAlso || expressionType == ExpressionType.OrElse);
             var ignoreIsNot = false;
 
@@ -1353,12 +1353,18 @@ namespace RepoDb
             {
                 // Expecting a list here
                 values = expression.Object.GetValue();
+            }
 
-                // Convert to a proper array type
-                if ((values is Array) == false)
-                {
-                    values = values.AsArray();
-                }
+            // Convert to a proper array type
+            if ((values is Array) == false)
+            {
+                values = values.AsArray();
+            }
+
+            // Ensure that the value is not null
+            if (values == null || values?.AsArray()?.Length == 0)
+            {
+                throw new EmptyException("The value must not be null or empty.");
             }
 
             // Add to query fields

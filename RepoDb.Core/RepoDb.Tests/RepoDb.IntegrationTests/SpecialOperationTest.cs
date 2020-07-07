@@ -6,6 +6,7 @@ using RepoDb.IntegrationTests.Setup;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using RepoDb.Exceptions;
 
 namespace RepoDb.IntegrationTests
 {
@@ -126,6 +127,16 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowNewExceptionOnSqlConnectionQueryForEmptyArrayContainsOperation()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Query<IdentityTable>(item => (new long[] { }).Contains(item.Id));
+            }
+        }
+
         #endregion
 
         #region List.Contains
@@ -168,6 +179,16 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
                 queryResult.AsList().ForEach(item => Helper.AssertPropertiesEquality(entities.First(entity => entity.Id == item.Id), item));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowNewExceptionOnSqlConnectionQueryForEmptyListContainsOperation()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Query<IdentityTable>(item => (new List<long>() { }).Contains(item.Id));
             }
         }
 
