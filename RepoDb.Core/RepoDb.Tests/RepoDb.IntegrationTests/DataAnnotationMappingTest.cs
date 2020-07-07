@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,7 +28,7 @@ namespace RepoDb.IntegrationTests
 
         #region SubClasses
 
-        [Table("[dbo].[COMPLETETABLE]")]
+        [Table("[COMPLETETABLE]", Schema = "[dbo]")]
         private class MappedCompleteTable
         {
             [Column("SESSIONID"), Key]
@@ -48,7 +47,7 @@ namespace RepoDb.IntegrationTests
             public string ColumnNVarCharMapped { get; set; }
         }
 
-        [Table("[sc].[IDENTITYTABLE]")]
+        [Table("[IDENTITYTABLE]", Schema = "[sc]")]
         private class MappedIdentityTable
         {
             [Column("ID"), Key]
@@ -69,7 +68,7 @@ namespace RepoDb.IntegrationTests
             public string ColumnNVarCharMapped { get; set; }
         }
 
-        [Table("[dbo].[COMPLETETABLE]")]
+        [Table("[COMPLETETABLE]", Schema = "[dbo]")]
         private class MappedCompleteTableForKey
         {
             [Column("SESSIONID")]

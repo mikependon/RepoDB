@@ -24,12 +24,12 @@ namespace RepoDb.UnitTests.Mappers
 
         #region SubClasses
 
-        [Table("[dbo].[Person]")]
+        [Table("[Person]", Schema = "[dbo]")]
         private class ClassMapperTableAttributeTestClass
         {
         }
 
-        [Table("[dbo].[Person]"), Map("[sales].[Person]")]
+        [Table("[Person]", Schema = "[dbo]"), Map("[sales].[Person]")]
         private class ClassMapperTableAndMapAttributeCollisionTestClass
         {
         }

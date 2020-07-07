@@ -38,25 +38,43 @@ namespace RepoDb.Extensions
         // GetMappedName
 
         /// <summary>
-        /// Gets the mapped name of a data entity. It will return the value of <see cref="MapAttribute.Name"/> property. If the
-        /// <see cref="MapAttribute"/> is not defined, then this will return the name of the class.
+        /// Gets the mapped name of the data entity from the <see cref="TableAttribute"/> object.
         /// </summary>
-        /// <param name="type">The type of the data entity where to get the mapped name.</param>
-        /// <returns>A mapped name for the data entity.</returns>
-        internal static string GetMappedName(Type type)
+        /// <param name="tableAttribute">The table attribute to be checked.</param>
+        /// <returns>The mapped name for the data entity.</returns>
+        private static string GetMappedName(TableAttribute tableAttribute)
         {
-            return type.GetCustomAttribute<MapAttribute>()?.Name ??
-                   type.GetCustomAttribute<TableAttribute>()?.Name ??
-                   ClassMapper.Get(type) ??
-                   type.Name;
+            if (tableAttribute == null)
+            {
+                return null;
+            }
+            if (string.IsNullOrEmpty(tableAttribute.Schema))
+            {
+                return tableAttribute.Name;
+            }
+            return string.Concat(tableAttribute.Schema, ".", tableAttribute.Name);
         }
 
         /// <summary>
-        /// Gets the mapped name of a data entity. It will return the value of <see cref="MapAttribute.Name"/> property. If the
-        /// <see cref="MapAttribute"/> is not defined, then this will return the name of the class.
+        /// Gets the mapped name of the data entity. This will return the value of <see cref="MapAttribute.Name"/> and/or <see cref="TableAttribute.Name"/> property.
+        /// If the both attributes are not defined, then this will return the name of the class.
+        /// </summary>
+        /// <param name="type">The type of the data entity where to get the mapped name.</param>
+        /// <returns>The mapped name for the data entity.</returns>
+        internal static string GetMappedName(Type type)
+        {
+            return type.GetCustomAttribute<MapAttribute>()?.Name ??
+                GetMappedName(type.GetCustomAttribute<TableAttribute>()) ??
+                ClassMapper.Get(type) ??
+                type.Name;
+        }
+
+        /// <summary>
+        /// Gets the mapped name of the data entity. This will return the value of <see cref="MapAttribute.Name"/> and/or <see cref="TableAttribute.Name"/> property.
+        /// If the both attributes are not defined, then this will return the name of the class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
-        /// <returns>A mapped name for the data entity.</returns>
+        /// <returns>The mapped name for the data entity.</returns>
         public static string GetMappedName<TEntity>()
             where TEntity : class =>
             GetMappedName(typeof(TEntity));
