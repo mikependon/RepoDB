@@ -677,7 +677,7 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
                         {
                             var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                             var list = entities.AsList();
@@ -895,7 +895,7 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                        result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1116,7 +1116,7 @@ namespace RepoDb
                             // Identify the column
                             if (column?.ReadOnly == false)
                             {
-                                using (var reader = (DbDataReader)(connection.ExecuteReader(sql, transaction: transaction)))
+                                using (var reader = (DbDataReader)(connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
                                 {
                                     while (reader.Read())
                                     {
@@ -1128,7 +1128,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                             }
 
                             // Drop the table after used
@@ -1342,7 +1342,7 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
                         {
                             var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                             var list = entities.AsList();
@@ -1560,7 +1560,7 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                        result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1781,7 +1781,7 @@ namespace RepoDb
                             // Identify the column
                             if (column?.ReadOnly == false)
                             {
-                                using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                                using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
                                 {
                                     while (await reader.ReadAsync())
                                     {
@@ -1793,7 +1793,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                             }
 
                             // Drop the table after used

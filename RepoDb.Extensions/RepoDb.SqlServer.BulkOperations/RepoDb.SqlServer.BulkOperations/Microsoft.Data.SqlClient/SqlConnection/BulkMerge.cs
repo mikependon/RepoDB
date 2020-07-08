@@ -721,11 +721,11 @@ namespace RepoDb
                 // Identity if the identity is to return
                 if (isReturnIdentity != true)
                 {
-                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                 }
                 else
                 {
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
                     {
                         var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                         var list = entities.AsList();
@@ -932,7 +932,7 @@ namespace RepoDb
                     hints,
                     dbSetting,
                     isReturnIdentity.GetValueOrDefault());
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1135,7 +1135,7 @@ namespace RepoDb
                 var column = dataTable.Columns[identityDbField.Name];
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, transaction: transaction))
+                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
                     {
                         while (reader.Read())
                         {
@@ -1147,7 +1147,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                    result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                 }
 
                 // Drop the table after used
@@ -1351,11 +1351,11 @@ namespace RepoDb
                 // Identity if the identity is to return
                 if (isReturnIdentity != true)
                 {
-                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                 }
                 else
                 {
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
                     {
                         var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                         var list = entities.AsList();
@@ -1564,7 +1564,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1767,7 +1767,7 @@ namespace RepoDb
                 var column = dataTable.Columns[identityDbField.Name];
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, transaction: transaction)))
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
                     {
                         while (await reader.ReadAsync())
                         {
@@ -1779,7 +1779,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                 }
 
                 // Drop the table after used

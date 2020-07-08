@@ -770,7 +770,7 @@ namespace RepoDb
                     primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -962,7 +962,7 @@ namespace RepoDb
                     qualifiers,
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1157,7 +1157,7 @@ namespace RepoDb
                     qualifiers,
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1300,7 +1300,7 @@ namespace RepoDb
                     primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, transaction: transaction);
+                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1492,7 +1492,7 @@ namespace RepoDb
                     qualifiers,
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
@@ -1687,7 +1687,7 @@ namespace RepoDb
                     qualifiers,
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
