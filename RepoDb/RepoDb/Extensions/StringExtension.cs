@@ -124,9 +124,15 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            return value
-                .Replace(dbSetting.OpeningQuote, string.Empty)
-                .Replace(dbSetting.ClosingQuote, string.Empty);
+            if (!string.IsNullOrWhiteSpace(dbSetting.OpeningQuote))
+            {
+                value = value.Replace(dbSetting.OpeningQuote, string.Empty);
+            }
+            if (!string.IsNullOrWhiteSpace(dbSetting.ClosingQuote))
+            {
+                value = value.Replace(dbSetting.ClosingQuote, string.Empty);
+            } 
+            return value;
         }
 
         /// <summary>
