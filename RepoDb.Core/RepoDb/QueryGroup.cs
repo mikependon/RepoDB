@@ -1361,12 +1361,6 @@ namespace RepoDb
                 values = values.AsArray();
             }
 
-            // Ensure that the value is not null
-            if (values == null || values?.AsArray()?.Length == 0)
-            {
-                throw new EmptyException("The value must not be null or empty.");
-            }
-
             // Add to query fields
             var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
             var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, values);

@@ -107,6 +107,25 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestSqlConnectionQueryForEmptyArrayContainsOperation()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(entities);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item => (new long[] { }).Contains(item.Id));
+
+                // Assert
+                Assert.AreEqual(0, queryResult.Count());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionQueryForArrayContainsOperationViaVariable()
         {
             // Setup
@@ -124,16 +143,6 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
                 queryResult.AsList().ForEach(item => Helper.AssertPropertiesEquality(entities.First(entity => entity.Id == item.Id), item));
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(EmptyException))]
-        public void ThrowNewExceptionOnSqlConnectionQueryForEmptyArrayContainsOperation()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                connection.Query<IdentityTable>(item => (new long[] { }).Contains(item.Id));
             }
         }
 
@@ -162,6 +171,25 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
+        public void TestSqlConnectionQueryForEmptyListContainsOperation()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(entities);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item => (new List<long>()).Contains(item.Id));
+
+                // Assert
+                Assert.AreEqual(0, queryResult.Count());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionQueryForListContainsOperationViaVariable()
         {
             // Setup
@@ -179,16 +207,6 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(2, queryResult.Count());
                 queryResult.AsList().ForEach(item => Helper.AssertPropertiesEquality(entities.First(entity => entity.Id == item.Id), item));
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(EmptyException))]
-        public void ThrowNewExceptionOnSqlConnectionQueryForEmptyListContainsOperation()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                connection.Query<IdentityTable>(item => (new List<long>() { }).Contains(item.Id));
             }
         }
 

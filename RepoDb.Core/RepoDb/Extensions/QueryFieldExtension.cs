@@ -85,20 +85,37 @@ namespace RepoDb.Extensions
             {
                 return string.Concat(queryField.AsField(dbSetting), " IS NOT NULL");
             }
+            else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
+            {
+                return AsFieldAndParameterForBetween(queryField, index, dbSetting);
+            }
+            else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
+            {
+                return AsFieldAndParameterForIn(queryField, index, dbSetting);
+            }
             else
             {
-                if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
-                {
-                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
-                }
-                else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
-                {
-                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
-                }
-                else
-                {
-                    return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index, dbSetting));
-                }
+                return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index, dbSetting));
+            }
+        }
+
+        internal static string AsFieldAndParameterForBetween(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting) =>
+            string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
+
+        internal static string AsFieldAndParameterForIn(this QueryField queryField,
+            int index,
+            IDbSetting dbSetting)
+        {
+            var array = queryField.Parameter.Value?.AsArray();
+            if (array == null || array?.Length == 0)
+            {
+                return "1 = 0";
+            }
+            else
+            {
+                return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
             }
         }
 
