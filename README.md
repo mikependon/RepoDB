@@ -22,8 +22,23 @@ RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and fu
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
-<details>
-<summary><b>The benefits of using this library</b></summary>
+### It is easy-to-use
+
+RepoDb operations were implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
+
+### It is high-performant
+
+RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
+
+### It is efficient
+
+RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+
+### It is high-quality
+
+RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in Production environment.
+
+## Benefits of using this Library
 
 - The installation is easy and fast, it can then be used right-away.
 - The layer of like DbContext has been eliminated, thus give the developers more control on the implementation.
@@ -36,24 +51,6 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 - The auditing and tracing is much more simpler using the trace capability.
 - The support to dynamics is rich and can even work without the models.
 - The transmission of the data from different RDBMS data providers only take few lines of codes.
-
-</details>
-
-### It is easy-to-use
-
-RepoDb operations were implemented as extended methods of the IDbConnection object. For as long the connection is open, the developers can do all the activities towards the database.
-
-### It is high-performant
-
-RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
-
-### It is efficient
-
-RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
-
-### It is high-quality
-
-RepoDb is a high-quality micro-ORM supported by 8K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in production environment.
 
 ## Get Started
 
