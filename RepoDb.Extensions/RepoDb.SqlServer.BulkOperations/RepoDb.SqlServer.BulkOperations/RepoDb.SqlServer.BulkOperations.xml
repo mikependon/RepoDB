@@ -3652,12 +3652,6 @@
             </summary>
             <returns>The actual field.</returns>
         </member>
-        <member name="M:RepoDb.SqlConnectionExtension.GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy">
-            <summary>
-            Gets the <see cref="T:Microsoft.Data.SqlClient.SqlBulkCopy"/> private variable reflected field.
-            </summary>
-            <returns>The actual field.</returns>
-        </member>
         <member name="M:RepoDb.SqlConnectionExtension.ParseExpression``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
             <summary>
             Parses the expression to be an enumerable of <see cref="T:RepoDb.Field"/> objects.
