@@ -1,5 +1,5 @@
 ﻿using RepoDb.MySqlConnector.IntegrationTests.Models;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System;
 using System.Collections.Generic;
 
