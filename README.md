@@ -22,21 +22,13 @@ RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and fu
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
-### It is easy-to-use
+- **It is easy-to-use**. RepoDb operations were implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
 
-RepoDb operations were implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
+- **It is high-performant**. RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
 
-### It is high-performant
+- **It is efficient**. RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
-RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
-
-### It is efficient
-
-RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
-
-### It is high-quality
-
-RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in Production environment.
+- **It is high-quality**. RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in the Production environment.
 
 ## Core Benefits
 
@@ -128,7 +120,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 Please get in touch with us via:
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDb) - for any technical questions.
+- [StackOverflow](https://stackoverflow.com/search?tab=newest&q=RepoDb) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
