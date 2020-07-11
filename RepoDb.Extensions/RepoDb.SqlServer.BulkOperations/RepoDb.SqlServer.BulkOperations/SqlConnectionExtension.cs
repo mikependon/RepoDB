@@ -18,7 +18,7 @@ namespace RepoDb
         #region Privates
 
         private static FieldInfo m_systemDataSqlBulkCopyRowsCopiedField = null;
-        private static FieldInfo m_microsoftDataSqlBulkCopyRowsCopiedField = null;
+        private static bool m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = false;
 
         #endregion
 
@@ -45,33 +45,6 @@ namespace RepoDb
 
             // Return the value
             return m_systemDataSqlBulkCopyRowsCopiedField;
-        }
-
-        #endregion
-
-        #region Microsoft.Data
-
-        /// <summary>
-        /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
-        /// </summary>
-        /// <returns>The actual field.</returns>
-        private static FieldInfo GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy()
-        {
-            // Check if the call has made earlier
-            if (m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet == true)
-            {
-                return m_microsoftDataSqlBulkCopyRowsCopiedField;
-            }
-
-            // Set the flag
-            m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet = true;
-
-            // Get the field (whether null or not)
-            m_microsoftDataSqlBulkCopyRowsCopiedField = typeof(Microsoft.Data.SqlClient.SqlBulkCopy)
-                .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-
-            // Return the value
-            return m_microsoftDataSqlBulkCopyRowsCopiedField;
         }
 
         #endregion

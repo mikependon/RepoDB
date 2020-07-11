@@ -16,12 +16,6 @@ namespace RepoDb
     /// </summary>
     public static partial class SqlConnectionExtension
     {
-        #region Privates
-
-        private static bool m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = false;
-
-        #endregion
-
         #region BulkInsert<TEntity>
 
         /// <summary>

@@ -16,12 +16,6 @@ namespace RepoDb
     /// </summary>
     public static partial class SqlConnectionExtension
     {
-        #region Privates
-
-        private static bool m_microsoftDataBulkInsertRowsCopiedFieldHasBeenSet = false;
-
-        #endregion
-
         #region BulkInsert<TEntity>
 
         /// <summary>
@@ -696,11 +690,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        // Hack the 'SqlBulkCopy' object
-                        var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
-
-                        // Set the return value
-                        result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : recordsAffected;
+                        result = sqlBulkCopy.RowsCopied > 0 ? sqlBulkCopy.RowsCopied : recordsAffected;
                     }
                 }
 
@@ -903,11 +893,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        // Hack the 'SqlBulkCopy' object
-                        var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
-
-                        // Set the return value
-                        result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+                        result = sqlBulkCopy.RowsCopied > 0 ? sqlBulkCopy.RowsCopied : reader.RecordsAffected;
                     }
                 }
 
@@ -1361,11 +1347,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        // Hack the 'SqlBulkCopy' object
-                        var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
-
-                        // Set the return value
-                        result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : recordsAffected;
+                        result = sqlBulkCopy.RowsCopied > 0 ? sqlBulkCopy.RowsCopied : recordsAffected;
                     }
                 }
 
@@ -1568,11 +1550,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        // Hack the 'SqlBulkCopy' object
-                        var copiedField = GetRowsCopiedFieldFromMicrosoftDataSqlBulkCopy();
-
-                        // Set the return value
-                        result = copiedField != null ? (int)copiedField.GetValue(sqlBulkCopy) : reader.RecordsAffected;
+                        result = sqlBulkCopy.RowsCopied > 0 ? sqlBulkCopy.RowsCopied : reader.RecordsAffected;
                     }
                 }
 
