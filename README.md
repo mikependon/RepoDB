@@ -38,7 +38,7 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested by various critical systems that is running in Production environment.
 
-## Benefits of using this Library
+## Core Benefits
 
 - The installation is easy and fast, it can then be used right-away.
 - The layer of like DbContext has been eliminated, thus give the developers more control on the implementation.
