@@ -123,6 +123,8 @@ Your biggest contribution is to utilize and share this solution to other develop
 - Share it
 - Use it
 
+Show your support by giving a :star: on this project.
+
 ### Engagements
 
 Please get in touch with us via:
