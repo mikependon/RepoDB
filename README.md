@@ -123,7 +123,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 - Share it
 - Use it
 
-You can also contribute and show support by simply :star: this project.
+Or, show support by simply giving a :star: on this project.
 
 ### Engagements
 
