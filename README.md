@@ -39,15 +39,15 @@ RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integrat
 
 - The installation is easy and fast, it can then be used right-away.
 - The layer of like DbContext has been eliminated, thus give the developers more control on the implementation.
-- The calls to fluent and raw-SQL methods are just a dot away.
-- The implementation of repository is becoming more simple by leveraging the built-in repositories.
-- The control to query optimizations is easy via hints.
-- The processes to handle the large datasets is very-simple with batch and bulk operations.
-- The round-trips to the database is being minimized with 2nd-Layer cache.
-- The column transformation can be customized with property handlers.
-- The auditing and tracing is much more simpler using the trace capability.
-- The support to dynamics is rich and can even work without the models.
-- The transmission of the data from different RDBMS data providers only take few lines of codes.
+- The calls to fluent and raw-SQL methods are very simple.
+- The implementation of the repositories are simple by leveraging the built-in repositories.
+- The query optimization is more easy by simply passing a hint.
+- The way of handling the big datasets is easy with Batch and Bulk operations.
+- The round-trips to the database is being minimized with 2nd-Layer Cache.
+- The column transformation can be customized with Property Handlers.
+- The auditing and tracing is simple via Trace object.
+- The support to Dynamics is rich; can even work without a model.
+- The data transmission from various RDBMS is very simple to implement.
 
 ## Get Started
 
@@ -58,7 +58,7 @@ Please click any of the link below to fast-track your learnings.
 - [MySql](http://repodb.net/tutorial/get-started-mysql)
 - [PostgreSql](http://repodb.net/tutorial/get-started-postgresql)
 
-Or, learn the specific feature.
+Or, learn a specific feature.
 
 - [Batch Operations](http://repodb.net/feature/batchoperations)
 - [Bulk Operations](http://repodb.net/feature/bulkoperations)
@@ -139,6 +139,10 @@ Please get in touch with us via:
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) - let us be organized for easy tracking and fixing.
 
 ## Credits
+
+Thank you to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+
+And also, thank you to these awesome OSS projects.
 
 - [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
 - [GitHub](https://github.com/) - for hosting this project.
