@@ -33,21 +33,7 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 ### It is high-quality
 
-RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in the Production environment.
-
-## Core Benefits
-
-- The installation is easy and fast, it can then be used right-away.
-- The layer of like DbContext has been eliminated, thus give the developers more control on the implementation.
-- The calls to fluent and raw-SQL methods are very simple.
-- The implementation of the repositories are simple by leveraging the built-in repositories.
-- The query optimization is more easy by simply passing a hint.
-- The way of handling the big datasets is easy with Batch and Bulk operations.
-- The round-trips to the database is being minimized with 2nd-Layer Cache.
-- The column transformation can be customized with Property Handlers.
-- The auditing and tracing is simple via Trace object.
-- The support to Dynamics is rich; can even work without a model.
-- The data transmission from various RDBMS is very simple to implement.
+RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in the Production
 
 ## Get Started
 
