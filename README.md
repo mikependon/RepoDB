@@ -15,27 +15,29 @@
 
 # [RepoDb](http://repodb.net) - a hybrid ORM Library for .NET.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between the micro-ORMs and the full-ORMs. It would help the developers to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
-### It is easy-to-use
+:wave: Thank you [Scott Hanselman](https://github.com/shanselman) for endorsing this library into the community of .NET.
 
-RepoDb operations were implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
+### :one: It is easy-to-use
 
-### It is high-performant
+RepoDb operations were all implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
 
-RepoDb has its own compiler and pre-caches the already-generated compiled expressions for future reusabilities. It understands your schema to create the most optimal compiled expression AOT.
+### :two: It is high-performant
 
-### It is efficient
+RepoDb caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
+
+### :three: It is efficient
 
 RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
-### It is high-quality
+### :four: It is high-quality
 
-RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in the Production
+RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in production environment.
 
-## Get Started
+## :heavy_check_mark: Get Started
 
 Please click any of the link below to fast-track your learnings.
 
@@ -65,7 +67,7 @@ Or, learn a specific feature.
 
 Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
 
-## Supported Databases
+## :heavy_check_mark: Supported Databases
 
 The execute methods below supports all RDBMS data providers.
 
@@ -85,13 +87,13 @@ Whereas the fluent methods below only supports the [SQL Server](https://www.nuge
  
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
-## Benchmark
+## :heavy_check_mark: Benchmark
 
 The benchmark result to be shown on this page will always be referring to the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool). Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200410_netcore31.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
-## Contributions
+## :heavy_check_mark: Contributions
 
 We would like to make RepoDb the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
@@ -108,7 +110,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 
 Or, show support by simply giving a :star: on this project.
 
-### Engagements
+### :heavy_check_mark: Engagements
 
 Please get in touch with us via:
 
@@ -143,6 +145,6 @@ And also, thank you to these awesome OSS projects.
 - [StackEdit](https://stackedit.io) - for being the markdown file editor.
 - [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/) - for being the extended DB provider drivers.
 
-## License
+## :heavy_check_mark: License
 
 [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon

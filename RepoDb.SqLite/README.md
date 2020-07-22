@@ -8,7 +8,7 @@
 
 # RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between micro-ORMs and full-ORMs. It helps the developer to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDb is an open-source .NET ORM that bridge the gaps between the micro-ORMs and the full-ORMs. It would help the developers to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
