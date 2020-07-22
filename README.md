@@ -15,11 +15,13 @@
 
 # [RepoDb](http://repodb.net) - a hybrid ORM Library for .NET.
 
-RepoDb is an open-source .NET ORM library that bridges the "gaps" of micro-ORM and macro-ORM (aka full-ORM). It helps the developers to simplify the switch-over of when to use the BASIC and ADVANCE operations during the application development.
+RepoDb is an open-source .NET ORM library that bridges the gap of micro-ORMs and macro-ORMs (aka Full-ORMs). It helps the developers to simplify the switch-over of when to use the BASIC and ADVANCE operations during the application development.
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
 :wave: [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDb into the community of .NET.
+
+## Characteristics
 
 ### It is easy-to-use
 
