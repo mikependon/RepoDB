@@ -730,12 +730,12 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Actual Execution
-                result = Converter.ToType<TResult>(command.ExecuteScalar());
+                result = Converter.ToType<TResult>(await command.ExecuteScalarAsync());
 
                 // Get explicity if needed
                 if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
-                    result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
+                    result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
                 }
 
                 // Set the return value

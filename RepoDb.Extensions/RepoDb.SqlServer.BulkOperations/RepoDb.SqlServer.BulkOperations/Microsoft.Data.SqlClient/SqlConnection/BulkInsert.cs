@@ -1735,11 +1735,11 @@ namespace RepoDb
                     await connection.EnsureOpenAsync();
                     if (rowState.HasValue == true)
                     {
-                        sqlBulkCopy.WriteToServer(dataTable, rowState.Value);
+                        await sqlBulkCopy.WriteToServerAsync(dataTable, rowState.Value);
                     }
                     else
                     {
-                        sqlBulkCopy.WriteToServer(dataTable);
+                        await sqlBulkCopy.WriteToServerAsync(dataTable);
                     }
 
                     // Check if this is with pseudo

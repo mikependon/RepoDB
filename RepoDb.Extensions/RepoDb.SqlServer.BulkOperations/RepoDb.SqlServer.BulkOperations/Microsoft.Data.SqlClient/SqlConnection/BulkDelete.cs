@@ -1250,7 +1250,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
 
                 // Variables needed
                 var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
