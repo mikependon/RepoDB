@@ -21,19 +21,19 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Thank you [Scott Hanselman](https://github.com/shanselman) for endorsing this library into the community of .NET.
 
-### :one: It is easy-to-use
+### It is easy-to-use
 
 RepoDb operations were all implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
 
-### :two: It is high-performant
+### It is high-performant
 
 RepoDb caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
 
-### :three: It is efficient
+### It is efficient
 
 RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
-### :four: It is high-quality
+### It is high-quality
 
 RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in production environment.
 
