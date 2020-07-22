@@ -616,7 +616,7 @@ namespace RepoDb
             var separator = string.Concat(" ", GetConjunctionText(), " ");
 
             // Check the instance fields
-            if (QueryFields?.Count() > 0)
+            if (QueryFields?.Any() ?? false)
             {
                 var fields = QueryFields
                     .AsList()
@@ -625,7 +625,7 @@ namespace RepoDb
             }
 
             // Check the instance groups
-            if (QueryGroups?.Count() > 0)
+            if (QueryGroups?.Any() ?? false)
             {
                 var groups = QueryGroups
                     .AsList()
@@ -652,13 +652,13 @@ namespace RepoDb
             explore = new Action<QueryGroup>(queryGroup =>
             {
                 // Check child fields
-                if (queryGroup.QueryFields?.Count() > 0)
+                if (queryGroup.QueryFields?.Any() ?? false)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
 
                 // Check child groups
-                if (traverse == true && queryGroup.QueryGroups?.Count() > 0)
+                if (traverse == true && (queryGroup.QueryGroups?.Any() ?? false))
                 {
                     foreach (var qg in queryGroup.QueryGroups)
                     {
@@ -928,7 +928,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
+            if (expression.Arguments?.Count == 0)
             {
                 return null;
             }
@@ -1021,7 +1021,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
+            if (expression.Arguments?.Count == 0)
             {
                 return null;
             }
@@ -1094,7 +1094,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
+            if (expression.Arguments?.Count == 0)
             {
                 return null;
             }

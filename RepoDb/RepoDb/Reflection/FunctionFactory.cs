@@ -427,7 +427,7 @@ namespace RepoDb.Reflection
             var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) });
 
             // Iterate each properties
-            for (var ordinal = 0; ordinal < readerFields?.Count(); ordinal++)
+            for (var ordinal = 0; ordinal < readerFields?.Count; ordinal++)
             {
                 // Field variable
                 var readerField = readerFields[ordinal];
