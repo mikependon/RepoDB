@@ -1,16 +1,14 @@
 # Coding Standards
 
-Below are some of the things the developer needs to consider when doing a code change on the project. Some of the written standard on this page is a preference of the author itself.
+Below are some of the things the developer needs to consider when doing a code change on the project. We hope that you will familiarize the entire contents before contributing, and thank you for that!
 
-> Please be noted that this coding standard is not a strict compliance for a developer to push a pull-requests to us. Your codes will thoroughly be evaluated, further collaborations may be done between the requestor and admin (if there are clarrifications before merging).
+> Please be noted that this coding standard is not a strict compliance for a developer to push a pull-requests to us. Your code will thoroughly be reviewed and evaluated. Further collaborations may be done between the contributor and us (if there are any clarrifications before merging).
 
-#### DEV Inputs
+**Disclaimer:** Some of the written standards on this page are the preferences of the author itself. We are listening to any comments, therefore please do let us know if you think we need to adjust the standards.
 
-We are listening to any comments, therefore please do let us know if you think we need to adjust the way how we do the coding.
+## :heavy_check_mark: Class Implementation
 
-## Class Implementation
-
-#### ProperCase Class Naming Convention
+#### - ProperCase Class Naming Convention
 
 Like this:
 
@@ -30,9 +28,9 @@ public class queryField
 }
 ```
 
-## Property Implementation
+## :heavy_check_mark: Property Implementation
 
-#### Usage of "ProperCase" property naming convention
+#### - Usage of "ProperCase" property naming convention
 
 Like this:
 
@@ -46,7 +44,7 @@ Not like this:
 public IEnumerable<QueryField> queryFields { get; set; }
 ```
 
-#### Usage of the "get/set" for the property
+#### - Usage of the "get/set" for the property
 
 Like this:
 
@@ -65,7 +63,7 @@ public string propertyName
 }
 ```
 
-#### Direct assignment for "readonly" property
+#### - Direct assignment for "readonly" property
 
 This is not the case always. However, please always consider the usage of direct assignment first (if feasible) before doing any other implementation approach.
 
@@ -73,9 +71,9 @@ This is not the case always. However, please always consider the usage of direct
 public string ConnectionString => DbRepository.ConnectionString;
 ```
 
-## Variables
+## :heavy_check_mark: Variables
 
-#### Usage of "var" keyword when declaring a method-level variables
+#### - Usage of "var" keyword when declaring a method-level variables
 
 Like this:
 
@@ -89,7 +87,7 @@ Not like this:
 QueryField field = new QueryField("Name", "Value");
 ```
 
-#### Usage of "camelCase" when declaring the method-level variables
+#### - Usage of "camelCase" when declaring the method-level variables
 
 Like this:
 
@@ -104,7 +102,7 @@ var propertyindex = 0;
 var ProperyIndex = 0;
 ```
 
-#### Declare a meaningful variable name
+#### - Declare a meaningful variable name
 
 Like this:
 
@@ -118,7 +116,7 @@ Not like this:
 var x = properties.Count();
 ```
 
-#### Do not use the prefix "m_" for private variables
+#### - Do not use the prefix "m_" for private variables
 
 Like this:
 
@@ -132,9 +130,9 @@ Not like this:
 private IDbConnection _activeConnection;
 ```
 
-## Looping
+## :heavy_check_mark: Looping
 
-#### Always use "foreach" or "for (var)"
+#### - Always use "foreach" or "for (var)"
 
 Please avoid using the Linq `ForEach()` method.
 
@@ -158,9 +156,9 @@ queryFields.ForEach(queryField =>
 
 **Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
-## Coding Styles
+## :heavy_check_mark: Coding Styles
 
-#### Always open and close the conditional statements with curly-brackets
+#### - Always open and close the conditional statements with curly-brackets
 
 Like this:
 
@@ -182,7 +180,7 @@ if (true) Process();
 
 This must be done in all implementations.
 
-#### Always add an XML-comments in all public implementations
+#### - Always add an XML-comments in all public implementations
 
 - Methods
 - Properties
@@ -190,7 +188,7 @@ This must be done in all implementations.
 - Interfaces
 - Enumerations
 
-#### Always use the "String.Concat()" over "+ Concatenation"
+#### - Always use the "String.Concat()" over "+ Concatenation"
 
 Like this:
 
@@ -206,7 +204,7 @@ var tableName = "[dbo].[" + entityName + "]";
 	
 **Reason**: The author preferred the lowest level implementation as always for performance purposes.
 
-#### Always use the "String.Concat()" or "String.Format()" over the "String Interpolation"
+#### - Always use the "String.Concat()" or "String.Format()" over the "String Interpolation"
 
 Like this:
 
@@ -222,7 +220,7 @@ var tableName = $"[dbo].[{entityName}]";
 
 **Reason**: String interpolation is slow and is not efficient.
 	
-#### Avoid the usage of "this" and "base" keywords, unless very necesarry
+#### - Avoid the usage of "this" and "base" keywords, unless very necesarry
 
 Like this:
 
@@ -236,7 +234,7 @@ Not like this:
 var entities = this.QueryAll<T>();
 ```
 
-#### Always use the "AsList()" over "ToList()"
+#### - Always use the "AsList()" over "ToList()"
 
 Like this:
 
@@ -250,13 +248,13 @@ Not like this:
 var childQueryFields = queryGroup.QueryFields.ToList();
 ```
 
-#### The shorter, the better
+#### - The shorter, the better
 
-The methods must only contains few lines of codes. We prefer to have it maximum of 25 lines of codes per method.
+The methods must only contains few lines of code. We prefer to have it maximum of 25 lines of code per method.
 
 **Note**: It is not always the case. This is not a strict compliance.
 
-## Arguments
+## :heavy_check_mark: Arguments
 
 This is an author's preference. Always use a new-lined arguments.
 
@@ -289,11 +287,11 @@ internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConne
 }
 ```
 
-## Regions
+## :heavy_check_mark: Regions
 
 The regions are rich in RepoDb.
 
-#### Create a region for the "Properties"
+#### - Create a region for the "Properties"
 	
 Like this:
 
@@ -305,7 +303,7 @@ public string ConnectionString => DbRepository.ConnectionString;
 #endregion
 ```
 
-#### Create a region for the "Static Properties"
+#### - Create a region for the "Static Properties"
 
 Like this:
 
@@ -317,7 +315,7 @@ public static IDbConnection ActiveConnection { get; private set; }
 #endregion
 ```
 
-#### Create a region for the "Private Variables"
+#### - Create a region for the "Private Variables"
 
 Like this:
 
@@ -329,7 +327,7 @@ public int? m_hashCode = null;
 #endregion
 ```
 	
-#### Create a region for the "Static Private Variables"
+#### - Create a region for the "Static Private Variables"
 
 Like this:
 
@@ -341,7 +339,7 @@ public static IDbConnection m_activeConnection = null;
 #endregion
 ```
 
-#### Create a region for the "ConstructorsVariables"
+#### - Create a region for the "ConstructorsVariables"
 
 Like this:
 
@@ -365,7 +363,7 @@ public QueryGroup(QueryGroup queryGroup) :
 #endregion
 ```
 
-#### Create a region for the "Instance Methods"
+#### - Create a region for the "Instance Methods"
 
 ```csharp
 #region Methods
@@ -378,7 +376,7 @@ public void Fix()
 #endregion
 ```
 
-#### Create a region for the "Static Methods"
+#### - Create a region for the "Static Methods"
 
 ```csharp
 #region Methods
