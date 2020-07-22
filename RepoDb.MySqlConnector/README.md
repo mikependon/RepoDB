@@ -1,7 +1,5 @@
 [![MySqlConnectorBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-7ooj1)](https://ci.appveyor.com/project/mikependon/repodb-7ooj1)
 [![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![Website](https://img.shields.io/badge/website-information-yellow)](http://repodb.net)
-[![GetStarted](https://img.shields.io/badge/tutorial-getstarted-blueviolet)](http://repodb.net/tutorial/get-started-mysql)
 [![MySqlConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MySqlConnector)](https://www.nuget.org/packages/RepoDb.MySqlConnector)
 [![MySqlConnectorUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-pqvj7?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-pqvj7/build/tests)
 [![MySqlConnectorIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-4iutn?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-4iutn/build/tests)
