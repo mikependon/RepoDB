@@ -82,7 +82,7 @@ namespace RepoDb
                         .AsList();
                 }
             }
-            if (Properties?.Any() != true)
+            if (Properties?.Count == 0)
             {
                 Properties = PropertyCache.Get<TEntity>().AsList();
             }
@@ -167,7 +167,7 @@ namespace RepoDb
         /// <summary>
         /// Gets a value that signify whether the current data reader has data entities.
         /// </summary>
-        public override bool HasRows => Entities?.Count() > 0;
+        public override bool HasRows => Entities?.Any() ?? false;
 
         /// <summary>
         /// Closes the current data reader.

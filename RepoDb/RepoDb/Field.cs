@@ -98,7 +98,7 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The list of fields must not be null.");
             }
-            if (fields.Any(field => string.IsNullOrEmpty(field?.Trim())))
+            if (fields.Any(field => string.IsNullOrWhiteSpace(field)))
             {
                 throw new NullReferenceException("The field name must be null or empty.");
             }

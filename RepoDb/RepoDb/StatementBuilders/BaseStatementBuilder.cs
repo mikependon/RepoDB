@@ -1176,7 +1176,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the table.</param>
         protected void GuardTableName(string tableName)
         {
-            if (string.IsNullOrEmpty(tableName?.Trim()))
+            if (string.IsNullOrWhiteSpace(tableName))
             {
                 throw new NullReferenceException("The name of the table could be null.");
             }

@@ -450,7 +450,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="NewExpression"/> object.</returns>
         public static object GetValue(this NewExpression expression)
         {
-            if (expression.Arguments?.Any() == true)
+            if (expression.Arguments?.Count != 0)
             {
                 return Activator.CreateInstance(expression.Constructor.DeclaringType,
                     expression.Arguments?.Select(arg => arg.GetValue()));

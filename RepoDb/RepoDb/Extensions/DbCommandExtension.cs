@@ -568,7 +568,7 @@ namespace RepoDb.Extensions
                     }
 
                     // If there is any (then set to null)
-                    if (resetOthers == true && missingParameters?.Any() == true)
+                    if (resetOthers == true && missingParameters?.Count != 0)
                     {
                         foreach (var parameter in missingParameters)
                         {
@@ -655,7 +655,7 @@ namespace RepoDb.Extensions
             }
 
             // If there is any (then set to null)
-            if (resetOthers == true && others?.Any() == true)
+            if (resetOthers == true && others?.Count != 0)
             {
                 foreach (var parameter in others)
                 {
@@ -740,7 +740,7 @@ namespace RepoDb.Extensions
             }
 
             // If there is any (then set to null)
-            if (resetOthers == true && others?.Any() == true)
+            if (resetOthers == true && others?.Count != 0)
             {
                 foreach (var parameter in others)
                 {
