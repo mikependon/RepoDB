@@ -37,7 +37,7 @@ RepoDb extracts and caches the object properties, execution contexts, object map
 
 RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in production environment.
 
-## :heavy_check_mark: Get Started
+## Get Started
 
 Please click any of the link below to fast-track your learnings.
 
@@ -67,7 +67,7 @@ Or, learn a specific feature.
 
 Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
 
-## :heavy_check_mark: Supported Databases
+## Supported Databases
 
 The execute methods below supports all RDBMS data providers.
 
@@ -87,13 +87,13 @@ Whereas the fluent methods below only supports the [SQL Server](https://www.nuge
  
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
-## :heavy_check_mark: Benchmark
+## Benchmark
 
 The benchmark result to be shown on this page will always be referring to the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool). Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200410_netcore31.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
-## :heavy_check_mark: Contributions
+## Contributions
 
 We would like to make RepoDb the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
@@ -126,7 +126,7 @@ Please get in touch with us via:
 - [Issuing a PR](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Issuing%20a%20PR.md) - let us be aligned and notified.
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) - let us be organized for easy tracking and fixing.
 
-## :heavy_check_mark: Credits
+## Credits
 
 Thank you to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
@@ -145,6 +145,6 @@ And also, thank you to these awesome OSS projects.
 - [StackEdit](https://stackedit.io) - for being the markdown file editor.
 - [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/), [MySql.Data](https://www.nuget.org/packages/MySql.Data/), [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/), [Npgsql](https://www.nuget.org/packages/Npgsql/) - for being the extended DB provider drivers.
 
-## :heavy_check_mark: License
+## License
 
 [Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
