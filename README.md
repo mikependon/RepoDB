@@ -110,7 +110,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 
 Or, show support by simply giving a :star: on this project.
 
-### :heavy_check_mark: Engagements
+### Engagements
 
 Please get in touch with us via:
 
@@ -126,7 +126,7 @@ Please get in touch with us via:
 - [Issuing a PR](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Issuing%20a%20PR.md) - let us be aligned and notified.
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) - let us be organized for easy tracking and fixing.
 
-## Credits
+## :heavy_check_mark: Credits
 
 Thank you to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
