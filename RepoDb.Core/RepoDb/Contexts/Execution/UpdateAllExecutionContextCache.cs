@@ -12,7 +12,7 @@ namespace RepoDb.Contexts.Execution
     public static class UpdateAllExecutionContextCache<TEntity>
         where TEntity : class
     {
-        private static ConcurrentDictionary<int, UpdateAllExecutionContext<TEntity>> m_cache =
+        private static ConcurrentDictionary<int, UpdateAllExecutionContext<TEntity>> cache =
             new ConcurrentDictionary<int, UpdateAllExecutionContext<TEntity>>();
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace RepoDb.Contexts.Execution
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>
@@ -50,10 +50,10 @@ namespace RepoDb.Contexts.Execution
             }
 
             // Get the cache
-            if (m_cache.TryGetValue(key, out context) == false)
+            if (cache.TryGetValue(key, out context) == false)
             {
                 context = callback(batchSize);
-                m_cache.TryAdd(key, context);
+                cache.TryAdd(key, context);
             }
 
             // Return the cache

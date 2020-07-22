@@ -118,12 +118,12 @@ Not like this:
 var x = properties.Count();
 ```
 
-#### Usage of prefix "m_" for private variables
+#### Do not use the prefix "m_" for private variables
 
 Like this:
 
 ```csharp
-private IDbConnection m_activeConnection;
+private IDbConnection activeConnection;
 ```
 
 Not like this:

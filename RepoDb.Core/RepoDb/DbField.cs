@@ -7,7 +7,7 @@ namespace RepoDb
     /// </summary>
     public class DbField : IEquatable<DbField>
     {
-        private int? m_hashCode = null;
+        private int? hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="DbField"/> object.
@@ -113,7 +113,7 @@ namespace RepoDb
         /// <returns>The string that represents the instance of this <see cref="DbField"/> object.</returns>
         public override string ToString()
         {
-            return string.Concat(Name, ", ", IsPrimary.ToString(), " (", m_hashCode, ")");
+            return string.Concat(Name, ", ", IsPrimary.ToString(), " (", hashCode, ")");
         }
 
         #endregion
@@ -126,9 +126,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             var hashCode = 0;
@@ -157,7 +157,7 @@ namespace RepoDb
             }
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

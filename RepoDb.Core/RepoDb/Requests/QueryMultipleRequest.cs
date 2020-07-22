@@ -11,7 +11,7 @@ namespace RepoDb.Requests
     /// </summary>
     internal class QueryMultipleRequest : BaseRequest, IEquatable<QueryMultipleRequest>
     {
-        private int? m_hashCode = null;
+        private int? hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleRequest"/> object.
@@ -125,9 +125,9 @@ namespace RepoDb.Requests
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             // Get first the entity hash code
@@ -176,7 +176,7 @@ namespace RepoDb.Requests
             }
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

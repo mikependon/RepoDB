@@ -17,8 +17,8 @@ namespace RepoDb
     {
         #region Fields
 
-        private static readonly object m_syncLock = new object();
-        private TDbConnection m_connection;
+        private static readonly object syncLock = new object();
+        private TDbConnection connection;
 
         #endregion
 
@@ -297,17 +297,17 @@ namespace RepoDb
             var connection = (TDbConnection)null;
             if (force == false && ConnectionPersistency == ConnectionPersistency.Instance)
             {
-                lock (m_syncLock)
+                lock (syncLock)
                 {
-                    if (m_connection == null)
+                    if (this.connection == null)
                     {
                         connection = Activator.CreateInstance<TDbConnection>();
                         connection.ConnectionString = ConnectionString;
-                        m_connection = connection;
+                        this.connection = connection;
                     }
                     else
                     {
-                        connection = m_connection;
+                        connection = this.connection;
                     }
                 }
             }
@@ -328,7 +328,7 @@ namespace RepoDb
         {
             if (ConnectionPersistency == ConnectionPersistency.Instance)
             {
-                m_connection?.Dispose();
+                connection?.Dispose();
             }
         }
 

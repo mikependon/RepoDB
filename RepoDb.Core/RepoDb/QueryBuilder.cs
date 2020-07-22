@@ -19,7 +19,7 @@ namespace RepoDb
 
         //TODO: Tune this value
         private const int INITIAL_STRINGBUILDER_CAPACITY = 256;
-        private readonly StringBuilder m_stringBuilder = new StringBuilder(INITIAL_STRINGBUILDER_CAPACITY);
+        private readonly StringBuilder stringBuilder = new StringBuilder(INITIAL_STRINGBUILDER_CAPACITY);
 
         /// <summary>
         /// Stringify the current object.
@@ -42,7 +42,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public string GetString()
         {
-            return m_stringBuilder.ToString(1, m_stringBuilder.Length - 1);
+            return stringBuilder.ToString(1, stringBuilder.Length - 1);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder Clear()
         {
-            m_stringBuilder.Clear();
+            stringBuilder.Clear();
             return this;
         }
 
@@ -70,7 +70,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder NewLine()
         {
-            m_stringBuilder.AppendLine();
+            stringBuilder.AppendLine();
             return this;
         }
 
@@ -86,7 +86,7 @@ namespace RepoDb
 
         private QueryBuilder Append(string value)
         {
-            m_stringBuilder.Append(string.Concat(" ", value));
+            stringBuilder.Append(string.Concat(" ", value));
             return this;
         }
 

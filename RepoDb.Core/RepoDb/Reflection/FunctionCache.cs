@@ -16,7 +16,7 @@ namespace RepoDb
     /// </summary>
     internal static class FunctionCache
     {
-        private static ConcurrentDictionary<string, Action<DbCommand, object>> m_cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
+        private static ConcurrentDictionary<string, Action<DbCommand, object>> cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
 
         #region GetDataReaderToDataEntityConverterFunction
 
@@ -45,7 +45,7 @@ namespace RepoDb
         private static class GetDataReaderToDataEntityFunctionConverterCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
 
             public static Func<DbDataReader, TEntity> Get(DbDataReader reader,
                 IDbConnection connection,
@@ -63,10 +63,10 @@ namespace RepoDb
                 {
                     key += connection.ConnectionString.GetHashCode();
                 }
-                if (m_cache.TryGetValue(key, out result) == false)
+                if (cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, connectionString, transaction, enableValidation);
-                    m_cache.TryAdd(key, result);
+                    cache.TryAdd(key, result);
                 }
                 return result;
             }
@@ -110,7 +110,7 @@ namespace RepoDb
 
         private static class GetDataReaderToExpandoObjectConverterFunctionCache
         {
-            private static ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>> cache = new ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>>();
 
             public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader,
                 string tableName,
@@ -130,10 +130,10 @@ namespace RepoDb
                 {
                     key += connection.ConnectionString.GetHashCode();
                 }
-                if (m_cache.TryGetValue(key, out result) == false)
+                if (cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader, tableName, connection, transaction);
-                    m_cache.TryAdd(key, result);
+                    cache.TryAdd(key, result);
                 }
                 return result;
             }
@@ -168,7 +168,7 @@ namespace RepoDb
         private static class GetDataEntityDbCommandParameterSetterFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> m_cache = new ConcurrentDictionary<long, Action<DbCommand, TEntity>>();
+            private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> cache = new ConcurrentDictionary<long, Action<DbCommand, TEntity>>();
 
             public static Action<DbCommand, TEntity> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
@@ -191,10 +191,10 @@ namespace RepoDb
                         key += field.GetHashCode();
                     }
                 }
-                if (m_cache.TryGetValue(key, out func) == false)
+                if (cache.TryGetValue(key, out func) == false)
                 {
                     func = FunctionFactory.GetDataEntityDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, dbSetting);
-                    m_cache.TryAdd(key, func);
+                    cache.TryAdd(key, func);
                 }
                 return func;
             }
@@ -231,7 +231,7 @@ namespace RepoDb
         private static class DataEntitiesDbCommandParameterSetterFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> m_cache = new ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>>();
+            private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> cache = new ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>>();
 
             public static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
@@ -255,10 +255,10 @@ namespace RepoDb
                     }
                 }
                 var func = (Action<DbCommand, IList<TEntity>>)null;
-                if (m_cache.TryGetValue(key, out func) == false)
+                if (cache.TryGetValue(key, out func) == false)
                 {
                     func = FunctionFactory.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(inputFields, outputFields, batchSize, dbSetting);
-                    m_cache.TryAdd(key, func);
+                    cache.TryAdd(key, func);
                 }
                 return func;
             }
@@ -293,7 +293,7 @@ namespace RepoDb
         private static class GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> m_cache = new ConcurrentDictionary<long, Action<TEntity, DbCommand>>();
+            private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> cache = new ConcurrentDictionary<long, Action<TEntity, DbCommand>>();
 
             public static Action<TEntity, DbCommand> Get(Field field,
                 string parameterName,
@@ -303,10 +303,10 @@ namespace RepoDb
                 var key = (long)typeof(TEntity).FullName.GetHashCode() + field.GetHashCode() +
                     parameterName.GetHashCode() + index.GetHashCode();
                 var func = (Action<TEntity, DbCommand>)null;
-                if (m_cache.TryGetValue(key, out func) == false)
+                if (cache.TryGetValue(key, out func) == false)
                 {
                     func = FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(field, parameterName, index, dbSetting);
-                    m_cache.TryAdd(key, func);
+                    cache.TryAdd(key, func);
                 }
                 return func;
             }
@@ -335,16 +335,16 @@ namespace RepoDb
         private static class GetDataEntityPropertyValueSetterFunctionCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<TEntity, object>> m_cache = new ConcurrentDictionary<long, Action<TEntity, object>>();
+            private static ConcurrentDictionary<long, Action<TEntity, object>> cache = new ConcurrentDictionary<long, Action<TEntity, object>>();
 
             public static Action<TEntity, object> Get(Field field)
             {
                 var key = (long)typeof(TEntity).FullName.GetHashCode() + field.Name.GetHashCode();
                 var func = (Action<TEntity, object>)null;
-                if (m_cache.TryGetValue(key, out func) == false)
+                if (cache.TryGetValue(key, out func) == false)
                 {
                     func = FunctionFactory.GetDataEntityPropertyValueSetterFunction<TEntity>(field);
-                    m_cache.TryAdd(key, func);
+                    cache.TryAdd(key, func);
                 }
                 return func;
             }

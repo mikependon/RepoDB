@@ -18,7 +18,7 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class ExpressionExtension
     {
-        private readonly static ExpressionType[] m_extractableExpressionTypes = new[]
+        private readonly static ExpressionType[] extractableExpressionTypes = new[]
             {
                 ExpressionType.Equal,
                 ExpressionType.NotEqual,
@@ -28,7 +28,7 @@ namespace RepoDb.Extensions
                 ExpressionType.LessThanOrEqual
             };
 
-        private readonly static ExpressionType[] m_mathematicalExpressionTypes = new[]
+        private readonly static ExpressionType[] mathematicalExpressionTypes = new[]
             {
                 ExpressionType.Add,
                 ExpressionType.Subtract,
@@ -42,7 +42,7 @@ namespace RepoDb.Extensions
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be extracted as <see cref="QueryField"/> object.</returns>
         internal static bool IsExtractable(this Expression expression) =>
-            m_extractableExpressionTypes.Contains(expression.NodeType);
+            extractableExpressionTypes.Contains(expression.NodeType);
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> can be grouped as <see cref="QueryGroup"/> object.
@@ -58,7 +58,7 @@ namespace RepoDb.Extensions
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression is using the <see cref="Math"/> object operations.</returns>
         internal static bool IsMathematical(this Expression expression) =>
-            m_mathematicalExpressionTypes.Contains(expression.NodeType);
+            mathematicalExpressionTypes.Contains(expression.NodeType);
 
         #region GetField
 

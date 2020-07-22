@@ -15,7 +15,7 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, string> m_maps = new ConcurrentDictionary<int, string>();
+        private static readonly ConcurrentDictionary<int, string> maps = new ConcurrentDictionary<int, string>();
 
         #endregion
 
@@ -155,12 +155,12 @@ namespace RepoDb
             var value = (string)null;
 
             // Try get the cache
-            if (m_maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out value))
             {
                 if (force)
                 {
                     // Update the existing one
-                    m_maps.TryUpdate(key, columnName, value);
+                    maps.TryUpdate(key, columnName, value);
                 }
                 else
                 {
@@ -171,7 +171,7 @@ namespace RepoDb
             else
             {
                 // Add the mapping
-                m_maps.TryAdd(key, columnName);
+                maps.TryAdd(key, columnName);
             }
         }
 
@@ -245,7 +245,7 @@ namespace RepoDb
             var value = (string)null;
 
             // Try get the value
-            m_maps.TryGetValue(key, out value);
+            maps.TryGetValue(key, out value);
 
             // Return the value
             return value;
@@ -298,7 +298,7 @@ namespace RepoDb
             var value = (string)null;
 
             // Try get the value
-            m_maps.TryRemove(key, out value);
+            maps.TryRemove(key, out value);
         }
 
         /*
@@ -310,7 +310,7 @@ namespace RepoDb
         /// </summary>
         public static void Clear()
         {
-            m_maps.Clear();
+            maps.Clear();
         }
 
         #endregion

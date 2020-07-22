@@ -14,11 +14,11 @@ namespace RepoDb
     /// </summary>
     public sealed class QueryMultipleExtractor : IDisposable
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<int, IEnumerable<DbField>>();
-        private DbDataReader m_reader = null;
-        private IDbConnection m_connection = null;
-        private IDbTransaction m_transaction = null;
-        private string m_connectionString = null;
+        private static readonly ConcurrentDictionary<int, IEnumerable<DbField>> cache = new ConcurrentDictionary<int, IEnumerable<DbField>>();
+        private DbDataReader reader = null;
+        private IDbConnection connection = null;
+        private IDbTransaction transaction = null;
+        private string connectionString = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
@@ -47,10 +47,10 @@ namespace RepoDb
             IDbTransaction transaction,
             string connectionString)
         {
-            m_reader = reader;
-            m_connection = connection;
-            m_transaction = transaction;
-            m_connectionString = connectionString;
+            this.reader = reader;
+            this.connection = connection;
+            this.transaction = transaction;
+            this.connectionString = connectionString;
             Position = 0;
         }
 
@@ -59,7 +59,7 @@ namespace RepoDb
         /// </summary>
         public void Dispose()
         {
-            m_reader?.Dispose();
+            reader?.Dispose();
         }
 
         #region Properties
@@ -76,7 +76,7 @@ namespace RepoDb
         // TODO: Revisits whether "without" creating a new instance of connection object is possible
         //       This line of code is a dead-end, I could not even refactor due to the feature of this class (multiple extracting).
         //       Reason why we need to recreate a new connection object is to let us open a new DbDataReader directly to the database
-        //       where the current connection is connected. The variable m_reader is an already opened DbDataReader object which
+        //       where the current connection is connected. The variable 'reader' is an already opened DbDataReader object which
         //       prevents us of doing so.
 
 
@@ -87,15 +87,15 @@ namespace RepoDb
         /// <returns>The key to the cache.</returns>
         private int GetDbFieldGetCallsCacheKey<TEntity>()
         {
-            var key = m_connection.GetType().FullName.GetHashCode();
+            var key = connection.GetType().FullName.GetHashCode();
 
             // Add the entity type hash code
             key += typeof(TEntity).FullName.GetHashCode();
 
             // Add the connection string hashcode
-            if (!string.IsNullOrEmpty(m_connectionString))
+            if (!string.IsNullOrEmpty(connectionString))
             {
-                key += m_connectionString.GetHashCode();
+                key += connectionString.GetHashCode();
             }
 
             // Return the reusable key
@@ -114,12 +114,12 @@ namespace RepoDb
             var dbFields = (IEnumerable<DbField>)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out dbFields) == false)
+            if (cache.TryGetValue(key, out dbFields) == false)
             {
-                using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
+                using (var connection = (IDbConnection)Activator.CreateInstance(this.connection.GetType(), new object[] { connectionString }))
                 {
                     dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                    m_cache.TryAdd(key, dbFields);
+                    cache.TryAdd(key, dbFields);
                 }
             }
         }
@@ -136,12 +136,12 @@ namespace RepoDb
             var dbFields = (IEnumerable<DbField>)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out dbFields) == false)
+            if (cache.TryGetValue(key, out dbFields) == false)
             {
-                using (var connection = (IDbConnection)Activator.CreateInstance(m_connection.GetType(), new object[] { m_connectionString }))
+                using (var connection = (IDbConnection)Activator.CreateInstance(this.connection.GetType(), new object[] { connectionString }))
                 {
                     dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                    m_cache.TryAdd(key, dbFields);
+                    cache.TryAdd(key, dbFields);
                 }
             }
         }
@@ -161,10 +161,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
-            EnsureSingleCallForDbFieldCacheGet<TEntity>(m_transaction);
+            EnsureSingleCallForDbFieldCacheGet<TEntity>(transaction);
 
             // Get the result
-            var result = DataReader.ToEnumerable<TEntity>(m_reader, m_connection, m_transaction).AsList();
+            var result = DataReader.ToEnumerable<TEntity>(reader, connection, transaction).AsList();
 
             // Move to next result
             NextResult();
@@ -182,10 +182,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Call the cache first to avoid reusing multiple data readers
-            await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(m_transaction);
+            await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(transaction);
 
             // Get the result
-            var result = await DataReader.ToEnumerableAsync<TEntity>(m_reader, m_connection, m_transaction);
+            var result = await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction);
 
             // Move to next result
             await NextResultAsync();
@@ -204,7 +204,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<dynamic> Extract()
         {
-            var result = DataReader.ToEnumerable(m_reader, null, m_connection, m_transaction).AsList();
+            var result = DataReader.ToEnumerable(reader, null, connection, transaction).AsList();
 
             // Move to next result
             NextResult();
@@ -219,7 +219,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<dynamic>> ExtractAsync()
         {
-            var result = await DataReader.ToEnumerableAsync(m_reader, null, m_connection, m_transaction);
+            var result = await DataReader.ToEnumerableAsync(reader, null, connection, transaction);
 
             // Move to next result
             await NextResultAsync();
@@ -246,10 +246,10 @@ namespace RepoDb
             var value = default(TResult);
 
             // Only if there are record
-            if (m_reader.Read())
+            if (reader.Read())
             {
                 // TODO: This can be compiled expression using the 'Get<Type>()' method
-                value = Converter.ToType<TResult>(m_reader[0]);
+                value = Converter.ToType<TResult>(reader[0]);
             }
 
             // Move to next result
@@ -269,10 +269,10 @@ namespace RepoDb
             var value = default(TResult);
 
             // Only if there are record
-            if (await m_reader.ReadAsync())
+            if (await reader.ReadAsync())
             {
                 // TODO: This can be compiled expression using the 'Get<Type>()' method
-                value = Converter.ToType<TResult>(m_reader[0]);
+                value = Converter.ToType<TResult>(reader[0]);
             }
 
             // Move to next result
@@ -295,9 +295,9 @@ namespace RepoDb
             var value = (object)null;
 
             // Only if there are record
-            if (m_reader.Read())
+            if (reader.Read())
             {
-                value = Converter.DbNullToNull(m_reader.GetValue(0));
+                value = Converter.DbNullToNull(reader.GetValue(0));
             }
 
             // Move to next result
@@ -316,9 +316,9 @@ namespace RepoDb
             var value = (object)null;
 
             // Only if there are record
-            if (await m_reader.ReadAsync())
+            if (await reader.ReadAsync())
             {
-                value = Converter.DbNullToNull(m_reader.GetValue(0));
+                value = Converter.DbNullToNull(reader.GetValue(0));
             }
 
             // Move to next result
@@ -340,7 +340,7 @@ namespace RepoDb
         /// </summary>
         public bool NextResult()
         {
-            return (Position = m_reader.NextResult() ? Position + 1 : -1) >= 0;
+            return (Position = reader.NextResult() ? Position + 1 : -1) >= 0;
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace RepoDb
         /// </summary>
         public async Task<bool> NextResultAsync()
         {
-            return (Position = await m_reader.NextResultAsync() ? Position + 1 : -1) >= 0;
+            return (Position = await reader.NextResultAsync() ? Position + 1 : -1) >= 0;
         }
 
         #endregion

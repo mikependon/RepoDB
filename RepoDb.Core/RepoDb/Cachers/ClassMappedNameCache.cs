@@ -11,8 +11,8 @@ namespace RepoDb
     /// </summary>
     public static class ClassMappedNameCache
     {
-        private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
-        private static IResolver<Type, string> m_resolver = new ClassMappedNameResolver();
+        private static readonly ConcurrentDictionary<int, string> cache = new ConcurrentDictionary<int, string>();
+        private static IResolver<Type, string> resolver = new ClassMappedNameResolver();
 
         #region Methods
 
@@ -40,10 +40,10 @@ namespace RepoDb
             var result = (string)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
-                result = m_resolver.Resolve(entityType);
-                m_cache.TryAdd(key, result);
+                result = resolver.Resolve(entityType);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -59,7 +59,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

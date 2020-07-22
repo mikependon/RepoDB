@@ -18,9 +18,9 @@ namespace RepoDb
     /// </summary>
     public class QueryGroup : IEquatable<QueryGroup>
     {
-        private bool m_isFixed = false;
-        private int? m_hashCode = null;
-        private TextAttribute m_conjuctionTextAttribute = null;
+        private bool isFixed = false;
+        private int? hashCode = null;
+        private TextAttribute conjuctionTextAttribute = null;
 
         #region Constructors
 
@@ -542,7 +542,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Force to set the <see cref="m_isFixed"/> variable to True.
+        /// Force to set the <see cref="isFixed"/> variable to True.
         /// </summary>
         private void ForceFix()
         {
@@ -556,7 +556,7 @@ namespace RepoDb
             }
 
             // Set the flag of the current instance
-            m_isFixed = true;
+            isFixed = true;
         }
 
         /// <summary>
@@ -756,11 +756,11 @@ namespace RepoDb
             }
 
             // Reset the attribute
-            m_conjuctionTextAttribute = null;
-            m_isFixed = false;
+            conjuctionTextAttribute = null;
+            isFixed = false;
 
             // Reset the hash code
-            m_hashCode = null;
+            hashCode = null;
         }
 
         /// <summary>
@@ -769,7 +769,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryGroup Fix()
         {
-            if (m_isFixed)
+            if (isFixed)
             {
                 return this;
             }
@@ -832,14 +832,14 @@ namespace RepoDb
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetConjunctionText()
         {
-            if (m_conjuctionTextAttribute == null)
+            if (conjuctionTextAttribute == null)
             {
-                m_conjuctionTextAttribute = typeof(Conjunction)
+                conjuctionTextAttribute = typeof(Conjunction)
                     .GetMembers()
                     .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.OrdinalIgnoreCase))
                     .GetCustomAttribute<TextAttribute>();
             }
-            return m_conjuctionTextAttribute.Text;
+            return conjuctionTextAttribute.Text;
         }
 
 
@@ -1486,9 +1486,9 @@ namespace RepoDb
         public override int GetHashCode()
         {
             // Make sure to check if this is already taken
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             var hashCode = 0;
@@ -1518,7 +1518,7 @@ namespace RepoDb
             hashCode += IsNot.GetHashCode();
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

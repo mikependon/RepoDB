@@ -15,7 +15,7 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, object> m_maps = new ConcurrentDictionary<int, object>();
+        private static readonly ConcurrentDictionary<int, object> maps = new ConcurrentDictionary<int, object>();
 
         #endregion
 
@@ -67,12 +67,12 @@ namespace RepoDb
             var value = (object)null;
 
             // Try get the mappings
-            if (m_maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out value))
             {
                 if (force)
                 {
                     // Override the existing one
-                    m_maps.TryUpdate(key, propertyHandler, value);
+                    maps.TryUpdate(key, propertyHandler, value);
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace RepoDb
             else
             {
                 // Add to mapping
-                m_maps.TryAdd(key, propertyHandler);
+                maps.TryAdd(key, propertyHandler);
             }
         }
 
@@ -115,7 +115,7 @@ namespace RepoDb
             var value = (object)null;
 
             // get the value
-            m_maps.TryGetValue(GenerateHashCode(type), out value);
+            maps.TryGetValue(GenerateHashCode(type), out value);
 
             // Check the result
             if (value == null || value is TPropertyHandler)
@@ -152,7 +152,7 @@ namespace RepoDb
             var existing = (object)null;
 
             // Try get the value
-            m_maps.TryRemove(key, out existing);
+            maps.TryRemove(key, out existing);
         }
 
         #endregion
@@ -399,12 +399,12 @@ namespace RepoDb
             var value = (object)null;
 
             // Try get the cache
-            if (m_maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out value))
             {
                 if (force)
                 {
                     // Update the existing one
-                    m_maps.TryUpdate(key, propertyHandler, value);
+                    maps.TryUpdate(key, propertyHandler, value);
                 }
                 else
                 {
@@ -415,7 +415,7 @@ namespace RepoDb
             else
             {
                 // Add the mapping
-                m_maps.TryAdd(key, propertyHandler);
+                maps.TryAdd(key, propertyHandler);
             }
         }
 
@@ -486,7 +486,7 @@ namespace RepoDb
             var result = default(TPropertyHandler);
 
             // Try get the value
-            if (m_maps.TryGetValue(key, out value) == true)
+            if (maps.TryGetValue(key, out value) == true)
             {
                 result = Converter.ToType<TPropertyHandler>(value);
             }
@@ -576,7 +576,7 @@ namespace RepoDb
             var value = (object)null;
 
             // Try to remove the value
-            m_maps.TryRemove(key, out value);
+            maps.TryRemove(key, out value);
         }
 
 
@@ -589,7 +589,7 @@ namespace RepoDb
         /// </summary>
         public static void Clear()
         {
-            m_maps.Clear();
+            maps.Clear();
         }
 
         #endregion

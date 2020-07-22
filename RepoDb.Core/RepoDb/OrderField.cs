@@ -15,8 +15,8 @@ namespace RepoDb
     /// </summary>
     public class OrderField
     {
-        private TextAttribute m_orderTextAttribute = null;
-        private int? m_hashCode = null;
+        private TextAttribute orderTextAttribute = null;
+        private int? hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="OrderField"/> object.
@@ -59,14 +59,14 @@ namespace RepoDb
         /// <returns>The string containing the text value of the ordering direction.</returns>
         public string GetOrderText()
         {
-            if (m_orderTextAttribute == null)
+            if (orderTextAttribute == null)
             {
-                m_orderTextAttribute = typeof(Order)
+                orderTextAttribute = typeof(Order)
                     .GetMembers()
                     .First(member => member.Name.ToLower() == Order.ToString().ToLower())
                     .GetCustomAttribute<TextAttribute>();
             }
-            return m_orderTextAttribute.Text;
+            return orderTextAttribute.Text;
         }
 
         #endregion
@@ -214,9 +214,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             var hashCode = 0;
@@ -225,7 +225,7 @@ namespace RepoDb
             hashCode = Name.GetHashCode() + (int)Order;
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

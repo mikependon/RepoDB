@@ -17,7 +17,7 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, DbType?> m_maps = new ConcurrentDictionary<int, DbType?>();
+        private static readonly ConcurrentDictionary<int, DbType?> maps = new ConcurrentDictionary<int, DbType?>();
 
         #endregion
 
@@ -89,12 +89,12 @@ namespace RepoDb
             var value = (DbType?)null;
 
             // Try get the cache
-            if (m_maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out value))
             {
                 if (force)
                 {
                     // Update the existing one
-                    m_maps.TryUpdate(key, dbType, value);
+                    maps.TryUpdate(key, dbType, value);
                 }
                 else
                 {
@@ -105,7 +105,7 @@ namespace RepoDb
             else
             {
                 // Add the mapping
-                m_maps.TryAdd(key, dbType);
+                maps.TryAdd(key, dbType);
             }
         }
 
@@ -136,7 +136,7 @@ namespace RepoDb
             var key = GenerateHashCode(type);
 
             // Try get the value
-            m_maps.TryGetValue(key, out value);
+            maps.TryGetValue(key, out value);
 
             // Return the value
             return value;
@@ -163,7 +163,7 @@ namespace RepoDb
             var value = (DbType?)null;
 
             // Try get the value
-            m_maps.TryRemove(key, out value);
+            maps.TryRemove(key, out value);
         }
 
         #region Obselete
@@ -387,12 +387,12 @@ namespace RepoDb
             var value = (DbType?)null;
 
             // Try get the cache
-            if (m_maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out value))
             {
                 if (force)
                 {
                     // Update the existing one
-                    m_maps.TryUpdate(key, dbType, value);
+                    maps.TryUpdate(key, dbType, value);
                 }
                 else
                 {
@@ -403,7 +403,7 @@ namespace RepoDb
             else
             {
                 // Add the mapping
-                m_maps.TryAdd(key, dbType);
+                maps.TryAdd(key, dbType);
             }
         }
 
@@ -458,7 +458,7 @@ namespace RepoDb
             var value = (DbType?)null;
 
             // Try get the value
-            m_maps.TryGetValue(key, out value);
+            maps.TryGetValue(key, out value);
 
             // Return the value
             return value;
@@ -511,7 +511,7 @@ namespace RepoDb
             var value = (DbType?)null;
 
             // Try get the value
-            m_maps.TryRemove(key, out value);
+            maps.TryRemove(key, out value);
         }
 
         /*
@@ -523,7 +523,7 @@ namespace RepoDb
         /// </summary>
         public static void Clear()
         {
-            m_maps.Clear();
+            maps.Clear();
         }
 
         #endregion

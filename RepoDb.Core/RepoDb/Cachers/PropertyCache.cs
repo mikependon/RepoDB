@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> m_cache = new ConcurrentDictionary<int, IEnumerable<ClassProperty>>();
+        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new ConcurrentDictionary<int, IEnumerable<ClassProperty>>();
 
         #region Methods
 
@@ -124,10 +124,10 @@ namespace RepoDb
             var supportedGenericType = entityType.IsGenericType == false || entityType.GenericTypeArguments?.Any() == true;
 
             // Try get the value
-            if (supportedGenericType && m_cache.TryGetValue(key, out properties) == false)
+            if (supportedGenericType && cache.TryGetValue(key, out properties) == false)
             {
                 properties = entityType.GetClassProperties().AsList();
-                m_cache.TryAdd(key, properties);
+                cache.TryAdd(key, properties);
             }
 
             // Return the value
@@ -143,7 +143,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

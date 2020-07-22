@@ -14,8 +14,8 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, IDbSetting> m_maps = new ConcurrentDictionary<int, IDbSetting>();
-        private static Type m_type = typeof(DbConnection);
+        private static readonly ConcurrentDictionary<int, IDbSetting> maps = new ConcurrentDictionary<int, IDbSetting>();
+        private static Type type = typeof(DbConnection);
 
         #endregion
 
@@ -54,12 +54,12 @@ namespace RepoDb
             var existing = (IDbSetting)null;
 
             // Try get the mappings
-            if (m_maps.TryGetValue(key, out existing))
+            if (maps.TryGetValue(key, out existing))
             {
                 if (@override)
                 {
                     // Override the existing one
-                    m_maps.TryUpdate(key, dbSetting, existing);
+                    maps.TryUpdate(key, dbSetting, existing);
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace RepoDb
             else
             {
                 // Add to mapping
-                m_maps.TryAdd(key, dbSetting);
+                maps.TryAdd(key, dbSetting);
             }
         }
 
@@ -103,7 +103,7 @@ namespace RepoDb
             var value = (IDbSetting)null;
 
             // get the value
-            m_maps.TryGetValue(GenerateHashCode(connectionType), out value);
+            maps.TryGetValue(GenerateHashCode(connectionType), out value);
 
             // Return the value
             return value;
@@ -135,7 +135,7 @@ namespace RepoDb
             var existing = (IDbSetting)null;
 
             // Try get the the value
-            m_maps.TryRemove(key, out existing);
+            maps.TryRemove(key, out existing);
         }
 
         /*
@@ -147,7 +147,7 @@ namespace RepoDb
         /// </summary>
         public static void Clear()
         {
-            m_maps.Clear();
+            maps.Clear();
         }
 
         #endregion
@@ -181,9 +181,9 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            if (type.IsSubclassOf(m_type) == false)
+            if (type.IsSubclassOf(DbSettingMapper.type) == false)
             {
-                throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{DbSettingMapper.type.FullName}'.");
             }
         }
 

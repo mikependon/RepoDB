@@ -17,8 +17,8 @@ namespace RepoDb
     {
         private const int HASHCODE_ISNULL = 128;
         private const int HASHCODE_ISNOTNULL = 256;
-        private int? m_hashCode = null;
-        private TextAttribute m_operationTextAttribute = null;
+        private int? hashCode = null;
+        private TextAttribute operationTextAttribute = null;
 
         #region Constructors
 
@@ -161,8 +161,8 @@ namespace RepoDb
         public void Reset()
         {
             Parameter?.SetName(Field.Name);
-            m_operationTextAttribute = null;
-            m_hashCode = null;
+            operationTextAttribute = null;
+            hashCode = null;
         }
 
         /// <summary>
@@ -171,14 +171,14 @@ namespace RepoDb
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetOperationText()
         {
-            if (m_operationTextAttribute == null)
+            if (operationTextAttribute == null)
             {
-                m_operationTextAttribute = typeof(Operation)
+                operationTextAttribute = typeof(Operation)
                     .GetMembers()
                     .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.OrdinalIgnoreCase))
                     .GetCustomAttribute<TextAttribute>();
             }
-            return m_operationTextAttribute.Text;
+            return operationTextAttribute.Text;
         }
 
         /// <summary>
@@ -276,9 +276,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             var hashCode = 0;
@@ -308,7 +308,7 @@ namespace RepoDb
             }
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

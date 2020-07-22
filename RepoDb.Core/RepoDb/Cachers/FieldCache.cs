@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public static class FieldCache
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<Field>> m_cache = new ConcurrentDictionary<int, IEnumerable<Field>>();
+        private static readonly ConcurrentDictionary<int, IEnumerable<Field>> cache = new ConcurrentDictionary<int, IEnumerable<Field>>();
 
         #region Methods
 
@@ -36,10 +36,10 @@ namespace RepoDb
             var result = (IEnumerable<Field>)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
                 result = entityType.AsFields();
-                m_cache.TryAdd(key, result);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -55,7 +55,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

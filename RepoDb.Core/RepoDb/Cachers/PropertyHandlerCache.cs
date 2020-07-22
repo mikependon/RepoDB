@@ -15,9 +15,9 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, object> m_cache = new ConcurrentDictionary<int, object>();
-        private static readonly IResolver<Type, PropertyInfo, object> m_propertyLevelResolver = new PropertyHandlerPropertyLevelResolver();
-        private static readonly IResolver<Type, object> m_typeLevelResolver = new PropertyHandlerTypeLevelResolver();
+        private static readonly ConcurrentDictionary<int, object> cache = new ConcurrentDictionary<int, object>();
+        private static readonly IResolver<Type, PropertyInfo, object> propertyLevelResolver = new PropertyHandlerPropertyLevelResolver();
+        private static readonly IResolver<Type, object> typeLevelResolver = new PropertyHandlerTypeLevelResolver();
 
         #endregion
 
@@ -51,11 +51,11 @@ namespace RepoDb
             var result = default(TPropertyHandler);
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out value) == false)
+            if (cache.TryGetValue(key, out value) == false)
             {
-                value = m_typeLevelResolver.Resolve(type);
+                value = typeLevelResolver.Resolve(type);
                 result = Converter.ToType<TPropertyHandler>(value);
-                m_cache.TryAdd(key, result);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -130,11 +130,11 @@ namespace RepoDb
             var result = default(TPropertyHandler);
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out value) == false)
+            if (cache.TryGetValue(key, out value) == false)
             {
-                value = m_propertyLevelResolver.Resolve(entityType, propertyInfo);
+                value = propertyLevelResolver.Resolve(entityType, propertyInfo);
                 result = Converter.ToType<TPropertyHandler>(value);
-                m_cache.TryAdd(key, result);
+                cache.TryAdd(key, result);
             }
             else
             {
@@ -157,7 +157,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

@@ -15,8 +15,8 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, string> m_cache = new ConcurrentDictionary<int, string>();
-        private static IResolver<PropertyInfo, string> m_resolver = new PropertyMappedNameResolver();
+        private static readonly ConcurrentDictionary<int, string> cache = new ConcurrentDictionary<int, string>();
+        private static IResolver<PropertyInfo, string> resolver = new PropertyMappedNameResolver();
 
         #endregion
 
@@ -88,10 +88,10 @@ namespace RepoDb
             var result = (string)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
-                result = m_resolver.Resolve(propertyInfo);
-                m_cache.TryAdd(key, result);
+                result = resolver.Resolve(propertyInfo);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -107,7 +107,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

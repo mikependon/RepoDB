@@ -11,7 +11,7 @@ namespace RepoDb.DbSettings
     {
         #region Privates
 
-        private int? m_hashCode = null;
+        private int? hashCode = null;
 
         #endregion
 
@@ -110,9 +110,9 @@ namespace RepoDb.DbSettings
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             // Use the non nullable for perf purposes
@@ -173,7 +173,7 @@ namespace RepoDb.DbSettings
             }
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

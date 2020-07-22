@@ -16,9 +16,9 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, DbType?> m_cache = new ConcurrentDictionary<int, DbType?>();
-        private static readonly IResolver<PropertyInfo, DbType?> m_propertyLevelResolver = new TypeMapPropertyLevelResolver();
-        private static readonly IResolver<Type, DbType?> m_typeLevelResolver = new TypeMapTypeLevelResolver();
+        private static readonly ConcurrentDictionary<int, DbType?> cache = new ConcurrentDictionary<int, DbType?>();
+        private static readonly IResolver<PropertyInfo, DbType?> propertyLevelResolver = new TypeMapPropertyLevelResolver();
+        private static readonly IResolver<Type, DbType?> typeLevelResolver = new TypeMapTypeLevelResolver();
 
         #endregion
 
@@ -49,10 +49,10 @@ namespace RepoDb
             var result = (DbType?)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
-                result = m_typeLevelResolver.Resolve(type);
-                m_cache.TryAdd(key, result);
+                result = typeLevelResolver.Resolve(type);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -120,10 +120,10 @@ namespace RepoDb
             var result = (DbType?)null;
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
-                result = m_propertyLevelResolver.Resolve(propertyInfo);
-                m_cache.TryAdd(key, result);
+                result = propertyLevelResolver.Resolve(propertyInfo);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -141,7 +141,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

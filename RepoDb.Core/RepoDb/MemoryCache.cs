@@ -12,14 +12,14 @@ namespace RepoDb
     /// </summary>
     public class MemoryCache : ICache
     {
-        private readonly ConcurrentDictionary<string, object> m_cache;
+        private readonly ConcurrentDictionary<string, object> cache;
 
         /// <summary>
         /// Creates a new instance <see cref="MemoryCache"/> object.
         /// </summary>
         public MemoryCache()
         {
-            m_cache = new ConcurrentDictionary<string, object>();
+            cache = new ConcurrentDictionary<string, object>();
         }
 
         /// <summary>
@@ -49,13 +49,13 @@ namespace RepoDb
         {
             var cacheItem = (CacheItem<T>)null;
             var value = (object)null;
-            if (m_cache.TryGetValue(item.Key, out value))
+            if (cache.TryGetValue(item.Key, out value))
             {
                 cacheItem = value as CacheItem<T>;
             }
             if (cacheItem == null)
             {
-                if (m_cache.TryAdd(item.Key, item) == false && throwException == true)
+                if (cache.TryAdd(item.Key, item) == false && throwException == true)
                 {
                     throw new Exception($"Fail to add an item into the cache for the key {item.Key}.");
                 }
@@ -75,7 +75,7 @@ namespace RepoDb
         /// </summary>
         public void Clear()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace RepoDb
         public bool Contains(string key)
         {
             var value = (object)null;
-            if (m_cache.TryGetValue(key, out value) == true)
+            if (cache.TryGetValue(key, out value) == true)
             {
                 var expirable = value as IExpirable;
                 if (expirable != null)
@@ -109,7 +109,7 @@ namespace RepoDb
         {
             var item = (CacheItem<T>)null;
             var value = (object)null;
-            if (m_cache.TryGetValue(key, out value))
+            if (cache.TryGetValue(key, out value))
             {
                 item = value as CacheItem<T>;
             }
@@ -126,7 +126,7 @@ namespace RepoDb
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            return m_cache
+            return cache
                 .Where(kvp => (kvp.Value as IExpirable)?.IsExpired() == false)
                 .Select(kvp => kvp.Value)
                 .GetEnumerator();
@@ -150,7 +150,7 @@ namespace RepoDb
             bool throwException = true)
         {
             var item = (object)null;
-            if (m_cache.TryRemove(key, out item) == false && throwException == true)
+            if (cache.TryRemove(key, out item) == false && throwException == true)
             {
                 throw new ItemNotFoundException($"Failed to remove an item with key '{key}'.");
             }

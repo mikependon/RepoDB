@@ -87,7 +87,7 @@ namespace RepoDb
         private static class GetPropertyValuesCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> m_cache =
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
                 new ConcurrentDictionary<int, Func<TEntity, TResult>>();
 
             private static Func<TEntity, TResult> GetFunc(ClassProperty property)
@@ -136,7 +136,7 @@ namespace RepoDb
                 var key = property.GetHashCode();
 
                 // Get from the cache
-                if (m_cache.TryGetValue(key, out func) == false)
+                if (cache.TryGetValue(key, out func) == false)
                 {
                     func = GetFunc(property);
                 }
@@ -170,7 +170,7 @@ namespace RepoDb
         private static class GetPropertiesCache<TEntity>
             where TEntity : class
         {
-            private static Func<IEnumerable<ClassProperty>> m_func;
+            private static Func<IEnumerable<ClassProperty>> func;
 
             private static Func<IEnumerable<ClassProperty>> GetFunc()
             {
@@ -182,11 +182,11 @@ namespace RepoDb
 
             public static IEnumerable<ClassProperty> Do()
             {
-                if (m_func == null)
+                if (func == null)
                 {
-                    m_func = GetFunc();
+                    func = GetFunc();
                 }
-                return m_func();
+                return func();
             }
         }
 
@@ -209,7 +209,7 @@ namespace RepoDb
         private static class GetPropertiesValuesCache<TEntity>
             where TEntity : class
         {
-            private static Func<TEntity, IEnumerable<PropertyValue>> m_func;
+            private static Func<TEntity, IEnumerable<PropertyValue>> func;
 
             private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc()
             {
@@ -246,11 +246,11 @@ namespace RepoDb
 
             public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
-                if (m_func == null)
+                if (func == null)
                 {
-                    m_func = GetFunc();
+                    func = GetFunc();
                 }
-                return m_func(obj);
+                return func(obj);
             }
         }
 

@@ -14,8 +14,8 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, IStatementBuilder> m_maps = new ConcurrentDictionary<int, IStatementBuilder>();
-        private static Type m_type = typeof(DbConnection);
+        private static readonly ConcurrentDictionary<int, IStatementBuilder> maps = new ConcurrentDictionary<int, IStatementBuilder>();
+        private static Type type = typeof(DbConnection);
 
         #endregion
 
@@ -58,12 +58,12 @@ namespace RepoDb
             var existing = (IStatementBuilder)null;
 
             // Try get the mappings
-            if (m_maps.TryGetValue(key, out existing))
+            if (maps.TryGetValue(key, out existing))
             {
                 if (@override)
                 {
                     // Override the existing one
-                    m_maps.TryUpdate(key, statementBuilder, existing);
+                    maps.TryUpdate(key, statementBuilder, existing);
                 }
                 else
                 {
@@ -74,7 +74,7 @@ namespace RepoDb
             else
             {
                 // Add to mapping
-                m_maps.TryAdd(key, statementBuilder);
+                maps.TryAdd(key, statementBuilder);
             }
         }
 
@@ -107,7 +107,7 @@ namespace RepoDb
             var value = (IStatementBuilder)null;
 
             // get the value
-            m_maps.TryGetValue(GenerateHashCode(connectionType), out value);
+            maps.TryGetValue(GenerateHashCode(connectionType), out value);
 
             // Return the value
             return value;
@@ -139,7 +139,7 @@ namespace RepoDb
             var existing = (IStatementBuilder)null;
 
             // Try to remove the value
-            m_maps.TryRemove(key, out existing);
+            maps.TryRemove(key, out existing);
         }
 
         /*
@@ -151,7 +151,7 @@ namespace RepoDb
         /// </summary>
         public static void Clear()
         {
-            m_maps.Clear();
+            maps.Clear();
         }
 
         #endregion
@@ -185,9 +185,9 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            if (type.IsSubclassOf(m_type) == false)
+            if (type.IsSubclassOf(StatementBuilderMapper.type) == false)
             {
-                throw new InvalidTypeException($"Type must be a subclass of '{m_type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{StatementBuilderMapper.type.FullName}'.");
             }
         }
 

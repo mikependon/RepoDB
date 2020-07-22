@@ -14,7 +14,7 @@ namespace RepoDb
     /// </summary>
     public static class CommandTextCache
     {
-        private static readonly ConcurrentDictionary<BaseRequest, string> m_cache = new ConcurrentDictionary<BaseRequest, string>();
+        private static readonly ConcurrentDictionary<BaseRequest, string> cache = new ConcurrentDictionary<BaseRequest, string>();
 
         #region GetAverageText
 
@@ -26,7 +26,7 @@ namespace RepoDb
         internal static string GetAverageText(AverageRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateAverage(new QueryBuilder(),
@@ -34,7 +34,7 @@ namespace RepoDb
                     request.Field,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -51,14 +51,14 @@ namespace RepoDb
         internal static string GetAverageAllText(AverageAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateAverageAll(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -75,7 +75,7 @@ namespace RepoDb
         internal static string GetBatchQueryText(BatchQueryRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -87,7 +87,7 @@ namespace RepoDb
                     request.OrderBy,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -104,14 +104,14 @@ namespace RepoDb
         internal static string GetCountText(CountRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCount(new QueryBuilder(),
                     request.Name,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -128,13 +128,13 @@ namespace RepoDb
         internal static string GetCountAllText(CountAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCountAll(new QueryBuilder(),
                     request.Name,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -151,13 +151,13 @@ namespace RepoDb
         internal static string GetDeleteText(DeleteRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDelete(new QueryBuilder(),
                     request.Name,
                     request.Where);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -174,12 +174,12 @@ namespace RepoDb
         internal static string GetDeleteAllText(DeleteAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
                     request.Name);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -196,14 +196,14 @@ namespace RepoDb
         internal static string GetExistsText(ExistsRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateExists(new QueryBuilder(),
                     request.Name,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -220,7 +220,7 @@ namespace RepoDb
         internal static string GetInsertText(InsertRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -231,7 +231,7 @@ namespace RepoDb
                     fields,
                     primaryField,
                     identityField);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -248,7 +248,7 @@ namespace RepoDb
         internal static string GetInsertAllText(InsertAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -260,7 +260,7 @@ namespace RepoDb
                     request.BatchSize,
                     primaryField,
                     identityField);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -277,7 +277,7 @@ namespace RepoDb
         internal static string GetMaxText(MaxRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMax(new QueryBuilder(),
@@ -285,7 +285,7 @@ namespace RepoDb
                     request.Field,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -302,14 +302,14 @@ namespace RepoDb
         internal static string GetMaxAllText(MaxAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMaxAll(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -326,7 +326,7 @@ namespace RepoDb
         internal static string GetMergeText(MergeRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -338,7 +338,7 @@ namespace RepoDb
                     request.Qualifiers,
                     primaryField,
                     identityField);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -355,7 +355,7 @@ namespace RepoDb
         internal static string GetMergeAllText(MergeAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -368,7 +368,7 @@ namespace RepoDb
                     request.BatchSize,
                     primaryField,
                     identityField);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -385,7 +385,7 @@ namespace RepoDb
         internal static string GetMinText(MinRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMin(new QueryBuilder(),
@@ -393,7 +393,7 @@ namespace RepoDb
                     request.Field,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -410,14 +410,14 @@ namespace RepoDb
         internal static string GetMinAllText(MinAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMinAll(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -434,7 +434,7 @@ namespace RepoDb
         internal static string GetQueryText(QueryRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -445,7 +445,7 @@ namespace RepoDb
                     request.OrderBy,
                     request.Top,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -462,7 +462,7 @@ namespace RepoDb
         internal static string GetQueryAllText(QueryAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -471,7 +471,7 @@ namespace RepoDb
                     fields,
                     request.OrderBy,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -490,7 +490,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -501,7 +501,7 @@ namespace RepoDb
                     request.OrderBy,
                     request.Top,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -518,7 +518,7 @@ namespace RepoDb
         internal static string GetSumText(SumRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateSum(new QueryBuilder(),
@@ -526,7 +526,7 @@ namespace RepoDb
                     request.Field,
                     request.Where,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -543,14 +543,14 @@ namespace RepoDb
         internal static string GetSumAllText(SumAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateSumAll(new QueryBuilder(),
                     request.Name,
                     request.Field,
                     request.Hints);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -567,12 +567,12 @@ namespace RepoDb
         internal static string GetTruncateText(TruncateRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateTruncate(new QueryBuilder(),
                     request.Name);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -589,7 +589,7 @@ namespace RepoDb
         internal static string GetUpdateText(UpdateRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -601,7 +601,7 @@ namespace RepoDb
                     request.Where,
                     primaryField,
                     identityField);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -618,7 +618,7 @@ namespace RepoDb
         internal static string GetUpdateAllText(UpdateAllRequest request)
         {
             var commandText = (string)null;
-            if (m_cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 var fields = GetActualFields(request.Connection, request.Name, request.Fields, request.Transaction);
@@ -632,7 +632,7 @@ namespace RepoDb
                     request.BatchSize,
                     primaryField,
                     identityField);
-                m_cache.TryAdd(request, commandText);
+                cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -646,7 +646,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>

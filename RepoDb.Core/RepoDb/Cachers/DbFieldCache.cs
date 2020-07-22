@@ -12,7 +12,7 @@ namespace RepoDb
     /// </summary>
     public static class DbFieldCache
     {
-        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> m_cache = new ConcurrentDictionary<long, IEnumerable<DbField>>();
+        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> cache = new ConcurrentDictionary<long, IEnumerable<DbField>>();
 
         #region Helpers
 
@@ -21,7 +21,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace RepoDb
             }
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
                 // Get from DB
                 var dbHelper = DbHelperMapper.Get(type);
@@ -115,7 +115,7 @@ namespace RepoDb
                 }
 
                 // Add to cache
-                m_cache.TryAdd(key, result);
+                cache.TryAdd(key, result);
             }
 
             // Return the value
@@ -184,7 +184,7 @@ namespace RepoDb
             }
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
                 // Get from DB
                 var dbHelper = DbHelperMapper.Get(type);
@@ -197,7 +197,7 @@ namespace RepoDb
                 }
 
                 // Add to cache
-                m_cache.TryAdd(key, result);
+                cache.TryAdd(key, result);
             }
 
             // Return the value

@@ -14,7 +14,7 @@ namespace RepoDb
     /// </summary>
     public class Field : IEquatable<Field>
     {
-        private int? m_hashCode = null;
+        private int? hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="Field"/> object.
@@ -67,7 +67,7 @@ namespace RepoDb
         /// <returns>The string value equivalent to the name of the field.</returns>
         public override string ToString()
         {
-            return string.Concat(Name, ", ", Type?.FullName, " (", m_hashCode, ")");
+            return string.Concat(Name, ", ", Type?.FullName, " (", hashCode, ")");
         }
 
         #endregion
@@ -265,9 +265,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             var hashCode = 0;
@@ -280,7 +280,7 @@ namespace RepoDb
             }
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

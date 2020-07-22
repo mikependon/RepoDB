@@ -17,9 +17,9 @@ namespace RepoDb.Extensions
     {
         #region Privates
 
-        internal static Type m_bytesType = typeof(byte[]);
-        internal static Type m_dictionaryType = typeof(Dictionary<,>);
-        internal static ClientTypeToDbTypeResolver m_clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
+        internal static Type bytesType = typeof(byte[]);
+        internal static Type dictionaryType = typeof(Dictionary<,>);
+        internal static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
 
         #endregion
 
@@ -148,7 +148,7 @@ namespace RepoDb.Extensions
                 var type = param.GetType();
 
                 // Check the validity of the type
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == m_dictionaryType)
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == dictionaryType)
                 {
                     throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }
@@ -191,7 +191,7 @@ namespace RepoDb.Extensions
                         var setMethod = propertyHandler.GetType().GetMethod("Set");
                         var returnType = setMethod.ReturnType;
                         var classProperty = PropertyCache.Get(property.GetDeclaringType(), property.PropertyInfo);
-                        dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
+                        dbType = clientTypeToDbTypeResolver.Resolve(returnType);
                         value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
 
@@ -218,7 +218,7 @@ namespace RepoDb.Extensions
                             {
                                 dbType = DbType.String;
                             }
-                            else if (propertyType == m_bytesType)
+                            else if (propertyType == bytesType)
                             {
                                 dbType = DbType.Binary;
                             }
@@ -288,7 +288,7 @@ namespace RepoDb.Extensions
                         var setMethod = propertyHandler.GetType().GetMethod("Set");
                         var returnType = setMethod.ReturnType;
                         var classProperty = PropertyCache.Get(declaringType, property);
-                        dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
+                        dbType = clientTypeToDbTypeResolver.Resolve(returnType);
                         value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
 
@@ -307,7 +307,7 @@ namespace RepoDb.Extensions
                             {
                                 dbType = DbType.String;
                             }
-                            else if (valueType == m_bytesType)
+                            else if (valueType == bytesType)
                             {
                                 dbType = DbType.Binary;
                             }
@@ -400,7 +400,7 @@ namespace RepoDb.Extensions
                 {
                     classProperty = PropertyCache.Get(entityType, queryField.Field);
                 }
-                dbType = m_clientTypeToDbTypeResolver.Resolve(returnType);
+                dbType = clientTypeToDbTypeResolver.Resolve(returnType);
                 value = setMethod.Invoke(typeHandler, new[] { value, classProperty });
             }
 
@@ -419,7 +419,7 @@ namespace RepoDb.Extensions
                     {
                         dbType = DbType.String;
                     }
-                    else if (valueType == m_bytesType)
+                    else if (valueType == bytesType)
                     {
                         dbType = DbType.Binary;
                     }

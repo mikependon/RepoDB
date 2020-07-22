@@ -8,7 +8,7 @@ namespace RepoDb
     /// </summary>
     public sealed class Parameter : IEquatable<Parameter>
     {
-        private int? m_hashCode = null;
+        private int? hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="Parameter"/> object.
@@ -96,9 +96,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (m_hashCode != null)
+            if (this.hashCode != null)
             {
-                return m_hashCode.Value;
+                return this.hashCode.Value;
             }
 
             var hashCode = 0;
@@ -107,7 +107,7 @@ namespace RepoDb
             hashCode = OriginalName.GetHashCode();
 
             // Set and return the hashcode
-            return (m_hashCode = hashCode).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

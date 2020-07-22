@@ -11,8 +11,8 @@ namespace RepoDb
     /// </summary>
     public static class PrimaryCache
     {
-        private static readonly ConcurrentDictionary<int, ClassProperty> m_cache = new ConcurrentDictionary<int, ClassProperty>();
-        private static IResolver<Type, ClassProperty> m_resolver = new PrimaryResolver();
+        private static readonly ConcurrentDictionary<int, ClassProperty> cache = new ConcurrentDictionary<int, ClassProperty>();
+        private static IResolver<Type, ClassProperty> resolver = new PrimaryResolver();
 
         #region Methods
 
@@ -39,10 +39,10 @@ namespace RepoDb
             var key = GenerateHashCode(entityType);
 
             // Try get the value
-            if (m_cache.TryGetValue(key, out property) == false)
+            if (cache.TryGetValue(key, out property) == false)
             {
-                property = m_resolver.Resolve(entityType);
-                m_cache.TryAdd(key, property);
+                property = resolver.Resolve(entityType);
+                cache.TryAdd(key, property);
             }
 
             // Return the value
@@ -58,7 +58,7 @@ namespace RepoDb
         /// </summary>
         public static void Flush()
         {
-            m_cache.Clear();
+            cache.Clear();
         }
 
         /// <summary>
