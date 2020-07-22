@@ -19,7 +19,7 @@ RepoDb is an open-source .NET ORM library that bridges the "gaps" of the micro-O
 
 It is the best alternative ORM to both Dapper and EntityFramework.
 
-:wave: Thank you [Scott Hanselman](https://github.com/shanselman) for endorsing this library into the community of .NET.
+:wave: [Scott Hanselman](https://www.hanselman.com/), allow us to thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) this library into the community of .NET.
 
 ### It is easy-to-use
 
