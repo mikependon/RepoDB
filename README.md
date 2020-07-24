@@ -71,7 +71,7 @@ Otherwise, please visit our [documentation](http://repodb.net/docs) page to lear
 
 ## Supported Databases
 
-The execute methods below supports all RDBMS data providers.
+The execute methods below support all the RDBMS data providers.
 
 - [ExecuteQuery](http://repodb.net/operation/executequery)
 - [ExecuteNonQuery](http://repodb.net/operation/executenonquery)
@@ -79,7 +79,7 @@ The execute methods below supports all RDBMS data providers.
 - [ExecuteReader](http://repodb.net/operation/executereader)
 - [ExecuteQueryMultiple](http://repodb.net/operation/executequerymultiple)
 
-Whereas the fluent methods below only supports the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
+Whereas the fluent methods below only support the [SQL Server](https://www.nuget.org/packages/RepoDb.SqlServer), [SQLite](https://www.nuget.org/packages/RepoDb.SqLite), [MySQL](https://www.nuget.org/packages/RepoDb.MySql) and [PostgreSQL](https://www.nuget.org/packages/RepoDb.PostgreSql) RDBMS data providers.
 
 - [Query](http://repodb.net/operation/query)
 - [Insert](http://repodb.net/operation/insert)
