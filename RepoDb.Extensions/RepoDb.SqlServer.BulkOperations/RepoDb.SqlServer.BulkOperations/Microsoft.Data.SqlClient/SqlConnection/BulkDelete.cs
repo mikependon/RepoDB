@@ -77,6 +77,7 @@ namespace RepoDb
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
+                reader.Initialize();
                 return BulkDeleteInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
@@ -122,6 +123,7 @@ namespace RepoDb
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
+                reader.Initialize();
                 return BulkDeleteInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,
@@ -401,6 +403,7 @@ namespace RepoDb
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
+                await reader.InitializeAsync();
                 return await BulkDeleteAsyncInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
@@ -446,6 +449,7 @@ namespace RepoDb
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
+                await reader.InitializeAsync();
                 return await BulkDeleteAsyncInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,

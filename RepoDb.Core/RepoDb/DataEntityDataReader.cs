@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using System.Threading.Tasks;
 
 namespace RepoDb
 {
@@ -18,6 +19,7 @@ namespace RepoDb
     {
         #region Fields
 
+        private int fieldCount = 0;
         private bool isClosed = false;
         private bool isDisposed = false;
         private int position = -1;
@@ -72,23 +74,68 @@ namespace RepoDb
             DbSetting = connection?.GetDbSetting();
 
             // Properties
-            if (connection != null)
+            Connection = connection;
+            Transaction = transaction;
+            Enumerator = entities.GetEnumerator();
+            Entities = entities;
+        }
+
+        /// <summary>
+        /// Initializes the current instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        public void Initialize()
+        {
+            if (IsInitialized)
             {
-                var fields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
-                if (fields?.Any() == true)
-                {
-                    Properties = PropertyCache.Get<TEntity>()
-                        .Where(p => fields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                        .AsList();
-                }
+                return;
             }
-            if (Properties?.Any() != true)
+            var dbFields = (IEnumerable<DbField>)null;
+            if (Connection != null)
+            {
+                dbFields = DbFieldCache.Get(Connection, ClassMappedNameCache.Get<TEntity>(), Transaction);
+            }
+            InitializeInternal(dbFields);
+        }
+
+        /// <summary>
+        /// Initializes the current instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        public async Task InitializeAsync()
+        {
+            if (IsInitialized)
+            {
+                return;
+            }
+            var dbFields = (IEnumerable<DbField>)null;
+            if (Connection != null)
+            {
+                dbFields = await DbFieldCache.GetAsync(Connection, ClassMappedNameCache.Get<TEntity>(), Transaction);
+            }
+            InitializeInternal(dbFields);
+        }
+
+        /// <summary>
+        /// Initializes the current instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        /// <param name="dbFields">The list of the <see cref="DbField"/> objects.</param>
+        private void InitializeInternal(IEnumerable<DbField> dbFields)
+        {
+            if (IsInitialized)
+            {
+                return;
+            }
+            if (dbFields?.Any() == true)
+            {
+                Properties = PropertyCache.Get<TEntity>()
+                    .Where(p => dbFields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                    .AsList();
+            }
+            else
             {
                 Properties = PropertyCache.Get<TEntity>().AsList();
             }
-            Enumerator = entities.GetEnumerator();
-            Entities = entities;
-            FieldCount = Properties.Count;
+            fieldCount = Properties.Count;
+            IsInitialized = true;
         }
 
         /// <summary>
@@ -101,12 +148,27 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Gets the instance of <see cref="IDbConnection"/> in used.
+        /// </summary>
+        public IDbConnection Connection { get; }
+
+        /// <summary>
+        /// Gets the instance of <see cref="IDbTransaction"/> in used.
+        /// </summary>
+        public IDbTransaction Transaction { get; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the current instance of <see cref="DataEntityDataReader{TEntity}"/> object has already been initialized.
+        /// </summary>
+        public bool IsInitialized { get; private set; }
+
+        /// <summary>
         /// Returns the database setting that is currently in used.
         /// </summary>
         private IDbSetting DbSetting { get; }
 
         /// <summary>
-        /// Returns an enumerator that iterates through a collection of data entity objects.
+        /// Gets the instance of enumerator that iterates through a collection of data entity objects.
         /// </summary>
         public IEnumerator<TEntity> Enumerator { get; private set; }
 
@@ -162,7 +224,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the number of properties the data entity object has.
         /// </summary>
-        public override int FieldCount { get; }
+        public override int FieldCount { get { return fieldCount; } }
 
         /// <summary>
         /// Gets a value that signify whether the current data reader has data entities.
@@ -195,7 +257,7 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             Enumerator = Entities.GetEnumerator();
             position = -1;
             recordsAffected = -1;
@@ -208,7 +270,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override bool GetBoolean(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<bool>(GetValue(i));
         }
 
@@ -219,7 +281,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override byte GetByte(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<byte>(GetValue(i));
         }
 
@@ -234,7 +296,7 @@ namespace RepoDb
         /// <returns></returns>
         public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
         }
 
@@ -245,7 +307,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override char GetChar(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<char>(GetValue(i));
         }
 
@@ -260,7 +322,7 @@ namespace RepoDb
         /// <returns></returns>
         public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
         }
 
@@ -271,7 +333,7 @@ namespace RepoDb
         /// <returns>Int</returns>
         public new IDataReader GetData(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
         }
 
@@ -282,7 +344,7 @@ namespace RepoDb
         /// <returns>The property type name from the property index.</returns>
         public override string GetDataTypeName(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Properties[i].PropertyInfo.PropertyType.Name;
         }
 
@@ -293,7 +355,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override DateTime GetDateTime(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<DateTime>(GetValue(i));
         }
 
@@ -304,7 +366,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override decimal GetDecimal(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<decimal>(GetValue(i));
         }
 
@@ -315,7 +377,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override double GetDouble(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<double>(GetValue(i));
         }
 
@@ -326,7 +388,7 @@ namespace RepoDb
         /// <returns>The property type from the property index.</returns>
         public override Type GetFieldType(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Properties[i].PropertyInfo.PropertyType;
         }
 
@@ -337,7 +399,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override float GetFloat(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<float>(GetValue(i));
         }
 
@@ -348,7 +410,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override Guid GetGuid(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Guid.Parse(GetValue(i)?.ToString());
         }
 
@@ -359,7 +421,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override short GetInt16(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<short>(GetValue(i));
         }
 
@@ -370,7 +432,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override int GetInt32(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<int>(GetValue(i));
         }
 
@@ -381,7 +443,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override long GetInt64(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<long>(GetValue(i));
         }
 
@@ -392,7 +454,7 @@ namespace RepoDb
         /// <returns>The name from the property index.</returns>
         public override string GetName(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Properties[i].GetMappedName();
         }
 
@@ -403,7 +465,7 @@ namespace RepoDb
         /// <returns>The index of the property from property name.</returns>
         public override int GetOrdinal(string name)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
         }
 
@@ -413,7 +475,7 @@ namespace RepoDb
         /// <returns>An instance of the <see cref="DataTable"/> with the table schema.</returns>
         public override DataTable GetSchemaTable()
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
         }
 
@@ -424,7 +486,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override string GetString(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Converter.ToType<string>(GetValue(i));
         }
 
@@ -435,7 +497,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override object GetValue(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return Properties[i].PropertyInfo.GetValue(Enumerator.Current);
         }
 
@@ -446,7 +508,7 @@ namespace RepoDb
         /// <returns></returns>
         public override int GetValues(object[] values)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             if (values == null)
             {
                 throw new NullReferenceException("The values array must not be null.");
@@ -470,7 +532,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public override bool IsDBNull(int i)
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             return GetValue(i) == DBNull.Value;
         }
 
@@ -480,7 +542,7 @@ namespace RepoDb
         /// <returns>Returns true if the forward operation is successful.</returns>
         public override bool NextResult()
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
         }
 
@@ -490,17 +552,21 @@ namespace RepoDb
         /// <returns>A value that indicates whether the movement is successful.</returns>
         public override bool Read()
         {
-            ThrowExceptionIfNotAvailable();
+            ThrowExceptionIfNotInitializedOrNotAvailable();
             position++;
             recordsAffected++;
             return Enumerator.MoveNext();
         }
 
         /// <summary>
-        /// Throws an exception if the current data reader is not available.
+        /// Throws an exception if the current data reader has not yet been initialized or is not available anymore.
         /// </summary>
-        private void ThrowExceptionIfNotAvailable()
+        private void ThrowExceptionIfNotInitializedOrNotAvailable()
         {
+            if (!IsInitialized)
+            {
+                throw new InvalidOperationException("The reader is not yet initialized.");
+            }
             if (IsDisposed)
             {
                 throw new InvalidOperationException("The reader is already disposed.");

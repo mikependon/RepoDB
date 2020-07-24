@@ -655,6 +655,7 @@ namespace RepoDb
                     connection.EnsureOpen();
                     using (var reader = new DataEntityDataReader<TEntity>(entities))
                     {
+                        reader.Initialize();
                         sqlBulkCopy.WriteToServer(reader);
                         recordsAffected = reader.RecordsAffected;
                     }
@@ -1312,6 +1313,7 @@ namespace RepoDb
                     connection.EnsureOpen();
                     using (var reader = new DataEntityDataReader<TEntity>(entities))
                     {
+                        await reader.InitializeAsync();
                         await sqlBulkCopy.WriteToServerAsync(reader);
                         recordsAffected = reader.RecordsAffected;
                     }
