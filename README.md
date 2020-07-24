@@ -21,7 +21,9 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDb into the community of .NET.
 
-##
+## Important Attributes
+
+Below are some of the important attributes that is a part of the package and you will easily leverage being a user of this library.
 
 ### It is easy-to-use
 
