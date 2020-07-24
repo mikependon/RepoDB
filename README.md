@@ -19,7 +19,7 @@ RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 
 It is your best alternative ORM to both Dapper and EntityFramework.
 
-:wave: [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDb into the community of .NET.
+:wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDb into the community of .NET.
 
 ##
 
@@ -101,9 +101,9 @@ We would like to make RepoDb the mainstream hybrid-ORM library for .NET technolo
 
 To contribute, you can find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
-If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. You expertise is needed to correct the forms, if needed.
+If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. Your expertise is needed to correct the forms, if needed.
 
-Your biggest contribution is to utilize and share this solution to the other developers.
+Your biggest contribution is to utilize and share this library to the other developers.
 
 - Blog it
 - Discuss it
