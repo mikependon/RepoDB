@@ -88,14 +88,14 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
-            if (string.IsNullOrEmpty(dbSetting?.SchemaSeparator) || value.IndexOf(dbSetting?.SchemaSeparator) < 0)
+            if (value.IndexOf(StringConstants.Period) < 0)
             {
                 return value.AsUnquotedInternal(trim, dbSetting);
             }
             else
             {
-                var splitted = value.Split(dbSetting?.SchemaSeparator.ToCharArray());
-                return splitted.Select(s => s.AsUnquotedInternal(trim, dbSetting)).Join(dbSetting?.SchemaSeparator);
+                var splitted = value.Split(StringConstants.Period.ToCharArray());
+                return splitted.Select(s => s.AsUnquotedInternal(trim, dbSetting)).Join(StringConstants.Period);
             }
         }
 
@@ -168,14 +168,14 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
-            if (ignoreSchema || value.IndexOf(dbSetting.SchemaSeparator) < 0)
+            if (ignoreSchema || value.IndexOf(StringConstants.Period) < 0)
             {
                 return value.AsQuotedInternal(trim, dbSetting);
             }
             else
             {
-                var splitted = value.Split(dbSetting?.SchemaSeparator.ToCharArray());
-                return splitted.Select(s => s.AsQuotedInternal(trim, dbSetting)).Join(dbSetting.SchemaSeparator);
+                var splitted = value.Split(StringConstants.Period.ToCharArray());
+                return splitted.Select(s => s.AsQuotedInternal(trim, dbSetting)).Join(StringConstants.Period);
             }
         }
 
@@ -278,15 +278,15 @@ namespace RepoDb.Extensions
             string rightAlias,
             IDbSetting dbSetting)
         {
-            return string.Concat(leftAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting),
-                " = ", rightAlias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
+            return string.Concat(leftAlias, StringConstants.Period, value.AsQuoted(true, true, dbSetting),
+                " = ", rightAlias, StringConstants.Period, value.AsQuoted(true, true, dbSetting));
         }
 
         // AsAliasField
         internal static string AsAliasField(this string value,
             string alias,
             IDbSetting dbSetting) =>
-            string.Concat(alias, dbSetting.SchemaSeparator, value.AsQuoted(true, true, dbSetting));
+            string.Concat(alias, StringConstants.Period, value.AsQuoted(true, true, dbSetting));
 
         // AsParameterAsField
         internal static string AsParameterAsField(this string value,
@@ -305,7 +305,7 @@ namespace RepoDb.Extensions
             string leftAlias,
             string rightAlias,
             IDbSetting dbSetting) =>
-            string.Concat(leftAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting), " = ", rightAlias, dbSetting.SchemaSeparator, AsField(value, dbSetting));
+            string.Concat(leftAlias, StringConstants.Period, AsField(value, dbSetting), " = ", rightAlias, StringConstants.Period, AsField(value, dbSetting));
 
         /* IEnumerable<string> */
 

@@ -25,7 +25,6 @@ namespace RepoDb.PostgreSql.DbSettings
             IsUseUpsert = false;
             OpeningQuote = "\"";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
         }
     }
 }

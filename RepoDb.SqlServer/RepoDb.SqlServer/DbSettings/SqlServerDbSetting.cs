@@ -22,7 +22,6 @@
             IsUseUpsert = false;
             OpeningQuote = "[";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
         }
     }
 }

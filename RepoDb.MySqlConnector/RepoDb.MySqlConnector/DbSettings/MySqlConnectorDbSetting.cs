@@ -24,7 +24,6 @@ namespace RepoDb.MySqlConnector.DbSettings
             IsUseUpsert = false;
             OpeningQuote = "`";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
         }
     }
 }

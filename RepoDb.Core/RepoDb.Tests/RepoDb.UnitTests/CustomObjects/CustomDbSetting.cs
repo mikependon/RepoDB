@@ -17,7 +17,6 @@ namespace RepoDb.UnitTests.CustomObjects
             IsUseUpsert = false;
             OpeningQuote = "[";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
         }
     }
 
@@ -36,7 +35,6 @@ namespace RepoDb.UnitTests.CustomObjects
             IsUseUpsert = false;
             OpeningQuote = "[";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
 
         }
     }
@@ -56,7 +54,6 @@ namespace RepoDb.UnitTests.CustomObjects
             IsUseUpsert = false;
             OpeningQuote = "[";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
         }
     }
 }

@@ -98,6 +98,7 @@ namespace RepoDb.DbSettings
         /// <summary>
         /// Gets the character (or string) used for separating the schema.
         /// </summary>
+        [Obsolete("This will be removed in the future releases. The schema separator will be defaulted to a 'period' character.")]
         public string SchemaSeparator { get; protected set; }
 
         #endregion
@@ -164,12 +165,6 @@ namespace RepoDb.DbSettings
             if (!string.IsNullOrEmpty(ParameterPrefix))
             {
                 hashCode += ParameterPrefix.GetHashCode();
-            }
-
-            // SchemaSeparator
-            if (!string.IsNullOrEmpty(SchemaSeparator))
-            {
-                hashCode += SchemaSeparator.GetHashCode();
             }
 
             // Set and return the hashcode
