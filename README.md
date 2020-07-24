@@ -17,7 +17,7 @@
 
 RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the application development.
 
-It is the best alternative ORM to both Dapper and EntityFramework.
+It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDb into the community of .NET.
 
@@ -25,7 +25,7 @@ It is the best alternative ORM to both Dapper and EntityFramework.
 
 ### It is easy-to-use
 
-RepoDb operations were all implemented as extended methods of IDbConnection object. For as long the connection is open, any operations can then be called against the database.
+RepoDb operations were all implemented as extended methods of IDbConnection object. For as long you connection is open, any operations can then be called against your database.
 
 ### It is high-performant
 
@@ -99,10 +99,11 @@ The benchmark result to be shown on this page will always be referring to the co
 
 We would like to make RepoDb the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
-To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, please create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
-If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository.
+To contribute, you can find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
-Your biggest contribution is to utilize and share this solution to other developers.
+If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. You expertise is needed to correct the forms, if needed.
+
+Your biggest contribution is to utilize and share this solution to the other developers.
 
 - Blog it
 - Discuss it
@@ -110,7 +111,7 @@ Your biggest contribution is to utilize and share this solution to other develop
 - Share it
 - Use it
 
-Or, show support by simply giving a :star: on this project.
+Or, show your support by simply giving a :star: on this project.
 
 ### Engagements
 
