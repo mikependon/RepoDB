@@ -105,4 +105,4 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-**Note:** Use the TEMP pseudo-temporary table if you are working with multi-threading environment. Otherwise, always use the physical pseudo-temporary table to maximize the advantages of having a physical table.
+**Note:** Use the TEMP pseudo-temporary table if you are working with multi-threaded environment. Otherwise, always use the physical pseudo-temporary table to maximize the advantages of having a physical table.
