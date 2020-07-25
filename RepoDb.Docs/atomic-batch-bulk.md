@@ -19,11 +19,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 {
 	using (var transaction = connection.EnsureOpen().BeginTransaction())
 	{
-		foreach (var person in people)
-		{
-			var id = connection.Insert(p, transaction: transaction);
-			...
-		}
+		people.ForEach(p => connection.Insert(p, transaction: transaction));
 		transaction.Commit();
 	}
 }
@@ -33,7 +29,7 @@ The operations of like [Insert](https://repodb.net/operation/insert), [Update](h
 
 ## Batch Operations
 
-This operations refers to a single execution of multiple command texts. Imagine executing a 10 INSERT statements in one-go. It allows you to control the number of rows to be processed against the database.
+This operations refers to a single execution of multiple command texts. Imagine executing the 10 INSERT statements in one-go. It allows you to control the number of rows to be processed against the database.
 
 By using this operation, you are able to optimize the execution in response to the following situations.
 
