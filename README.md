@@ -43,57 +43,22 @@ RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integrat
 
 ## Benefits/Advantages
 
-Below are some of the benefits and advantages when using RepoDb.
+Below are some of the benefits and advantages you are automatically leveraging when using RepoDb.
 
-### Feature Sets
+### Feature Sets/Capabilities
 
 Like many other ORMs, RepoDb does provide the preliminary [methods](https://repodb.net/docs#operations) needed for the basic operations (like CRUD). The good thing is, RepoDb also does provide an advance operations to cater the advance use-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
 
 ### Development Experience
 
 If you are to use this library, your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. Thus makes [RepoDb](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb) the simpiest ORM to use.
-
-```csharp
-using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
-{
-	var id = connection.Insert<Person, int>(new Person { Name = "John Doe" });
-}
-```
-
-### Advance Bulk Operations
+### Advanced Bulk Operations
 
 When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after the execution. This is a very important use-case that is needed by most, and both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations address this need.
 
-```csharp
-var people = CreatePeople(1000);
-using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
-{
-	var rowsInserted = connection.BulkInsert(people, isReturnIdentity: true);
-}
-```
-
-### Way of Executions
+### The Way of Executions
 
 RepoDb does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations)). Through this, you can create a very powerful repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance that much.
-
-```csharp
-var people = CreatePeople();
-using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
-{
-	if (people.Count < 50)
-	{
-		people.ForEach(p => connection.Insert(p));
-	}
-	else if (people.Count < 1000)
-	{
-		connection.InsertAll(people, batchSize: 100);
-	}
-	else
-	{
-		connection.BulkInsert(people, isReturnIdentity: true);
-	}
-}
-```
 
 ## Get Started
 
