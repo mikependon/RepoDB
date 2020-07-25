@@ -1,17 +1,6 @@
 # Development Experience
 
-If you are to use RepoDb, the development experience is identical to both both Dapper and Entity Framework. However, since RepoDb is a micro-ORM library, it gives you the most attributes of being a micro-ORM (i.e: performant, efficient).
-
-### Dapper
-
-In Dapper, you tend to simply open a connection and then execute an operation.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var people = connection.Query<Person>("SELECT * FROM [dbo].[Person]");
-}
-```
+If you are to use RepoDb, the development experience is identical to both both Entity Framework and Dapper. However, since RepoDb is a micro-ORM library, it gives you the most attributes of micro-ORM (i.e: performant, efficient).
 
 ### Entity Framework
 
@@ -51,12 +40,23 @@ using (var context = new DbContext())
 }
 ```
 
+### Dapper
+
+In Dapper, you tend to simply open a connection and then execute an operation.
+
+```csharp
+using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
+{
+	var people = connection.Query<Person>("SELECT * FROM [dbo].[Person]");
+}
+```
+
 ### RepoDb
 
 In RepoDb, you just simply open a connection like Dapper, and then, call the operations like Entity Framework.
 
 ```csharp
-using (var connection = new SqlConnection(Connection))
+using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
 {
 	connection.Add(new Person
 	{
@@ -69,7 +69,7 @@ using (var connection = new SqlConnection(Connection))
 Though you can as well force the complete Dapper-Like experience like below.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
 {
 	var people = connection.ExecuteQuery<Person>("SELECT * FROM [dbo].[Person]");
 }
