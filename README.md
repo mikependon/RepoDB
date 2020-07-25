@@ -30,7 +30,7 @@ If you are to use this library, your [development experience](https://github.com
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
 {
-	var id = connection.Insert<Person, int>(new Person { Name = "John Doe", DateInsertedUtc = DateTime.UtcNow });
+	var id = connection.Insert<Person, int>(new Person { Name = "John Doe" });
 }
 ```
 
@@ -56,7 +56,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 	}
 	else if (people.Count < 1000)
 	{
-		connection.InsertAll(people);
+		connection.InsertAll(people, batchSize: 100);
 	}
 	else
 	{
