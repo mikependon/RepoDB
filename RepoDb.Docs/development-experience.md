@@ -1,6 +1,6 @@
 ﻿# The Development Experience
 
-If you are to use RepoDb, the development experience is identical to both both Entity Framework and Dapper. However, since RepoDb is a micro-ORM library, it gives you the most attributes of micro-ORM (i.e: performant, efficient).
+If you are to use RepoDb, the development experience is identical to both Entity Framework and Dapper. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
 
 ### Entity Framework
 
