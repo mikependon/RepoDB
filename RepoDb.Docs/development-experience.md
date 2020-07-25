@@ -74,3 +74,27 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 	var people = connection.ExecuteQuery<Person>("SELECT * FROM [dbo].[Person]");
 }
 ```
+
+And force the EF-Like design with the use of repository.
+
+```csharp
+public class PeopleRepository : BaseRepository<Person, SqlConnection>
+{
+	public PeopleRepository() :
+		base("Server=.;Database=TestDB;Integrated Security=SSPI;")
+	{ }
+}
+```
+
+And you call the operations like below.
+
+```csharp
+using (var repository = new PeopleRepository())
+{
+	repository.Insert(new Person
+	{
+		Name = "John Doe",
+		DateInsertedUtc = DateTime.UtcNow
+	});
+}
+```
