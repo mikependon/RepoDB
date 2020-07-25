@@ -1,10 +1,10 @@
 # Edge Case on Bulk Operations
 
-In RepoDb, the bulk operations are not just a normal bulk operation. It does address some very important edge-cases that many ORM in .NET space does not provide.
+In RepoDb, the bulk operations are not just the normal bulk operations. They are addressing some very important edge-cases that many ORMs in .NET space did not solved.
 
 ## Parameters
 
-All the bulk operations (i.e: [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge)) are flexible to accept different kind of parameters.
+All the bulk operations (i.e: [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge)) are accepting different kind of parameters.
  
 #### DataReader
 
@@ -49,9 +49,9 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 
 ## Identity Columns
 
-Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations are specialized in a way of bulk-processing the data and still be able to retrieve the identities back to the caller.
+Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations are special in a way of bulk-processing the huge datasets but still be able to retrieve the new generated identity columns value back to the data models.
 
-This is a very common but is an important use-case to everyone. Imagine bulk inserting huge datasets and have all the identities referenced back to your application.
+It is a very common and is an important use-case to most. Imagine bulk inserting the huge datasets and have all the identities referenced back to your application for building relationships.
 
 To enable this, simply set the `isReturnIdentity` argument to `true` when calling the operations.
 
@@ -79,7 +79,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 
 ## Pseudo-Temporary Table (Physical/Temporary)
 
-In RepoDb, the bulk operations are creating a pseudo-temporary as a stepping stone for the actual operation. The data is first being brought to this pseudo-temporary table with the use of [BulkInsert](https://repodb.net/operation/bulkinsert) operation. Then, this pseudo-temporary is being used to promote the changes towards the target table.
+In RepoDb, the bulk operations are creating a pseudo-temporary as a stepping stone for the actual operation. The data is first brought into this pseudo-temporary table via [BulkInsert](https://repodb.net/operation/bulkinsert) operation. Then, this pseudo-temporary is being used to promote the actual changes towards the target table.
 
 You can leverage the underlying RDBMS capability by specifying whether to use the TEMP pseudo-temporary table or the physical pseudo-temporary table. To do this, simply set the `usePhysicalPseudoTempTable` argument to `true`.
 
@@ -105,4 +105,4 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-**Note:** Use the TEMP pseudo-temporary table if you are working in multi-threading environment. Otherwise, always use the physical pseudo-temporary table to maximize the advantages of having the physical table.
+**Note:** Use the TEMP pseudo-temporary table if you are working with multi-threading environment. Otherwise, always use the physical pseudo-temporary table to maximize the advantages of having a physical table.
