@@ -21,6 +21,16 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDb into the community of .NET.
 
+## Benefits/Advantages
+
+Like many other ORMs, RepoDb does provide the preliminary [methods](https://repodb.net/docs#operations) to address the basic operations (like CRUD). Howerver, RepoDb also does provide advance operations to cater advance use-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk](https://repodb.net/feature/bulkoperations) Operations.
+
+If you are to use this library, your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as Dapper when opening a connection and as simple as Entity Framework when executing an operation.
+
+When you do the bulk operations, you will retrieve the generated [identities](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns just right after the executions. This is a very important case that is needed by most. Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) address this needs.
+
+Lastly, RepoDb does support the 3 important way-of-executions, the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations) way of execution. Through this, you can create a repository that can process small to large datasets without affecting the efficiency and performance.
+
 ## Important Attributes
 
 Below are some of the important attributes that is a part of the package and you will easily leverage being a user of this library.
@@ -93,7 +103,7 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## Benchmark
 
-The benchmark result to be shown on this page will always be referring to the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool). Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200410_netcore31.txt).
+The benchmark result to be shown on this page will always be referring to the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool). Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
@@ -128,7 +138,7 @@ Please get in touch with us via:
 
 - [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md) - let us build your copies.
 - [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md) - let us be uniformed.
-- [Issuing a PR](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md) - let us be aligned and notified.
+- [Issuing a Pull-Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md) - let us be aligned and notified.
 - [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md) - let us be organized for easy tracking and fixing.
 
 ## Credits
