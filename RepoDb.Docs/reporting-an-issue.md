@@ -8,11 +8,11 @@ In this page, we will guide you with the standards on how to report an issue.
 
 We considered the following issues.
 
-- [Bug](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#bug)
-- [Request](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#request)
-- [Question](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#question)
-- [Nice-To-Have](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#nice-to-have)
-- [For-Grabs](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reporting%20an%20Issue.md#for-grabs)
+- [Bug](#bug)
+- [Request](#request)
+- [Question](#question)
+- [Nice-To-Have](#nice-to-have)
+- [For-Grabs](#for-grabs)
 
 ### > Bug
 
