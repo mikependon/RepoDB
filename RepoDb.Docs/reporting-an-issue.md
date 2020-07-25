@@ -2,9 +2,9 @@
 
 In this page, we will guide you with the standards on how to report an issue.
 
-> The standards provided on this page is mostly introduced by the author itself. Please do let us know if you think a change is needed by submitting a pull-request on this page.
+**Disclaimer:** The standards provided on this page is mostly introduced by the author itself. Please do let us know if you think a change is needed by submitting a pull-request on this page.
 
-## :heavy_check_mark: Type of Issues
+## Type of Issues
 
 We considered the following issues.
 
@@ -14,7 +14,7 @@ We considered the following issues.
 - [Nice-To-Have](#nice-to-have)
 - [For-Grabs](#for-grabs)
 
-### > Bug
+### Bug
 
 A [bug](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Abug) is usually prioritized over the other (non-bug) items. If the requestor has enough reason to have the bug be fixed ASAP, the item will be put on top-priority. If the bug is a known-bug, or find not really important (depends on weight), then the bug will not be placed on top-priority list, but it will be picked once the other bugs are done.
 
@@ -54,7 +54,7 @@ Before deploying, if there are existing collaborations (ie: [GitHub](https://git
 
 After the deployment, we will leave the bug open for the next few days (not yet defined) and we will place a [deployed](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Adeployed) label. The label will be placed even the fix is deployed in a pre-release versions.
 
-### > Request
+### Request
 
 A [request](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Arequest) is an any form of item the issuer would like us to implement (or do). Usually, it is being [assessed](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22under+assessment%22) internally. The weight of the requests to be considered as top priority will be dependent on the community engagement or on our assessment. The higher the engagement ratio, the higher probability that the requests will be prioritized and implemented.
 
@@ -76,7 +76,7 @@ See below.
 - [Email](https://repodb.readthedocs.io/en/latest/pages/contact.html)
 - [Twitter](https://twitter.com/home) - notifying the [author](https://twitter.com/mike_pendon) or placing a tag **#RepoDb**.
 
-### > Nice-To-Have
+### Nice-To-Have
 
 A [nice-to-have](https://github.com/mikependon/RepoDb/labels/nice%20to%20have) items are list of features or considerations to be done in the future. An item in the nice-to-have may or may-not be done. The weight of items-to-be-done will depend on our own assessment or on the weight of the community collaborations.
 
@@ -89,7 +89,7 @@ We are not requiring a strict template for the nice-to-have items. However, we w
 
 We are thanking you for this!
 
-### > For-Grabs
+### For-Grabs
 
 Depends on our internal assessment, we sometimes place an issue (i.e: Bug, Request, Question) as an item for [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) so the community can fix it for us.
 
