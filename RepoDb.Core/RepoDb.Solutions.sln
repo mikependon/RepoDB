@@ -25,11 +25,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuge
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{C7222746-534E-4D95-9B7E-9593C191FDE2}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Docs\Building the Solutions.md = ..\RepoDb.Docs\Building the Solutions.md
-		..\RepoDb.Docs\Coding Standards.md = ..\RepoDb.Docs\Coding Standards.md
-		..\RepoDb.Docs\Issuing a PR.md = ..\RepoDb.Docs\Issuing a PR.md
-		..\RepoDb.Docs\RepoDb vs Dapper.md = ..\RepoDb.Docs\RepoDb vs Dapper.md
-		..\RepoDb.Docs\Reporting an Issue.md = ..\RepoDb.Docs\Reporting an Issue.md
+		..\RepoDb.Docs\atomic-batch-bulk.md = ..\RepoDb.Docs\atomic-batch-bulk.md
+		..\RepoDb.Docs\building-the-solutions.md = ..\RepoDb.Docs\building-the-solutions.md
+		..\RepoDb.Docs\bulk-operation-identities.md = ..\RepoDb.Docs\bulk-operation-identities.md
+		..\RepoDb.Docs\coding-standards.md = ..\RepoDb.Docs\coding-standards.md
+		..\RepoDb.Docs\development-experience.md = ..\RepoDb.Docs\development-experience.md
+		..\RepoDb.Docs\issuing-a-pull-request.md = ..\RepoDb.Docs\issuing-a-pull-request.md
+		..\RepoDb.Docs\reporting-an-issue.md = ..\RepoDb.Docs\reporting-an-issue.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"

@@ -64,7 +64,7 @@ It is good to have a good description when requesting an items or features alway
 
 We will place the [request](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Arequest) label always.
 
-### > Question
+### Question
 
 A [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) is a form of inquiry towards us. The item is open for everyone to answer, no need to wait for the [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) label. We usually answer to the question ASAP.
 

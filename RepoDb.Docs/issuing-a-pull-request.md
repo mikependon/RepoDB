@@ -1,8 +1,8 @@
-# Issuing a PR
+# Issuing a Pull-Request
 
 The issues that were labelled as [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) is open for pull-requests. If you are interested to contribute into an existing issue that is not [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22), then simply let us know by commenting on the target issue.
 
-#### DOs for issuing a PR
+### DOs for issuing a Pull-Request
 
 - Be knowledgeable with the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Coding%20Standards.md).
 - Be open by notifying us which issue you wish to grab.
@@ -10,7 +10,7 @@ The issues that were labelled as [for-grabs](https://github.com/mikependon/RepoD
 - Be professional if there are disagreements.
 - Be patient, we are reviewing!
 
-#### DONTs for issuing a PR
+### DONTs for issuing a Pull-Request
 
 - By surprising us with a big PR (with thousand lines of code changes), without us knowing in advance.
 - By attacking the other collaborators or the community participants in any ways.
