@@ -2,11 +2,11 @@
 
 Below are some of the things the developer needs to consider when doing a code change on the project. We hope that you will familiarize the entire contents before contributing, and thank you for that!
 
-> Please be noted that this coding standard is not a strict compliance for a developer to push a pull-requests to us. Your code will thoroughly be reviewed and evaluated. Further collaborations may be done between the contributor and us (if there are any clarrifications before merging).
+Please be noted that this coding standard is not a strict compliance for a developer to push a pull-requests to us. Your code will thoroughly be reviewed and evaluated. Further collaborations may be done between the contributor and us (if there are any clarrifications before merging).
 
 **Disclaimer:** Some of the written standards on this page are the preferences of the author itself. We are listening to any comments, therefore please do let us know if you think we need to adjust the standards.
 
-## :heavy_check_mark: Class Implementation
+## Class Implementation
 
 ### ProperCase Class Naming Convention
 
@@ -71,7 +71,7 @@ This is not the case always. However, please always consider the usage of direct
 public string ConnectionString => DbRepository.ConnectionString;
 ```
 
-## :heavy_check_mark: Variables
+## Variables
 
 ### Usage of "var" keyword when declaring a method-level variables
 
