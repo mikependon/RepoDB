@@ -2,13 +2,13 @@
 
 In this page, we will guide you on how to build the RepoDb Solutions.
 
-- [RepoDb.Core](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbcore)
-- [RepoDb.SqlServer](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlserver)
-- [RepoDb.SqlServer.BulkOperations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlserverbulkoperations)
-- [RepoDb.SqLite](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbsqlite)
-- [RepoDb.MySql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysql)
-- [RepoDb.MySqlConnector](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbmysqlconnector)
-- [RepoDb.PostgreSql](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Building%20the%20Solutions.md#building-the-repodbpostgresql)
+- [RepoDb.Core](#building-the-repodbcore)
+- [RepoDb.SqlServer](#building-the-repodbsqlserver)
+- [RepoDb.SqlServer.BulkOperations](#building-the-repodbsqlserverbulkoperations)
+- [RepoDb.SqLite](#building-the-repodbsqlite)
+- [RepoDb.MySql](#building-the-repodbmysql)
+- [RepoDb.MySqlConnector](#building-the-repodbmysqlconnector)
+- [RepoDb.PostgreSql](#building-the-repodbpostgresql)
 
 ## Install the Git
 
