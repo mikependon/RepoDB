@@ -1,4 +1,4 @@
-# Atomic, Batch and Bulk Operations
+# The Atomic, Batch and Bulk Operations
 
 RepoDb supports the different set of operations by default. With these operations, you can maximize the different ways of implementation to make your application more performant and efficient.
 
@@ -33,7 +33,7 @@ The operations of like [Insert](https://repodb.net/operation/insert), [Update](h
 
 ## Batch Operations
 
-This operations refers to a single execution of multiple command texts. It allows you to control the number of rows to be processed against the database.
+This operations refers to a single execution of multiple command texts. Imagine executing a 10 INSERT statements in one-go. It allows you to control the number of rows to be processed against the database.
 
 By using this operation, you are able to optimize the execution in response to the following situations.
 
@@ -42,7 +42,7 @@ By using this operation, you are able to optimize the execution in response to t
 - Kind of Data (Blob, Plain Text, etc)
 - Many More...
 
-To be specific, if you have created a list of Person like below and wish to save it to the database.
+To be specific, if you have created a list of Person like below and wish to save it into the database.
 
 ```csharp
 var people = CreatePeople(1000);
@@ -57,9 +57,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-The execution is wrapped within the Transaction to make it more ACID.
-
-The operations of like [InsertAll](https://repodb.net/operation/insertall), [UpdateAll](https://repodb.net/operation/updateall) and [MergeAll](https://repodb.net/operation/mergeall) are all packed-executions.
+By default, the execution is wrapped within the Transaction to make it more ACID. The operations of like [InsertAll](https://repodb.net/operation/insertall), [UpdateAll](https://repodb.net/operation/updateall) and [MergeAll](https://repodb.net/operation/mergeall) are all packed-executions.
 
 ## Bulk Operations
 
@@ -73,7 +71,7 @@ To be specific, if you have created a list of Person like below and wish to save
 var people = CreatePeople(100000);
 ```
 
-Then you can bulk insert it like below.
+Then you can the mentioned datasets in a bulk it like below.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
@@ -81,3 +79,5 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 	var rowsInserted = connection.BulkInsert(people);
 }
 ```
+
+The operations of like [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge) are all bulk-operations.
