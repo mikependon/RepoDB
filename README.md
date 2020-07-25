@@ -126,10 +126,10 @@ Please get in touch with us via:
 
 ### Hints
 
-- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Building%20the%20Solutions.md) - let us build your copies.
-- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Coding%20Standards.md) - let us be uniformed.
-- [Issuing a PR](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Issuing%20a%20PR.md) - let us be aligned and notified.
-- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/Reporting%20an%20Issue.md) - let us be organized for easy tracking and fixing.
+- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md) - let us build your copies.
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md) - let us be uniformed.
+- [Issuing a PR](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md) - let us be aligned and notified.
+- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md) - let us be organized for easy tracking and fixing.
 
 ## Credits
 
