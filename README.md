@@ -23,10 +23,6 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Benefits/Advantages
 
-Below are some of the benefits and advantages you are automatically inheritting when using RepoDb.
-
-### Feature sets/capabilities
-
 Like with any other ORMs, RepoDb does provide the preliminary [methods](https://repodb.net/docs#operations) needed for the basic operations (i.e.: CRUD). The good thing is, RepoDb also does provide an advance operations to cater the advance use-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
 
 If you are to use [RepoDb](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. It is the reason that makes this library the simpiest ORM to use.
