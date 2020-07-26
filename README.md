@@ -45,19 +45,19 @@ RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integrat
 
 Below are some of the benefits and advantages you are automatically inheritting when using RepoDb.
 
-### Feature Sets/Capabilities
+### Feature sets/capabilities
 
 Like with any other ORMs, RepoDb does provide the preliminary [methods](https://repodb.net/docs#operations) needed for the basic operations (i.e.: CRUD). The good thing is, RepoDb also does provide an advance operations to cater the advance use-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
 
-### Development Experience
+### Development experiences
 
 When using [RepoDb](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. Thus makes this library the simpiest ORM to use.
 
-### Advanced Bulk Operations
+### Advanced bulk operations
 
 When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after the execution. This is a very important use-case that is needed by most. Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations addressed this need.
 
-### The Way of Executions
+### The way of executions
 
 RepoDb does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations)). Through this, you can create a very powerful repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance that much.
 
