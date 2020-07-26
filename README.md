@@ -31,6 +31,26 @@ When you do the [bulk operations](https://repodb.net/feature/bulkoperations), th
 
 Lastly, RepoDb does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations)). Through this, you can create a very powerful repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance that much.
 
+## Important Attributes
+
+Below are some of the important attributes that is a part of the package and you will easily leverage being a user of this library.
+
+### It is easy-to-use
+
+RepoDb operations were all implemented as extended methods of IDbConnection object. For as long your connection is open, any operations can then be called against your database.
+
+### It is high-performant
+
+RepoDb caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
+
+### It is efficient
+
+RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+
+### It is high-quality
+
+RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in production environment.
+
 ## Get Started
 
 Please click any of the link below to fast-track your learnings.
@@ -60,26 +80,6 @@ Or, learn a specific feature.
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
 Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
-
-## Important Attributes
-
-Below are some of the important attributes that is a part of the package and you will easily leverage being a user of this library.
-
-### It is easy-to-use
-
-RepoDb operations were all implemented as extended methods of IDbConnection object. For as long your connection is open, any operations can then be called against your database.
-
-### It is high-performant
-
-RepoDb caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
-
-### It is efficient
-
-RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
-
-### It is high-quality
-
-RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in production environment.
 
 ## Supported Databases
 
