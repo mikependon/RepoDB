@@ -29,7 +29,7 @@ The operations of like [Insert](https://repodb.net/operation/insert), [Update](h
 
 ## Batch Operations
 
-This operations refers to a single execution of multiple command texts. Imagine executing the 10 INSERT statements in one-go. It allows you to control the number of rows to be processed against the database.
+This operation refers to a single execution of multiple command texts. Imagine executing the 10 INSERT statements in one-go. It allows you to control the number of rows to be processed against the database.
 
 By using this operation, you are able to optimize the execution in response to the following situations.
 
@@ -77,3 +77,35 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 ```
 
 The operations of like [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge) are all bulk-operations.
+
+## Repository Implementation
+
+To make sure the repository can handle the smallest-to-the-biggest datasets, the mentioned methods above must properly be used.
+
+We highly recommend to you to have your own standards of when to do the Batch operation. The only requirement is to have your magic number as a standard. In our case, we used the range of 30-1000, any number below this should be dealt by Atomic operation and any number above this should be dealt by Bulk operation.
+
+See the sample code below for SaveAll.
+
+```csharp
+using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
+{
+        var count = people.Count();
+	using (var transaction = connection.EnsureOpen().BeginTransaction())
+	{
+                if (count <= 30)
+                {
+		        people.ForEach(p => connection.Insert(p, transaction: transaction));
+		}
+                else if (count > 30 && count <= 1000)
+                {
+		        connection.InsertAll(people, transaction: transaction);
+		}
+                else
+                {
+		        connection.BulkInsert(people, transaction: transaction);
+		}
+                transaction.Commit();
+	}
+}
+```
+
