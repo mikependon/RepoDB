@@ -33,7 +33,6 @@ namespace RepoDb.DbSettings
             IsUseUpsert = false;
             OpeningQuote = "[";
             ParameterPrefix = "@";
-            SchemaSeparator = ".";
         }
 
         #endregion
