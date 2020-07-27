@@ -111,15 +111,5 @@ namespace RepoDb.MySql.UnitTests
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
         }
-
-        [TestMethod]
-        public void TestMySqlDbSettingSchemaSeparatorProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<MySqlConnection>();
-
-            // Assert
-            Assert.AreEqual(".", setting.SchemaSeparator);
-        }
     }
 }

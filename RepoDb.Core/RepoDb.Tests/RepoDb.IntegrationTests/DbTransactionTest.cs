@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Transactions;
 
 namespace RepoDb.IntegrationTests
 {
@@ -26,6 +27,8 @@ namespace RepoDb.IntegrationTests
         /*
          * Some tests here are only triggers (ie: BatchQuery, Count, CountAll, Query, QueryAll, Truncate)
          */
+
+        #region DbTransaction
 
         #region BatchQuery
 
@@ -1416,6 +1419,40 @@ namespace RepoDb.IntegrationTests
         }
 
         #endregion
+
+        #endregion
+
+        #endregion
+
+        #region TransactionScope
+
+        /*
+         * Sync
+         */
+
+        [TestMethod]
+        public void TestTransactionForScopeInsertAll()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions(),
+                TransactionScopeAsyncFlowOption.Enabled))
+            {
+                using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                {
+                    // Act
+                    connection.InsertAllAsync<IdentityTable>(entities).Wait();
+
+                    // Act
+                    transaction.Complete();
+
+                    // Assert
+                    Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
+                }
+            }
+        }
 
         #endregion
     }
