@@ -4,6 +4,7 @@ using RepoDb.Enumerations;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System.Linq;
+using System.Transactions;
 
 namespace RepoDb.PostgreSql.IntegrationTests
 {
@@ -27,12 +28,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
          * Some tests here are only triggers (ie: BatchQuery, Count, CountAll, Query, QueryAll, Truncate)
          */
 
+        #region DbTransaction
+
         #region BatchQuery
 
         #region BatchQuery
 
         [TestMethod]
-        public void TestSqlTransactionForBatchQuery()
+        public void TestDbTransactionForBatchQuery()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -50,7 +53,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestSqlTransactionForBatchQueryAsync()
+        public void TestDbTransactionForBatchQueryAsync()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -72,7 +75,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Count
 
         [TestMethod]
-        public void TestSqlTransactionForCount()
+        public void TestDbTransactionForCount()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -90,7 +93,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region CountAsync
 
         [TestMethod]
-        public void TestSqlTransactionForCountAsync()
+        public void TestDbTransactionForCountAsync()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -112,7 +115,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region CountAll
 
         [TestMethod]
-        public void TestSqlTransactionForCountAll()
+        public void TestDbTransactionForCountAll()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -130,7 +133,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region CountAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForCountAllAsync()
+        public void TestDbTransactionForCountAllAsync()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -152,7 +155,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Delete
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsCommitted()
+        public void TestDbTransactionForDeleteAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -178,7 +181,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsRolledBack()
+        public void TestDbTransactionForDeleteAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -208,7 +211,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region DeleteAsync
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsyncAsCommitted()
+        public void TestDbTransactionForDeleteAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -234,7 +237,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsyncAsRolledBack()
+        public void TestDbTransactionForDeleteAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -268,7 +271,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region DeleteAll
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsCommitted()
+        public void TestDbTransactionForDeleteAllAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -294,7 +297,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsRolledBack()
+        public void TestDbTransactionForDeleteAllAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -324,7 +327,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsyncAsCommitted()
+        public void TestDbTransactionForDeleteAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -350,7 +353,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsyncAsRolledBack()
+        public void TestDbTransactionForDeleteAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -384,7 +387,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Insert
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsCommitted()
+        public void TestDbTransactionForInsertAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -407,7 +410,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsRolledBack()
+        public void TestDbTransactionForInsertAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -434,7 +437,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region InsertAsync
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsyncAsCommitted()
+        public void TestDbTransactionForInsertAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -457,7 +460,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsyncAsRolledBack()
+        public void TestDbTransactionForInsertAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -488,7 +491,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region InsertAll
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsCommitted()
+        public void TestDbTransactionForInsertAllAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -511,7 +514,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsRolledBack()
+        public void TestDbTransactionForInsertAllAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -538,7 +541,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsyncAsCommitted()
+        public void TestDbTransactionForInsertAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -561,7 +564,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsyncAsRolledBack()
+        public void TestDbTransactionForInsertAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -592,7 +595,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Merge
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsCommitted()
+        public void TestDbTransactionForMergeAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -615,7 +618,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsRolledBack()
+        public void TestDbTransactionForMergeAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -642,7 +645,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region MergeAsync
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsyncAsCommitted()
+        public void TestDbTransactionForMergeAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -664,7 +667,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsyncAsRolledBack()
+        public void TestDbTransactionForMergeAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -694,7 +697,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region MergeAll
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsCommitted()
+        public void TestDbTransactionForMergeAllAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -717,7 +720,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsRolledBack()
+        public void TestDbTransactionForMergeAllAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -744,7 +747,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsyncAsCommitted()
+        public void TestDbTransactionForMergeAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -767,7 +770,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsyncAsRolledBack()
+        public void TestDbTransactionForMergeAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -798,7 +801,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Query
 
         [TestMethod]
-        public void TestSqlTransactionForQuery()
+        public void TestDbTransactionForQuery()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -816,7 +819,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region QueryAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAsync()
+        public void TestDbTransactionForQueryAsync()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -838,7 +841,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region QueryAll
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAll()
+        public void TestDbTransactionForQueryAll()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -856,7 +859,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAllAsync()
+        public void TestDbTransactionForQueryAllAsync()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -878,7 +881,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region QueryMultiple
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleT2()
+        public void TestDbTransactionForQueryMultipleT2()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -894,7 +897,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleT3()
+        public void TestDbTransactionForQueryMultipleT3()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -911,7 +914,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleT4()
+        public void TestDbTransactionForQueryMultipleT4()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -929,7 +932,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleT5()
+        public void TestDbTransactionForQueryMultipleT5()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -948,7 +951,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleT6()
+        public void TestDbTransactionForQueryMultipleT6()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -968,7 +971,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleT7()
+        public void TestDbTransactionForQueryMultipleT7()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -993,7 +996,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region QueryMultipleAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT2()
+        public void TestDbTransactionForQueryMultipleAsyncT2()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1009,7 +1012,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT3()
+        public void TestDbTransactionForQueryMultipleAsyncT3()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1026,7 +1029,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT4()
+        public void TestDbTransactionForQueryMultipleAsyncT4()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1044,7 +1047,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT5()
+        public void TestDbTransactionForQueryMultipleAsyncT5()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1063,7 +1066,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT6()
+        public void TestDbTransactionForQueryMultipleAsyncT6()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1083,7 +1086,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT7()
+        public void TestDbTransactionForQueryMultipleAsyncT7()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1112,7 +1115,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Truncate
 
         [TestMethod]
-        public void TestSqlTransactionForTruncate()
+        public void TestDbTransactionForTruncate()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1130,7 +1133,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region TruncateAsync
 
         [TestMethod]
-        public void TestSqlTransactionForTruncateAsync()
+        public void TestDbTransactionForTruncateAsync()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -1152,7 +1155,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region Update
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsCommitted()
+        public void TestDbTransactionForUpdateAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -1183,7 +1186,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsRolledBack()
+        public void TestDbTransactionForUpdateAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -1218,7 +1221,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region UpdateAsync
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsyncAsCommitted()
+        public void TestDbTransactionForUpdateAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -1249,7 +1252,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsyncAsRolledBack()
+        public void TestDbTransactionForUpdateAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateCompleteTables(1).First();
@@ -1288,7 +1291,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region UpdateAll
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsCommitted()
+        public void TestDbTransactionForUpdateAllAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -1319,7 +1322,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsRolledBack()
+        public void TestDbTransactionForUpdateAllAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -1354,7 +1357,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsyncAsCommitted()
+        public void TestDbTransactionForUpdateAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -1385,7 +1388,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsyncAsRolledBack()
+        public void TestDbTransactionForUpdateAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateCompleteTables(10);
@@ -1414,6 +1417,178 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 entities.ForEach(entity => Assert.AreEqual(true, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
             }
         }
+
+        #endregion
+
+        #endregion
+
+        #endregion
+
+        #region TransactionScope
+
+        #region TransactionScope
+
+        #region InsertAll
+
+        [TestMethod]
+        public void TestTransactionForInsertAll()
+        {
+            // Setup
+            var entities = Helper.CreateCompleteTables(10);
+
+            using (var transaction = new TransactionScope())
+            {
+                using (var connection = new NpgsqlConnection(Database.ConnectionString))
+                {
+                    // Act
+                    connection.InsertAll<CompleteTable>(entities);
+
+                    // Assert
+                    Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
+                }
+
+                // Complete
+                transaction.Complete();
+            }
+        }
+
+        [TestMethod]
+        public void TestTransactionForInsertAllAsync()
+        {
+            // Setup
+            var entities = Helper.CreateCompleteTables(10);
+
+            using (var transaction = new TransactionScope())
+            {
+                using (var connection = new NpgsqlConnection(Database.ConnectionString))
+                {
+                    // Act
+                    connection.InsertAllAsync<CompleteTable>(entities).Wait();
+
+                    // Assert
+                    Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
+                }
+
+                // Complete
+                transaction.Complete();
+            }
+        }
+
+        #endregion
+
+        #region MergeAll
+
+        [TestMethod]
+        public void TestTransactionScopeForMergeAll()
+        {
+            // Setup
+            var entities = Helper.CreateCompleteTables(10);
+
+            using (var transaction = new TransactionScope())
+            {
+                using (var connection = new NpgsqlConnection(Database.ConnectionString))
+                {
+                    // Act
+                    connection.MergeAll<CompleteTable>(entities);
+
+                    // Assert
+                    Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
+                }
+
+                // Complete
+                transaction.Complete();
+            }
+        }
+
+        [TestMethod]
+        public void TestTransactionScopeForMergeAllAsync()
+        {
+            // Setup
+            var entities = Helper.CreateCompleteTables(10);
+
+            using (var transaction = new TransactionScope())
+            {
+                using (var connection = new NpgsqlConnection(Database.ConnectionString))
+                {
+                    // Act
+                    connection.MergeAllAsync<CompleteTable>(entities).Wait();
+
+                    // Assert
+                    Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
+                }
+
+                // Complete
+                transaction.Complete();
+            }
+        }
+
+        #endregion
+
+        #region UpdateAll
+
+        [TestMethod]
+        public void TestTransactionScopeForUpdateAll()
+        {
+            // Setup
+            var entities = Helper.CreateCompleteTables(10);
+
+            using (var transaction = new TransactionScope())
+            {
+                using (var connection = new NpgsqlConnection(Database.ConnectionString))
+                {
+                    // Act
+                    connection.InsertAll<CompleteTable>(entities);
+
+                    // Prepare
+                    entities.ForEach(entity => entity.ColumnBoolean = false);
+
+                    // Act
+                    connection.UpdateAll<CompleteTable>(entities);
+
+                    // Act
+                    var queryResult = connection.QueryAll<CompleteTable>();
+
+                    // Assert
+                    entities.ForEach(entity => Assert.AreEqual(false, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                }
+
+                // Complete
+                transaction.Complete();
+            }
+        }
+
+        [TestMethod]
+        public void TestTransactionScopeForUpdateAllAsync()
+        {
+            // Setup
+            var entities = Helper.CreateCompleteTables(10);
+
+            using (var transaction = new TransactionScope())
+            {
+                using (var connection = new NpgsqlConnection(Database.ConnectionString))
+                {
+                    // Act
+                    connection.InsertAll<CompleteTable>(entities);
+
+                    // Prepare
+                    entities.ForEach(entity => entity.ColumnBoolean = false);
+
+                    // Act
+                    connection.UpdateAllAsync<CompleteTable>(entities).Wait();
+
+                    // Act
+                    var queryResult = connection.QueryAll<CompleteTable>();
+
+                    // Assert
+                    entities.ForEach(entity => Assert.AreEqual(false, queryResult.First(item => item.Id == entity.Id).ColumnBoolean));
+                }
+
+                // Complete
+                transaction.Complete();
+            }
+        }
+
+        #endregion
 
         #endregion
 
