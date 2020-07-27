@@ -111,15 +111,5 @@ namespace RepoDb.PostgreSql.UnitTests
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
         }
-
-        [TestMethod]
-        public void TestPostgreSqlDbSettingSchemaSeparatorProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<NpgsqlConnection>();
-
-            // Assert
-            Assert.AreEqual(".", setting.SchemaSeparator);
-        }
     }
 }
