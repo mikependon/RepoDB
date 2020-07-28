@@ -1,10 +1,10 @@
 ﻿# The Development Experience
 
-If you are to use RepoDb, the development experience is identical to both Entity Framework and Dapper. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
+If you are to use RepoDb, the development experience is identical to both Entity Framework and Dapper ORMs. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
 
 ### Entity Framework
 
-In Entity Framework, you tend to create a DbContext so you will inherit the entity-based operations.
+If you are using Entity Framework ORM, you tend to create a DbContext object first to inherit the entity-based operations (for a specific data model).
 
 ```csharp
 public class DatabaseContext : DbContext
@@ -26,12 +26,12 @@ public class DatabaseContext : DbContext
 }
 ```
 
-And you call the operations like below.
+And then you call the operations like below.
 
 ```csharp
 using (var context = new DbContext())
 {
-	context.Add(new Person
+	context.People.Add(new Person
 	{
 		Name = "John Doe",
 		DateInsertedUtc = DateTime.UtcNow
@@ -42,7 +42,7 @@ using (var context = new DbContext())
 
 ### Dapper
 
-In Dapper, you tend to simply open a connection and then execute an operation.
+If you are using Dapper micro-ORM, you are simply opening a connection object and then execute an operation right away. The way you execute the operation is no other way but with SQL.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
@@ -53,7 +53,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 
 ### RepoDb
 
-In RepoDb, you just simply open a connection like Dapper, and then, call the operations like Entity Framework.
+If you are to use RepoDb, you just simply open a connection like Dapper, and then, call the operations like Entity Framework.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
