@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -31,7 +31,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT2()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -53,7 +53,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT3()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -79,7 +79,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT4()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -109,7 +109,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT5()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -143,7 +143,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT6()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -181,7 +181,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleForT7()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -223,7 +223,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionQueryMultipleWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -245,7 +245,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleAsyncForT2()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -267,7 +267,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleAsyncForT3()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -293,7 +293,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleAsyncForT4()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -323,7 +323,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleAsyncForT5()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -357,7 +357,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleAsyncForT6()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -395,7 +395,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionQueryMultipleAsyncForT7()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -437,7 +437,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionQueryMultipleAsyncWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);

@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -30,7 +30,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionCountAll()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -46,7 +46,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnSqLiteConnectionCountAllWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -63,7 +63,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionCountAllAsync()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -79,7 +79,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqLiteConnectionCountAllAsyncWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -100,7 +100,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionCountAllViaTableName()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -116,7 +116,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnSqLiteConnectionCountAllViaTableNameWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -134,7 +134,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionCountAllAsyncViaTableName()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -150,7 +150,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqLiteConnectionCountAllAsyncViaTableNameWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);

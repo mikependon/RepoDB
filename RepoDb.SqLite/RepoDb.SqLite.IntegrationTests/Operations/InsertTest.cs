@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -30,7 +30,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -57,7 +57,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -87,7 +87,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertAsyncForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -114,7 +114,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertAsyncForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -148,7 +148,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -175,7 +175,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameAsDynamicForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -202,7 +202,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -229,7 +229,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameAsDynamicForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -260,7 +260,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameAsyncForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -287,7 +287,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertAsyncViaTableNameAsDynamicForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -314,7 +314,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameAsyncForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -341,7 +341,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionInsertAsyncViaTableNameAsDynamicForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);

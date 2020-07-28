@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -31,7 +31,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -48,7 +48,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -66,7 +66,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaDynamic()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -83,7 +83,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaQueryField()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -100,7 +100,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaQueryFields()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -122,7 +122,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaQueryGroup()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -145,7 +145,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnSqLiteConnectionMaxWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -164,7 +164,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -181,7 +181,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -199,7 +199,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaDynamic()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -216,7 +216,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaQueryField()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -233,7 +233,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaQueryFields()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -255,7 +255,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaQueryGroup()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -278,7 +278,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqLiteConnectionMaxAsyncWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -301,7 +301,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaTableNameWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -319,7 +319,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaTableNameViaDynamic()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -337,7 +337,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaTableNameViaQueryField()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -355,7 +355,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaTableNameViaQueryFields()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -378,7 +378,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxViaTableNameViaQueryGroup()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -402,7 +402,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnSqLiteConnectionMaxViaTableNameWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -422,7 +422,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaTableNameWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -440,7 +440,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaTableNameViaDynamic()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -458,7 +458,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaTableNameViaQueryField()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -476,7 +476,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaTableNameViaQueryFields()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -499,7 +499,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionMaxAsyncViaTableNameViaQueryGroup()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -523,7 +523,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqLiteConnectionMaxAsyncViaTableNameWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);

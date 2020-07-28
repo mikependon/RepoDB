@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -31,7 +31,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -48,7 +48,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageWithExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -66,7 +66,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void TestSqLiteConnectionAverageWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -85,7 +85,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageAsyncWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -102,7 +102,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageAsyncWithExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -120,7 +120,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void TestSqLiteConnectionAverageAsyncWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -143,7 +143,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageViaTableNameWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -161,7 +161,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageViaTableNameWithExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -180,7 +180,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void TestSqLiteConnectionAverageViaTableNameWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -200,7 +200,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageAsyncViaTableNameWithoutExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -218,7 +218,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionAverageAsyncViaTableNameWithExpression()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -237,7 +237,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void TestSqLiteConnectionAverageAsyncViaTableNameWithHints()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);

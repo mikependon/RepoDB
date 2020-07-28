@@ -1,11 +1,11 @@
-﻿using RepoDb.Extensions;
+﻿using Microsoft.Data.Sqlite;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +16,7 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public sealed class SqLiteDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = DbSettingMapper.Get<SQLiteConnection>();
+        private IDbSetting m_dbSetting = DbSettingMapper.Get<SqliteConnection>();
 
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
@@ -83,9 +83,9 @@ namespace RepoDb.DbHelpers
         private string GetSchema(string tableName)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
+            if (tableName.IndexOf(".") > 0)
             {
-                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
+                var splitted = tableName.Split(".".ToCharArray());
                 return splitted[0].AsUnquoted(true, m_dbSetting);
             }
 
@@ -101,9 +101,9 @@ namespace RepoDb.DbHelpers
         private string GetTableName(string tableName)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(m_dbSetting.SchemaSeparator) > 0)
+            if (tableName.IndexOf(".") > 0)
             {
-                var splitted = tableName.Split(m_dbSetting.SchemaSeparator.ToCharArray());
+                var splitted = tableName.Split(".".ToCharArray());
                 return splitted[1].AsUnquoted(true, m_dbSetting);
             }
 

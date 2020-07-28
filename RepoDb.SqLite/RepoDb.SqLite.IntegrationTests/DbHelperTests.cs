@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Data.SQLite;
 using System.Linq;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
@@ -30,7 +30,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -64,7 +64,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -83,7 +83,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -106,7 +106,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -140,7 +140,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -159,7 +159,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetFieldsAsyncIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
@@ -186,7 +186,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);
@@ -217,7 +217,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Create the tables
                 Database.CreateTables(connection);

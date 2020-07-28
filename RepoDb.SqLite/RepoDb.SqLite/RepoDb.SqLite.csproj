@@ -35,8 +35,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqLite" Version="3.1.6" />
     <PackageReference Include="RepoDb" Version="1.11.5" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.113.1" />
   </ItemGroup>
 
   <ItemGroup>

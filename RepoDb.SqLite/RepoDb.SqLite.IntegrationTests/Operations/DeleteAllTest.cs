@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -29,7 +29,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAll()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -45,7 +45,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllViaPrimaryKeys()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -62,7 +62,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         //[TestMethod]
         //public void TestSqLiteConnectionDeleteAllViaPrimaryKeysBeyondLimits()
         //{
-        //    using (var connection = new SQLiteConnection(Database.ConnectionString))
+        //    using (var connection = new SqliteConnection(Database.ConnectionString))
         //    {
         //        // Setup
         //        var tables = Database.CreateCompleteTables(1000, connection);
@@ -83,7 +83,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllAsync()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -99,7 +99,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeys()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -116,7 +116,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         //[TestMethod]
         //public void TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
         //{
-        //    using (var connection = new SQLiteConnection(Database.ConnectionString))
+        //    using (var connection = new SqliteConnection(Database.ConnectionString))
         //    {
         //        // Setup
         //        var tables = Database.CreateCompleteTables(1000, connection);
@@ -141,7 +141,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllViaTableName()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -157,7 +157,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllViaTableNameViaPrimaryKeys()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -174,7 +174,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         //[TestMethod]
         //public void TestSqLiteConnectionDeleteAllViaTableNameViaPrimaryKeysBeyondLimits()
         //{
-        //    using (var connection = new SQLiteConnection(Database.ConnectionString))
+        //    using (var connection = new SqliteConnection(Database.ConnectionString))
         //    {
         //        // Setup
         //        var tables = Database.CreateCompleteTables(1000, connection);
@@ -195,7 +195,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllAsyncViaTableName()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -211,7 +211,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -228,7 +228,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         //[TestMethod]
         //public void TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
         //{
-        //    using (var connection = new SQLiteConnection(Database.ConnectionString))
+        //    using (var connection = new SqliteConnection(Database.ConnectionString))
         //    {
         //        // Setup
         //        var tables = Database.CreateCompleteTables(1000, connection);

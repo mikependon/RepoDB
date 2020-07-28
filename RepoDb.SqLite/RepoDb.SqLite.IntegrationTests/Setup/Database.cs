@@ -1,7 +1,7 @@
-﻿using RepoDb.SqLite.IntegrationTests.Models;
+﻿using Microsoft.Data.Sqlite;
+using RepoDb.SqLite.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 
 namespace RepoDb.SqLite.IntegrationTests.Setup
 {
@@ -41,12 +41,12 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             if (IsInMemory == true)
             {
                 // Memory
-                ConnectionString = @"Data Source=:memory:;Version=3;";
+                ConnectionString = @"Data Source=:memory:;";
             }
             else
             {
                 // Local
-                ConnectionString = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+                ConnectionString = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
 
                 // Create tables
                 CreateTables();
@@ -59,7 +59,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             {
                 return;
             }
-            using (var connection = new SQLiteConnection(ConnectionString))
+            using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.DeleteAll<CompleteTable>();
                 connection.DeleteAll<NonIdentityCompleteTable>();
@@ -71,12 +71,12 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
         #region CompleteTable
 
         public static IEnumerable<CompleteTable> CreateCompleteTables(int count,
-            SQLiteConnection connection = null)
+            SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SQLiteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
@@ -99,12 +99,12 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
         #region NonIdentityCompleteTable
 
         public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count,
-            SQLiteConnection connection = null)
+            SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SQLiteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
@@ -126,18 +126,18 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #region CreateTables
 
-        public static void CreateTables(SQLiteConnection connection = null)
+        public static void CreateTables(SqliteConnection connection = null)
         {
             CreateCompleteTable(connection);
             CreateNonIdentityCompleteTable(connection);
         }
 
-        public static void CreateCompleteTable(SQLiteConnection connection = null)
+        public static void CreateCompleteTable(SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SQLiteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {
@@ -172,12 +172,12 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             }
         }
 
-        public static void CreateNonIdentityCompleteTable(SQLiteConnection connection = null)
+        public static void CreateNonIdentityCompleteTable(SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SQLiteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionString);
             }
             try
             {

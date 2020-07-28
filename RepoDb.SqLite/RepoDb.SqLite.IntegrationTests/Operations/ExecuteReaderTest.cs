@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.Reflection;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests.Operations
@@ -31,7 +31,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReader()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -44,7 +44,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDateTime = reader.GetDateTime(2);
+                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
@@ -59,7 +59,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderWithMultipleStatements()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -74,7 +74,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDateTime = reader.GetDateTime(2);
+                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert
@@ -90,7 +90,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderAsExtractedEntity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -110,7 +110,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderAsExtractedDynamic()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -134,7 +134,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderAsync()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -147,7 +147,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                         // Act
                         var id = reader.GetInt64(0);
                         var columnInt = reader.GetInt32(1);
-                        var columnDateTime = reader.GetDateTime(2);
+                        var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
                         var table = tables.FirstOrDefault(e => e.Id == id);
 
                         // Assert
@@ -162,7 +162,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -177,7 +177,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
                             // Act
                             var id = reader.GetInt64(0);
                             var columnInt = reader.GetInt32(1);
-                            var columnDateTime = reader.GetDateTime(2);
+                            var columnDateTime = reader.GetDateTime(2).ToString(Helper.DATE_FORMAT);
                             var table = tables.FirstOrDefault(e => e.Id == id);
 
                             // Assert
@@ -193,7 +193,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);
@@ -213,7 +213,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations
         [TestMethod]
         public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 // Setup
                 var tables = Database.CreateCompleteTables(10, connection);

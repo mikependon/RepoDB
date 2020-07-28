@@ -1,5 +1,5 @@
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data.SQLite;
 
 namespace RepoDb.SqLite.UnitTests
 {
@@ -16,7 +16,7 @@ namespace RepoDb.SqLite.UnitTests
         public void TestSqLiteStatementBuilderMapper()
         {
             // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
             // Assert
             Assert.IsNotNull(builder);
@@ -26,7 +26,7 @@ namespace RepoDb.SqLite.UnitTests
         public void TestSqLiteDbHelperMapper()
         {
             // Setup
-            var helper = DbHelperMapper.Get<SQLiteConnection>();
+            var helper = DbHelperMapper.Get<SqliteConnection>();
 
             // Assert
             Assert.IsNotNull(helper);
@@ -36,7 +36,7 @@ namespace RepoDb.SqLite.UnitTests
         public void TestSqLiteDbSettingMapper()
         {
             // Setup
-            var setting = DbSettingMapper.Get<SQLiteConnection>();
+            var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
             Assert.IsNotNull(setting);

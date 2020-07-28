@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
 
 namespace RepoDb.SqLite.IntegrationTests
@@ -111,7 +111,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsNull()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -134,7 +134,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -156,7 +156,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -182,7 +182,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsNull()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -205,7 +205,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -227,7 +227,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -253,7 +253,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
@@ -275,7 +275,7 @@ namespace RepoDb.SqLite.IntegrationTests
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionString))
+            using (var connection = new SqliteConnection(Database.ConnectionString))
             {
                 //  Create the table first
                 Database.CreateCompleteTable(connection);
