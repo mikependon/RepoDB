@@ -1,10 +1,12 @@
 ﻿# The Development Experience
 
-If you are to use RepoDb, the development experience is identical to both Entity Framework and Dapper ORMs. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
+If you are to use RepoDb, your development experience will be identical to both Entity Framework and Dapper ORMs. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
 
 ### Entity Framework
 
-If you are using Entity Framework ORM, you tend to create a DbContext object first to inherit the entity-based operations (for a specific data model).
+If you are using Entity Framework ORM, you first create a DbContext object to inherit the entity-based operations for a specific data model.
+
+See the code snippets below.
 
 ```csharp
 public class DatabaseContext : DbContext
@@ -42,7 +44,7 @@ using (var context = new DbContext())
 
 ### Dapper
 
-If you are using Dapper micro-ORM, you are simply opening a connection object and then execute an operation right away. The way you execute the operation is no other way but with SQL.
+If you are using Dapper micro-ORM, you are simply opening a connection object and then execute an operation right away. The way you execute an operation is through SQL.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
@@ -66,7 +68,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-Though you can as well force the complete Dapper-Like experience like below.
+Though, you can as well force the complete Dapper-Like experience like below.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
