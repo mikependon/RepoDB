@@ -670,28 +670,6 @@ namespace RepoDb.IntegrationTests
         #region UnorganizedTable
 
         /// <summary>
-        /// Creates a list of <see cref="UnorganizedTable"/> objects.
-        /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="UnorganizedTable"/> objects.</returns>
-        public static List<UnorganizedTable> CreateUnorganizedTables(int count)
-        {
-            var tables = new List<UnorganizedTable>();
-            for (var i = 0; i < count; i++)
-            {
-                var index = i + 1;
-                tables.Add(new UnorganizedTable
-                {
-                    SessionId = Guid.NewGuid(),
-                    ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
-                });
-            }
-            return tables;
-        }
-
-        /// <summary>
         /// Creates an instance of <see cref="UnorganizedTable"/> object.
         /// </summary>
         /// <returns>A new created instance of <see cref="UnorganizedTable"/> object.</returns>
@@ -705,6 +683,55 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
                 ColumnNVarChar = Guid.NewGuid().ToString()
             };
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="UnorganizedTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="UnorganizedTable"/> objects.</returns>
+        public static List<UnorganizedTable> CreateUnorganizedTables(int count)
+        {
+            var list = new List<UnorganizedTable>();
+            for (var i = 0; i < count; i++)
+            {
+                list.Add(CreateUnorganizedTable());
+            }
+            return list;
+        }
+
+        #endregion
+
+        #region DottedTable
+
+        /// <summary>
+        /// Creates an instance of <see cref="DottedTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="DottedTable"/> object.</returns>
+        public static DottedTable CreateDottedTable()
+        {
+            return new DottedTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnInt = new Random().Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="DottedTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="DottedTable"/> objects.</returns>
+        public static List<DottedTable> CreateDottedTables(int count)
+        {
+            var list = new List<DottedTable>();
+            for (var i = 0; i < count; i++)
+            {
+                list.Add(CreateDottedTable());
+            }
+            return list;
         }
 
         #endregion

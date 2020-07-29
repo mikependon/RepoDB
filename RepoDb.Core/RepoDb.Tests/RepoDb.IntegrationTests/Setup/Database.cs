@@ -218,6 +218,28 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
+        /// Creates a dotted table that has some dots on the name. All fields are nullable.
+        /// </summary>
+        public static void CreateDottedTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Dotted.Table'))
+                BEGIN
+	                CREATE TABLE [dbo].[Dotted.Table]
+	                (
+		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
+                        [SessionId] UNIQUEIDENTIFIER NOT NULL,
+		                [Column.Int] INT NULL,
+		                [Column.NVarChar] NVARCHAR(128) NULL,
+		                [Column.DateTime] DATETIME2(7) NULL
+	                ) ON [PRIMARY];
+                END";
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        /// <summary>
         /// Creates a table that has a complete fields. All fields are nullable.
         /// </summary>
         public static void CreateCompleteTable()
