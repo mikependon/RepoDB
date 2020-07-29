@@ -8,11 +8,9 @@ This page may not be the source of truth of all as the other use-cases may not y
 
 ## Clustered Primary Keys
 
-The default support to this will never be implemented as RepoDb tend to sided the other scenario that is completely oppositing and defaultly eliminateing this use-case.
+The default support to this will never be implemented as RepoDb tend to sided the other scenario that is eliminating this use-case. When you do the push operation in RepoDb (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
 
-When you do the push operation in RepoD (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
-
-So when you do save a row like below.
+### Scenario 1 - Insert
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -21,7 +19,9 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-The return value is the ID of that row, whether the ID column is an identity or not. There, we cannot return the value of the Clustered PK. This is also true for the other operations, specially for the [Bulk Operations](https://repodb.net/feature/bulkoperations).
+The return value is the ID of that row, whether the ID column is an identity (or not). The value of the Clustered PK cannot be returned. This is also true for the other operations, specially for the [Bulk Operations](https://repodb.net/feature/bulkoperations).
+
+### Scenario 2 - Update
 
 Another example is for update operation, we tend to defaultly use the PK as the qualifier. See the code below
 
@@ -52,5 +52,20 @@ using (var connection = new SqlConnection(ConnectionString))
     var affectedRows = connection.Update(person, e => e.Name = person.Name && e.DateOfBirth = person.DateOfBirth);
 }
 ```
+
+### Scenario 3 - Delete
+
+Same goes the Update scenario, we use the PK as the default qualifier.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var affectedRows = connection.Delete<Person>(10045);
+}
+```
+
+It is impossible to map the value if you have Clustered PK.
+
+> There are lot of scenarios that makes RepoDb unusable for the use-case of having a table with Clustered PKs.
 
 ## State Tracking
