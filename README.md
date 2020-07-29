@@ -49,7 +49,7 @@ RepoDb extracts and caches your object properties, execution contexts, object ma
 
 ### It is high-quality
 
-RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and used by various critical systems that are running in production environment.
+RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and is used by various critical systems that are running in the Production environment.
 
 ## Get Started
 
@@ -79,7 +79,7 @@ Or, learn a specific feature.
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
-Otherwise, please visit our [documentation](http://repodb.net/docs) page for you to learn more.
+Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
 
 ## Supported Databases
 
@@ -103,7 +103,9 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## Benchmark
 
-The benchmark result to be shown on this page will always be referring to the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool). Results below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
+The benchmark result shown on this section is the result of the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+
+Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
