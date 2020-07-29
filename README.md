@@ -23,13 +23,13 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Benefits/Advantages
 
-Like with any other ORMs, RepoDb does provide the preliminary [methods](https://repodb.net/docs#operations) needed for the basic operations (i.e.: CRUD). The good thing is, RepoDb also does provide the operations needed to cater various edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
+Like with any other ORMs, RepoDb does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations (i.e.: CRUD). The good thing is, RepoDb also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
 
 If you are to use [RepoDb](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. It is the reason that makes this library the simpliest ORM to use.
 
-When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after the execution. This is an important use-case that is needed by most developers, both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations addressed this need.
+When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after your execution. It is an important use-case that is needed by most developers and both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations addressed this need.
 
-Lastly, RepoDb does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations)). Through this, it is easy to establish a repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance of the application.
+Lastly, RepoDb does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations)). Through this, it is easy to establish your repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance of your application.
 
 ## Important Attributes
 
@@ -37,7 +37,7 @@ Below are some of the important attributes that is a part of the package and you
 
 ### It is easy-to-use
 
-RepoDb operations were all implemented as extended methods of IDbConnection object. For as long your connection is open, any operations can then be called against your database.
+RepoDb operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.
 
 ### It is high-performant
 
@@ -45,7 +45,7 @@ RepoDb caches the already-generated compiled expressions for future reusabilitie
 
 ### It is efficient
 
-RepoDb extracts and caches the object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+RepoDb extracts and caches your object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
 ### It is high-quality
 
@@ -79,7 +79,7 @@ Or, learn a specific feature.
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
-Otherwise, please visit our [documentation](http://repodb.net/docs) page to learn more.
+Otherwise, please visit our [documentation](http://repodb.net/docs) page for you to learn more.
 
 ## Supported Databases
 
@@ -143,9 +143,9 @@ Please get in touch with us via:
 
 ## Credits
 
-Thank you to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+Thanks to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
-And also, thank you to these awesome OSS projects.
+And also, thanks to these awesome OSS projects.
 
 - [AppVeyor](https://www.appveyor.com/) - for the builds and test-executions.
 - [GitHub](https://github.com/) - for hosting this project.
