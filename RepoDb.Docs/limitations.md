@@ -4,6 +4,13 @@ We are frank and direct on our intention to the .NET community. RepoDb is a micr
 
 **Disclaimer:** This page may not be the source of truth (as of writing this) as the other use-cases may not yet discovered. We will update this page even futher once we gathered the use-cases that cannot be supported. This page will also answer some of the FAQs towards this library.
 
+## Topics Covered
+
+- [Support to JOIN Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#support-to-join-query)
+- [Clustered Primary Keys](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#clustered-primary-keys)
+- [Computed Columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#computed-columns)
+- [State Tracking](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#state-tracking)
+
 ## Support to JOIN Query
 
 We understand the reality that without having a support to JOIN Query will somehow eliminate the coccepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDb as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
@@ -50,10 +57,10 @@ You write the code below.
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var supplier = connection
-        .Query<Customer>(e => e.Name == "Amazon")
-        .Include<Address>()
-        .Include<Product>()
-        .Include<Warehouse>();
+		.Query<Customer>(e => e.Name == "Amazon")
+		.Include<Address>()
+		.Include<Product>()
+		.Include<Warehouse>();
 }
 ```
 
@@ -76,8 +83,8 @@ Though SkipQuery seems to be working in this case, solving the problem beyond N+
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var supplier = connection
-        .Query<Customer, Address, Product, Warehouse>(e => e.Name == "Amazon")
-        .SplitFor<Address>(e => e.Id)
+		.Query<Customer, Address, Product, Warehouse>(e => e.Name == "Amazon")
+		.SplitFor<Address>(e => e.Id)
 		.SplitFor<Product>(e => e.Id)
 		.SplitFor<Wharehouse>(e => e.Id)
 }
