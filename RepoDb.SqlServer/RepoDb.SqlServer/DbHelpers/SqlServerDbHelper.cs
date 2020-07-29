@@ -123,10 +123,10 @@ namespace RepoDb.DbHelpers
             IDbSetting dbSetting)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
+            var index = tableName.IndexOf(".");
+            if (index > 0)
             {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[0].AsUnquoted(true, dbSetting);
+                return tableName.Substring(0, index).AsUnquoted(true, dbSetting);
             }
 
             // Return the unquoted
@@ -143,10 +143,13 @@ namespace RepoDb.DbHelpers
             IDbSetting dbSetting)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
+            var index = tableName.IndexOf(".");
+            if (index > 0)
             {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[1].AsUnquoted(true, dbSetting);
+                if (tableName.Length > index)
+                {
+                    return tableName.Substring(index + 1).AsUnquoted(true, dbSetting);
+                }
             }
 
             // Return the unquoted

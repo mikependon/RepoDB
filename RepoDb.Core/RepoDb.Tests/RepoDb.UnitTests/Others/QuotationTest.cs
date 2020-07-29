@@ -68,6 +68,48 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestAsQuotedWithDottedTable()
+        {
+            // Setup
+            var text = "[Schema].[Dotted.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Schema].[Dotted.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithDatabase()
+        {
+            // Setup
+            var text = "[Database].[Schema].[Dotted.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "[Database].[Schema].[Dotted.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestAsQuotedWithDottedTableWithUnquotedDatabaseAndSchema()
+        {
+            // Setup
+            var text = "Database.Schema.[Dotted.Name]";
+
+            // Act
+            var actual = text.AsQuoted(true, m_dbSetting);
+            var expected = "Database.Schema.[Dotted.Name]";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region AsUnQuoted
@@ -123,6 +165,48 @@ namespace RepoDb.UnitTests
             // Act
             var actual = text.AsUnquoted(true, m_dbSetting);
             var expected = "Database.Schema.Name";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestAsUnquotedWithDottedTable()
+        {
+            // Setup
+            var text = "[Schema].[Dotted.Name]";
+
+            // Act
+            var actual = text.AsUnquoted(true, m_dbSetting);
+            var expected = "Schema.Dotted.Name";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestAsUnquotedWithDottedTableWithDatabase()
+        {
+            // Setup
+            var text = "[Database].[Schema].[Dotted.Name]";
+
+            // Act
+            var actual = text.AsUnquoted(true, m_dbSetting);
+            var expected = "Database.Schema.Dotted.Name";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestAsUnquotedWithDottedTableWithUnquotedDatabaseAndSchema()
+        {
+            // Setup
+            var text = "Database.Schema.[Dotted.Name]";
+
+            // Act
+            var actual = text.AsUnquoted(true, m_dbSetting);
+            var expected = "Database.Schema.Dotted.Name";
 
             // Assert
             Assert.AreEqual(expected, actual);

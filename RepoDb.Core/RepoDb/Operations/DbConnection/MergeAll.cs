@@ -934,7 +934,7 @@ namespace RepoDb
                 if (batchSizeValue <= 1)
                 {
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
                         dbSetting);
@@ -942,7 +942,7 @@ namespace RepoDb
                 else
                 {
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
                         batchSizeValue,
@@ -1445,7 +1445,7 @@ namespace RepoDb
                 if (batchSizeValue <= 1)
                 {
                     singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
                         dbSetting);
@@ -1453,7 +1453,7 @@ namespace RepoDb
                 else
                 {
                     multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".MergeAll"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
                         batchSizeValue,

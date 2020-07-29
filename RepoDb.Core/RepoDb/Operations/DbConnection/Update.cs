@@ -999,7 +999,7 @@ namespace RepoDb
                     CommandText = CommandTextCache.GetUpdateText(updateRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),
                         inputFields?.AsList(),
                         null,
                         dbSetting)
@@ -1150,7 +1150,7 @@ namespace RepoDb
                     CommandText = CommandTextCache.GetUpdateText(updateRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Update"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),
                         inputFields?.AsList(),
                         null,
                         dbSetting)

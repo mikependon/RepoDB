@@ -517,7 +517,7 @@ namespace RepoDb
                     CommandText = CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Insert"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),
                         inputFields?.AsList(),
                         null,
                         dbSetting),
@@ -688,7 +688,7 @@ namespace RepoDb
                     CommandText = CommandTextCache.GetInsertText(insertRequest),
                     InputFields = inputFields,
                     ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, ".", tableName, ".Insert"),
+                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),
                         inputFields?.AsList(),
                         null,
                         dbSetting),

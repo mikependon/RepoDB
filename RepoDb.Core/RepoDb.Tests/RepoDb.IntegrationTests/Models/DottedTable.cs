@@ -7,7 +7,6 @@ namespace RepoDb.IntegrationTests.Models
     public class DottedTable
     {
         public long Id { get; set; }
-        [Map("Session Id")]
         public Guid SessionId { get; set; }
         [Map("[Column.Int]")]
         public int? ColumnInt { get; set; }

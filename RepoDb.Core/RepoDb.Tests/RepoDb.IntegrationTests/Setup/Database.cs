@@ -87,6 +87,7 @@ namespace RepoDb.IntegrationTests.Setup
             CreateIdentityTable();
             CreateNonIdentityTable();
             CreateUnorganizedTable();
+            CreateDottedTable();
             CreatePropertyHandlerTable();
         }
 

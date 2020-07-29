@@ -56,7 +56,7 @@ namespace RepoDb
                 var result = (Func<DbDataReader, TEntity>)null;
                 var fields = Enumerable.Range(0, reader.FieldCount)
                     .Select(reader.GetName)
-                    .Join(".")
+                    .Join(StringConstant.Period)
                     .GetHashCode();
                 var key = typeof(TEntity).FullName.GetHashCode() + fields.GetHashCode();
                 if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
@@ -120,7 +120,7 @@ namespace RepoDb
                 var result = (Func<DbDataReader, ExpandoObject>)null;
                 var key = (long)Enumerable.Range(0, reader.FieldCount)
                     .Select(reader.GetName)
-                    .Join(".")
+                    .Join(StringConstant.Period)
                     .GetHashCode();
                 if (tableName != null)
                 {

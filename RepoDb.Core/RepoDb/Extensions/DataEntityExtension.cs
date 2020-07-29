@@ -52,7 +52,7 @@ namespace RepoDb.Extensions
             {
                 return tableAttribute.Name;
             }
-            return string.Concat(tableAttribute.Schema, ".", tableAttribute.Name);
+            return string.Concat(tableAttribute.Schema, StringConstant.Period, tableAttribute.Name);
         }
 
         /// <summary>
