@@ -50,14 +50,96 @@ You write the code below.
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var supplier = connection
-        .Query<Customer>(10045)
+        .Query<Customer>(e => e.Name == "Amazon")
         .Include<Address>()
         .Include<Product>()
         .Include<Warehouse>();
 }
 ```
 
+And have these scripts executed by ORM.
 
+```
+> SELECT * FROM [Supplier] WHERE Name = 'Amazon';
+> SELECT A.* FROM [Address] A INNER JOIN [Supplier] S ON S.Id = A.SupplierId WHERE A.Name = 'Amazon';
+> SELECT P.* FROM [Product] P INNER JOIN [Supplier] S ON S.Id = P.SupplierId WHERE P.Name = 'Amazon';
+> SELECT W.* FROM [Warehouse] W INNER JOIN [Warehouse] S ON S.Id = W.SupplierId WHERE A.Name = 'Amazon';
+```
+
+We do not want to control the implementation for now, but instead we leave it all to you. We do not know yet whether the solution of multiple execution is acceptable to the community with the use of CTE, LEFT JOIN, OUTER APPLY or whatever techniques.
+
+**SkipQuery**
+
+Though SkipQuery seems to be working in this case, solving the problem beyond N+1. Let us say you write the code below.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var supplier = connection
+        .Query<Customer, Address, Product, Warehouse>(e => e.Name == "Amazon")
+        .SplitFor<Address>(e => e.Id)
+		.SplitFor<Product>(e => e.Id)
+		.SplitFor<Wharehouse>(e => e.Id)
+}
+```
+
+That may execute this LEFT JOIN query from the database.
+
+```csharp
+> SELECT S.*
+>	, A.*
+>	, P.*
+>	, W.*
+> FROM [Supplier] S
+> INNER JOIN [Address] A ON A.SupplierId = S.Id
+> INNER JOIN [Product] P ON P.SupplierId = S.Id
+> INNER JOIN [Warehouse] W ON W.SupplierId = S.Id
+> WHERE S.Name = 'Amazon';
+```
+
+Is still not the most optimal thing to do as it needed a lot of process on the data afterwards. Like grouping the main object and the other N+X values.
+
+**Alternative**
+
+We tend to ask the community to use the [QueryMultiple](https://repodb.net/operation/querymultiple) operation to solve this.
+
+```csharp
+using (var connection = new SqlConnection(connectionString).EnsureOpen())
+{
+	var result = connection.QueryMultiple<Supplier, Address, Product, Warehouse>(s => s.Id == 10045,
+		a => a.SupplierId == 10045,
+		p => p.SupplierId == 10045,
+		w => w.SupplierId == 10045);
+	var supplier = result.Item1.FirstOrDefault();
+	var addresses = result.Item2.AsList();
+	var products = result.Item3.AsList();
+	var warehouses = result.Item4.AsList();
+	
+	// Do the stuffs here
+}
+```
+
+Or via the [ExecuteMultiple](https://repodb.net/operation/executequerymultiple) operation.
+
+```csharp
+using (var connection = new SqlConnection(connectionString).EnsureOpen())
+{
+	using (var result = connection.ExecuteQueryMultiple(@"SELECT * FROM [dbo].[Supplier] WHERE [Id] = @SupplierId;
+		SELECT * FROM [dbo].[Address] WHERE SupplierId = @SupplierId;
+		SELECT * FROM [dbo].[Product] WHERE SupplierId = @SupplierId;
+		SELECT * FROM [dbo].[Warehouse] WHERE SupplierId = @SupplierId;"))
+	{
+		var supplier = result.Extract<Person>().FirstOrDefault();
+		var addresses = result.Extract<Address>().AsList();
+		var products = result.Extract<Product>().AsList();
+		var warehouses = result.Extract<Warehouse>().AsList();
+		
+		// Do the stuffs here
+	}
+}
+```
+
+The good thing to this is controlled by you, and that is a very important case to us.
 
 ## Clustered Primary Keys
 
