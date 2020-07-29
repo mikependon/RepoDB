@@ -73,9 +73,9 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             // Get the schema and table name
-            if (tableName.IndexOf(dbSetting.SchemaSeparator) > 0)
+            if (tableName.IndexOf(".") > 0)
             {
-                var splitted = tableName.Split(dbSetting.SchemaSeparator.ToCharArray());
+                var splitted = tableName.Split(".".ToCharArray());
                 return splitted[1].AsUnquoted(true, dbSetting);
             }
 

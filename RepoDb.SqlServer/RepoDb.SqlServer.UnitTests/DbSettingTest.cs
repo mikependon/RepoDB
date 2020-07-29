@@ -111,15 +111,5 @@ namespace RepoDb.SqlServer.UnitTests
             // Assert
             Assert.AreEqual("@", setting.ParameterPrefix);
         }
-
-        [TestMethod]
-        public void TestSqlServerDbSettingSchemaSeparatorProperty()
-        {
-            // Setup
-            var setting = DbSettingMapper.Get<SqlConnection>();
-
-            // Assert
-            Assert.AreEqual(".", setting.SchemaSeparator);
-        }
     }
 }
