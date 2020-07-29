@@ -6,9 +6,9 @@
 
 # RepoDb.PostgreSql - a hybrid .NET ORM library for PostgreSQL.
 
-RepoDb is an open-source .NET ORM that bridge the gaps between the micro-ORMs and the full-ORMs. It would help the developers to simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
-It is the best alternative ORM to both Dapper and EntityFramework.
+It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
