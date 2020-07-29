@@ -98,9 +98,9 @@ That may execute this LEFT JOIN query from the database.
 >	, P.*
 >	, W.*
 > FROM [Supplier] S
-> INNER JOIN [Address] A ON A.SupplierId = S.Id
-> INNER JOIN [Product] P ON P.SupplierId = S.Id
-> INNER JOIN [Warehouse] W ON W.SupplierId = S.Id
+> LEFT JOIN [Address] A ON A.SupplierId = S.Id
+> LEFT JOIN [Product] P ON P.SupplierId = S.Id
+> LEFT JOIN [Warehouse] W ON W.SupplierId = S.Id
 > WHERE S.Name = 'Amazon';
 ```
 
