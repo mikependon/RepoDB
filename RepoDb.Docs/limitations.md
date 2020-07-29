@@ -2,13 +2,13 @@
 
 We are frank and direct on our intention to the .NET community. RepoDb is a micro-ORM that you may consider have some advance features built from advance concepts/thingking. But, on top of these things, we are also having some limitations that may not work at all use-cases.
 
-This page may not be the source of truth of all as the other use-cases may not yet discovered. We will update this page to futher once we gathered the use-cases that are not supported. This page will also answer some of the FAQs towards this library.
+**Disclaimer:** This page may not be the source of truth (as of writing this) as the other use-cases may not yet discovered. We will update this page even futher once we gathered the use-cases that cannot be supported. This page will also answer some of the FAQs towards this library.
 
 ## Support to JOIN Query
 
-We understand the reality that without having a support to JOIN Query will somehow eliminate the coccepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDb as ORM due to the fact of its flexible feature. We tend to leave to the users how do they will implement the JOIN Query on their own perusal.
+We understand the reality that without having a support to JOIN Query will somehow eliminate the coccepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDb as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
 
-We see that 99% of the problems of the RDBMS data providers are managing relationships. These includes the constraints, delegations, cascading and many more. To maintain the robustness of the library and put the control to the users when doing the things, we purposely not support this feature "for now", up until we have a much better way of doing it ahead of any other existing libraries.
+We see that 99% of the problems of the RDBMS data providers are managing the relationships. These includes the constraints, delegations, cascading and many more. To maintain the robustness of the library and put the control to the users when doing the things, we purposely not support this feature (for now), up until we have a much better way of doing it ahead of any other existing libraries.
 
 **Example**
 
@@ -99,7 +99,7 @@ That may execute this LEFT JOIN query from the database.
 
 Is still not the most optimal thing to do as it needed a lot of process on the data afterwards. Like grouping the main object and the other N+X values.
 
-**Alternative**
+**Alternative Solution**
 
 We tend to ask the community to use the [QueryMultiple](https://repodb.net/operation/querymultiple) operation to solve this.
 
