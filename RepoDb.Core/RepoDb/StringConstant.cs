@@ -3,7 +3,7 @@
     /// <summary>
     /// A class that contains all the constant strings.
     /// </summary>
-    internal static class StringConstants
+    internal static class StringConstant
     {
         public const string Period = ".";
     }
