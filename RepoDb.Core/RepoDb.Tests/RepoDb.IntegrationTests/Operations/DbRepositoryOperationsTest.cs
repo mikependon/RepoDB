@@ -7,7 +7,6 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
@@ -15681,6 +15680,42 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbRepositoryUpdateViaExpressionNonPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update<IdentityTable>(item,
+                        c => c.ColumnInt == item.ColumnInt && c.ColumnNVarChar == item.ColumnNVarChar);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryUpdateViaQueryField()
         {
             // Setup
@@ -16186,6 +16221,42 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = repository.UpdateAsync(item, c => c.Id == item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => Helper.AssertPropertiesEquality(item, result.First(e => e.Id == item.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryUpdateAsyncViaExpressionNonPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(item,
+                        c => c.ColumnInt == item.ColumnInt && c.ColumnNVarChar == item.ColumnNVarChar).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
