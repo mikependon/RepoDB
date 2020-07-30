@@ -522,11 +522,12 @@ namespace RepoDb
         /// </summary>
         internal void PrependAnUnderscoreAtTheParameters()
         {
-            if (QueryFields?.Any() != true)
+            var queryFields = GetFields(true);
+            if (queryFields?.Any() != true)
             {
                 return;
             }
-            foreach (var queryField in QueryFields)
+            foreach (var queryField in queryFields)
             {
                 queryField.PrependAnUnderscoreAtParameter();
             }

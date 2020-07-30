@@ -16040,7 +16040,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.Update<IdentityTable>(item,
-                        c => c.ColumnInt == item.ColumnInt && c.ColumnNVarChar == item.ColumnNVarChar);
+                        c => c.ColumnFloat == item.ColumnFloat && c.ColumnNVarChar == item.ColumnNVarChar);
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
@@ -16595,7 +16595,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Update each
                     var affectedRows = connection.UpdateAsync(item,
-                        c => c.ColumnInt == item.ColumnInt && c.ColumnNVarChar == item.ColumnNVarChar).Result;
+                        c => c.ColumnFloat == item.ColumnFloat && c.ColumnNVarChar == item.ColumnNVarChar).Result;
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
