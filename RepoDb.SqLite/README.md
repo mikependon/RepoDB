@@ -10,6 +10,10 @@ RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 
 It is your best alternative ORM to both Dapper and EntityFramework.
 
+## News/Updates
+
+Starting at version 1.0.15, the SQLite driver has been changed to [Microsoft.Data.Sqlite.Core](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/).
+
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
@@ -25,7 +29,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 ## Dependencies
 
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
-- [System.Data.SQLite](https://www.nuget.org/packages/System.Data.SQLite/) - the data provider used for SqLite.
+- [Microsoft.Data.Sqlite.Core](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite.
 
 ## License
 
