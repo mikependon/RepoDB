@@ -4,7 +4,7 @@ The issues that were labelled as [for-grabs](https://github.com/mikependon/RepoD
 
 ### DOs for issuing a Pull-Request
 
-- Be knowledgeable with the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Coding%20Standards.md).
+- Be knowledgeable with the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/coding-standards.md).
 - Be open by notifying us which issue you wish to grab.
 - Be collaborative with proposed solutions.
 - Be professional if there are disagreements.
@@ -14,7 +14,7 @@ The issues that were labelled as [for-grabs](https://github.com/mikependon/RepoD
 
 - By surprising us with a big PR (with thousand lines of code changes), without us knowing in advance.
 - By attacking the other collaborators or the community participants in any ways.
-- By not following the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Coding%20Standards.md).
+- By not following the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/coding-standards.md).
 - By not issuing a Unit Tests and/or Integration Tests (this can be discussed).
 
 Again, it is highly recommended that you contact us before working on the issue you wish to grab, otherwise, the PR may be declined.
