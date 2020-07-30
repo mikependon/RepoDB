@@ -1,15 +1,78 @@
 # RepoDb Limitations
 
-We are frank and direct on our intention to the .NET community. RepoDb is a micro-ORM that you may consider have some advance features built from advance concepts/thingking. But, on top of these things, we are also having some limitations that may not work at all use-cases.
+We would like you and the community of .NET to understand the limitations of the library before you decide using it. RepoDb is a micro-ORM that has some advance features built from advance concepts. But, it also has its own limitations that may not work in all use-cases.
 
-**Disclaimer:** This page may not be the source of truth (as of writing this) as the other use-cases may not yet discovered. We will update this page even futher once we gathered the use-cases that cannot be supported. This page will also answer some of the FAQs towards this library.
+**Disclaimer:** This page may not contain all the limitations (as of writing this) as the other use-cases is not yet discovered. We will further update this page for any discoveries pertaining to the unsupported use-cases. This page will also answer some of the FAQs towards this library.
 
-## Topics Covered
-
-- [JOIN Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#join-query)
+## Known Limitations
 - [Composite Keys](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#composite-keys)
 - [Computed Columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#computed-columns)
-- [State Tracking](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#state-tracking)
+- [JOIN Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#join-query)
+
+## Composite Keys
+
+The default support to this will never be implemented as RepoDb tend to sided the other scenario that is eliminating this use-case. When you do the push operation in RepoDb (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
+
+**Scenario 1 - Insert**
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var id = connection.Insert<Person>(new Person { Name = "John Doe" });
+}
+```
+
+The return value is the ID of that row, whether the ID column is an identity (or not). The value of the Clustered PK cannot be returned. This is also true for the other operations, specially for the [Bulk Operations](https://repodb.net/feature/bulkoperations).
+
+**Scenario 2 - Update**
+
+Another example is for update operation, we tend to defaultly use the PK as the qualifier. See the code below
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var affectedRows = connection.Update<Person>(new Person { Name = "John Doe" }, 10045);
+}
+```
+
+In which, the 10045 is pointed to a single column in the DB, which is the PK.
+
+Therefore, the code below will fail if you have a clustered index in the Name and DateOfBirth column.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var affectedRows = connection.Update<Person>(new Person { Name = "John Doe", DateOfBirth = DateTime.Parse("1970/01/01"), Address = "New York" });
+}
+```
+
+RepoDb will instead ask you to do it this way, targetting the Clustered PK as the qualifiers.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var person = new Person { Name = "John Doe", DateOfBirth = DateTime.Parse("1970/01/01"), Address = "New York" };
+    var affectedRows = connection.Update(person, e => e.Name = person.Name && e.DateOfBirth = person.DateOfBirth);
+}
+```
+
+**Scenario 3 - Delete**
+
+Same goes the Update scenario, we use the PK as the default qualifier.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+    var affectedRows = connection.Delete<Person>(10045);
+}
+```
+
+It is impossible to map the value if you have Clustered PK.
+
+> There are lot of scenarios that makes RepoDb unusable for the use-case of having a table with Clustered PKs.
+
+## Computed Columns
+
 
 ## JOIN Query
 
@@ -148,69 +211,4 @@ using (var connection = new SqlConnection(connectionString).EnsureOpen())
 
 The good thing to this is controlled by you, and that is a very important case to us.
 
-## Composite Keys
 
-The default support to this will never be implemented as RepoDb tend to sided the other scenario that is eliminating this use-case. When you do the push operation in RepoDb (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
-
-**Scenario 1 - Insert**
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var id = connection.Insert<Person>(new Person { Name = "John Doe" });
-}
-```
-
-The return value is the ID of that row, whether the ID column is an identity (or not). The value of the Clustered PK cannot be returned. This is also true for the other operations, specially for the [Bulk Operations](https://repodb.net/feature/bulkoperations).
-
-**Scenario 2 - Update**
-
-Another example is for update operation, we tend to defaultly use the PK as the qualifier. See the code below
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var affectedRows = connection.Update<Person>(new Person { Name = "John Doe" }, 10045);
-}
-```
-
-In which, the 10045 is pointed to a single column in the DB, which is the PK.
-
-Therefore, the code below will fail if you have a clustered index in the Name and DateOfBirth column.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var affectedRows = connection.Update<Person>(new Person { Name = "John Doe", DateOfBirth = DateTime.Parse("1970/01/01"), Address = "New York" });
-}
-```
-
-RepoDb will instead ask you to do it this way, targetting the Clustered PK as the qualifiers.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var person = new Person { Name = "John Doe", DateOfBirth = DateTime.Parse("1970/01/01"), Address = "New York" };
-    var affectedRows = connection.Update(person, e => e.Name = person.Name && e.DateOfBirth = person.DateOfBirth);
-}
-```
-
-**Scenario 3 - Delete**
-
-Same goes the Update scenario, we use the PK as the default qualifier.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var affectedRows = connection.Delete<Person>(10045);
-}
-```
-
-It is impossible to map the value if you have Clustered PK.
-
-> There are lot of scenarios that makes RepoDb unusable for the use-case of having a table with Clustered PKs.
-
-## Computed Columns
-
-
-## State Tracking
