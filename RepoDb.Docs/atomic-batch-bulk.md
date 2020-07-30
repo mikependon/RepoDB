@@ -6,7 +6,7 @@ RepoDb supports the different set of operations by default. With these operation
 
 This operation refers to a single minute execution to accomplish the job. In most cases, if your dataset is small, then an atomic execution is much faster and optimal.
 
-To be specific, if you have created a list of Person and wish to save it in your database.
+To be specific, if you had created a list of Person and wish to save it in your database.
 
 ```csharp
 var people = CreatePeople(30);
@@ -38,13 +38,13 @@ By using this operation, you are able to optimize the execution in response to t
 - Kind of Data (Blob, Plain Text, etc)
 - Many More...
 
-To be specific, if you have created a list of Person like below and wish to save it in your database.
+To be specific, if you had created a list of Person like below and wish to save it in your database.
 
 ```csharp
 var people = CreatePeople(1000);
 ```
 
-And if you know that you can maximize the performance by sending 100 rows per batch. Then you do it like below.
+And you know that you can maximize the performance when sending 100 rows per batch, then you do it like below.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
@@ -61,7 +61,7 @@ This operation refers to "a kind of execution" that process all the data at once
 
 The drawback to this is that, it skips all the necessary checks of the underlying RDBMS data provider (i.e.: Logging, Auditing, Constraints and etc).
 
-To be specific, if you have created a list of Person like below and wish to save it in your database.
+To be specific, if you had created a list of Person like below and wish to save it in your database.
 
 ```csharp
 var people = CreatePeople(100000);
@@ -84,7 +84,7 @@ To make sure that your repository implementation can handle the smallest-to-the-
 
 We highly recommend to you to have your own standards of when to do the Batch operation. The only requirement is to have your magic number as a standard.
 
-In our case, we used the range of 31-1000.  A list with 30 rows (or less) will be processed by Atomic operations and a list with more than 1000 rows will be processed by Bulk operations.
+In our case, we used the range of 31-1000.  A list with 30 rows (or less) will be processed by Atomic operations, and a list with more than 1000 rows will be processed by Bulk operations.
 
 See the sample code below for SaveAll.
 
