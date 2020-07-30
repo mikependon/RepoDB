@@ -1,12 +1,12 @@
 # Edge Case on Bulk Operations
 
-In RepoDb, the bulk operations are not just the normal bulk operations. They are addressing some very important edge-cases that many ORMs in .NET space did not solved.
+It is quite important for us to relay to you the edge-cases that is being addressed by the bulk operations embedded in this library. We strongly believe that the bulk operations in RepoDb library are addressing the use-cases that is mainly not solved by other ORMs.
 
-## Parameters
+## Call Parameters
 
-All the bulk operations (i.e: [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge)) are accepting different kind of parameters.
+This is pertained to the simplicity of the invocations when calling the bulk operations. All the bulk operations (i.e: [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge)) are accepting different kind of parameters.
  
-#### DataReader
+#### Via DataReader
 
 ```csharp
 using (var sourceConnection = new OracleConnection("OracleConnectionString"))
@@ -21,9 +21,7 @@ using (var sourceConnection = new OracleConnection("OracleConnectionString"))
 }
 ```
 
-#### DataTable
-
-Assuming the `ConvertToDataTable()` method is existing.
+#### Via DataTable
 
 ```csharp
 var people = new List<Person>();
@@ -35,7 +33,9 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-#### IEnumerable&lt;T&gt;
+Assuming the `ConvertToDataTable()` method is existing.
+
+#### Via IEnumerable&lt;T&gt;
 
 ```csharp
 var people = new List<Person>();
@@ -49,9 +49,9 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 
 ## Identity Columns
 
-Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations are special in a way of bulk-processing the huge datasets but still be able to retrieve the new generated identity columns value back to the data models.
+Both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations are special in a way of bulk-processing the huge datasets. By using these operations, you are able to retrieve the newly generated identity column values from your data models, just right after the execution.
 
-It is a very common and is an important use-case to most. Imagine bulk inserting the huge datasets and have all the identities referenced back to your application for building relationships.
+We believe that it is a very common and is an important use-case to you (and/or most developers). Imagine bulk inserting the huge datasets and have all the identities referenced back to your application for building relationships.
 
 To enable this, simply set the `isReturnIdentity` argument to `true` when calling the operations.
 
