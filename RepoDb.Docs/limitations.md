@@ -5,6 +5,7 @@ We would like you and the community of .NET to understand the limitations of the
 **Disclaimer:** This page may not contain all the limitations as the other use-cases is not yet discovered. We will further update this page for any discoveries pertaining to the use-cases that cannot be supported (or impossible to support).
 
 ## Known Limitations
+
 - [Composite Keys](#composite-keys)
 - [Computed Columns](#computed-columns)
 - [JOIN Query (Support)](#join-query)
@@ -201,7 +202,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 We understand the reality that without having a support to JOIN Query will somehow eliminate the concepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDb as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
 
-We see that majority of the problems of the RDBMS data providers are managing the relationships. These includes the constraints, delegations, cascading and many more. To maintain the robustness of the library and put the control to the users when doing the things, we purposely not support this feature (for now), up until we have a much better way of doing it ahead of any other existing libraries.
+We see that majority of the problems of the RDBMS data providers are managing the relationships. These includes the constraints, delegations, cascading and many more. To maintain the robustness of the library and put the control to the users when doing the things, we purposely did not supported this feature (for now), up until we have a much better solution ahead of other ORM libraries.
 
 **Example**
 
