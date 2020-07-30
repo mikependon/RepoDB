@@ -33,8 +33,6 @@ In addition, RepoDb does support the different way-of-executions (the [atomic](h
 
 ## Important Attributes
 
-Below are some of the important attributes that is a part of the package and you will easily leverage being a user of this library.
-
 | Attributes            | Description                                                                                                                                                                                            |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Easy-To-Use**       | The operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.                   |
