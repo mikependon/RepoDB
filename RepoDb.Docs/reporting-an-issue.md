@@ -97,7 +97,7 @@ Below are some of the considerations for us to place an issue as a [for-grabs](h
 - If we found the issue is not a breaking-change.
 - If there is an agreement with you and/or the other parties.
 
-## :heavy_check_mark: Gitter and Twitter
+## Gitter and Twitter
 
 You can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitter](https://twitter.com/home) anytime. Usually, the issue reported here is [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion). However, depends on the outcome of the discussion, we will create an issue on our [GitHub](https://github.com/mikependon/RepoDb/issues) page and placing the right type-of-issue.
 
@@ -108,7 +108,7 @@ You can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitter]
 - Issue a proper label.
 - Tag the person whom we have collaborated with.
 
-## :heavy_check_mark: StackOverflow
+## StackOverflow
 
 YOu can create a [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) or [bug](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Abug) in [StackOverflow](https://stackoverflow.com/search?q=RepoDb) by tagging **RepoDb**. We are visiting the site from time-to-time.
 
