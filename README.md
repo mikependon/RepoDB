@@ -31,20 +31,22 @@ When you do the [bulk operations](https://repodb.net/feature/bulkoperations), th
 
 In addition, RepoDb does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operations), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operations) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operations)). Through this, it is easy for you to establish your repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance of your application.
 
-## Important Attributes
+<details>
+<summary><b>Important Attributes</b></summary>
 
-| Attributes            | Description                                                                                                                                                                                            |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Easy-To-Use**       | The operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.                   |
-| **High Performant**   | RepoDb caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.                       |
-| **Memory Efficient**  | RepoDb extracts and caches your object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.            |
-| **High Quality**      | RepoDb is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and is used by various critical systems that are running in the Production environment. |
+<p>
 
-## Library Limitations
+**Easy-to-use** - the operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.
 
-We are frank and direct to share to you and to the .NET community the things the library is capable and is-not capable of doing.
+**High performant** - it caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
 
-Please visit this [link](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md) to learn more about the limitations.
+**Memory efficient** - it extracts and caches your object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+
+**High quality** - it is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and is used by various critical systems that are running in the Production environment.
+
+</p>
+
+</details>
 
 ## Get Started
 
@@ -103,6 +105,10 @@ The benchmark result shown on this section is the result of the community-approv
 Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
+
+## Library Limitations
+
+It is very important for you and to the community of .NET to learn the things the library is capable and is-not capable of doing, so please spend time reading the [limitation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md) page before using the library.
 
 ## Contributions
 
