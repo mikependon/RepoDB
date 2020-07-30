@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
-using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 
@@ -20,23 +18,6 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<int, DbType?> maps = new ConcurrentDictionary<int, DbType?>();
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the conversion type when converting the instance of <see cref="DbDataReader"/> object into its destination .NET CLR Types.
-        /// The default value is <see cref="ConversionType.Default"/>.
-        /// </summary>
-        [Obsolete("Use the 'Converter.ConversionType' instead.")]
-        public static ConversionType ConversionType
-        {
-            get { return Converter.ConversionType; }
-            set { Converter.ConversionType = value; }
-        }
-
-        #endregion
-
-        #region Methods
 
         #region Type Level
 
@@ -165,76 +146,6 @@ namespace RepoDb
             // Try get the value
             maps.TryRemove(key, out value);
         }
-
-        #region Obselete
-
-        /*
-         * Map
-         */
-
-        /// <summary>
-        /// Adds a mapping between a .NET CLR type and a <see cref="DbType"/> object.
-        /// </summary>
-        /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
-        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
-        [Obsolete("Use the 'Add' method instead.")]
-        public static void Map<T>(DbType dbType) =>
-            Add(typeof(T), dbType);
-
-        /// <summary>
-        /// Adds a mapping between a .NET CLR type and a <see cref="DbType"/> object.
-        /// </summary>
-        /// <typeparam name="T">The .NET CLR type to be mapped.</typeparam>
-        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
-        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        [Obsolete("Use the 'Add' method instead.")]
-        public static void Map<T>(DbType dbType,
-            bool force) =>
-            Add(typeof(T), dbType, force);
-
-        /// <summary>
-        /// Adds a mapping between a .NET CLR type and a <see cref="DbType"/> object.
-        /// </summary>
-        /// <param name="type">The .NET CLR type to be mapped.</param>
-        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
-        [Obsolete("Use the 'Add' method instead.")]
-        public static void Map(Type type,
-            DbType dbType) =>
-            Add(type, dbType, false);
-
-        /// <summary>
-        /// Adds a mapping between a .NET CLR type and a <see cref="DbType"/> object.
-        /// </summary>
-        /// <param name="type">The .NET CLR type to be mapped.</param>
-        /// <param name="dbType">The <see cref="DbType"/> object where to map the .NET CLR type.</param>
-        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        [Obsolete("Use the 'Add' method instead.")]
-        public static void Map(Type type,
-            DbType dbType,
-            bool force) =>
-            Add(type, dbType, force);
-
-        /*
-         * Unmap
-         */
-
-        /// <summary>
-        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
-        /// </summary>
-        /// <typeparam name="T">The .NET CLR type mapping to be removed.</typeparam>
-        [Obsolete("Use the 'Remove' method instead.")]
-        public static void Unmap<T>() =>
-            Remove(typeof(T));
-
-        /// <summary>
-        /// Removes the mapping of the .NET CLR type and <see cref="DbType"/> object.
-        /// </summary>
-        /// <param name="type">The .NET CLR type mapping to be removed.</param>
-        [Obsolete("Use the 'Remove' method instead.")]
-        public static void Unmap(Type type) =>
-            Remove(type);
-
-        #endregion
 
         #endregion
 
@@ -578,8 +489,6 @@ namespace RepoDb
                 throw new NullReferenceException($"The argument '{argument}' cannot be null.");
             }
         }
-
-        #endregion
 
         #endregion
     }

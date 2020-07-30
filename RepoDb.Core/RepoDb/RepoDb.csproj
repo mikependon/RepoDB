@@ -52,6 +52,7 @@
     <Compile Remove="Interfaces\IIdentityOptions.cs" />
     <Compile Remove="Interfaces\IPrimaryOptions.cs" />
     <Compile Remove="Interfaces\IPropertyOptions.cs" />
+    <Compile Remove="Mappers\PropertyTypeHandlerMapper.cs" />
     <Compile Remove="PerformanceMonitor.cs" />
     <Compile Remove="PrimaryOptions.cs" />
     <Compile Remove="Properties\AssemblyInfo.cs" />

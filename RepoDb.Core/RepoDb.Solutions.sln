@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs"
 		..\RepoDb.Docs\coding-standards.md = ..\RepoDb.Docs\coding-standards.md
 		..\RepoDb.Docs\development-experience.md = ..\RepoDb.Docs\development-experience.md
 		..\RepoDb.Docs\issuing-a-pull-request.md = ..\RepoDb.Docs\issuing-a-pull-request.md
+		..\RepoDb.Docs\limitations.md = ..\RepoDb.Docs\limitations.md
 		..\RepoDb.Docs\reporting-an-issue.md = ..\RepoDb.Docs\reporting-an-issue.md
 	EndProjectSection
 EndProject
