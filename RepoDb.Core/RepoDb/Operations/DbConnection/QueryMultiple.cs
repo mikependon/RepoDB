@@ -147,11 +147,13 @@ namespace RepoDb
                 where2.MapTo<T2>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -192,7 +194,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -367,11 +369,13 @@ namespace RepoDb
                 where3.MapTo<T3>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -416,7 +420,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -631,11 +635,13 @@ namespace RepoDb
                 where4.MapTo<T4>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -684,7 +690,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -937,11 +943,13 @@ namespace RepoDb
                 where5.MapTo<T5>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -994,7 +1002,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1285,11 +1293,13 @@ namespace RepoDb
                 where6.MapTo<T6>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1347,7 +1357,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1676,11 +1686,13 @@ namespace RepoDb
                 where7.MapTo<T7>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1742,7 +1754,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1883,11 +1895,13 @@ namespace RepoDb
                 where2.MapTo<T2>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1928,7 +1942,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2103,11 +2117,13 @@ namespace RepoDb
                 where3.MapTo<T3>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2152,7 +2168,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2367,11 +2383,13 @@ namespace RepoDb
                 where4.MapTo<T4>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2420,7 +2438,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2673,11 +2691,13 @@ namespace RepoDb
                 where5.MapTo<T5>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2730,7 +2750,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3021,11 +3041,13 @@ namespace RepoDb
                 where6.MapTo<T6>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3083,7 +3105,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3412,11 +3434,13 @@ namespace RepoDb
                 where7.MapTo<T7>()
             };
             var param = QueryGroup.AsMappedObject(maps, false);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryMultiple(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3478,7 +3502,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                trace.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

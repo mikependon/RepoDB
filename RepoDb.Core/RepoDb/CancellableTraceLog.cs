@@ -1,4 +1,6 @@
-﻿namespace RepoDb
+﻿using System;
+
+namespace RepoDb
 {
     /// <summary>
     /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
@@ -8,13 +10,16 @@
         /// <summary>
         /// Creates a new instance of <see cref="CancellableTraceLog"/> object.
         /// </summary>
+        /// <param name="sessionId">The session identifier for the current trace object.</param>
         /// <param name="statement">A SQL statement that was used in the trace operation.</param>
         /// <param name="parameter">An object that was used as a parameter in the operation.</param>
         /// <param name="result">A result of the operation.</param>
-        protected internal CancellableTraceLog(string statement,
+        protected internal CancellableTraceLog(Guid sessionId,
+            string statement,
             object parameter,
             object result)
-            : base(statement,
+            : base(sessionId,
+                  statement,
                   parameter,
                   result,
                   null)

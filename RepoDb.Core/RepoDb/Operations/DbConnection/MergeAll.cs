@@ -1017,11 +1017,13 @@ namespace RepoDb
 
             // Get the context
             var context = MergeAllExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, batchSize, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
                 trace.BeforeMergeAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1182,7 +1184,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMergeAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterMergeAll(new TraceLog(sessionId, context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1226,6 +1228,7 @@ namespace RepoDb
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
+            var sessionId = Guid.Empty;
 
             // Get the properties
             if (type.IsGenericType == true)
@@ -1257,7 +1260,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("UpsertAll.Before", entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, "UpsertAll.Before", entities, null);
                 trace.BeforeMergeAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1338,7 +1342,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMergeAll(new TraceLog("UpsertAll.After", entities, result,
+                trace.AfterMergeAll(new TraceLog(sessionId, "UpsertAll.After", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1528,11 +1532,13 @@ namespace RepoDb
 
             // Get the context
             var context = MergeAllExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, batchSize, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
                 trace.BeforeMergeAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1693,7 +1699,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMergeAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterMergeAll(new TraceLog(sessionId, context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1737,6 +1743,7 @@ namespace RepoDb
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
+            var sessionId = Guid.Empty;
 
             // Get the properties
             if (type.IsGenericType == true)
@@ -1768,7 +1775,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog("UpsertAll.Before", entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, "UpsertAll.Before", entities, null);
                 trace.BeforeMergeAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1849,7 +1857,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMergeAll(new TraceLog("UpsertAll.After", entities, result,
+                trace.AfterMergeAll(new TraceLog(sessionId, "UpsertAll.After", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

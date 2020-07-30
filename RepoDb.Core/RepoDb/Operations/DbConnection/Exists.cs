@@ -781,11 +781,13 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetExistsText(request);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeExists(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -814,7 +816,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterExists(new TraceLog(commandText, param, result,
+                trace.AfterExists(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -846,11 +848,13 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetExistsText(request);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeExists(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -879,7 +883,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterExists(new TraceLog(commandText, param, result,
+                trace.AfterExists(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

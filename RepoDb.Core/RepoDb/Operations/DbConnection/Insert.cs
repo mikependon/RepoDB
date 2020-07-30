@@ -527,11 +527,13 @@ namespace RepoDb
 
             // Get the context
             var context = InsertExecutionContextCache<TEntity>.Get(tableName, fields, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entity, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
                 trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -577,7 +579,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(context.CommandText, entity, result,
+                trace.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -698,11 +700,13 @@ namespace RepoDb
 
             // Get the context
             var context = InsertExecutionContextCache<TEntity>.Get(tableName, fields, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entity, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
                 trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -748,7 +752,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(context.CommandText, entity, result,
+                trace.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

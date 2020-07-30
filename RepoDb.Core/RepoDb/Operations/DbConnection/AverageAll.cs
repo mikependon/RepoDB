@@ -390,11 +390,13 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetAverageAllText(request);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeAverageAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -423,7 +425,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterAverageAll(new TraceLog(commandText, param, result,
+                trace.AfterAverageAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -455,11 +457,13 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetAverageAllText(request);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeAverageAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -488,7 +492,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterAverageAll(new TraceLog(commandText, param, result,
+                trace.AfterAverageAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

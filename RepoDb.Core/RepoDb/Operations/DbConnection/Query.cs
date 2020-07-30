@@ -1189,6 +1189,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1199,7 +1200,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1228,7 +1230,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(commandText, param, result,
+                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1305,6 +1307,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1315,7 +1318,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1344,7 +1348,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(commandText, param, result,
+                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1427,6 +1431,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1437,7 +1442,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1467,7 +1473,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(commandText, param, result,
+                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1550,6 +1556,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1560,7 +1567,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1590,7 +1598,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(commandText, param, result,
+                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

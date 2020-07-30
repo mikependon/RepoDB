@@ -436,11 +436,13 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryAllText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -469,7 +471,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryAll(new TraceLog(commandText, param, result,
+                trace.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -538,6 +540,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryAllText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Database pre-touch for field definitions
             await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
@@ -545,7 +548,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -574,7 +578,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryAll(new TraceLog(commandText, param, result,
+                trace.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -651,11 +655,13 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryAllText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -685,7 +691,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryAll(new TraceLog(commandText, param, result,
+                trace.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -762,11 +768,13 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryAllText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeQueryAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -796,7 +804,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQueryAll(new TraceLog(commandText, param, result,
+                trace.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

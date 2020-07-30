@@ -1129,6 +1129,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1139,7 +1140,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeBatchQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1168,7 +1170,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBatchQuery(new TraceLog(commandText, param, result,
+                trace.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1221,6 +1223,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1231,7 +1234,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeBatchQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1260,7 +1264,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBatchQuery(new TraceLog(commandText, param, result,
+                trace.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1321,6 +1325,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1331,7 +1336,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeBatchQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1361,7 +1367,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBatchQuery(new TraceLog(commandText, param, result,
+                trace.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1422,6 +1428,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText(request);
             var param = (object)null;
+            var sessionId = Guid.Empty;
 
             // Converts to propery mapped object
             if (where != null)
@@ -1432,7 +1439,8 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
                 trace.BeforeBatchQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1462,7 +1470,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBatchQuery(new TraceLog(commandText, param, result,
+                trace.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

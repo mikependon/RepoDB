@@ -497,11 +497,13 @@ namespace RepoDb
 
             // Identify the number of entities (performance), get an execution context from cache
             context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
                 trace.BeforeInsertAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -666,7 +668,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterInsertAll(new TraceLog(sessionId, context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -849,11 +851,13 @@ namespace RepoDb
 
             // Identify the number of entities (performance), get an execution context from cache
             context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
                 trace.BeforeInsertAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1018,7 +1022,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsertAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterInsertAll(new TraceLog(sessionId, context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

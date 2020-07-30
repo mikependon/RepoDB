@@ -10,15 +10,18 @@ namespace RepoDb
         /// <summary>
         /// Creates an instance of <see cref="TraceLog"/> class.
         /// </summary>
+        /// <param name="sessionId">The session identifier for the current trace object.</param>
         /// <param name="statement">The command text in used.</param>
         /// <param name="parameter">The parameters passed.</param>
         /// <param name="result">The actual result if present.</param>
         /// <param name="executionTime">The elapsed time of the execution.</param>
-        protected internal TraceLog(string statement,
+        protected internal TraceLog(Guid sessionId,
+            string statement,
             object parameter,
             object result,
             TimeSpan? executionTime)
         {
+            SessionId = sessionId;
             Statement = statement;
             Parameter = parameter;
             Result = result;
@@ -27,6 +30,11 @@ namespace RepoDb
                 ExecutionTime = executionTime.Value;
             }
         }
+
+        /// <summary>
+        /// Gets the session identifier of the current trace.
+        /// </summary>
+        public Guid SessionId { get; }
 
         /// <summary>
         /// Gets the actual result of the actual operation execution.

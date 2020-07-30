@@ -850,11 +850,13 @@ namespace RepoDb
 
             // Get the context
             var context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
                 trace.BeforeUpdateAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -982,7 +984,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdateAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1121,11 +1123,13 @@ namespace RepoDb
 
             // Get the context
             var context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var sessionId = Guid.Empty;
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(context.CommandText, entities, null);
+                sessionId = Guid.NewGuid();
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
                 trace.BeforeUpdateAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1253,7 +1257,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdateAll(new TraceLog(context.CommandText, entities, result,
+                trace.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
