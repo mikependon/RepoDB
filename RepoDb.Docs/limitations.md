@@ -6,12 +6,12 @@ We are frank and direct on our intention to the .NET community. RepoDb is a micr
 
 ## Topics Covered
 
-- [Support to JOIN Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#support-to-join-query)
-- [Clustered Primary Keys](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#clustered-primary-keys)
+- [JOIN Query](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#join-query)
+- [Composite Keys](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#composite-keys)
 - [Computed Columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#computed-columns)
 - [State Tracking](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md#state-tracking)
 
-## Support to JOIN Query
+## JOIN Query
 
 We understand the reality that without having a support to JOIN Query will somehow eliminate the coccepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDb as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
 
@@ -148,7 +148,7 @@ using (var connection = new SqlConnection(connectionString).EnsureOpen())
 
 The good thing to this is controlled by you, and that is a very important case to us.
 
-## Clustered Primary Keys
+## Composite Keys
 
 The default support to this will never be implemented as RepoDb tend to sided the other scenario that is eliminating this use-case. When you do the push operation in RepoDb (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
 
