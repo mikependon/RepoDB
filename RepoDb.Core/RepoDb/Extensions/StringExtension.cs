@@ -11,6 +11,10 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class StringExtension
     {
+        /*
+         * Join
+         */
+
         /// <summary>
         /// Joins an array string with a given separator.
         /// </summary>
@@ -39,6 +43,10 @@ namespace RepoDb.Extensions
             return string.Join(separator, strings);
         }
 
+        /*
+         * AsAlphaNumeric
+         */
+
         /// <summary>
         /// Removes the non-alphanumeric characters.
         /// </summary>
@@ -62,6 +70,10 @@ namespace RepoDb.Extensions
             }
             return Regex.Replace(value, @"[^a-zA-Z0-9]", "_");
         }
+
+        /*
+         * AsUnquoted
+         */
 
         /// <summary>
         /// Unquotes a string.
@@ -106,14 +118,10 @@ namespace RepoDb.Extensions
         /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The unquoted string.</returns>
-        internal static string AsUnquotedInternal(this string value,
+        private static string AsUnquotedInternal(this string value,
             bool trim,
             IDbSetting dbSetting)
         {
-            if (dbSetting == null)
-            {
-                return value;
-            }
             if (!string.IsNullOrEmpty(dbSetting.OpeningQuote))
             {
                 value = value.Replace(dbSetting.OpeningQuote, string.Empty);
@@ -128,6 +136,10 @@ namespace RepoDb.Extensions
             }
             return value;
         }
+
+        /*
+         * AsQuoted
+         */
 
         /// <summary>
         /// Quotes a string.
@@ -168,16 +180,73 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
-            if (ignoreSchema || value.IndexOf(StringConstant.Period) < 0)
+            if (trim)
             {
-                return value.AsQuotedInternal(trim, dbSetting);
+                value = value.Trim();
+            }
+            var firstIndex = value.IndexOf(StringConstant.Period);
+            if (ignoreSchema || firstIndex < 0)
+            {
+                return value.AsQuotedInternal(dbSetting);
             }
             else
             {
-                var index = value.IndexOf(StringConstant.Period);
-                var schema = value.Substring(0, index);
-                var tableName = value.Substring(index + 1);
-                return string.Concat(schema.AsQuotedInternal(trim, dbSetting), StringConstant.Period, tableName.AsQuotedInternal(trim, dbSetting));
+                return AsQuotedForDatabaseSchemaTableInternal(value, dbSetting);
+            }
+        }
+
+        /// <summary>
+        /// Quotes a string for database, schema and a table.
+        /// </summary>
+        /// <param name="value">The string value to be quoted.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The quoted string.</returns>
+        private static string AsQuotedForDatabaseSchemaTableInternal(this string value,
+            IDbSetting dbSetting)
+        {
+            var splitted = value.Split(StringConstant.Period.ToCharArray());
+            if (splitted.Length > 2)
+            {
+                var list = new List<string>(splitted.Length);
+                var current = default(string);
+                foreach (var item in splitted)
+                {
+                    if (!string.IsNullOrEmpty(current))
+                    {
+                        if (current.StartsWith(dbSetting.OpeningQuote) && item.EndsWith(dbSetting.ClosingQuote))
+                        {
+                            list.Add(string.Concat(current, StringConstant.Period, item));
+                            current = null;
+                        }
+                    }
+                    else
+                    {
+                        if (item.StartsWith(dbSetting.OpeningQuote))
+                        {
+                            if (item.EndsWith(dbSetting.ClosingQuote))
+                            {
+                                list.Add(item.AsQuotedInternal(dbSetting));
+                            }
+                            else
+                            {
+                                current = item;
+                            }
+                        }
+                        else
+                        {
+                            list.Add(item.AsQuotedInternal(dbSetting));
+                        }
+                    }
+                }
+                if (current != null)
+                {
+                    list.Add(current.AsQuotedInternal(dbSetting));
+                }
+                return string.Join(StringConstant.Period, list);
+            }
+            else
+            {
+                return string.Join(StringConstant.Period, splitted.Select(item => item.AsQuotedInternal(dbSetting)));
             }
         }
 
@@ -185,21 +254,11 @@ namespace RepoDb.Extensions
         /// Quotes a string.
         /// </summary>
         /// <param name="value">The string value to be quoted.</param>
-        /// <param name="trim">The boolean value that indicates whether to trim the string before quoting.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The quoted string.</returns>
-        internal static string AsQuotedInternal(this string value,
-            bool trim,
+        private static string AsQuotedInternal(this string value,
             IDbSetting dbSetting)
         {
-            if (dbSetting == null)
-            {
-                return value;
-            }
-            if (trim)
-            {
-                value = value.Trim();
-            }
             if (!value.StartsWith(dbSetting.OpeningQuote))
             {
                 value = string.Concat(dbSetting.OpeningQuote, value);
@@ -208,8 +267,26 @@ namespace RepoDb.Extensions
             {
                 value = string.Concat(value, dbSetting.ClosingQuote);
             }
-            return trim ? value.Trim() : value;
+            return value;
         }
+
+        /*
+         * IsQuoted
+         */
+
+        /// <summary>
+        /// Checks whether a string is quoted.
+        /// </summary>
+        /// <param name="value">The string value to be quoted.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The quoted string.</returns>
+        public static bool IsQuoted(this string value,
+            IDbSetting dbSetting) =>
+            value?.StartsWith(dbSetting.OpeningQuote) == true && value?.EndsWith(dbSetting.ClosingQuote) == true;
+
+        /*
+         * AsEnumerable
+         */
 
         /// <summary>
         /// Returns the string as an enumerable.
@@ -220,6 +297,10 @@ namespace RepoDb.Extensions
         {
             yield return value;
         }
+
+        /*
+         * AsCharList
+         */
 
         /// <summary>
         /// Returns the string as an enumerable of character.
@@ -233,6 +314,10 @@ namespace RepoDb.Extensions
                 yield return c;
             }
         }
+
+        /*
+         * Others
+         */
 
         /// <summary>
         /// Returns the string as a field name in the database.

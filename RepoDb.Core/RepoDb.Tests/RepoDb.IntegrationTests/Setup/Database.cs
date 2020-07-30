@@ -113,6 +113,7 @@ namespace RepoDb.IntegrationTests.Setup
                 connection.Truncate("[sc].[IdentityTable]");
                 connection.Truncate("[dbo].[NonIdentityTable]");
                 connection.Truncate("[dbo].[Unorganized Table]");
+                connection.Truncate("[dbo].[Dotted.Table]");
                 connection.Truncate("[dbo].[PropertyHandler]");
             }
         }

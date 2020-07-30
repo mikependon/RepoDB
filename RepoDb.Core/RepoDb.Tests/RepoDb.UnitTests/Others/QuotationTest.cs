@@ -104,7 +104,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = text.AsQuoted(true, m_dbSetting);
-            var expected = "Database.Schema.[Dotted.Name]";
+            var expected = "[Database].[Schema].[Dotted.Name]";
 
             // Assert
             Assert.AreEqual(expected, actual);
