@@ -117,4 +117,4 @@ YOu can create a [question](https://github.com/mikependon/RepoDb/issues?q=is%3Ai
 - We will answer you directly in StackOverlow.
 - We will not report the issue on our GitHub page.
 
-> The questions or bugs issued at [StackOverflow](https://stackoverflow.com/search?q=RepoDb) is not tracked from our history. We recommend that you file an issue directly to our [GitHub](https://github.com/mikependon/RepoDb/issues) page.
+Please be noted that, the questions or bugs issued at [StackOverflow](https://stackoverflow.com/search?q=RepoDb) is not tracked from our history. We recommend that you file an issue directly to our [GitHub](https://github.com/mikependon/RepoDb/issues) page.
