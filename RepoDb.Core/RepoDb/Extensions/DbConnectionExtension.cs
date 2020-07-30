@@ -1631,9 +1631,12 @@ namespace RepoDb
             var commandArrayParameters = (IList<CommandArrayParameter>)null;
 
             // Return if any of this
-            if (param is ExpandoObject || param is IDictionary<string, object>)
+            if (param is ExpandoObject || param is System.Collections.IDictionary)
             {
-                return AsCommandArrayParameters((IDictionary<string, object>)param, dbSetting, ref commandText);
+                if (param is IDictionary<string, object>)
+                {
+                    return AsCommandArrayParameters((IDictionary<string, object>)param, dbSetting, ref commandText);
+                }
             }
             else if (param is QueryField)
             {
@@ -1652,14 +1655,17 @@ namespace RepoDb
                 // Iterate the properties
                 foreach (var property in param.GetType().GetProperties())
                 {
-                    // Skip if it is not an array
-                    if (property.PropertyType.IsArray == false)
+                    // String is an enumerable
+                    if (property.PropertyType == typeof(string))
                     {
                         continue;
                     }
 
-                    // Skip if it is an array
-                    if (property.DeclaringType.IsGenericType == false && property.PropertyType == typeof(byte[]))
+                    // Get the value
+                    var value = property.GetValue(param);
+
+                    // Skip if it is not an enumerable
+                    if ((value is System.Collections.IEnumerable) == false)
                     {
                         continue;
                     }
@@ -1709,8 +1715,14 @@ namespace RepoDb
                 // Get type of the value
                 var type = kvp.Value?.GetType();
 
-                // Skip if it is not an array
-                if (type?.IsArray == false)
+                // String is an enumerable
+                if (type == typeof(string))
+                {
+                    continue;
+                }
+
+                // Skip if it is not an enumerable
+                if ((kvp.Value is System.Collections.IEnumerable) == false)
                 {
                     continue;
                 }
@@ -1774,8 +1786,14 @@ namespace RepoDb
                 // Get type of the value
                 var type = field.Parameter.Value?.GetType();
 
-                // Skip if it is not an array
-                if (type.IsArray == false)
+                // String is an enumerable
+                if (type == typeof(string))
+                {
+                    continue;
+                }
+
+                // Skip if it is not an enumerable
+                if ((field.Parameter.Value is System.Collections.IEnumerable) == false)
                 {
                     continue;
                 }
@@ -1819,10 +1837,16 @@ namespace RepoDb
             // Get type of the value
             var type = queryField.Parameter.Value?.GetType();
 
-            // Skip if it is not an array
-            if (type.IsArray == false)
+            // String is an enumerable
+            if (type == typeof(string))
             {
-                return null;
+                return default;
+            }
+
+            // Skip if it is not an enumerable
+            if ((queryField.Parameter.Value is System.Collections.IEnumerable) == false)
+            {
+                return default;
             }
 
             // Initialize the array if it not yet initialized
