@@ -1,8 +1,8 @@
 # Coding Standards
 
-Below are some of the things the developer needs to consider when doing a code change on the project. We hope that you will familiarize the entire contents before contributing, and thank you for that!
+Below are some of the things you (as the pull-requestor) needs to consider when doing a code change on the project. We hope that you will familiarize the entire contents before contributing, and thank you for that!
 
-Please be noted that this coding standard is not a strict compliance for a developer to push a pull-requests to us. Your code will thoroughly be reviewed and evaluated. Further collaborations may be done between the contributor and us (if there are any clarrifications before merging).
+Please be noted that this coding standard is not a strict compliance for you to make a PR towards us. Though, your code will be reviewed and evaluated thoroughly. Further collaborations may be done between you (the contributor) and us if there are any clarrifications before merging.
 
 **Disclaimer:** Some of the written standards on this page are the preferences of the author itself. We are listening to any comments, therefore please do let us know if you think we need to adjust the standards.
 
