@@ -92,42 +92,6 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(4) ? "text" : reader.GetString(4));
         }
 
-        /// <summary>
-        /// Gets the actual schema of the table from the database.
-        /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <returns>The actual table schema.</returns>
-        private string GetSchema(string tableName)
-        {
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[0].AsUnquoted(true, m_dbSetting);
-            }
-
-            // Return the unquoted
-            return m_dbSetting.DefaultSchema;
-        }
-
-        /// <summary>
-        /// Gets the actual name of the table from the database.
-        /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <returns>The actual table name.</returns>
-        private string GetTableName(string tableName)
-        {
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[1].AsUnquoted(true, m_dbSetting);
-            }
-
-            // Return the unquoted
-            return tableName.AsUnquoted(true, m_dbSetting);
-        }
-
         #endregion
 
         #region Methods
@@ -149,8 +113,8 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new
             {
-                Schema = GetSchema(tableName),
-                TableName = GetTableName(tableName)
+                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting),
+                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting)
             };
 
             // Iterate and extract
@@ -184,8 +148,8 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new
             {
-                Schema = GetSchema(tableName),
-                TableName = GetTableName(tableName)
+                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting),
+                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting)
             };
 
             // Iterate and extract

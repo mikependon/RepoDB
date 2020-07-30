@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using RepoDb.Attributes;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
@@ -78,5 +79,72 @@ namespace RepoDb.Extensions
         public static string GetMappedName<TEntity>()
             where TEntity : class =>
             GetMappedName(typeof(TEntity));
+
+        /*
+         * GetSchema
+         */
+
+        /// <summary>
+        /// Gets the actual schema of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <returns>The actual table schema.</returns>
+        public static string GetSchema(string tableName) =>
+            GetSchema(tableName, null);
+
+        /// <summary>
+        /// Gets the actual schema of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The actual table schema.</returns>
+        public static string GetSchema(string tableName,
+            IDbSetting dbSetting)
+        {
+            // Get the schema and table name
+            var index = tableName.IndexOf(".");
+            if (index > 0)
+            {
+                return tableName.Substring(0, index).AsUnquoted(true, dbSetting);
+            }
+
+            // Return the unquoted
+            return dbSetting.DefaultSchema;
+        }
+
+        /*
+         * GetTableName
+         */
+
+        /// <summary>
+        /// Gets the actual name of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <returns>The actual table name.</returns>
+        public static string GetTableName(string tableName) =>
+            GetTableName(tableName, null);
+
+        /// <summary>
+        /// Gets the actual name of the table from the database.
+        /// </summary>
+        /// <param name="tableName">The passed table name.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The actual table name.</returns>
+        public static string GetTableName(string tableName,
+            IDbSetting dbSetting)
+        {
+            // Get the schema and table name
+            var index = tableName.IndexOf(".");
+            if (index > 0)
+            {
+                if (tableName.Length > index)
+                {
+                    return tableName.Substring(index + 1).AsUnquoted(true, dbSetting);
+                }
+            }
+
+            // Return the unquoted
+            return tableName.AsUnquoted(true, dbSetting);
+        }
     }
 }

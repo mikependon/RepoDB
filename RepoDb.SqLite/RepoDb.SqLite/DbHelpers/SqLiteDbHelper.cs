@@ -52,7 +52,7 @@ namespace RepoDb.DbHelpers
         /// <returns>The command text.</returns>
         private string GetCommandText(string tableName)
         {
-            return $"pragma table_info({tableName});";
+            return $"pragma table_info({DataEntityExtension.GetTableName(tableName)});";
         }
 
         /// <summary>
@@ -76,42 +76,6 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Gets the actual schema of the table from the database.
-        /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <returns>The actual table schema.</returns>
-        private string GetSchema(string tableName)
-        {
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[0].AsUnquoted(true, m_dbSetting);
-            }
-
-            // Return the unquoted
-            return m_dbSetting.DefaultSchema;
-        }
-
-        /// <summary>
-        /// Gets the actual name of the table from the database.
-        /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <returns>The actual table name.</returns>
-        private string GetTableName(string tableName)
-        {
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[1].AsUnquoted(true, m_dbSetting);
-            }
-
-            // Return the unquoted
-            return tableName.AsUnquoted(true, m_dbSetting);
-        }
-
-        /// <summary>
         /// Gets the list of <see cref="DbField"/> of the table.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
@@ -126,7 +90,7 @@ namespace RepoDb.DbHelpers
         {
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
-            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = GetTableName(tableName) });
+            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = DataEntityExtension.GetTableName(tableName) });
             var fields = ParseTableFieldsFromSql(sql);
 
             // Iterate the fields
@@ -219,13 +183,9 @@ namespace RepoDb.DbHelpers
         {
             // Variables
             var commandText = GetCommandText(tableName);
-            var param = new
-            {
-                TableName = GetTableName(tableName)
-            };
 
             // Iterate and extract
-            using (var reader = await connection.ExecuteReaderAsync(commandText, param, transaction: transaction))
+            using (var reader = await connection.ExecuteReaderAsync(commandText, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
                 var identity = GetIdentityFieldName(connection, tableName, transaction);

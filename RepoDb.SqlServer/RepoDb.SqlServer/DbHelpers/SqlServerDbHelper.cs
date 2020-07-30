@@ -112,50 +112,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
                 reader.IsDBNull(7) ? "text" : reader.GetString(4));
         }
-
-        /// <summary>
-        /// Gets the actual schema of the table from the database.
-        /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The actual table schema.</returns>
-        private string GetSchema(string tableName,
-            IDbSetting dbSetting)
-        {
-            // Get the schema and table name
-            var index = tableName.IndexOf(".");
-            if (index > 0)
-            {
-                return tableName.Substring(0, index).AsUnquoted(true, dbSetting);
-            }
-
-            // Return the unquoted
-            return dbSetting.DefaultSchema;
-        }
-
-        /// <summary>
-        /// Gets the actual name of the table from the database.
-        /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The actual table name.</returns>
-        private string GetTableName(string tableName,
-            IDbSetting dbSetting)
-        {
-            // Get the schema and table name
-            var index = tableName.IndexOf(".");
-            if (index > 0)
-            {
-                if (tableName.Length > index)
-                {
-                    return tableName.Substring(index + 1).AsUnquoted(true, dbSetting);
-                }
-            }
-
-            // Return the unquoted
-            return tableName.AsUnquoted(true, dbSetting);
-        }
-
+        
         #endregion
 
         #region Methods
@@ -178,8 +135,8 @@ namespace RepoDb.DbHelpers
             var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = GetSchema(tableName, setting),
-                TableName = GetTableName(tableName, setting)
+                Schema = DataEntityExtension.GetSchema(tableName, setting),
+                TableName = DataEntityExtension.GetTableName(tableName, setting)
             };
 
             // Iterate and extract
@@ -214,8 +171,8 @@ namespace RepoDb.DbHelpers
             var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = GetSchema(tableName, setting),
-                TableName = GetTableName(tableName, setting)
+                Schema = DataEntityExtension.GetSchema(tableName, setting),
+                TableName = DataEntityExtension.GetTableName(tableName, setting)
             };
 
             // Iterate and extract

@@ -72,15 +72,7 @@ namespace RepoDb
         private static string GetTableName(string tableName,
             IDbSetting dbSetting)
         {
-            // Get the schema and table name
-            if (tableName.IndexOf(".") > 0)
-            {
-                var splitted = tableName.Split(".".ToCharArray());
-                return splitted[1].AsUnquoted(true, dbSetting);
-            }
-
-            // Return the unquoted
-            return tableName.AsUnquoted(true, dbSetting);
+            return DataEntityExtension.GetTableName(tableName, dbSetting);
         }
 
         /// <summary>
