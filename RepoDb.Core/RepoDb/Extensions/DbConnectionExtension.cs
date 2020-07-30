@@ -1655,19 +1655,22 @@ namespace RepoDb
                 // Iterate the properties
                 foreach (var property in param.GetType().GetProperties())
                 {
-                    // String is an enumerable
-                    if (property.PropertyType == typeof(string))
+                    if (property.PropertyType.IsArray == false)
                     {
-                        continue;
-                    }
+                        // String is an enumerable
+                        if (property.PropertyType == typeof(string))
+                        {
+                            continue;
+                        }
 
-                    // Get the value
-                    var value = property.GetValue(param);
+                        // Get the value
+                        var value = property.GetValue(param);
 
-                    // Skip if it is not an enumerable
-                    if ((value is System.Collections.IEnumerable) == false)
-                    {
-                        continue;
+                        // Skip if it is not an enumerable
+                        if ((value is System.Collections.IEnumerable) == false)
+                        {
+                            continue;
+                        }
                     }
 
                     // Initialize the array if it not yet initialized
