@@ -18178,18 +18178,18 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
-        {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Setup
-                var param = new QueryField("Id", Operation.NotEqual, 1);
+        //[TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        //public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
+        //{
+        //    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+        //    {
+        //        // Setup
+        //        var param = new QueryField("Id", Operation.NotEqual, 1);
 
-                // Act
-                repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
-            }
-        }
+        //        // Act
+        //        repository.ExecuteQuery<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParametersAreNotDefined()
@@ -18532,18 +18532,18 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
-        {
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Setup
-                var param = new QueryField("Id", Operation.NotEqual, 1);
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
+        //{
+        //    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+        //    {
+        //        // Setup
+        //        var param = new QueryField("Id", Operation.NotEqual, 1);
 
-                // Act
-                var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
-            }
-        }
+        //        // Act
+        //        var result = repository.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()

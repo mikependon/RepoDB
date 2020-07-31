@@ -1,7 +1,6 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.StatementBuilders;
 using System;
 
 namespace RepoDb.Attributes

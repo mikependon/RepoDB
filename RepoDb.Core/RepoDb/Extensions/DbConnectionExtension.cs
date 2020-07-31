@@ -1,4 +1,5 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
@@ -1799,6 +1800,24 @@ namespace RepoDb
                 if ((field.Parameter.Value is System.Collections.IEnumerable) == false)
                 {
                     continue;
+                }
+
+                // Check the IN operation parameters
+                if (field.Operation == Operation.In || field.Operation == Operation.NotIn)
+                {
+                    if (commandText.IndexOf(string.Concat(field.Parameter.Name, "_In_")) > 0)
+                    {
+                        continue;
+                    }
+                }
+
+                // Check the BETWEEN operation parameters
+                else if (field.Operation == Operation.Between || field.Operation == Operation.NotBetween)
+                {
+                    if (commandText.IndexOf(string.Concat(field.Parameter.Name, "_Left")) > 0)
+                    {
+                        continue;
+                    }
                 }
 
                 // Initialize the array if it not yet initialized

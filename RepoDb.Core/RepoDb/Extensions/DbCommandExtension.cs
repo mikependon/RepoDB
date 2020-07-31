@@ -354,7 +354,61 @@ namespace RepoDb.Extensions
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
             {
-                CreateParameters(command, queryField, null, entityType);
+                if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
+                {
+                    CreateParametersForInOperation(command, queryField);
+                }
+                else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
+                {
+                    CreateParametersForBetweenOperation(command, queryField);
+                }
+                else
+                {
+                    CreateParameters(command, queryField, null, entityType);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a command parameter from the <see cref="QueryField"/> with <see cref="Operation.In"/>.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
+        internal static void CreateParametersForInOperation(this IDbCommand command,
+            QueryField queryField)
+        {
+            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
+                        .OfType<object>()
+                        .AsList();
+            if (values.Any() == true)
+            {
+                for (var i = 0; i < values.Count; i++)
+                {
+                    var name = string.Concat(queryField.Parameter.Name, "_In_", i);
+                    command.Parameters.Add(CreateParameter(command, name, values[i], null));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a command parameter from the <see cref="QueryField"/> with <see cref="Operation.In"/>.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
+        internal static void CreateParametersForBetweenOperation(this IDbCommand command,
+            QueryField queryField)
+        {
+            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
+                        .OfType<object>()
+                        .AsList();
+            if (values?.Count == 2)
+            {
+                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), values[0], null));
+                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), values[1], null));
+            }
+            else
+            {
+                throw new InvalidParameterException("The values for 'Between' and 'NotBetween' operations must be 2.");
             }
         }
 
@@ -376,11 +430,11 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            // Validate, make sure to only have the proper operation
-            if (queryField.Operation != Operation.Equal)
-            {
-                throw new InvalidOperationException($"Operation must only be '{nameof(Operation.Equal)}' when calling the 'Execute' methods.");
-            }
+            //// Validate, make sure to only have the proper operation
+            //if (queryField.Operation != Operation.Equal)
+            //{
+            //    throw new InvalidOperationException($"Operation must only be '{nameof(Operation.Equal)}' when calling the 'Execute' methods.");
+            //}
 
             // Get the values
             var value = queryField.Parameter.Value;

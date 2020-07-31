@@ -10245,18 +10245,18 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
-        {
-            using (var repository = new IdentityTableRepository())
-            {
-                // Setup
-                var param = new QueryField("Id", Operation.NotEqual, 1);
+        //[TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        //public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
+        //{
+        //    using (var repository = new IdentityTableRepository())
+        //    {
+        //        // Setup
+        //        var param = new QueryField("Id", Operation.NotEqual, 1);
 
-                // Act
-                repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
-            }
-        }
+        //        // Act
+        //        repository.ExecuteQuery("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param);
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParametersAreNotDefined()
@@ -10602,18 +10602,18 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
-        {
-            using (var repository = new IdentityTableRepository())
-            {
-                // Setup
-                var param = new QueryField("Id", Operation.NotEqual, 1);
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParameterIsQueryFieldAndTheOperationIsNotEqualsToEqual()
+        //{
+        //    using (var repository = new IdentityTableRepository())
+        //    {
+        //        // Setup
+        //        var param = new QueryField("Id", Operation.NotEqual, 1);
 
-                // Act
-                var result = repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
-            }
-        }
+        //        // Act
+        //        var result = repository.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);", param).Result;
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()
