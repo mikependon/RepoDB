@@ -108,8 +108,8 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            var array = queryField.Parameter.Value?.AsArray();
-            if (array == null || array?.Length == 0)
+            var enumerable = (queryField.Parameter.Value as System.Collections.IEnumerable)?.OfType<object>();
+            if (enumerable?.Any() != true)
             {
                 return "1 = 0";
             }

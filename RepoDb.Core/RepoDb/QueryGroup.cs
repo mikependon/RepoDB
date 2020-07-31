@@ -1356,12 +1356,6 @@ namespace RepoDb
                 values = expression.Object.GetValue();
             }
 
-            // Convert to a proper array type
-            if ((values is Array) == false)
-            {
-                values = values.AsArray();
-            }
-
             // Add to query fields
             var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
             var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, values);
