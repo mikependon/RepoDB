@@ -478,13 +478,13 @@ namespace RepoDb.StatementBuilders
             var outputField = identityField ?? primaryField;
             if (outputField != null)
             {
-                queryBuilder
+                builder
                     .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
                     .As("[Result]");
             }
 
             // End the builder
-            queryBuilder.End();
+            builder.End();
 
             // Return the query
             return builder.GetString();
@@ -603,7 +603,7 @@ namespace RepoDb.StatementBuilders
             for (var index = 0; index < batchSize; index++)
             {
                 // MERGE T USING S
-                queryBuilder.Merge()
+                builder.Merge()
                     .TableNameFrom(tableName, DbSetting)
                     .As("T")
                     .HintsFrom(hints)
@@ -646,13 +646,13 @@ namespace RepoDb.StatementBuilders
                 var outputField = identityField ?? primaryField;
                 if (outputField != null)
                 {
-                    queryBuilder
+                    builder
                         .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
                         .As("[Result]");
                 }
 
                 // End the builder
-                queryBuilder.End();
+                builder.End();
             }
 
             // Return the query

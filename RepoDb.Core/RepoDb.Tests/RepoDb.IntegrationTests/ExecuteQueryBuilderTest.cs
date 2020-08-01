@@ -566,6 +566,49 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region Merge
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateMerge()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTables(1).First();
+            var fields = FieldCache.Get<IdentityTable>();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert(table);
+
+                // Set the properties
+                table.ColumnNVarChar = $"{table.ColumnNVarChar}-Merged";
+
+                // Setup
+                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<IdentityTable>(), null);
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateMerge(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    fields: fields,
+                    qualifiers: fields.Where(f => dbFields.FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && df.Name == f.Name) != null),
+                    primaryField: dbFields.FirstOrDefault(e => e.IsPrimary),
+                    identityField: dbFields.FirstOrDefault(e => e.IsIdentity));
+
+                // Act
+                var affectedRow = connection.ExecuteNonQuery(sql, table);
+
+                // Assert
+                Assert.AreEqual(1, affectedRow);
+
+                // Setup
+                var result = connection.QueryAll<IdentityTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        #endregion
+
         #region Query
 
         [TestMethod]
