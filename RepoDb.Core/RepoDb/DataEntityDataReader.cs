@@ -229,7 +229,7 @@ namespace RepoDb
         /// <summary>
         /// Gets a value that signify whether the current data reader has data entities.
         /// </summary>
-        public override bool HasRows => Entities?.Count() > 0;
+        public override bool HasRows => Entities?.Any() == true;
 
         /// <summary>
         /// Closes the current data reader.

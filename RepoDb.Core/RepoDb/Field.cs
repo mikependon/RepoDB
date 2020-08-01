@@ -245,7 +245,7 @@ namespace RepoDb
         internal static IEnumerable<Field> Parse<TEntity>(NewExpression expression)
             where TEntity : class
         {
-            if (expression.Members?.Count() >= 0)
+            if (expression.Members?.Count >= 0)
             {
                 return expression
                     .Members

@@ -1596,15 +1596,15 @@ namespace RepoDb
                 return commandText;
             }
 
-            // Get the variables needed
-            var length = values != null ? values.Count() : 0;
-            var parameters = new string[length];
-
-            // Iterate and set the parameter values
-            for (var i = 0; i < length; i++)
+            // Return if there is no values
+            if (values?.Any() != true)
             {
-                parameters[i] = string.Concat(parameterName, i).AsParameter(dbSetting);
+                return commandText;
             }
+
+            // Get the variables needed
+            var parameters = values.Select((value, index) =>
+                string.Concat(parameterName, index).AsParameter(dbSetting));
 
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));

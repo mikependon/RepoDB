@@ -63,19 +63,18 @@ namespace RepoDb.Extensions
         internal static void CreateParametersFromArray(this IDbCommand command,
             IEnumerable<CommandArrayParameter> commandArrayParameters)
         {
-            if (commandArrayParameters?.Any() != true)
+            if (commandArrayParameters.Any() != true)
             {
                 return;
             }
             var dbSetting = command.Connection.GetDbSetting();
-            for (var i = 0; i < commandArrayParameters.Count(); i++)
+            foreach (var commandArrayParameter in commandArrayParameters)
             {
-                var commandArrayParameter = commandArrayParameters.ElementAt(i);
-                for (var c = 0; c < commandArrayParameter.Values.Count(); c++)
+                var values = commandArrayParameter.Values.AsArray();
+                for (var i = 0; i < values.Length; i++)
                 {
-                    var name = string.Concat(commandArrayParameter.ParameterName, c).AsParameter(dbSetting);
-                    var value = commandArrayParameter.Values.ElementAt(c);
-                    command.Parameters.Add(command.CreateParameter(name, value, null));
+                    var name = string.Concat(commandArrayParameter.ParameterName, i).AsParameter(dbSetting);
+                    command.Parameters.Add(command.CreateParameter(name, values[i], null));
                 }
             }
         }

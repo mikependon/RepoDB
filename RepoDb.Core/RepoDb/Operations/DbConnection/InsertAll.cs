@@ -597,7 +597,7 @@ namespace RepoDb
                             }
 
                             // Set the values
-                            if (batchItems?.Count() == 1)
+                            if (batchItems?.Count == 1)
                             {
                                 context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
                             }
@@ -951,7 +951,7 @@ namespace RepoDb
                             }
 
                             // Set the values
-                            if (batchItems?.Count() == 1)
+                            if (batchItems?.Count == 1)
                             {
                                 context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
                             }

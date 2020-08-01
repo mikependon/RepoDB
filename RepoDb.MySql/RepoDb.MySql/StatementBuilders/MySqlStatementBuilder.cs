@@ -289,7 +289,7 @@ namespace RepoDb.StatementBuilders
                 var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                 // Iterate the indexes
-                for (var index = 0; index < splitted.Count(); index++)
+                for (var index = 0; index < splitted.Length; index++)
                 {
                     var line = splitted[index].Trim();
                     var returnValue = "SELECT LAST_INSERT_ID()";

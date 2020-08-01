@@ -777,39 +777,36 @@ namespace RepoDb
 
             // Check the presence
             var fields = GetFields(true);
-            if (fields == null)
-            {
-                return this;
-            }
 
             // Check any item
-            if (fields.Any() != true)
+            if (fields?.Any() != true)
             {
                 return this;
             }
 
             // Filter the items
-            var firstList = fields.OrderBy(queryField => queryField.Parameter.Name);
+            var firstList = fields
+                .OrderBy(queryField => queryField.Parameter.Name)
+                .AsList();
             var secondList = new List<QueryField>(firstList);
 
             // Iterate and fix the names
-            for (var i = 0; i < firstList.Count(); i++)
+            foreach (var firstQueryField in firstList)
             {
-                var queryField = firstList.ElementAt(i);
                 for (var c = 0; c < secondList.Count; c++)
                 {
-                    var cQueryField = secondList[c];
-                    if (ReferenceEquals(queryField, cQueryField))
+                    var secondQueryField = secondList[c];
+                    if (ReferenceEquals(firstQueryField, secondQueryField))
                     {
                         continue;
                     }
-                    if (queryField.Field.Equals(cQueryField.Field))
+                    if (firstQueryField.Field.Equals(secondQueryField.Field))
                     {
-                        var fieldValue = cQueryField.Parameter;
-                        fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
+                        var fieldValue = secondQueryField.Parameter;
+                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", c));
                     }
                 }
-                secondList.RemoveAll(qf => qf.Field.Equals(queryField.Field));
+                secondList.RemoveAll(qf => qf.Field.Equals(firstQueryField.Field));
             }
 
             // Force the fixes
@@ -874,19 +871,20 @@ namespace RepoDb
             var separator = string.Concat(" ", GetConjunctionText(), " ");
 
             // Check the instance fields
-            if (QueryFields?.Count() > 0)
+            var queryFields = QueryFields.AsList();
+            if (queryFields?.Count > 0)
             {
                 var fields = QueryFields
-                    .AsList()
-                    .Select(qf => qf.AsFieldAndParameter(index, dbSetting)).Join(separator);
+                    .Select(qf =>
+                        qf.AsFieldAndParameter(index, dbSetting)).Join(separator);
                 groupList.Add(fields);
             }
 
             // Check the instance groups
-            if (QueryGroups?.Count() > 0)
+            var queryGroups = QueryGroups.AsList();
+            if (queryGroups?.Count > 0)
             {
                 var groups = QueryGroups
-                    .AsList()
                     .Select(qg => qg.GetString(index, dbSetting)).Join(separator);
                 groupList.Add(groups);
             }
@@ -910,13 +908,13 @@ namespace RepoDb
             explore = new Action<QueryGroup>(queryGroup =>
             {
                 // Check child fields
-                if (queryGroup.QueryFields?.Count() > 0)
+                if (queryGroup.QueryFields?.Any() == true)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
 
                 // Check child groups
-                if (traverse == true && queryGroup.QueryGroups?.Count() > 0)
+                if (traverse == true && queryGroup.QueryGroups?.Any() == true)
                 {
                     foreach (var qg in queryGroup.QueryGroups)
                     {

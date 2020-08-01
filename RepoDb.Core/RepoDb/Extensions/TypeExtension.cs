@@ -226,13 +226,13 @@ namespace RepoDb.Extensions
             }
 
             // Check the name equality
-            if (members1?.Count() != members2?.Count())
+            if (members1?.Count != members2?.Count)
             {
                 return false;
             }
             else
             {
-                for (var i = 0; i < members1.Count(); i++)
+                for (var i = 0; i < members1.Count; i++)
                 {
                     if (string.Equals(members1[i].Name, members2[i].Name, StringComparison.Ordinal) == false)
                     {
@@ -271,13 +271,13 @@ namespace RepoDb.Extensions
             }
 
             // Check the argument name equalities
-            if (members1?.Count() != members2?.Count())
+            if (members1?.Count != members2?.Count)
             {
                 return false;
             }
             else
             {
-                for (var i = 0; i < members1.Count(); i++)
+                for (var i = 0; i < members1.Count; i++)
                 {
                     var member1 = members1[i];
                     var member2 = members2[i];

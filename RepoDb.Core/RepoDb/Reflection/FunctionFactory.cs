@@ -714,7 +714,7 @@ namespace RepoDb.Reflection
             var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) });
 
             // Iterate each properties
-            for (var ordinal = 0; ordinal < readerFields?.Count(); ordinal++)
+            for (var ordinal = 0; ordinal < readerFields?.Count; ordinal++)
             {
                 // Field variable
                 var readerField = readerFields[ordinal];
@@ -1314,29 +1314,25 @@ namespace RepoDb.Reflection
             // Input fields properties
             if (inputFields?.Any() == true)
             {
-                for (var index = 0; index < inputFields.Count(); index++)
-                {
-                    propertyVariableList.Add(new
+                propertyVariableList.AddRange(inputFields.Select((value, index) =>
+                    new
                     {
                         Index = index,
-                        Field = inputFields.ElementAt(index),
+                        Field = value,
                         Direction = ParameterDirection.Input
-                    });
-                }
+                    }));
             }
 
             // Output fields properties
             if (outputFields?.Any() == true)
             {
-                for (var index = 0; index < outputFields.Count(); index++)
-                {
-                    propertyVariableList.Add(new
+                propertyVariableList.AddRange(outputFields.Select((value, index) =>
+                    new
                     {
-                        Index = inputFields.Count() + index,
-                        Field = outputFields.ElementAt(index),
+                        Index = index,
+                        Field = value,
                         Direction = ParameterDirection.Output
-                    });
-                }
+                    }));
             }
 
             // Variables for expression body
@@ -1988,29 +1984,23 @@ namespace RepoDb.Reflection
             // Input fields properties
             if (inputFields?.Any() == true)
             {
-                for (var index = 0; index < inputFields.Count(); index++)
+                propertyVariableList.AddRange(inputFields.Select((value, index) => new
                 {
-                    propertyVariableList.Add(new
-                    {
-                        Index = index,
-                        Field = inputFields.ElementAt(index),
-                        Direction = ParameterDirection.Input
-                    });
-                }
+                    Index = index,
+                    Field = value,
+                    Direction = ParameterDirection.Input
+                }));
             }
 
             // Output fields properties
             if (outputFields?.Any() == true)
             {
-                for (var index = 0; index < outputFields.Count(); index++)
+                propertyVariableList.AddRange(outputFields.Select((value, index) => new
                 {
-                    propertyVariableList.Add(new
-                    {
-                        Index = inputFields.Count() + index,
-                        Field = outputFields.ElementAt(index),
-                        Direction = ParameterDirection.Output
-                    });
-                }
+                    Index = index,
+                    Field = value,
+                    Direction = ParameterDirection.Output
+                }));
             }
 
             // Variables for expression body
