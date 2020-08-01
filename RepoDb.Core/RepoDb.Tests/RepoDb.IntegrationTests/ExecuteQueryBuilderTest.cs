@@ -27,6 +27,8 @@ namespace RepoDb.IntegrationTests
             Database.Cleanup();
         }
 
+        #region Specialized
+
         #region In
 
         /*
@@ -530,6 +532,263 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #endregion
+
+        #region Operations
+
+        #region Average
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateAverage()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 0));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateAverage(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteScalar<double>(sql, where);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region AverageAll
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateAverageAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateAverageAll(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
+
+                // Act
+                var result = connection.ExecuteScalar<double>(sql);
+
+                // Assert
+                Assert.AreEqual(tables.Average(e => e.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region BatchQuery
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateBatchQuery()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 0));
+            var fields = FieldCache.Get<IdentityTable>();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateBatchQuery(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    fields: fields,
+                    page: 2,
+                    rowsPerBatch: 2,
+                    orderBy: OrderField.Ascending<IdentityTable>(e => e.Id).AsEnumerable(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteQuery<IdentityTable>(sql, where);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    Helper.AssertPropertiesEquality(tables.First(v => v.Id == item.Id), item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region Count
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateCount()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 4));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateCount(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql, where);
+
+                // Assert
+                Assert.AreEqual(tables.Count(e => e.Id >= 4), result);
+            }
+        }
+
+        #endregion
+
+        #region CountAll
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateCountAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateCountAll(null,
+                    ClassMappedNameCache.Get<IdentityTable>());
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region Delete
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateDelete()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 4));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), connection.CountAll<IdentityTable>());
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateDelete(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteNonQuery(sql, where);
+
+                // Assert
+                Assert.AreEqual(7, result);
+                Assert.AreEqual(3, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #region CountAll
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateDeleteAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), connection.CountAll<IdentityTable>());
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateDeleteAll(null,
+                    ClassMappedNameCache.Get<IdentityTable>());
+
+                // Act
+                var result = connection.ExecuteNonQuery(sql);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #region Exists
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateExists()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var where = new QueryGroup(new QueryField("Id", tables.Last().Id));
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateExists(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteScalar<bool>(sql, where);
+
+                // Assert
+                Assert.IsTrue(result);
+            }
+        }
+
+        #endregion
+
         #region Insert
 
         [TestMethod]
@@ -561,6 +820,66 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        #endregion
+
+        #region Max
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateMax()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 0));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateMax(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql, where);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id >= 0).Max(e => e.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region MaxAll
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateMaxAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateMaxAll(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql);
+
+                // Assert
+                Assert.AreEqual(tables.Max(e => e.ColumnInt), result);
             }
         }
 
@@ -604,6 +923,66 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        #endregion
+
+        #region Min
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateMin()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 6));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateMin(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql, where);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id >= 6).Min(e => e.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region MinAll
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateMinAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateMinAll(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql);
+
+                // Assert
+                Assert.AreEqual(tables.Min(e => e.ColumnInt), result);
             }
         }
 
@@ -716,6 +1095,97 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region Sum
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateSum()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var where = new QueryGroup(new QueryField("Id", Operation.GreaterThanOrEqual, 6));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateSum(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
+                    where: where);
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql, where);
+
+                // Assert
+                Assert.AreEqual(tables.Where(e => e.Id >= 6).Sum(e => e.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region SumAll
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateSumAll()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateSumAll(null,
+                    ClassMappedNameCache.Get<IdentityTable>(),
+                    field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
+
+                // Act
+                var result = connection.ExecuteScalar<int>(sql);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(e => e.ColumnInt), result);
+            }
+        }
+
+        #endregion
+
+        #region Truncate
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryFromQueryBuilderCreateTruncate()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), connection.CountAll<IdentityTable>());
+
+                // Setup
+                var builder = connection.GetStatementBuilder();
+                var sql = builder.CreateTruncate(null,
+                    ClassMappedNameCache.Get<IdentityTable>());
+
+                // Act
+                connection.ExecuteNonQuery(sql);
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
         #region Update
 
         [TestMethod]
@@ -759,6 +1229,8 @@ namespace RepoDb.IntegrationTests
                 Helper.AssertPropertiesEquality(table, result);
             }
         }
+
+        #endregion
 
         #endregion
     }

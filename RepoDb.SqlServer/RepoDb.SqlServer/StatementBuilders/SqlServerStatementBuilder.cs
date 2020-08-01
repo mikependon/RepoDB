@@ -100,6 +100,7 @@ namespace RepoDb.StatementBuilders
                 .As()
                 .OpenParen()
                 .Select()
+                .TopFrom((page + 1) * rowsPerBatch)
                 .RowNumber()
                 .Over()
                 .OpenParen()
@@ -111,13 +112,13 @@ namespace RepoDb.StatementBuilders
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
+                .OrderByFrom(orderBy, DbSetting)
                 .CloseParen()
                 .Select()
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .WriteText("CTE")
                 .WriteText(string.Concat("WHERE ([RowNumber] BETWEEN ", (page * rowsPerBatch) + 1, " AND ", (page + 1) * rowsPerBatch, ")"))
-                .OrderByFrom(orderBy, DbSetting)
                 .End();
 
             // Return the query
