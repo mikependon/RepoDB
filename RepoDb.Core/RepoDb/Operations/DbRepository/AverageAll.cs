@@ -9,18 +9,19 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region AverageAll<TEntity>
 
         /// <summary>
-        /// Averages all the number of data from the database table.
+        /// Computes the average value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value.</returns>
+        /// <returns>The average value of the target field.</returns>
         public object AverageAll<TEntity>(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -52,13 +53,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Averages all the number of data from the database table.
+        /// Computes the average value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value.</returns>
+        /// <returns>The average value of the target field.</returns>
         public object AverageAll<TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -94,13 +95,13 @@ namespace RepoDb
         #region AverageAllAsync<TEntity>
 
         /// <summary>
-        /// Averages all the number of data from the database table in an asynchronous way.
+        /// Computes the average value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value.</returns>
+        /// <returns>The average value of the target field.</returns>
         public async Task<object> AverageAllAsync<TEntity>(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -132,13 +133,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Averages all the number of data from the database table in an asynchronous way.
+        /// Computes the average value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value.</returns>
+        /// <returns>The average value of the target field.</returns>
         public async Task<object> AverageAllAsync<TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -174,7 +175,7 @@ namespace RepoDb
         #region AverageAll(TableName)
 
         /// <summary>
-        /// Averages all the number of data from the database table.
+        /// Computes the average value of the target field.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -217,7 +218,7 @@ namespace RepoDb
         #region AverageAllAsync(TableName)
 
         /// <summary>
-        /// Averages all the number of data from the database table in an asynchronous way.
+        /// Computes the average value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

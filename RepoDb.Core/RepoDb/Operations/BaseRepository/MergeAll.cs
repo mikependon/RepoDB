@@ -14,7 +14,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
@@ -55,7 +55,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The expression for the qualifier fields.</param>

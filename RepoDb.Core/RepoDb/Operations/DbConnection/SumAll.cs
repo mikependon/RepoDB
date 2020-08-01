@@ -27,7 +27,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static object SumAll<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -57,7 +57,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static object SumAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
@@ -87,7 +87,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static object SumAllInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -130,7 +130,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<object> SumAllAsync<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -160,7 +160,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<object> SumAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
@@ -190,7 +190,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<object> SumAllAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -233,7 +233,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static object SumAll(this IDbConnection connection,
             string tableName,
             Field field,
@@ -264,7 +264,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static object SumAllInternal(this IDbConnection connection,
             string tableName,
             Field field,
@@ -307,7 +307,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<object> SumAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
@@ -338,7 +338,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<object> SumAllAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
@@ -379,7 +379,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static object SumAllInternalBase(this IDbConnection connection,
             SumAllRequest request,
             object param,
@@ -446,7 +446,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static async Task<object> SumAllInternalAsyncBase(this IDbConnection connection,
             SumAllRequest request,
             object param,

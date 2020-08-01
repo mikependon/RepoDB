@@ -748,7 +748,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -782,7 +782,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -816,7 +816,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -850,7 +850,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -884,7 +884,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in asynchronous way.
+        /// Updates an existing data in the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>

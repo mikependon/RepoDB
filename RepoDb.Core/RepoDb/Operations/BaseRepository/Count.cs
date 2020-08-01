@@ -14,12 +14,12 @@ namespace RepoDb
         #region Count<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(object where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -30,12 +30,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -46,12 +46,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -62,12 +62,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -78,12 +78,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -98,12 +98,12 @@ namespace RepoDb
         #region CountAsync<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAsync(object where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -114,12 +114,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAsync(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -130,12 +130,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAsync(QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -146,12 +146,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAsync(IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -162,12 +162,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAsync(QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)

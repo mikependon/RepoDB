@@ -22,7 +22,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -92,7 +92,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -164,7 +164,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -232,7 +232,7 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -266,7 +266,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -302,7 +302,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -338,7 +338,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -374,7 +374,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>

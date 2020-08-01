@@ -13,13 +13,13 @@ namespace RepoDb
         #region Insert<TEntity>
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert<TEntity>(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -51,14 +51,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -94,13 +94,13 @@ namespace RepoDb
         #region InsertAsync<TEntity>
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync<TEntity>(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -132,14 +132,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -175,13 +175,13 @@ namespace RepoDb
         #region Insert(TableName)
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert(string tableName,
             object entity,
             string hints = null,
@@ -214,14 +214,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TResult>(string tableName,
             object entity,
             string hints = null,
@@ -258,13 +258,13 @@ namespace RepoDb
         #region InsertAsync(TableName)
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync(string tableName,
             object entity,
             string hints = null,
@@ -297,7 +297,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>

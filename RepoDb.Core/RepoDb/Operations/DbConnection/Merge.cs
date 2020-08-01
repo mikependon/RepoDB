@@ -22,7 +22,7 @@ namespace RepoDb
         #region Merge<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -32,7 +32,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -53,7 +53,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -64,7 +64,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
@@ -86,7 +86,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -97,7 +97,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -119,7 +119,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -130,7 +130,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
@@ -152,7 +152,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -163,7 +163,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -184,7 +184,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -196,7 +196,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
@@ -218,7 +218,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -230,7 +230,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -252,7 +252,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -264,7 +264,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
@@ -286,7 +286,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -298,7 +298,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult MergeInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -353,7 +353,7 @@ namespace RepoDb
         #region MergeAsync<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -363,7 +363,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -384,7 +384,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -395,7 +395,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
@@ -417,7 +417,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -428,7 +428,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -450,7 +450,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -461,7 +461,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
@@ -483,7 +483,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -494,7 +494,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -515,7 +515,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -527,7 +527,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             Field qualifier,
@@ -549,7 +549,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -561,7 +561,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -583,7 +583,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -595,7 +595,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
@@ -617,7 +617,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -629,7 +629,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -694,7 +694,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
@@ -727,7 +727,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
@@ -761,7 +761,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Merge(this IDbConnection connection,
             string tableName,
             object entity,
@@ -795,7 +795,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -829,7 +829,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -864,7 +864,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Merge<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -899,7 +899,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult MergeInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -957,7 +957,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -990,7 +990,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1024,7 +1024,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> MergeAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1058,7 +1058,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1092,7 +1092,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1127,7 +1127,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> MergeAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1162,7 +1162,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static async Task<TResult> MergeAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -1225,7 +1225,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult MergeInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -1406,7 +1406,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult UpsertInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -1607,7 +1607,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static async Task<TResult> MergeAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -1772,7 +1772,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static async Task<TResult> UpsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,

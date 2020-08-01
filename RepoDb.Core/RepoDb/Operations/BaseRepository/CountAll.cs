@@ -12,11 +12,11 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll(string hints = null,
             IDbTransaction transaction = null)
         {
@@ -29,7 +29,7 @@ namespace RepoDb
         #region CountAllAsync<TEntity>
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>

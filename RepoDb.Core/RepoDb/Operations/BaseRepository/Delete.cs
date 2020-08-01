@@ -14,12 +14,12 @@ namespace RepoDb
         #region Delete<TEntity>
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -30,12 +30,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(object whereOrPrimaryKey,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -46,12 +46,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -62,12 +62,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(QueryField where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -78,12 +78,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(IEnumerable<QueryField> where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -94,12 +94,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(QueryGroup where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -114,12 +114,12 @@ namespace RepoDb
         #region DeleteAsync<TEntity>
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -130,12 +130,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(object whereOrPrimaryKey,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -146,12 +146,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -162,12 +162,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(QueryField where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -178,12 +178,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(IEnumerable<QueryField> where,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -194,12 +194,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(QueryGroup where,
             string hints = null,
 			IDbTransaction transaction = null)

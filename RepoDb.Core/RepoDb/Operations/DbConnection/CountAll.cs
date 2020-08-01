@@ -15,7 +15,7 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -24,7 +24,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long CountAll<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
@@ -42,7 +42,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -51,7 +51,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountAllInternal<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
@@ -82,7 +82,7 @@ namespace RepoDb
         #region CountAllAsync<TEntity>
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -91,7 +91,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAllAsync<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
@@ -109,7 +109,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -118,7 +118,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAllAsyncInternal<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
@@ -149,7 +149,7 @@ namespace RepoDb
         #region CountAll(TableName)
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -158,7 +158,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long CountAll(this IDbConnection connection,
             string tableName,
             string hints = null,
@@ -177,7 +177,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -186,7 +186,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountAllInternal(this IDbConnection connection,
             string tableName,
             string hints = null,
@@ -217,7 +217,7 @@ namespace RepoDb
         #region CountAllAsync(TableName)
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -226,7 +226,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAllAsync(this IDbConnection connection,
             string tableName,
             string hints = null,
@@ -245,7 +245,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -254,7 +254,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAllAsyncInternal(this IDbConnection connection,
             string tableName,
             string hints = null,
@@ -285,7 +285,7 @@ namespace RepoDb
         #region CountAllInternalBase
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
@@ -293,7 +293,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountAllInternalBase(this IDbConnection connection,
             CountAllRequest request,
             object param,
@@ -352,7 +352,7 @@ namespace RepoDb
         #region CountAllAsyncInternalBase
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountAllRequest"/> object.</param>
@@ -360,7 +360,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static async Task<long> CountAllInternalAsyncBase(this IDbConnection connection,
             CountAllRequest request,
             object param,

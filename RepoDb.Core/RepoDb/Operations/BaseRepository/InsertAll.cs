@@ -13,13 +13,13 @@ namespace RepoDb
         #region InsertAll<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts the multiple data entity objects (as new rows) in the table.
         /// </summary>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         public int InsertAll(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
@@ -36,13 +36,13 @@ namespace RepoDb
         #region InsertAllAsync<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
         /// </summary>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         public Task<int> InsertAllAsync(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,

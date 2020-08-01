@@ -14,7 +14,7 @@ namespace RepoDb
         #region BatchQuery<TEntity>
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -39,7 +39,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -63,7 +63,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -88,7 +88,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -113,7 +113,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -142,7 +142,7 @@ namespace RepoDb
         #region BatchQueryAsync<TEntity>
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -164,7 +164,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -189,7 +189,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -214,7 +214,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -239,7 +239,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
@@ -264,7 +264,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>

@@ -20,7 +20,7 @@ namespace RepoDb
         #region Insert<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Insert<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -50,7 +50,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -61,7 +61,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -81,7 +81,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -92,7 +92,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -119,7 +119,7 @@ namespace RepoDb
         #region InsertAsync<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a new data in the database in asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -129,7 +129,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -149,7 +149,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database in asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -160,7 +160,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -180,7 +180,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database in asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -191,7 +191,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static Task<TResult> InsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -218,7 +218,7 @@ namespace RepoDb
         #region Insert(TableName)<TResult>
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static object Insert(this IDbConnection connection,
             string tableName,
             object entity,
@@ -249,7 +249,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database (certain fields only).
+        /// Inserts a data entity object (as a new row) in the table (certain fields only).
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -260,7 +260,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static TResult Insert<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -281,7 +281,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database (certain fields only).
+        /// Inserts a data entity object (as a new row) in the table (certain fields only).
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -292,7 +292,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult InsertInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -320,7 +320,7 @@ namespace RepoDb
         #region InsertAsync(TableName)<TResult>
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -330,7 +330,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<object> InsertAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -351,7 +351,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -362,7 +362,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public static Task<TResult> InsertAsync<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -383,7 +383,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -394,7 +394,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static Task<TResult> InsertAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
@@ -422,7 +422,7 @@ namespace RepoDb
         #region InsertInternalBase<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a new data in the database.
+        /// Inserts a data entity object (as a new row) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -436,7 +436,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult InsertInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -592,7 +592,7 @@ namespace RepoDb
         #region InsertAsyncInternalBase<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a new data in the database in an asynchronous way.
+        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -606,7 +606,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal async static Task<TResult> InsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,

@@ -15,7 +15,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -100,7 +100,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple data entity objects into the database.
+        /// Merges/upserts the multiple data entity objects into the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -148,7 +148,7 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -189,7 +189,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -233,7 +233,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
+        /// Merges/upserts a data entity object into a table in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -378,7 +378,7 @@ namespace RepoDb
         #region MergeAllAsync(TableName)
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Merges/upserts a data entity object into a table in an asychronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -423,7 +423,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Merges/upserts a data entity object into a table in an asychronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>

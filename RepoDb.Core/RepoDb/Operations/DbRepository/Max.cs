@@ -15,14 +15,14 @@ namespace RepoDb
         #region Max<TEntity>
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Field field,
             object where = null,
             string hints = null,
@@ -56,14 +56,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -97,14 +97,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Field field,
             QueryField where = null,
             string hints = null,
@@ -138,14 +138,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -179,14 +179,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Field field,
             QueryGroup where = null,
             string hints = null,
@@ -220,14 +220,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -261,14 +261,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -302,14 +302,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -343,14 +343,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -384,14 +384,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max<TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -429,14 +429,14 @@ namespace RepoDb
         #region MaxAsync<TEntity>
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Field field,
             object where = null,
             string hints = null,
@@ -470,14 +470,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -511,14 +511,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Field field,
             QueryField where = null,
             string hints = null,
@@ -552,14 +552,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -593,14 +593,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Field field,
             QueryGroup where = null,
             string hints = null,
@@ -634,14 +634,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -675,14 +675,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -716,14 +716,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -757,14 +757,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -798,14 +798,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync<TEntity>(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -843,14 +843,14 @@ namespace RepoDb
         #region Max(TableName)
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max(string tableName,
             Field field,
             object where = null,
@@ -885,14 +885,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max(string tableName,
             Field field,
             QueryField where = null,
@@ -927,14 +927,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max(string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -969,14 +969,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object Max(string tableName,
             Field field,
             QueryGroup where = null,
@@ -1015,14 +1015,14 @@ namespace RepoDb
         #region MaxAsync(TableName)
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync(string tableName,
             Field field,
             object where = null,
@@ -1057,14 +1057,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync(string tableName,
             Field field,
             QueryField where = null,
@@ -1099,14 +1099,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync(string tableName,
             Field field,
             IEnumerable<QueryField> where = null,
@@ -1141,14 +1141,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAsync(string tableName,
             Field field,
             QueryGroup where = null,

@@ -14,12 +14,12 @@ namespace RepoDb
         #region Merge<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Merge(TEntity entity,
             string hints = null,
             IDbTransaction transaction = null)
@@ -30,13 +30,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Merge(TEntity entity,
             Field qualifier,
             string hints = null,
@@ -49,13 +49,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Merge(TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,
@@ -68,13 +68,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The expression for the qualifer fields.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Merge(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             string hints = null,
@@ -87,13 +87,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
             string hints = null,
             IDbTransaction transaction = null)
@@ -105,14 +105,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
             Field qualifier,
             string hints = null,
@@ -125,14 +125,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,
@@ -145,14 +145,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database.
+        /// Merges/upserts a data entity object into a table.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The expression for the qualifer fields.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Merge<TResult>(TEntity entity,
             Expression<Func<TEntity, object>> qualifiers,
             string hints = null,
@@ -169,12 +169,12 @@ namespace RepoDb
         #region MergeAsync<TEntity>
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges/upserts a data entity object into a table in an asynchronous way.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public Task<object> MergeAsync(TEntity entity,
             string hints = null,
             IDbTransaction transaction = null)
@@ -185,13 +185,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges/upserts a data entity object into a table in an asynchronous way.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public Task<object> MergeAsync(TEntity entity,
             Field qualifier,
             string hints = null,
@@ -204,13 +204,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges/upserts a data entity object into a table in an asynchronous way.
         /// </summary>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public Task<object> MergeAsync(TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,
@@ -223,13 +223,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges/upserts a data entity object into a table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public Task<TResult> MergeAsync<TResult>(TEntity entity,
             string hints = null,
             IDbTransaction transaction = null)
@@ -241,14 +241,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges/upserts a data entity object into a table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public Task<TResult> MergeAsync<TResult>(TEntity entity,
             Field qualifier,
             string hints = null,
@@ -261,14 +261,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
+        /// Merges/upserts a data entity object into a table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of primary field.</returns>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public Task<TResult> MergeAsync<TResult>(TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,

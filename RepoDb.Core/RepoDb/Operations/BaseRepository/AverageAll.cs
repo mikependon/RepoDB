@@ -13,12 +13,12 @@ namespace RepoDb
         #region AverageAll<TEntity>
 
         /// <summary>
-        /// Averages the target field from all data of the database table.
+        /// Computes the average value of the target field.
         /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value.</returns>
+        /// <returns>The average value of the target field.</returns>
         public object AverageAll(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -29,12 +29,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Averages the target field from all data of the database table.
+        /// Computes the average value of the target field.
         /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The average value.</returns>
+        /// <returns>The average value of the target field.</returns>
         public object AverageAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -49,7 +49,7 @@ namespace RepoDb
         #region AverageAllAsync<TEntity>
 
         /// <summary>
-        /// Averages the target field from all data of the database table in an asynchronous way.
+        /// Computes the average value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -65,7 +65,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Averages the target field from all data of the database table in an asynchronous way.
+        /// Computes the average value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>

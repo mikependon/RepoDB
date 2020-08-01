@@ -755,7 +755,7 @@ namespace RepoDb
         #region ExecuteNonQueryAsync
 
         /// <summary>
-        /// Executes a query from the database in asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected data during the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -785,7 +785,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected data during the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>

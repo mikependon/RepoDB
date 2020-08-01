@@ -21,7 +21,7 @@ namespace RepoDb
         #region InsertAll<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts the multiple data entity objects (as new rows) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -32,7 +32,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         public static int InsertAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -54,7 +54,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts the multiple data entity objects (as new rows) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -65,7 +65,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         internal static int InsertAllInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -94,7 +94,7 @@ namespace RepoDb
         #region InsertAllAsync<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database in asynchronous way.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -105,7 +105,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -127,7 +127,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database in asynchronous way.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -138,7 +138,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         internal static Task<int> InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -167,7 +167,7 @@ namespace RepoDb
         #region InsertAll(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -179,7 +179,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         public static int InsertAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -204,7 +204,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -216,7 +216,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         internal static int InsertAllInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -247,7 +247,7 @@ namespace RepoDb
         #region InsertAllAsync(TableName)
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -259,7 +259,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         public static Task<int> InsertAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -284,7 +284,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -296,7 +296,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -327,7 +327,7 @@ namespace RepoDb
         #region InsertAllInternalBase<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database.
+        /// Inserts the multiple data entity objects (as new rows) in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -341,7 +341,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         internal static int InsertAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -681,7 +681,7 @@ namespace RepoDb
         #region InsertAllAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Inserts multiple data in the database in an asynchronous way.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -695,7 +695,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The number of inserted rows.</returns>
+        /// <returns>The number of inserted rows in the table.</returns>
         internal static async Task<int> InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,

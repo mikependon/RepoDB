@@ -13,12 +13,12 @@ namespace RepoDb
         #region CountAll<TEntity>
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll<TEntity>(string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -52,12 +52,12 @@ namespace RepoDb
         #region CountAllAsync<TEntity>
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAllAsync<TEntity>(string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -91,7 +91,7 @@ namespace RepoDb
         #region CountAll(TableName)
 
         /// <summary>
-        /// Counts all the number of data from the database table.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -131,7 +131,7 @@ namespace RepoDb
         #region CountAllAsync(TableName)
 
         /// <summary>
-        /// Counts all the number of data from the database table in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

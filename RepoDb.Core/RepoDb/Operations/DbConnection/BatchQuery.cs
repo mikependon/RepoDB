@@ -19,7 +19,7 @@ namespace RepoDb
         #region BatchQuery<TEntity>
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -95,7 +95,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -134,7 +134,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -173,7 +173,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -212,7 +212,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -251,7 +251,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -294,7 +294,7 @@ namespace RepoDb
         #region BatchQueryAsync<TEntity>
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -331,7 +331,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -370,7 +370,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -409,7 +409,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -448,7 +448,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -487,7 +487,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -526,7 +526,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -569,7 +569,7 @@ namespace RepoDb
         #region BatchQuery(TableName)
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -610,7 +610,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -653,7 +653,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -696,7 +696,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -739,7 +739,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -782,7 +782,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -829,7 +829,7 @@ namespace RepoDb
         #region BatchQueryAsync(TableName)
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -870,7 +870,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -913,7 +913,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -956,7 +956,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -999,7 +999,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1042,7 +1042,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1089,7 +1089,7 @@ namespace RepoDb
         #region BatchQueryInternalBase<TEntity>
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -1183,7 +1183,7 @@ namespace RepoDb
         #region BatchQueryAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -1277,7 +1277,7 @@ namespace RepoDb
         #region BatchQueryInternalBase(TableName)
 
         /// <summary>
-        /// Queries a data from the database by batch.
+        /// Query the rows from the database by batch.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1380,7 +1380,7 @@ namespace RepoDb
         #region BatchQueryAsyncInternalBase(TableName)
 
         /// <summary>
-        /// Queries a data from the database by batch in an asynchronous way.
+        /// Query the rows from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

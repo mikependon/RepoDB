@@ -18,7 +18,7 @@ namespace RepoDb
         #region Count<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -28,7 +28,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
             object where = null,
             string hints = null,
@@ -48,7 +48,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -58,7 +58,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -78,7 +78,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -88,7 +88,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
             QueryField where = null,
             string hints = null,
@@ -108,7 +108,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -118,7 +118,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -138,7 +138,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -148,7 +148,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             string hints = null,
@@ -168,7 +168,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -178,7 +178,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountInternal<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             string hints = null,
@@ -217,7 +217,7 @@ namespace RepoDb
         #region CountAsync<TEntity>
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -227,7 +227,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             object where = null,
             string hints = null,
@@ -247,7 +247,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -257,7 +257,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -277,7 +277,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -287,7 +287,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             QueryField where = null,
             string hints = null,
@@ -307,7 +307,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -317,7 +317,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -337,7 +337,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -347,7 +347,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             string hints = null,
@@ -367,7 +367,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -377,7 +377,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             int? commandTimeout = null,
@@ -416,7 +416,7 @@ namespace RepoDb
         #region Count(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -426,7 +426,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
             object where = null,
@@ -447,7 +447,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -457,7 +457,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
             QueryField where = null,
@@ -478,7 +478,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -488,7 +488,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where = null,
@@ -509,7 +509,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -519,7 +519,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static long Count(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -540,7 +540,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -550,7 +550,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -589,7 +589,7 @@ namespace RepoDb
         #region CountAsync(TableName)
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -599,7 +599,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
             object where = null,
@@ -620,7 +620,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -630,7 +630,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
             QueryField where = null,
@@ -651,7 +651,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -661,7 +661,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where = null,
@@ -682,7 +682,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -692,7 +692,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public static Task<long> CountAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -713,7 +713,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -723,7 +723,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static Task<long> CountAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -762,7 +762,7 @@ namespace RepoDb
         #region CounterInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database.
+        /// Count the number of rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
@@ -770,7 +770,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static long CountInternalBase(this IDbConnection connection,
             CountRequest request,
             object param,
@@ -829,7 +829,7 @@ namespace RepoDb
         #region CountAsyncInternalBase
 
         /// <summary>
-        /// Counts the number of table data from the database in an asynchronous way.
+        /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="CountRequest"/> object.</param>
@@ -837,7 +837,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         internal static async Task<long> CountInternalAsyncBase(this IDbConnection connection,
             CountRequest request,
             object param,

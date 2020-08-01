@@ -17,7 +17,7 @@ namespace RepoDb
         #region MaxAll<TEntity>
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -27,7 +27,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public static object MaxAll<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -47,7 +47,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public static object MaxAll<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
@@ -77,7 +77,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -87,7 +87,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         internal static object MaxAllInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -120,7 +120,7 @@ namespace RepoDb
         #region MaxAllAsync<TEntity>
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -130,7 +130,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public static Task<object> MaxAllAsync<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -150,7 +150,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -160,7 +160,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public static Task<object> MaxAllAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, object>> field,
             string hints = null,
@@ -180,7 +180,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -190,7 +190,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         internal static Task<object> MaxAllAsyncInternal<TEntity>(this IDbConnection connection,
             Field field,
             string hints = null,
@@ -223,7 +223,7 @@ namespace RepoDb
         #region MaxAll(TableName)
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -233,7 +233,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public static object MaxAll(this IDbConnection connection,
             string tableName,
             Field field,
@@ -254,7 +254,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -264,7 +264,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         internal static object MaxAllInternal(this IDbConnection connection,
             string tableName,
             Field field,
@@ -297,7 +297,7 @@ namespace RepoDb
         #region MaxAllAsync(TableName)
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -307,7 +307,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         public static Task<object> MaxAllAsync(this IDbConnection connection,
             string tableName,
             Field field,
@@ -328,7 +328,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -338,7 +338,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         internal static Task<object> MaxAllAsyncInternal(this IDbConnection connection,
             string tableName,
             Field field,
@@ -371,7 +371,7 @@ namespace RepoDb
         #region MaxAllInternalBase
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table.
+        /// Computes the max value of the target field.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="MaxAllRequest"/> object.</param>
@@ -379,7 +379,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         internal static object MaxAllInternalBase(this IDbConnection connection,
             MaxAllRequest request,
             object param,
@@ -438,7 +438,7 @@ namespace RepoDb
         #region MaxAllAsyncInternalBase
 
         /// <summary>
-        /// Maximizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the max value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="MaxAllRequest"/> object.</param>
@@ -446,7 +446,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>The maximum value.</returns>
+        /// <returns>The max value of the target field.</returns>
         internal static async Task<object> MaxAllInternalAsyncBase(this IDbConnection connection,
             MaxAllRequest request,
             object param,

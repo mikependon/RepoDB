@@ -15,13 +15,13 @@ namespace RepoDb
         #region Exists<TEntity>
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists<TEntity>(object whereOrPrimaryKey = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -53,13 +53,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists<TEntity>(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -91,13 +91,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists<TEntity>(QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -129,13 +129,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists<TEntity>(IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -167,13 +167,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists<TEntity>(QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -209,13 +209,13 @@ namespace RepoDb
         #region ExistsAsync<TEntity>
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync<TEntity>(object whereOrPrimaryKey = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -247,13 +247,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -285,13 +285,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync<TEntity>(QueryField where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -323,13 +323,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync<TEntity>(IEnumerable<QueryField> where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -361,13 +361,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync<TEntity>(QueryGroup where = null,
             string hints = null,
             IDbTransaction transaction = null)
@@ -403,13 +403,13 @@ namespace RepoDb
         #region Exists(TableName)
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists(string tableName,
             object whereOrPrimaryKey = null,
             string hints = null,
@@ -442,13 +442,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists(string tableName,
             QueryField where = null,
             string hints = null,
@@ -481,13 +481,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists(string tableName,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -520,13 +520,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table.
+        /// Check whether the rows are existing in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public bool Exists(string tableName,
             QueryGroup where = null,
             string hints = null,
@@ -563,13 +563,13 @@ namespace RepoDb
         #region ExistsAsync(TableName)
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync(string tableName,
             object whereOrPrimaryKey = null,
             string hints = null,
@@ -602,13 +602,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync(string tableName,
             QueryField where = null,
             string hints = null,
@@ -641,13 +641,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync(string tableName,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -680,13 +680,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Check whether the records are existing in the table in an asynchronous way.
+        /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An integer value that holds the number of data from the database.</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public async Task<bool> ExistsAsync(string tableName,
             QueryGroup where = null,
             string hints = null,

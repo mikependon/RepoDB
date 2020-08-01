@@ -18,7 +18,7 @@ namespace RepoDb
         #region Delete<TEntity>
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -28,7 +28,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -49,7 +49,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -59,7 +59,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
             string hints = null,
@@ -80,7 +80,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -90,7 +90,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -110,7 +110,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -120,7 +120,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
@@ -140,7 +140,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -150,7 +150,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -170,7 +170,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -180,7 +180,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -200,7 +200,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -210,7 +210,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static int DeleteInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -249,7 +249,7 @@ namespace RepoDb
         #region DeleteAsync<TEntity>
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -259,7 +259,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -280,7 +280,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -290,7 +290,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
             string hints = null,
@@ -311,7 +311,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -321,7 +321,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -341,7 +341,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -351,7 +351,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
@@ -371,7 +371,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -381,7 +381,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -401,7 +401,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -411,7 +411,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -431,7 +431,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -441,7 +441,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static Task<int> DeleteAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -480,7 +480,7 @@ namespace RepoDb
         #region Delete(TableName)
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -490,7 +490,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
@@ -511,7 +511,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -521,7 +521,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
             QueryField where,
@@ -542,7 +542,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -552,7 +552,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
@@ -573,7 +573,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -583,7 +583,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -604,7 +604,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -614,7 +614,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static int DeleteInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -653,7 +653,7 @@ namespace RepoDb
         #region DeleteAsync(TableName)
 
         /// <summary>
-        /// Deletes an existing data from the database in asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -663,7 +663,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
@@ -684,7 +684,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -694,7 +694,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             QueryField where,
@@ -715,7 +715,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -725,7 +725,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
@@ -746,7 +746,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -756,7 +756,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         public static Task<int> DeleteAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -777,7 +777,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes an existing data from the database in asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -787,7 +787,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static Task<int> DeleteAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -826,7 +826,7 @@ namespace RepoDb
         #region DeleteInternalBase
 
         /// <summary>
-        /// Deletes an existing data from the database.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="DeleteRequest"/> object.</param>
@@ -834,7 +834,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static int DeleteInternalBase(this IDbConnection connection,
             DeleteRequest request,
             object param,
@@ -893,7 +893,7 @@ namespace RepoDb
         #region DeleteAsyncInternalBase
 
         /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="DeleteRequest"/> object.</param>
@@ -901,7 +901,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
         internal static async Task<int> DeleteAsyncInternalBase(this IDbConnection connection,
             DeleteRequest request,
             object param,
