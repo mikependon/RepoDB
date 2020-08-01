@@ -1042,18 +1042,7 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Add the fields from the query group
-                if (where != null)
-                {
-                    // Iterate the fields
-                    foreach (var queryField in where.GetFields(true))
-                    {
-                        // Create a parameter
-                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
-
-                        // Add to the command object
-                        command.Parameters.Add(parameter);
-                    }
-                }
+                WhereToCommandParameters(command, where);
 
                 // Actual Execution
                 result = command.ExecuteNonQuery();
@@ -1195,18 +1184,7 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Add the fields from the query group
-                if (where != null)
-                {
-                    // Iterate the fields
-                    foreach (var queryField in where.GetFields(true))
-                    {
-                        // Create a parameter
-                        var parameter = command.CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
-
-                        // Add to the command object
-                        command.Parameters.Add(parameter);
-                    }
-                }
+                WhereToCommandParameters(command, where);
 
                 // Actual Execution
                 result = await command.ExecuteNonQueryAsync();

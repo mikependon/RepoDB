@@ -1189,6 +1189,32 @@ namespace RepoDb
         #region Helper Methods
 
         /// <summary>
+        /// Added the <see cref="QueryGroup"/> fields into a command object parameters.
+        /// </summary>
+        /// <param name="command">The target command.</param>
+        /// <param name="where">The instance of <see cref="QueryGroup"/> object.</param>
+        private static void WhereToCommandParameters(DbCommand command,
+            QueryGroup where)
+        {
+            // Check the presence
+            if (where == null)
+            {
+                return;
+            }
+
+            // Iterate the fields
+            foreach (var queryField in where.GetFields(true))
+            {
+                // Create a parameter
+                var parameter = command
+                    .CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
+
+                // Add to the command object
+                command.Parameters.Add(parameter);
+            }
+        }
+
+        /// <summary>
         /// Creates a <see cref="QueryGroup"/> object based on the given qualifiers.
         /// </summary>
         /// <param name="entity">The data entity or dynamic object to be merged.</param>
