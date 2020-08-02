@@ -116,7 +116,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [MdsCompleteTable];"))
+                using (var reader = connection.ExecuteReader("SELECT *, 'MDS' AS MDS  FROM [MdsCompleteTable];"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
@@ -219,7 +219,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];").Result)
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();

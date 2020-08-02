@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Michael Camara Pendon</Authors>
-    <Version>1.0.15</Version>
+    <Version>1.0.16</Version>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A hybrid .NET ORM library for SqLite.</Description>
@@ -16,8 +16,8 @@
     <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <AssemblyVersion>1.0.15.0</AssemblyVersion>
-    <FileVersion>1.0.15.0</FileVersion>
+    <AssemblyVersion>1.0.16.0</AssemblyVersion>
+    <FileVersion>1.0.16.0</FileVersion>
     <PackageIconUrl></PackageIconUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageIcon>RepoDb-64x64.png</PackageIcon>
