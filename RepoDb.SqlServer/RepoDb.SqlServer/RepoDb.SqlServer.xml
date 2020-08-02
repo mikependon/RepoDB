@@ -80,22 +80,6 @@
             <param name="reader">The instance of <see cref="T:System.Data.IDataReader"/> object.</param>
             <returns>The instance of converted <see cref="T:RepoDb.DbField"/> object.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetSchema(System.String,RepoDb.Interfaces.IDbSetting)">
-            <summary>
-            Gets the actual schema of the table from the database.
-            </summary>
-            <param name="tableName">The passed table name.</param>
-            <param name="dbSetting">The currently in used <see cref="T:RepoDb.Interfaces.IDbSetting"/> object.</param>
-            <returns>The actual table schema.</returns>
-        </member>
-        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetTableName(System.String,RepoDb.Interfaces.IDbSetting)">
-            <summary>
-            Gets the actual name of the table from the database.
-            </summary>
-            <param name="tableName">The passed table name.</param>
-            <param name="dbSetting">The currently in used <see cref="T:RepoDb.Interfaces.IDbSetting"/> object.</param>
-            <returns>The actual table name.</returns>
-        </member>
         <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetFields(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table.
