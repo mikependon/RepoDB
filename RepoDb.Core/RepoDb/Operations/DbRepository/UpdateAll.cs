@@ -10,19 +10,20 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
@@ -56,7 +57,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -64,7 +65,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -100,7 +101,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -108,7 +109,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll<TEntity>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -148,14 +149,14 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
@@ -189,7 +190,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -197,7 +198,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -233,7 +234,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -241,7 +242,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync<TEntity>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -281,7 +282,7 @@ namespace RepoDb
         #region UpdateAll(TableName)
 
         /// <summary>
-        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -289,7 +290,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -326,7 +327,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -335,7 +336,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int UpdateAll(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
@@ -378,7 +379,7 @@ namespace RepoDb
         #region UpdateAllAsync(TableName)
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -386,7 +387,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -423,7 +424,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -432,7 +433,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAllAsync(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,

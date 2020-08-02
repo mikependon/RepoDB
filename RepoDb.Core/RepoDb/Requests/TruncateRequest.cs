@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the truncate operation arguments.
+    /// A class that holds the value of the 'Truncate' operation arguments.
     /// </summary>
     internal class TruncateRequest : BaseRequest, IEquatable<TruncateRequest>
     {

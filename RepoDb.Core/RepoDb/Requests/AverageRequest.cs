@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the average operation arguments.
+    /// A class that holds the value of the 'Average' operation arguments.
     /// </summary>
     internal class AverageRequest : BaseRequest, IEquatable<AverageRequest>
     {

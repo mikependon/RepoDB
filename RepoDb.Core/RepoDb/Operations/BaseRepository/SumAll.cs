@@ -13,12 +13,12 @@ namespace RepoDb
         #region SumAll<TEntity>
 
         /// <summary>
-        /// Summarizes the target field from all data of the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object SumAll(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -29,12 +29,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from all data of the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object SumAll(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -49,12 +49,12 @@ namespace RepoDb
         #region SumAllAsync<TEntity>
 
         /// <summary>
-        /// Summarizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAllAsync(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -65,12 +65,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAllAsync(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)

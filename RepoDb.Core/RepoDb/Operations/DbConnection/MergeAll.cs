@@ -22,7 +22,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -68,7 +68,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Field qualifier,
@@ -92,7 +92,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -104,7 +104,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -140,7 +140,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
@@ -164,7 +164,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -176,7 +176,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static int MergeAllInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -232,7 +232,7 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -243,7 +243,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -266,7 +266,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -278,7 +278,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Field qualifier,
@@ -302,7 +302,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -314,7 +314,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -338,7 +338,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -350,7 +350,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
@@ -374,7 +374,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -386,7 +386,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static Task<int> MergeAllAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -442,7 +442,7 @@ namespace RepoDb
         #region MergeAll(TableName)
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -454,7 +454,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -480,7 +480,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -493,7 +493,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -520,7 +520,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -533,7 +533,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static int MergeAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -560,7 +560,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -573,7 +573,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static int MergeAllInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -648,7 +648,7 @@ namespace RepoDb
         #region MergeAllAsync(TableName)
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -660,7 +660,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -686,7 +686,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -699,7 +699,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -726,7 +726,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -739,7 +739,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -766,7 +766,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Merges the multiple dynamic objects into the database in an asynchronous way. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -779,7 +779,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static Task<int> MergeAllAsyncInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -869,7 +869,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static int MergeAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -1209,7 +1209,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static int UpsertAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -1370,7 +1370,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="skipIdentityCheck">True to skip the identity check.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -1724,7 +1724,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         internal static async Task<int> UpsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,

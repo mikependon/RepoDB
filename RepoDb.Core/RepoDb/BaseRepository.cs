@@ -302,7 +302,7 @@ namespace RepoDb
         // ExecuteQuery
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <param name="commandText">The command text to be used.</param>
@@ -313,7 +313,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public IEnumerable<TEntity> ExecuteQuery(string commandText,
             object param = null,
@@ -331,7 +331,7 @@ namespace RepoDb
         #region ExecuteQueryAsync
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and 
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and 
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <param name="commandText">The command text to be used.</param>
@@ -342,7 +342,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText,
             object param = null,
@@ -360,8 +360,8 @@ namespace RepoDb
         #region ExecuteNonQuery
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected data during the execution.
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -387,8 +387,8 @@ namespace RepoDb
         #region ExecuteNonQueryAsync
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/>
-        /// and returns the number of affected data during the execution.
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/>
+        /// and returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -414,7 +414,7 @@ namespace RepoDb
         #region ExecuteScalar
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="commandText">The command text to be used.</param>
@@ -441,7 +441,7 @@ namespace RepoDb
         #region ExecuteScalarAsync
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="commandText">The command text to be used.</param>
@@ -468,7 +468,7 @@ namespace RepoDb
         #region ExecuteScalar<TResult>
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <typeparam name="TResult">The target return type.</typeparam>
@@ -496,7 +496,7 @@ namespace RepoDb
         #region ExecuteScalarAsync<TResult>
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <typeparam name="TResult">The target return type.</typeparam>

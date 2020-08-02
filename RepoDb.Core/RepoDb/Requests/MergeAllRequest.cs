@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the merge operation arguments.
+    /// A class that holds the value of the 'MergeAll' operation arguments.
     /// </summary>
     internal class MergeAllRequest : BaseRequest, IEquatable<MergeAllRequest>
     {

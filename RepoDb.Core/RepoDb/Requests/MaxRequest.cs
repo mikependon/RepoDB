@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the maximum operation arguments.
+    /// A class that holds the value of the 'Max' operation arguments.
     /// </summary>
     internal class MaxRequest : BaseRequest, IEquatable<MaxRequest>
     {

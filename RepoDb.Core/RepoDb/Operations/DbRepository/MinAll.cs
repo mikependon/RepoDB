@@ -9,18 +9,19 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region MinAll<TEntity>
 
         /// <summary>
-        /// Minimizes the target field from all data of the database table.
+        /// Computes the min value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The minimum value.</returns>
+        /// <returns>The min value of the target field.</returns>
         public object MinAll<TEntity>(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -52,13 +53,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimizes the target field from all data of the database table.
+        /// Computes the min value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The minimum value.</returns>
+        /// <returns>The min value of the target field.</returns>
         public object MinAll<TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -94,13 +95,13 @@ namespace RepoDb
         #region MinAllAsync<TEntity>
 
         /// <summary>
-        /// Minimizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The minimum value.</returns>
+        /// <returns>The min value of the target field.</returns>
         public async Task<object> MinAllAsync<TEntity>(Field field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -132,13 +133,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Minimizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The minimum value.</returns>
+        /// <returns>The min value of the target field.</returns>
         public async Task<object> MinAllAsync<TEntity>(Expression<Func<TEntity, object>> field,
             string hints = null,
             IDbTransaction transaction = null)
@@ -174,13 +175,13 @@ namespace RepoDb
         #region MinAll(TableName)
 
         /// <summary>
-        /// Minimizes the target field from all data of the database table.
+        /// Computes the min value of the target field.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The min value of the target field.</returns>
         public object MinAll(string tableName,
             Field field,
             string hints = null,
@@ -217,13 +218,13 @@ namespace RepoDb
         #region MinAllAsync(TableName)
 
         /// <summary>
-        /// Minimizes the target field from all data of the database table in an asynchronous way.
+        /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The min value of the target field.</returns>
         public async Task<object> MinAllAsync(string tableName,
             Field field,
             string hints = null,

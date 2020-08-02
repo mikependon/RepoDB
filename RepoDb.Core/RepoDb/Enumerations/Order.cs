@@ -3,7 +3,7 @@
 namespace RepoDb.Enumerations
 {
     /// <summary>
-    /// An enumeration used to define the ordering of the query field.
+    /// An enumeration that is used to define an ordering for the query.
     /// </summary>
     public enum Order
     {

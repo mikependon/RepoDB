@@ -6,7 +6,7 @@ using System;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a handler for the property transformation.
+    /// An attribute that is used to define a handler for the property transformation.
     /// </summary>
     public class PropertyHandlerAttribute : Attribute
     {

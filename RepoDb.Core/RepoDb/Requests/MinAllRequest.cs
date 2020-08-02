@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the minimum-all operation arguments.
+    /// A class that holds the value of the 'MinAll' operation arguments.
     /// </summary>
     internal class MinAllRequest : BaseRequest, IEquatable<MinAllRequest>
     {

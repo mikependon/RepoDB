@@ -10,7 +10,8 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region Count<TEntity>
 

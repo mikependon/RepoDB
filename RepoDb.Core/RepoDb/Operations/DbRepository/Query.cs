@@ -10,12 +10,13 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region Query<TEntity>
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
@@ -26,7 +27,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -66,7 +67,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -77,7 +78,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -117,7 +118,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -128,7 +129,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -167,7 +168,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -178,7 +179,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -218,7 +219,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -229,7 +230,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -273,7 +274,7 @@ namespace RepoDb
         #region QueryAsync<TEntity>
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
@@ -284,7 +285,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -324,7 +325,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -335,7 +336,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -375,7 +376,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -386,7 +387,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -426,7 +427,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -437,7 +438,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -477,7 +478,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
@@ -488,7 +489,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -532,7 +533,7 @@ namespace RepoDb
         #region Query(TableName)
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
@@ -544,7 +545,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> Query(string tableName,
             object whereOrPrimaryKey = null,
             IEnumerable<Field> fields = null,
@@ -587,7 +588,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -599,7 +600,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> Query(string tableName,
             QueryField where = null,
             IEnumerable<Field> fields = null,
@@ -641,7 +642,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -653,7 +654,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> Query(string tableName,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
@@ -696,7 +697,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -708,7 +709,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> Query(string tableName,
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
@@ -755,7 +756,7 @@ namespace RepoDb
         #region QueryAsync(TableName)
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
@@ -767,7 +768,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> QueryAsync(string tableName,
             object whereOrPrimaryKey = null,
             IEnumerable<Field> fields = null,
@@ -810,7 +811,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -822,7 +823,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> QueryAsync(string tableName,
             QueryField where = null,
             IEnumerable<Field> fields = null,
@@ -865,7 +866,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -877,7 +878,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> QueryAsync(string tableName,
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
@@ -920,7 +921,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
@@ -932,7 +933,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> QueryAsync(string tableName,
             QueryGroup where = null,
             IEnumerable<Field> fields = null,

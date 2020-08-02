@@ -9,7 +9,8 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region MaxAll<TEntity>
 
@@ -180,7 +181,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The max value of the target field.</returns>
         public object MaxAll(string tableName,
             Field field,
             string hints = null,
@@ -223,7 +224,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be maximized.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The max value of the target field.</returns>
         public async Task<object> MaxAllAsync(string tableName,
             Field field,
             string hints = null,

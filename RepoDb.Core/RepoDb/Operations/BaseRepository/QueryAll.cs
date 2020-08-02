@@ -13,7 +13,7 @@ namespace RepoDb
         #region QueryAll<TEntity>
 
         /// <summary>
-        /// Query all the data from the database.
+        /// Query all the data from the table.
         /// </summary>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -21,7 +21,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll(IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -38,7 +38,7 @@ namespace RepoDb
         #region QueryAllAsync<TEntity>
 
         /// <summary>
-        /// Query all the data from the database in an asynchronous way.
+        /// Query all the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -46,7 +46,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAllAsync(IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,

@@ -3,7 +3,7 @@
 namespace RepoDb.Enumerations
 {
     /// <summary>
-    /// An enumeration used to define an operation on the query expression.
+    /// An enumeration that is used to define an operation on the query expression.
     /// </summary>
     public enum Operation
     {

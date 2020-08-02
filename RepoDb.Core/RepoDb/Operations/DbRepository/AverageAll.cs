@@ -181,7 +181,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The average value of the target field.</returns>
         public object AverageAll(string tableName,
             Field field,
             string hints = null,
@@ -224,7 +224,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The average value of the target field.</returns>
         public async Task<object> AverageAllAsync(string tableName,
             Field field,
             string hints = null,

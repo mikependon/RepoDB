@@ -14,13 +14,13 @@ namespace RepoDb
         #region Sum<TEntity>
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Field field,
             object where = null,
             string hints = null,
@@ -33,13 +33,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -52,13 +52,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Field field,
             QueryField where = null,
             string hints = null,
@@ -71,13 +71,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -90,13 +90,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Field field,
             QueryGroup where = null,
             string hints = null,
@@ -109,13 +109,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -128,13 +128,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -147,13 +147,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -166,13 +166,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -185,13 +185,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table.
+        /// Computes the sum value of the target field.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public object Sum(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,
@@ -208,13 +208,13 @@ namespace RepoDb
         #region SumAsync<TEntity>
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Field field,
             object where = null,
             string hints = null,
@@ -227,13 +227,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Field field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -246,13 +246,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Field field,
             QueryField where = null,
             string hints = null,
@@ -265,13 +265,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Field field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -284,13 +284,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Field field,
             QueryGroup where = null,
             string hints = null,
@@ -303,13 +303,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Expression<Func<TEntity, object>> field,
             object where = null,
             string hints = null,
@@ -322,13 +322,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Expression<Func<TEntity, object>> field,
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
@@ -341,13 +341,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Expression<Func<TEntity, object>> field,
             QueryField where = null,
             string hints = null,
@@ -360,13 +360,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Expression<Func<TEntity, object>> field,
             IEnumerable<QueryField> where = null,
             string hints = null,
@@ -379,13 +379,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Summarizes the target field from the database table in an asynchronous way.
+        /// Computes the sum value of the target field in an asynchronous way.
         /// </summary>
         /// <param name="field">The field to be summarized.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The sum value.</returns>
+        /// <returns>The sum value of the target field.</returns>
         public Task<object> SumAsync(Expression<Func<TEntity, object>> field,
             QueryGroup where = null,
             string hints = null,

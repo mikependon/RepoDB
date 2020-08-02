@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the update operation arguments.
+    /// A class that holds the value of the 'Update' operation arguments.
     /// </summary>
     internal class UpdateRequest : BaseRequest, IEquatable<UpdateRequest>
     {

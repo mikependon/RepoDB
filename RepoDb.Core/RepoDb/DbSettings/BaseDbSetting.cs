@@ -5,7 +5,7 @@ using System.Data.Common;
 namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A base class to be used when implementing a <see cref="IDbSetting"/> object for a specific data provider.
+    /// A base class to be used when implementing an <see cref="IDbSetting"/>-based object to support a specific RDBMS data provider.
     /// </summary>
     public abstract class BaseDbSetting : IDbSetting
     {

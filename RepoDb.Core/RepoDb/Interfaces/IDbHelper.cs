@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface that is used to mark a class be a helper class of a specific database provider.
+    /// An interface that is used to mark a class be a database helper object.
     /// </summary>
     public interface IDbHelper
     {
@@ -18,7 +18,7 @@ namespace RepoDb.Interfaces
         #region GetFields
 
         /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table.
+        /// Gets the list of <see cref="DbField"/> objects of the table.
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -29,7 +29,7 @@ namespace RepoDb.Interfaces
             IDbTransaction transaction = null);
 
         /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table in an asynchronous way.
+        /// Gets the list of <see cref="DbField"/> objects of the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>

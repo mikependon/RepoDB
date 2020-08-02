@@ -19,7 +19,7 @@ namespace RepoDb
         #region Query<TEntity>
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -37,7 +37,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
@@ -67,7 +67,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -85,7 +85,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -115,7 +115,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -133,7 +133,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -163,7 +163,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -181,7 +181,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -210,7 +210,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -228,7 +228,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -258,7 +258,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -276,7 +276,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         internal static IEnumerable<TEntity> QueryInternal<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -311,7 +311,7 @@ namespace RepoDb
         #region QueryAsync<TEntity>
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -329,7 +329,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey = null,
             IEnumerable<OrderField> orderBy = null,
@@ -359,7 +359,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -377,7 +377,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             QueryField where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -407,7 +407,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -425,7 +425,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -455,7 +455,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -473,7 +473,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -502,7 +502,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -520,7 +520,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -550,7 +550,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -568,7 +568,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         internal static Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -603,7 +603,7 @@ namespace RepoDb
         #region Query(TableName)
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -622,7 +622,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static IEnumerable<dynamic> Query(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey = null,
@@ -655,7 +655,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -674,7 +674,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static IEnumerable<dynamic> Query(this IDbConnection connection,
             string tableName,
             QueryField where = null,
@@ -707,7 +707,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -726,7 +726,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static IEnumerable<dynamic> Query(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where = null,
@@ -759,7 +759,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -778,7 +778,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static IEnumerable<dynamic> Query(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -811,7 +811,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -830,7 +830,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         internal static IEnumerable<dynamic> QueryInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -867,7 +867,7 @@ namespace RepoDb
         #region QueryAsync(TableName)
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -886,7 +886,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey = null,
@@ -919,7 +919,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -938,7 +938,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
             QueryField where = null,
@@ -971,7 +971,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -990,7 +990,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where = null,
@@ -1023,7 +1023,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1042,7 +1042,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -1075,7 +1075,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1094,7 +1094,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         internal static Task<IEnumerable<dynamic>> QueryAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -1131,7 +1131,7 @@ namespace RepoDb
         #region QueryInternalBase<TEntity>
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -1150,7 +1150,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         internal static IEnumerable<TEntity> QueryInternalBase<TEntity>(this IDbConnection connection,
             IEnumerable<Field> fields = null,
             QueryGroup where = null,
@@ -1249,7 +1249,7 @@ namespace RepoDb
         #region QueryAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -1268,7 +1268,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> QueryAsyncInternalBase<TEntity>(this IDbConnection connection,
             IEnumerable<Field> fields = null,
             QueryGroup where = null,
@@ -1367,7 +1367,7 @@ namespace RepoDb
         #region QueryInternalBase(TableName)
 
         /// <summary>
-        /// Queries a data from the database.
+        /// Query the data from the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1386,7 +1386,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         internal static IEnumerable<dynamic> QueryInternalBase(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
@@ -1492,7 +1492,7 @@ namespace RepoDb
         #region QueryAsyncInternalBase(TableName)
 
         /// <summary>
-        /// Queries a data from the database in an asynchronous way.
+        /// Query the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1511,7 +1511,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic object.</returns>
+        /// <returns>An enumerable list of dynamic objects.</returns>
         internal static async Task<IEnumerable<dynamic>> QueryAsyncInternalBase(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,

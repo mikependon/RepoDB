@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the exists operation arguments.
+    /// A class that holds the value of the 'Exists' operation arguments.
     /// </summary>
     internal class ExistsRequest : BaseRequest, IEquatable<ExistsRequest>
     {

@@ -8,7 +8,8 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region CountAll<TEntity>
 
@@ -96,7 +97,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll(string tableName,
             string hints = null,
             IDbTransaction transaction = null)
@@ -136,7 +137,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAllAsync(string tableName,
             string hints = null,
             IDbTransaction transaction = null)

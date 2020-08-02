@@ -22,7 +22,7 @@ namespace RepoDb
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -68,7 +68,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Field qualifier,
@@ -92,7 +92,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -104,7 +104,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -140,7 +140,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
@@ -164,7 +164,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -176,7 +176,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static int UpdateAllInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -211,7 +211,7 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -222,7 +222,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -245,7 +245,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -257,7 +257,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Field qualifier,
@@ -281,7 +281,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -293,7 +293,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -317,7 +317,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -329,7 +329,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
@@ -353,7 +353,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -365,7 +365,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static Task<int> UpdateAllAsyncInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -400,7 +400,7 @@ namespace RepoDb
         #region UpdateAll(TableName)
 
         /// <summary>
-        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -412,7 +412,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -438,7 +438,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -451,7 +451,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -478,7 +478,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -491,7 +491,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int UpdateAll(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -518,7 +518,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -531,7 +531,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static int UpdateAllInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -562,7 +562,7 @@ namespace RepoDb
         #region UpdateAllAsync(TableName)
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -574,7 +574,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -600,7 +600,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -613,7 +613,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -640,7 +640,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -653,7 +653,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAllAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -680,7 +680,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -693,7 +693,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static Task<int> UpdateAllAsyncInternal(this IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
@@ -724,7 +724,7 @@ namespace RepoDb
         #region UpdateAllInternalBase<TEntity>
 
         /// <summary>
-        /// Updates existing multiple data in the database.
+        /// Update the existing multiple rows in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
@@ -738,7 +738,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static int UpdateAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -997,7 +997,7 @@ namespace RepoDb
         #region UpdateAllAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Updates existing multiple data in the database in an asynchronous way.
+        /// Update the existing multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
@@ -1011,7 +1011,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static async Task<int> UpdateAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,

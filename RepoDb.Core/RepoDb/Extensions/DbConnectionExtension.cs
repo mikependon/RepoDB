@@ -87,7 +87,7 @@ namespace RepoDb
         #region ExecuteQuery(Dynamics)
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -120,7 +120,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -168,7 +168,7 @@ namespace RepoDb
         #region ExecuteQueryAsync(Dynamics)
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -201,7 +201,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -249,7 +249,7 @@ namespace RepoDb
         #region ExecuteQuery<TEntity>
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -263,7 +263,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
             string commandText,
@@ -283,7 +283,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -298,7 +298,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static IEnumerable<TEntity> ExecuteQueryInternal<TEntity>(this IDbConnection connection,
             string commandText,
@@ -341,7 +341,7 @@ namespace RepoDb
         #region ExecuteQueryAsync<TEntity>
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -355,7 +355,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
             string commandText,
@@ -375,7 +375,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
@@ -390,7 +390,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static async Task<IEnumerable<TEntity>> ExecuteQueryAsyncInternal<TEntity>(this IDbConnection connection,
             string commandText,
@@ -433,7 +433,7 @@ namespace RepoDb
         #region ExecuteQueryMultiple(Results)
 
         /// <summary>
-        /// Executes a multiple query statement from the database.
+        /// Execute the multiple SQL statements from the database.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -469,7 +469,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a multiple query statement from the database in an asynchronous way.
+        /// Execute the multiple SQL statements from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -509,7 +509,7 @@ namespace RepoDb
         #region ExecuteReader
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -539,7 +539,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -597,7 +597,7 @@ namespace RepoDb
         #region ExecuteReaderAsync
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -627,7 +627,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -685,8 +685,8 @@ namespace RepoDb
         #region ExecuteNonQuery
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected data during the execution.
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -715,8 +715,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected data during the execution.
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -755,8 +755,8 @@ namespace RepoDb
         #region ExecuteNonQueryAsync
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected data during the execution.
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -785,8 +785,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected data during the execution.
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -825,7 +825,7 @@ namespace RepoDb
         #region ExecuteScalar
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -855,7 +855,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -895,7 +895,7 @@ namespace RepoDb
         #region ExecuteScalarAsync
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -925,7 +925,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -965,7 +965,7 @@ namespace RepoDb
         #region ExecuteScalar<TResult>
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <typeparam name="TResult">The target return type.</typeparam>
@@ -996,7 +996,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -1036,7 +1036,7 @@ namespace RepoDb
         #region ExecuteScalarAsync<TResult>
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <typeparam name="TResult">The target return type.</typeparam>
@@ -1067,7 +1067,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
@@ -1107,7 +1107,7 @@ namespace RepoDb
         #region Mapped Operations
 
         /// <summary>
-        /// Gets the associated <see cref="IDbSetting"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// Gets the associated <see cref="IDbSetting"/> object that is currently mapped on the target <see cref="IDbConnection"/> object.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <returns>An instance of the mapped <see cref="IDbSetting"/> object.</returns>
@@ -1133,7 +1133,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the associated <see cref="IDbHelper"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// Gets the associated <see cref="IDbHelper"/> object that is currently mapped on the target <see cref="IDbConnection"/> object.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <returns>An instance of the mapped <see cref="IDbHelper"/> object.</returns>
@@ -1159,7 +1159,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the associated <see cref="IStatementBuilder"/> object that is currently mapped for the target <see cref="IDbConnection"/> object.
+        /// Gets the associated <see cref="IStatementBuilder"/> object that is currently mapped on the target <see cref="IDbConnection"/> object.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <returns>An instance of the mapped <see cref="IStatementBuilder"/> object.</returns>

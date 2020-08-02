@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the count operation arguments.
+    /// A class that holds the value of the 'Count' operation arguments.
     /// </summary>
     internal class CountRequest : BaseRequest, IEquatable<CountRequest>
     {

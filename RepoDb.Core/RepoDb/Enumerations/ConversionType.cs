@@ -4,7 +4,7 @@ using System.Data.Common;
 namespace RepoDb.Enumerations
 {
     /// <summary>
-    /// An enum used to define the conversion logic when converting an instance of <see cref="DbDataReader"/> into a .NET CLR class.
+    /// An enumeration that is used to define the conversion logic when converting an instance of <see cref="DbDataReader"/> into a .NET CLR class.
     /// </summary>
     public enum ConversionType
     {

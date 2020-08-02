@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A class the holds the column definition of the database table columns.
+    /// A class the holds the column definition of the table.
     /// </summary>
     public class DbField : IEquatable<DbField>
     {

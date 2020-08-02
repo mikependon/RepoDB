@@ -19,7 +19,7 @@ namespace RepoDb
         #region GetAverageText
 
         /// <summary>
-        /// Gets a command text from the cache for the average operation.
+        /// Gets the cached command text for the 'Average' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -44,7 +44,7 @@ namespace RepoDb
         #region GetAverageAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the average-all operation.
+        /// Gets the cached command text for the 'AverageAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -68,7 +68,7 @@ namespace RepoDb
         #region GetBatchQueryText
 
         /// <summary>
-        /// Gets a command text from the cache for the batch query operation.
+        /// Gets the cached command text for the 'BatchQuery' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -97,7 +97,7 @@ namespace RepoDb
         #region GetCountText
 
         /// <summary>
-        /// Gets a command text from the cache for the count operation.
+        /// Gets the cached command text for the 'Count' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -121,7 +121,7 @@ namespace RepoDb
         #region GetCountAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the count-all operation.
+        /// Gets the cached command text for the 'CountAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -144,7 +144,7 @@ namespace RepoDb
         #region GetDeleteText
 
         /// <summary>
-        /// Gets a command text from the cache for the delete operation.
+        /// Gets the cached command text for the 'Delete' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -167,7 +167,7 @@ namespace RepoDb
         #region GetDeleteAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the delete-all operation.
+        /// Gets the cached command text for the 'DeleteAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -189,7 +189,7 @@ namespace RepoDb
         #region GetExistsText
 
         /// <summary>
-        /// Gets a command text from the cache for the exists operation.
+        /// Gets the cached command text for the 'Exists' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -213,7 +213,7 @@ namespace RepoDb
         #region GetInsertText
 
         /// <summary>
-        /// Gets a command text from the cache for the insert operation.
+        /// Gets the cached command text for the 'Insert' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -241,7 +241,7 @@ namespace RepoDb
         #region GetInsertAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the insert-all operation.
+        /// Gets the cached command text for the 'InsertAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -270,7 +270,7 @@ namespace RepoDb
         #region GetMaxText
 
         /// <summary>
-        /// Gets a command text from the cache for the maximum operation.
+        /// Gets the cached command text for the 'Max' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -295,7 +295,7 @@ namespace RepoDb
         #region GetMaxAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the maximum-all operation.
+        /// Gets the cached command text for the 'MaxAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -319,7 +319,7 @@ namespace RepoDb
         #region GetMergeText
 
         /// <summary>
-        /// Gets a command text from the cache for the merge operation.
+        /// Gets the cached command text for the 'Merge' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -348,7 +348,7 @@ namespace RepoDb
         #region GetMergeAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the merge-all operation.
+        /// Gets the cached command text for the 'MergeAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -378,7 +378,7 @@ namespace RepoDb
         #region GetMinText
 
         /// <summary>
-        /// Gets a command text from the cache for the minimum operation.
+        /// Gets the cached command text for the 'Min' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -403,7 +403,7 @@ namespace RepoDb
         #region GetMinAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the minimum-all operation.
+        /// Gets the cached command text for the 'MinAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -427,7 +427,7 @@ namespace RepoDb
         #region GetQueryText
 
         /// <summary>
-        /// Gets a command text from the cache for the query operation.
+        /// Gets the cached command text for the 'Query' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -455,7 +455,7 @@ namespace RepoDb
         #region GetQueryAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the query-all operation.
+        /// Gets the cached command text for the 'QueryAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -481,7 +481,7 @@ namespace RepoDb
         #region GetQueryMultipleText
 
         /// <summary>
-        /// Gets a command text from the cache for the query-multiple operation.
+        /// Gets the cached command text for the 'QueryMultiple' operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -511,7 +511,7 @@ namespace RepoDb
         #region GetSumText
 
         /// <summary>
-        /// Gets a command text from the cache for the sum operation.
+        /// Gets the cached command text for the 'Sum' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -536,7 +536,7 @@ namespace RepoDb
         #region GetSumAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the sum-all operation.
+        /// Gets the cached command text for the 'SumAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -560,7 +560,7 @@ namespace RepoDb
         #region GetTruncateText
 
         /// <summary>
-        /// Gets a command text from the cache for the truncate operation.
+        /// Gets the cached command text for the 'Truncate' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -582,7 +582,7 @@ namespace RepoDb
         #region GetUpdateText
 
         /// <summary>
-        /// Gets a command text from the cache for the update operation.
+        /// Gets the cached command text for the 'Update' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
@@ -611,7 +611,7 @@ namespace RepoDb
         #region GetUpdateAllText
 
         /// <summary>
-        /// Gets a command text from the cache for the update-all operation.
+        /// Gets the cached command text for the 'UpdateAll' operation.
         /// </summary>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>

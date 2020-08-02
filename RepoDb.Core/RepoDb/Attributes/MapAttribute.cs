@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Data;
 
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute class used to define a mapping of the current class/property equivalent to an object/field name in the database.
+    /// An attribute that is used to define a mapping of the class/property into its equivalent object/field name in the database.
     /// </summary>
     public class MapAttribute : Attribute
     {

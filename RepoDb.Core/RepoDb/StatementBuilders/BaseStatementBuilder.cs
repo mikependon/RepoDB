@@ -55,7 +55,7 @@ namespace RepoDb.StatementBuilders
         #region CreateAverage
 
         /// <summary>
-        /// Creates a SQL Statement for average operation.
+        /// Creates a SQL Statement for 'Average' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -108,7 +108,7 @@ namespace RepoDb.StatementBuilders
         #region CreateAverageAll
 
         /// <summary>
-        /// Creates a SQL Statement for average-all operation.
+        /// Creates a SQL Statement for 'AverageAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -158,7 +158,7 @@ namespace RepoDb.StatementBuilders
         #region CreateCount
 
         /// <summary>
-        /// Creates a SQL Statement for count operation.
+        /// Creates a SQL Statement for 'Count' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -199,7 +199,7 @@ namespace RepoDb.StatementBuilders
         #region CreateCountAll
 
         /// <summary>
-        /// Creates a SQL Statement for count-all operation.
+        /// Creates a SQL Statement for 'CountAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -237,7 +237,7 @@ namespace RepoDb.StatementBuilders
         #region CreateDelete
 
         /// <summary>
-        /// Creates a SQL Statement for delete operation.
+        /// Creates a SQL Statement for 'Delete' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -276,7 +276,7 @@ namespace RepoDb.StatementBuilders
         #region CreateDeleteAll
 
         /// <summary>
-        /// Creates a SQL Statement for delete-all operation.
+        /// Creates a SQL Statement for 'DeleteAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -312,7 +312,7 @@ namespace RepoDb.StatementBuilders
         #region CreateExists
 
         /// <summary>
-        /// Creates a SQL Statement for exists operation.
+        /// Creates a SQL Statement for 'Exists' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -353,7 +353,7 @@ namespace RepoDb.StatementBuilders
         #region CreateInsert
 
         /// <summary>
-        /// Creates a SQL Statement for insert operation.
+        /// Creates a SQL Statement for 'Insert' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -425,7 +425,7 @@ namespace RepoDb.StatementBuilders
         #region CreateInsertAll
 
         /// <summary>
-        /// Creates a SQL Statement for insert-all operation.
+        /// Creates a SQL Statement for 'InsertAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -507,7 +507,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMax
 
         /// <summary>
-        /// Creates a SQL Statement for maximum operation.
+        /// Creates a SQL Statement for 'Max' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -556,7 +556,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMaxAll
 
         /// <summary>
-        /// Creates a SQL Statement for maximum-all operation.
+        /// Creates a SQL Statement for 'MaxAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -602,7 +602,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMin
 
         /// <summary>
-        /// Creates a SQL Statement for minimum operation.
+        /// Creates a SQL Statement for 'Min' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -651,7 +651,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMinAll
 
         /// <summary>
-        /// Creates a SQL Statement for minimum-all operation.
+        /// Creates a SQL Statement for 'MinAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -697,7 +697,7 @@ namespace RepoDb.StatementBuilders
         #region CreateQuery
 
         /// <summary>
-        /// Creates a SQL Statement for query operation.
+        /// Creates a SQL Statement for 'Query' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -767,7 +767,7 @@ namespace RepoDb.StatementBuilders
         #region CreateQueryAll
 
         /// <summary>
-        /// Creates a SQL Statement for query-all operation.
+        /// Creates a SQL Statement for 'QueryAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -831,7 +831,7 @@ namespace RepoDb.StatementBuilders
         #region CreateSum
 
         /// <summary>
-        /// Creates a SQL Statement for sum operation.
+        /// Creates a SQL Statement for 'Sum' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -880,7 +880,7 @@ namespace RepoDb.StatementBuilders
         #region CreateSumAll
 
         /// <summary>
-        /// Creates a SQL Statement for sum-all operation.
+        /// Creates a SQL Statement for 'SumAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -926,7 +926,7 @@ namespace RepoDb.StatementBuilders
         #region CreateTruncate
 
         /// <summary>
-        /// Creates a SQL Statement for truncate operation.
+        /// Creates a SQL Statement for 'Truncate' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -956,7 +956,7 @@ namespace RepoDb.StatementBuilders
         #region CreateUpdate
 
         /// <summary>
-        /// Creates a SQL Statement for update operation.
+        /// Creates a SQL Statement for 'Update' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1013,7 +1013,7 @@ namespace RepoDb.StatementBuilders
         #region CreateUpdateAll
 
         /// <summary>
-        /// Creates a SQL Statement for update-all operation.
+        /// Creates a SQL Statement for 'UpdateAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1132,7 +1132,7 @@ namespace RepoDb.StatementBuilders
         #region CreateBatchQuery
 
         /// <summary>
-        /// Creates a SQL Statement for batch query operation.
+        /// Creates a SQL Statement for 'BatchQuery' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1157,7 +1157,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMerge
 
         /// <summary>
-        /// Creates a SQL Statement for merge operation.
+        /// Creates a SQL Statement for 'Merge' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -1180,7 +1180,7 @@ namespace RepoDb.StatementBuilders
         #region CreateMergeAll
 
         /// <summary>
-        /// Creates a SQL Statement for merge-all operation.
+        /// Creates a SQL Statement for 'MergeAll' operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

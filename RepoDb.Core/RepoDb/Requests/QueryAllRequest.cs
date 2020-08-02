@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the query operation arguments.
+    /// A class that holds the value of the 'QueryAll' operation arguments.
     /// </summary>
     internal class QueryAllRequest : BaseRequest, IEquatable<QueryAllRequest>
     {

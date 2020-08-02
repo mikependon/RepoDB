@@ -167,7 +167,7 @@ namespace RepoDb
         #region InsertAll(TableName)
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -204,7 +204,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -247,7 +247,7 @@ namespace RepoDb
         #region InsertAllAsync(TableName)
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -284,7 +284,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>

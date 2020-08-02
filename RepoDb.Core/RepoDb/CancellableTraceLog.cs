@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
+    /// A cancellable tracing log object that is used in the tracing operations. This class holds the cancellable operations for all tracing logs.
     /// </summary>
     public class CancellableTraceLog : TraceLog
     {

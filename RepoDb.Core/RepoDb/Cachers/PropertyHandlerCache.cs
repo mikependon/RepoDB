@@ -9,7 +9,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to cache the mappings between the class property and property handler object.
+    /// A class that is being used to cache the mappings between a class property and a property handler object.
     /// </summary>
     public static class PropertyHandlerCache
     {
@@ -26,7 +26,7 @@ namespace RepoDb
         #region Type Level
 
         /// <summary>
-        /// Type Level: Gets the cached property handler object that is being mapped into a specific .NET CLR type.
+        /// Type Level: Gets the cached property handler object that is being mapped to a specific .NET CLR type.
         /// </summary>
         /// <typeparam name="TType">The .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
@@ -35,7 +35,7 @@ namespace RepoDb
             Get<TPropertyHandler>(typeof(TType));
 
         /// <summary>
-        /// Type Level: Gets the cached property handler object that is being mapped into a specific .NET CLR type.
+        /// Type Level: Gets the cached property handler object that is being mapped to a specific .NET CLR type.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="type">The target .NET CLR type.</param>

@@ -10,19 +10,20 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
@@ -56,7 +57,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -64,7 +65,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -100,7 +101,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts the multiple data entity objects into the table.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -108,7 +109,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -148,14 +149,14 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
@@ -189,7 +190,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -197,7 +198,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -233,7 +234,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -241,7 +242,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync<TEntity>(IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -281,7 +282,7 @@ namespace RepoDb
         #region MergeAll(TableName)
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -289,7 +290,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -326,7 +327,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges the multiple dynamic objects into the database. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -335,7 +336,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
@@ -378,7 +379,7 @@ namespace RepoDb
         #region MergeAllAsync(TableName)
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -386,7 +387,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync(string tableName,
             IEnumerable<object> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -423,7 +424,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges/upserts a data entity object into a table in an asychronous way. By default, the database fields are used unless the 'fields' argument is defined.
+        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -432,7 +433,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the merge process.</returns>
         public async Task<int> MergeAllAsync(string tableName,
             IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,

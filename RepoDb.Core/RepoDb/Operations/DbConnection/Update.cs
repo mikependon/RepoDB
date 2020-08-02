@@ -22,7 +22,7 @@ namespace RepoDb
         #region Update<TEntity>
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -32,7 +32,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -54,7 +54,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -65,7 +65,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
@@ -88,7 +88,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -99,7 +99,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
@@ -121,7 +121,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -132,7 +132,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
@@ -154,7 +154,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -165,7 +165,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
@@ -187,7 +187,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -198,7 +198,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -220,7 +220,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -231,7 +231,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         internal static int UpdateInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -260,7 +260,7 @@ namespace RepoDb
         #region UpdateAsync<TEntity>
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -270,7 +270,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
@@ -292,7 +292,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -303,7 +303,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
@@ -326,7 +326,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -337,7 +337,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
@@ -359,7 +359,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -370,7 +370,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
@@ -392,7 +392,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -403,7 +403,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
@@ -425,7 +425,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -436,7 +436,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -458,7 +458,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -469,7 +469,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
@@ -498,7 +498,7 @@ namespace RepoDb
         #region Update(TableName)
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -508,7 +508,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -535,7 +535,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -546,7 +546,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -569,7 +569,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -580,7 +580,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -603,7 +603,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -614,7 +614,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -637,7 +637,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -648,7 +648,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
@@ -671,7 +671,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -682,7 +682,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         internal static int UpdateInternal(this IDbConnection connection,
             string tableName,
             object entity,
@@ -711,7 +711,7 @@ namespace RepoDb
         #region UpdateAsync(TableName)
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -721,7 +721,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static async Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -748,7 +748,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -759,7 +759,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -782,7 +782,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -793,7 +793,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -816,7 +816,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -827,7 +827,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -850,7 +850,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -861,7 +861,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
@@ -884,7 +884,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -895,7 +895,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
             string tableName,
             object entity,
@@ -924,7 +924,7 @@ namespace RepoDb
         #region UpdateInternalBase<TEntity>
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
@@ -937,7 +937,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         internal static int UpdateInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -1064,7 +1064,7 @@ namespace RepoDb
         #region UpdateAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
@@ -1077,7 +1077,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         internal static async Task<int> UpdateAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,

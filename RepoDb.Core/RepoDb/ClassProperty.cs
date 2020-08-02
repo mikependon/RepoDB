@@ -8,7 +8,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that wraps the property object.
+    /// A class that wraps the <see cref="PropertyInfo"/> object. This class is used to extract the information from the <see cref="System.Reflection.PropertyInfo"/> object in a fast and efficient manner.
     /// </summary>
     public class ClassProperty : IEquatable<ClassProperty>
     {

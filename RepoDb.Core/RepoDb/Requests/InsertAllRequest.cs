@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the insert operation arguments.
+    /// A class that holds the value of the 'Insert' operation arguments.
     /// </summary>
     internal class InsertAllRequest : BaseRequest, IEquatable<InsertAllRequest>
     {

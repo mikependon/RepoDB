@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -11,14 +10,15 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region QueryMultiple<TEntity>
 
         #region T1, T2
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 2 target types.
+        /// Query the data as multiple resultsets from the table based on the given 2 target types.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -80,7 +80,7 @@ namespace RepoDb
         #region T1, T2, T3
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 3 target types.
+        /// Query the data as multiple resultsets from the table based on the given 3 target types.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -156,7 +156,7 @@ namespace RepoDb
         #region T1, T2, T3, T4
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 4 target types.
+        /// Query the data as multiple resultsets from the table based on the given 4 target types.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -247,7 +247,7 @@ namespace RepoDb
         #region T1, T2, T3, T4, T5
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 5 target types.
+        /// Query the data as multiple resultsets from the table based on the given 5 target types.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -352,7 +352,7 @@ namespace RepoDb
         #region T1, T2, T3, T4, T5, T6
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 6 target types.
+        /// Query the data as multiple resultsets from the table based on the given 6 target types.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -471,7 +471,7 @@ namespace RepoDb
         #region T1, T2, T3, T4, T5, T6, T7
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 7 target types.
+        /// Query the data as multiple resultsets from the table based on the given 7 target types.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -608,7 +608,7 @@ namespace RepoDb
         #region T1, T2
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 2 target types in an asychronous way.
+        /// Query the data as multiple resultsets from the table based on the given 2 target types in an asychronous way.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -670,7 +670,7 @@ namespace RepoDb
         #region T1, T2, T3
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+        /// Query the data as multiple resultsets from the table based on the given 3 target types in an asychronous way.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -746,7 +746,7 @@ namespace RepoDb
         #region T1, T2, T3, T4
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 4 target types in an asychronous way.
+        /// Query the data as multiple resultsets from the table based on the given 4 target types in an asychronous way.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -837,7 +837,7 @@ namespace RepoDb
         #region T1, T2, T3, T4, T5
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 5 target types in an asychronous way.
+        /// Query the data as multiple resultsets from the table based on the given 5 target types in an asychronous way.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -942,7 +942,7 @@ namespace RepoDb
         #region T1, T2, T3, T4, T5, T6
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 6 target types in an asychronous way.
+        /// Query the data as multiple resultsets from the table based on the given 6 target types in an asychronous way.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
@@ -1061,7 +1061,7 @@ namespace RepoDb
         #region T1, T2, T3, T4, T5, T6, T7
 
         /// <summary>
-        /// Query a multiple resultset from the database based on the given 7 target types in an asychronous way.
+        /// Query the data as multiple resultsets from the table based on the given 7 target types in an asychronous way.
         /// </summary>
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>

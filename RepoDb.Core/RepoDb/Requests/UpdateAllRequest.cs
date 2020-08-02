@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the update-all operation arguments.
+    /// A class that holds the value of the 'UpdateAll' operation arguments.
     /// </summary>
     internal class UpdateAllRequest : BaseRequest, IEquatable<UpdateAllRequest>
     {

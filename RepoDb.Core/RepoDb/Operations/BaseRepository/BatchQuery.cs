@@ -22,7 +22,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -47,7 +47,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
@@ -71,7 +71,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -149,7 +149,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -172,7 +172,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -197,7 +197,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -222,7 +222,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -247,7 +247,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -272,7 +272,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,

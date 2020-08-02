@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to cache the list of <see cref="DbField"/> of the database table.
+    /// A class that is used to cache the list of <see cref="DbField"/> objects of the table.
     /// </summary>
     public static class DbFieldCache
     {
@@ -45,7 +45,7 @@ namespace RepoDb
         #region Sync
 
         /// <summary>
-        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name.
+        /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
             Get(connection, tableName, transaction, true);
 
         /// <summary>
-        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name.
+        /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -127,7 +127,7 @@ namespace RepoDb
         #region Async
 
         /// <summary>
-        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name in an asynchronous way.
+        /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -139,7 +139,7 @@ namespace RepoDb
             GetAsync(connection, tableName, transaction, true);
 
         /// <summary>
-        /// Gets the cached list of <see cref="DbField"/> of the database table based on the data entity mapped name in an asynchronous way.
+        /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>

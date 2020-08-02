@@ -17,19 +17,19 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Get the cached database object name mappings of the data entity type.
+        /// Gets the cached database object name of the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <returns>The cached mapped name of the entity.</returns>
+        /// <returns>The cached mapped name of the data entity.</returns>
         public static string Get<TEntity>()
             where TEntity : class =>
             Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the cached databse object name mappings of the data entity type.
+        /// Gets the cached database object name of the data entity type.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
-        /// <returns>The cached mapped name of the entity.</returns>
+        /// <returns>The cached mapped name of the data entity.</returns>
         public static string Get(Type entityType)
         {
             // Validate

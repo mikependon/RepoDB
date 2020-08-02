@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the sum operation arguments.
+    /// A class that holds the value of the 'Sum' operation arguments.
     /// </summary>
     internal class SumRequest : BaseRequest, IEquatable<SumRequest>
     {

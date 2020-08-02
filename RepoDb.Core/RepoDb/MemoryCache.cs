@@ -8,7 +8,7 @@ using RepoDb.Exceptions;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used for caching the results of query operation. This is the default cache object used by the <see cref="DbRepository{TDbConnection}"/> and <see cref="BaseRepository{T, TDbConnection}"/> objects.
+    /// A class object that is used for caching the resultsets of the query operations. This is the default cache object used by the <see cref="DbRepository{TDbConnection}"/> and <see cref="BaseRepository{T, TDbConnection}"/> repository objects.
     /// </summary>
     public class MemoryCache : ICache
     {

@@ -4,7 +4,7 @@ using System;
 namespace RepoDb
 {
     /// <summary>
-    /// An item used when caching an object in the repository object. This is the default class used by the <see cref="MemoryCache"/> object.
+    /// A class that is being used to cache the resultsets of the query operations. This is the default class used by the <see cref="MemoryCache"/> object.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
     public class CacheItem<T> : IExpirable

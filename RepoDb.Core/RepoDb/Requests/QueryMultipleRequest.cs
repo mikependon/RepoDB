@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the query multiple operation arguments.
+    /// A class that holds the value of the 'QueryMultiple' operation arguments.
     /// </summary>
     internal class QueryMultipleRequest : BaseRequest, IEquatable<QueryMultipleRequest>
     {

@@ -10,18 +10,19 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region Update<TEntity>
 
         /// <summary>
-        /// Updates an existing data in the database.
+        /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -53,14 +54,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
             string hints = null,
@@ -94,14 +95,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -135,14 +136,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             QueryField where,
             string hints = null,
@@ -176,14 +177,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -217,14 +218,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             QueryGroup where,
             string hints = null,
@@ -262,13 +263,13 @@ namespace RepoDb
         #region UpdateAsync<TEntity>
 
         /// <summary>
-        /// Updates an existing data in the database in an asynchronous way.
+        /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             string hints = null,
 			IDbTransaction transaction = null)
@@ -300,14 +301,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
             string hints = null,
@@ -341,14 +342,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -382,14 +383,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryField where,
             string hints = null,
@@ -423,14 +424,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -464,14 +465,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryGroup where,
             string hints = null,
@@ -509,13 +510,13 @@ namespace RepoDb
         #region Update(TableName)
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update(string tableName,
             object entity,
             string hints = null,
@@ -548,14 +549,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update(string tableName,
             object entity,
             object whereOrPrimaryKey,
@@ -590,14 +591,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update(string tableName,
             object entity,
             QueryField where,
@@ -632,14 +633,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update(string tableName,
             object entity,
             IEnumerable<QueryField> where,
@@ -674,14 +675,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression.
+        /// Updates an existing row in the table based on the given query expression.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public int Update(string tableName,
             object entity,
             QueryGroup where,
@@ -720,13 +721,13 @@ namespace RepoDb
         #region UpdateAsync(TableName)
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             string hints = null,
@@ -759,14 +760,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             object whereOrPrimaryKey,
@@ -801,14 +802,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryField where,
@@ -843,14 +844,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             IEnumerable<QueryField> where,
@@ -885,14 +886,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates an existing data in the database based on the given query expression in an asynchronous way.
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryGroup where,

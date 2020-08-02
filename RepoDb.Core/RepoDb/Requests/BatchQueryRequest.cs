@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the batch query operation arguments.
+    /// A class that holds the value of the 'BatchQuery' operation arguments.
     /// </summary>
     internal class BatchQueryRequest : BaseRequest, IEquatable<BatchQueryRequest>
     {

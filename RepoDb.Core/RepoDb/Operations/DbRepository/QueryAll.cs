@@ -9,12 +9,13 @@ namespace RepoDb
     /// <summary>
     /// A base object for all shared-based repositories.
     /// </summary>
-    public partial class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
+    public partial class DbRepository<TDbConnection> : IDisposable
+        where TDbConnection : DbConnection
     {
         #region QueryAll<TEntity>
 
         /// <summary>
-        /// Query all the data from the database.
+        /// Query all the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -23,7 +24,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -63,7 +64,7 @@ namespace RepoDb
         #region QueryAllAsync<TEntity>
 
         /// <summary>
-        /// Query all the data from the database in an asynchronous way.
+        /// Query all the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -72,7 +73,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -112,7 +113,7 @@ namespace RepoDb
         #region QueryAll(TableName)
 
         /// <summary>
-        /// Query all the data from the database.
+        /// Query all the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
@@ -122,7 +123,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<dynamic> QueryAll(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
@@ -165,7 +166,7 @@ namespace RepoDb
         #region QueryAllAsync(TableName)
 
         /// <summary>
-        /// Query all the data from the database in an asynchronous way.
+        /// Query all the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
@@ -175,7 +176,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<dynamic>> QueryAllAsync(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,

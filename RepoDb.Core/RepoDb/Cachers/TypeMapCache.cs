@@ -10,7 +10,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to cache the mappings between the <see cref="DbType"/> object and .NET CLR type or class property.
+    /// A class that is being used to cache the mappings between the <see cref="DbType"/> objects and .NET CLR type or class properties.
     /// </summary>
     public static class TypeMapCache
     {

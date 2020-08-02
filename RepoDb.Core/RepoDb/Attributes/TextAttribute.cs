@@ -3,7 +3,7 @@
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a text value on any object.
+    /// An attribute that is used to define a text value on any object.
     /// </summary>
     public class TextAttribute : Attribute
     {

@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the delete-all operation arguments.
+    /// A class that holds the value of the 'DeleteAll' operation arguments.
     /// </summary>
     internal class DeleteAllRequest : BaseRequest, IEquatable<DeleteAllRequest>
     {

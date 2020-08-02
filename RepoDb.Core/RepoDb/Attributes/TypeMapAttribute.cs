@@ -4,7 +4,7 @@ using System.Data;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="System.Data.DbType"/>.
+    /// An attribute that is used to define a mapping between the .NET CLR <see cref="Type"/> and the <see cref="System.Data.DbType"/>.
     /// </summary>
     public class TypeMapAttribute : Attribute
     {
