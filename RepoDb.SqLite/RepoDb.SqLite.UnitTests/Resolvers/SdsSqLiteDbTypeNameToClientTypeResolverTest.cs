@@ -5,7 +5,7 @@ using System;
 namespace RepoDb.SqLite.UnitTests.Resolvers
 {
     [TestClass]
-    public class SqLiteDbTypeNameToClientTypeResolverTest
+    public class SdsSqLiteDbTypeNameToClientTypeResolverTest
     {
         [TestInitialize]
         public void Initialize()
@@ -17,7 +17,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForBigInt()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("BIGINT");
@@ -30,7 +30,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForInteger()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("INTEGER");
@@ -43,7 +43,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForBlob()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("BLOB");
@@ -56,7 +56,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForBoolean()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("BOOLEAN");
@@ -69,7 +69,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForChar()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("CHAR");
@@ -82,7 +82,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForString()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("STRING");
@@ -95,7 +95,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForText()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("TEXT");
@@ -108,7 +108,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForVarChar()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("VARCHAR");
@@ -121,7 +121,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForDate()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("DATE");
@@ -134,7 +134,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForDateTime()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("DATETIME");
@@ -147,7 +147,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForTime()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("TIME");
@@ -160,7 +160,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForDecimal()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("DECIMAL");
@@ -173,7 +173,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForNumeric()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("NUMERIC");
@@ -186,7 +186,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForDouble()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("DOUBLE");
@@ -199,7 +199,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForReal()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("REAL");
@@ -212,7 +212,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForInt()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("INT");
@@ -225,7 +225,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForNone()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("NONE");
@@ -238,7 +238,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         public void TestSqLiteDbTypeNameToClientTypeResolverForOther()
         {
             // Setup
-            var resolver = new SqLiteDbTypeNameToClientTypeResolver();
+            var resolver = new SdsSqLiteDbTypeNameToClientTypeResolver();
 
             // Act
             var result = resolver.Resolve("WHATEVER");

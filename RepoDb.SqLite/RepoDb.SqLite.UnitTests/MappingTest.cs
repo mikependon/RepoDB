@@ -16,7 +16,7 @@ namespace RepoDb.SqLite.UnitTests
         #region SDS
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderMapper()
+        public void TestSdsSqLiteStatementBuilderMapper()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -26,7 +26,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbHelperMapper()
+        public void TestSdsSqLiteDbHelperMapper()
         {
             // Setup
             var helper = DbHelperMapper.Get<SQLiteConnection>();
@@ -36,7 +36,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingMapper()
+        public void TestSdsSqLiteDbSettingMapper()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();

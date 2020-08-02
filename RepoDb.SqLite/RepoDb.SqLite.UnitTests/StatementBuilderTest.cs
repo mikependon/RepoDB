@@ -21,7 +21,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateBatchQuery
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateBatchQuery()
+        public void TestSdsSqLiteStatementBuilderCreateBatchQuery()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -40,7 +40,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateBatchQueryWithPage()
+        public void TestSdsSqLiteStatementBuilderCreateBatchQueryWithPage()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -140,7 +140,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateExists
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateExists()
+        public void TestSdsSqLiteStatementBuilderCreateExists()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -160,7 +160,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateInsert
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateInsert()
+        public void TestSdsSqLiteStatementBuilderCreateInsert()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -178,7 +178,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateInsertWithPrimary()
+        public void TestSdsSqLiteStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -196,7 +196,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateInsertWithIdentity()
+        public void TestSdsSqLiteStatementBuilderCreateInsertWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -233,7 +233,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateInsertAll
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateInsertAll()
+        public void TestSdsSqLiteStatementBuilderCreateInsertAll()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -254,7 +254,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateInserAlltWithPrimary()
+        public void TestSdsSqLiteStatementBuilderCreateInserAlltWithPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -275,7 +275,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateInsertAllWithIdentity()
+        public void TestSdsSqLiteStatementBuilderCreateInsertAllWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -316,7 +316,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateMerge
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateMerge()
+        public void TestSdsSqLiteStatementBuilderCreateMerge()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -335,7 +335,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
+        public void TestSdsSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -354,7 +354,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateMergeWithIdentity()
+        public void TestSdsSqLiteStatementBuilderCreateMergeWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -438,7 +438,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateMergeAll
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateMergeAll()
+        public void TestSdsSqLiteStatementBuilderCreateMergeAll()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -460,7 +460,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
+        public void TestSdsSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -482,7 +482,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateMergeAllWithIdentity()
+        public void TestSdsSqLiteStatementBuilderCreateMergeAllWithIdentity()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -573,7 +573,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateQuery
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQuery()
+        public void TestSdsSqLiteStatementBuilderCreateQuery()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -593,7 +593,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryWithExpression()
+        public void TestSdsSqLiteStatementBuilderCreateQueryWithExpression()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -613,7 +613,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryWithTop()
+        public void TestSdsSqLiteStatementBuilderCreateQueryWithTop()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -633,7 +633,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryOrderBy()
+        public void TestSdsSqLiteStatementBuilderCreateQueryOrderBy()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -653,7 +653,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryOrderByFields()
+        public void TestSdsSqLiteStatementBuilderCreateQueryOrderByFields()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -673,7 +673,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryOrderByDescending()
+        public void TestSdsSqLiteStatementBuilderCreateQueryOrderByDescending()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -693,7 +693,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryOrderByFieldsDescending()
+        public void TestSdsSqLiteStatementBuilderCreateQueryOrderByFieldsDescending()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -713,7 +713,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateQueryOrderByFieldsMultiDirection()
+        public void TestSdsSqLiteStatementBuilderCreateQueryOrderByFieldsMultiDirection()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
@@ -769,7 +769,7 @@ namespace RepoDb.SqLite.UnitTests
         #region CreateTruncate
 
         [TestMethod]
-        public void TestSqLiteStatementBuilderCreateTruncate()
+        public void TestSdsSqLiteStatementBuilderCreateTruncate()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();

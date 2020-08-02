@@ -1,13 +1,13 @@
-﻿using Microsoft.Data.Sqlite;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.SqLite.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 
-namespace RepoDb.SqLite.IntegrationTests.MDS
+namespace RepoDb.SqLite.IntegrationTests.SDS
 {
     [TestClass]
     public class EnumTests
@@ -38,21 +38,21 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
 
         #region SubClasses
 
-        [Map("MdsCompleteTable")]
+        [Map("SdsCompleteTable")]
         public class PersonWithText
         {
             public System.Int64 Id { get; set; }
             public Hands? ColumnText { get; set; }
         }
 
-        [Map("MdsCompleteTable")]
+        [Map("SdsCompleteTable")]
         public class PersonWithInteger
         {
             public System.Int64 Id { get; set; }
             public Hands? ColumnInteger { get; set; }
         }
 
-        [Map("MdsCompleteTable")]
+        [Map("SdsCompleteTable")]
         public class PersonWithTextAsInteger
         {
             public System.Int64 Id { get; set; }
@@ -111,10 +111,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsNull()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -134,10 +134,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsText()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var person = GetPersonWithText(1).First();
@@ -156,10 +156,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextByBatch()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var people = GetPersonWithText(10).AsList();
@@ -182,10 +182,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsNull()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -205,10 +205,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsInteger()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var person = GetPersonWithInteger(1).First();
@@ -227,10 +227,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsIntegerAsBatch()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var people = GetPersonWithInteger(10).AsList();
@@ -253,10 +253,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsInt()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var person = GetPersonWithTextAsInteger(1).First();
@@ -275,10 +275,10 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestInsertAndQueryEnumAsTextAsIntAsBatch()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 //  Create the table first
-                Database.CreateMdsCompleteTable(connection);
+                Database.CreateSdsCompleteTable(connection);
 
                 // Setup
                 var people = GetPersonWithTextAsInteger(10).AsList();

@@ -16,7 +16,7 @@ namespace RepoDb.SqLite.UnitTests
         #region SDS
 
         [TestMethod]
-        public void TestSqLiteDbSettingAreTableHintsSupportedProperty()
+        public void TestSdsSqLiteDbSettingAreTableHintsSupportedProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -26,7 +26,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingAverageableTypeProperty()
+        public void TestSdsSqLiteDbSettingAverageableTypeProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -36,7 +36,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingClosingQuoteProperty()
+        public void TestSdsSqLiteDbSettingClosingQuoteProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -46,7 +46,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingDefaultSchemaProperty()
+        public void TestSdsSqLiteDbSettingDefaultSchemaProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -56,7 +56,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsDirectionSupportedSupportedProperty()
+        public void TestSdsSqLiteDbSettingIsDirectionSupportedSupportedProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -66,7 +66,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsExecuteReaderDisposableProperty()
+        public void TestSdsSqLiteDbSettingIsExecuteReaderDisposableProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -76,7 +76,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsMultiStatementExecutableProperty()
+        public void TestSdsSqLiteDbSettingIsMultiStatementExecutableProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -86,7 +86,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingIsUseUpsertProperty()
+        public void TestSdsSqLiteDbSettingIsUseUpsertProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -96,7 +96,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingOpeningQuoteProperty()
+        public void TestSdsSqLiteDbSettingOpeningQuoteProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -106,7 +106,7 @@ namespace RepoDb.SqLite.UnitTests
         }
 
         [TestMethod]
-        public void TestSqLiteDbSettingParameterPrefixProperty()
+        public void TestSdsSqLiteDbSettingParameterPrefixProperty()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();

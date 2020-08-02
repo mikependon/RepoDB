@@ -40,7 +40,7 @@ namespace RepoDb
             DbSettingMapper.Add(typeof(SQLiteConnection), new SqLiteDbSetting(true), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SQLiteConnection), new SqLiteDbHelper(new SqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add(typeof(SQLiteConnection), new SqLiteDbHelper(new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
             StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(DbSettingMapper.Get(typeof(SQLiteConnection)),

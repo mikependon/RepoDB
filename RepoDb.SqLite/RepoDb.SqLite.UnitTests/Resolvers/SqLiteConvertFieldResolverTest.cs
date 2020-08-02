@@ -18,7 +18,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         #region SDS
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForInt32()
+        public void TestSdsSqLiteConvertFieldResolverForInt32()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -33,7 +33,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForInt64()
+        public void TestSdsSqLiteConvertFieldResolverForInt64()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -48,7 +48,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForInt16()
+        public void TestSdsSqLiteConvertFieldResolverForInt16()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -63,7 +63,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForDateTime()
+        public void TestSdsSqLiteConvertFieldResolverForDateTime()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -78,7 +78,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForString()
+        public void TestSdsSqLiteConvertFieldResolverForString()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -93,7 +93,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForByte()
+        public void TestSdsSqLiteConvertFieldResolverForByte()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -108,7 +108,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForDecimal()
+        public void TestSdsSqLiteConvertFieldResolverForDecimal()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -123,7 +123,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForFloat()
+        public void TestSdsSqLiteConvertFieldResolverForFloat()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();
@@ -138,7 +138,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestSqLiteConvertFieldResolverForTimeSpan()
+        public void TestSdsSqLiteConvertFieldResolverForTimeSpan()
         {
             // Setup
             var setting = DbSettingMapper.Get<SQLiteConnection>();

@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Data.SQLite;
 using System.Linq;
-using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqLite.IntegrationTests.Models;
 using RepoDb.SqLite.IntegrationTests.Setup;
 
-namespace RepoDb.SqLite.IntegrationTests.MDS
+namespace RepoDb.SqLite.IntegrationTests.SDS
 {
     [TestClass]
     public class DbHelperTests
@@ -30,17 +30,17 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetFields()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var tables = Database.CreateMdsCompleteTables(10, connection);
+                var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFields(connection, "MdsCompleteTable", null);
+                var fields = helper.GetFields(connection, "SdsCompleteTable", null);
 
                 // Assert
-                using (var reader = connection.ExecuteReader("pragma table_info([MdsCompleteTable]);"))
+                using (var reader = connection.ExecuteReader("pragma table_info([SdsCompleteTable]);"))
                 {
                     var fieldCount = 0;
 
@@ -64,14 +64,14 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetFieldsPrimary()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var tables = Database.CreateMdsCompleteTables(10, connection);
+                var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFields(connection, "MdsCompleteTable", null);
+                var fields = helper.GetFields(connection, "SdsCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -83,14 +83,14 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetFieldsIdentity()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var tables = Database.CreateMdsCompleteTables(10, connection);
+                var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFields(connection, "MdsCompleteTable", null);
+                var fields = helper.GetFields(connection, "SdsCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -106,17 +106,17 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetFieldsAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var tables = Database.CreateMdsCompleteTables(10, connection);
+                var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "MdsCompleteTable", null).Result;
+                var fields = helper.GetFieldsAsync(connection, "SdsCompleteTable", null).Result;
 
                 // Assert
-                using (var reader = connection.ExecuteReader("pragma table_info([MdsCompleteTable]);"))
+                using (var reader = connection.ExecuteReader("pragma table_info([SdsCompleteTable]);"))
                 {
                     var fieldCount = 0;
 
@@ -140,14 +140,14 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetFieldsAsyncPrimary()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var tables = Database.CreateMdsCompleteTables(10, connection);
+                var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "MdsCompleteTable", null).Result;
+                var fields = helper.GetFieldsAsync(connection, "SdsCompleteTable", null).Result;
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -159,14 +159,14 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetFieldsAsyncIdentity()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Setup
                 var helper = connection.GetDbHelper();
-                var tables = Database.CreateMdsCompleteTables(10, connection);
+                var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "MdsCompleteTable", null).Result;
+                var fields = helper.GetFieldsAsync(connection, "SdsCompleteTable", null).Result;
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -186,17 +186,17 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetScopeIdentity()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Create the tables
-                Database.CreateMdsTables(connection);
+                Database.CreateSdsTables(connection);
 
                 // Setup
                 var helper = connection.GetDbHelper();
-                var table = Helper.CreateMdsCompleteTables(1).First();
+                var table = Helper.CreateSdsCompleteTables(1).First();
 
                 // Act
-                var insertResult = connection.Insert<MdsCompleteTable>(table);
+                var insertResult = connection.Insert<SdsCompleteTable>(table);
 
                 // Assert
                 Assert.IsTrue(Convert.ToInt64(insertResult) > 0);
@@ -217,17 +217,17 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         [TestMethod]
         public void TestDbHelperGetScopeIdentityAsync()
         {
-            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
                 // Create the tables
-                Database.CreateMdsTables(connection);
+                Database.CreateSdsTables(connection);
 
                 // Setup
                 var helper = connection.GetDbHelper();
-                var table = Helper.CreateMdsCompleteTables(1).First();
+                var table = Helper.CreateSdsCompleteTables(1).First();
 
                 // Act
-                var insertResult = connection.Insert<MdsCompleteTable>(table);
+                var insertResult = connection.Insert<SdsCompleteTable>(table);
 
                 // Assert
                 Assert.IsTrue(Convert.ToInt64(insertResult) > 0);

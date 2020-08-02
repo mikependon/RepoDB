@@ -47,6 +47,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             if (IsInMemory == true)
             {
                 // Memory
+                ConnectionStringSDS = @"Data Source=:memory:;";
                 ConnectionStringMDS = @"Data Source=:memory:;";
             }
             else
@@ -58,6 +59,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
                 ConnectionStringMDS = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
 
                 // Create tables
+                CreateSdsTables();
                 CreateMdsTables();
             }
         }
@@ -70,8 +72,156 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             }
             using (var connection = new SQLiteConnection(ConnectionStringMDS))
             {
+                connection.DeleteAll<SdsCompleteTable>();
+                connection.DeleteAll<SdsNonIdentityCompleteTable>();
                 connection.DeleteAll<MdsCompleteTable>();
                 connection.DeleteAll<MdsNonIdentityCompleteTable>();
+            }
+        }
+
+        #endregion
+
+        #region SdsCompleteTable
+
+        public static IEnumerable<SdsCompleteTable> CreateSdsCompleteTables(int count,
+            SQLiteConnection connection = null)
+        {
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
+            {
+                connection = new SQLiteConnection(ConnectionStringSDS);
+            }
+            try
+            {
+                var tables = Helper.CreateSdsCompleteTables(count);
+                CreateSdsCompleteTable(connection);
+                connection.InsertAll(tables);
+                return tables;
+            }
+            finally
+            {
+                if (hasConnection == false)
+                {
+                    connection.Dispose();
+                }
+            }
+        }
+
+        #endregion
+
+        #region SdsNonIdentityCompleteTable
+
+        public static IEnumerable<SdsNonIdentityCompleteTable> CreateSdsNonIdentityCompleteTables(int count,
+            SQLiteConnection connection = null)
+        {
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
+            {
+                connection = new SQLiteConnection(ConnectionStringSDS);
+            }
+            try
+            {
+                var tables = Helper.CreateSdsNonIdentityCompleteTables(count);
+                CreateSdsNonIdentityCompleteTable(connection);
+                connection.InsertAll(tables);
+                return tables;
+            }
+            finally
+            {
+                if (hasConnection == false)
+                {
+                    connection.Dispose();
+                }
+            }
+        }
+
+        #endregion
+
+        #region SdsCreateTables
+
+        public static void CreateSdsTables(SQLiteConnection connection = null)
+        {
+            CreateSdsCompleteTable(connection);
+            CreateSdsNonIdentityCompleteTable(connection);
+        }
+
+        public static void CreateSdsCompleteTable(SQLiteConnection connection = null)
+        {
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
+            {
+                connection = new SQLiteConnection(ConnectionStringSDS);
+            }
+            try
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [SdsCompleteTable] 
+                    (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT
+                        , ColumnBigInt BIGINT
+                        , ColumnBlob BLOB
+                        , ColumnBoolean BOOLEAN
+                        , ColumnChar CHAR
+                        , ColumnDate DATE
+                        , ColumnDateTime DATETIME
+                        , ColumnDecimal DECIMAL
+                        , ColumnDouble DOUBLE
+                        , ColumnInteger INTEGER
+                        , ColumnInt INT
+                        , ColumnNone NONE
+                        , ColumnNumeric NUMERIC
+                        , ColumnReal REAL
+                        , ColumnString STRING
+                        , ColumnText TEXT
+                        , ColumnTime TIME
+                        , ColumnVarChar VARCHAR
+                    );");
+            }
+            finally
+            {
+                if (hasConnection == false)
+                {
+                    connection.Dispose();
+                }
+            }
+        }
+
+        public static void CreateSdsNonIdentityCompleteTable(SQLiteConnection connection = null)
+        {
+            var hasConnection = (connection != null);
+            if (hasConnection == false)
+            {
+                connection = new SQLiteConnection(ConnectionStringSDS);
+            }
+            try
+            {
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [SdsNonIdentityCompleteTable] 
+                    (
+                        Id INTEGER PRIMARY KEY
+                        , ColumnBigInt BIGINT
+                        , ColumnBlob BLOB
+                        , ColumnBoolean BOOLEAN
+                        , ColumnChar CHAR
+                        , ColumnDate DATE
+                        , ColumnDateTime DATETIME
+                        , ColumnDecimal DECIMAL
+                        , ColumnDouble DOUBLE
+                        , ColumnInteger INTEGER
+                        , ColumnInt INT
+                        , ColumnNone NONE
+                        , ColumnNumeric NUMERIC
+                        , ColumnReal REAL
+                        , ColumnString STRING
+                        , ColumnText TEXT
+                        , ColumnTime TIME
+                        , ColumnVarChar VARCHAR
+                    );");
+            }
+            finally
+            {
+                if (hasConnection == false)
+                {
+                    connection.Dispose();
+                }
             }
         }
 
