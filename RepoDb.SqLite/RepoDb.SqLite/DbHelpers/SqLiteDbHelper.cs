@@ -1,7 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,15 +14,6 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public sealed class SqLiteDbHelper : IDbHelper
     {
-        private IDbSetting m_dbSetting = DbSettingMapper.Get<SqliteConnection>();
-
-        /// <summary>
-        /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
-        /// </summary>
-        public SqLiteDbHelper()
-            : this(new SqLiteDbTypeNameToClientTypeResolver())
-        { }
-
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
         /// </summary>

@@ -4,16 +4,16 @@ using System;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the SqLite Database Types into its equivalent .NET CLR Types. This is only used for 'System.Data.SQLite.Core' library.
+    /// A class used to resolve the SqLite Database Types into its equivalent .NET CLR Types. This is only used for 'Microsoft.Data.Sqlite' library.
     /// </summary>
-    public class SqLiteDbTypeNameToClientTypeResolver : IResolver<string, Type>
+    public class MdsSqLiteDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {
         /// <summary>
         /// Returns the equivalent .NET CLR Types of the Database Type.
         /// </summary>
         /// <param name="dbTypeName">The name of the database type.</param>
         /// <returns>The equivalent .NET CLR type.</returns>
-        public Type Resolve(string dbTypeName)
+        public virtual Type Resolve(string dbTypeName)
         {
             if (dbTypeName == null)
             {
@@ -23,51 +23,45 @@ namespace RepoDb.Resolvers
             Id : System.Int64
             ColumnBigInt : System.Int64
             ColumnBlob : System.Byte[]
-            ColumnBoolean : System.Boolean
+            ColumnBoolean : System.String
             ColumnChar : System.String
-            ColumnDate : System.DateTime
-            ColumnDateTime : System.DateTime
-            ColumnDecimal : System.Decimal
+            ColumnDate : System.String
+            ColumnDateTime : System.String
+            ColumnDecimal : System.String
             ColumnDouble : System.Double
             ColumnInteger : System.Int64
-            ColumnInt : System.Int32
-            ColumnNone : System.Double
-            ColumnNumeric : System.Decimal
+            ColumnInt : System.Int64
+            ColumnNone : System.String
+            ColumnNumeric : System.String
             ColumnReal : System.Double
             ColumnString : System.String
             ColumnText : System.String
-            ColumnTime : System.DateTime
+            ColumnTime : System.String
             ColumnVarChar : System.String
              */
             switch (dbTypeName.ToLower())
             {
                 case "bigint":
+                case "decimal":
+                case "int":
                 case "integer":
+                case "numeric":
                     return typeof(long);
                 case "blob":
                     return typeof(byte[]);
-                case "boolean":
-                    return typeof(long);
-                case "char":
-                case "string":
-                case "text":
-                case "varchar":
-                    return typeof(string);
-                case "date":
-                case "datetime":
-                    return typeof(DateTime);
-                case "time":
-                    return typeof(DateTime);
-                case "decimal":
-                case "numeric":
-                    return typeof(decimal);
                 case "double":
                 case "real":
                     return typeof(double);
-                case "int":
-                    return typeof(int);
+                case "boolean":
+                case "char":
+                case "date":
+                case "datetime":
                 case "none":
-                    return typeof(object);
+                case "string":
+                case "text":
+                case "time":
+                case "varchar":
+                    return typeof(string);
                 default:
                     return typeof(object);
             }

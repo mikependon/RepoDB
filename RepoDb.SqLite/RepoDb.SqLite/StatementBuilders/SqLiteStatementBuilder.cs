@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
@@ -14,15 +13,6 @@ namespace RepoDb.StatementBuilders
     /// </summary>
     public sealed class SqLiteStatementBuilder : BaseStatementBuilder
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> object.
-        /// </summary>
-        public SqLiteStatementBuilder()
-            : this(DbSettingMapper.Get(typeof(SqliteConnection)),
-                  new SqLiteConvertFieldResolver(),
-                  new ClientTypeToAverageableClientTypeResolver())
-        { }
-
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> class.
         /// </summary>

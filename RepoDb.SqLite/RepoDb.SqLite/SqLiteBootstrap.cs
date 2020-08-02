@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
+using RepoDb.Resolvers;
 using RepoDb.StatementBuilders;
+using System.Data.SQLite;
 
 namespace RepoDb
 {
@@ -32,14 +34,35 @@ namespace RepoDb
                 return;
             }
 
+            #region SDS
+
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(SqliteConnection), new SqLiteDbSetting(), true);
+            DbSettingMapper.Add(typeof(SQLiteConnection), new SqLiteDbSetting(true), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SqliteConnection), new SqLiteDbHelper(), true);
+            DbHelperMapper.Add(typeof(SQLiteConnection), new SqLiteDbHelper(new SqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(), true);
+            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(DbSettingMapper.Get(typeof(SQLiteConnection)),
+                new SqLiteConvertFieldResolver(),
+                new ClientTypeToAverageableClientTypeResolver()), true);
+
+            #endregion
+
+            #region MDS
+
+            // Map the DbSetting
+            DbSettingMapper.Add(typeof(SqliteConnection), new SqLiteDbSetting(false), true);
+
+            // Map the DbHelper
+            DbHelperMapper.Add(typeof(SqliteConnection), new SqLiteDbHelper(new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
+
+            // Map the Statement Builder
+            StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(DbSettingMapper.Get(typeof(SqliteConnection)),
+                new SqLiteConvertFieldResolver(),
+                new ClientTypeToAverageableClientTypeResolver()), true);
+
+            #endregion
 
             // Set the flag
             IsInitialized = true;

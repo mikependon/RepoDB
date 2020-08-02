@@ -149,19 +149,19 @@ namespace RepoDb.SqLite.IntegrationTests
             });
         }
 
-        #region CompleteTable
+        #region MdsCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="CompleteTable"/> objects.
+        /// Creates a list of <see cref="MdsCompleteTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="CompleteTable"/> objects.</returns>
-        public static List<CompleteTable> CreateCompleteTables(int count)
+        /// <returns>A list of <see cref="MdsCompleteTable"/> objects.</returns>
+        public static List<MdsCompleteTable> CreateMdsCompleteTables(int count)
         {
-            var tables = new List<CompleteTable>();
+            var tables = new List<MdsCompleteTable>();
             for (var i = 0; i < count; i++)
             {
-                tables.Add(new CompleteTable
+                tables.Add(new MdsCompleteTable
                 {
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
@@ -186,10 +186,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="CompleteTable"/> instance.
+        /// Update the properties of <see cref="MdsCompleteTable"/> instance.
         /// </summary>
         /// <param name="table">The instance to be updated.</param>
-        public static void UpdateCompleteTableProperties(CompleteTable table)
+        public static void UpdateMdsCompleteTableProperties(MdsCompleteTable table)
         {
             table.ColumnBigInt = long.MaxValue;
             table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
@@ -210,11 +210,11 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="CompleteTable"/> objects represented as dynamics.
+        /// Creates a list of <see cref="MdsCompleteTable"/> objects represented as dynamics.
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="CompleteTable"/> objects represented as dynamics.</returns>
-        public static List<dynamic> CreateCompleteTablesAsDynamics(int count)
+        /// <returns>A list of <see cref="MdsCompleteTable"/> objects represented as dynamics.</returns>
+        public static List<dynamic> CreateMdsCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
@@ -245,10 +245,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="CompleteTable"/> instance represented asy dynamic.
+        /// Update the properties of <see cref="MdsCompleteTable"/> instance represented asy dynamic.
         /// </summary>
         /// <param name="table">The instance to be updated.</param>
-        public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
+        public static void UpdateMdsCompleteTableAsDynamicProperties(dynamic table)
         {
             table.ColumnBigInt = long.MaxValue;
             table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
@@ -270,19 +270,19 @@ namespace RepoDb.SqLite.IntegrationTests
 
         #endregion
 
-        #region NonIdentityCompleteTable
+        #region MdsNonIdentityCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="NonIdentityCompleteTable"/> objects.
+        /// Creates a list of <see cref="MdsNonIdentityCompleteTable"/> objects.
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="NonIdentityCompleteTable"/> objects.</returns>
-        public static List<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
+        /// <returns>A list of <see cref="MdsNonIdentityCompleteTable"/> objects.</returns>
+        public static List<MdsNonIdentityCompleteTable> CreateMdsNonIdentityCompleteTables(int count)
         {
-            var tables = new List<NonIdentityCompleteTable>();
+            var tables = new List<MdsNonIdentityCompleteTable>();
             for (var i = 0; i < count; i++)
             {
-                tables.Add(new NonIdentityCompleteTable
+                tables.Add(new MdsNonIdentityCompleteTable
                 {
                     Id = (long)(i + 1),
                     ColumnBigInt = (long)i,
@@ -308,10 +308,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="NonIdentityCompleteTable"/> instance.
+        /// Update the properties of <see cref="MdsNonIdentityCompleteTable"/> instance.
         /// </summary>
         /// <param name="table">The instance to be updated.</param>
-        public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
+        public static void UpdateMdsNonIdentityCompleteTableProperties(MdsNonIdentityCompleteTable table)
         {
             table.ColumnBigInt = long.MaxValue;
             table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
@@ -332,11 +332,11 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="NonIdentityCompleteTable"/> objects represented as dynamics.
+        /// Creates a list of <see cref="MdsNonIdentityCompleteTable"/> objects represented as dynamics.
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="NonIdentityCompleteTable"/> objects represented as dynamics.</returns>
-        public static List<dynamic> CreateNonIdentityCompleteTablesAsDynamics(int count)
+        /// <returns>A list of <see cref="MdsNonIdentityCompleteTable"/> objects represented as dynamics.</returns>
+        public static List<dynamic> CreateMdsNonIdentityCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
@@ -367,10 +367,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="NonIdentityCompleteTable"/> instance represented asy dynamic.
+        /// Update the properties of <see cref="MdsNonIdentityCompleteTable"/> instance represented asy dynamic.
         /// </summary>
         /// <param name="table">The instance to be updated.</param>
-        public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
+        public static void UpdateMdsNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             table.ColumnBigInt = long.MaxValue;
             table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());

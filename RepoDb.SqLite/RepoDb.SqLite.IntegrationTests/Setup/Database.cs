@@ -2,6 +2,7 @@
 using RepoDb.SqLite.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace RepoDb.SqLite.IntegrationTests.Setup
 {
@@ -19,9 +20,14 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
         #region Properties
 
         /// <summary>
-        /// Gets or sets the connection string to be used.
+        /// Gets or sets the connection string to be used (for SDS).
         /// </summary>
-        public static string ConnectionString { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+        public static string ConnectionStringSDS { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+
+        /// <summary>
+        /// Gets or sets the connection string to be used (for MDS).
+        /// </summary>
+        public static string ConnectionStringMDS { get; private set; } = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
 
         /// <summary>
         /// Gets the value that indicates whether to use the in-memory database.
@@ -41,15 +47,18 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             if (IsInMemory == true)
             {
                 // Memory
-                ConnectionString = @"Data Source=:memory:;";
+                ConnectionStringMDS = @"Data Source=:memory:;";
             }
             else
             {
                 // Local
-                ConnectionString = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
+                ConnectionStringSDS = @"Data Source=C:\SqLite\Databases\RepoDb.db;Version=3;";
+
+                // Local
+                ConnectionStringMDS = @"Data Source=C:\SqLite\Databases\RepoDb.db;";
 
                 // Create tables
-                CreateTables();
+                CreateMdsTables();
             }
         }
 
@@ -59,29 +68,29 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             {
                 return;
             }
-            using (var connection = new SqliteConnection(ConnectionString))
+            using (var connection = new SQLiteConnection(ConnectionStringMDS))
             {
-                connection.DeleteAll<CompleteTable>();
-                connection.DeleteAll<NonIdentityCompleteTable>();
+                connection.DeleteAll<MdsCompleteTable>();
+                connection.DeleteAll<MdsNonIdentityCompleteTable>();
             }
         }
 
         #endregion
 
-        #region CompleteTable
+        #region MdsCompleteTable
 
-        public static IEnumerable<CompleteTable> CreateCompleteTables(int count,
+        public static IEnumerable<MdsCompleteTable> CreateMdsCompleteTables(int count,
             SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionStringMDS);
             }
             try
             {
-                var tables = Helper.CreateCompleteTables(count);
-                CreateCompleteTable(connection);
+                var tables = Helper.CreateMdsCompleteTables(count);
+                CreateMdsCompleteTable(connection);
                 connection.InsertAll(tables);
                 return tables;
             }
@@ -96,20 +105,20 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #endregion
 
-        #region NonIdentityCompleteTable
+        #region MdsNonIdentityCompleteTable
 
-        public static IEnumerable<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count,
+        public static IEnumerable<MdsNonIdentityCompleteTable> CreateMdsNonIdentityCompleteTables(int count,
             SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionStringMDS);
             }
             try
             {
-                var tables = Helper.CreateNonIdentityCompleteTables(count);
-                CreateNonIdentityCompleteTable(connection);
+                var tables = Helper.CreateMdsNonIdentityCompleteTables(count);
+                CreateMdsNonIdentityCompleteTable(connection);
                 connection.InsertAll(tables);
                 return tables;
             }
@@ -124,24 +133,24 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
 
         #endregion
 
-        #region CreateTables
+        #region CreateMdsTables
 
-        public static void CreateTables(SqliteConnection connection = null)
+        public static void CreateMdsTables(SqliteConnection connection = null)
         {
-            CreateCompleteTable(connection);
-            CreateNonIdentityCompleteTable(connection);
+            CreateMdsCompleteTable(connection);
+            CreateMdsNonIdentityCompleteTable(connection);
         }
 
-        public static void CreateCompleteTable(SqliteConnection connection = null)
+        public static void CreateMdsCompleteTable(SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionStringMDS);
             }
             try
             {
-                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [CompleteTable] 
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [MdsCompleteTable] 
                     (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT
                         , ColumnBigInt BIGINT
@@ -172,16 +181,16 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             }
         }
 
-        public static void CreateNonIdentityCompleteTable(SqliteConnection connection = null)
+        public static void CreateMdsNonIdentityCompleteTable(SqliteConnection connection = null)
         {
             var hasConnection = (connection != null);
             if (hasConnection == false)
             {
-                connection = new SqliteConnection(ConnectionString);
+                connection = new SqliteConnection(ConnectionStringMDS);
             }
             try
             {
-                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [NonIdentityCompleteTable] 
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [MdsNonIdentityCompleteTable] 
                     (
                         Id INTEGER PRIMARY KEY
                         , ColumnBigInt BIGINT

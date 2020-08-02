@@ -1,16 +1,22 @@
-﻿using Microsoft.Data.Sqlite;
-
-namespace RepoDb.DbSettings
+﻿namespace RepoDb.DbSettings
 {
     /// <summary>
-    /// A setting class used for <see cref="SqliteConnection"/> data provider.
+    /// A setting class used for SQLite data provider.
     /// </summary>
     public sealed class SqLiteDbSetting : BaseDbSetting
     {
+
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteDbSetting"/> class.
         /// </summary>
         public SqLiteDbSetting()
+            : this(true)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SqLiteDbSetting"/> class.
+        /// </summary>
+        public SqLiteDbSetting(bool isExecuteReaderDisposable)
             : base()
         {
             AreTableHintsSupported = false;
@@ -18,7 +24,7 @@ namespace RepoDb.DbSettings
             ClosingQuote = "]";
             DefaultSchema = null;
             IsDirectionSupported = false;
-            IsExecuteReaderDisposable = false;
+            IsExecuteReaderDisposable = isExecuteReaderDisposable;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
             IsUseUpsert = false;
