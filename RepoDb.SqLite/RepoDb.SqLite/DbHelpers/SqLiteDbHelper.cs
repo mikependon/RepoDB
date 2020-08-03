@@ -18,12 +18,19 @@ namespace RepoDb.DbHelpers
         /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
         /// </summary>
         /// <param name="dbTypeResolver">The type resolver to be used.</param>
-        public SqLiteDbHelper(IResolver<string, Type> dbTypeResolver)
+        public SqLiteDbHelper(IDbSetting dbSetting,
+            IResolver<string, Type> dbTypeResolver)
         {
+            DbSetting = dbSetting;
             DbTypeResolver = dbTypeResolver;
         }
 
         #region Properties
+
+        /// <summary>
+        /// Gets the database setting used by this <see cref="SqLiteDbHelper"/> instance.
+        /// </summary>
+        public IDbSetting DbSetting { get; }
 
         /// <summary>
         /// Gets the type resolver used by this <see cref="SqLiteDbHelper"/> instance.
@@ -79,7 +86,7 @@ namespace RepoDb.DbHelpers
         {
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
-            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = DataEntityExtension.GetTableName(tableName) });
+            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) });
             var fields = ParseTableFieldsFromSql(sql);
 
             // Iterate the fields

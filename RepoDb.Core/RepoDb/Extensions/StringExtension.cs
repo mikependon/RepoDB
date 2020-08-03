@@ -122,11 +122,11 @@ namespace RepoDb.Extensions
             bool trim,
             IDbSetting dbSetting)
         {
-            if (!string.IsNullOrEmpty(dbSetting.OpeningQuote))
+            if (!string.IsNullOrWhiteSpace(dbSetting.OpeningQuote))
             {
                 value = value.Replace(dbSetting.OpeningQuote, string.Empty);
             }
-            if (!string.IsNullOrEmpty(dbSetting.ClosingQuote))
+            if (!string.IsNullOrWhiteSpace(dbSetting.ClosingQuote))
             {
                 value = value.Replace(dbSetting.ClosingQuote, string.Empty);
             }

@@ -37,13 +37,15 @@ namespace RepoDb
             #region SDS
 
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(SQLiteConnection), new SqLiteDbSetting(true), true);
+            var sdsDbSetting = new SqLiteDbSetting(true);
+            DbSettingMapper.Add(typeof(SQLiteConnection), sdsDbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SQLiteConnection), new SqLiteDbHelper(new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add(typeof(SQLiteConnection),
+                new SqLiteDbHelper(sdsDbSetting, new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(DbSettingMapper.Get(typeof(SQLiteConnection)),
+            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(sdsDbSetting,
                 new SqLiteConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver()), true);
 
@@ -52,13 +54,15 @@ namespace RepoDb
             #region MDS
 
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(SqliteConnection), new SqLiteDbSetting(false), true);
+            var mdsDbSetting = new SqLiteDbSetting(false);
+            DbSettingMapper.Add(typeof(SqliteConnection), mdsDbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SqliteConnection), new SqLiteDbHelper(new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add(typeof(SqliteConnection),
+                new SqLiteDbHelper(mdsDbSetting, new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(DbSettingMapper.Get(typeof(SqliteConnection)),
+            StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(mdsDbSetting,
                 new SqLiteConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver()), true);
 
