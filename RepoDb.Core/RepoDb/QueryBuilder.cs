@@ -804,7 +804,7 @@ namespace RepoDb
             int index,
             IDbSetting dbSetting)
         {
-            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.GetString(index, dbSetting))) : this;
+            return (queryGroup?.GetFields(true)?.Any() == true) ? Append(string.Concat("WHERE ", queryGroup.GetString(index, dbSetting))) : this;
         }
 
         /// <summary>
