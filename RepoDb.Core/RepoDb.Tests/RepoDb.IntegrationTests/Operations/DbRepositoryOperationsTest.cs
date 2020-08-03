@@ -3003,6 +3003,26 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbRepositoryDeleteWithEmptyQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Delete<IdentityTable>(Enumerable.Empty<QueryGroup>());
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryDeleteViaPrimaryKey()
         {
             // Setup
@@ -3200,6 +3220,26 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.Delete<IdentityTable>((object)null);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, repository.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncWithEmptyQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Delete<IdentityTable>(Enumerable.Empty<QueryGroup>());
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -10628,6 +10668,30 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestDbRepositoryQueryWithEmptyQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.Query<IdentityTable>(Enumerable.Empty<QueryGroup>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryQueryWithTop()
         {
             // Setup
@@ -11571,6 +11635,30 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.QueryAsync<IdentityTable>((object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryQueryAsyncWithEmptyQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                repository.InsertAll(tables);
+
+                // Act
+                var result = repository.QueryAsync<IdentityTable>(Enumerable.Empty<QueryGroup>()).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
