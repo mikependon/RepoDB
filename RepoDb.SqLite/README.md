@@ -12,8 +12,8 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## News/Updates
 
-- Starting at version 1.0.15, the SQLite driver has been changed to [Microsoft.Data.Sqlite.Core](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/).
-- Starting at version 1.0.16, both the SQLite drivers ([Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/) and [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/)) is now supported.
+- Starting at version 1.0.15, the SQLite driver [System.Data.SQLite](https://www.nuget.org/packages/System.DataSQLite) has been removed.
+- Starting at version 1.0.16, both the SQLite drivers ([Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/) and [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/)) has been supported.
 
 ## Important Pages
 
