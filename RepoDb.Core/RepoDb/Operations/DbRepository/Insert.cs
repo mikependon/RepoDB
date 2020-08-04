@@ -14,7 +14,7 @@ namespace RepoDb
         #region Insert<TEntity>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
@@ -52,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -95,7 +95,7 @@ namespace RepoDb
         #region InsertAsync<TEntity>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
@@ -133,7 +133,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -176,7 +176,7 @@ namespace RepoDb
         #region Insert(TableName)
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
@@ -215,7 +215,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -259,7 +259,7 @@ namespace RepoDb
         #region InsertAsync(TableName)
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
@@ -298,7 +298,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>

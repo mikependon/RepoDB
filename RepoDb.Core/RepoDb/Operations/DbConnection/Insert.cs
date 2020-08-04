@@ -20,7 +20,7 @@ namespace RepoDb
         #region Insert<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -50,7 +50,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -81,7 +81,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -119,7 +119,7 @@ namespace RepoDb
         #region InsertAsync<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -149,7 +149,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -180,7 +180,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -218,7 +218,7 @@ namespace RepoDb
         #region Insert(TableName)<TResult>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -249,7 +249,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table (certain fields only).
+        /// Inserts a new row in the table (certain fields only).
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -281,7 +281,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table (certain fields only).
+        /// Inserts a new row in the table (certain fields only).
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -320,7 +320,7 @@ namespace RepoDb
         #region InsertAsync(TableName)<TResult>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -351,7 +351,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -383,7 +383,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -422,7 +422,7 @@ namespace RepoDb
         #region InsertInternalBase<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table.
+        /// Inserts a new row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -592,7 +592,7 @@ namespace RepoDb
         #region InsertAsyncInternalBase<TEntity, TResult>
 
         /// <summary>
-        /// Inserts a data entity object (as a new row) in the table in an asynchronous way.
+        /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
