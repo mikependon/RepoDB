@@ -16,7 +16,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Query<TEntity>
+        #region Query<TEntity>(TableName)
 
         /// <summary>
         /// Query the data from the table.
@@ -69,6 +69,10 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
+
+        #endregion
+
+        #region Query<TEntity>
 
         /// <summary>
         /// Query the data from the table.
@@ -361,7 +365,7 @@ namespace RepoDb
 
         #endregion
 
-        #region QueryAsync<TEntity>
+        #region QueryAsync<TEntity>(TableName)
 
         /// <summary>
         /// Query the data from the table in an asynchronous way.
@@ -414,6 +418,10 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
+
+        #endregion
+
+        #region QueryAsync<TEntity>
 
         /// <summary>
         /// Query the data from the table in an asynchronous way.

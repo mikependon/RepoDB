@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -22,7 +21,7 @@ namespace RepoDb
         #region Merge<TEntity>
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -53,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -86,7 +85,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -119,7 +118,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -152,7 +151,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -184,7 +183,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -218,7 +217,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -252,7 +251,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -286,7 +285,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a new row or updates an existing row in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -353,7 +352,7 @@ namespace RepoDb
         #region MergeAsync<TEntity>
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -384,7 +383,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -417,7 +416,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -450,7 +449,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -483,7 +482,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -515,7 +514,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -549,7 +548,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -583,7 +582,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
@@ -617,7 +616,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>

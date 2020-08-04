@@ -14,7 +14,7 @@ namespace RepoDb
         #region Delete<TEntity>
 
         /// <summary>
-        /// Delete the rows from the table.
+        /// Deletes an existing row from the table.
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -114,7 +114,7 @@ namespace RepoDb
         #region DeleteAsync<TEntity>
 
         /// <summary>
-        /// Delete the rows from the table in an asynchronous way.
+        /// Deletes an existing row from the table in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>

@@ -13,7 +13,7 @@ namespace RepoDb
         #region InsertAll<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table.
+        /// Insert multiple rows in the table.
         /// </summary>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -36,7 +36,7 @@ namespace RepoDb
         #region InsertAllAsync<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
+        /// Insert multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <param name="entities">The data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>

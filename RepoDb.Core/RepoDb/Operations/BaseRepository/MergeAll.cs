@@ -14,7 +14,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
@@ -55,7 +55,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The expression for the qualifier fields.</param>
@@ -81,7 +81,7 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be merged.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
@@ -100,7 +100,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be merged.</param>
@@ -122,7 +122,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
         /// <param name="qualifiers">The expression for the qualifer fields.</param>

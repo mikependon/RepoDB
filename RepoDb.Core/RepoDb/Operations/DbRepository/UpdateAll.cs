@@ -16,7 +16,7 @@ namespace RepoDb
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -101,7 +101,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -149,7 +149,7 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -190,7 +190,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -234,7 +234,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
@@ -282,7 +282,7 @@ namespace RepoDb
         #region UpdateAll(TableName)
 
         /// <summary>
-        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -327,7 +327,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -379,7 +379,7 @@ namespace RepoDb
         #region UpdateAllAsync(TableName)
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>
@@ -424,7 +424,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be used for update.</param>

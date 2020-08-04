@@ -14,7 +14,7 @@ namespace RepoDb
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
@@ -33,7 +33,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -55,7 +55,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The expression for the qualifier fields.</param>
@@ -81,7 +81,7 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an aysnchronous way.
+        /// Update the existing rows in the table in an aysnchronous way.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
@@ -100,7 +100,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an aysnchronous way.
+        /// Update the existing rows in the table in an aysnchronous way.
         /// </summary>
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
@@ -122,7 +122,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an aysnchronous way.
+        /// Update the existing rows in the table in an aysnchronous way.
         /// </summary>
         /// <param name="entities">The list of entity objects to be used for update.</param>
         /// <param name="qualifiers">The expression for the qualifier fields.</param>

@@ -15,7 +15,7 @@ namespace RepoDb
         #region InsertAll<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table.
+        /// Insert multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
@@ -60,7 +60,7 @@ namespace RepoDb
         #region InsertAllAsync<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
+        /// Insert multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The data entity objects to be inserted.</param>
@@ -105,7 +105,7 @@ namespace RepoDb
         #region InsertAll(TableName)
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table.
+        /// Insert multiple rows in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>
@@ -154,7 +154,7 @@ namespace RepoDb
         #region InsertAllAsync(TableName)
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
+        /// Insert multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entities">The dynamic objects to be inserted.</param>

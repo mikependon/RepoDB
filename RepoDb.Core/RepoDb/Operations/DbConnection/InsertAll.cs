@@ -21,7 +21,7 @@ namespace RepoDb
         #region InsertAll<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table.
+        /// Insert multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -54,7 +54,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table.
+        /// Insert multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -94,7 +94,7 @@ namespace RepoDb
         #region InsertAllAsync<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
+        /// Insert multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -127,7 +127,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
+        /// Insert multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -167,7 +167,7 @@ namespace RepoDb
         #region InsertAll(TableName)
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Insert multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -204,7 +204,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Insert multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -247,7 +247,7 @@ namespace RepoDb
         #region InsertAllAsync(TableName)
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Insert multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -284,7 +284,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Insert multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -327,7 +327,7 @@ namespace RepoDb
         #region InsertAllInternalBase<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table.
+        /// Insert multiple rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -681,7 +681,7 @@ namespace RepoDb
         #region InsertAllAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Inserts the multiple data entity objects (as new rows) in the table in an asynchronous way.
+        /// Insert multiple rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
         /// <param name="connection">The connection object to be used.</param>

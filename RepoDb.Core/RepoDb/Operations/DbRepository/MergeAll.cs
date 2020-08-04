@@ -16,7 +16,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -57,7 +57,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -101,7 +101,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -149,7 +149,7 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -190,7 +190,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -234,7 +234,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be merged.</param>
@@ -282,7 +282,7 @@ namespace RepoDb
         #region MergeAll(TableName)
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -327,7 +327,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -379,7 +379,7 @@ namespace RepoDb
         #region MergeAllAsync(TableName)
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>
@@ -424,7 +424,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="entities">The list of dynamic objects to be merged.</param>

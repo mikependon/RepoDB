@@ -22,7 +22,7 @@ namespace RepoDb
         #region UpdateAll<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -92,7 +92,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -164,7 +164,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -211,7 +211,7 @@ namespace RepoDb
         #region UpdateAllAsync<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -245,7 +245,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -281,7 +281,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -317,7 +317,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -353,7 +353,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -400,7 +400,7 @@ namespace RepoDb
         #region UpdateAll(TableName)
 
         /// <summary>
-        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -438,7 +438,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -478,7 +478,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -518,7 +518,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -562,7 +562,7 @@ namespace RepoDb
         #region UpdateAllAsync(TableName)
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -600,7 +600,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -640,7 +640,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -680,7 +680,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -724,7 +724,7 @@ namespace RepoDb
         #region UpdateAllInternalBase<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table.
+        /// Update the existing rows in the table.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>
@@ -997,7 +997,7 @@ namespace RepoDb
         #region UpdateAllAsyncInternalBase<TEntity>
 
         /// <summary>
-        /// Update the existing multiple rows in the table in an asynchronous way.
+        /// Update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <typeparam name="TEntity">The type of the object (whether a data entity or a dynamic).</typeparam>

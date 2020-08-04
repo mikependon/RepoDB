@@ -22,7 +22,7 @@ namespace RepoDb
         #region MergeAll<TEntity>
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -56,7 +56,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -92,7 +92,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -128,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -164,7 +164,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -232,7 +232,7 @@ namespace RepoDb
         #region MergeAllAsync<TEntity>
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -266,7 +266,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -302,7 +302,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -338,7 +338,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -374,7 +374,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple data entity objects (as new rows) or update the existing rows in the table in an asynchronous way. This merge operation only works like upsert, it does not do any deletion.
+        /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -442,7 +442,7 @@ namespace RepoDb
         #region MergeAll(TableName)
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -480,7 +480,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -520,7 +520,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -560,7 +560,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. This merge operation only works like upsert, it does not do any deletion. By default, the table fields are used unless the 'fields' argument is explicitly defined.
+        /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
