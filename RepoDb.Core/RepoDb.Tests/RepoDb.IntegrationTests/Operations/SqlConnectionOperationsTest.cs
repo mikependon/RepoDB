@@ -13852,7 +13852,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnQueryAsyncViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))

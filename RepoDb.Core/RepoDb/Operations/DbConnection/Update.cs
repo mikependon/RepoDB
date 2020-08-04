@@ -304,7 +304,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             object whereOrPrimaryKey,
             string hints = null,
@@ -315,9 +315,9 @@ namespace RepoDb
             where TEntity : class
         {
             GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return UpdateAsync<TEntity>(connection: connection,
+            return await UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -760,7 +760,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
-        public static Task<int> UpdateAsync(this IDbConnection connection,
+        public static async Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             object whereOrPrimaryKey,
@@ -770,10 +770,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateAsync(connection: connection,
+            return await UpdateAsync(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                where: await WhereOrPrimaryKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,

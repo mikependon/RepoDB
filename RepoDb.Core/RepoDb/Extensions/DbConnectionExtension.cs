@@ -1396,97 +1396,6 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
-            string tableName,
-            object whereOrPrimaryKey,
-            IDbTransaction transaction)
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            if (whereOrPrimaryKey.GetType().IsGenericType)
-            {
-                return QueryGroup.Parse(whereOrPrimaryKey);
-            }
-            else
-            {
-                var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(p => p.IsPrimary == true);
-                if (primary == null)
-                {
-                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
-                }
-                else
-                {
-                    return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(IDbConnection connection,
-            object whereOrPrimaryKey,
-            IDbTransaction transaction)
-            where TEntity : class
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            if (whereOrPrimaryKey is QueryField)
-            {
-                return new QueryGroup((QueryField)whereOrPrimaryKey);
-            }
-            else if (whereOrPrimaryKey is IEnumerable<QueryField>)
-            {
-                return new QueryGroup((IEnumerable<QueryField>)whereOrPrimaryKey);
-            }
-            else if (whereOrPrimaryKey is QueryGroup)
-            {
-                return (QueryGroup)whereOrPrimaryKey;
-            }
-            else
-            {
-                if (whereOrPrimaryKey.GetType().IsGenericType)
-                {
-                    return QueryGroup.Parse(whereOrPrimaryKey);
-                }
-                else
-                {
-                    var field = PrimaryCache.Get<TEntity>()?.AsField();
-                    if (field == null)
-                    {
-                        field = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
-                            .FirstOrDefault(p => p.IsPrimary == true)?
-                            .AsField();
-                    }
-                    if (field == null)
-                    {
-                        throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
-                    }
-                    else
-                    {
-                        return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Converts an object into a <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="where">The dynamic expression.</param>
@@ -1567,6 +1476,181 @@ namespace RepoDb
                 return null;
             }
             return new QueryGroup(fields);
+        }
+
+        /// <summary>
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(object whereOrPrimaryKey)
+        {
+            if (whereOrPrimaryKey == null)
+            {
+                return null;
+            }
+            if (whereOrPrimaryKey is QueryField)
+            {
+                return ToQueryGroup((QueryField)whereOrPrimaryKey);
+            }
+            else if (whereOrPrimaryKey is IEnumerable<QueryField>)
+            {
+                return ToQueryGroup((IEnumerable<QueryField>)whereOrPrimaryKey);
+            }
+            else if (whereOrPrimaryKey is QueryGroup)
+            {
+                return (QueryGroup)whereOrPrimaryKey;
+            }
+            else if (whereOrPrimaryKey.GetType().IsGenericType)
+            {
+                return QueryGroup.Parse(whereOrPrimaryKey);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
+            string tableName,
+            object whereOrPrimaryKey,
+            IDbTransaction transaction)
+        {
+            if (whereOrPrimaryKey == null)
+            {
+                return null;
+            }
+            var queryGroup = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(p => p.IsPrimary == true);
+            if (primary == null)
+            {
+                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
+            }
+        }
+
+        /// <summary>
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync(IDbConnection connection,
+            string tableName,
+            object whereOrPrimaryKey,
+            IDbTransaction transaction)
+        {
+            if (whereOrPrimaryKey == null)
+            {
+                return null;
+            }
+            var queryGroup = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?
+                .FirstOrDefault(p => p.IsPrimary == true);
+            if (primary == null)
+            {
+                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
+            }
+        }
+
+        /// <summary>
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(IDbConnection connection,
+            object whereOrPrimaryKey,
+            IDbTransaction transaction)
+            where TEntity : class
+        {
+            if (whereOrPrimaryKey == null)
+            {
+                return null;
+            }
+            var queryGroup = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var field = PrimaryCache.Get<TEntity>()?.AsField();
+            if (field == null)
+            {
+                field = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
+                    .FirstOrDefault(p => p.IsPrimary == true)?
+                    .AsField();
+            }
+            if (field == null)
+            {
+                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
+            }
+        }
+
+        /// <summary>
+        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
+            object whereOrPrimaryKey,
+            IDbTransaction transaction)
+            where TEntity : class
+        {
+            if (whereOrPrimaryKey == null)
+            {
+                return null;
+            }
+            var queryGroup = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var field = PrimaryCache.Get<TEntity>()?.AsField();
+            if (field == null)
+            {
+                field = (await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction))?
+                    .FirstOrDefault(p => p.IsPrimary == true)?
+                    .AsField();
+            }
+            if (field == null)
+            {
+                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
+            }
         }
 
         /// <summary>

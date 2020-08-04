@@ -228,7 +228,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
-        public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
+        public static async Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey = null,
             string hints = null,
             int? commandTimeout = null,
@@ -237,8 +237,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return ExistsAsync<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+            return await ExistsAsync<TEntity>(connection: connection,
+                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -600,7 +600,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
-        public static Task<bool> ExistsAsync(this IDbConnection connection,
+        public static async Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey = null,
             string hints = null,
@@ -609,9 +609,9 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return ExistsAsync(connection: connection,
+            return await ExistsAsync(connection: connection,
                 tableName: tableName,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                where: await WhereOrPrimaryKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
