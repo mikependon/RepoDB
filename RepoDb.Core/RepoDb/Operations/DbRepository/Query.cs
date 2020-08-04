@@ -19,6 +19,60 @@ namespace RepoDb
         /// Query the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The top number of data to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> Query<TEntity>(string tableName,
+            object whereOrPrimaryKey = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Query<TEntity>(tableName,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    orderBy: orderBy,
+                    top: top,
+                    hints: hints,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the data from the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
@@ -272,6 +326,60 @@ namespace RepoDb
         #endregion
 
         #region QueryAsync<TEntity>
+
+        /// <summary>
+        /// Query the data from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The top number of data to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
+            object whereOrPrimaryKey = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.QueryAsync<TEntity>(tableName: tableName,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    orderBy: orderBy,
+                    top: top,
+                    hints: hints,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         /// <summary>
         /// Query the data from the table in an asynchronous way.

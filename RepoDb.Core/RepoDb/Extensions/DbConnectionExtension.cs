@@ -1447,26 +1447,41 @@ namespace RepoDb
             {
                 return null;
             }
-            if (whereOrPrimaryKey.GetType().IsGenericType)
+            if (whereOrPrimaryKey is QueryField)
             {
-                return QueryGroup.Parse(whereOrPrimaryKey);
+                return new QueryGroup((QueryField)whereOrPrimaryKey);
+            }
+            else if (whereOrPrimaryKey is IEnumerable<QueryField>)
+            {
+                return new QueryGroup((IEnumerable<QueryField>)whereOrPrimaryKey);
+            }
+            else if (whereOrPrimaryKey is QueryGroup)
+            {
+                return (QueryGroup)whereOrPrimaryKey;
             }
             else
             {
-                var field = PrimaryCache.Get<TEntity>()?.AsField();
-                if (field == null)
+                if (whereOrPrimaryKey.GetType().IsGenericType)
                 {
-                    field = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
-                        .FirstOrDefault(p => p.IsPrimary == true)?
-                        .AsField();
-                }
-                if (field == null)
-                {
-                    throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
+                    return QueryGroup.Parse(whereOrPrimaryKey);
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
+                    var field = PrimaryCache.Get<TEntity>()?.AsField();
+                    if (field == null)
+                    {
+                        field = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
+                            .FirstOrDefault(p => p.IsPrimary == true)?
+                            .AsField();
+                    }
+                    if (field == null)
+                    {
+                        throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
+                    }
+                    else
+                    {
+                        return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
+                    }
                 }
             }
         }

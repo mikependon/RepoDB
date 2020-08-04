@@ -23,6 +23,58 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The top number of data to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
+            string tableName,
+            object whereOrPrimaryKey = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return QueryInternalBase<TEntity>(connection: connection,
+                tableName: tableName,
+                fields: FieldCache.Get<TEntity>(),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query the data from the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The top number of data to be used.</param>
@@ -292,6 +344,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryInternalBase<TEntity>(connection: connection,
+                ClassMappedNameCache.Get<TEntity>(),
                 fields: FieldCache.Get<TEntity>(),
                 where: where,
                 orderBy: orderBy,
@@ -309,6 +362,58 @@ namespace RepoDb
         #endregion
 
         #region QueryAsync<TEntity>
+
+        /// <summary>
+        /// Query the data from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The top number of data to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            object whereOrPrimaryKey = null,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return QueryAsyncInternalBase<TEntity>(connection: connection,
+                tableName: tableName,
+                fields: FieldCache.Get<TEntity>(),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
         /// <summary>
         /// Query the data from the table in an asynchronous way.
@@ -584,6 +689,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsyncInternalBase<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 fields: FieldCache.Get<TEntity>(),
                 where: where,
                 orderBy: orderBy,
@@ -1135,6 +1241,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -1152,6 +1259,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static IEnumerable<TEntity> QueryInternalBase<TEntity>(this IDbConnection connection,
+            string tableName,
             IEnumerable<Field> fields = null,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1178,7 +1286,7 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
-            var request = new QueryRequest(typeof(TEntity),
+            var request = new QueryRequest(tableName,
                 connection,
                 transaction,
                 fields,
@@ -1253,6 +1361,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -1270,6 +1379,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> QueryAsyncInternalBase<TEntity>(this IDbConnection connection,
+            string tableName,
             IEnumerable<Field> fields = null,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -1296,7 +1406,7 @@ namespace RepoDb
 
             // Variables
             var commandType = CommandType.Text;
-            var request = new QueryRequest(typeof(TEntity),
+            var request = new QueryRequest(tableName,
                 connection,
                 transaction,
                 fields,
