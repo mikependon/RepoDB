@@ -563,6 +563,41 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region BitToStringClass
+
+        [Map("CompleteTable")]
+        private class BitToStringClass
+        {
+            [Primary]
+            public Guid SessionId { get; set; }
+            public bool ColumnNVarChar { get; set; }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionCrudConvertionFromStringToString()
+        {
+            // Setup
+            var entity = new BitToStringClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = true
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Insert
+                var id = connection.Insert(entity);
+
+                // Act Query
+                var data = connection.Query<BitToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+            }
+        }
+
+        #endregion
+
         #region DateTimeToStringClass (Date, DateTime, DateTime2)
 
         [Map("CompleteTable")]
