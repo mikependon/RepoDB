@@ -15,7 +15,6 @@ namespace RepoDb
         #region Privates
 
         private static readonly ConcurrentDictionary<int, IStatementBuilder> maps = new ConcurrentDictionary<int, IStatementBuilder>();
-        private static Type type = typeof(DbConnection);
 
         #endregion
 
@@ -38,7 +37,7 @@ namespace RepoDb
         public static void Add<TDbConnection>(IStatementBuilder statementBuilder,
             bool @override)
             where TDbConnection : DbConnection =>
-            Add(typeof(TDbConnection), statementBuilder, @override);
+            Add(StaticType.DbConnection, statementBuilder, @override);
 
         /// <summary>
         /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IStatementBuilder"/> object.
@@ -123,7 +122,7 @@ namespace RepoDb
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
         public static void Remove<TDbConnection>()
             where TDbConnection : DbConnection =>
-            Remove(typeof(TDbConnection));
+            Remove(StaticType.DbConnection);
 
         /// <summary>
         /// Removes an existing mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IStatementBuilder"/> object.
@@ -185,9 +184,9 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            if (type.IsSubclassOf(StatementBuilderMapper.type) == false)
+            if (type.IsSubclassOf(StaticType.DbConnection) == false)
             {
-                throw new InvalidTypeException($"Type must be a subclass of '{StatementBuilderMapper.type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{StaticType.DbConnection}'.");
             }
         }
 

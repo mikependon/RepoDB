@@ -173,7 +173,7 @@ namespace RepoDb
         {
             if (operationTextAttribute == null)
             {
-                operationTextAttribute = typeof(Operation)
+                operationTextAttribute = StaticType.Operation
                     .GetMembers()
                     .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.OrdinalIgnoreCase))
                     .GetCustomAttribute<TextAttribute>();

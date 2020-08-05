@@ -75,8 +75,8 @@ namespace RepoDb.Extensions
         /// <returns>A string containing the mapped name.</returns>
         public static string GetMappedName(this PropertyInfo property)
         {
-            var attributeName = ((MapAttribute)GetCustomAttribute(property, typeof(MapAttribute)))?.Name ??
-                ((ColumnAttribute)GetCustomAttribute(property, typeof(ColumnAttribute)))?.Name;
+            var attributeName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
+                ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name;
             return attributeName ??
                 PropertyMapper.Get(property) ??
                 property.Name;

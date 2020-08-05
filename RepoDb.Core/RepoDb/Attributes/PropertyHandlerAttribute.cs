@@ -33,10 +33,10 @@ namespace RepoDb.Attributes
 
         private void Validate(Type handlerType)
         {
-            var isInterfacedTo = handlerType.IsInterfacedTo(typeof(IPropertyHandler<,>));
+            var isInterfacedTo = handlerType.IsInterfacedTo(StaticType.IPropertyHandler);
             if (isInterfacedTo == false)
             {
-                throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{typeof(IPropertyHandler<,>).FullName}' interface.");
+                throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{StaticType.IPropertyHandler}' interface.");
             }
         }
 

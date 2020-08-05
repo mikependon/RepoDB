@@ -815,7 +815,7 @@ namespace RepoDb
                 var updateAllRequest = (UpdateAllRequest)null;
 
                 // Variables
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     updateAllRequest = new UpdateAllRequest(tableName,
                         connection,
@@ -1088,7 +1088,7 @@ namespace RepoDb
                 var updateAllRequest = (UpdateAllRequest)null;
 
                 // Variables
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     updateAllRequest = new UpdateAllRequest(tableName,
                         connection,

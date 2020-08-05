@@ -685,7 +685,7 @@ namespace RepoDb
         /// <returns>The primary <see cref="DbField"/> object.</returns>
         private static DbField GetPrimaryField(BaseRequest request)
         {
-            if (request.Type != null && request.Type != typeof(object))
+            if (request.Type != null && request.Type != StaticType.Object)
             {
                 var primaryProperty = PrimaryCache.Get(request.Type);
                 if (primaryProperty != null)
@@ -717,7 +717,7 @@ namespace RepoDb
         /// <returns>The identity <see cref="DbField"/> object.</returns>
         private static DbField GetIdentityField(BaseRequest request)
         {
-            if (request.Type != null && request.Type != typeof(object))
+            if (request.Type != null && request.Type != StaticType.Object)
             {
                 var identityProperty = IdentityCache.Get(request.Type);
                 if (identityProperty != null)

@@ -23,7 +23,7 @@ namespace RepoDb.DbSettings
         public BaseDbSetting()
         {
             AreTableHintsSupported = true;
-            AverageableType = typeof(double);
+            AverageableType = StaticType.Double;
             ClosingQuote = "]";
             DefaultSchema = "dbo";
             IsDirectionSupported = true;

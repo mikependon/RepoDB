@@ -44,7 +44,7 @@ namespace RepoDb.Reflection
                 }
                 if (enumType.IsNullable())
                 {
-                    var nullable = typeof(Nullable<>).MakeGenericType(new[] { enumType });
+                    var nullable = StaticType.Nullable.MakeGenericType(new[] { enumType });
                     return Activator.CreateInstance(nullable);
                 }
                 else
@@ -106,7 +106,7 @@ namespace RepoDb.Reflection
             where TEntity : class
         {
             // Expression variables
-            var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
+            var readerParameterExpression = Expression.Parameter(StaticType.DbDataReader, "reader");
             var newEntityExpression = Expression.New(typeof(TEntity));
 
             // Variables neede
@@ -173,10 +173,6 @@ namespace RepoDb.Reflection
         {
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
-            var typeOfDbDataReader = typeof(DbDataReader);
-            var typeOfDateTime = typeof(DateTime);
-            var typeOfTimeSpan = typeof(TimeSpan);
-            var typeOfSingle = typeof(Single);
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
             var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
             var dbSetting = connection?.GetDbSetting();
@@ -246,18 +242,18 @@ namespace RepoDb.Reflection
                     }
 
                     // Ignore for the TimeSpan
-                    if (targetType != typeOfTimeSpan)
+                    if (targetType != StaticType.TimeSpan)
                     {
-                        readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", readerField.Type?.Name));
+                        readerGetValueMethod = StaticType.DbDataReader.GetMethod(string.Concat("Get", readerField.Type?.Name));
                     }
 
                     // If null, use the object
                     if (readerGetValueMethod == null)
                     {
                         // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
-                        if (isDefaultConversion == false && readerField.Type != typeOfSingle)
+                        if (isDefaultConversion == false && readerField.Type != StaticType.Single)
                         {
-                            readerGetValueMethod = typeOfDbDataReader.GetMethod(string.Concat("Get", targetType.Name));
+                            readerGetValueMethod = StaticType.DbDataReader.GetMethod(string.Concat("Get", targetType.Name));
                         }
 
                         // If present, then use the property type, otherwise, use the object
@@ -267,8 +263,8 @@ namespace RepoDb.Reflection
                         }
                         else
                         {
-                            readerGetValueMethod = typeOfDbDataReader.GetMethod("GetValue");
-                            convertType = typeof(object);
+                            readerGetValueMethod = StaticType.DbDataReader.GetMethod("GetValue");
+                            convertType = StaticType.Object;
                         }
 
                         // Force the conversion flag
@@ -282,7 +278,7 @@ namespace RepoDb.Reflection
                     // Check for nullables
                     if (isNullable == true)
                     {
-                        var isDbNullExpression = Expression.Call(readerParameterExpression, typeOfDbDataReader.GetMethod("IsDBNull"), ordinalExpression);
+                        var isDbNullExpression = Expression.Call(readerParameterExpression, StaticType.DbDataReader.GetMethod("IsDBNull"), ordinalExpression);
 
                         // True expression
                         var trueExpression = (Expression)null;
@@ -293,7 +289,7 @@ namespace RepoDb.Reflection
                         {
                             if (handlerInstance == null || (handlerInstance != null && getParameterUnderlyingType != null))
                             {
-                                trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(getParameter?.ParameterType.GetUnderlyingType() ?? targetType));
+                                trueExpression = Expression.New(StaticType.Nullable.MakeGenericType(getParameter?.ParameterType.GetUnderlyingType() ?? targetType));
                                 isNullableAlreadySet = true;
                             }
                         }
@@ -349,19 +345,19 @@ namespace RepoDb.Reflection
                                     {
                                         #region StringToEnum
 
-                                        if (readerField.Type == typeof(string))
+                                        if (readerField.Type == StaticType.String)
                                         {
-                                            var enumParseMethod = typeof(EnumHelper).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                                            var enumParseMethod = typeof(EnumHelper).GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
                                             falseExpression = Expression.Call(enumParseMethod, new[]
                                             {
-                                            Expression.Constant(propertyType),
-                                            falseExpression,
-                                            Expression.Constant(true)
-                                        });
+                                                Expression.Constant(propertyType),
+                                                falseExpression,
+                                                Expression.Constant(true)
+                                            });
                                             var enumPropertyType = targetType;
                                             if (propertyType.IsNullable())
                                             {
-                                                enumPropertyType = typeof(Nullable<>).MakeGenericType(targetType);
+                                                enumPropertyType = StaticType.Nullable.MakeGenericType(targetType);
                                             }
                                             falseExpression = Expression.Convert(falseExpression, enumPropertyType);
                                         }
@@ -373,16 +369,16 @@ namespace RepoDb.Reflection
                                         else
                                         {
                                             var enumUnderlyingType = Enum.GetUnderlyingType(targetType);
-                                            var enumToObjectMethod = typeof(Enum).GetMethod("ToObject", new[] { typeof(Type), readerField.Type });
-                                            if (readerField.Type == typeof(bool))
+                                            var enumToObjectMethod = StaticType.Enum.GetMethod("ToObject", new[] { StaticType.Type, readerField.Type });
+                                            if (readerField.Type == StaticType.Boolean)
                                             {
-                                                falseExpression = Expression.Convert(falseExpression, typeof(object));
+                                                falseExpression = Expression.Convert(falseExpression, StaticType.Object);
                                             }
                                             falseExpression = Expression.Call(enumToObjectMethod, new[]
                                             {
-                                            Expression.Constant(targetType),
-                                            falseExpression
-                                        });
+                                                Expression.Constant(targetType),
+                                                falseExpression
+                                            });
                                             falseExpression = Expression.Convert(falseExpression, targetType);
                                         }
 
@@ -392,9 +388,9 @@ namespace RepoDb.Reflection
                                     {
                                         #region TimeSpanToDateTime
 
-                                        if (readerField.Type == typeOfDateTime && targetType == typeOfTimeSpan)
+                                        if (readerField.Type == StaticType.DateTime && targetType == StaticType.TimeSpan)
                                         {
-                                            falseExpression = Expression.Convert(falseExpression, typeOfDateTime);
+                                            falseExpression = Expression.Convert(falseExpression, StaticType.DateTime);
                                         }
 
                                         #endregion
@@ -423,9 +419,9 @@ namespace RepoDb.Reflection
 
                             if (handlerInstance == null)
                             {
-                                if (readerField.Type == typeOfDateTime && targetType == typeOfTimeSpan)
+                                if (readerField.Type == StaticType.DateTime && targetType == StaticType.TimeSpan)
                                 {
-                                    var timeOfDayProperty = typeof(DateTime).GetProperty("TimeOfDay");
+                                    var timeOfDayProperty = StaticType.DateTime.GetProperty("TimeOfDay");
                                     falseExpression = Expression.Property(falseExpression, timeOfDayProperty);
                                 }
                             }
@@ -437,10 +433,10 @@ namespace RepoDb.Reflection
                         isNullableAlreadySet = false;
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != typeof(string));
+                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != StaticType.String);
                             if (setNullable == true)
                             {
-                                var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(targetType).GetConstructor(new[] { targetType });
+                                var nullableConstructorExpression = StaticType.Nullable.MakeGenericType(targetType).GetConstructor(new[] { targetType });
                                 if (handlerInstance == null)
                                 {
                                     falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
@@ -498,10 +494,10 @@ namespace RepoDb.Reflection
                         // Set for the 'Nullable' property
                         if (underlyingType != null && underlyingType.IsValueType == true)
                         {
-                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != typeof(string));
+                            var setNullable = (targetType.IsEnum == false) || (targetType.IsEnum && readerField.Type != StaticType.String);
                             if (setNullable == true)
                             {
-                                var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(targetType).GetConstructor(new[] { targetType });
+                                var nullableConstructorExpression = StaticType.Nullable.MakeGenericType(targetType).GetConstructor(new[] { targetType });
                                 if (handlerInstance == null)
                                 {
                                     valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
@@ -552,9 +548,9 @@ namespace RepoDb.Reflection
                 {
                     #region StringToEnum
 
-                    if (readerField.Type == typeof(string))
+                    if (readerField.Type == StaticType.String)
                     {
-                        var enumParseMethod = typeof(EnumHelper).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+                        var enumParseMethod = typeof(EnumHelper).GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
                         expression = Expression.Call(enumParseMethod, new[]
                         {
                             Expression.Constant(propertyType),
@@ -564,7 +560,7 @@ namespace RepoDb.Reflection
                         var enumPropertyType = propertyType;
                         if (propertyType.IsNullable())
                         {
-                            enumPropertyType = typeof(Nullable<>).MakeGenericType(propertyType);
+                            enumPropertyType = StaticType.Nullable.MakeGenericType(propertyType);
                         }
                         expression = Expression.Convert(expression, enumPropertyType);
                     }
@@ -575,10 +571,10 @@ namespace RepoDb.Reflection
 
                     else
                     {
-                        var enumToObjectMethod = typeof(Enum).GetMethod("ToObject", new[] { typeof(Type), readerField.Type });
-                        if (readerField.Type == typeof(bool))
+                        var enumToObjectMethod = StaticType.Enum.GetMethod("ToObject", new[] { StaticType.Type, readerField.Type });
+                        if (readerField.Type == StaticType.Boolean)
                         {
-                            expression = Expression.Convert(expression, typeof(object));
+                            expression = Expression.Convert(expression, StaticType.Object);
                         }
                         expression = Expression.Call(enumToObjectMethod, new[]
                         {
@@ -600,22 +596,22 @@ namespace RepoDb.Reflection
                 var targetParameter = (Expression)null;
 
                 // Identify if the target type is 'Guid'
-                if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
+                if (propertyType == StaticType.Guid && readerField.Type == StaticType.String)
                 {
                     // This is (new Guid(string))
-                    expression = Expression.New(typeof(Guid).GetConstructor(new[] { typeof(string) }), expression);
+                    expression = Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), expression);
                 }
-                else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
+                else if (propertyType == StaticType.String && readerField.Type == StaticType.Guid)
                 {
                     // This is Guid.ToString()
-                    targetMethod = typeof(Guid).GetMethod("ToString", new Type[0]);
+                    targetMethod = StaticType.Guid.GetMethod("ToString", new Type[0]);
                     targetInstance = expression;
                     targetParameter = null;
                 }
                 else
                 {
                     // This System.Convert.To<Type>()
-                    targetMethod = typeof(Convert).GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
+                    targetMethod = StaticType.Convert.GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
                     targetInstance = null;
                     targetParameter = expression;
                 }
@@ -663,8 +659,8 @@ namespace RepoDb.Reflection
             IDbTransaction transaction)
         {
             // Expression variables
-            var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
-            var newObjectExpression = Expression.New(typeof(ExpandoObject));
+            var readerParameterExpression = Expression.Parameter(StaticType.DbDataReader, "reader");
+            var newObjectExpression = Expression.New(StaticType.ExpandoObject);
 
             // DB Variables
             var dbSetting = connection.GetDbSetting();
@@ -710,8 +706,8 @@ namespace RepoDb.Reflection
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
-            var dataReaderType = typeof(DbDataReader);
-            var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) });
+            var dataReaderType = StaticType.DbDataReader;
+            var addMethod = StaticType.IDictionaryStringObject.GetMethod("Add", new[] { StaticType.String, StaticType.Object });
 
             // Iterate each properties
             for (var ordinal = 0; ordinal < readerFields?.Count; ordinal++)
@@ -739,16 +735,16 @@ namespace RepoDb.Reflection
                     var trueExpression = (Expression)null;
                     if (readerField.Type?.IsValueType != true)
                     {
-                        trueExpression = Expression.Default(readerField.Type ?? typeof(object));
+                        trueExpression = Expression.Default(readerField.Type ?? StaticType.Object);
                         if (isConversionNeeded == true)
                         {
-                            valueExpression = Expression.Convert(valueExpression, readerField.Type ?? typeof(object));
+                            valueExpression = Expression.Convert(valueExpression, readerField.Type ?? StaticType.Object);
                         }
                     }
                     else
                     {
-                        trueExpression = Expression.Constant(null, typeof(object));
-                        valueExpression = Expression.Convert(valueExpression, typeof(object));
+                        trueExpression = Expression.Constant(null, StaticType.Object);
+                        valueExpression = Expression.Convert(valueExpression, StaticType.Object);
                     }
                     valueExpression = Expression.Condition(isDbNullExpression, trueExpression, valueExpression);
                 }
@@ -757,7 +753,7 @@ namespace RepoDb.Reflection
                 var values = new[]
                 {
                     Expression.Constant(readerField.Name),
-                    (Expression)Expression.Convert(valueExpression, typeof(object))
+                    (Expression)Expression.Convert(valueExpression, StaticType.Object)
                 };
                 elementInits.Add(Expression.ElementInit(addMethod, values));
             }
@@ -784,55 +780,35 @@ namespace RepoDb.Reflection
             where TEntity : class
         {
             // Get the types
-            var typeOfDbCommand = typeof(DbCommand);
             var typeOfEntity = typeof(TEntity);
-            var typeOfObject = typeof(object);
-            var typeOfDbParameter = typeof(DbParameter);
-            var typeOfDbParameterCollection = typeof(DbParameterCollection);
-            var typeOfInt = typeof(int);
-            var typeOfString = typeof(string);
-            var typeOfType = typeof(Type);
-            var typeOfPropertyInfo = typeof(PropertyInfo);
-            var typeOfBytes = typeof(byte[]);
-            var typeOfTimeSpan = typeof(TimeSpan);
-            var typeOfBindingFlags = typeof(BindingFlags);
-            var typeOfGuid = typeof(Guid);
-            var typeOfDateTime = typeof(DateTime);
-            var typeOfDecimal = typeof(Decimal);
-            var typeOfFloat = typeof(float);
-            var typeOfLong = typeof(long);
-            var typeOfDouble = typeof(Double);
-            var typeOfShort = typeof(short);
-            var typeOfBoolean = typeof(bool);
-            var typeOfConvert = typeof(Convert);
 
             // Variables for arguments
-            var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
+            var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
 
             // Variables for types
             var entityProperties = PropertyCache.Get<TEntity>();
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
-            var dbCommandCreateParameterMethod = typeOfDbCommand.GetMethod("CreateParameter");
-            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetProperty("ParameterName").SetMethod;
-            var dbParameterValueSetMethod = typeOfDbParameter.GetProperty("Value").SetMethod;
-            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetProperty("DbType").SetMethod;
-            var dbParameterDirectionSetMethod = typeOfDbParameter.GetProperty("Direction").SetMethod;
-            var dbParameterSizeSetMethod = typeOfDbParameter.GetProperty("Size").SetMethod;
-            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetProperty("Precision").SetMethod;
-            var dbParameterScaleSetMethod = typeOfDbParameter.GetProperty("Scale").SetMethod;
+            var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
+            var dbCommandCreateParameterMethod = StaticType.DbCommand.GetMethod("CreateParameter");
+            var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
+            var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
+            var dbParameterDirectionSetMethod = StaticType.DbParameter.GetProperty("Direction").SetMethod;
+            var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
+            var dbParameterPrecisionSetMethod = StaticType.DbParameter.GetProperty("Precision").SetMethod;
+            var dbParameterScaleSetMethod = StaticType.DbParameter.GetProperty("Scale").SetMethod;
 
             // Variables for DbParameterCollection
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
-            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetMethod("Add", new[] { typeOfObject });
-            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetMethod("Clear");
+            var dbParameterCollectionAddMethod = StaticType.DbParameterCollection.GetMethod("Add", new[] { StaticType.Object });
+            var dbParameterCollectionClearMethod = StaticType.DbParameterCollection.GetMethod("Clear");
 
             // Variables for 'Dynamic|Object' object
-            var objectGetTypeMethod = typeOfObject.GetMethod("GetType");
-            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString, typeOfBindingFlags });
-            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
+            var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
+            var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[] { StaticType.String, StaticType.BindingFlags });
+            var propertyInfoGetValueMethod = StaticType.PropertyInfo.GetMethod("GetValue", new[] { StaticType.Object });
 
             // Other variables
             var dbTypeResolver = new ClientTypeToDbTypeResolver();
@@ -850,7 +826,7 @@ namespace RepoDb.Reflection
 
                 // Parameter variables
                 var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
-                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
+                var parameterVariable = Expression.Variable(StaticType.DbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
 
@@ -876,7 +852,7 @@ namespace RepoDb.Reflection
                     var valueAssignment = (Expression)null;
 
                     // Check the proper type of the entity
-                    if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
+                    if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
                     {
                         instanceProperty = classProperty.PropertyInfo;
                     }
@@ -921,9 +897,9 @@ namespace RepoDb.Reflection
                                 #region StringToGuid
 
                                 // Create a new guid here
-                                if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
+                                if (propertyType == StaticType.String && fieldType == StaticType.Guid /* StringToGuid */)
                                 {
-                                    value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                    value = Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), new[] { valueToConvert });
                                 }
 
                                 #endregion
@@ -931,10 +907,10 @@ namespace RepoDb.Reflection
                                 #region GuidToString
 
                                 // Call the System.Convert conversion
-                                else if (propertyType == typeOfGuid && fieldType == typeOfString/* GuidToString*/)
+                                else if (propertyType == StaticType.Guid && fieldType == StaticType.String/* GuidToString*/)
                                 {
-                                    var convertMethod = typeof(Convert).GetMethod("ToString", new[] { typeOfObject });
-                                    value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, typeOfObject));
+                                    var convertMethod = StaticType.Convert.GetMethod("ToString", new[] { StaticType.Object });
+                                    value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, StaticType.Object));
                                     value = Expression.Convert(value, fieldType);
                                 }
 
@@ -965,12 +941,12 @@ namespace RepoDb.Reflection
                                     }
                                     if (mappedToType != null)
                                     {
-                                        convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { typeOfObject });
+                                        convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
                                     }
                                 }
                                 if (convertToTypeMethod == null)
                                 {
-                                    convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { typeOfObject });
+                                    convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
                                 }
                                 if (convertToTypeMethod == null)
                                 {
@@ -984,7 +960,7 @@ namespace RepoDb.Reflection
                                         value = Expression.Call(converterMethod,
                                             Expression.Constant(instanceProperty.PropertyType),
                                             Expression.Constant(dbField.Type),
-                                            Expression.Convert(value, typeOfObject),
+                                            Expression.Convert(value, StaticType.Object),
                                             Expression.Constant(convertToTypeMethod));
                                     }
                                 }
@@ -1012,7 +988,7 @@ namespace RepoDb.Reflection
                         }
 
                         // Convert to object
-                        value = Expression.Convert(value, typeOfObject);
+                        value = Expression.Convert(value, StaticType.Object);
                     }
 
                     // Declare the variable for the value assignment
@@ -1028,13 +1004,13 @@ namespace RepoDb.Reflection
                         );
 
                     // The value for DBNull.Value
-                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
+                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
 
                     // Check if the property is nullable
                     if (isNullable == true)
                     {
                         // Identification of the DBNull
-                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", parameterName));
+                        var valueVariable = Expression.Variable(StaticType.Object, string.Concat("valueOf", parameterName));
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
 
                         // Set the propert value
@@ -1053,7 +1029,7 @@ namespace RepoDb.Reflection
                     #endregion
 
                     // Check if it is a direct assignment or not
-                    if (typeOfEntity != typeOfObject)
+                    if (typeOfEntity != StaticType.Object)
                     {
                         parameterAssignments.Add(valueAssignment);
                     }
@@ -1067,7 +1043,7 @@ namespace RepoDb.Reflection
                         if (dbField.IsNullable == false && dbField.Type != null)
                         {
                             dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
-                                Expression.Convert(Expression.Default(dbField.Type), typeOfObject));
+                                Expression.Convert(Expression.Default(dbField.Type), StaticType.Object));
                         }
 
                         // Set the DBNull value
@@ -1094,7 +1070,7 @@ namespace RepoDb.Reflection
 
                 // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
                 // It is actually me who file this issue to Microsoft :)
-                //if (fieldOrPropertyType != typeOfTimeSpan)
+                //if (fieldOrPropertyType != StaticType.TimeSpan)
                 //{
                 // Identify the DB Type
                 var fieldOrPropertyType = (Type)null;
@@ -1104,27 +1080,27 @@ namespace RepoDb.Reflection
                 if (Converter.ConversionType == ConversionType.Automatic)
                 {
                     // Identity the conversion
-                    if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeOfDecimal && (fieldType == typeOfFloat || fieldType == typeOfDouble) /* DecimalToFloat/DecimalToDouble */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
-                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
-                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
-                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                        propertyType == typeOfString && fieldType == typeOfDateTime /* StringToDate */ ||
-                        propertyType == typeOfString && fieldType == typeOfShort /* StringToShort */ ||
-                        propertyType == typeOfString && fieldType == typeOfInt /* StringToInt */ ||
-                        propertyType == typeOfString && fieldType == typeOfLong /* StringToLong */ ||
-                        propertyType == typeOfString && fieldType == typeOfDouble /* StringToDouble */ ||
-                        propertyType == typeOfString && fieldType == typeOfDecimal /* StringToDecimal */ ||
-                        propertyType == typeOfString && fieldType == typeOfFloat /* StringToFloat */ ||
-                        propertyType == typeOfString && fieldType == typeOfBoolean /* StringToBoolean */ ||
-                        propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */ ||
-                        propertyType == typeOfGuid && fieldType == typeOfString /* GuidToString */)
+                    if (propertyType == StaticType.DateTime && fieldType == StaticType.String /* DateTimeToString */ ||
+                        propertyType == StaticType.Decimal && (fieldType == StaticType.Single || fieldType == StaticType.Double) /* DecimalToFloat/DecimalToDouble */ ||
+                        propertyType == StaticType.Double && fieldType == StaticType.Int64 /* DoubleToBigint */||
+                        propertyType == StaticType.Double && fieldType == StaticType.Int32 /* DoubleToBigint */ ||
+                        propertyType == StaticType.Double && fieldType == StaticType.Int16 /* DoubleToShort */||
+                        propertyType == StaticType.Single && fieldType == StaticType.Int64 /* FloatToBigint */ ||
+                        propertyType == StaticType.Single && fieldType == StaticType.Int16 /* FloatToShort */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.DateTime /* StringToDate */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Int16 /* StringToShort */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Int32 /* StringToInt */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Int64 /* StringToLong */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Double /* StringToDouble */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Decimal /* StringToDecimal */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Single /* StringToFloat */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Boolean /* StringToBoolean */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Guid /* StringToGuid */ ||
+                        propertyType == StaticType.Guid && fieldType == StaticType.String /* GuidToString */)
                     {
                         fieldOrPropertyType = fieldType;
                     }
-                    else if (propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                    else if (propertyType == StaticType.Guid && fieldType == StaticType.String /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
@@ -1137,7 +1113,7 @@ namespace RepoDb.Reflection
                 // Get the class property
                 if (dbType == null && handlerInstance == null)
                 {
-                    if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
+                    if (fieldOrPropertyType != StaticType.SqlVariant && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
                     {
                         dbType = classProperty?.GetDbType();
                     }
@@ -1309,7 +1285,7 @@ namespace RepoDb.Reflection
             var propertyVariableList = new List<dynamic>();
             var instanceVariable = Expression.Variable(typeOfEntity, "instance");
             var instanceType = Expression.Constant(typeOfEntity);
-            var instanceTypeVariable = Expression.Variable(typeOfType, "instanceType");
+            var instanceTypeVariable = Expression.Variable(StaticType.Type, "instanceType");
 
             // Input fields properties
             if (inputFields?.Any() == true)
@@ -1366,9 +1342,9 @@ namespace RepoDb.Reflection
                 var propertyName = field.Name.AsUnquoted(true, dbSetting);
 
                 // Set the proper assignments (property)
-                if (typeOfEntity == typeOfObject)
+                if (typeOfEntity == StaticType.Object)
                 {
-                    propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", propertyName));
+                    propertyVariable = Expression.Variable(StaticType.PropertyInfo, string.Concat("property", propertyName));
                     propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
                         typeGetPropertyMethod,
                         new[]
@@ -1449,58 +1425,39 @@ namespace RepoDb.Reflection
             where TEntity : class
         {
             // Get the types
-            var typeOfDbCommand = typeof(DbCommand);
             var typeOfListEntity = typeof(IList<TEntity>);
             var typeOfEntity = typeof(TEntity);
-            var typeOfObject = typeof(object);
-            var typeOfDbParameter = typeof(DbParameter);
-            var typeOfDbParameterCollection = typeof(DbParameterCollection);
-            var typeOfInt = typeof(int);
-            var typeOfString = typeof(string);
-            var typeOfType = typeof(Type);
-            var typeOfPropertyInfo = typeof(PropertyInfo);
-            var typeOfTimeSpan = typeof(TimeSpan);
-            var typeOfBindingFlags = typeof(BindingFlags);
-            var typeOfGuid = typeof(Guid);
-            var typeOfDateTime = typeof(DateTime);
-            var typeOfDecimal = typeof(Decimal);
-            var typeOfFloat = typeof(float);
-            var typeOfLong = typeof(long);
-            var typeOfDouble = typeof(Double);
-            var typeOfShort = typeof(short);
-            var typeOfBoolean = typeof(bool);
-            var typeOfConvert = typeof(Convert);
 
             // Variables for arguments
-            var commandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
+            var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
 
             // Variables for types
             var entityProperties = PropertyCache.Get<TEntity>();
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
-            var dbCommandCreateParameterMethod = typeOfDbCommand.GetMethod("CreateParameter");
-            var dbParameterParameterNameSetMethod = typeOfDbParameter.GetProperty("ParameterName").SetMethod;
-            var dbParameterValueSetMethod = typeOfDbParameter.GetProperty("Value").SetMethod;
-            var dbParameterDbTypeSetMethod = typeOfDbParameter.GetProperty("DbType").SetMethod;
-            var dbParameterDirectionSetMethod = typeOfDbParameter.GetProperty("Direction").SetMethod;
-            var dbParameterSizeSetMethod = typeOfDbParameter.GetProperty("Size").SetMethod;
-            var dbParameterPrecisionSetMethod = typeOfDbParameter.GetProperty("Precision").SetMethod;
-            var dbParameterScaleSetMethod = typeOfDbParameter.GetProperty("Scale").SetMethod;
+            var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
+            var dbCommandCreateParameterMethod = StaticType.DbCommand.GetMethod("CreateParameter");
+            var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
+            var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
+            var dbParameterDirectionSetMethod = StaticType.DbParameter.GetProperty("Direction").SetMethod;
+            var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
+            var dbParameterPrecisionSetMethod = StaticType.DbParameter.GetProperty("Precision").SetMethod;
+            var dbParameterScaleSetMethod = StaticType.DbParameter.GetProperty("Scale").SetMethod;
 
             // Variables for DbParameterCollection
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
-            var dbParameterCollectionAddMethod = typeOfDbParameterCollection.GetMethod("Add", new[] { typeOfObject });
-            var dbParameterCollectionClearMethod = typeOfDbParameterCollection.GetMethod("Clear");
+            var dbParameterCollectionAddMethod = StaticType.DbParameterCollection.GetMethod("Add", new[] { StaticType.Object });
+            var dbParameterCollectionClearMethod = StaticType.DbParameterCollection.GetMethod("Clear");
 
             // Variables for 'Dynamic|Object' object
-            var objectGetTypeMethod = typeOfObject.GetMethod("GetType");
-            var typeGetPropertyMethod = typeOfType.GetMethod("GetProperty", new[] { typeOfString, typeOfBindingFlags });
-            var propertyInfoGetValueMethod = typeOfPropertyInfo.GetMethod("GetValue", new[] { typeOfObject });
+            var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
+            var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[] { StaticType.String, StaticType.BindingFlags });
+            var propertyInfoGetValueMethod = StaticType.PropertyInfo.GetMethod("GetValue", new[] { StaticType.Object });
 
             // Variables for List<T>
-            var listIndexerMethod = typeOfListEntity.GetMethod("get_Item", new[] { typeOfInt });
+            var listIndexerMethod = typeOfListEntity.GetMethod("get_Item", new[] { StaticType.Int32 });
 
             // Other variables
             var dbTypeResolver = new ClientTypeToDbTypeResolver();
@@ -1519,7 +1476,7 @@ namespace RepoDb.Reflection
 
                 // Parameter variables
                 var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
-                var parameterVariable = Expression.Variable(typeOfDbParameter, string.Concat("parameter", parameterName));
+                var parameterVariable = Expression.Variable(StaticType.DbParameter, string.Concat("parameter", parameterName));
                 var parameterInstance = Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
                 parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
 
@@ -1546,7 +1503,7 @@ namespace RepoDb.Reflection
                     var valueAssignment = (Expression)null;
 
                     // Check the proper type of the entity
-                    if (typeOfEntity != typeOfObject && typeOfEntity.IsGenericType == false)
+                    if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
                     {
                         instanceProperty = classProperty.PropertyInfo;
                     }
@@ -1591,9 +1548,9 @@ namespace RepoDb.Reflection
                                 #region StringToGuid
 
                                 // Create a new guid here
-                                if (propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */)
+                                if (propertyType == StaticType.String && fieldType == StaticType.Guid /* StringToGuid */)
                                 {
-                                    value = Expression.New(typeOfGuid.GetConstructor(new[] { typeOfString }), new[] { valueToConvert });
+                                    value = Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), new[] { valueToConvert });
                                 }
 
                                 #endregion
@@ -1601,10 +1558,10 @@ namespace RepoDb.Reflection
                                 #region GuidToString
 
                                 // Call the System.Convert conversion
-                                else if (propertyType == typeOfGuid && fieldType == typeOfString/* GuidToString*/)
+                                else if (propertyType == StaticType.Guid && fieldType == StaticType.String/* GuidToString*/)
                                 {
-                                    var convertMethod = typeof(Convert).GetMethod("ToString", new[] { typeOfObject });
-                                    value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, typeOfObject));
+                                    var convertMethod = StaticType.Convert.GetMethod("ToString", new[] { StaticType.Object });
+                                    value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, StaticType.Object));
                                     value = Expression.Convert(value, fieldType);
                                 }
 
@@ -1635,12 +1592,12 @@ namespace RepoDb.Reflection
                                     }
                                     if (mappedToType != null)
                                     {
-                                        convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { typeOfObject });
+                                        convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
                                     }
                                 }
                                 if (convertToTypeMethod == null)
                                 {
-                                    convertToTypeMethod = typeOfConvert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { typeOfObject });
+                                    convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
                                 }
                                 if (convertToTypeMethod == null)
                                 {
@@ -1654,7 +1611,7 @@ namespace RepoDb.Reflection
                                         value = Expression.Call(converterMethod,
                                             Expression.Constant(instanceProperty.PropertyType),
                                             Expression.Constant(dbField.Type),
-                                            Expression.Convert(value, typeOfObject),
+                                            Expression.Convert(value, StaticType.Object),
                                             Expression.Constant(convertToTypeMethod));
                                     }
                                 }
@@ -1682,7 +1639,7 @@ namespace RepoDb.Reflection
                         }
 
                         // Convert to object
-                        value = Expression.Convert(value, typeOfObject);
+                        value = Expression.Convert(value, StaticType.Object);
                     }
 
                     // Declare the variable for the value assignment
@@ -1698,13 +1655,13 @@ namespace RepoDb.Reflection
                         );
 
                     // The value for DBNull.Value
-                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), typeOfObject);
+                    var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
 
                     // Check if the property is nullable
                     if (isNullable == true)
                     {
                         // Identification of the DBNull
-                        var valueVariable = Expression.Variable(typeOfObject, string.Concat("valueOf", parameterName));
+                        var valueVariable = Expression.Variable(StaticType.Object, string.Concat("valueOf", parameterName));
                         var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
 
                         // Set the propert value
@@ -1723,7 +1680,7 @@ namespace RepoDb.Reflection
                     #endregion
 
                     // Check if it is a direct assignment or not
-                    if (typeOfEntity != typeOfObject)
+                    if (typeOfEntity != StaticType.Object)
                     {
                         parameterAssignments.Add(valueAssignment);
                     }
@@ -1737,7 +1694,7 @@ namespace RepoDb.Reflection
                         if (dbField.IsNullable == false && dbField.Type != null)
                         {
                             dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
-                                Expression.Convert(Expression.Default(dbField.Type), typeOfObject));
+                                Expression.Convert(Expression.Default(dbField.Type), StaticType.Object));
                         }
 
                         // Set the DBNull value
@@ -1764,7 +1721,7 @@ namespace RepoDb.Reflection
 
                 // Set for non Timestamp, not-working in System.Data.SqlClient but is working at Microsoft.Data.SqlClient
                 // It is actually me who file this issue to Microsoft :)
-                //if (fieldOrPropertyType != typeOfTimeSpan)
+                //if (fieldOrPropertyType != StaticType.TimeSpan)
                 //{
                 // Identify the DB Type
                 var fieldOrPropertyType = (Type)null;
@@ -1774,27 +1731,27 @@ namespace RepoDb.Reflection
                 if (Converter.ConversionType == ConversionType.Automatic)
                 {
                     // Identity the conversion
-                    if (propertyType == typeOfDateTime && fieldType == typeOfString /* DateTimeToString */ ||
-                        propertyType == typeOfDecimal && (fieldType == typeOfFloat || fieldType == typeOfDouble) /* DecimalToFloat/DecimalToDouble */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfLong /* DoubleToBigint */||
-                        propertyType == typeOfDouble && fieldType == typeOfInt /* DoubleToBigint */ ||
-                        propertyType == typeOfDouble && fieldType == typeOfShort /* DoubleToShort */||
-                        propertyType == typeOfFloat && fieldType == typeOfLong /* FloatToBigint */ ||
-                        propertyType == typeOfFloat && fieldType == typeOfShort /* FloatToShort */ ||
-                        propertyType == typeOfString && fieldType == typeOfDateTime /* StringToDate */ ||
-                        propertyType == typeOfString && fieldType == typeOfShort /* StringToShort */ ||
-                        propertyType == typeOfString && fieldType == typeOfInt /* StringToInt */ ||
-                        propertyType == typeOfString && fieldType == typeOfLong /* StringToLong */ ||
-                        propertyType == typeOfString && fieldType == typeOfDouble /* StringToDouble */ ||
-                        propertyType == typeOfString && fieldType == typeOfDecimal /* StringToDecimal */ ||
-                        propertyType == typeOfString && fieldType == typeOfFloat /* StringToFloat */ ||
-                        propertyType == typeOfString && fieldType == typeOfBoolean /* StringToBoolean */ ||
-                        propertyType == typeOfString && fieldType == typeOfGuid /* StringToGuid */ ||
-                        propertyType == typeOfGuid && fieldType == typeOfString /* GuidToString */)
+                    if (propertyType == StaticType.DateTime && fieldType == StaticType.String /* DateTimeToString */ ||
+                        propertyType == StaticType.Decimal && (fieldType == StaticType.Single || fieldType == StaticType.Double) /* DecimalToFloat/DecimalToDouble */ ||
+                        propertyType == StaticType.Double && fieldType == StaticType.Int64 /* DoubleToBigint */||
+                        propertyType == StaticType.Double && fieldType == StaticType.Int32 /* DoubleToBigint */ ||
+                        propertyType == StaticType.Double && fieldType == StaticType.Int16 /* DoubleToShort */||
+                        propertyType == StaticType.Single && fieldType == StaticType.Int64 /* FloatToBigint */ ||
+                        propertyType == StaticType.Single && fieldType == StaticType.Int16 /* FloatToShort */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.DateTime /* StringToDate */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Int16 /* StringToShort */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Int32 /* StringToInt */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Int64 /* StringToLong */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Double /* StringToDouble */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Decimal /* StringToDecimal */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Single /* StringToFloat */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Boolean /* StringToBoolean */ ||
+                        propertyType == StaticType.String && fieldType == StaticType.Guid /* StringToGuid */ ||
+                        propertyType == StaticType.Guid && fieldType == StaticType.String /* GuidToString */)
                     {
                         fieldOrPropertyType = fieldType;
                     }
-                    else if (propertyType == typeOfGuid && fieldType == typeOfString /* UniqueIdentifierToString */)
+                    else if (propertyType == StaticType.Guid && fieldType == StaticType.String /* UniqueIdentifierToString */)
                     {
                         fieldOrPropertyType = propertyType;
                     }
@@ -1807,7 +1764,7 @@ namespace RepoDb.Reflection
                 // Get the class property
                 if (dbType == null && handlerInstance == null)
                 {
-                    if (fieldOrPropertyType != typeof(SqlVariant) && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
+                    if (fieldOrPropertyType != StaticType.SqlVariant && !string.Equals(dbField.DatabaseType, "sql_variant", StringComparison.OrdinalIgnoreCase))
                     {
                         dbType = classProperty?.GetDbType();
                     }
@@ -1979,7 +1936,7 @@ namespace RepoDb.Reflection
             var propertyVariableList = new List<dynamic>();
             var instanceVariable = Expression.Variable(typeOfEntity, "instance");
             var instanceType = Expression.Constant(typeOfEntity); // Expression.Call(instanceVariable, objectGetTypeMethod);
-            var instanceTypeVariable = Expression.Variable(typeOfType, "instanceType");
+            var instanceTypeVariable = Expression.Variable(StaticType.Type, "instanceType");
 
             // Input fields properties
             if (inputFields?.Any() == true)
@@ -2038,9 +1995,9 @@ namespace RepoDb.Reflection
                     var propertyName = field.Name.AsUnquoted(true, dbSetting);
 
                     // Set the proper assignments (property)
-                    if (typeOfEntity == typeOfObject)
+                    if (typeOfEntity == StaticType.Object)
                     {
-                        propertyVariable = Expression.Variable(typeOfPropertyInfo, string.Concat("property", propertyName));
+                        propertyVariable = Expression.Variable(StaticType.PropertyInfo, string.Concat("property", propertyName));
                         propertyInstance = Expression.Call(Expression.Call(instanceVariable, objectGetTypeMethod),
                             typeGetPropertyMethod,
                             new[]
@@ -2125,23 +2082,19 @@ namespace RepoDb.Reflection
         {
             // Variables for type
             var typeOfEntity = typeof(TEntity);
-            var typeOfDbCommand = typeof(DbCommand);
-            var typeOfDbParameterCollection = typeof(DbParameterCollection);
-            var typeOfString = typeof(string);
-            var typeOfDbParameter = typeof(DbParameter);
 
             // Variables for argument
             var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
-            var dbCommandParameterExpression = Expression.Parameter(typeOfDbCommand, "command");
+            var dbCommandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
 
             // Variables for DbCommand
-            var dbCommandParametersProperty = typeOfDbCommand.GetProperty("Parameters");
+            var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
 
             // Variables for DbParameterCollection
-            var dbParameterCollectionIndexerMethod = typeOfDbParameterCollection.GetMethod("get_Item", new[] { typeOfString });
+            var dbParameterCollectionIndexerMethod = StaticType.DbParameterCollection.GetMethod("get_Item", new[] { StaticType.String });
 
             // Variables for DbParameter
-            var dbParameterValueProperty = typeOfDbParameter.GetProperty("Value");
+            var dbParameterValueProperty = StaticType.DbParameter.GetProperty("Value");
 
             // Get the entity property
             var propertyName = field.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
@@ -2178,18 +2131,16 @@ namespace RepoDb.Reflection
         {
             // Variables for type
             var typeOfEntity = typeof(TEntity);
-            var typeOfObject = typeof(object);
-            var typeOfConverter = typeof(Converter);
 
             // Variables for argument
             var entityParameter = Expression.Parameter(typeOfEntity, "entity");
-            var valueParameter = Expression.Parameter(typeOfObject, "value");
+            var valueParameter = Expression.Parameter(StaticType.Object, "value");
 
             // Get the entity property
             var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetPropertyByMapping(field.Name)?.PropertyInfo)?.SetMethod;
 
             // Get the converter
-            var toTypeMethod = typeOfConverter.GetMethod("ToType", new[] { typeOfObject }).MakeGenericMethod(field.Type.GetUnderlyingType());
+            var toTypeMethod = StaticType.Converter.GetMethod("ToType", new[] { StaticType.Object }).MakeGenericMethod(field.Type.GetUnderlyingType());
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property,
@@ -2218,7 +2169,6 @@ namespace RepoDb.Reflection
         {
             // Variables
             var dbTypeResolver = new ClientTypeToDbTypeResolver();
-            var typeOfBytes = typeof(byte[]);
             var dbSetting = command.Connection.GetDbSetting();
 
             // Clear the parameters
@@ -2247,7 +2197,7 @@ namespace RepoDb.Reflection
                 // Ensure the type mapping
                 if (dbType == null)
                 {
-                    if (field.Type == typeOfBytes)
+                    if (field.Type == StaticType.ByteArray)
                     {
                         dbType = DbType.Binary;
                     }
