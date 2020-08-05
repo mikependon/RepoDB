@@ -434,7 +434,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     if (batchSizeValue > 1)
                     {
@@ -788,7 +788,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     if (batchSizeValue > 1)
                     {

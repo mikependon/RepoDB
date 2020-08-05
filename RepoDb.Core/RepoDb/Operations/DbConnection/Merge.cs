@@ -1297,7 +1297,7 @@ namespace RepoDb
                 var mergeRequest = (MergeRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     mergeRequest = new MergeRequest(tableName,
                         connection,
@@ -1420,7 +1420,7 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
-            var isObjectType = typeof(TEntity) == typeof(object);
+            var isObjectType = typeof(TEntity) == StaticType.Object;
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
@@ -1663,7 +1663,7 @@ namespace RepoDb
                 var mergeRequest = (MergeRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     mergeRequest = new MergeRequest(tableName,
                         connection,
@@ -1786,7 +1786,7 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
-            var isObjectType = typeof(TEntity) == typeof(object);
+            var isObjectType = typeof(TEntity) == StaticType.Object;
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;

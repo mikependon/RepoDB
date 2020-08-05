@@ -1685,7 +1685,7 @@ namespace RepoDb
                     if (property.PropertyType.IsArray == false)
                     {
                         // String is an enumerable
-                        if (property.PropertyType == typeof(string))
+                        if (property.PropertyType == StaticType.String)
                         {
                             continue;
                         }
@@ -1746,7 +1746,7 @@ namespace RepoDb
                 var type = kvp.Value?.GetType();
 
                 // String is an enumerable
-                if (type == typeof(string))
+                if (type == StaticType.String)
                 {
                     continue;
                 }
@@ -1817,7 +1817,7 @@ namespace RepoDb
                 var type = field.Parameter.Value?.GetType();
 
                 // String is an enumerable
-                if (type == typeof(string))
+                if (type == StaticType.String)
                 {
                     continue;
                 }
@@ -1886,7 +1886,7 @@ namespace RepoDb
             var type = queryField.Parameter.Value?.GetType();
 
             // String is an enumerable
-            if (type == typeof(string))
+            if (type == StaticType.String)
             {
                 return default;
             }

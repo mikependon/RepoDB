@@ -972,7 +972,7 @@ namespace RepoDb
                 var updateRequest = (UpdateRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     updateRequest = new UpdateRequest(tableName,
                         connection,
@@ -1114,7 +1114,7 @@ namespace RepoDb
                 var updateRequest = (UpdateRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     updateRequest = new UpdateRequest(tableName,
                         connection,

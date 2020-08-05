@@ -24,39 +24,39 @@ namespace RepoDb.Resolvers
             switch (dbType)
             {
                 case DbType.Int64:
-                    return typeof(long);
+                    return StaticType.Int64;
                 case DbType.Binary:
                 case DbType.Byte:
-                    return typeof(byte[]);
+                    return StaticType.ByteArray;
                 case DbType.Boolean:
-                    return typeof(bool);
+                    return StaticType.Boolean;
                 case DbType.String:
                 case DbType.AnsiString:
                 case DbType.AnsiStringFixedLength:
                 case DbType.StringFixedLength:
-                    return typeof(string);
+                    return StaticType.String;
                 case DbType.Date:
                 case DbType.DateTime:
                 case DbType.DateTime2:
-                    return typeof(DateTime);
+                    return StaticType.DateTime;
                 case DbType.DateTimeOffset:
-                    return typeof(DateTimeOffset);
+                    return StaticType.DateTimeOffset;
                 case DbType.Decimal:
-                    return typeof(decimal);
+                    return StaticType.Decimal;
                 case DbType.Single:
-                    return typeof(Single);
+                    return StaticType.Single;
                 case DbType.Double:
-                    return typeof(double);
+                    return StaticType.Double;
                 case DbType.Int32:
-                    return typeof(int);
+                    return StaticType.Int32;
                 case DbType.Int16:
-                    return typeof(short);
+                    return StaticType.Int16;
                 case DbType.Time:
-                    return typeof(TimeSpan);
+                    return StaticType.TimeSpan;
                 case DbType.Guid:
-                    return typeof(Guid);
+                    return StaticType.Guid;
                 case DbType.Object:
-                    return typeof(object);
+                    return StaticType.Object;
                 //case DbType.Xml:
                 //    return "XML";
                 default:

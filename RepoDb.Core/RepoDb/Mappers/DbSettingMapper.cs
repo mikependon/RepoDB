@@ -15,7 +15,6 @@ namespace RepoDb
         #region Privates
 
         private static readonly ConcurrentDictionary<int, IDbSetting> maps = new ConcurrentDictionary<int, IDbSetting>();
-        private static Type type = typeof(DbConnection);
 
         #endregion
 
@@ -34,7 +33,7 @@ namespace RepoDb
         public static void Add<TDbConnection>(IDbSetting dbSetting,
             bool @override)
             where TDbConnection : DbConnection =>
-            Add(typeof(TDbConnection), dbSetting, @override);
+            Add(StaticType.DbConnection, dbSetting, @override);
 
         /// <summary>
         /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
@@ -86,7 +85,7 @@ namespace RepoDb
         public static IDbSetting Get<TDbConnection>()
             where TDbConnection : DbConnection
         {
-            return Get(typeof(TDbConnection));
+            return Get(StaticType.DbConnection);
         }
 
         /// <summary>
@@ -119,7 +118,7 @@ namespace RepoDb
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
         public static void Remove<TDbConnection>()
             where TDbConnection : DbConnection =>
-            Remove(typeof(TDbConnection));
+            Remove(StaticType.DbConnection);
 
         /// <summary>
         /// Removes the mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
@@ -181,9 +180,9 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            if (type.IsSubclassOf(DbSettingMapper.type) == false)
+            if (type.IsSubclassOf(StaticType.DbConnection) == false)
             {
-                throw new InvalidTypeException($"Type must be a subclass of '{DbSettingMapper.type.FullName}'.");
+                throw new InvalidTypeException($"Type must be a subclass of '{StaticType.DbConnection.FullName}'.");
             }
         }
 

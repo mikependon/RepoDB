@@ -17,8 +17,8 @@ namespace RepoDb.Extensions
     {
         #region Privates
 
-        internal static Type bytesType = typeof(byte[]);
-        internal static Type dictionaryType = typeof(Dictionary<,>);
+        internal static Type bytesType = StaticType.ByteArray;
+        internal static Type dictionaryType = StaticType.Dictionary;
         internal static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
 
         #endregion

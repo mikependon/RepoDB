@@ -214,23 +214,23 @@ namespace RepoDb
             private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc()
             {
                 // Expressions
-                var addMethod = typeof(List<PropertyValue>).GetMethod("Add", new[] { typeof(PropertyValue) });
+                var addMethod = StaticType.PropertyValueList.GetMethod("Add", new[] { StaticType.PropertyValue });
                 var obj = Expression.Parameter(typeof(TEntity), "obj");
-                var constructor = typeof(PropertyValue).GetConstructor(new[]
+                var constructor = StaticType.PropertyValue.GetConstructor(new[]
                 {
-                    typeof(string),
-                    typeof(object),
-                    typeof(ClassProperty)
+                    StaticType.String,
+                    StaticType.Object,
+                    StaticType.ClassProperty
                 });
 
                 // Set the body
                 var properties = PropertyCache.Get<TEntity>();
                 var body = Expression.ListInit(
-                    Expression.New(typeof(List<PropertyValue>)),
+                    Expression.New(StaticType.PropertyValueList),
                     properties.Select(property =>
                     {
                         var name = Expression.Constant(property.GetMappedName());
-                        var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), typeof(object));
+                        var value = Expression.Convert(Expression.Property(obj, property.PropertyInfo), StaticType.Object);
                         var propertyValue = Expression.New(constructor,
                             name,
                             value,

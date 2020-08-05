@@ -44,7 +44,7 @@ namespace RepoDb
             IsNullable = isNullable;
             Type = type;
             Size = size;
-            if (type == typeof(double) && precision > 38)
+            if (type == StaticType.Double && precision > 38)
             {
                 Precision = 38;
             }

@@ -130,7 +130,7 @@ namespace RepoDb
                 return identityAttribute;
             }
             isIdentityAttributeWasSet = true;
-            return identityAttribute = PropertyInfo.GetCustomAttribute(typeof(IdentityAttribute)) as IdentityAttribute;
+            return identityAttribute = PropertyInfo.GetCustomAttribute(StaticType.IdentityAttribute) as IdentityAttribute;
         }
 
         /*
@@ -150,7 +150,7 @@ namespace RepoDb
                 return typeMapAttribute;
             }
             isTypeMapAttributeWasSet = true;
-            return typeMapAttribute = PropertyInfo.GetCustomAttribute(typeof(TypeMapAttribute)) as TypeMapAttribute;
+            return typeMapAttribute = PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute) as TypeMapAttribute;
         }
 
         /*
@@ -170,7 +170,7 @@ namespace RepoDb
                 return propertyHandlerAttribute;
             }
             isPropertyHandlerAttributeWasSet = true;
-            return propertyHandlerAttribute = PropertyInfo.GetCustomAttribute(typeof(PropertyHandlerAttribute)) as PropertyHandlerAttribute;
+            return propertyHandlerAttribute = PropertyInfo.GetCustomAttribute(StaticType.PropertyHandlerAttribute) as PropertyHandlerAttribute;
         }
 
         /*

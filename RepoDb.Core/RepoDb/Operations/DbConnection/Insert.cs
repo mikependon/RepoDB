@@ -492,7 +492,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     insertRequest = new InsertRequest(tableName,
                         connection,
@@ -665,7 +665,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == typeof(object))
+                if (typeof(TEntity) == StaticType.Object)
                 {
                     insertRequest = new InsertRequest(tableName,
                         connection,

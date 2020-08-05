@@ -25,14 +25,14 @@ namespace RepoDb.Resolvers
             type = type?.GetUnderlyingType();
 
             // Only convert those numerics
-            if (type == typeof(short) ||
-               type == typeof(int) ||
-               type == typeof(long) ||
-               type == typeof(UInt16) ||
-               type == typeof(UInt32) ||
-               type == typeof(UInt64))
+            if (type == StaticType.Int16 ||
+               type == StaticType.Int32 ||
+               type == StaticType.Int64 ||
+               type == StaticType.UInt16 ||
+               type == StaticType.UInt32 ||
+               type == StaticType.UInt64)
             {
-                type = typeof(double);
+                type = StaticType.Double;
             }
 
             // Return the type
