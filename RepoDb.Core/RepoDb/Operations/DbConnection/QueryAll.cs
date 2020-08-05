@@ -15,7 +15,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region QueryAll<TEntity>
+        #region QueryAll<TEntity>(TableName)
 
         /// <summary>
         /// Query all the data from the table.
@@ -61,6 +61,10 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
+
+        #endregion
+
+        #region QueryAll<TEntity>
 
         /// <summary>
         /// Query all the data from the table.
@@ -637,9 +641,6 @@ namespace RepoDb
             var commandText = CommandTextCache.GetQueryAllText(request);
             var param = (object)null;
             var sessionId = Guid.Empty;
-
-            // Database pre-touch for field definitions
-            await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
             // Before Execution
             if (trace != null)

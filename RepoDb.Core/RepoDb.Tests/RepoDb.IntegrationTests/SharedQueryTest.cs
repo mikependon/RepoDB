@@ -523,5 +523,129 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #endregion
+
+        #region QueryAll<TEntity>(TableName)
+
+        #region IdentityTable
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqlConnectionSharedQueryAllForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.ColumnInt == item.ColumnInt);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public void TestSqlConnectionSharedQueryAllAsyncForIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<SharedIdentityTable>(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.ColumnInt == item.ColumnInt);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region NonIdentityTable
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqlConnectionSharedQueryAllForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.ColumnInt == item.ColumnInt);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public void TestSqlConnectionSharedQueryAllAsyncForNonIdentityTable()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<SharedIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.ColumnInt == item.ColumnInt);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #endregion
     }
 }
