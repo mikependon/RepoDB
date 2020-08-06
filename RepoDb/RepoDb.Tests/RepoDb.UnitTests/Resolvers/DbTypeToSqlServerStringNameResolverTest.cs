@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Int64;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("bigint", name);
@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Binary;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("binary", name);
@@ -47,7 +47,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Boolean;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("bit", name);
@@ -60,7 +60,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.AnsiStringFixedLength;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("char", name);
@@ -73,7 +73,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Date;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("date", name);
@@ -86,7 +86,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.DateTime;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("datetime", name);
@@ -99,7 +99,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.DateTime2;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("datetime2", name);
@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.DateTimeOffset;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("datetimeoffset", name);
@@ -125,7 +125,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Double;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("float", name);
@@ -138,7 +138,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Int32;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("int", name);
@@ -151,7 +151,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.StringFixedLength;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("nchar", name);
@@ -164,7 +164,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Single;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("real", name);
@@ -177,7 +177,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.String;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("nvarchar", name);
@@ -190,7 +190,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Object;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("object", name);
@@ -203,7 +203,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Time;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("time", name);
@@ -216,7 +216,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Byte;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("tinyint", name);
@@ -229,7 +229,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Guid;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("uniqueidentifier", name);
@@ -242,7 +242,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.AnsiString;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("varchar", name);
@@ -255,7 +255,7 @@ namespace RepoDb.UnitTests.Resolvers
             var dbType = DbType.Xml;
 
             // Act
-            var name = m_resolver.Resolve(dbType).ToLower();
+            var name = m_resolver.Resolve(dbType).ToLowerInvariant();
 
             // Assert
             Assert.AreEqual("xml", name);
