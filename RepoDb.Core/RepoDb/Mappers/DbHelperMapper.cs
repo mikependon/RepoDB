@@ -85,7 +85,7 @@ namespace RepoDb
         public static IDbHelper Get<TDbConnection>()
             where TDbConnection : DbConnection
         {
-            return Get(StaticType.DbConnection);
+            return Get(typeof(TDbConnection));
         }
 
         /// <summary>
