@@ -856,7 +856,7 @@ namespace RepoDb.Reflection
             IDbConnection connection)
             where TEntity : class
         {
-            var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
+            var fieldNames = readerFields.Select(f => f.Name.ToLowerInvariant()).AsList();
             var dbSetting = connection?.GetDbSetting();
             var classProperties = PropertyCache
                 .Get<TEntity>()
@@ -882,7 +882,7 @@ namespace RepoDb.Reflection
                     .AsUnquoted(true, dbSetting);
 
                 // Skip if not found
-                var ordinal = fieldNames.IndexOf(mappedName.ToLower());
+                var ordinal = fieldNames.IndexOf(mappedName.ToLowerInvariant());
                 if (ordinal < 0)
                 {
                     continue;

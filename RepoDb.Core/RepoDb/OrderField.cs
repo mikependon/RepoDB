@@ -63,7 +63,7 @@ namespace RepoDb
             {
                 orderTextAttribute = typeof(Order)
                     .GetMembers()
-                    .First(member => member.Name.ToLower() == Order.ToString().ToLower())
+                    .First(member => member.Name.ToLowerInvariant() == Order.ToString().ToLowerInvariant())
                     .GetCustomAttribute<TextAttribute>();
             }
             return orderTextAttribute.Text;

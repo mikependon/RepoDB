@@ -63,7 +63,7 @@ namespace RepoDb.Resolvers
             ColumnTinyText (System.String)
             ColumnBit (System.UInt64)
              */
-            switch (dbTypeName.ToLower())
+            switch (dbTypeName.ToLowerInvariant())
             {
                 case "bigint":
                 case "integer":

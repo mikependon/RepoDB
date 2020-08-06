@@ -14,7 +14,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             var variable = Environment.GetEnvironmentVariable("REPODB_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
 
             // Set the property
-            IsInMemory = string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
+            IsInMemory = true; //string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
         }
 
         #region Properties

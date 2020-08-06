@@ -25,7 +25,7 @@ namespace RepoDb.Resolvers
             {
                 throw new NullReferenceException("The DB Type name must not be null.");
             }
-            switch (dbTypeName.ToLower())
+            switch (dbTypeName.ToLowerInvariant())
             {
                 case "bigint":
                     return typeof(long);
