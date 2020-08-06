@@ -79,9 +79,9 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 
 ## Pseudo-Temporary Table (Physical/Temporary)
 
-In RepoDb, the bulk operations are creating a pseudo-temporary as a stepping stone for the actual operation. The data is first brought into this pseudo-temporary table via [BulkInsert](https://repodb.net/operation/bulkinsert) operation. Then, this pseudo-temporary is being used to promote the actual changes towards the target table. It is happening behind-the-scene when calling the [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) bulk operations.
+In RepoDb, the bulk operations are creating a pseudo-temporary table as a stepping stone for the actual operation. The data is first brought into this pseudo-temporary table via [BulkInsert](https://repodb.net/operation/bulkinsert) operation. Then, this pseudo-temporary table is then used to promote the changes towards the actual table. It is happening behind-the-scene when calling the [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) bulk operations.
 
-You can leverage the underlying RDBMS capability by specifying whether to use the TEMP pseudo-temporary table or the physical pseudo-temporary table. To do this, simply set the `usePhysicalPseudoTempTable` argument to `true`.
+You can leverage the underlying RDBMS capability by specifying whether to use the "temporary" pseudo-temporary table or the "physical" pseudo-temporary table. To do this, simply set the `usePhysicalPseudoTempTable` argument to `true`.
 
 #### BulkInsert
 
