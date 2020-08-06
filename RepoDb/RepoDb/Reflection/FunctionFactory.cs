@@ -94,7 +94,7 @@ namespace RepoDb.Reflection
             var typeOfSingle = typeof(Single);
             var isDefaultConversion = TypeMapper.ConversionType == ConversionType.Default;
             var properties = PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite);
-            var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
+            var fieldNames = readerFields.Select(f => f.Name.ToLowerInvariant()).AsList();
             var dbSetting = connection.GetDbSetting();
 
             // Filter the properties by reader fields
@@ -107,7 +107,7 @@ namespace RepoDb.Reflection
             {
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetMappedName().AsUnquoted(true, dbSetting);
-                var ordinal = fieldNames.IndexOf(mappedName.ToLower());
+                var ordinal = fieldNames.IndexOf(mappedName.ToLowerInvariant());
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)

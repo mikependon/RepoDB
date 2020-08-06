@@ -160,7 +160,7 @@ namespace RepoDb.Resolvers
             ColumnXML = System.String
             ColumnXMLAsArray = System.Array
             */
-            switch (dbTypeName.ToLower())
+            switch (dbTypeName.ToLowerInvariant())
             {
                 case "bigint":
                     return typeof(System.Int64);

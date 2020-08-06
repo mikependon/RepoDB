@@ -13,7 +13,7 @@ namespace RepoDb.UnitTests.Enumerations
         {
             return typeof(Order)
                 .GetMembers()
-                .First(member => member.Name.ToLower() == order.ToString().ToLower())
+                .First(member => member.Name.ToLowerInvariant() == order.ToString().ToLowerInvariant())
                 .GetCustomAttribute<TextAttribute>();
         }
 

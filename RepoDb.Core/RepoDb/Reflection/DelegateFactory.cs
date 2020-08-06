@@ -46,7 +46,7 @@ namespace RepoDb.Reflection
             // Matching the fields
             var fields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
-                .Select(n => n.ToLower())
+                .Select(n => n.ToLowerInvariant())
                 .ToList();
             var matchedCount = 0;
 
@@ -56,8 +56,8 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    var mappedName = property.GetMappedName().ToLower();
-                    var fieldDefinition = fieldDefinitions?.FirstOrDefault(fd => fd.Name.ToLower() == mappedName);
+                    var mappedName = property.GetMappedName().ToLowerInvariant();
+                    var fieldDefinition = fieldDefinitions?.FirstOrDefault(fd => fd.Name.ToLowerInvariant() == mappedName);
                     var ordinal = fields.IndexOf(mappedName);
                     if (ordinal >= 0)
                     {

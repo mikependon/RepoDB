@@ -39,7 +39,7 @@ namespace RepoDb.Resolvers
             ColumnTime : System.String
             ColumnVarChar : System.String
              */
-            switch (dbTypeName.ToLower())
+            switch (dbTypeName.ToLowerInvariant())
             {
                 case "bigint":
                 case "decimal":
