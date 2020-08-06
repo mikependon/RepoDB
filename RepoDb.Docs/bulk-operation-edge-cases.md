@@ -43,7 +43,7 @@ people.Add(..);
 
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))
 {
-	var rowsInserted = connection.BulkInsert(ConvertToDataTable(people));
+	var rowsInserted = connection.BulkInsert(people);
 }
 ```
 
