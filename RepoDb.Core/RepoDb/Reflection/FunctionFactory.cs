@@ -553,7 +553,7 @@ namespace RepoDb.Reflection
          * var targetType = propertyUnderlyingType ?? propertyType;
          */
 
-        private static Expression GetExpressionForNullablePropertyType(Expression expression,
+        private static Expression ConvertExpressionForNullablePropertyType(Expression expression,
             ClassProperty classProperty,
             DataReaderField readerField,
             Type targetType)
@@ -623,35 +623,35 @@ namespace RepoDb.Reflection
             var readerGetValueMethod = GetDbReaderGetValueMethod(classProperty,
                 readerField,
                 targetType);
-            var falseExpression = (Expression)Expression.Call(readerParameterExpression,
+            var expression = (Expression)Expression.Call(readerParameterExpression,
                 readerGetValueMethod,
                 ordinalExpression);
             var isNullableAlreadySet = false;
 
             // Nullable DB Field Expression
-            falseExpression = ConvertNullableFalseExpression(falseExpression, classProperty, readerField);
+            expression = ConvertNullableFalseExpression(expression, classProperty, readerField);
 
             // Nullable Property
             if (propertyUnderlyingType != null && propertyUnderlyingType.IsValueType == true)
             {
-                var nullableExpression = GetExpressionForNullablePropertyType(falseExpression,
+                var nullableExpression = ConvertExpressionForNullablePropertyType(expression,
                     classProperty,
                     readerField,
                     targetType);
                 if (nullableExpression != null)
                 {
-                    falseExpression = nullableExpression;
+                    expression = nullableExpression;
                     isNullableAlreadySet = true;
                 }
             }
 
             // Property Handler
-            falseExpression = ConvertValueExpressionViaPropertyHandler(falseExpression,
+            expression = ConvertValueExpressionViaPropertyHandler(expression,
                 classProperty,
                 isNullableAlreadySet);
 
             // Return the value
-            return falseExpression;
+            return expression;
         }
 
         private static Expression GetNullableDbFieldValueExpression(ParameterExpression readerParameterExpression,
@@ -675,7 +675,7 @@ namespace RepoDb.Reflection
             return Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
         }
 
-        private static Expression GetNonNullableDbDataReaderFieldValueExpression(ParameterExpression readerParameterExpression,
+        private static Expression GetNonNullableDbFieldValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
             DataReaderField readerField,
             int ordinal)
@@ -718,7 +718,7 @@ namespace RepoDb.Reflection
             // Nullable Property
             if (propertyUnderlyingType != null && propertyUnderlyingType.IsValueType == true)
             {
-                var nullableExpression = GetExpressionForNullablePropertyType(expression,
+                var nullableExpression = ConvertExpressionForNullablePropertyType(expression,
                     classProperty,
                     readerField,
                     targetType);
@@ -749,17 +749,13 @@ namespace RepoDb.Reflection
             {
                 // Expression for Nullables
                 return GetNullableDbFieldValueExpression(readerParameterExpression,
-                    classProperty,
-                    readerField,
-                    ordinal);
+                    classProperty, readerField, ordinal);
             }
             else
             {
                 // Expression for Non-Nullables
-                return GetNonNullableDbDataReaderFieldValueExpression(readerParameterExpression,
-                    classProperty,
-                    readerField,
-                    ordinal);
+                return GetNonNullableDbFieldValueExpression(readerParameterExpression,
+                    classProperty, readerField, ordinal);
             }
         }
 
