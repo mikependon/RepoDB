@@ -4,7 +4,7 @@
 [![UnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-g4ml5?label=unit&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5/build/tests)
 [![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-neg8t?label=integration&style=flat-square)](https://ci.appveyor.com/project/mikependon/repodb-neg8t/build/tests)
 
-## RepoDb.MySql - a hybrid ORM library for .NET.
+## RepoDb - a hybrid ORM library for .NET.
 
 This is the official repository for **RepoDb** (NetFramework) solution.
 
@@ -21,6 +21,6 @@ This code-line will be **out-of-support** starting v1.10.1. To contribute, pleas
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright Â© 2019 - Michael Camara Pendon
 
 Please refer to RepoDb [GitHub](https://github.com/mikependon/RepoDb) page for further information.
