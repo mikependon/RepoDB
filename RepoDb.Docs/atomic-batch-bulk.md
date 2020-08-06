@@ -2,7 +2,7 @@
 
 RepoDb supports the different set of operations by default. With these operations, you can maximize the different ways of implementation to make your application more performant and efficient.
 
-## Atomic Operations
+## Atomic Operation
 
 This operation refers to a single minute execution to accomplish the job. In most cases, if your dataset is small, then an atomic execution is much faster and optimal.
 
@@ -76,7 +76,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-Also, by default, the execution is wrapped within a Transaction object. The operations of like [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge) are all bulk-operations.
+By default, the execution is wrapped within a Transaction object. The operations of like [BulkInsert](https://repodb.net/operation/bulkinsert), [BulkUpdate](https://repodb.net/operation/bulkupdate), [BulkDelete](https://repodb.net/operation/bulkdelete) and [BulkMerge](https://repodb.net/operation/bulkmerge) are all bulk-operations.
 
 ## Repository Implementation
 
