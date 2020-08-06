@@ -316,6 +316,41 @@ namespace RepoDb.Reflection
             }
         }
 
+        private static Expression ConvertNullableFalseExpressionWithDefaultConversion(Expression expression,
+            ClassProperty classProperty,
+            DataReaderField readerField)
+        {
+            var propertyType = classProperty.PropertyInfo.PropertyType;
+            var propertyUnderlyingType = Nullable.GetUnderlyingType(propertyType);
+            var targetType = propertyUnderlyingType ?? propertyType;
+            var handlerInstance = GetHandlerInstance(classProperty, readerField);
+            var handlerGetMethod = handlerInstance?.GetType().GetMethod("Get");
+            var getParameter = handlerGetMethod?.GetParameters()?.First();
+
+            if (targetType.IsEnum)
+            {
+                expression = ConvertExpressionToEnumExpression(expression, readerField,
+                    propertyType, targetType);
+            }
+            else
+            {
+                // TimeSpanToDateTime
+                if (readerField.Type == StaticType.DateTime && targetType == StaticType.TimeSpan)
+                {
+                    expression = Expression.Convert(expression, StaticType.DateTime);
+                }
+
+                // Default
+                else
+                {
+                    expression = Expression.Convert(expression,
+                        getParameter?.ParameterType?.GetUnderlyingType() ?? targetType);
+                }
+            }
+
+            return expression;
+        }
+
         private static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
             DataReaderField readerField,
             Type propertyType,
@@ -447,7 +482,7 @@ namespace RepoDb.Reflection
             return trueExpression;
         }
 
-        private static Expression GetNullableTrueExpressionForClassProperty(ClassProperty classProperty,
+        private static Expression GetNullableTrueExpression(ClassProperty classProperty,
             DataReaderField readerField)
         {
             var trueExpression = (Expression)null;
@@ -494,42 +529,7 @@ namespace RepoDb.Reflection
          * var targetType = propertyUnderlyingType ?? propertyType;
          */
 
-        private static Expression AAA(Expression expression,
-            ClassProperty classProperty,
-            DataReaderField readerField)
-        {
-            var propertyType = classProperty.PropertyInfo.PropertyType;
-            var propertyUnderlyingType = Nullable.GetUnderlyingType(propertyType);
-            var targetType = propertyUnderlyingType ?? propertyType;
-            var handlerInstance = GetHandlerInstance(classProperty, readerField);
-            var handlerGetMethod = handlerInstance?.GetType().GetMethod("Get");
-            var getParameter = handlerGetMethod?.GetParameters()?.First();
-
-            if (targetType.IsEnum)
-            {
-                expression = ConvertExpressionToEnumExpression(expression, readerField,
-                    propertyType, targetType);
-            }
-            else
-            {
-                // TimeSpanToDateTime
-                if (readerField.Type == StaticType.DateTime && targetType == StaticType.TimeSpan)
-                {
-                    expression = Expression.Convert(expression, StaticType.DateTime);
-                }
-
-                // Default
-                else
-                {
-                    expression = Expression.Convert(expression,
-                        getParameter?.ParameterType?.GetUnderlyingType() ?? targetType);
-                }
-            }
-
-            return expression;
-        }
-
-        private static Expression ConvertNullableFalseExpressionForClassProperty(Expression expression,
+        private static Expression ConvertNullableFalseExpression(Expression expression,
             ClassProperty classProperty,
             DataReaderField readerField)
         {
@@ -556,7 +556,7 @@ namespace RepoDb.Reflection
                 // Default
                 if (handlerInstance == null)
                 {
-                    expression = AAA(expression, classProperty, readerField);
+                    expression = ConvertNullableFalseExpressionWithDefaultConversion(expression, classProperty, readerField);
                 }
             }
             else
@@ -604,7 +604,7 @@ namespace RepoDb.Reflection
             return expression;
         }
 
-        private static Expression GetNullableFalseExpressionForClassProperty(ParameterExpression readerParameterExpression,
+        private static Expression GetNullableFalseExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
             DataReaderField readerField,
             int ordinal)
@@ -633,7 +633,7 @@ namespace RepoDb.Reflection
             var convertType = GetConvertType(classProperty, readerField, targetType) ?? readerField.Type;
 
             // Only if there are conversions, execute the logics inside
-            falseExpression = ConvertNullableFalseExpressionForClassProperty(falseExpression, classProperty, readerField);
+            falseExpression = ConvertNullableFalseExpression(falseExpression, classProperty, readerField);
 
             // Reset nullable variable
             var isNullableAlreadySet = false;
@@ -680,7 +680,7 @@ namespace RepoDb.Reflection
             return falseExpression;
         }
 
-        private static Expression GetNullableDbFieldValueExpressionForClassProperty(ParameterExpression readerParameterExpression,
+        private static Expression GetNullableDbFieldValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
             DataReaderField readerField,
             int ordinal)
@@ -690,18 +690,18 @@ namespace RepoDb.Reflection
                 StaticType.DbDataReader.GetMethod("IsDBNull"), Expression.Constant(ordinal));
 
             // True Expression
-            var trueExpression = GetNullableTrueExpressionForClassProperty(classProperty,
+            var trueExpression = GetNullableTrueExpression(classProperty,
                 readerField);
 
             // False expression
-            var falseExpression = GetNullableFalseExpressionForClassProperty(readerParameterExpression,
+            var falseExpression = GetNullableFalseExpression(readerParameterExpression,
                 classProperty, readerField, ordinal);
 
             // Set the value
             return Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
         }
 
-        private static Expression GetNonNullableDbFieldValueExpressionForClassProperty(ParameterExpression readerParameterExpression,
+        private static Expression GetNonNullableDbDataReaderFieldValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
             DataReaderField readerField,
             int ordinal)
@@ -773,7 +773,7 @@ namespace RepoDb.Reflection
             if (isNullable == true)
             {
                 // Expression for Nullables
-                return GetNullableDbFieldValueExpressionForClassProperty(readerParameterExpression,
+                return GetNullableDbFieldValueExpression(readerParameterExpression,
                     classProperty,
                     readerField,
                     ordinal);
@@ -781,7 +781,7 @@ namespace RepoDb.Reflection
             else
             {
                 // Expression for Non-Nullables
-                return GetNonNullableDbFieldValueExpressionForClassProperty(readerParameterExpression,
+                return GetNonNullableDbDataReaderFieldValueExpression(readerParameterExpression,
                     classProperty,
                     readerField,
                     ordinal);
