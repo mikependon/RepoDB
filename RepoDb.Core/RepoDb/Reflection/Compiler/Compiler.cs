@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
@@ -1108,6 +1107,7 @@ namespace RepoDb.Reflection
         }
 
         internal static Expression GetParameterAssignmentExpression<TEntity>(ParameterExpression commandParameterExpression,
+            int entityIndex,
             Expression instance,
             ParameterExpression property,
             DbField dbField,
@@ -1151,7 +1151,9 @@ namespace RepoDb.Reflection
             parameterAssignments.Add(Expression.Assign(parameterVariable, parameterInstance));
 
             // Set the name
-            var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod, Expression.Constant(parameterName));
+            // var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod, Expression.Constant(parameterName));
+            var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
+                   Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
             parameterAssignments.Add(nameAssignment);
 
             // Property instance

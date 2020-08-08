@@ -68,7 +68,8 @@ namespace RepoDb.Reflection
             // Other variables
             var dbTypeResolver = new ClientTypeToDbTypeResolver();
 
-            // Reusable function for input/output fields
+            // Reusable function for input / output fields
+
             var func = new Func<int, Expression, ParameterExpression, DbField, ClassProperty, bool, ParameterDirection, Expression>((int entityIndex,
                 Expression instance,
                 ParameterExpression property,
@@ -88,7 +89,7 @@ namespace RepoDb.Reflection
 
                 // Set the name
                 var nameAssignment = Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
-                    Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
+                Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
                 parameterAssignments.Add(nameAssignment);
 
                 // Property instance
@@ -624,13 +625,14 @@ namespace RepoDb.Reflection
                     }
 
                     // Execute the function
-                    var parameterAssignment = func(entityIndex /* index */,
+                    var parameterAssignment = GetParameterAssignmentExpression<TEntity>(commandParameterExpression,
+                        entityIndex /* index */,
                         instanceVariable /* instance */,
                         propertyVariable /* property */,
                         field /* field */,
                         classProperty /* classProperty */,
-                        (direction == ParameterDirection.Output) /* skipValueAssignment */,
-                        direction /* direction */);
+                        direction /* direction */,
+                        dbSetting /* dbSetting */);
 
                     // Add the necessary variables
                     if (propertyVariable != null)

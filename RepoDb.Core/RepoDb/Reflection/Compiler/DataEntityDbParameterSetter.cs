@@ -146,6 +146,7 @@ namespace RepoDb.Reflection
 
                 // Execute the function
                 var parameterAssignment = GetParameterAssignmentExpression<TEntity>(commandParameterExpression,
+                    0, /* entityIndex */
                     instanceVariable /* instance */,
                     propertyVariable /* property */,
                     field /* field */,
