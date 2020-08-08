@@ -933,7 +933,7 @@ namespace RepoDb
                 // Identity which objects to set
                 if (batchSizeValue <= 1)
                 {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
@@ -941,7 +941,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
+                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
@@ -1448,7 +1448,7 @@ namespace RepoDb
                 // Identity which objects to set
                 if (batchSizeValue <= 1)
                 {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,
@@ -1456,7 +1456,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntitiesDbCommandParameterSetterFunction<TEntity>(
+                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                         inputFields?.AsList(),
                         null,

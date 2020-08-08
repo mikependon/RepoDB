@@ -1323,7 +1323,7 @@ namespace RepoDb
                 {
                     CommandText = CommandTextCache.GetMergeText(mergeRequest),
                     InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Merge"),
                         inputFields?.AsList(),
                         null,
@@ -1689,7 +1689,7 @@ namespace RepoDb
                 {
                     CommandText = CommandTextCache.GetMergeText(mergeRequest),
                     InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbCommandParameterSetterFunction<TEntity>(
+                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                         string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Merge"),
                         inputFields?.AsList(),
                         null,
