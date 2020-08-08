@@ -927,7 +927,7 @@ namespace RepoDb
                 // Get if we have not skipped it
                 if (skipIdentityCheck == false && identity != null)
                 {
-                    identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+                    identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
                 }
 
                 // Identity which objects to set
@@ -1442,7 +1442,7 @@ namespace RepoDb
                 // Get if we have not skipped it
                 if (skipIdentityCheck == false && identity != null)
                 {
-                    identitySetterFunc = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+                    identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
                 }
 
                 // Identity which objects to set

@@ -141,12 +141,10 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        internal static Type GetConvertType(ClassProperty classProperty,
-            DataReaderField readerField,
+        internal static Type GetConvertType(DataReaderField readerField,
             Type targetType)
         {
             var methodInfo = GetNonTimeSpanReaderGetValueMethod(readerField);
@@ -154,7 +152,7 @@ namespace RepoDb.Reflection
 
             if (methodInfo == null)
             {
-                methodInfo = GetNonSingleReaderGetValueMethod(classProperty, readerField);
+                methodInfo = GetNonSingleReaderGetValueMethod(readerField);
                 if (methodInfo != null)
                 {
                     value = targetType;
@@ -260,29 +258,6 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="classProperty"></param>
-        /// <param name="readerField"></param>
-        /// <returns></returns>
-        internal static MethodInfo GetNonSingleReaderGetValueMethod(ClassProperty classProperty,
-            DataReaderField readerField)
-        {
-            var handlerInstance = GetHandlerInstance(classProperty, readerField);
-            var isDefaultConversion = (Converter.ConversionType == ConversionType.Default) ?
-                true : (handlerInstance != null);
-
-            if (isDefaultConversion == false)
-            {
-                return GetNonSingleReaderGetValueMethod(readerField); ;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="readerField"></param>
         /// <returns></returns>
         internal static MethodInfo GetNonSingleReaderGetValueMethod(DataReaderField readerField)
@@ -340,14 +315,12 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
         /// <returns></returns>
-        internal static MethodInfo GetDbReaderGetValueMethod(ClassProperty classProperty,
-            DataReaderField readerField)
+        internal static MethodInfo GetDbReaderGetValueTargettedMethod(DataReaderField readerField)
         {
             return GetNonTimeSpanReaderGetValueMethod(readerField) ??
-                GetNonSingleReaderGetValueMethod(classProperty, readerField) ??
+                GetNonSingleReaderGetValueMethod(readerField) ??
                 GetDbReaderGetValueMethod();
         }
 
@@ -594,8 +567,7 @@ namespace RepoDb.Reflection
         {
             var propertyUnderlyingType = Nullable.GetUnderlyingType(classProperty.PropertyInfo.PropertyType);
             var targetType = GetTargetType(classProperty);
-            var readerGetValueMethod = GetDbReaderGetValueMethod(classProperty,
-                readerField);
+            var readerGetValueMethod = GetDbReaderGetValueMethod(readerField);
 
             // Verify the get value if present
             if (readerGetValueMethod == null)
@@ -604,8 +576,7 @@ namespace RepoDb.Reflection
             }
 
             // Variables needed
-            var convertType = GetConvertType(classProperty, readerField, targetType) ??
-                readerField.Type;
+            var convertType = GetConvertType(readerField, targetType);
             var isConversionNeeded = CheckIfConversionIsNeeded(readerField, targetType);
             var isNullableAlreadySet = false;
 
@@ -706,8 +677,7 @@ namespace RepoDb.Reflection
             var propertyUnderlyingType = Nullable.GetUnderlyingType(classProperty.PropertyInfo.PropertyType);
             var targetType = GetTargetType(classProperty);
             var ordinalExpression = Expression.Constant(ordinal);
-            var readerGetValueMethod = GetDbReaderGetValueMethod(classProperty,
-                readerField);
+            var readerGetValueMethod = GetDbReaderGetValueTargettedMethod(readerField);
             var expression = (Expression)Expression.Call(readerParameterExpression,
                 readerGetValueMethod,
                 ordinalExpression);
@@ -969,8 +939,7 @@ namespace RepoDb.Reflection
             }
             else
             {
-                var convertType = GetConvertType(classProperty, readerField, targetType) ??
-                    readerField.Type;
+                var convertType = GetConvertType(readerField, targetType);
 
                 // Automatic
                 expression = ConvertExpressionWithAutomaticConversion(expression,

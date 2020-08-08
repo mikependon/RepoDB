@@ -46,7 +46,7 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
+                var func = FunctionCache.GetDataReaderToDataEntityCompiledFunction<TEntity>(reader,
                     connection,
                     connectionString,
                     transaction,
@@ -96,7 +96,7 @@ namespace RepoDb.Reflection
             var list = new List<TEntity>();
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader,
+                var func = FunctionCache.GetDataReaderToDataEntityCompiledFunction<TEntity>(reader,
                     connection,
                     connectionString,
                     transaction,
@@ -142,7 +142,7 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
+                var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
                     tableName,
                     connection,
                     transaction);
@@ -187,7 +187,7 @@ namespace RepoDb.Reflection
             var list = new List<dynamic>();
             if (reader != null && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToExpandoObjectConverterFunction(reader,
+                var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
                     tableName,
                     connection,
                     transaction);

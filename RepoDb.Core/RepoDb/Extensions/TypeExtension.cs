@@ -48,12 +48,12 @@ namespace RepoDb.Extensions
             type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
 
         /// <summary>
-        /// Returns the mapped property if the property is not present.
+        /// Returns the property of the type based on the mappings equality.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <param name="mappedName">The name of the property mapping.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
-        internal static ClassProperty GetPropertyByMapping(this Type type,
+        internal static ClassProperty GetMappedProperty(this Type type,
             string mappedName) =>
             PropertyCache.Get(type).FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
 

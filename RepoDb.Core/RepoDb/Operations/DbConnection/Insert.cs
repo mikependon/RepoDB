@@ -485,7 +485,7 @@ namespace RepoDb
                 // Get the identity setter
                 if (skipIdentityCheck == false && identity != null)
                 {
-                    identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+                    identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
                 }
 
                 // Identify the requests
@@ -658,7 +658,7 @@ namespace RepoDb
                 // Get the identity setter
                 if (skipIdentityCheck == false && identity != null)
                 {
-                    identityPropertySetter = FunctionCache.GetDataEntityPropertyValueSetterFunction<TEntity>(identity);
+                    identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
                 }
 
                 // Identify the requests

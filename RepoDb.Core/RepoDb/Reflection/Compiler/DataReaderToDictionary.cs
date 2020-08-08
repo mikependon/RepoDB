@@ -18,7 +18,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
+        public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)

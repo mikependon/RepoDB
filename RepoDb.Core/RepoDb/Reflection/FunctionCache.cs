@@ -16,9 +16,7 @@ namespace RepoDb
     /// </summary>
     internal static class FunctionCache
     {
-        private static ConcurrentDictionary<string, Action<DbCommand, object>> cache = new ConcurrentDictionary<string, Action<DbCommand, object>>();
-
-        #region GetDataReaderToDataEntityConverterFunction
+        #region GetDataReaderToDataEntityCompiledFunction
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
@@ -30,24 +28,24 @@ namespace RepoDb
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader,
+        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityCompiledFunction<TEntity>(DbDataReader reader,
             IDbConnection connection,
             string connectionString,
             IDbTransaction transaction,
             bool enableValidation)
             where TEntity : class
         {
-            return GetDataReaderToDataEntityFunctionConverterCache<TEntity>.Get(reader, connection, connectionString, transaction, enableValidation);
+            return DataReaderToDataEntityCache<TEntity>.Get(reader, connection, connectionString, transaction, enableValidation);
         }
 
-        #region GetDataReaderToDataEntityFunctionConverterCache
+        #region DataReaderToDataEntityCache
 
-        private static class GetDataReaderToDataEntityFunctionConverterCache<TEntity>
+        private static class DataReaderToDataEntityCache<TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
 
-            public static Func<DbDataReader, TEntity> Get(DbDataReader reader,
+            internal static Func<DbDataReader, TEntity> Get(DbDataReader reader,
                 IDbConnection connection,
                 string connectionString,
                 IDbTransaction transaction,
@@ -65,7 +63,7 @@ namespace RepoDb
                 }
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToDataEntityConverterFunction<TEntity>(reader, connection, connectionString, transaction, enableValidation);
+                    result = FunctionFactory.CompileDataReaderToDataEntity<TEntity>(reader, connection, connectionString, transaction, enableValidation);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -76,7 +74,7 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataReaderToExpandoObjectConverterFunction
+        #region GetDataReaderToExpandoObjectCompileFunction
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
@@ -84,10 +82,10 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
+        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
             IDbTransaction transaction)
         {
-            return GetDataReaderToExpandoObjectConverterFunction(reader, null, null, transaction);
+            return GetDataReaderToExpandoObjectCompileFunction(reader, null, null, transaction);
         }
 
         /// <summary>
@@ -98,21 +96,21 @@ namespace RepoDb
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectConverterFunction(DbDataReader reader,
+        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
         {
-            return GetDataReaderToExpandoObjectConverterFunctionCache.Get(reader, tableName, connection, transaction);
+            return DataReaderToExpandoObjectCache.Get(reader, tableName, connection, transaction);
         }
 
-        #region GetDataReaderToExpandoObjectConverterFunctionCache
+        #region DataReaderToExpandoObjectCache
 
-        private static class GetDataReaderToExpandoObjectConverterFunctionCache
+        private static class DataReaderToExpandoObjectCache
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>> cache = new ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>>();
 
-            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader,
+            internal static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader,
                 string tableName,
                 IDbConnection connection,
                 IDbTransaction transaction)
@@ -132,7 +130,7 @@ namespace RepoDb
                 }
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.GetDataReaderToExpandoObjectConverterFunction(reader, tableName, connection, transaction);
+                    result = FunctionFactory.CompileDataReaderToExpandoObject(reader, tableName, connection, transaction);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -170,7 +168,7 @@ namespace RepoDb
         {
             private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> cache = new ConcurrentDictionary<long, Action<DbCommand, TEntity>>();
 
-            public static Action<DbCommand, TEntity> Get(string cacheKey,
+            internal static Action<DbCommand, TEntity> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 IDbSetting dbSetting)
@@ -233,7 +231,7 @@ namespace RepoDb
         {
             private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> cache = new ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>>();
 
-            public static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
+            internal static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 int batchSize,
@@ -268,7 +266,7 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataEntityPropertySetterFromDbCommandParameterFunction
+        #region GetDbCommandToPropertyCompiledFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
@@ -279,23 +277,23 @@ namespace RepoDb
         /// <param name="index">The index of the batches.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
-        internal static Action<TEntity, DbCommand> GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(Field field,
+        internal static Action<TEntity, DbCommand> GetDbCommandToPropertyCompiledFunction<TEntity>(Field field,
             string parameterName,
             int index,
             IDbSetting dbSetting)
             where TEntity : class
         {
-            return GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>.Get(field, parameterName, index, dbSetting);
+            return DbCommandToPropertyCache<TEntity>.Get(field, parameterName, index, dbSetting);
         }
 
-        #region GetDataEntityPropertySetterFromDbCommandParameterFunctionCache
+        #region DbCommandToPropertyCache
 
-        private static class GetDataEntityPropertySetterFromDbCommandParameterFunctionCache<TEntity>
+        private static class DbCommandToPropertyCache<TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> cache = new ConcurrentDictionary<long, Action<TEntity, DbCommand>>();
 
-            public static Action<TEntity, DbCommand> Get(Field field,
+            internal static Action<TEntity, DbCommand> Get(Field field,
                 string parameterName,
                 int index,
                 IDbSetting dbSetting)
@@ -305,7 +303,7 @@ namespace RepoDb
                 var func = (Action<TEntity, DbCommand>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntityPropertySetterFromDbCommandParameterFunction<TEntity>(field, parameterName, index, dbSetting);
+                    func = FunctionFactory.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
                     cache.TryAdd(key, func);
                 }
                 return func;
@@ -316,7 +314,7 @@ namespace RepoDb
 
         #endregion
 
-        #region GetDataEntityPropertyValueSetterFunction
+        #region GetDataEntityPropertySetterCompiledFunction
 
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value.
@@ -324,26 +322,26 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The target <see cref="Field"/>.</param>
         /// <returns>A compiled function that is used to set the data entity object property value.</returns>
-        public static Action<TEntity, object> GetDataEntityPropertyValueSetterFunction<TEntity>(Field field)
+        internal static Action<TEntity, object> GetDataEntityPropertySetterCompiledFunction<TEntity>(Field field)
             where TEntity : class
         {
-            return GetDataEntityPropertyValueSetterFunctionCache<TEntity>.Get(field);
+            return DataEntityPropertySetterCache<TEntity>.Get(field);
         }
 
-        #region GetDataEntityPropertyValueSetterFunctionCache
+        #region DataEntityPropertySetterCache
 
-        private static class GetDataEntityPropertyValueSetterFunctionCache<TEntity>
+        private static class DataEntityPropertySetterCache<TEntity>
             where TEntity : class
         {
             private static ConcurrentDictionary<long, Action<TEntity, object>> cache = new ConcurrentDictionary<long, Action<TEntity, object>>();
 
-            public static Action<TEntity, object> Get(Field field)
+            internal static Action<TEntity, object> Get(Field field)
             {
                 var key = (long)typeof(TEntity).FullName.GetHashCode() + field.Name.GetHashCode();
                 var func = (Action<TEntity, object>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.GetDataEntityPropertyValueSetterFunction<TEntity>(field);
+                    func = FunctionFactory.CompileDataEntityPropertySetter<TEntity>(field);
                     cache.TryAdd(key, func);
                 }
                 return func;

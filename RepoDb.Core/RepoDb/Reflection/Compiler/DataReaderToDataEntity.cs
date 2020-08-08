@@ -20,7 +20,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
+        public static Func<DbDataReader, TEntity> CompileDataReaderToDataEntity<TEntity>(DbDataReader reader,
             IDbConnection connection,
             string connectionString,
             IDbTransaction transaction,
@@ -35,7 +35,7 @@ namespace RepoDb.Reflection
                 enableValidation);
 
             // return the value
-            return GetDataReaderToDataEntityConverterFunction<TEntity>(reader, dbFields, connection?.GetDbSetting());
+            return CompileDataReaderToDataEntity<TEntity>(reader, dbFields, connection?.GetDbSetting());
         }
 
 
@@ -47,7 +47,7 @@ namespace RepoDb.Reflection
         /// <param name="dbFields">The list of the <see cref="DbField"/> objects.</param>
         /// <param name="dbSetting">The database setting that is being used.</param>
         /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityConverterFunction<TEntity>(DbDataReader reader,
+        public static Func<DbDataReader, TEntity> CompileDataReaderToDataEntity<TEntity>(DbDataReader reader,
             IEnumerable<DbField> dbFields,
             IDbSetting dbSetting)
             where TEntity : class
