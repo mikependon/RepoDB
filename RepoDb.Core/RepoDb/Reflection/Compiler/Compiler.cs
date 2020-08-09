@@ -5,9 +5,12 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 
 namespace RepoDb.Reflection
 {
@@ -84,11 +87,37 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetPropertyHandlerGetMethod(ClassProperty classProperty) =>
+            GetPropertyHandlerGetMethod(classProperty.GetPropertyHandler());
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerGetMethod(object handlerInstance)
         {
             return handlerInstance?.GetType().GetMethod("Get");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetPropertyHandlerSetMethod(ClassProperty classProperty) =>
+            GetPropertyHandlerSetMethod(classProperty.GetPropertyHandler());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetPropertyHandlerSetMethod(object handlerInstance)
+        {
+            return handlerInstance?.GetType().GetMethod("Set");
         }
 
         /// <summary>
@@ -120,23 +149,42 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static ParameterInfo GetPropertyHandlerSetParameter(ClassProperty classProperty) =>
+            GetPropertyHandlerSetParameter(classProperty.GetPropertyHandler());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static ParameterInfo GetPropertyHandlerSetParameter(object handlerInstance) =>
+            GetPropertyHandlerSetParameter(GetPropertyHandlerSetMethod(handlerInstance));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="setMethod"></param>
+        /// <returns></returns>
+        internal static ParameterInfo GetPropertyHandlerSetParameter(MethodInfo setMethod) =>
+            setMethod?.GetParameters()?.First();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        internal static Type GetParameterUnderlyingType(ParameterInfo parameter)
-        {
-            return parameter != null ?
-                Nullable.GetUnderlyingType(parameter.ParameterType) : null;
-        }
+        internal static Type GetParameterUnderlyingType(ParameterInfo parameter) =>
+            parameter != null ? Nullable.GetUnderlyingType(parameter.ParameterType) : null;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        internal static Type GetTargetType(ClassProperty classProperty)
-        {
-            return classProperty.PropertyInfo.PropertyType.GetUnderlyingType();
-        }
+        internal static Type GetTargetType(ClassProperty classProperty) =>
+            classProperty.PropertyInfo.PropertyType.GetUnderlyingType();
 
         /// <summary>
         /// 
@@ -246,28 +294,16 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="readerField"></param>
         /// <returns></returns>
-        internal static MethodInfo GetNonTimeSpanReaderGetValueMethod(DataReaderField readerField)
-        {
-            if (readerField?.Type == StaticType.TimeSpan)
-            {
-                return null;
-            }
-            return GetDbReaderGetValueMethod(readerField);
-        }
+        internal static MethodInfo GetNonTimeSpanReaderGetValueMethod(DataReaderField readerField) =>
+            (readerField?.Type == StaticType.TimeSpan) ? null : GetDbReaderGetValueMethod(readerField);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="readerField"></param>
         /// <returns></returns>
-        internal static MethodInfo GetNonSingleReaderGetValueMethod(DataReaderField readerField)
-        {
-            if (readerField?.Type == StaticType.Single)
-            {
-                return null;
-            }
-            return GetDbReaderGetValueMethod(readerField);
-        }
+        internal static MethodInfo GetNonSingleReaderGetValueMethod(DataReaderField readerField) =>
+            (readerField?.Type == StaticType.Single) ? null : GetDbReaderGetValueMethod(readerField);
 
         /// <summary>
         /// 
@@ -282,19 +318,15 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        internal static MethodInfo GetDbReaderGetValueMethod(Type targetType)
-        {
-            return StaticType.DbDataReader.GetMethod(string.Concat("Get", targetType?.Name));
-        }
+        internal static MethodInfo GetDbReaderGetValueMethod(Type targetType) =>
+            StaticType.DbDataReader.GetMethod(string.Concat("Get", targetType?.Name));
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        internal static MethodInfo GetDbReaderGetValueMethod()
-        {
-            return StaticType.DbDataReader.GetMethod("GetValue");
-        }
+        internal static MethodInfo GetDbReaderGetValueMethod() =>
+            StaticType.DbDataReader.GetMethod("GetValue");
 
         /// <summary>
         /// 
@@ -317,12 +349,10 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="readerField"></param>
         /// <returns></returns>
-        internal static MethodInfo GetDbReaderGetValueTargettedMethod(DataReaderField readerField)
-        {
-            return GetNonTimeSpanReaderGetValueMethod(readerField) ??
-                GetNonSingleReaderGetValueMethod(readerField) ??
-                GetDbReaderGetValueMethod();
-        }
+        internal static MethodInfo GetDbReaderGetValueTargettedMethod(DataReaderField readerField) =>
+            GetNonTimeSpanReaderGetValueMethod(readerField) ??
+            GetNonSingleReaderGetValueMethod(readerField) ??
+            GetDbReaderGetValueMethod();
 
         /// <summary>
         /// 
@@ -331,11 +361,8 @@ namespace RepoDb.Reflection
         /// <param name="targetType"></param>
         /// <returns></returns>
         internal static bool? CheckIfConversionIsNeeded(DataReaderField readerField,
-            Type targetType)
-        {
-            var methodInfo = GetNonTimeSpanReaderGetValueMethod(readerField);
-            return ((methodInfo == null) ? (bool?)true : null) ?? readerField.Type != targetType;
-        }
+            Type targetType) =>
+            ((GetNonTimeSpanReaderGetValueMethod(readerField) == null) ? (bool?)true : null) ?? readerField.Type != targetType;
 
         /// <summary>
         /// 
@@ -400,21 +427,16 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToGuidToStringExpression(Expression expression)
-        {
-            return Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), expression);
-        }
+        internal static Expression ConvertExpressionToGuidToStringExpression(Expression expression) =>
+            Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), expression);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToStringToGuidExpression(Expression expression)
-        {
-            var methodInfo = StaticType.Guid.GetMethod("ToString", new Type[0]);
-            return Expression.Call(expression, methodInfo);
-        }
+        internal static Expression ConvertExpressionToStringToGuidExpression(Expression expression) =>
+            Expression.Call(expression, StaticType.Guid.GetMethod("ToString", new Type[0]));
 
         /// <summary>
         /// 
@@ -1102,6 +1124,542 @@ namespace RepoDb.Reflection
 
             // Return the result
             return elementInits;
+        }
+
+        internal static Expression GetDbParameterValueAssignmentExpression<TEntity>(ParameterExpression parameterVariable,
+            Expression entityInstance,
+            ParameterExpression property,
+            ClassProperty classProperty,
+            DbField dbField,
+            IDbSetting dbSetting)
+        {
+            var typeOfEntity = typeof(TEntity);
+            var valueAssignment = (Expression)null;
+            var instanceProperty = (PropertyInfo)null;
+            var handlerInstance = classProperty?.GetPropertyHandler() ??
+                PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
+            var handlerSetMethod = GetPropertyHandlerSetMethod(handlerInstance);
+            var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
+            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
+
+            // Variables for 'Dynamic|Object' object
+            var propertyInfoGetValueMethod = StaticType.PropertyInfo.GetMethod("GetValue", new[] { StaticType.Object });
+
+            // Check the proper type of the entity
+            if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
+            {
+                instanceProperty = classProperty.PropertyInfo;
+            }
+
+            #region Instance.Property or PropertyInfo.GetValue()
+
+            // Set the value
+            var value = (Expression)null;
+            var propertyType = (Type)null;
+            var fieldType = dbField.Type?.GetUnderlyingType();
+
+            // If the property is missing directly, then it could be a dynamic object
+            if (instanceProperty == null)
+            {
+                value = Expression.Call(property, propertyInfoGetValueMethod, entityInstance);
+            }
+            else
+            {
+                propertyType = instanceProperty.PropertyType.GetUnderlyingType();
+
+                if (handlerInstance == null)
+                {
+                    if (Converter.ConversionType == ConversionType.Automatic)
+                    {
+                        var valueToConvert = Expression.Property(entityInstance, instanceProperty);
+
+                        #region StringToGuid
+
+                        // Create a new guid here
+                        if (propertyType == StaticType.String && fieldType == StaticType.Guid /* StringToGuid */)
+                        {
+                            value = Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), new[] { valueToConvert });
+                        }
+
+                        #endregion
+
+                        #region GuidToString
+
+                        // Call the System.Convert conversion
+                        else if (propertyType == StaticType.Guid && fieldType == StaticType.String/* GuidToString*/)
+                        {
+                            var convertMethod = StaticType.Convert.GetMethod("ToString", new[] { StaticType.Object });
+                            value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, StaticType.Object));
+                            value = Expression.Convert(value, fieldType);
+                        }
+
+                        #endregion
+
+                        else
+                        {
+                            value = valueToConvert;
+                        }
+                    }
+                    else
+                    {
+                        // Get the Class.Property
+                        value = Expression.Property(entityInstance, instanceProperty);
+                    }
+
+                    #region EnumAsIntForString
+
+                    if (propertyType.IsEnum)
+                    {
+                        var convertToTypeMethod = (MethodInfo)null;
+                        if (convertToTypeMethod == null)
+                        {
+                            var mappedToType = classProperty?.GetDbType();
+                            if (mappedToType == null)
+                            {
+                                mappedToType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+                            }
+                            if (mappedToType != null)
+                            {
+                                convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
+                            }
+                        }
+                        if (convertToTypeMethod == null)
+                        {
+                            convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
+                        }
+                        if (convertToTypeMethod == null)
+                        {
+                            throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
+                        }
+                        else
+                        {
+                            var converterMethod = typeof(Compiler.EnumHelper).GetMethod("Convert");
+                            if (converterMethod != null)
+                            {
+                                value = Expression.Call(converterMethod,
+                                    Expression.Constant(instanceProperty.PropertyType),
+                                    Expression.Constant(dbField.Type),
+                                    Expression.Convert(value, StaticType.Object),
+                                    Expression.Constant(convertToTypeMethod));
+                            }
+                        }
+                    }
+
+                    #endregion
+                }
+                else
+                {
+                    // Get the value directly from the property
+                    value = Expression.Property(entityInstance, instanceProperty);
+
+                    #region PropertyHandler
+
+                    if (handlerInstance != null)
+                    {
+                        var setParameter = GetPropertyHandlerSetParameter(handlerSetMethod);
+                        value = Expression.Call(Expression.Constant(handlerInstance),
+                            handlerSetMethod,
+                            Expression.Convert(value, setParameter.ParameterType),
+                            Expression.Constant(classProperty));
+                    }
+
+                    #endregion
+                }
+
+                // Convert to object
+                value = Expression.Convert(value, StaticType.Object);
+            }
+
+            // Declare the variable for the value assignment
+            var valueBlock = (Expression)null;
+            var isNullable = dbField.IsNullable == true ||
+                instanceProperty == null ||
+                (
+                    instanceProperty != null &&
+                    (
+                        instanceProperty.PropertyType.IsValueType == false ||
+                        Nullable.GetUnderlyingType(instanceProperty.PropertyType) != null
+                    )
+                );
+
+            // The value for DBNull.Value
+            var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
+
+            // Check if the property is nullable
+            if (isNullable == true)
+            {
+                // Identification of the DBNull
+                var valueVariable = Expression.Variable(StaticType.Object, string.Concat("valueOf", parameterName));
+                var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
+
+                // Set the propert value
+                valueBlock = Expression.Block(new[] { valueVariable },
+                    Expression.Assign(valueVariable, value),
+                    Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+            }
+            else
+            {
+                valueBlock = value;
+            }
+
+            // Add to the collection
+            valueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, valueBlock);
+
+            #endregion
+
+            // Check if it is a direct assignment or not
+            if (typeOfEntity == StaticType.Object)
+            {
+                var dbNullValueAssignment = (Expression)null;
+
+                #region DBNull.Value
+
+                // Set the default type value
+                if (dbField.IsNullable == false && dbField.Type != null)
+                {
+                    dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
+                        Expression.Convert(Expression.Default(dbField.Type), StaticType.Object));
+                }
+
+                // Set the DBNull value
+                if (dbNullValueAssignment == null)
+                {
+                    dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, dbNullValue);
+                }
+
+                #endregion
+
+                // Check the presence of the property
+                var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
+
+                // Add to parameter assignment
+                valueAssignment = Expression.Condition(propertyIsNull, dbNullValueAssignment, valueAssignment);
+            }
+
+            // Return
+            return valueAssignment;
+        }
+
+        internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            DbField dbField)
+        {
+            var expression = (MethodCallExpression)null;
+            var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
+            var fieldOrPropertyType = dbField.Type?.GetUnderlyingType();
+            var dbType = TypeMapper.Get(fieldOrPropertyType) ??
+                new ClientTypeToDbTypeResolver().Resolve(fieldOrPropertyType);
+
+            // Set the DB Type
+            if (dbType != null)
+            {
+                expression = Expression.Call(parameterVariable, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
+            }
+
+            // Return the expression
+            return expression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbCommandCreateParameterExpression(ParameterExpression commandParameterExpression)
+        {
+            var dbCommandCreateParameterMethod = StaticType.DbCommand.GetMethod("CreateParameter");
+            return Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="dbField"></param>
+        /// <param name="entityIndex"></param>
+        /// <param name="dbSetting"></param>
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariable,
+            DbField dbField,
+            int entityIndex,
+            IDbSetting dbSetting)
+        {
+            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
+            var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            return Expression.Call(parameterVariable, dbParameterParameterNameSetMethod,
+                Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterDirectionAssignmentExpression(ParameterExpression parameterVariable,
+            ParameterDirection direction)
+        {
+            var dbParameterDirectionSetMethod = StaticType.DbParameter.GetProperty("Direction").SetMethod;
+            return Expression.Call(parameterVariable, dbParameterDirectionSetMethod, Expression.Constant(direction));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(ParameterExpression parameterVariable,
+            int size)
+        {
+            var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
+            return Expression.Call(parameterVariable, dbParameterSizeSetMethod, Expression.Constant(size));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterPrecisionAssignmentExpression(ParameterExpression parameterVariable,
+            byte precision)
+        {
+            var dbParameterPrecisionSetMethod = StaticType.DbParameter.GetProperty("Precision").SetMethod;
+            return Expression.Call(parameterVariable, dbParameterPrecisionSetMethod, Expression.Constant(precision));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="scale"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterScaleAssignmentExpression(ParameterExpression parameterVariable,
+            byte scale)
+        {
+            var dbParameterScaleSetMethod = StaticType.DbParameter.GetProperty("Scale").SetMethod;
+            return Expression.Call(parameterVariable, dbParameterScaleSetMethod, Expression.Constant(scale));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="parameterVariable"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbCommandParametersAddExpression(ParameterExpression commandParameterExpression,
+            ParameterExpression parameterVariable)
+        {
+            var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
+            var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
+            var dbParameterCollectionAddMethod = StaticType.DbParameterCollection.GetMethod("Add", new[] { StaticType.Object });
+            return Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameterVariable);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterSystemSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetSystemSqlServerTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetSystemSqlServerDbTypeFromAttribute(attribute);
+            var parameterType = GetSystemSqlServerParameterTypeFromAttribute(attribute);
+            var setMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetMicrosoftSqlServerDbTypeFromAttribute(attribute);
+            var parameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(attribute);
+            var setMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterMySqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetMySqlDbTypeFromAttribute(attribute);
+            var parameterType = GetMySqlParameterTypeFromAttribute(attribute);
+            var setMethod = GetMySqlDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterNpgsqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetNpgsqlDbTypeFromAttribute(attribute);
+            var parameterType = GetNpgsqlParameterTypeFromAttribute(attribute);
+            var setMethod = GetNpgsqlDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="entityIndex"></param>
+        /// <param name="entityInstance"></param>
+        /// <param name="property"></param>
+        /// <param name="dbField"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="direction"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static Expression GetParameterAssignmentExpression<TEntity>(ParameterExpression commandParameterExpression,
+            int entityIndex,
+            Expression entityInstance,
+            ParameterExpression property,
+            DbField dbField,
+            ClassProperty classProperty,
+            ParameterDirection direction,
+            IDbSetting dbSetting)
+            where TEntity : class
+        {
+            var parameterAssignments = new List<Expression>();
+            var parameterVariable = Expression.Variable(StaticType.DbParameter,
+                string.Concat("parameter", dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric()));
+
+            // Variable
+            var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression);
+            parameterAssignments.AddIfNotNull(Expression.Assign(parameterVariable, createParameterExpression));
+
+            // DbParameter.Name
+            var nameAssignmentExpression = GetDbParameterNameAssignmentExpression(parameterVariable,
+                dbField,
+                entityIndex,
+                dbSetting);
+            parameterAssignments.AddIfNotNull(nameAssignmentExpression);
+
+            // DbParameter.Value
+            if (direction != ParameterDirection.Output)
+            {
+                var valueAssignmentExpression = GetDbParameterValueAssignmentExpression<TEntity>(parameterVariable,
+                    entityInstance,
+                    property,
+                    classProperty,
+                    dbField,
+                    dbSetting);
+                parameterAssignments.AddIfNotNull(valueAssignmentExpression);
+            }
+
+            // DbParameter.DbType
+            var dbTypeAssignmentExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariable,
+                dbField);
+            parameterAssignments.AddIfNotNull(dbTypeAssignmentExpression);
+
+            // DbParameter.SqlDbType (System)
+            var systemSqlDbTypeAssignmentExpression = GetDbParameterSystemSqlDbTypeAssignmentExpression(parameterVariable,
+                classProperty);
+            parameterAssignments.AddIfNotNull(systemSqlDbTypeAssignmentExpression);
+
+            // DbParameter.SqlDbType (Microsoft)
+            var microsoftSqlDbTypeAssignmentExpression = GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(parameterVariable,
+                classProperty);
+            parameterAssignments.AddIfNotNull(microsoftSqlDbTypeAssignmentExpression);
+
+            // DbParameter.MySqlDbType
+            var mySqlDbTypeAssignmentExpression = GetDbParameterMySqlDbTypeAssignmentExpression(parameterVariable,
+                classProperty);
+            parameterAssignments.AddIfNotNull(mySqlDbTypeAssignmentExpression);
+
+            // DbParameter.NpgsqlDbType
+            var npgsqlDbTypeAssignmentExpression = GetDbParameterNpgsqlDbTypeAssignmentExpression(parameterVariable,
+                classProperty);
+            parameterAssignments.AddIfNotNull(npgsqlDbTypeAssignmentExpression);
+
+            // DbParameter.Direction
+            if (dbSetting.IsDirectionSupported)
+            {
+                var directionAssignmentExpression = GetDbParameterDirectionAssignmentExpression(parameterVariable, direction);
+                parameterAssignments.AddIfNotNull(directionAssignmentExpression);
+            }
+
+            // DbParameter.Size
+            if (dbField.Size != null)
+            {
+                var sizeAssignmentExpression = GetDbParameterSizeAssignmentExpression(parameterVariable, dbField.Size.Value);
+                parameterAssignments.AddIfNotNull(sizeAssignmentExpression);
+            }
+
+            // DbParameter.Precision
+            if (dbField.Precision != null)
+            {
+                var precisionAssignmentExpression = GetDbParameterPrecisionAssignmentExpression(parameterVariable, dbField.Precision.Value);
+                parameterAssignments.AddIfNotNull(precisionAssignmentExpression);
+            }
+
+            // DbParameter.Scale
+            if (dbField.Scale != null)
+            {
+                var scaleAssignmentExpression = GetDbParameterScaleAssignmentExpression(parameterVariable, dbField.Scale.Value);
+                parameterAssignments.AddIfNotNull(scaleAssignmentExpression);
+            }
+
+            // DbCommand.Parameters.Add
+            var dbParametersAddExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariable);
+            parameterAssignments.AddIfNotNull(dbParametersAddExpression);
+
+            // Return the value
+            return Expression.Block(new[] { parameterVariable }, parameterAssignments);
         }
 
         #endregion
