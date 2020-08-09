@@ -357,6 +357,13 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetDbParameterValueSetMethod() =>
+            StaticType.DbParameter.GetProperty("Value").SetMethod;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="readerField"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
@@ -1126,24 +1133,56 @@ namespace RepoDb.Reflection
             return elementInits;
         }
 
-        internal static Expression GetDbParameterValueAssignmentExpression<TEntity>(ParameterExpression parameterVariable,
-            Expression entityInstance,
-            ParameterExpression property,
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityInstance"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        internal static Expression GetPropertyValueAutomaticConversionExpression(Expression entityInstance,
             ClassProperty classProperty,
-            DbField dbField,
-            IDbSetting dbSetting)
+            DbField dbField)
+        {
+            var instanceProperty = classProperty.PropertyInfo;
+            var expression = (Expression)Expression.Property(entityInstance, instanceProperty);
+            var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
+            var fieldType = dbField.Type?.GetUnderlyingType();
+
+            // GuidToString
+            if (fieldType == StaticType.Guid && propertyType == StaticType.String)
+            {
+                expression = ConvertExpressionToGuidToStringExpression(expression);
+            }
+            // StringToGuid
+            else if (fieldType == StaticType.String && propertyType == StaticType.Guid)
+            {
+                expression = ConvertExpressionToStringToGuidExpression(expression);
+            }
+
+            // Return the value
+            return expression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityInstance"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        internal static UnaryExpression GetEntityInstancePropertyValueExpression<TEntity>(Expression entityInstance,
+            ClassProperty classProperty,
+            DbField dbField)
         {
             var typeOfEntity = typeof(TEntity);
-            var valueAssignment = (Expression)null;
-            var instanceProperty = (PropertyInfo)null;
+            var instanceProperty = classProperty.PropertyInfo;
+            var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
             var handlerInstance = classProperty?.GetPropertyHandler() ??
                 PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
-            var handlerSetMethod = GetPropertyHandlerSetMethod(handlerInstance);
-            var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
-            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
-
-            // Variables for 'Dynamic|Object' object
-            var propertyInfoGetValueMethod = StaticType.PropertyInfo.GetMethod("GetValue", new[] { StaticType.Object });
+            var fieldType = dbField.Type?.GetUnderlyingType();
+            var value = (Expression)null;
 
             // Check the proper type of the entity
             if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
@@ -1151,126 +1190,112 @@ namespace RepoDb.Reflection
                 instanceProperty = classProperty.PropertyInfo;
             }
 
-            #region Instance.Property or PropertyInfo.GetValue()
-
-            // Set the value
-            var value = (Expression)null;
-            var propertyType = (Type)null;
-            var fieldType = dbField.Type?.GetUnderlyingType();
-
-            // If the property is missing directly, then it could be a dynamic object
-            if (instanceProperty == null)
+            if (handlerInstance == null)
             {
-                value = Expression.Call(property, propertyInfoGetValueMethod, entityInstance);
-            }
-            else
-            {
-                propertyType = instanceProperty.PropertyType.GetUnderlyingType();
-
-                if (handlerInstance == null)
+                if (Converter.ConversionType == ConversionType.Automatic)
                 {
-                    if (Converter.ConversionType == ConversionType.Automatic)
-                    {
-                        var valueToConvert = Expression.Property(entityInstance, instanceProperty);
-
-                        #region StringToGuid
-
-                        // Create a new guid here
-                        if (propertyType == StaticType.String && fieldType == StaticType.Guid /* StringToGuid */)
-                        {
-                            value = Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), new[] { valueToConvert });
-                        }
-
-                        #endregion
-
-                        #region GuidToString
-
-                        // Call the System.Convert conversion
-                        else if (propertyType == StaticType.Guid && fieldType == StaticType.String/* GuidToString*/)
-                        {
-                            var convertMethod = StaticType.Convert.GetMethod("ToString", new[] { StaticType.Object });
-                            value = Expression.Call(convertMethod, Expression.Convert(valueToConvert, StaticType.Object));
-                            value = Expression.Convert(value, fieldType);
-                        }
-
-                        #endregion
-
-                        else
-                        {
-                            value = valueToConvert;
-                        }
-                    }
-                    else
-                    {
-                        // Get the Class.Property
-                        value = Expression.Property(entityInstance, instanceProperty);
-                    }
-
-                    #region EnumAsIntForString
-
-                    if (propertyType.IsEnum)
-                    {
-                        var convertToTypeMethod = (MethodInfo)null;
-                        if (convertToTypeMethod == null)
-                        {
-                            var mappedToType = classProperty?.GetDbType();
-                            if (mappedToType == null)
-                            {
-                                mappedToType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
-                            }
-                            if (mappedToType != null)
-                            {
-                                convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
-                            }
-                        }
-                        if (convertToTypeMethod == null)
-                        {
-                            convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
-                        }
-                        if (convertToTypeMethod == null)
-                        {
-                            throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
-                        }
-                        else
-                        {
-                            var converterMethod = typeof(Compiler.EnumHelper).GetMethod("Convert");
-                            if (converterMethod != null)
-                            {
-                                value = Expression.Call(converterMethod,
-                                    Expression.Constant(instanceProperty.PropertyType),
-                                    Expression.Constant(dbField.Type),
-                                    Expression.Convert(value, StaticType.Object),
-                                    Expression.Constant(convertToTypeMethod));
-                            }
-                        }
-                    }
-
-                    #endregion
+                    value = GetPropertyValueAutomaticConversionExpression(entityInstance, classProperty, dbField);
                 }
                 else
                 {
-                    // Get the value directly from the property
                     value = Expression.Property(entityInstance, instanceProperty);
-
-                    #region PropertyHandler
-
-                    if (handlerInstance != null)
-                    {
-                        var setParameter = GetPropertyHandlerSetParameter(handlerSetMethod);
-                        value = Expression.Call(Expression.Constant(handlerInstance),
-                            handlerSetMethod,
-                            Expression.Convert(value, setParameter.ParameterType),
-                            Expression.Constant(classProperty));
-                    }
-
-                    #endregion
                 }
 
-                // Convert to object
-                value = Expression.Convert(value, StaticType.Object);
+                // TODO: Optimize this
+
+                #region EnumAsIntForString
+
+                if (propertyType.IsEnum)
+                {
+                    var convertToTypeMethod = (MethodInfo)null;
+                    if (convertToTypeMethod == null)
+                    {
+                        var mappedToType = classProperty?.GetDbType();
+                        if (mappedToType == null)
+                        {
+                            mappedToType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+                        }
+                        if (mappedToType != null)
+                        {
+                            convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
+                        }
+                    }
+                    if (convertToTypeMethod == null)
+                    {
+                        convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
+                    }
+                    if (convertToTypeMethod == null)
+                    {
+                        throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
+                    }
+                    else
+                    {
+                        var converterMethod = typeof(Compiler.EnumHelper).GetMethod("Convert");
+                        if (converterMethod != null)
+                        {
+                            value = Expression.Call(converterMethod,
+                                Expression.Constant(instanceProperty.PropertyType),
+                                Expression.Constant(dbField.Type),
+                                Expression.Convert(value, StaticType.Object),
+                                Expression.Constant(convertToTypeMethod));
+                        }
+                    }
+                }
+
+                #endregion
+            }
+            else
+            {
+                // Get the value directly from the property
+                value = Expression.Property(entityInstance, instanceProperty);
+
+                #region PropertyHandler
+
+                if (handlerInstance != null)
+                {
+                    var setMethod = GetPropertyHandlerSetMethod(handlerInstance);
+                    var setParameter = GetPropertyHandlerSetParameter(setMethod);
+                    value = Expression.Call(Expression.Constant(handlerInstance),
+                        setMethod,
+                        Expression.Convert(value, setParameter.ParameterType),
+                        Expression.Constant(classProperty));
+                }
+
+                #endregion
             }
 
-            // Declare the variable for the value assignment
+            // Convert to object
+            return Expression.Convert(value, StaticType.Object);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="entityInstance"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetObjectInstancePropertyValueExpression(ParameterExpression property,
+            Expression entityInstance)
+        {
+            var methodInfo = StaticType.PropertyInfo.GetMethod("GetValue", new[] { StaticType.Object });
+            return Expression.Call(property, methodInfo, entityInstance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="dbField"></param>
+        /// <param name="instanceProperty"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetNullablePropertyValueAssignmentExpression(ParameterExpression parameterVariable,
+            Expression existingValue,
+            DbField dbField,
+            PropertyInfo instanceProperty,
+            IDbSetting dbSetting)
+        {
             var valueBlock = (Expression)null;
             var isNullable = dbField.IsNullable == true ||
                 instanceProperty == null ||
@@ -1282,58 +1307,104 @@ namespace RepoDb.Reflection
                     )
                 );
 
-            // The value for DBNull.Value
-            var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
-
             // Check if the property is nullable
             if (isNullable == true)
             {
                 // Identification of the DBNull
+                var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
                 var valueVariable = Expression.Variable(StaticType.Object, string.Concat("valueOf", parameterName));
                 var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
+                var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
 
                 // Set the propert value
                 valueBlock = Expression.Block(new[] { valueVariable },
-                    Expression.Assign(valueVariable, value),
+                    Expression.Assign(valueVariable, existingValue),
                     Expression.Condition(valueIsNull, dbNullValue, valueVariable));
             }
             else
             {
-                valueBlock = value;
+                valueBlock = existingValue;
             }
 
-            // Add to the collection
-            valueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, valueBlock);
+            // Set the value
+            return Expression.Call(parameterVariable, GetDbParameterValueSetMethod(), valueBlock);
+        }
 
-            #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="property"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        internal static ConditionalExpression GetDbNullPropertyValueAssignmentExpression(ParameterExpression parameterVariable,
+            ParameterExpression property,
+            Expression existingValue,
+            DbField dbField)
+        {
+            var dbParameterValueSetMethod = GetDbParameterValueSetMethod();
+            var dbNullValueAssignment = (Expression)null;
+
+            // Set the default type value
+            if (dbField.IsNullable == false && dbField.Type != null)
+            {
+                dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
+                    Expression.Convert(Expression.Default(dbField.Type), StaticType.Object));
+            }
+
+            // Set the DBNull value
+            if (dbNullValueAssignment == null)
+            {
+                var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
+                dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, dbNullValue);
+            }
+
+            // Check the presence of the property
+            var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
+
+            // Set the condition
+            return Expression.Condition(propertyIsNull, dbNullValueAssignment, existingValue);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="parameterVariable"></param>
+        /// <param name="entityInstance"></param>
+        /// <param name="property"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static Expression GetDbParameterValueAssignmentExpression<TEntity>(ParameterExpression parameterVariable,
+            Expression entityInstance,
+            ParameterExpression property,
+            ClassProperty classProperty,
+            DbField dbField,
+            IDbSetting dbSetting)
+        {
+            var typeOfEntity = typeof(TEntity);
+            var instanceProperty = (PropertyInfo)null;
+
+            // Check the proper type of the entity
+            if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
+            {
+                instanceProperty = classProperty.PropertyInfo;
+            }
+
+            // Get the property value
+            var value = (instanceProperty == null) ? (Expression)GetObjectInstancePropertyValueExpression(property, entityInstance) :
+                    GetEntityInstancePropertyValueExpression<TEntity>(entityInstance, classProperty, dbField);
+
+            // Ensure the nullable
+            var valueAssignment = (Expression)GetNullablePropertyValueAssignmentExpression(parameterVariable, value, dbField, instanceProperty, dbSetting);
 
             // Check if it is a direct assignment or not
             if (typeOfEntity == StaticType.Object)
             {
-                var dbNullValueAssignment = (Expression)null;
-
-                #region DBNull.Value
-
-                // Set the default type value
-                if (dbField.IsNullable == false && dbField.Type != null)
-                {
-                    dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
-                        Expression.Convert(Expression.Default(dbField.Type), StaticType.Object));
-                }
-
-                // Set the DBNull value
-                if (dbNullValueAssignment == null)
-                {
-                    dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, dbNullValue);
-                }
-
-                #endregion
-
-                // Check the presence of the property
-                var propertyIsNull = Expression.Equal(property, Expression.Constant(null));
-
-                // Add to parameter assignment
-                valueAssignment = Expression.Condition(propertyIsNull, dbNullValueAssignment, valueAssignment);
+                valueAssignment = GetDbNullPropertyValueAssignmentExpression(parameterVariable, property, valueAssignment, dbField);
             }
 
             // Return
