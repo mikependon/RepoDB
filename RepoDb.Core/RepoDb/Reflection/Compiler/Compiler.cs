@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -505,7 +504,7 @@ namespace RepoDb.Reflection
         /// <param name="readerField"></param>
         /// <param name="propertyType"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionWithDefaultConversion(Expression expression,
+        internal static Expression ConvertExpressionWithDefaultConversionExpression(Expression expression,
             DataReaderField readerField,
             Type propertyType)
         {
@@ -869,7 +868,7 @@ namespace RepoDb.Reflection
 
             if (Converter.ConversionType == ConversionType.Default)
             {
-                return ConvertExpressionWithDefaultConversion(expression,
+                return ConvertExpressionWithDefaultConversionExpression(expression,
                     readerField,
                     propertyType);
             }
@@ -1167,21 +1166,90 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="entityInstance"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="instanceProperty"></param>
+        /// <returns></returns>
+        internal static Expression ConvertPropertyValueForEnumHandlingExpression(Expression existingValue,
+            ClassProperty classProperty,
+            DbField dbField,
+            PropertyInfo instanceProperty)
+        {
+            var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
+            var mappedToType = classProperty?.GetDbType() ?? new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+            var convertToTypeMethod = (MethodInfo)null;
+
+            if (mappedToType != null)
+            {
+                convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
+            }
+
+            if (convertToTypeMethod == null)
+            {
+                convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
+            }
+
+            if (convertToTypeMethod == null)
+            {
+                throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
+            }
+            else
+            {
+                existingValue = Expression.Call(typeof(EnumHelper).GetMethod("Convert"),
+                    Expression.Constant(instanceProperty.PropertyType),
+                    Expression.Constant(dbField.Type),
+                    Expression.Convert(existingValue, StaticType.Object),
+                    Expression.Constant(convertToTypeMethod));
+            }
+
+            return existingValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="existingValue"></param>
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        internal static UnaryExpression GetEntityInstancePropertyValueExpression<TEntity>(Expression entityInstance,
+        internal static Expression ConvertExpressionToPropertyHandlerExpression(Expression existingValue,
             ClassProperty classProperty,
             DbField dbField)
         {
-            var typeOfEntity = typeof(TEntity);
+            var handlerInstance = classProperty?.GetPropertyHandler() ??
+                PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
+
+            if (handlerInstance != null)
+            {
+                var setMethod = GetPropertyHandlerSetMethod(handlerInstance);
+                var setParameter = GetPropertyHandlerSetParameter(setMethod);
+                existingValue = Expression.Call(Expression.Constant(handlerInstance),
+                    setMethod,
+                    Expression.Convert(existingValue, setParameter.ParameterType),
+                    Expression.Constant(classProperty));
+            }
+
+            return existingValue;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityInstance"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="typeOfEntity"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        internal static UnaryExpression GetEntityInstancePropertyValueExpression(Expression entityInstance,
+            ClassProperty classProperty,
+            Type typeOfEntity,
+            DbField dbField)
+        {
             var instanceProperty = classProperty.PropertyInfo;
             var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
             var handlerInstance = classProperty?.GetPropertyHandler() ??
                 PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
-            var fieldType = dbField.Type?.GetUnderlyingType();
             var value = (Expression)null;
 
             // Check the proper type of the entity
@@ -1192,76 +1260,25 @@ namespace RepoDb.Reflection
 
             if (handlerInstance == null)
             {
-                if (Converter.ConversionType == ConversionType.Automatic)
-                {
-                    value = GetPropertyValueAutomaticConversionExpression(entityInstance, classProperty, dbField);
-                }
-                else
-                {
-                    value = Expression.Property(entityInstance, instanceProperty);
-                }
+                value = (Converter.ConversionType == ConversionType.Automatic) ?
+                    GetPropertyValueAutomaticConversionExpression(entityInstance, classProperty, dbField) :
+                    Expression.Property(entityInstance, instanceProperty);
 
-                // TODO: Optimize this
-
-                #region EnumAsIntForString
-
+                // Enum Handling
                 if (propertyType.IsEnum)
                 {
-                    var convertToTypeMethod = (MethodInfo)null;
-                    if (convertToTypeMethod == null)
-                    {
-                        var mappedToType = classProperty?.GetDbType();
-                        if (mappedToType == null)
-                        {
-                            mappedToType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
-                        }
-                        if (mappedToType != null)
-                        {
-                            convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
-                        }
-                    }
-                    if (convertToTypeMethod == null)
-                    {
-                        convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
-                    }
-                    if (convertToTypeMethod == null)
-                    {
-                        throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
-                    }
-                    else
-                    {
-                        var converterMethod = typeof(Compiler.EnumHelper).GetMethod("Convert");
-                        if (converterMethod != null)
-                        {
-                            value = Expression.Call(converterMethod,
-                                Expression.Constant(instanceProperty.PropertyType),
-                                Expression.Constant(dbField.Type),
-                                Expression.Convert(value, StaticType.Object),
-                                Expression.Constant(convertToTypeMethod));
-                        }
-                    }
+                    value = ConvertPropertyValueForEnumHandlingExpression(value,
+                        classProperty,
+                        dbField,
+                        instanceProperty);
                 }
-
-                #endregion
             }
             else
             {
-                // Get the value directly from the property
                 value = Expression.Property(entityInstance, instanceProperty);
 
-                #region PropertyHandler
-
-                if (handlerInstance != null)
-                {
-                    var setMethod = GetPropertyHandlerSetMethod(handlerInstance);
-                    var setParameter = GetPropertyHandlerSetParameter(setMethod);
-                    value = Expression.Call(Expression.Constant(handlerInstance),
-                        setMethod,
-                        Expression.Convert(value, setParameter.ParameterType),
-                        Expression.Constant(classProperty));
-                }
-
-                #endregion
+                // Property Handler
+                value = ConvertExpressionToPropertyHandlerExpression(value, classProperty, dbField);
             }
 
             // Convert to object
@@ -1396,7 +1413,7 @@ namespace RepoDb.Reflection
 
             // Get the property value
             var value = (instanceProperty == null) ? (Expression)GetObjectInstancePropertyValueExpression(property, entityInstance) :
-                    GetEntityInstancePropertyValueExpression<TEntity>(entityInstance, classProperty, dbField);
+                    GetEntityInstancePropertyValueExpression(entityInstance, classProperty, typeOfEntity, dbField);
 
             // Ensure the nullable
             var valueAssignment = (Expression)GetNullablePropertyValueAssignmentExpression(parameterVariable, value, dbField, instanceProperty, dbSetting);
