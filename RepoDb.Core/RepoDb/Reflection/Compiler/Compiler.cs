@@ -455,6 +455,7 @@ namespace RepoDb.Reflection
             Type propertyType,
             Type convertType)
         {
+            // TODO: Add check on the propertyType and convertType
             var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", propertyType.Name),
                 new[] { convertType });
 
@@ -1433,9 +1434,9 @@ namespace RepoDb.Reflection
         {
             var expression = (MethodCallExpression)null;
             var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
-            var fieldOrPropertyType = dbField.Type?.GetUnderlyingType();
-            var dbType = TypeMapper.Get(fieldOrPropertyType) ??
-                new ClientTypeToDbTypeResolver().Resolve(fieldOrPropertyType);
+            var underlyingType = dbField.Type?.GetUnderlyingType();
+            var dbType = TypeMapper.Get(underlyingType) ??
+                new ClientTypeToDbTypeResolver().Resolve(underlyingType);
 
             // Set the DB Type
             if (dbType != null)
