@@ -18,7 +18,7 @@ namespace RepoDb.Reflection
     /// </summary>
     internal partial class Compiler
     {
-        #region SubClasses
+        #region SubClasses/SubStructs
 
         /// <summary>
         /// A helper class for type enum.
@@ -79,9 +79,57 @@ namespace RepoDb.Reflection
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        internal struct FieldDirection
+        {
+            public int Index { get; set; }
+            public DbField DbField { get; set; }
+            public ParameterDirection Direction { get; set; }
+        }
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        internal static IEnumerable<FieldDirection> GetInputFieldDirections(IEnumerable<DbField> fields)
+        {
+            if (fields?.Any() != true)
+            {
+                return Enumerable.Empty<FieldDirection>();
+            }
+            return fields?.Select((value, index) => new FieldDirection
+            {
+                Index = index,
+                DbField = value,
+                Direction = ParameterDirection.Input
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        internal static IEnumerable<FieldDirection> GetOutputFieldDirections(IEnumerable<DbField> fields)
+        {
+            if (fields?.Any() != true)
+            {
+                return Enumerable.Empty<FieldDirection>();
+            }
+            return fields?.Select((value, index) => new FieldDirection
+            {
+                Index = index,
+                DbField = value,
+                Direction = ParameterDirection.Output
+            });
+        }
 
         /// <summary>
         /// 
@@ -458,8 +506,9 @@ namespace RepoDb.Reflection
             var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", propertyType.Name),
                 new[] { convertType });
 
+            // TODO: Remove the conversion below if possible
             return (methodInfo != null) ? (Expression)Expression.Call(null, methodInfo, expression) :
-                (Expression)Expression.Convert(expression, propertyType);
+                Expression.Convert(expression, propertyType);
         }
 
         /// <summary>
@@ -786,20 +835,50 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
             DataReaderField readerField,
             Type propertyType,
+            Type convertType) =>
+            ConvertExpressionWithAutomaticConversion(expression, readerField.Type, propertyType, convertType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="fieldType"></param>
+        /// <param name="propertyType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
+            Type fieldType,
+            Type propertyType) =>
+            ConvertExpressionWithAutomaticConversion(expression, fieldType, propertyType, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="fieldType"></param>
+        /// <param name="propertyType"></param>
+        /// <param name="convertType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
+            Type fieldType,
+            Type propertyType,
             Type convertType)
         {
-            if (propertyType == StaticType.Guid && readerField.Type == StaticType.String)
+            if (propertyType == StaticType.Guid && fieldType == StaticType.String)
             {
-                return ConvertExpressionToGuidToStringExpression(expression);
+                expression = ConvertExpressionToGuidToStringExpression(expression);
             }
-            else if (propertyType == StaticType.String && readerField.Type == StaticType.Guid)
+            else if (propertyType == StaticType.String && fieldType == StaticType.Guid)
             {
-                return ConvertExpressionToStringToGuidExpression(expression);
+                expression = ConvertExpressionToStringToGuidExpression(expression);
             }
             else
             {
-                return ConvertExpressionToSystemConvertExpression(expression, propertyType, convertType);
+                if (convertType != null)
+                {
+                    expression = ConvertExpressionToSystemConvertExpression(expression, propertyType, convertType);
+                }
             }
+            return expression;
         }
 
         /// <summary>
@@ -1139,25 +1218,20 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        internal static Expression GetPropertyValueAutomaticConversionExpression(Expression entityInstance,
+        internal static Expression GetPropertyValueWithAutomaticConversionExpression(Expression entityInstance,
             ClassProperty classProperty,
             DbField dbField)
         {
             var instanceProperty = classProperty.PropertyInfo;
             var expression = (Expression)Expression.Property(entityInstance, instanceProperty);
-            var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
-            var fieldType = dbField.Type?.GetUnderlyingType();
 
-            // GuidToString
-            if (fieldType == StaticType.Guid && propertyType == StaticType.String)
-            {
-                expression = ConvertExpressionToGuidToStringExpression(expression);
-            }
-            // StringToGuid
-            else if (fieldType == StaticType.String && propertyType == StaticType.Guid)
-            {
-                expression = ConvertExpressionToStringToGuidExpression(expression);
-            }
+            // Must be opposite (for setters)
+            var fieldType = instanceProperty.PropertyType.GetUnderlyingType();
+            var propertyType = dbField.Type?.GetUnderlyingType();
+
+            // Handle the auto conversion
+            expression = ConvertExpressionWithAutomaticConversion(expression,
+                fieldType, propertyType);
 
             // Return the value
             return expression;
@@ -1238,12 +1312,10 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="entityInstance"></param>
         /// <param name="classProperty"></param>
-        /// <param name="typeOfEntity"></param>
         /// <param name="dbField"></param>
         /// <returns></returns>
         internal static UnaryExpression GetEntityInstancePropertyValueExpression(Expression entityInstance,
             ClassProperty classProperty,
-            Type typeOfEntity,
             DbField dbField)
         {
             var instanceProperty = classProperty.PropertyInfo;
@@ -1252,16 +1324,10 @@ namespace RepoDb.Reflection
                 PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
             var value = (Expression)null;
 
-            // Check the proper type of the entity
-            if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
-            {
-                instanceProperty = classProperty.PropertyInfo;
-            }
-
             if (handlerInstance == null)
             {
                 value = (Converter.ConversionType == ConversionType.Automatic) ?
-                    GetPropertyValueAutomaticConversionExpression(entityInstance, classProperty, dbField) :
+                    GetPropertyValueWithAutomaticConversionExpression(entityInstance, classProperty, dbField) :
                     Expression.Property(entityInstance, instanceProperty);
 
                 // Enum Handling
@@ -1413,7 +1479,7 @@ namespace RepoDb.Reflection
 
             // Get the property value
             var value = (instanceProperty == null) ? (Expression)GetObjectInstancePropertyValueExpression(property, entityInstance) :
-                    GetEntityInstancePropertyValueExpression(entityInstance, classProperty, typeOfEntity, dbField);
+                    GetEntityInstancePropertyValueExpression(entityInstance, classProperty, dbField);
 
             // Ensure the nullable
             var valueAssignment = (Expression)GetNullablePropertyValueAssignmentExpression(parameterVariable, value, dbField, instanceProperty, dbSetting);
@@ -1433,9 +1499,9 @@ namespace RepoDb.Reflection
         {
             var expression = (MethodCallExpression)null;
             var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
-            var fieldOrPropertyType = dbField.Type?.GetUnderlyingType();
-            var dbType = TypeMapper.Get(fieldOrPropertyType) ??
-                new ClientTypeToDbTypeResolver().Resolve(fieldOrPropertyType);
+            var underlyingType = dbField.Type?.GetUnderlyingType();
+            var dbType = TypeMapper.Get(underlyingType) ??
+                new ClientTypeToDbTypeResolver().Resolve(underlyingType);
 
             // Set the DB Type
             if (dbType != null)
@@ -1748,6 +1814,121 @@ namespace RepoDb.Reflection
 
             // Return the value
             return Expression.Block(new[] { parameterVariable }, parameterAssignments);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbParameterCollection"></param>
+        /// <returns></returns>
+        internal static Expression GetDbParameterCollectionClearMethodExpression(MemberExpression dbParameterCollection)
+        {
+            var dbParameterCollectionClearMethod = StaticType.DbParameterCollection.GetMethod("Clear");
+            return Expression.Call(dbParameterCollection, dbParameterCollectionClearMethod);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="entityVariable"></param>
+        /// <param name="fieldDirection"></param>
+        /// <param name="entityIndex"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static Expression GetPropertyFieldExpression<TEntity>(ParameterExpression commandParameterExpression,
+            ParameterExpression entityVariable,
+            FieldDirection fieldDirection,
+            int entityIndex,
+            IDbSetting dbSetting)
+            where TEntity : class
+        {
+            var typeOfEntity = typeof(TEntity);
+            var propertyExpressions = new List<Expression>();
+            var propertyVariables = new List<ParameterExpression>();
+            var propertyVariable = (ParameterExpression)null;
+            var propertyInstance = (Expression)null;
+            var classProperty = (ClassProperty)null;
+            var propertyName = fieldDirection.DbField.Name.AsUnquoted(true, dbSetting);
+            var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
+            var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[] { StaticType.String, StaticType.BindingFlags });
+
+            // Set the proper assignments (property)
+            if (typeOfEntity == StaticType.Object)
+            {
+                propertyVariable = Expression.Variable(StaticType.PropertyInfo, string.Concat("property", propertyName));
+                propertyInstance = Expression.Call(Expression.Call(entityVariable, objectGetTypeMethod),
+                    typeGetPropertyMethod, new[]
+                    {
+                        Expression.Constant(propertyName),
+                        Expression.Constant(BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase)
+                    });
+            }
+            else
+            {
+                var entityProperties = PropertyCache.Get<TEntity>();
+                classProperty = entityProperties.First(property =>
+                    string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
+                        propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+
+                if (classProperty != null)
+                {
+                    propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
+                    propertyInstance = Expression.Property(entityVariable, classProperty.PropertyInfo);
+                }
+            }
+
+            // Add the variables
+            if (propertyVariable != null)
+            {
+                propertyVariables.Add(propertyVariable);
+                propertyExpressions.Add(Expression.Assign(propertyVariable, propertyInstance));
+            }
+
+            // Execute the function
+            var parameterAssignment = GetParameterAssignmentExpression<TEntity>(commandParameterExpression,
+                entityIndex,
+                entityVariable,
+                propertyVariable,
+                fieldDirection.DbField,
+                classProperty,
+                fieldDirection.Direction,
+                dbSetting);
+            propertyExpressions.Add(parameterAssignment);
+
+            // Add the property block
+            return Expression.Block(propertyVariables, propertyExpressions);
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbCommandParametersClearExpression(ParameterExpression commandParameterExpression)
+        {
+            var dbParameterCollection = Expression.Property(commandParameterExpression,
+                StaticType.DbCommand.GetProperty("Parameters"));
+            var dbParameterCollectionClearMethod = StaticType.DbParameterCollection.GetMethod("Clear");
+            return Expression.Call(dbParameterCollection, dbParameterCollectionClearMethod);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entitiesParameterExpression"></param>
+        /// <param name="typeOfListEntity"></param>
+        /// <param name="entityIndex"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetListEntityIndexerExpression(ParameterExpression entitiesParameterExpression,
+            Type typeOfListEntity,
+            int entityIndex)
+        {
+            var listIndexerMethod = typeOfListEntity.GetMethod("get_Item", new[] { StaticType.Int32 });
+            return Expression.Call(entitiesParameterExpression, listIndexerMethod,
+                Expression.Constant(entityIndex));
         }
 
         #endregion
