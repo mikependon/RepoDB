@@ -262,18 +262,18 @@ And have these scripts executed by ORM.
 
 We do not want to control the implementation for now, but instead we leave it all to you. We do not know yet whether the solution of multiple execution is acceptable to the community with the use of CTE, LEFT JOIN, OUTER APPLY or whatever techniques.
 
-**SkipQuery**
+**SplitQuery**
 
-Though SkipQuery seems to be working in this case, solving the problem beyond N+1. Let us say you write the code below.
+Though SplitQuery seems to be working in this case, solving the problem beyond N+1. Let us say you write the code below.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var supplier = connection
-		.Query<Customer, Address, Product, Warehouse>(e => e.Name == "Amazon")
-		.SplitFor<Address>(e => e.Id)
-		.SplitFor<Product>(e => e.Id)
-		.SplitFor<Wharehouse>(e => e.Id)
+		.SplitQuery<Customer, Address, Product, Warehouse>(e => e.Name == "Amazon")
+		.For<Address>(e => e.Id)
+		.For<Product>(e => e.Id)
+		.For<Wharehouse>(e => e.Id)
 }
 ```
 
