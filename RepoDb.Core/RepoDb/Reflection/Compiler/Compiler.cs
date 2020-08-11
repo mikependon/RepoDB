@@ -134,6 +134,26 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="fromType"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetSystemConvertGetTypeMethod(Type fromType,
+            Type toType) =>
+            GetSystemConvertGetTypeMethod(fromType, toType.Name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromType"></param>
+        /// <param name="toTypeName"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetSystemConvertGetTypeMethod(Type fromType,
+            string toTypeName) =>
+            StaticType.Convert.GetMethod(string.Concat("To", toTypeName), new[] { fromType });
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="classProperty"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerGetMethod(ClassProperty classProperty) =>
@@ -764,14 +784,8 @@ namespace RepoDb.Reflection
         /// <param name="toType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToTypeExpression(Expression expression,
-            Type toType)
-        {
-            if (expression.Type != toType)
-            {
-                expression = Expression.Convert(expression, toType);
-            }
-            return expression;
-        }
+            Type toType) =>
+            (expression.Type != toType) ? Expression.Convert(expression, toType) : expression;
 
         /// <summary>
         /// 
@@ -997,8 +1011,7 @@ namespace RepoDb.Reflection
 
             // Variables needed
             var handlerInstance = GetHandlerInstance(classProperty, readerField);
-            var isDefaultConversion = (Converter.ConversionType == ConversionType.Default) ?
-                true : (handlerInstance != null);
+            var isDefaultConversion = (Converter.ConversionType == ConversionType.Default) || (handlerInstance != null);
 
             // Check the conversion
             if (isDefaultConversion == true)
@@ -1116,6 +1129,50 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="readerParameterExpression"></param>
+        /// <param name="ordinal"></param>
+        /// <returns></returns>
+        internal static Expression GetDbNullExpression(ParameterExpression readerParameterExpression,
+            int ordinal) =>
+            GetDbNullExpression(readerParameterExpression, Expression.Constant(ordinal));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="readerParameterExpression"></param>
+        /// <param name="ordinalExpression"></param>
+        /// <returns></returns>
+        internal static Expression GetDbNullExpression(ParameterExpression readerParameterExpression,
+            ConstantExpression ordinalExpression) =>
+            Expression.Call(readerParameterExpression, StaticType.DbDataReader.GetMethod("IsDBNull"), ordinalExpression);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="readerParameterExpression"></param>
+        /// <param name="readerGetValueMethod"></param>
+        /// <param name="ordinal"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbReaderGetValueExpression(ParameterExpression readerParameterExpression,
+            MethodInfo readerGetValueMethod,
+            int ordinal) =>
+            Expression.Call(readerParameterExpression, readerGetValueMethod, Expression.Constant(ordinal));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="readerParameterExpression"></param>
+        /// <param name="readerGetValueMethod"></param>
+        /// <param name="ordinalExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbReaderGetValueExpression(ParameterExpression readerParameterExpression,
+            MethodInfo readerGetValueMethod,
+            ConstantExpression ordinalExpression) =>
+            Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
+
+        /// <summary>
         /// Returns the list of the bindings for the object.
         /// </summary>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
@@ -1126,7 +1183,6 @@ namespace RepoDb.Reflection
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
-            var dataReaderType = StaticType.DbDataReader;
             var addMethod = StaticType.IDictionaryStringObject.GetMethod("Add", new[] { StaticType.String, StaticType.Object });
 
             // Iterate each properties
@@ -1134,30 +1190,15 @@ namespace RepoDb.Reflection
             {
                 var readerField = readerFields[ordinal];
                 var readerGetValueMethod = GetDbReaderGetValueOrDefaultMethod(readerField);
-                var isConversionNeeded = readerGetValueMethod.ReturnType == StaticType.Object;
-                var ordinalExpression = Expression.Constant(ordinal);
-                var valueExpression = (Expression)Expression.Call(readerParameterExpression,
-                    readerGetValueMethod, ordinalExpression);
+                var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression, readerGetValueMethod, ordinal);
 
                 // Check for nullables
                 if (readerField.DbField == null || readerField.DbField?.IsNullable == true)
                 {
-                    var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
-                    var trueExpression = (Expression)null;
-                    if (readerField.Type?.IsValueType != true)
-                    {
-                        trueExpression = Expression.Default(readerField.Type ?? StaticType.Object);
-                        if (isConversionNeeded == true)
-                        {
-                            valueExpression = ConvertExpressionToTypeExpression(valueExpression, readerField.Type ?? StaticType.Object);
-                        }
-                    }
-                    else
-                    {
-                        trueExpression = Expression.Constant(null, StaticType.Object);
-                        valueExpression = ConvertExpressionToTypeExpression(valueExpression, StaticType.Object);
-                    }
-                    valueExpression = Expression.Condition(isDbNullExpression, trueExpression, valueExpression);
+                    var isDbNullExpression = GetDbNullExpression(readerParameterExpression, ordinal);
+                    var toType = (readerField.Type?.IsValueType != true) ? readerField.Type : StaticType.Object;
+                    valueExpression = Expression.Condition(isDbNullExpression, Expression.Default(toType),
+                        ConvertExpressionToTypeExpression(valueExpression, toType));
                 }
 
                 // Add to the bindings
@@ -1213,22 +1254,14 @@ namespace RepoDb.Reflection
             PropertyInfo instanceProperty)
         {
             var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
-            var mappedToType = classProperty?.GetDbType() ?? new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
-            var convertToTypeMethod = (MethodInfo)null;
+            var dbType = classProperty?.GetDbType() ?? new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+            var type = new DbTypeToClientTypeResolver().Resolve(dbType.GetValueOrDefault());
+            var method = GetSystemConvertGetTypeMethod(StaticType.Object, type) ??
+                GetSystemConvertGetTypeMethod(StaticType.Object, dbField.Type);
 
-            if (mappedToType != null)
+            if (method == null)
             {
-                convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", mappedToType.ToString()), new[] { StaticType.Object });
-            }
-
-            if (convertToTypeMethod == null)
-            {
-                convertToTypeMethod = StaticType.Convert.GetMethod(string.Concat("To", dbField.Type.Name), new[] { StaticType.Object });
-            }
-
-            if (convertToTypeMethod == null)
-            {
-                throw new ConverterNotFoundException($"The convert between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
+                throw new ConverterNotFoundException($"The conversion between '{propertyType.FullName}' and database type '{dbField.DatabaseType}' (of .NET CLR '{dbField.Type.FullName}') is not found.");
             }
             else
             {
@@ -1236,7 +1269,7 @@ namespace RepoDb.Reflection
                     Expression.Constant(instanceProperty.PropertyType),
                     Expression.Constant(dbField.Type),
                     ConvertExpressionToTypeExpression(existingValue, StaticType.Object),
-                    Expression.Constant(convertToTypeMethod));
+                    Expression.Constant(method));
             }
 
             return existingValue;
@@ -1444,7 +1477,8 @@ namespace RepoDb.Reflection
                     GetEntityInstancePropertyValueExpression(entityInstance, classProperty, dbField);
 
             // Ensure the nullable
-            var valueAssignment = (Expression)GetNullablePropertyValueAssignmentExpression(parameterVariable, value, dbField, instanceProperty, dbSetting);
+            var valueAssignment = (Expression)GetNullablePropertyValueAssignmentExpression(parameterVariable,
+                value, dbField, instanceProperty, dbSetting);
 
             // Check if it is a direct assignment or not
             if (typeOfEntity == StaticType.Object)

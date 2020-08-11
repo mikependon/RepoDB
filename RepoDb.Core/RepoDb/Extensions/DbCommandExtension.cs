@@ -429,12 +429,6 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            //// Validate, make sure to only have the proper operation
-            //if (queryField.Operation != Operation.Equal)
-            //{
-            //    throw new InvalidOperationException($"Operation must only be '{nameof(Operation.Equal)}' when calling the 'Execute' methods.");
-            //}
-
             // Get the values
             var value = queryField.Parameter.Value;
             var valueType = value?.GetType()?.GetUnderlyingType();
