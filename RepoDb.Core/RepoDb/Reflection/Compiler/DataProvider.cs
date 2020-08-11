@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace RepoDb.Reflection
@@ -7,6 +8,30 @@ namespace RepoDb.Reflection
     internal partial class Compiler
     {
         #region SqlServer (System)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterSystemSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetSystemSqlServerTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetSystemSqlServerDbTypeFromAttribute(attribute);
+            var parameterType = GetSystemSqlServerParameterTypeFromAttribute(attribute);
+            var setMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
 
         /// <summary>
         /// Gets the SystemSqlServerTypeMapAttribute if present.
@@ -77,6 +102,30 @@ namespace RepoDb.Reflection
         #region SqlServer (Microsoft)
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetMicrosoftSqlServerDbTypeFromAttribute(attribute);
+            var parameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(attribute);
+            var setMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
+
+        /// <summary>
         /// Gets the MicrosoftSqlServerTypeMapAttribute if present.
         /// </summary>
         /// <param name="property">The instance of propery to inspect.</param>
@@ -145,6 +194,30 @@ namespace RepoDb.Reflection
         #region MySql
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterMySqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetMySqlDbTypeFromAttribute(attribute);
+            var parameterType = GetMySqlParameterTypeFromAttribute(attribute);
+            var setMethod = GetMySqlDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
+
+        /// <summary>
         /// Gets the MySqlTypeMapAttribute if present.
         /// </summary>
         /// <param name="property">The instance of propery to inspect.</param>
@@ -211,6 +284,30 @@ namespace RepoDb.Reflection
         #endregion
 
         #region Npgsql
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterNpgsqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+            ClassProperty classProperty)
+        {
+            var attribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
+            if (attribute == null)
+            {
+                return null;
+            }
+
+            var dbType = GetNpgsqlDbTypeFromAttribute(attribute);
+            var parameterType = GetNpgsqlParameterTypeFromAttribute(attribute);
+            var setMethod = GetNpgsqlDbTypeFromAttributeSetMethod(attribute);
+
+            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+                setMethod,
+                Expression.Constant(dbType));
+        }
 
         /// <summary>
         /// Gets the NpgsqlDbTypeMapAttribute if present.
