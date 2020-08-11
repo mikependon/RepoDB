@@ -236,34 +236,6 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="readerField"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        internal static Type GetConvertType(DataReaderField readerField,
-            Type targetType)
-        {
-            var methodInfo = GetNonTimeSpanReaderGetValueMethod(readerField);
-            var value = (Type)null;
-
-            if (methodInfo == null)
-            {
-                methodInfo = GetNonSingleReaderGetValueMethod(readerField);
-                if (methodInfo != null)
-                {
-                    value = targetType;
-                }
-                else
-                {
-                    value = StaticType.Object;
-                }
-            }
-
-            return value ?? readerField.Type;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="connectionString"></param>
@@ -444,7 +416,7 @@ namespace RepoDb.Reflection
                 enumPropertyType = StaticType.Nullable.MakeGenericType(targetType);
             }
 
-            return Expression.Convert(expression, enumPropertyType);
+            return ConvertExpressionToTypeExpression(expression, enumPropertyType);
         }
 
         /// <summary>
@@ -466,7 +438,7 @@ namespace RepoDb.Reflection
 
             if (propertyType == StaticType.Boolean)
             {
-                expression = Expression.Convert(expression, StaticType.Object);
+                expression = ConvertExpressionToTypeExpression(expression, StaticType.Object);
             }
 
             return Expression.Call(enumToObjectMethod, new[]
@@ -496,19 +468,21 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="propertyType"></param>
-        /// <param name="convertType"></param>
+        /// <param name="toType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToSystemConvertExpression(Expression expression,
-            Type propertyType,
-            Type convertType)
+            Type toType)
         {
-            var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", propertyType.Name),
-                new[] { convertType });
+            if (expression.Type == toType)
+            {
+                return expression;
+            }
 
-            // TODO: Remove the conversion below if possible
-            return (methodInfo != null) ? (Expression)Expression.Call(null, methodInfo, expression) :
-                Expression.Convert(expression, propertyType);
+            var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", toType.Name),
+                new[] { expression.Type });
+
+            return (methodInfo != null) ? Expression.Call(null, methodInfo, expression) :
+                ConvertExpressionToTypeExpression(expression, toType);
         }
 
         /// <summary>
@@ -541,8 +515,7 @@ namespace RepoDb.Reflection
             else
             {
                 expression = ConvertExpressionToTypeToEnumExpression(expression, readerField.Type, targetType);
-                // TODO: How to eliminate this conversion?
-                return Expression.Convert(expression, targetType);
+                return ConvertExpressionToTypeExpression(expression, targetType);
             }
         }
 
@@ -551,19 +524,19 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="readerField"></param>
-        /// <param name="propertyType"></param>
+        /// <param name="toType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionWithDefaultConversionExpression(Expression expression,
             DataReaderField readerField,
-            Type propertyType)
+            Type toType)
         {
-            if (propertyType.IsEnum)
+            if (toType.IsEnum)
             {
                 return ConvertExpressionToEnumExpression(expression, readerField);
             }
             else
             {
-                return Expression.Convert(expression, propertyType);
+                return ConvertExpressionToTypeExpression(expression, toType);
             }
         }
 
@@ -653,7 +626,6 @@ namespace RepoDb.Reflection
             }
 
             // Variables needed
-            var convertType = GetConvertType(readerField, targetType);
             var isConversionNeeded = CheckIfConversionIsNeeded(readerField, targetType);
             var isNullableAlreadySet = false;
 
@@ -668,8 +640,7 @@ namespace RepoDb.Reflection
                 expression = ConvertExpressionForDataEntity(expression,
                     classProperty,
                     readerField,
-                    targetType,
-                    convertType);
+                    targetType);
             }
 
             // Nullable Property
@@ -790,6 +761,22 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="expression"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToTypeExpression(Expression expression,
+            Type toType)
+        {
+            if (expression.Type != toType)
+            {
+                expression = Expression.Convert(expression, toType);
+            }
+            return expression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
         /// <returns></returns>
@@ -810,13 +797,13 @@ namespace RepoDb.Reflection
                 // TimeSpanToDateTime
                 if (readerField.Type == StaticType.DateTime && targetType == StaticType.TimeSpan)
                 {
-                    expression = Expression.Convert(expression, StaticType.DateTime);
+                    expression = ConvertExpressionToTypeExpression(expression, StaticType.DateTime);
                 }
 
                 // Default
                 else
                 {
-                    expression = Expression.Convert(expression,
+                    expression = ConvertExpressionToTypeExpression(expression,
                         getParameter?.ParameterType?.GetUnderlyingType() ?? targetType);
                 }
             }
@@ -830,53 +817,34 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <param name="readerField"></param>
         /// <param name="propertyType"></param>
-        /// <param name="convertType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
             DataReaderField readerField,
-            Type propertyType,
-            Type convertType) =>
-            ConvertExpressionWithAutomaticConversion(expression, readerField.Type, propertyType, convertType);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="fieldType"></param>
-        /// <param name="propertyType"></param>
-        /// <returns></returns>
-        internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
-            Type fieldType,
             Type propertyType) =>
-            ConvertExpressionWithAutomaticConversion(expression, fieldType, propertyType, null);
+            ConvertExpressionWithAutomaticConversion(expression, propertyType, readerField.Type);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="fieldType"></param>
-        /// <param name="propertyType"></param>
-        /// <param name="convertType"></param>
+        /// <param name="toType"></param>
+        /// <param name="fromType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
-            Type fieldType,
-            Type propertyType,
-            Type convertType)
+            Type fromType,
+            Type toType)
         {
-            if (propertyType == StaticType.Guid && fieldType == StaticType.String)
+            if (fromType == StaticType.Guid && toType == StaticType.String)
             {
                 expression = ConvertExpressionToGuidToStringExpression(expression);
             }
-            else if (propertyType == StaticType.String && fieldType == StaticType.Guid)
+            else if (fromType == StaticType.String && toType == StaticType.Guid)
             {
                 expression = ConvertExpressionToStringToGuidExpression(expression);
             }
             else
             {
-                if (convertType != null)
-                {
-                    expression = ConvertExpressionToSystemConvertExpression(expression, propertyType, convertType);
-                }
+                expression = ConvertExpressionToSystemConvertExpression(expression, fromType);
             }
             return expression;
         }
@@ -905,7 +873,7 @@ namespace RepoDb.Reflection
 
             if (targetType != getParameterUnderlyingType)
             {
-                expression = Expression.Convert(expression, getParameter.ParameterType.GetUnderlyingType());
+                expression = ConvertExpressionToTypeExpression(expression, getParameter.ParameterType.GetUnderlyingType());
             }
 
             if (isNullableAlreadySet == false && getParameterUnderlyingType != null)
@@ -921,7 +889,7 @@ namespace RepoDb.Reflection
 
             if (handlerGetMethod.ReturnType != classProperty.PropertyInfo.PropertyType)
             {
-                expression = Expression.Convert(expression, classProperty.PropertyInfo.PropertyType);
+                expression = ConvertExpressionToTypeExpression(expression, classProperty.PropertyInfo.PropertyType);
             }
 
             return expression;
@@ -934,13 +902,11 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
         /// <param name="propertyType"></param>
-        /// <param name="convertType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionForDataEntity(Expression expression,
             ClassProperty classProperty,
             DataReaderField readerField,
-            Type propertyType,
-            Type convertType)
+            Type propertyType)
         {
             var getParameter = GetPropertyHandlerGetParameter(classProperty);
             propertyType = GetParameterUnderlyingType(getParameter) ?? propertyType;
@@ -955,8 +921,7 @@ namespace RepoDb.Reflection
             {
                 return ConvertExpressionWithAutomaticConversion(expression,
                     readerField,
-                    propertyType,
-                    convertType);
+                    propertyType);
             }
         }
 
@@ -992,7 +957,7 @@ namespace RepoDb.Reflection
             {
                 trueExpression = Expression.Call(Expression.Constant(handlerInstance),
                     handlerGetMethod,
-                    Expression.Convert(trueExpression, getParameter.ParameterType.GetUnderlyingType()),
+                    ConvertExpressionToTypeExpression(trueExpression, getParameter.ParameterType.GetUnderlyingType()),
                     Expression.Constant(classProperty));
             }
             else
@@ -1004,7 +969,7 @@ namespace RepoDb.Reflection
             }
             if (handlerGetMethod.ReturnType != classProperty.PropertyInfo.PropertyType)
             {
-                trueExpression = Expression.Convert(trueExpression, classProperty.PropertyInfo.PropertyType);
+                trueExpression = ConvertExpressionToTypeExpression(trueExpression, classProperty.PropertyInfo.PropertyType);
             }
 
             return trueExpression;
@@ -1046,13 +1011,10 @@ namespace RepoDb.Reflection
             }
             else
             {
-                var convertType = GetConvertType(readerField, targetType);
-
                 // Automatic
                 expression = ConvertExpressionWithAutomaticConversion(expression,
                     readerField,
-                    classProperty.PropertyInfo.PropertyType,
-                    convertType);
+                    classProperty.PropertyInfo.PropertyType);
             }
 
             if (handlerInstance == null)
@@ -1187,13 +1149,13 @@ namespace RepoDb.Reflection
                         trueExpression = Expression.Default(readerField.Type ?? StaticType.Object);
                         if (isConversionNeeded == true)
                         {
-                            valueExpression = Expression.Convert(valueExpression, readerField.Type ?? StaticType.Object);
+                            valueExpression = ConvertExpressionToTypeExpression(valueExpression, readerField.Type ?? StaticType.Object);
                         }
                     }
                     else
                     {
                         trueExpression = Expression.Constant(null, StaticType.Object);
-                        valueExpression = Expression.Convert(valueExpression, StaticType.Object);
+                        valueExpression = ConvertExpressionToTypeExpression(valueExpression, StaticType.Object);
                     }
                     valueExpression = Expression.Condition(isDbNullExpression, trueExpression, valueExpression);
                 }
@@ -1202,7 +1164,7 @@ namespace RepoDb.Reflection
                 var values = new Expression[]
                 {
                     Expression.Constant(readerField.Name),
-                    Expression.Convert(valueExpression, StaticType.Object)
+                    ConvertExpressionToTypeExpression(valueExpression, StaticType.Object)
                 };
                 elementInits.Add(Expression.ElementInit(addMethod, values));
             }
@@ -1231,7 +1193,7 @@ namespace RepoDb.Reflection
 
             // Handle the auto conversion
             expression = ConvertExpressionWithAutomaticConversion(expression,
-                fieldType, propertyType);
+                propertyType, fieldType);
 
             // Return the value
             return expression;
@@ -1273,7 +1235,7 @@ namespace RepoDb.Reflection
                 existingValue = Expression.Call(typeof(EnumHelper).GetMethod("Convert"),
                     Expression.Constant(instanceProperty.PropertyType),
                     Expression.Constant(dbField.Type),
-                    Expression.Convert(existingValue, StaticType.Object),
+                    ConvertExpressionToTypeExpression(existingValue, StaticType.Object),
                     Expression.Constant(convertToTypeMethod));
             }
 
@@ -1300,7 +1262,7 @@ namespace RepoDb.Reflection
                 var setParameter = GetPropertyHandlerSetParameter(setMethod);
                 existingValue = Expression.Call(Expression.Constant(handlerInstance),
                     setMethod,
-                    Expression.Convert(existingValue, setParameter.ParameterType),
+                    ConvertExpressionToTypeExpression(existingValue, setParameter.ParameterType),
                     Expression.Constant(classProperty));
             }
 
@@ -1314,7 +1276,7 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        internal static UnaryExpression GetEntityInstancePropertyValueExpression(Expression entityInstance,
+        internal static Expression GetEntityInstancePropertyValueExpression(Expression entityInstance,
             ClassProperty classProperty,
             DbField dbField)
         {
@@ -1348,7 +1310,7 @@ namespace RepoDb.Reflection
             }
 
             // Convert to object
-            return Expression.Convert(value, StaticType.Object);
+            return ConvertExpressionToTypeExpression(value, StaticType.Object);
         }
 
         /// <summary>
@@ -1397,7 +1359,7 @@ namespace RepoDb.Reflection
                 var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
                 var valueVariable = Expression.Variable(StaticType.Object, string.Concat("valueOf", parameterName));
                 var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
-                var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
+                var dbNullValue = ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object);
 
                 // Set the propert value
                 valueBlock = Expression.Block(new[] { valueVariable },
@@ -1433,13 +1395,13 @@ namespace RepoDb.Reflection
             if (dbField.IsNullable == false && dbField.Type != null)
             {
                 dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod,
-                    Expression.Convert(Expression.Default(dbField.Type), StaticType.Object));
+                    ConvertExpressionToTypeExpression(Expression.Default(dbField.Type), StaticType.Object));
             }
 
             // Set the DBNull value
             if (dbNullValueAssignment == null)
             {
-                var dbNullValue = Expression.Convert(Expression.Constant(DBNull.Value), StaticType.Object);
+                var dbNullValue = ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object);
                 dbNullValueAssignment = Expression.Call(parameterVariable, dbParameterValueSetMethod, dbNullValue);
             }
 
@@ -1607,102 +1569,6 @@ namespace RepoDb.Reflection
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
             var dbParameterCollectionAddMethod = StaticType.DbParameterCollection.GetMethod("Add", new[] { StaticType.Object });
             return Expression.Call(dbParameterCollection, dbParameterCollectionAddMethod, parameterVariable);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameterVariable"></param>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterSystemSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
-            ClassProperty classProperty)
-        {
-            var attribute = GetSystemSqlServerTypeMapAttribute(classProperty);
-            if (attribute == null)
-            {
-                return null;
-            }
-
-            var dbType = GetSystemSqlServerDbTypeFromAttribute(attribute);
-            var parameterType = GetSystemSqlServerParameterTypeFromAttribute(attribute);
-            var setMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
-                setMethod,
-                Expression.Constant(dbType));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameterVariable"></param>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
-            ClassProperty classProperty)
-        {
-            var attribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
-            if (attribute == null)
-            {
-                return null;
-            }
-
-            var dbType = GetMicrosoftSqlServerDbTypeFromAttribute(attribute);
-            var parameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(attribute);
-            var setMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
-                setMethod,
-                Expression.Constant(dbType));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameterVariable"></param>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterMySqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
-            ClassProperty classProperty)
-        {
-            var attribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
-            if (attribute == null)
-            {
-                return null;
-            }
-
-            var dbType = GetMySqlDbTypeFromAttribute(attribute);
-            var parameterType = GetMySqlParameterTypeFromAttribute(attribute);
-            var setMethod = GetMySqlDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
-                setMethod,
-                Expression.Constant(dbType));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameterVariable"></param>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterNpgsqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
-            ClassProperty classProperty)
-        {
-            var attribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
-            if (attribute == null)
-            {
-                return null;
-            }
-
-            var dbType = GetNpgsqlDbTypeFromAttribute(attribute);
-            var parameterType = GetNpgsqlParameterTypeFromAttribute(attribute);
-            var setMethod = GetNpgsqlDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(Expression.Convert(parameterVariable, parameterType),
-                setMethod,
-                Expression.Constant(dbType));
         }
 
         /// <summary>
