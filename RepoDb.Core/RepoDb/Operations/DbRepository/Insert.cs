@@ -11,6 +11,93 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
+        #region Insert<TEntity>(TableName)
+
+        /// <summary>
+        /// Inserts a new row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public object Insert<TEntity>(string tableName,
+            TEntity entity,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Insert<TEntity>(tableName: tableName,
+                    entity: entity,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a new row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public TResult Insert<TEntity, TResult>(string tableName,
+            TEntity entity,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Insert<TEntity, TResult>(tableName: tableName,
+                    entity: entity,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
         #region Insert<TEntity>
 
         /// <summary>
@@ -23,7 +110,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert<TEntity>(TEntity entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -34,7 +121,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Insert<TEntity>(entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -62,7 +149,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(TEntity entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -73,7 +160,94 @@ namespace RepoDb
                 // Call the method
                 return connection.Insert<TEntity, TResult>(entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region InsertAsync<TEntity>(TableName)
+
+        /// <summary>
+        /// Inserts a new row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public async Task<object> InsertAsync<TEntity>(string tableName,
+            TEntity entity,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InsertAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a new row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public async Task<TResult> InsertAsync<TEntity, TResult>(string tableName,
+            TEntity entity,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InsertAsync<TEntity, TResult>(tableName: tableName,
+                    entity: entity,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -104,7 +278,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync<TEntity>(TEntity entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -115,7 +289,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAsync<TEntity>(entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -143,7 +317,7 @@ namespace RepoDb
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -154,7 +328,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAsync<TEntity, TResult>(entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -186,7 +360,7 @@ namespace RepoDb
         public object Insert(string tableName,
             object entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -197,7 +371,7 @@ namespace RepoDb
                 return connection.Insert(tableName: tableName,
                     entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -226,7 +400,7 @@ namespace RepoDb
         public TResult Insert<TResult>(string tableName,
             object entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -237,7 +411,7 @@ namespace RepoDb
                 return connection.Insert<TResult>(tableName: tableName,
                     entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -269,7 +443,7 @@ namespace RepoDb
         public async Task<object> InsertAsync(string tableName,
             object entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -280,7 +454,7 @@ namespace RepoDb
                 return await connection.InsertAsync(tableName: tableName,
                     entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -309,7 +483,7 @@ namespace RepoDb
         public async Task<TResult> InsertAsync<TResult>(string tableName,
             object entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -320,7 +494,7 @@ namespace RepoDb
                 return await connection.InsertAsync<TResult>(tableName: tableName,
                     entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);

@@ -17,6 +17,79 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        #region Insert<TEntity, TResult>(TableName)
+
+        /// <summary>
+        /// Inserts a new row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static object Insert<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                fields: FieldCache.Get<TEntity>(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                fields: FieldCache.Get<TEntity>(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        #endregion
+
         #region Insert<TEntity, TResult>
 
         /// <summary>
@@ -112,6 +185,79 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder,
                 skipIdentityCheck: false);
+        }
+
+        #endregion
+
+        #region InsertAsync<TEntity, TResult>(TableName)
+
+        /// <summary>
+        /// Inserts a new row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                fields: FieldCache.Get<TEntity>(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                fields: FieldCache.Get<TEntity>(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -241,6 +387,7 @@ namespace RepoDb
             return InsertInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                fields: Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -273,6 +420,7 @@ namespace RepoDb
             return InsertInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                fields: Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -287,6 +435,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -296,6 +445,7 @@ namespace RepoDb
         internal static TResult InsertInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            IEnumerable<Field> fields,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -306,7 +456,7 @@ namespace RepoDb
             return InsertInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -375,6 +525,7 @@ namespace RepoDb
             return InsertAsyncInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                fields: Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -389,6 +540,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -398,6 +550,7 @@ namespace RepoDb
         internal static Task<TResult> InsertAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             object entity,
+            IEnumerable<Field> fields,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -408,7 +561,7 @@ namespace RepoDb
             return InsertAsyncInternalBase<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
