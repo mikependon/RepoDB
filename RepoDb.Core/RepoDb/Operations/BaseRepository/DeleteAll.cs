@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -11,10 +10,33 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
+        #region DeleteAll<TEntity>(TableName) (Delete<TEntity>)
+
+        /// <summary>
+        /// Delete the rows from the table.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of data entity objects to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int DeleteAll(string tableName,
+            IEnumerable<TEntity> entities,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAll<TEntity>(tableName: tableName,
+                entities: entities,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        #endregion
+
         #region DeleteAll<TEntity> (Delete<TEntity>)
 
         /// <summary>
-        /// Delete the rows from the table. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -30,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete the rows from the table. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -64,10 +86,33 @@ namespace RepoDb
 
         #endregion
 
+        #region DeleteAllAsync<TEntity>(TableName) (DeleteAsync<TEntity>)
+
+        /// <summary>
+        /// Delete the rows from the table in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of data entity objects to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public Task<int> DeleteAllAsync(string tableName,
+            IEnumerable<TEntity> entities,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAllAsync<TEntity>(tableName: tableName,
+                entities: entities,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        #endregion
+
         #region DeleteAllAsync<TEntity> (DeleteAsync<TEntity>)
 
         /// <summary>
-        /// Delete all the rows from the table in an asynchronous way. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete all the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -83,7 +128,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete the rows from the table. It uses the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete the rows from the table.
         /// </summary>
         /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
