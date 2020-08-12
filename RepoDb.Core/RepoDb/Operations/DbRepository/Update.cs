@@ -13,6 +13,271 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
+        #region Update<TEntity>(TableName)
+
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public int Update<TEntity>(string tableName,
+            TEntity entity,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Update<TEntity>(tableName: tableName,
+                    entity: entity,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public int Update<TEntity>(string tableName,
+            TEntity entity,
+            object whereOrPrimaryKey,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Update<TEntity>(tableName: tableName,
+                    entity: entity,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public int Update<TEntity>(string tableName,
+            TEntity entity,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Update<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public int Update<TEntity>(string tableName,
+            TEntity entity,
+            QueryField where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Update<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public int Update<TEntity>(string tableName,
+            TEntity entity,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Update<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public int Update<TEntity>(string tableName,
+            TEntity entity,
+            QueryGroup where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Update<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
         #region Update<TEntity>
 
         /// <summary>
@@ -25,7 +290,7 @@ namespace RepoDb
         /// <returns>The number of affected rows during the update process..</returns>
         public int Update<TEntity>(TEntity entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -36,7 +301,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -65,7 +330,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -77,7 +342,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -106,7 +371,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -118,7 +383,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -147,7 +412,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity,
             QueryField where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -159,7 +424,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -188,7 +453,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -200,7 +465,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -229,7 +494,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity,
             QueryGroup where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -241,7 +506,272 @@ namespace RepoDb
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region UpdateAsync<TEntity>(TableName)
+
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName,
+            TEntity entity,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName,
+            TEntity entity,
+            object whereOrPrimaryKey,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName,
+            TEntity entity,
+            Expression<Func<TEntity, bool>> where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName,
+            TEntity entity,
+            QueryField where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName,
+            TEntity entity,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public async Task<int> UpdateAsync<TEntity>(string tableName,
+            TEntity entity,
+            QueryGroup where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAsync<TEntity>(tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -272,7 +802,7 @@ namespace RepoDb
         /// <returns>The number of affected rows during the update process..</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -283,7 +813,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -312,7 +842,7 @@ namespace RepoDb
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -324,7 +854,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -353,7 +883,7 @@ namespace RepoDb
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -365,7 +895,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -394,7 +924,7 @@ namespace RepoDb
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryField where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -406,7 +936,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -435,7 +965,7 @@ namespace RepoDb
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -447,7 +977,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -476,7 +1006,7 @@ namespace RepoDb
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryGroup where,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -488,7 +1018,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -509,423 +1039,423 @@ namespace RepoDb
 
         #region Update(TableName)
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public int Update(string tableName,
-            object entity,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public int Update(string tableName,
+        //    object entity,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return connection.Update(tableName: tableName,
-                    entity: entity,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return connection.Update(tableName: tableName,
+        //            entity: entity,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public int Update(string tableName,
-            object entity,
-            object whereOrPrimaryKey,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public int Update(string tableName,
+        //    object entity,
+        //    object whereOrPrimaryKey,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return connection.Update(tableName: tableName,
-                    entity: entity,
-                    whereOrPrimaryKey: whereOrPrimaryKey,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return connection.Update(tableName: tableName,
+        //            entity: entity,
+        //            whereOrPrimaryKey: whereOrPrimaryKey,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public int Update(string tableName,
-            object entity,
-            QueryField where,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="where">The query expression to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public int Update(string tableName,
+        //    object entity,
+        //    QueryField where,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return connection.Update(tableName: tableName,
-                    entity: entity,
-                    where: where,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return connection.Update(tableName: tableName,
+        //            entity: entity,
+        //            where: where,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public int Update(string tableName,
-            object entity,
-            IEnumerable<QueryField> where,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="where">The query expression to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public int Update(string tableName,
+        //    object entity,
+        //    IEnumerable<QueryField> where,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return connection.Update(tableName: tableName,
-                    entity: entity,
-                    where: where,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return connection.Update(tableName: tableName,
+        //            entity: entity,
+        //            where: where,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public int Update(string tableName,
-            object entity,
-            QueryGroup where,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="where">The query expression to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public int Update(string tableName,
+        //    object entity,
+        //    QueryGroup where,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return connection.Update(tableName: tableName,
-                    entity: entity,
-                    where: where,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return connection.Update(tableName: tableName,
+        //            entity: entity,
+        //            where: where,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
         #endregion
 
         #region UpdateAsync(TableName)
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public async Task<int> UpdateAsync(string tableName,
-            object entity,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public async Task<int> UpdateAsync(string tableName,
+        //    object entity,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return await connection.UpdateAsync(tableName: tableName,
-                    entity: entity,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return await connection.UpdateAsync(tableName: tableName,
+        //            entity: entity,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public async Task<int> UpdateAsync(string tableName,
-            object entity,
-            object whereOrPrimaryKey,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public async Task<int> UpdateAsync(string tableName,
+        //    object entity,
+        //    object whereOrPrimaryKey,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return await connection.UpdateAsync(tableName: tableName,
-                    entity: entity,
-                    whereOrPrimaryKey: whereOrPrimaryKey,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return await connection.UpdateAsync(tableName: tableName,
+        //            entity: entity,
+        //            whereOrPrimaryKey: whereOrPrimaryKey,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public async Task<int> UpdateAsync(string tableName,
-            object entity,
-            QueryField where,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="where">The query expression to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public async Task<int> UpdateAsync(string tableName,
+        //    object entity,
+        //    QueryField where,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return await connection.UpdateAsync(tableName: tableName,
-                    entity: entity,
-                    where: where,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return await connection.UpdateAsync(tableName: tableName,
+        //            entity: entity,
+        //            where: where,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public async Task<int> UpdateAsync(string tableName,
-            object entity,
-            IEnumerable<QueryField> where,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="where">The query expression to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public async Task<int> UpdateAsync(string tableName,
+        //    object entity,
+        //    IEnumerable<QueryField> where,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return await connection.UpdateAsync(tableName: tableName,
-                    entity: entity,
-                    where: where,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return await connection.UpdateAsync(tableName: tableName,
+        //            entity: entity,
+        //            where: where,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
-        /// <summary>
-        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        public async Task<int> UpdateAsync(string tableName,
-            object entity,
-            QueryGroup where,
-            string hints = null,
-			IDbTransaction transaction = null)
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        ///// </summary>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be used for update.</param>
+        ///// <param name="where">The query expression to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of affected rows during the update process..</returns>
+        //public async Task<int> UpdateAsync(string tableName,
+        //    object entity,
+        //    QueryGroup where,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return await connection.UpdateAsync(tableName: tableName,
-                    entity: entity,
-                    where: where,
-                    hints: hints,
-					commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return await connection.UpdateAsync(tableName: tableName,
+        //            entity: entity,
+        //            where: where,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
         #endregion
     }
