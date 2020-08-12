@@ -1262,16 +1262,30 @@ namespace RepoDb
         /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
         private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection,
             IDbTransaction transaction)
+            where TEntity : class =>
+            GetAndGuardPrimaryKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+
+        /// <summary>
+        /// Throws an exception if there is no defined primary key on the data entity type.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
             where TEntity : class
         {
             var property = PrimaryCache.Get<TEntity>();
             if (property == null)
             {
-                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
                 if (primary != null)
                 {
-                    var properties = PropertyCache.Get<TEntity>();
+                    var properties = PropertyCache.Get<TEntity>() ?? typeof(TEntity).GetClassProperties();
                     property = properties.FirstOrDefault(p =>
                         string.Equals(p.GetMappedName(), primary.Name, StringComparison.OrdinalIgnoreCase));
                 }

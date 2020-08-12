@@ -874,7 +874,7 @@ namespace RepoDb
         /// Inserts a new row or updates an existing row in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TResult">The target type of the result.</typeparam
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
         /// <param name="hints">The table hints to be used.</param>
