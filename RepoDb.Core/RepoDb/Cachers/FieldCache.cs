@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoDb
 {
@@ -32,11 +33,12 @@ namespace RepoDb
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Get(Type entityType)
         {
-            var key = GenerateHashCode(entityType);
             var result = (IEnumerable<Field>)null;
+            var key = GenerateHashCode(entityType);
+            var supportedGenericType = entityType.IsGenericType == false || entityType.GenericTypeArguments?.Any() == true;
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (supportedGenericType && cache.TryGetValue(key, out result) == false)
             {
                 result = entityType.AsFields();
                 cache.TryAdd(key, result);

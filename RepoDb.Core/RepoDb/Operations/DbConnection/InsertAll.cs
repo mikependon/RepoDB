@@ -18,6 +18,50 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        #region InsertAll<TEntity>(TableName)
+
+        /// <summary>
+        /// Insert multiple rows in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of inserted rows in the table.</returns>
+        public static int InsertAll<TEntity>(this IDbConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertAllInternalBase<TEntity>(connection: connection,
+                tableName: tableName,
+                entities: entities,
+                batchSize: batchSize,
+                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                skipIdentityCheck: true);
+        }
+
+        #endregion
+
         #region InsertAll<TEntity>
 
         /// <summary>
@@ -87,6 +131,50 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder,
                 skipIdentityCheck: false);
+        }
+
+        #endregion
+
+        #region InsertAll<TEntity>(TableName)
+
+        /// <summary>
+        /// Insert multiple rows in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of inserted rows in the table.</returns>
+        public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertAllAsyncInternalBase<TEntity>(connection: connection,
+                tableName: tableName,
+                entities: entities,
+                batchSize: batchSize,
+                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                skipIdentityCheck: true);
         }
 
         #endregion

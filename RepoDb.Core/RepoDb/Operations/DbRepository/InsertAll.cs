@@ -12,6 +12,57 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
+        #region InsertAll<TEntity>(TableName)
+
+        /// <summary>
+        /// Insert multiple rows in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of inserted rows in the table.</returns>
+        public int InsertAll<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.InsertAll<TEntity>(tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
         #region InsertAll<TEntity>
 
         /// <summary>
@@ -26,7 +77,7 @@ namespace RepoDb
         public int InsertAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -38,7 +89,58 @@ namespace RepoDb
                 return connection.InsertAll<TEntity>(entities: entities,
                     batchSize: batchSize,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region InsertAllAsync<TEntity>(TableName)
+
+        /// <summary>
+        /// Insert multiple rows in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The data entity objects to be inserted.</param>
+        /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of inserted rows in the table.</returns>
+        public async Task<int> InsertAllAsync<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InsertAllAsync<TEntity>(tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -71,7 +173,7 @@ namespace RepoDb
         public async Task<int> InsertAllAsync<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -83,7 +185,7 @@ namespace RepoDb
                 return await connection.InsertAllAsync<TEntity>(entities: entities,
                     batchSize: batchSize,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -119,7 +221,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -132,7 +234,7 @@ namespace RepoDb
                     fields: fields,
                     batchSize: batchSize,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -168,7 +270,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-			IDbTransaction transaction = null)
+            IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -181,7 +283,7 @@ namespace RepoDb
                     batchSize: batchSize,
                     fields: fields,
                     hints: hints,
-					commandTimeout: CommandTimeout,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
