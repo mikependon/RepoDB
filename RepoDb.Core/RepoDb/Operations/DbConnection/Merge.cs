@@ -18,6 +18,298 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        #region Merge<TEntity>(TableName)
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: null,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Field qualifier,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifiers,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static object Merge<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Expression<Func<TEntity, object>> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: null,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Field qualifier,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifiers,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static TResult Merge<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Expression<Func<TEntity, object>> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        #endregion
+
         #region Merge<TEntity>
 
         /// <summary>
@@ -26,7 +318,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-		/// <param name="hints">The table hints to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -345,6 +637,298 @@ namespace RepoDb
                     trace: trace,
                     statementBuilder: statementBuilder);
             }
+        }
+
+        #endregion
+
+        #region MergeAsync<TEntity>(TableName)
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: null,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Field qualifier,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifiers,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<object> MergeAsync<TEntity>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Expression<Func<TEntity, object>> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: null,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Field qualifier,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifier?.AsEnumerable(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            IEnumerable<Field> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: qualifiers,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new row or updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The target type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The object to be merged.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        public static Task<TResult> MergeAsync<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            Expression<Func<TEntity, object>> qualifiers,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MergeAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                qualifiers: Field.Parse<TEntity>(qualifiers),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         #endregion
