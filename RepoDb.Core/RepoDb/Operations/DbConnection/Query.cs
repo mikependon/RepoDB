@@ -25,6 +25,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -42,6 +43,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -54,10 +56,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryInternalBase<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
-                fields: FieldCache.Get<TEntity>(),
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -77,6 +79,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -94,6 +97,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             string tableName,
             Expression<Func<TEntity, bool>> where = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -108,8 +112,8 @@ namespace RepoDb
         {
             return QueryInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
-                fields: FieldCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -129,6 +133,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -146,6 +151,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             string tableName,
             QueryField where = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -160,8 +166,8 @@ namespace RepoDb
         {
             return QueryInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
-                fields: FieldCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -181,6 +187,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -198,6 +205,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -212,8 +220,8 @@ namespace RepoDb
         {
             return QueryInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
-                fields: FieldCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -233,6 +241,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -250,6 +259,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -264,8 +274,8 @@ namespace RepoDb
         {
             return QueryInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
-                fields: FieldCache.Get<TEntity>(),
                 where: where,
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -316,8 +326,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Query<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -364,8 +376,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Query<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -411,8 +425,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null) where TEntity : class
         {
-            return Query<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -459,8 +475,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Query<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -508,7 +526,9 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: where,
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -526,7 +546,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -542,7 +564,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static IEnumerable<TEntity> QueryInternal<TEntity>(this IDbConnection connection,
+            string tableName,
             QueryGroup where = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -556,9 +580,9 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryInternalBase<TEntity>(connection: connection,
-                ClassMappedNameCache.Get<TEntity>(),
-                fields: FieldCache.Get<TEntity>(),
+                tableName: tableName,
                 where: where,
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -611,7 +635,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await QueryAsyncInternalBase<TEntity>(connection: connection,
+            return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: FieldCache.Get<TEntity>(),
                 where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
@@ -663,7 +687,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await QueryAsyncInternalBase<TEntity>(connection: connection,
+            return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: FieldCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
@@ -715,7 +739,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await QueryAsyncInternalBase<TEntity>(connection: connection,
+            return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: FieldCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
@@ -767,7 +791,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await QueryAsyncInternalBase<TEntity>(connection: connection,
+            return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: FieldCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
@@ -819,7 +843,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await QueryAsyncInternalBase<TEntity>(connection: connection,
+            return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: FieldCache.Get<TEntity>(),
                 where: where,
@@ -873,8 +897,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await QueryAsync<TEntity>(connection: connection,
+            return await QueryAsyncInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -921,8 +947,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryAsync<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -969,8 +997,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryAsync<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -1016,8 +1046,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null) where TEntity : class
         {
-            return QueryAsync<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: ToQueryGroup(where),
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -1065,7 +1097,9 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsyncInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 where: where,
+                fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -1083,7 +1117,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1099,7 +1135,9 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
+            string tableName,
             QueryGroup where = null,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1113,8 +1151,8 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsyncInternalBase<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                fields: FieldCache.Get<TEntity>(),
+                tableName: tableName,
+                fields: fields ?? FieldCache.Get<TEntity>(),
                 where: where,
                 orderBy: orderBy,
                 top: top,

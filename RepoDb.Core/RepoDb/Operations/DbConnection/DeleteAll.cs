@@ -49,8 +49,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var primaryKeys = ExtractPropertyValues<TEntity>(entities, primary).AsList();
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var primaryKeys = ExtractPropertyValues<TEntity>(entities, qualifier).AsList();
 
             return DeleteAllInternal<TEntity>(connection: connection,
                 tableName: tableName,
@@ -87,8 +87,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var primaryKeys = ExtractPropertyValues<TEntity>(entities, primary).AsList();
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var primaryKeys = ExtractPropertyValues<TEntity>(entities, qualifier).AsList();
 
             return DeleteAllInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -154,7 +154,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;
@@ -176,7 +176,7 @@ namespace RepoDb
                     {
                         break;
                     }
-                    var where = new QueryField(primary.GetMappedName(), Operation.In, keys.AsList());
+                    var where = new QueryField(qualifier.GetMappedName(), Operation.In, keys.AsList());
                     deletedRows += DeleteInternal(connection: connection,
                         tableName: tableName,
                         where: new QueryGroup(where),
@@ -234,8 +234,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var primaryKeys = ExtractPropertyValues<TEntity>(entities, primary).AsList();
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var primaryKeys = ExtractPropertyValues<TEntity>(entities, qualifier).AsList();
 
             return DeleteAllAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
@@ -272,8 +272,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            var primaryKeys = ExtractPropertyValues<TEntity>(entities, primary).AsList();
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var primaryKeys = ExtractPropertyValues<TEntity>(entities, qualifier).AsList();
 
             return DeleteAllAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -339,7 +339,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;
@@ -361,7 +361,7 @@ namespace RepoDb
                     {
                         break;
                     }
-                    var field = new QueryField(primary.GetMappedName(), Operation.In, keys?.AsList());
+                    var field = new QueryField(qualifier.GetMappedName(), Operation.In, keys?.AsList());
                     deletedRows += await DeleteAsync(connection: connection,
                         tableName: tableName,
                         where: new QueryGroup(field),
@@ -578,7 +578,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var primary = GetAndGuardPrimaryKey(connection, tableName, transaction);
+            var primary = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
@@ -688,7 +688,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var primary = GetAndGuardPrimaryKey(connection, tableName, transaction);
+            var primary = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;

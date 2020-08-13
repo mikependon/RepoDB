@@ -17,39 +17,41 @@ namespace RepoDb
     {
         #region Delete<TEntity>(TableName)
 
-        /// <summary>
-        /// Deletes an existing row from the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The data entity object to be deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection,
-            string tableName,
-            TEntity entity,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return DeleteInternal(connection: connection,
-                tableName,
-                where: ToQueryGroup<TEntity>(primary, entity),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
+        // TODO: Reenable this, add a checking if it is class for 'whereOrPrimaryKey'
+
+        ///// <summary>
+        ///// Deletes an existing row from the table.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The data entity object to be deleted.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The number of rows that has been deleted from the table.</returns>
+        //public static int Delete<TEntity>(this IDbConnection connection,
+        //    string tableName,
+        //    TEntity entity,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //    where TEntity : class
+        //{
+        //    var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, tableName, transaction);
+        //    return DeleteInternal(connection: connection,
+        //        tableName,
+        //        where: ToQueryGroup<TEntity>(qualifier, entity),
+        //        hints: hints,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction,
+        //        trace: trace,
+        //        statementBuilder: statementBuilder);
+        //}
 
         #endregion
 
@@ -76,9 +78,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primary, entity),
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            return DeleteInternal<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(qualifier, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -107,8 +109,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return Delete<TEntity>(connection: connection,
+            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            return DeleteInternal<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -138,7 +140,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Delete<TEntity>(connection: connection,
+            return DeleteInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -168,7 +170,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Delete<TEntity>(connection: connection,
+            return DeleteInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -176,6 +178,8 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
+
+        // TODO: Introduce the Array, List, IEnumerable
 
         /// <summary>
         /// Delete the rows from the table.
@@ -198,7 +202,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Delete<TEntity>(connection: connection,
+            return DeleteInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -286,39 +290,39 @@ namespace RepoDb
 
         #region DeleteAsync<TEntity>(TableName)
 
-        /// <summary>
-        /// Deletes an existing row from the table in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The data entity object to be deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            string tableName,
-            TEntity entity,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return DeleteAsyncInternal(connection: connection,
-                tableName,
-                where: ToQueryGroup<TEntity>(primary, entity),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
+        ///// <summary>
+        ///// Deletes an existing row from the table in an asynchronous way.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The data entity object to be deleted.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The number of rows that has been deleted from the table.</returns>
+        //public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        //    string tableName,
+        //    TEntity entity,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //    where TEntity : class
+        //{
+        //    var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+        //    return DeleteAsyncInternal(connection: connection,
+        //        tableName,
+        //        where: ToQueryGroup<TEntity>(qualifier, entity),
+        //        hints: hints,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction,
+        //        trace: trace,
+        //        statementBuilder: statementBuilder);
+        //}
 
         #endregion
 
@@ -345,9 +349,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primary, entity),
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            return DeleteAsyncInternal<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(qualifier, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -376,8 +380,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return await DeleteAsync<TEntity>(connection: connection,
+            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            return await DeleteAsyncInternal<TEntity>(connection: connection,
                 where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -407,7 +411,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return DeleteAsync<TEntity>(connection: connection,
+            return DeleteAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -437,7 +441,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return DeleteAsync<TEntity>(connection: connection,
+            return DeleteAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -467,7 +471,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return DeleteAsync<TEntity>(connection: connection,
+            return DeleteAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,

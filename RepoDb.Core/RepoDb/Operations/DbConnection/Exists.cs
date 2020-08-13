@@ -38,7 +38,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Exists<TEntity>(connection: connection,
+            return ExistsInternal<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -68,7 +68,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Exists<TEntity>(connection: connection,
+            return ExistsInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -98,7 +98,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Exists<TEntity>(connection: connection,
+            return ExistsInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -128,7 +128,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Exists<TEntity>(connection: connection,
+            return ExistsInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -237,7 +237,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return await ExistsAsync<TEntity>(connection: connection,
+            return await ExistsAsyncInternal<TEntity>(connection: connection,
                 where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -267,7 +267,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return ExistsAsync<TEntity>(connection: connection,
+            return ExistsAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -297,7 +297,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return ExistsAsync<TEntity>(connection: connection,
+            return ExistsAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -327,7 +327,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return ExistsAsync<TEntity>(connection: connection,
+            return ExistsAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -436,7 +436,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Exists(connection: connection,
+            return ExistsInternal(connection: connection,
                 tableName: tableName,
                 where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 hints: hints,
@@ -467,7 +467,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Exists(connection: connection,
+            return ExistsInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -498,7 +498,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Exists(connection: connection,
+            return ExistsInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -609,7 +609,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return await ExistsAsync(connection: connection,
+            return await ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: await WhereOrPrimaryKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
                 hints: hints,
@@ -640,7 +640,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return ExistsAsync(connection: connection,
+            return ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -671,7 +671,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return ExistsAsync(connection: connection,
+            return ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -759,7 +759,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExistserInternalBase
+        #region ExistsInternalBase
 
         /// <summary>
         /// Check whether the rows are existing in the table.

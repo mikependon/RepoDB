@@ -9521,18 +9521,18 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnDbRepositoryMergeAllIfThereIsNoPrimaryKey()
-        {
-            // Setup
-            var tables = Helper.CreateDynamicIdentityTables(10);
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnDbRepositoryMergeAllIfThereIsNoPrimaryKey()
+        //{
+        //    // Setup
+        //    var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
-            }
-        }
+        //    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+        //    {
+        //        // Act
+        //        repository.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+        //    }
+        //}
 
         #endregion
 
@@ -9824,18 +9824,18 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDbRepositoryMergeAllAsyncIfThereIsNoPrimaryKey()
-        {
-            // Setup
-            var tables = Helper.CreateDynamicIdentityTables(10);
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnDbRepositoryMergeAllAsyncIfThereIsNoPrimaryKey()
+        //{
+        //    // Setup
+        //    var tables = Helper.CreateDynamicIdentityTables(10);
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
-            }
-        }
+        //    using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+        //    {
+        //        // Act
+        //        repository.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+        //    }
+        //}
 
         #endregion
 

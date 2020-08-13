@@ -80,7 +80,7 @@ namespace RepoDb
             return InsertInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>()  ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -217,7 +217,7 @@ namespace RepoDb
             return InsertAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>()  ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -252,7 +252,7 @@ namespace RepoDb
             return InsertAsyncInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>()  ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -490,9 +490,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAsync<object>(connection: connection,
+            return InsertAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
+                fields: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -645,7 +646,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     insertRequest = new InsertRequest(tableName,
                         connection,
@@ -818,7 +819,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     insertRequest = new InsertRequest(tableName,
                         connection,

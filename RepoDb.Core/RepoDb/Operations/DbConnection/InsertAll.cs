@@ -51,7 +51,7 @@ namespace RepoDb
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -168,7 +168,7 @@ namespace RepoDb
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -254,161 +254,161 @@ namespace RepoDb
 
         #region InsertAll(TableName)
 
-        /// <summary>
-        /// Insert multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows in the table.</returns>
-        public static int InsertAll(this IDbConnection connection,
-            string tableName,
-            IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return InsertAllInternal(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: fields,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
+        ///// <summary>
+        ///// Insert multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        ///// </summary>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entities">The list of dynamic objects to be inserted.</param>
+        ///// <param name="batchSize">The batch size of the insertion.</param>
+        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The number of inserted rows in the table.</returns>
+        //public static int InsertAll(this IDbConnection connection,
+        //    string tableName,
+        //    IEnumerable<object> entities,
+        //    int batchSize = Constant.DefaultBatchOperationSize,
+        //    IEnumerable<Field> fields = null,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //{
+        //    return InsertAllInternal(connection: connection,
+        //        tableName: tableName,
+        //        entities: entities,
+        //        batchSize: batchSize,
+        //        fields: fields,
+        //        hints: hints,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction,
+        //        trace: trace,
+        //        statementBuilder: statementBuilder);
+        //}
 
-        /// <summary>
-        /// Insert multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows in the table.</returns>
-        internal static int InsertAllInternal(this IDbConnection connection,
-            string tableName,
-            IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Return the result
-            return InsertAllInternalBase<object>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: fields,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
-        }
+        ///// <summary>
+        ///// Insert multiple rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        ///// </summary>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entities">The list of dynamic objects to be inserted.</param>
+        ///// <param name="batchSize">The batch size of the insertion.</param>
+        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The number of inserted rows in the table.</returns>
+        //internal static int InsertAllInternal(this IDbConnection connection,
+        //    string tableName,
+        //    IEnumerable<object> entities,
+        //    int batchSize = Constant.DefaultBatchOperationSize,
+        //    IEnumerable<Field> fields = null,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //{
+        //    // Return the result
+        //    return InsertAllInternalBase<object>(connection: connection,
+        //        tableName: tableName,
+        //        entities: entities,
+        //        batchSize: batchSize,
+        //        fields: fields,
+        //        hints: hints,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction,
+        //        trace: trace,
+        //        statementBuilder: statementBuilder,
+        //        skipIdentityCheck: true);
+        //}
 
         #endregion
 
         #region InsertAllAsync(TableName)
 
-        /// <summary>
-        /// Insert multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows in the table.</returns>
-        public static Task<int> InsertAllAsync(this IDbConnection connection,
-            string tableName,
-            IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return InsertAllAsyncInternal(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: fields,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
+        ///// <summary>
+        ///// Insert multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        ///// </summary>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entities">The list of dynamic objects to be inserted.</param>
+        ///// <param name="batchSize">The batch size of the insertion.</param>
+        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The number of inserted rows in the table.</returns>
+        //public static Task<int> InsertAllAsync(this IDbConnection connection,
+        //    string tableName,
+        //    IEnumerable<object> entities,
+        //    int batchSize = Constant.DefaultBatchOperationSize,
+        //    IEnumerable<Field> fields = null,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //{
+        //    return InsertAllAsyncInternal(connection: connection,
+        //        tableName: tableName,
+        //        entities: entities,
+        //        batchSize: batchSize,
+        //        fields: fields,
+        //        hints: hints,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction,
+        //        trace: trace,
+        //        statementBuilder: statementBuilder);
+        //}
 
-        /// <summary>
-        /// Insert multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of dynamic objects to be inserted.</param>
-        /// <param name="batchSize">The batch size of the insertion.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of inserted rows in the table.</returns>
-        internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
-            string tableName,
-            IEnumerable<object> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Return the result
-            return InsertAllAsyncInternalBase<object>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: fields,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
-        }
+        ///// <summary>
+        ///// Insert multiple rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        ///// </summary>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entities">The list of dynamic objects to be inserted.</param>
+        ///// <param name="batchSize">The batch size of the insertion.</param>
+        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The number of inserted rows in the table.</returns>
+        //internal static Task<int> InsertAllAsyncInternal(this IDbConnection connection,
+        //    string tableName,
+        //    IEnumerable<object> entities,
+        //    int batchSize = Constant.DefaultBatchOperationSize,
+        //    IEnumerable<Field> fields = null,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //{
+        //    // Return the result
+        //    return InsertAllAsyncInternalBase<object>(connection: connection,
+        //        tableName: tableName,
+        //        entities: entities,
+        //        batchSize: batchSize,
+        //        fields: fields,
+        //        hints: hints,
+        //        commandTimeout: commandTimeout,
+        //        transaction: transaction,
+        //        trace: trace,
+        //        statementBuilder: statementBuilder,
+        //        skipIdentityCheck: true);
+        //}
 
         #endregion
 
@@ -454,11 +454,6 @@ namespace RepoDb
 
             // Get the fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            if (fields?.Any() != true)
-            {
-                var first = entities?.First();
-                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
-            }
 
             // Get the function
             var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
@@ -522,7 +517,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     if (batchSizeValue > 1)
                     {
@@ -548,7 +543,7 @@ namespace RepoDb
                 {
                     if (batchSizeValue > 1)
                     {
-                        insertAllRequest = new InsertAllRequest(typeof(TEntity),
+                        insertAllRequest = new InsertAllRequest(tableName,
                             connection,
                             transaction,
                             fields,
@@ -558,7 +553,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        insertRequest = new InsertRequest(typeof(TEntity),
+                        insertRequest = new InsertRequest(tableName,
                             connection,
                             transaction,
                             fields,
@@ -581,10 +576,7 @@ namespace RepoDb
             });
 
             // Get the context
-            var context = (InsertAllExecutionContext<TEntity>)null;
-
-            // Identify the number of entities (performance), get an execution context from cache
-            context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context  = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -635,7 +627,7 @@ namespace RepoDb
                         foreach (var entity in entities.AsList())
                         {
                             // Set the values
-                            context.SingleDataEntityParametersSetterFunc(command, entity);
+                            context.SingleDataEntityParametersSetterFunc?.Invoke(command, entity);
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -687,11 +679,11 @@ namespace RepoDb
                             // Set the values
                             if (batchItems?.Count == 1)
                             {
-                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                                context.SingleDataEntityParametersSetterFunc?.Invoke(command, batchItems.First());
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
                             }
 
                             // Prepare the command
@@ -808,11 +800,6 @@ namespace RepoDb
 
             // Get the fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-            if (fields?.Any() != true)
-            {
-                var first = entities?.First();
-                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
-            }
 
             // Get the function
             var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
@@ -876,7 +863,7 @@ namespace RepoDb
                 var insertRequest = (InsertRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     if (batchSizeValue > 1)
                     {
@@ -935,10 +922,7 @@ namespace RepoDb
             });
 
             // Get the context
-            var context = (InsertAllExecutionContext<TEntity>)null;
-
-            // Identify the number of entities (performance), get an execution context from cache
-            context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -989,7 +973,7 @@ namespace RepoDb
                         foreach (var entity in entities.AsList())
                         {
                             // Set the values
-                            context.SingleDataEntityParametersSetterFunc(command, entity);
+                            context.SingleDataEntityParametersSetterFunc?.Invoke(command, entity);
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -1041,11 +1025,11 @@ namespace RepoDb
                             // Set the values
                             if (batchItems?.Count == 1)
                             {
-                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                                context.SingleDataEntityParametersSetterFunc?.Invoke(command, batchItems.First());
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
                             }
 
                             // Prepare the command

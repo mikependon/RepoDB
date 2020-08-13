@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -90,7 +91,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateAll<TEntity>(connection: connection,
+            return UpdateAllInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -252,7 +253,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateAll<TEntity>(connection: connection,
+            return UpdateAllInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -372,14 +373,14 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-                qualifiers = primary.AsField().AsEnumerable();
+                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = qualifier.AsField().AsEnumerable();
             }
             return UpdateAllInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 qualifiers: qualifiers,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -743,14 +744,14 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-                qualifiers = primary.AsField().AsEnumerable();
+                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = qualifier.AsField().AsEnumerable();
             }
             return UpdateAllAsyncInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 qualifiers: qualifiers,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -1125,26 +1126,27 @@ namespace RepoDb
             // Validate the batch size
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
-            // Get the fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            if (fields?.Any() != true)
-            {
-                var first = entities?.First();
-                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
             // Get the function
             var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
             {
                 // Variables needed
                 var inputFields = new List<DbField>();
+
+                // Get the fields
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                if (fields?.Any() != true)
+                {
+                    var first = entities?.First();
+                    fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
+                }
+
+                // Check the qualifiers
+                if (qualifiers?.Any() != true)
+                {
+                    var qualifier = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true) ??
+                        dbFields?.FirstOrDefault(dbField => dbField.IsIdentity == true);
+                    qualifiers = qualifier?.AsField().AsEnumerable();
+                }
 
                 // Filter the actual properties for input fields
                 inputFields = dbFields?
@@ -1178,8 +1180,7 @@ namespace RepoDb
                 // Identity the requests
                 var updateAllRequest = (UpdateAllRequest)null;
 
-                // Variables
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     updateAllRequest = new UpdateAllRequest(tableName,
                         connection,
@@ -1265,7 +1266,7 @@ namespace RepoDb
                         foreach (var entity in entities.AsList())
                         {
                             // Set the values
-                            context.SingleDataEntityParametersSetterFunc(command, entity);
+                            context.SingleDataEntityParametersSetterFunc?.Invoke(command, entity);
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -1302,11 +1303,11 @@ namespace RepoDb
                             // Set the values
                             if (batchItems?.Count == 1)
                             {
-                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                                context.SingleDataEntityParametersSetterFunc?.Invoke(command, batchItems.First());
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
                             }
 
                             // Prepare the command
@@ -1398,95 +1399,14 @@ namespace RepoDb
             // Validate the batch size
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
-            // Get the fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-            if (fields?.Any() != true)
-            {
-                var first = entities?.First();
-                fields = first != null ? Field.Parse(first) : dbFields?.AsFields();
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
-            // Get the function
-            var callback = new Func<int, UpdateAllExecutionContext<TEntity>>((int batchSizeValue) =>
-            {
-                // Variables needed
-                var inputFields = new List<DbField>();
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the context
-                var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-
-                // Identity which objects to set
-                if (batchSizeValue <= 1)
-                {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".UpdateAll"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting);
-                }
-                else
-                {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".UpdateAll"),
-                        inputFields?.AsList(),
-                        null,
-                        batchSizeValue,
-                        dbSetting);
-                }
-
-                // Identity the requests
-                var updateAllRequest = (UpdateAllRequest)null;
-
-                // Variables
-                if (typeof(TEntity) == StaticType.Object)
-                {
-                    updateAllRequest = new UpdateAllRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        batchSizeValue,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    updateAllRequest = new UpdateAllRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        batchSizeValue,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new UpdateAllExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetUpdateAllText(updateAllRequest),
-                    InputFields = inputFields,
-                    SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc
-                };
-            });
-
             // Get the context
-            var context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context = UpdateAllExecutionContextProvider.UpdateAllExecutionContext<TEntity>(connection,
+                tableName,
+                qualifiers,
+                batchSize,
+                fields,
+                hints,
+                transaction);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1538,7 +1458,7 @@ namespace RepoDb
                         foreach (var entity in entities.AsList())
                         {
                             // Set the values
-                            context.SingleDataEntityParametersSetterFunc(command, entity);
+                            context.SingleDataEntityParametersSetterFunc?.Invoke(command, entity);
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -1566,7 +1486,13 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = UpdateAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
+                                context = UpdateAllExecutionContextProvider.UpdateAllExecutionContext<TEntity>(connection,
+                                    tableName,
+                                    qualifiers,
+                                    batchItems.Count,
+                                    fields,
+                                    hints,
+                                    transaction);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -1575,11 +1501,11 @@ namespace RepoDb
                             // Set the values
                             if (batchItems?.Count == 1)
                             {
-                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                                context.SingleDataEntityParametersSetterFunc?.Invoke(command, batchItems.First());
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
                             }
 
                             // Prepare the command

@@ -15,46 +15,48 @@ namespace RepoDb
     {
         #region Delete<TEntity>(TableName)
 
-        /// <summary>
-        /// Deletes an existing row from the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The data entity object to be deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int Delete<TEntity>(string tableName,
-            TEntity entity,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        // TODO: Reenable this, add a checking if it is class for 'whereOrPrimaryKey'
 
-            try
-            {
-                // Call the method
-                return connection.Delete<TEntity>(tableName: tableName,
-                    entity: entity,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        ///// <summary>
+        ///// Deletes an existing row from the table.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The data entity object to be deleted.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of rows that has been deleted from the table.</returns>
+        //public int Delete<TEntity>(string tableName,
+        //    TEntity entity,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //    where TEntity : class
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
+
+        //    try
+        //    {
+        //        // Call the method
+        //        return connection.Delete<TEntity>(tableName: tableName,
+        //            entity: entity,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
         #endregion
 
@@ -292,46 +294,46 @@ namespace RepoDb
 
         #region DeleteAsync<TEntity>(TableName)
 
-        /// <summary>
-        /// Delete an existing row from the table in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The data entity object to be deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAsync<TEntity>(string tableName,
-            TEntity entity,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
+        ///// <summary>
+        ///// Delete an existing row from the table in an asynchronous way.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The data entity object to be deleted.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <returns>The number of rows that has been deleted from the table.</returns>
+        //public async Task<int> DeleteAsync<TEntity>(string tableName,
+        //    TEntity entity,
+        //    string hints = null,
+        //    IDbTransaction transaction = null)
+        //    where TEntity : class
+        //{
+        //    // Create a connection
+        //    var connection = (transaction?.Connection ?? CreateConnection());
 
-            try
-            {
-                // Call the method
-                return await connection.DeleteAsync<TEntity>(tableName: tableName,
-                    entity: entity,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
+        //    try
+        //    {
+        //        // Call the method
+        //        return await connection.DeleteAsync<TEntity>(tableName: tableName,
+        //            entity: entity,
+        //            hints: hints,
+        //            commandTimeout: CommandTimeout,
+        //            transaction: transaction,
+        //            trace: Trace,
+        //            statementBuilder: StatementBuilder);
+        //    }
+        //    catch
+        //    {
+        //        // Throw back the error
+        //        throw;
+        //    }
+        //    finally
+        //    {
+        //        // Dispose the connection
+        //        DisposeConnectionForPerCall(connection, transaction);
+        //    }
+        //}
 
         #endregion
 

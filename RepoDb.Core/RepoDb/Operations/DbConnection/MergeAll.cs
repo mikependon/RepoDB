@@ -369,8 +369,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-                qualifiers = primary.AsField().AsEnumerable();
+                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = qualifier.AsField().AsEnumerable();
             }
 
             // Variables needed
@@ -384,7 +384,7 @@ namespace RepoDb
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
-                    fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                     hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -757,8 +757,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-                qualifiers = primary.AsField().AsEnumerable();
+                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = qualifier.AsField().AsEnumerable();
             }
 
             // Variables needed
@@ -772,7 +772,7 @@ namespace RepoDb
                     entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
-                    fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(entities?.FirstOrDefault()),
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                     hints: hints,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -964,7 +964,7 @@ namespace RepoDb
         //        }
 
         //        // Set the primary as the qualifier
-        //        qualifiers = primary.AsField().AsEnumerable();
+        //        qualifiers = qualifier.AsField().AsEnumerable();
         //    }
 
         //    // Variables needed
@@ -1170,7 +1170,7 @@ namespace RepoDb
         //        }
 
         //        // Set the primary as the qualifier
-        //        qualifiers = primary.AsField().AsEnumerable();
+        //        qualifiers = qualifier.AsField().AsEnumerable();
         //    }
 
         //    // Variables needed
@@ -1264,7 +1264,7 @@ namespace RepoDb
                     identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>()?.FirstOrDefault(field =>
                             string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -1281,7 +1281,7 @@ namespace RepoDb
                 var identitySetterFunc = (Action<TEntity, object>)null;
 
                 // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null)
+                if (skipIdentityCheck == false && identity != null && typeof(TEntity).IsClassType())
                 {
                     identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
                 }
@@ -1310,7 +1310,7 @@ namespace RepoDb
                 var mergeRequest = (MergeRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     if (batchSizeValue > 1)
                     {
@@ -1424,7 +1424,7 @@ namespace RepoDb
                         foreach (var entity in entities.AsList())
                         {
                             // Set the values
-                            context.SingleDataEntityParametersSetterFunc(command, entity);
+                            context.SingleDataEntityParametersSetterFunc?.Invoke(command, entity);
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -1471,11 +1471,11 @@ namespace RepoDb
                             // Set the values
                             if (batchItems?.Count == 1)
                             {
-                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                                context.SingleDataEntityParametersSetterFunc?.Invoke(command, batchItems.First());
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
                             }
 
                             // Prepare the command
@@ -1779,7 +1779,7 @@ namespace RepoDb
                     identity = IdentityCache.Get<TEntity>()?.AsField();
                     if (identity == null && identityDbField != null)
                     {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
+                        identity = FieldCache.Get<TEntity>()?.FirstOrDefault(field =>
                             string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
                     }
                 }
@@ -1796,7 +1796,7 @@ namespace RepoDb
                 var identitySetterFunc = (Action<TEntity, object>)null;
 
                 // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null)
+                if (skipIdentityCheck == false && identity != null && typeof(TEntity).IsClassType())
                 {
                     identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
                 }
@@ -1825,7 +1825,7 @@ namespace RepoDb
                 var mergeRequest = (MergeRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     if (batchSizeValue > 1)
                     {
@@ -1939,7 +1939,7 @@ namespace RepoDb
                         foreach (var entity in entities.AsList())
                         {
                             // Set the values
-                            context.SingleDataEntityParametersSetterFunc(command, entity);
+                            context.SingleDataEntityParametersSetterFunc?.Invoke(command, entity);
 
                             // Prepare the command
                             if (dbSetting.IsPreparable)
@@ -1986,11 +1986,11 @@ namespace RepoDb
                             // Set the values
                             if (batchItems?.Count == 1)
                             {
-                                context.SingleDataEntityParametersSetterFunc(command, batchItems.First());
+                                context.SingleDataEntityParametersSetterFunc?.Invoke(command, batchItems.First());
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
                             }
 
                             // Prepare the command

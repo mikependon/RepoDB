@@ -38,7 +38,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return CountInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -68,7 +68,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return CountInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -98,7 +98,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return CountInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -128,7 +128,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Count<TEntity>(connection: connection,
+            return CountInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -237,7 +237,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return CountAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -267,7 +267,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return CountAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -297,7 +297,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return CountAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -327,7 +327,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return CountAsync<TEntity>(connection: connection,
+            return CountAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -436,7 +436,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return CountInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -467,7 +467,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return CountInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -498,7 +498,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Count(connection: connection,
+            return CountInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -609,7 +609,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return CountAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -640,7 +640,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return CountAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -671,7 +671,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return CountAsync(connection: connection,
+            return CountAsyncInternal(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 hints: hints,

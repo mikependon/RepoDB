@@ -41,7 +41,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
+            return MinInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -74,7 +74,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
+            return MinInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -107,7 +107,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
+            return MinInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -140,7 +140,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
+            return MinInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -206,8 +206,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
-                field: field,
+            return MinInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -239,8 +239,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
-                field: field,
+            return MinInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -272,8 +272,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
-                field: field,
+            return MinInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -305,8 +305,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Min<TEntity>(connection: connection,
-                field: field,
+            return MinInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -423,7 +423,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
+            return MinAsyncInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -456,7 +456,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
+            return MinAsyncInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -489,7 +489,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
+            return MinAsyncInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -522,7 +522,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
+            return MinAsyncInternal<TEntity>(connection: connection,
                 field: field,
                 where: ToQueryGroup(where),
                 hints: hints,
@@ -588,8 +588,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
-                field: field,
+            return MinAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -621,8 +621,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
-                field: field,
+            return MinAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -654,8 +654,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
-                field: field,
+            return MinAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -687,8 +687,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAsync<TEntity>(connection: connection,
-                field: field,
+            return MinAsyncInternal<TEntity>(connection: connection,
+                field: Field.Parse<TEntity>(field).First(),
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -805,7 +805,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Min(connection: connection,
+            return MinInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -839,7 +839,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Min(connection: connection,
+            return MinInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -873,7 +873,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Min(connection: connection,
+            return MinInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -993,7 +993,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinAsync(connection: connection,
+            return MinAsyncInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -1027,7 +1027,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinAsync(connection: connection,
+            return MinAsyncInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),
@@ -1061,7 +1061,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinAsync(connection: connection,
+            return MinAsyncInternal(connection: connection,
                 tableName: tableName,
                 field: field,
                 where: ToQueryGroup(where),

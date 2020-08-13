@@ -21,10 +21,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Get<TEntity>()
-            where TEntity : class
-        {
-            return Get(typeof(TEntity));
-        }
+            where TEntity : class =>
+            Get(typeof(TEntity));
 
         /// <summary>
         /// Gets the cached list of <see cref="Field"/> objects of the data entity.
@@ -33,12 +31,17 @@ namespace RepoDb
         /// <returns>The cached list <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Get(Type entityType)
         {
+            if (entityType.IsClassType() == false)
+            {
+                return null;
+            }
+
+            // Variables
             var result = (IEnumerable<Field>)null;
             var key = GenerateHashCode(entityType);
-            var supportedGenericType = entityType.IsGenericType == false || entityType.GenericTypeArguments?.Any() == true;
 
             // Try get the value
-            if (supportedGenericType && cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out result) == false)
             {
                 result = entityType.AsFields();
                 cache.TryAdd(key, result);

@@ -6915,8 +6915,8 @@ namespace RepoDb.UnitTests.Interfaces
                 new[]
                 {
                     new StatementBuilderEntityForCrossCall { Name = "Name1" },
-                    new StatementBuilderEntityForCrossCall { Name = "Name2" },
-                    new StatementBuilderEntityForCrossCall { Name = "Name3" }
+                    //new StatementBuilderEntityForCrossCall { Name = "Name2" },
+                    //new StatementBuilderEntityForCrossCall { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 statementBuilder: statementBuilder.Object).Wait();

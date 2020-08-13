@@ -333,9 +333,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Merge<TEntity>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -366,7 +366,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Merge<TEntity>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -464,9 +464,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Merge<TEntity, TResult>(connection: connection,
+            return MergeInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -498,7 +498,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Merge<TEntity, TResult>(connection: connection,
+            return MergeInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -603,8 +603,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-                qualifiers = primary.AsField().AsEnumerable();
+                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+                qualifiers = qualifier.AsField().AsEnumerable();
             }
 
             // Variables needed
@@ -956,9 +956,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsync<TEntity>(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -989,7 +989,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsync<TEntity, object>(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -1087,9 +1087,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsync<TEntity, TResult>(connection: connection,
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1121,7 +1121,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsync<TEntity, TResult>(connection: connection,
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -1226,8 +1226,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-                qualifiers = primary.AsField().AsEnumerable();
+                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+                qualifiers = qualifier.AsField().AsEnumerable();
             }
 
             // Variables needed
@@ -1287,10 +1287,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Merge(connection: connection,
+            return MergeInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1321,7 +1321,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Merge(connection: connection,
+            return MergeInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1388,10 +1388,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Merge<TResult>(connection: connection,
+            return MergeInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1423,7 +1423,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return Merge<TResult>(connection: connection,
+            return MergeInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1550,10 +1550,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsync(connection: connection,
+            return MergeAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1584,7 +1584,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsync(connection: connection,
+            return MergeAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1651,10 +1651,10 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsync<TResult>(connection: connection,
+            return MergeAsyncInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                qualifier: null,
+                qualifiers: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1686,7 +1686,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsync<TResult>(connection: connection,
+            return MergeAsyncInternal<TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1880,7 +1880,7 @@ namespace RepoDb
                 var mergeRequest = (MergeRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     mergeRequest = new MergeRequest(tableName,
                         connection,
@@ -2246,7 +2246,7 @@ namespace RepoDb
                 var mergeRequest = (MergeRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     mergeRequest = new MergeRequest(tableName,
                         connection,

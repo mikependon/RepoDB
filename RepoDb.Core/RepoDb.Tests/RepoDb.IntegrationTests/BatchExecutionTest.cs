@@ -64,7 +64,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                         connection.UpdateAll(identityTables);
                         connection.UpdateAllAsync(identityTables).Wait();
                     }
-                    catch
+                    catch (System.Exception ex)
                     {
                         hasError = true;
                         break;

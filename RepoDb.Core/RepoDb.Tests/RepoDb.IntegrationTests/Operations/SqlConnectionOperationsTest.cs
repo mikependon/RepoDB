@@ -3688,6 +3688,15 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionDeleteViaTableNameIfThereIsNoKeyField()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.Delete(ClassMappedNameCache.Get<NonKeyedTable>(), 1);
+            }
+        }
+
         #endregion
 
         #region DeleteAsync(TableName)
@@ -3828,6 +3837,15 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(10, result);
                 Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionDeleteAsyncViaTableNameIfThereIsNoKeyField()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.DeleteAsync(ClassMappedNameCache.Get<NonKeyedTable>(), 1).Wait();
             }
         }
 
@@ -8363,7 +8381,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionMergeViaTableNameIfThereIsNoPrimaryKey()
+        public void ThrowExceptionOnSqlConnectionMergeViaTableNameIfThereIsNoKeyField()
         {
             // Setup
             var item = Helper.CreateDynamicIdentityTable();
@@ -8729,7 +8747,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionMergeAsyncViaTableNameIfThereIsNoPrimaryKey()
+        public void ThrowExceptionOnSqlConnectionMergeAsyncViaTableNameIfThereIsNoKeyField()
         {
             // Setup
             var item = Helper.CreateDynamicIdentityTable();
@@ -9836,16 +9854,42 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoPrimaryKey()
+        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllIfTheKeyFieldIsNotPresent()
         {
             // Setup
-            var tables = Helper.CreateDynamicIdentityTables(10);
+            var tables = Helper.CreateDynamicIdentityTablesWithoutIdentity(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoKeyField()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonKeyedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllIfThereIsNoKeyFieldAtTheTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonKeyedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
             }
         }
 
@@ -10164,16 +10208,42 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoPrimaryKey()
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfTheKeyFieldIsNotPresent()
         {
             // Setup
-            var tables = Helper.CreateDynamicIdentityTables(10);
+            var tables = Helper.CreateDynamicIdentityTablesWithoutIdentity(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionAsyncMergeAllIfThereIsNoKeyField()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonKeyedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoKeyFieldAtTheTable()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicNonKeyedTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables).Wait();
             }
         }
 
@@ -13389,13 +13459,13 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionQueryViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionQueryViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                connection.Query(ClassMappedNameCache.Get<NonKeyedTable>(),
                     1);
             }
         }
@@ -13853,12 +13923,12 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryAsyncViaTableNameViaPrimaryKeyIfThePrimaryKeyIsNotDefinedFromTheDatabase()
+        public void ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
                     1).Wait();
             }
         }
@@ -17376,8 +17446,8 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThePrimaryKeyIsNotFound()
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -17684,7 +17754,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThePrimaryKeyIsNotFound()
+        public void ThrowExceptionOnSqlConnectionUpdateAsyncViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {

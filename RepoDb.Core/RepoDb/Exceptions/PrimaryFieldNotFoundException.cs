@@ -3,8 +3,7 @@
 namespace RepoDb.Exceptions
 {
     /// <summary>
-    /// An exception that is being thrown if the validation for primary key has been called and the primary key is not
-    /// found from the data entity.
+    /// An exception that is being thrown if the primary key is not found from the data entity.
     /// </summary>
     public class PrimaryFieldNotFoundException : Exception
     {

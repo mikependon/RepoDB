@@ -11,6 +11,14 @@ namespace RepoDb.Extensions
     public static class TypeExtension
     {
         /// <summary>
+        /// Checks whether the current type is a class.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>Returns true if the current type is a class.</returns>
+        public static bool IsClassType(this Type type) =>
+            type.IsClass && type != StaticType.Object && type != StaticType.String && type.IsGenericType == false;
+
+        /// <summary>
         /// Checks whether the current type is wrapped within <see cref="Nullable{T}"/> object.
         /// </summary>
         /// <param name="type">The current type.</param>
@@ -45,7 +53,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type to check.</param>
         /// <returns>The underlying type or the current type.</returns>
         public static Type GetUnderlyingType(this Type type) =>
-            type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
+            type != null ? (Nullable.GetUnderlyingType(type) ?? type) : null;
 
         /// <summary>
         /// Returns the property of the type based on the mappings equality.

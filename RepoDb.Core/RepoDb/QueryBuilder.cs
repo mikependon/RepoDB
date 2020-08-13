@@ -42,7 +42,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public string GetString()
         {
-            return stringBuilder.ToString(1, stringBuilder.Length - 1);
+            return stringBuilder.Length > 0 ? stringBuilder.ToString(1, stringBuilder.Length - 1) : null;
         }
 
         /// <summary>

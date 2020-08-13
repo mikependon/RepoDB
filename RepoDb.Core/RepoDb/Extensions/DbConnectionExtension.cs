@@ -1189,10 +1189,24 @@ namespace RepoDb
         #region Helper Methods
 
         /// <summary>
-        /// Added the <see cref="QueryGroup"/> fields into a command object parameters.
+        /// 
         /// </summary>
-        /// <param name="command">The target command.</param>
-        /// <param name="where">The instance of <see cref="QueryGroup"/> object.</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        internal static void ValidateTransactionConnectionObject(this IDbConnection connection,
+            IDbTransaction transaction)
+        {
+            if (transaction != null && transaction.Connection != connection)
+            {
+                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="where"></param>
         private static void WhereToCommandParameters(DbCommand command,
             QueryGroup where)
         {
@@ -1215,115 +1229,189 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a <see cref="QueryGroup"/> object based on the given qualifiers.
+        /// 
         /// </summary>
-        /// <param name="entity">The data entity or dynamic object to be merged.</param>
-        /// <param name="properties">The list of properties for the entity object.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="entity"></param>
+        /// <param name="properties"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
         private static QueryGroup CreateQueryGroupForUpsert(object entity,
             IEnumerable<ClassProperty> properties,
             IEnumerable<Field> qualifiers = null)
         {
-            // Variables needed
-            var queryFields = (IList<QueryField>)null;
-
-            // Iterate the fields
+            var queryFields = new List<QueryField>();
             foreach (var field in qualifiers)
             {
-                // Get the property
                 var property = properties?.FirstOrDefault(
                     p => string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
 
-                // Get the value
                 if (property != null)
                 {
-                    // Create the list if necessary
-                    if (queryFields == null)
-                    {
-                        queryFields = new List<QueryField>();
-                    }
-
-                    // Add the fields
                     queryFields.Add(new QueryField(field, property.PropertyInfo.GetValue(entity)));
                 }
             }
-
-            // Return the value
             return new QueryGroup(queryFields);
         }
 
         /// <summary>
-        /// Throws an exception if there is no defined primary key on the data entity type.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
-        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection,
-            IDbTransaction transaction)
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="fields"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
+            TEntity entity)
             where TEntity : class =>
-            GetAndGuardPrimaryKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            fields ?? ((typeof(TEntity).IsClassType() == false) ? Field.Parse(entity) : FieldCache.Get<TEntity>());
 
         /// <summary>
-        /// Throws an exception if there is no defined primary key on the data entity type.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>The primary <see cref="ClassProperty"/> of the type.</returns>
-        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(IDbConnection connection,
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
+            IDbTransaction transaction)
+            where TEntity : class =>
+            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
             where TEntity : class
         {
-            var property = PrimaryCache.Get<TEntity>();
+            var property = PrimaryCache.Get<TEntity>() ?? IdentityCache.Get<TEntity>();
             if (property == null)
             {
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                if (primary != null)
-                {
-                    var properties = PropertyCache.Get<TEntity>() ?? typeof(TEntity).GetClassProperties();
-                    property = properties.FirstOrDefault(p =>
-                        string.Equals(p.GetMappedName(), primary.Name, StringComparison.OrdinalIgnoreCase));
-                }
+                property = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(dbFields);
             }
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static async Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
+            where TEntity : class
+        {
+            var property = PrimaryCache.Get<TEntity>() ?? IdentityCache.Get<TEntity>();
             if (property == null)
             {
-                throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}'.");
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+                property = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(dbFields);
+            }
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+            ClassProperty property)
+        {
+            if (property == null)
+            {
+                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
             }
             return property;
         }
 
         /// <summary>
-        /// Throws an exception if there is no defined primary key on the data entity type.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>The primary <see cref="DbField"/> of the table.</returns>
-        private static DbField GetAndGuardPrimaryKey(IDbConnection connection,
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IEnumerable<DbField> dbFields)
+            where TEntity : class
+        {
+            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
+                dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            if (dbField != null)
+            {
+                var properties = PropertyCache.Get<TEntity>() ?? typeof(TEntity).GetClassProperties();
+                return properties.FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), dbField.Name, StringComparison.OrdinalIgnoreCase));
+            }
+            throw new KeyFieldNotFoundException($"No primary key and identify found at type '{typeof(TEntity).Name}'.");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static DbField GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-            if (primary == null)
-            {
-                throw new PrimaryFieldNotFoundException($"No primary key found at table '{tableName}'.");
-            }
-            return primary;
+            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
         }
 
         /// <summary>
-        /// Extract the property value from the instances
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="entities">The list of data entity objects to be extracted.</param>
-        /// <param name="property">The class property to be used.</param>
-        /// <returns>An array of the results based on the target types.</returns>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static async Task<DbField> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
+        {
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        private static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+            DbField dbField)
+        {
+            if (dbField == null)
+            {
+                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
+            }
+            return dbField;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
         private static IEnumerable<object> ExtractPropertyValues<TEntity>(IEnumerable<TEntity> entities,
             ClassProperty property)
             where TEntity : class
@@ -1332,88 +1420,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Validates whether the transaction object connection is object is equals to the connection object.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be validated.</param>
-        /// <param name="transaction">The transaction object to compare.</param>
-        internal static void ValidateTransactionConnectionObject(this IDbConnection connection,
-            IDbTransaction transaction)
-        {
-            if (transaction != null && transaction.Connection != connection)
-            {
-                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
-            }
-        }
-
-        /// <summary>
-        /// Converts the object expression into a <see cref="QueryGroup"/> object with the PrimaryKey value.
-        /// </summary>
-        /// <param name="instance">The object expression instance.</param>
-        /// <param name="defaultPrimaryKey">The default name of primary key to be used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object with the PrimaryKey value.</returns>
-        private static QueryGroup DataEntityToPrimaryKeyQueryGroup(object instance,
-            string defaultPrimaryKey)
-        {
-            if (instance == null)
-            {
-                return null;
-            }
-
-            // Variables
-            var type = instance?.GetType();
-            var properties = (IEnumerable<ClassProperty>)null;
-
-            // Identify
-            if (type.IsGenericType)
-            {
-                properties = type.GetClassProperties();
-            }
-            else
-            {
-                properties = PropertyCache.Get(type);
-            }
-
-            // Get all the PrimaryKey(s)
-            var primaryProperties = properties.Where(p => p.IsPrimary() == true);
-
-            // Get the PrimaryKey via IsPrimary
-            var property = primaryProperties.FirstOrDefault(p => p.IsPrimary() == true);
-
-            // Check if there is forced [Primary] attribute
-            if (property == null)
-            {
-                property = primaryProperties.FirstOrDefault(p => p.GetPrimaryAttribute() != null);
-            }
-
-            // If it still null, get the first one
-            if (property == null)
-            {
-                property = primaryProperties?.FirstOrDefault();
-            }
-
-            // Otherwise, check the default one
-            if (property == null && !string.IsNullOrEmpty(defaultPrimaryKey))
-            {
-                property = properties.FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), defaultPrimaryKey, StringComparison.OrdinalIgnoreCase));
-            }
-
-            // Return the instance
-            if (property != null)
-            {
-                return new QueryGroup(new QueryField(property.AsField(), property.PropertyInfo.GetValue(instance)));
-            }
-            else
-            {
-                throw new PrimaryFieldNotFoundException("The primary field is not found.");
-            }
-        }
-
-        /// <summary>
-        /// Converts an object into a <see cref="QueryGroup"/> object.
-        /// </summary>
-        /// <param name="where">The dynamic expression.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="where"></param>
+        /// <returns></returns>
         private static QueryGroup ToQueryGroup(object where)
         {
             if (where == null)
@@ -1431,11 +1441,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the primary key to <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="where">The query expression.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="where"></param>
+        /// <returns></returns>
         private static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
             where TEntity : class
         {
@@ -1447,12 +1457,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the primary key to <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="property">The instance of <see cref="ClassProperty"/> to be converted.</param>
-        /// <param name="entity">The instance of the actual entity.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="property"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         private static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
             TEntity entity)
             where TEntity : class
@@ -1465,10 +1475,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <param name="field">The instance of <see cref="QueryField"/> to be converted.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="field"></param>
+        /// <returns></returns>
         private static QueryGroup ToQueryGroup(QueryField field)
         {
             if (field == null)
@@ -1479,10 +1489,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <param name="fields">The list of <see cref="QueryField"/> objects to be converted.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="fields"></param>
+        /// <returns></returns>
         private static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields)
         {
             if (fields == null)
@@ -1493,17 +1503,37 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="dbField"></param>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <returns></returns>
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(DbField dbField,
+            object whereOrPrimaryKey) =>
+            WhereOrPrimaryKeyToQueryGroup(dbField.Name, whereOrPrimaryKey);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <returns></returns>
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(string fieldName,
+            object whereOrPrimaryKey) =>
+            new QueryGroup(new QueryField(fieldName, whereOrPrimaryKey));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <returns></returns>
         private static QueryGroup WhereOrPrimaryKeyToQueryGroup(object whereOrPrimaryKey)
         {
             if (whereOrPrimaryKey == null)
             {
                 return null;
             }
-            if (whereOrPrimaryKey is QueryField)
+            else if (whereOrPrimaryKey is QueryField)
             {
                 return ToQueryGroup((QueryField)whereOrPrimaryKey);
             }
@@ -1515,21 +1545,25 @@ namespace RepoDb
             {
                 return (QueryGroup)whereOrPrimaryKey;
             }
-            else if (whereOrPrimaryKey.GetType().IsGenericType)
+            else
             {
-                return QueryGroup.Parse(whereOrPrimaryKey);
+                var type = whereOrPrimaryKey.GetType();
+                if (type.IsGenericType || type.IsClassType())
+                {
+                    return QueryGroup.Parse(whereOrPrimaryKey);
+                }
             }
             return null;
         }
 
         /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
@@ -1547,7 +1581,7 @@ namespace RepoDb
             var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(p => p.IsPrimary == true);
             if (primary == null)
             {
-                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
+                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
             }
             else
             {
@@ -1556,13 +1590,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object in an asynchronous way.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync(IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
@@ -1577,26 +1611,26 @@ namespace RepoDb
             {
                 return queryGroup;
             }
-            var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?
+            var key = (await DbFieldCache.GetAsync(connection, tableName, transaction))?
                 .FirstOrDefault(p => p.IsPrimary == true);
-            if (primary == null)
+            if (key == null)
             {
-                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", tableName));
+                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
             }
             else
             {
-                return new QueryGroup(new QueryField(primary.AsField(), whereOrPrimaryKey));
+                return new QueryGroup(new QueryField(key.AsField(), whereOrPrimaryKey));
             }
         }
 
         /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(IDbConnection connection,
             object whereOrPrimaryKey,
             IDbTransaction transaction)
@@ -1611,7 +1645,7 @@ namespace RepoDb
             {
                 return queryGroup;
             }
-            var field = PrimaryCache.Get<TEntity>()?.AsField();
+            var field = PrimaryCache.Get<TEntity>()?.AsField() ?? IdentityCache.Get<TEntity>()?.AsField();
             if (field == null)
             {
                 field = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction)?
@@ -1629,13 +1663,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the dynamic expression into a <see cref="QueryGroup"/> object in an asynchronous way.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="whereOrPrimaryKey"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
             object whereOrPrimaryKey,
             IDbTransaction transaction)
@@ -1668,17 +1702,17 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Create a new instance of <see cref="DbCommand"/> object to be used for execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">The list of parameters.</param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout to be used.</param>
-        /// <param name="transaction">The transaction object to be used.</param>
-        /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>An instance of <see cref="DbCommand"/> object.</returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         private static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1717,13 +1751,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the command text into a raw SQL with array parameters.
+        /// 
         /// </summary>
-        /// <param name="commandText">The current command text where the raw sql parameters will be replaced.</param>
-        /// <param name="parameterName">The name of the parameter to be replaced.</param>
-        /// <param name="values">The array of the values.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The raw SQL with array parameters.</returns>
+        /// <param name="commandText"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="values"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string ToRawSqlWithArrayParams(string commandText,
             string parameterName,
             IEnumerable<object> values,
@@ -1752,12 +1786,12 @@ namespace RepoDb
         #region AsCommandArrayParameters
 
         /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// 
         /// </summary>
-        /// <param name="param">The parameter passed.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        /// <param name="param"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
             IDbSetting dbSetting,
             ref string commandText)
@@ -1834,12 +1868,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// 
         /// </summary>
-        /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        /// <param name="dictionary"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
             IDbSetting dbSetting,
             ref string commandText)
@@ -1891,12 +1925,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// 
         /// </summary>
-        /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        /// <param name="queryGroup"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
             IDbSetting dbSetting,
             ref string commandText)
@@ -1905,12 +1939,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// 
         /// </summary>
-        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        /// <param name="queryFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
             IDbSetting dbSetting,
             ref string commandText)
@@ -1980,12 +2014,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// 
         /// </summary>
-        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        /// <param name="queryField"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
             IDbSetting dbSetting,
             ref string commandText)
@@ -2027,13 +2061,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// 
         /// </summary>
-        /// <param name="name">The target name of the <see cref="CommandArrayParameter"/> object.</param>
-        /// <param name="values">The array value of the <see cref="CommandArrayParameter"/> object.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <param name="commandText">The command text to be replaced.</param>
-        /// <returns>An instance of <see cref="CommandArrayParameter"/> object.</returns>
+        /// <param name="name"></param>
+        /// <param name="values"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         private static CommandArrayParameter AsCommandArrayParameter(string name,
             IEnumerable<object> values,
             IDbSetting dbSetting,

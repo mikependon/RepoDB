@@ -47,7 +47,7 @@ namespace RepoDb.Reflection
             foreach (var fieldDirection in fieldDirections)
             {
                 // Add the property block
-                var propertyBlock = GetPropertyFieldExpression<TEntity>(commandParameterExpression,
+                var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
                     entityVariable, fieldDirection, 0, dbSetting);
 
                 // Add to instance expression

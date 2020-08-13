@@ -818,6 +818,53 @@ namespace RepoDb.IntegrationTests
             return new Tuple<List<dynamic>, IEnumerable<Field>>(tables, fields);
         }
 
+        /// <summary>
+        /// Creates a list of dynamic objects for [sc].[IdentityTable] without an identity.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of dynamic objects.</returns>
+        public static List<dynamic> CreateDynamicIdentityTablesWithoutIdentity(int count)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = true,
+                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = Convert.ToDecimal(index),
+                    ColumnFloat = Convert.ToSingle(index),
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of dynamic objects for [dbo].[NonKeyedTable] table.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of dynamic objects.</returns>
+        public static List<dynamic> CreateDynamicNonKeyedTables(int count)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
         #endregion
 
         #region NonIdentityTable

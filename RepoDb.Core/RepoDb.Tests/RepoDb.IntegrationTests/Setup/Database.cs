@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
-using RepoDb.SqlServer;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -89,6 +88,7 @@ namespace RepoDb.IntegrationTests.Setup
             CreateUnorganizedTable();
             CreateDottedTable();
             CreatePropertyHandlerTable();
+            CreateNonKeyedTable();
         }
 
         /// <summary>
@@ -115,6 +115,7 @@ namespace RepoDb.IntegrationTests.Setup
                 connection.Truncate("[dbo].[Unorganized Table]");
                 connection.Truncate("[dbo].[Dotted.Table]");
                 connection.Truncate("[dbo].[PropertyHandler]");
+                connection.Truncate("[dbo].[NonKeyedTable]");
             }
         }
 
@@ -322,6 +323,26 @@ namespace RepoDb.IntegrationTests.Setup
                         (
 	                        [Id] ASC
                         )
+	                ) ON [PRIMARY];
+                END";
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        /// <summary>
+        /// Creates a table that has no keys.
+        /// </summary>
+        public static void CreateNonKeyedTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'NonKeyedTable'))
+                BEGIN
+	                CREATE TABLE [dbo].[NonKeyedTable]
+	                (
+		                [ColumnDateTime2] DATETIME2(7) NULL,
+		                [ColumnInt] INT NULL,
+		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
 	                ) ON [PRIMARY];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())

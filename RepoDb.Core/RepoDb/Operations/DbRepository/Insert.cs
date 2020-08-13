@@ -355,7 +355,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert(string tableName,
             object entity,
@@ -395,7 +395,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TResult>(string tableName,
             object entity,
@@ -438,7 +438,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync(string tableName,
             object entity,
@@ -478,7 +478,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
         public async Task<TResult> InsertAsync<TResult>(string tableName,
             object entity,

@@ -1448,7 +1448,6 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="parameterVariable"></param>
         /// <param name="entityInstance"></param>
         /// <param name="property"></param>
@@ -1456,32 +1455,23 @@ namespace RepoDb.Reflection
         /// <param name="dbField"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Expression GetDbParameterValueAssignmentExpression<TEntity>(ParameterExpression parameterVariable,
+        internal static Expression GetDbParameterValueAssignmentExpression(ParameterExpression parameterVariable,
             Expression entityInstance,
             ParameterExpression property,
             ClassProperty classProperty,
             DbField dbField,
             IDbSetting dbSetting)
         {
-            var typeOfEntity = typeof(TEntity);
-            var instanceProperty = (PropertyInfo)null;
-
-            // Check the proper type of the entity
-            if (typeOfEntity != StaticType.Object && typeOfEntity.IsGenericType == false)
-            {
-                instanceProperty = classProperty.PropertyInfo;
-            }
-
             // Get the property value
-            var value = (instanceProperty == null) ? (Expression)GetObjectInstancePropertyValueExpression(property, entityInstance) :
-                    GetEntityInstancePropertyValueExpression(entityInstance, classProperty, dbField);
+            var value = (property.Type == StaticType.PropertyInfo) ?GetObjectInstancePropertyValueExpression(property, entityInstance) :
+                GetEntityInstancePropertyValueExpression(entityInstance, classProperty, dbField);
 
             // Ensure the nullable
             var valueAssignment = (Expression)GetNullablePropertyValueAssignmentExpression(parameterVariable,
-                value, dbField, instanceProperty, dbSetting);
+                value, dbField, classProperty?.PropertyInfo, dbSetting);
 
             // Check if it is a direct assignment or not
-            if (typeOfEntity == StaticType.Object)
+            if (entityInstance.Type == StaticType.Object)
             {
                 valueAssignment = GetDbNullPropertyValueAssignmentExpression(parameterVariable, property, valueAssignment, dbField);
             }
@@ -1608,7 +1598,6 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entityIndex"></param>
         /// <param name="entityInstance"></param>
@@ -1618,7 +1607,7 @@ namespace RepoDb.Reflection
         /// <param name="direction"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Expression GetParameterAssignmentExpression<TEntity>(ParameterExpression commandParameterExpression,
+        internal static Expression GetParameterAssignmentExpression(ParameterExpression commandParameterExpression,
             int entityIndex,
             Expression entityInstance,
             ParameterExpression property,
@@ -1626,7 +1615,6 @@ namespace RepoDb.Reflection
             ClassProperty classProperty,
             ParameterDirection direction,
             IDbSetting dbSetting)
-            where TEntity : class
         {
             var parameterAssignments = new List<Expression>();
             var parameterVariable = Expression.Variable(StaticType.DbParameter,
@@ -1646,7 +1634,7 @@ namespace RepoDb.Reflection
             // DbParameter.Value
             if (direction != ParameterDirection.Output)
             {
-                var valueAssignmentExpression = GetDbParameterValueAssignmentExpression<TEntity>(parameterVariable,
+                var valueAssignmentExpression = GetDbParameterValueAssignmentExpression(parameterVariable,
                     entityInstance,
                     property,
                     classProperty,
@@ -1730,33 +1718,35 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entityVariable"></param>
         /// <param name="fieldDirection"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Expression GetPropertyFieldExpression<TEntity>(ParameterExpression commandParameterExpression,
+        internal static Expression GetPropertyFieldExpression(ParameterExpression commandParameterExpression,
             ParameterExpression entityVariable,
             FieldDirection fieldDirection,
             int entityIndex,
             IDbSetting dbSetting)
-            where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
             var propertyExpressions = new List<Expression>();
             var propertyVariables = new List<ParameterExpression>();
             var propertyVariable = (ParameterExpression)null;
             var propertyInstance = (Expression)null;
             var classProperty = (ClassProperty)null;
             var propertyName = fieldDirection.DbField.Name.AsUnquoted(true, dbSetting);
-            var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
-            var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[] { StaticType.String, StaticType.BindingFlags });
 
+            // TODO: Type.IsClassType()?
             // Set the proper assignments (property)
-            if (typeOfEntity == StaticType.Object)
+            if (entityVariable.Type == StaticType.Object || entityVariable.Type.IsGenericType)
             {
+                var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[]
+                {
+                    StaticType.String,
+                    StaticType.BindingFlags
+                });
+                var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
                 propertyVariable = Expression.Variable(StaticType.PropertyInfo, string.Concat("property", propertyName));
                 propertyInstance = Expression.Call(Expression.Call(entityVariable, objectGetTypeMethod),
                     typeGetPropertyMethod, new[]
@@ -1767,7 +1757,7 @@ namespace RepoDb.Reflection
             }
             else
             {
-                var entityProperties = PropertyCache.Get<TEntity>();
+                var entityProperties = PropertyCache.Get(entityVariable.Type);
                 classProperty = entityProperties.First(property =>
                     string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
                         propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
@@ -1787,7 +1777,7 @@ namespace RepoDb.Reflection
             }
 
             // Execute the function
-            var parameterAssignment = GetParameterAssignmentExpression<TEntity>(commandParameterExpression,
+            var parameterAssignment = GetParameterAssignmentExpression(commandParameterExpression,
                 entityIndex,
                 entityVariable,
                 propertyVariable,
@@ -1799,7 +1789,6 @@ namespace RepoDb.Reflection
 
             // Add the property block
             return Expression.Block(propertyVariables, propertyExpressions);
-
         }
 
         /// <summary>
@@ -1811,8 +1800,7 @@ namespace RepoDb.Reflection
         {
             var dbParameterCollection = Expression.Property(commandParameterExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
-            var dbParameterCollectionClearMethod = StaticType.DbParameterCollection.GetMethod("Clear");
-            return Expression.Call(dbParameterCollection, dbParameterCollectionClearMethod);
+            return Expression.Call(dbParameterCollection, StaticType.DbParameterCollection.GetMethod("Clear"));
         }
 
         /// <summary>

@@ -103,7 +103,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of fields.</returns>
         internal static IEnumerable<Field> AsFields<TEntity>(this TEntity entity)
             where TEntity : class =>
-            FieldCache.Get<TEntity>();
+            FieldCache.Get<TEntity>() ?? Field.Parse(entity);
 
         /// <summary>
         /// Converts an instance of an object into an enumerable list of field.

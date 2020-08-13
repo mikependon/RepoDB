@@ -43,11 +43,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return UpdateInternalBase<TEntity>(connection: connection,
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, tableName, transaction);
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primary, entity),
+                where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -80,11 +80,16 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return UpdateInternalBase<TEntity>(connection: connection,
+            var where = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            if (where == null)
+            {
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                where = WhereOrPrimaryKeyToQueryGroup(key, whereOrPrimaryKey);
+            }
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -117,7 +122,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
@@ -153,7 +158,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
@@ -189,7 +194,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
@@ -261,11 +266,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return UpdateInternalBase<TEntity>(connection: connection,
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primary, entity),
+                where: ToQueryGroup<TEntity>(qualifier, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -296,8 +301,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return UpdateInternalBase<TEntity>(connection: connection,
+            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
@@ -331,7 +336,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
@@ -365,7 +370,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
@@ -399,7 +404,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
+            return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
@@ -469,7 +474,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
             return UpdateInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -499,7 +503,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             string hints = null,
@@ -509,11 +513,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
-            return UpdateAsyncInternal<TEntity>(connection: connection,
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, tableName, transaction);
+            return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primary, entity),
+                where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -546,11 +550,16 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
+            var where = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            if (where == null)
+            {
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+                where = WhereOrPrimaryKeyToQueryGroup(key, whereOrPrimaryKey);
+            }
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -727,11 +736,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>(connection, transaction);
+            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primary, entity),
+                where: ToQueryGroup<TEntity>(qualifier, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -762,7 +771,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(connection, transaction);
+            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
@@ -1408,11 +1417,12 @@ namespace RepoDb
             // Set the flags
             where?.IsForUpdate();
 
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+
             // Get the function
             var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
             {
                 // Variables needed
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
                 var inputFields = new List<DbField>();
                 var dbSetting = connection.GetDbSetting();
 
@@ -1420,14 +1430,15 @@ namespace RepoDb
                 inputFields = dbFields?
                     .Where(dbField => dbField.IsIdentity == false)
                     .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                        fields.FirstOrDefault(field =>
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
 
                 // Identify the requests
                 var updateRequest = (UpdateRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     updateRequest = new UpdateRequest(tableName,
                         connection,
@@ -1569,7 +1580,7 @@ namespace RepoDb
                 var updateRequest = (UpdateRequest)null;
 
                 // Create a different kind of requests
-                if (typeof(TEntity) == StaticType.Object)
+                if (typeof(TEntity).IsClassType() == false)
                 {
                     updateRequest = new UpdateRequest(tableName,
                         connection,

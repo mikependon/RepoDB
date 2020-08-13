@@ -119,12 +119,17 @@ namespace RepoDb
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> Get(Type entityType)
         {
+            if (entityType.IsClassType() == false)
+            {
+                return null;
+            }
+
+            // Variables
             var properties = (IEnumerable<ClassProperty>)null;
             var key = GenerateHashCode(entityType);
-            var supportedGenericType = entityType.IsGenericType == false || entityType.GenericTypeArguments?.Any() == true;
 
             // Try get the value
-            if (supportedGenericType && cache.TryGetValue(key, out properties) == false)
+            if (cache.TryGetValue(key, out properties) == false)
             {
                 properties = entityType.GetClassProperties().AsList();
                 cache.TryAdd(key, properties);
