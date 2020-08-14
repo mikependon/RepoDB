@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -1249,130 +1250,17 @@ namespace RepoDb
             // Validate the batch size
             batchSize = Math.Min(batchSize, entities.Count());
 
-            // Get the function
-            var callback = new Func<int, MergeAllExecutionContext<TEntity>>((int batchSizeValue) =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-                // Set the identity value
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>()?.FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the context
-                var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-                var identitySetterFunc = (Action<TEntity, object>)null;
-
-                // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null && typeof(TEntity).IsClassType())
-                {
-                    identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identity which objects to set
-                if (batchSizeValue <= 1)
-                {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting);
-                }
-                else
-                {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                        inputFields?.AsList(),
-                        null,
-                        batchSizeValue,
-                        dbSetting);
-                }
-
-                // Identify the requests
-                var mergeAllRequest = (MergeAllRequest)null;
-                var mergeRequest = (MergeRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        mergeAllRequest = new MergeAllRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        mergeRequest = new MergeRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-                else
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        mergeAllRequest = new MergeAllRequest(typeof(TEntity),
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        mergeRequest = new MergeRequest(typeof(TEntity),
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-
-                // Return the value
-                return new MergeAllExecutionContext<TEntity>
-                {
-                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetMergeAllText(mergeAllRequest) : CommandTextCache.GetMergeText(mergeRequest),
-                    InputFields = inputFields,
-                    BatchSize = batchSizeValue,
-                    SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                    IdentityPropertySetterFunc = identitySetterFunc
-                };
-            });
-
             // Get the context
-            var context = MergeAllExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, batchSize, callback);
+            var context = MergeAllExecutionContextProvider.MergeAllExecutionContext<TEntity>(connection,
+                entities,
+                tableName,
+                qualifiers,
+                batchSize,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1462,7 +1350,16 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = MergeAllExecutionContextCache<TEntity>.Get(tableName, fields, qualifiers, batchItems.Count, callback);
+                                context = MergeAllExecutionContextProvider.MergeAllExecutionContext<TEntity>(connection,
+                                    batchItems,
+                                    tableName,
+                                    qualifiers,
+                                    batchItems.Count,
+                                    fields,
+                                    hints,
+                                    transaction,
+                                    statementBuilder,
+                                    skipIdentityCheck);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -1750,144 +1647,17 @@ namespace RepoDb
             // Validate the batch size
             batchSize = Math.Min(batchSize, entities.Count());
 
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = dbFields?.AsFields();
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
-            // Get the function
-            var callback = new Func<int, MergeAllExecutionContext<TEntity>>((int batchSizeValue) =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-                // Set the identity value
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>()?.FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the context
-                var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-                var identitySetterFunc = (Action<TEntity, object>)null;
-
-                // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null && typeof(TEntity).IsClassType())
-                {
-                    identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identity which objects to set
-                if (batchSizeValue <= 1)
-                {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting);
-                }
-                else
-                {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                        inputFields?.AsList(),
-                        null,
-                        batchSizeValue,
-                        dbSetting);
-                }
-
-                // Identify the requests
-                var mergeAllRequest = (MergeAllRequest)null;
-                var mergeRequest = (MergeRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        mergeAllRequest = new MergeAllRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        mergeRequest = new MergeRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-                else
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        mergeAllRequest = new MergeAllRequest(typeof(TEntity),
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        mergeRequest = new MergeRequest(typeof(TEntity),
-                            connection,
-                            transaction,
-                            fields,
-                            qualifiers,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-
-                // Return the value
-                return new MergeAllExecutionContext<TEntity>
-                {
-                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetMergeAllText(mergeAllRequest) : CommandTextCache.GetMergeText(mergeRequest),
-                    InputFields = inputFields,
-                    BatchSize = batchSizeValue,
-                    SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                    IdentityPropertySetterFunc = identitySetterFunc
-                };
-            });
-
             // Get the context
-            var context = MergeAllExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, batchSize, callback);
+            var context = await MergeAllExecutionContextProvider.MergeAllExecutionContextAsync<TEntity>(connection,
+                entities,
+                tableName,
+                qualifiers,
+                batchSize,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1977,7 +1747,16 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = MergeAllExecutionContextCache<TEntity>.Get(tableName, fields, qualifiers, batchItems.Count, callback);
+                                context = await MergeAllExecutionContextProvider.MergeAllExecutionContextAsync<TEntity>(connection,
+                                    batchItems,
+                                    tableName,
+                                    qualifiers,
+                                    batchItems.Count,
+                                    fields,
+                                    hints,
+                                    transaction,
+                                    statementBuilder,
+                                    skipIdentityCheck);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;

@@ -1207,7 +1207,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command"></param>
         /// <param name="where"></param>
-        private static void WhereToCommandParameters(DbCommand command,
+        internal static void WhereToCommandParameters(DbCommand command,
             QueryGroup where)
         {
             // Check the presence
@@ -1235,7 +1235,7 @@ namespace RepoDb
         /// <param name="properties"></param>
         /// <param name="qualifiers"></param>
         /// <returns></returns>
-        private static QueryGroup CreateQueryGroupForUpsert(object entity,
+        internal static QueryGroup CreateQueryGroupForUpsert(object entity,
             IEnumerable<ClassProperty> properties,
             IEnumerable<Field> qualifiers = null)
         {
@@ -1260,7 +1260,7 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        private static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
+        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
             TEntity entity)
             where TEntity : class =>
             fields ?? ((typeof(TEntity).IsClassType() == false) ? Field.Parse(entity) : FieldCache.Get<TEntity>());
@@ -1272,7 +1272,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
+        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
             IDbTransaction transaction)
             where TEntity : class =>
             GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
@@ -1285,7 +1285,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
+        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
             where TEntity : class
@@ -1307,7 +1307,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static async Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
+        internal static async Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
             where TEntity : class
@@ -1327,7 +1327,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
             ClassProperty property)
         {
             if (property == null)
@@ -1343,7 +1343,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        private static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IEnumerable<DbField> dbFields)
+        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IEnumerable<DbField> dbFields)
             where TEntity : class
         {
             var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
@@ -1364,7 +1364,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static DbField GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
+        internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
         {
@@ -1380,7 +1380,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static async Task<DbField> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
+        internal static async Task<DbField> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
         {
@@ -1395,7 +1395,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        private static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+        internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
             DbField dbField)
         {
             if (dbField == null)
@@ -1412,7 +1412,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        private static IEnumerable<object> ExtractPropertyValues<TEntity>(IEnumerable<TEntity> entities,
+        internal static IEnumerable<object> ExtractPropertyValues<TEntity>(IEnumerable<TEntity> entities,
             ClassProperty property)
             where TEntity : class
         {
@@ -1424,7 +1424,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="where"></param>
         /// <returns></returns>
-        private static QueryGroup ToQueryGroup(object where)
+        internal static QueryGroup ToQueryGroup(object where)
         {
             if (where == null)
             {
@@ -1446,7 +1446,7 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
         /// <returns></returns>
-        private static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
+        internal static QueryGroup ToQueryGroup<TEntity>(Expression<Func<TEntity, bool>> where)
             where TEntity : class
         {
             if (where == null)
@@ -1463,7 +1463,7 @@ namespace RepoDb
         /// <param name="property"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        private static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
+        internal static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
             TEntity entity)
             where TEntity : class
         {
@@ -1479,7 +1479,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        private static QueryGroup ToQueryGroup(QueryField field)
+        internal static QueryGroup ToQueryGroup(QueryField field)
         {
             if (field == null)
             {
@@ -1493,7 +1493,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        private static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields)
+        internal static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields)
         {
             if (fields == null)
             {
@@ -1508,7 +1508,7 @@ namespace RepoDb
         /// <param name="dbField"></param>
         /// <param name="whereOrPrimaryKey"></param>
         /// <returns></returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(DbField dbField,
+        internal static QueryGroup WhereOrPrimaryKeyToQueryGroup(DbField dbField,
             object whereOrPrimaryKey) =>
             WhereOrPrimaryKeyToQueryGroup(dbField.Name, whereOrPrimaryKey);
 
@@ -1518,7 +1518,7 @@ namespace RepoDb
         /// <param name="fieldName"></param>
         /// <param name="whereOrPrimaryKey"></param>
         /// <returns></returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(string fieldName,
+        internal static QueryGroup WhereOrPrimaryKeyToQueryGroup(string fieldName,
             object whereOrPrimaryKey) =>
             new QueryGroup(new QueryField(fieldName, whereOrPrimaryKey));
 
@@ -1527,7 +1527,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="whereOrPrimaryKey"></param>
         /// <returns></returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(object whereOrPrimaryKey)
+        internal static QueryGroup WhereOrPrimaryKeyToQueryGroup(object whereOrPrimaryKey)
         {
             if (whereOrPrimaryKey == null)
             {
@@ -1564,7 +1564,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
+        internal static QueryGroup WhereOrPrimaryKeyToQueryGroup(IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
             IDbTransaction transaction)
@@ -1597,7 +1597,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync(IDbConnection connection,
+        internal static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync(IDbConnection connection,
             string tableName,
             object whereOrPrimaryKey,
             IDbTransaction transaction)
@@ -1631,7 +1631,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(IDbConnection connection,
+        internal static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(IDbConnection connection,
             object whereOrPrimaryKey,
             IDbTransaction transaction)
             where TEntity : class
@@ -1670,7 +1670,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
+        internal static async Task<QueryGroup> WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
             object whereOrPrimaryKey,
             IDbTransaction transaction)
             where TEntity : class
@@ -1713,7 +1713,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        private static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
+        internal static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1758,7 +1758,7 @@ namespace RepoDb
         /// <param name="values"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string ToRawSqlWithArrayParams(string commandText,
+        internal static string ToRawSqlWithArrayParams(string commandText,
             string parameterName,
             IEnumerable<object> values,
             IDbSetting dbSetting)
@@ -1792,7 +1792,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
+        internal static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
             IDbSetting dbSetting,
             ref string commandText)
         {
@@ -1874,7 +1874,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
+        internal static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
             IDbSetting dbSetting,
             ref string commandText)
         {
@@ -1931,7 +1931,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
+        internal static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
             IDbSetting dbSetting,
             ref string commandText)
         {
@@ -1945,7 +1945,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
+        internal static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
             IDbSetting dbSetting,
             ref string commandText)
         {
@@ -2020,7 +2020,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
+        internal static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
             IDbSetting dbSetting,
             ref string commandText)
         {
@@ -2068,7 +2068,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static CommandArrayParameter AsCommandArrayParameter(string name,
+        internal static CommandArrayParameter AsCommandArrayParameter(string name,
             IEnumerable<object> values,
             IDbSetting dbSetting,
             ref string commandText)

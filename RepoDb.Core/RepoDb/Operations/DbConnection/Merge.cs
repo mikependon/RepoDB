@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -1841,82 +1842,15 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
-            // Get the function
-            var callback = new Func<MergeExecutionContext<TEntity>>(() =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var inputFields = new List<DbField>();
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
-
-                // Set the identity field
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the entity action
-                var identityPropertySetter = (Action<TEntity, object>)null;
-
-                // Get the identity setter
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identify the requests
-                var mergeRequest = (MergeRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    mergeRequest = new MergeRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    mergeRequest = new MergeRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new MergeExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetMergeText(mergeRequest),
-                    InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Merge"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting),
-                    IdentityPropertySetterFunc = identityPropertySetter
-                };
-            });
-
             // Get the context
-            var context = MergeExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, callback);
+            var context = MergeExecutionContextProvider.MergeExecutionContext<TEntity>(connection,
+                tableName,
+                qualifiers,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1931,7 +1865,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(context.CommandText);
                     }
-                    return default(TResult);
+                    return default;
                 }
                 context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
@@ -2049,7 +1983,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException("Upsert.Cancelled");
                     }
-                    return default(TResult);
+                    return default;
                 }
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
             }
@@ -2207,82 +2141,15 @@ namespace RepoDb
             // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
-            // Get the function
-            var callback = new Func<MergeExecutionContext<TEntity>>(() =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var inputFields = new List<DbField>();
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-                var dbSetting = connection.GetDbSetting();
-
-                // Set the identity field
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the entity action
-                var identityPropertySetter = (Action<TEntity, object>)null;
-
-                // Get the identity setter
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identify the requests
-                var mergeRequest = (MergeRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    mergeRequest = new MergeRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    mergeRequest = new MergeRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new MergeExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetMergeText(mergeRequest),
-                    InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Merge"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting),
-                    IdentityPropertySetterFunc = identityPropertySetter
-                };
-            });
-
             // Get the context
-            var context = MergeExecutionContextCache<TEntity>.Get(tableName, qualifiers, fields, callback);
+            var context = await MergeExecutionContextProvider.MergeExecutionContextAsync<TEntity>(connection,
+                tableName,
+                qualifiers,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -2297,7 +2164,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(context.CommandText);
                     }
-                    return default(TResult);
+                    return default;
                 }
                 context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
@@ -2415,7 +2282,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException("Upsert.Cancelled");
                     }
-                    return default(TResult);
+                    return default;
                 }
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
             }

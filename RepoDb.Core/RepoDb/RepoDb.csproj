@@ -46,6 +46,12 @@
 
   <ItemGroup>
     <Compile Remove="ClassMap.cs" />
+    <Compile Remove="Contexts\Execution\InsertAllExecutionContextCache.cs" />
+    <Compile Remove="Contexts\Execution\InsertExecutionContextCache.cs" />
+    <Compile Remove="Contexts\Execution\MergeAllExecutionContextCache.cs" />
+    <Compile Remove="Contexts\Execution\MergeExecutionContextCache.cs" />
+    <Compile Remove="Contexts\Execution\UpdateAllExecutionContextCache.cs" />
+    <Compile Remove="Contexts\Execution\UpdateExecutionContextCache.cs" />
     <Compile Remove="Extensions\DateTimeExtensions.cs" />
     <Compile Remove="Extensions\TimeSpanExtenstion.cs" />
     <Compile Remove="IdentityOptions.cs" />

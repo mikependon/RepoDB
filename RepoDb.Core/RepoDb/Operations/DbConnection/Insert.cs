@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -606,81 +607,14 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
 
-            // Get the function
-            var callback = new Func<InsertExecutionContext<TEntity>>(() =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-                var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-                // Set the identity field
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the entity action
-                var identityPropertySetter = (Action<TEntity, object>)null;
-
-                // Get the identity setter
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identify the requests
-                var insertRequest = (InsertRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    insertRequest = new InsertRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    insertRequest = new InsertRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new InsertExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetInsertText(insertRequest),
-                    InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting),
-                    IdentityPropertySetterFunc = identityPropertySetter
-                };
-            });
-
             // Get the context
-            var context = InsertExecutionContextCache<TEntity>.Get(tableName, fields, callback);
+            var context = InsertExecutionContextProvider.InsertExecutionContext<TEntity>(connection,
+                tableName,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -779,81 +713,14 @@ namespace RepoDb
             // Get the database fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
-            // Get the function
-            var callback = new Func<InsertExecutionContext<TEntity>>(() =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-                // Set the identity field
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the entity action
-                var identityPropertySetter = (Action<TEntity, object>)null;
-
-                // Get the identity setter
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identify the requests
-                var insertRequest = (InsertRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    insertRequest = new InsertRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    insertRequest = new InsertRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new InsertExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetInsertText(insertRequest),
-                    InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting),
-                    IdentityPropertySetterFunc = identityPropertySetter
-                };
-            });
-
             // Get the context
-            var context = InsertExecutionContextCache<TEntity>.Get(tableName, fields, callback);
+            var context = await InsertExecutionContextProvider.InsertExecutionContextAsync<TEntity>(connection,
+                tableName,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution

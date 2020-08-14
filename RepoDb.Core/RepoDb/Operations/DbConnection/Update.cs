@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -1417,63 +1418,14 @@ namespace RepoDb
             // Set the flags
             where?.IsForUpdate();
 
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Get the function
-            var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
-            {
-                // Variables needed
-                var inputFields = new List<DbField>();
-                var dbSetting = connection.GetDbSetting();
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Identify the requests
-                var updateRequest = (UpdateRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    updateRequest = new UpdateRequest(tableName,
-                        connection,
-                        transaction,
-                        where,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    updateRequest = new UpdateRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        where,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new UpdateExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetUpdateText(updateRequest),
-                    InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting)
-                };
-            });
-
             // Get the context
-            var context = UpdateExecutionContextCache<TEntity>.Get(tableName, where, fields, callback);
+            var context = UpdateExecutionContextProvider.UpdateExecutionContext<TEntity>(connection,
+                tableName,
+                where,
+                fields,
+                hints,
+                transaction,
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1559,63 +1511,14 @@ namespace RepoDb
             // Set the flags
             where?.IsForUpdate();
 
-            // Get the database fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-
-            // Get the function
-            var callback = new Func<UpdateExecutionContext<TEntity>>(() =>
-            {
-                // Variables needed
-                var inputFields = new List<DbField>();
-                var dbSetting = connection.GetDbSetting();
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Identify the requests
-                var updateRequest = (UpdateRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    updateRequest = new UpdateRequest(tableName,
-                        connection,
-                        transaction,
-                        where,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    updateRequest = new UpdateRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        where,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
-
-                // Return the value
-                return new UpdateExecutionContext<TEntity>
-                {
-                    CommandText = CommandTextCache.GetUpdateText(updateRequest),
-                    InputFields = inputFields,
-                    ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting)
-                };
-            });
-
             // Get the context
-            var context = UpdateExecutionContextCache<TEntity>.Get(tableName, where, fields, callback);
+            var context = await UpdateExecutionContextProvider.UpdateExecutionContextAsync<TEntity>(connection,
+                tableName,
+                where,
+                fields,
+                hints,
+                transaction,
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution

@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -452,131 +453,15 @@ namespace RepoDb
             // Validate the batch size
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
-            // Get the fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Get the function
-            var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-                // Set the identity value
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the context
-                var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var identitySettersFunc = (List<Action<TEntity, DbCommand>>)null;
-                var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-                var identitySetterFunc = (Action<TEntity, object>)null;
-
-                // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identity which objects to set
-                if (batchSizeValue <= 1)
-                {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".InsertAll"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting);
-                }
-                else
-                {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".InsertAll"),
-                        inputFields?.AsList(),
-                        null,
-                        batchSizeValue,
-                        dbSetting);
-                }
-
-                // Identify the requests
-                var insertAllRequest = (InsertAllRequest)null;
-                var insertRequest = (InsertRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        insertAllRequest = new InsertAllRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        insertRequest = new InsertRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-                else
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        insertAllRequest = new InsertAllRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        insertRequest = new InsertRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-
-                // Return the value
-                return new InsertAllExecutionContext<TEntity>
-                {
-                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
-                    InputFields = inputFields,
-                    BatchSize = batchSizeValue,
-                    SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                    IdentityPropertySetterFunc = identitySetterFunc,
-                    IdentityPropertySettersFunc = identitySettersFunc
-                };
-            });
-
             // Get the context
-            var context  = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context = InsertAllExecutionContextProvider.InsertAllExecutionContext<TEntity>(connection,
+                tableName,
+                batchSize,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -670,7 +555,14 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
+                                context = InsertAllExecutionContextProvider.InsertAllExecutionContext<TEntity>(connection,
+                                    tableName,
+                                    batchItems.Count,
+                                    fields,
+                                    hints,
+                                    transaction,
+                                    statementBuilder,
+                                    skipIdentityCheck);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -798,131 +690,15 @@ namespace RepoDb
             // Validate the batch size
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
-            // Get the fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-
-            // Get the function
-            var callback = new Func<int, InsertAllExecutionContext<TEntity>>((int batchSizeValue) =>
-            {
-                // Variables needed
-                var identity = (Field)null;
-                var inputFields = (IEnumerable<DbField>)null;
-                var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-                // Set the identity value
-                if (skipIdentityCheck == false)
-                {
-                    identity = IdentityCache.Get<TEntity>()?.AsField();
-                    if (identity == null && identityDbField != null)
-                    {
-                        identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                    }
-                }
-
-                // Filter the actual properties for input fields
-                inputFields = dbFields?
-                    .Where(dbField => dbField.IsIdentity == false)
-                    .Where(dbField =>
-                        fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-
-                // Variables for the context
-                var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-                var identitySettersFunc = (List<Action<TEntity, DbCommand>>)null;
-                var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-                var identitySetterFunc = (Action<TEntity, object>)null;
-
-                // Get if we have not skipped it
-                if (skipIdentityCheck == false && identity != null)
-                {
-                    identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
-                }
-
-                // Identity which objects to set
-                if (batchSizeValue <= 1)
-                {
-                    singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".InsertAll"),
-                        inputFields?.AsList(),
-                        null,
-                        dbSetting);
-                }
-                else
-                {
-                    multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                        string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".InsertAll"),
-                        inputFields?.AsList(),
-                        null,
-                        batchSizeValue,
-                        dbSetting);
-                }
-
-                // Identify the requests
-                var insertAllRequest = (InsertAllRequest)null;
-                var insertRequest = (InsertRequest)null;
-
-                // Create a different kind of requests
-                if (typeof(TEntity).IsClassType() == false)
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        insertAllRequest = new InsertAllRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        insertRequest = new InsertRequest(tableName,
-                            connection,
-                            transaction,
-                            fields,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-                else
-                {
-                    if (batchSizeValue > 1)
-                    {
-                        insertAllRequest = new InsertAllRequest(typeof(TEntity),
-                            connection,
-                            transaction,
-                            fields,
-                            batchSizeValue,
-                            hints,
-                            statementBuilder);
-                    }
-                    else
-                    {
-                        insertRequest = new InsertRequest(typeof(TEntity),
-                            connection,
-                            transaction,
-                            fields,
-                            hints,
-                            statementBuilder);
-                    }
-                }
-
-                // Return the value
-                return new InsertAllExecutionContext<TEntity>
-                {
-                    CommandText = batchSizeValue > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
-                    InputFields = inputFields,
-                    BatchSize = batchSizeValue,
-                    SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                    MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                    IdentityPropertySetterFunc = identitySetterFunc,
-                    IdentityPropertySettersFunc = identitySettersFunc
-                };
-            });
-
             // Get the context
-            var context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchSize, callback);
+            var context = InsertAllExecutionContextProvider.InsertAllExecutionContext<TEntity>(connection,
+                tableName,
+                batchSize,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1016,7 +792,14 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextCache<TEntity>.Get(tableName, fields, batchItems.Count, callback);
+                                context = await InsertAllExecutionContextProvider.InsertAllExecutionContextAsync<TEntity>(connection,
+                                    tableName,
+                                    batchItems.Count,
+                                    fields,
+                                    hints,
+                                    transaction,
+                                    statementBuilder,
+                                    skipIdentityCheck);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
