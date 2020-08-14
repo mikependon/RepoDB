@@ -1084,7 +1084,7 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting)
             where TEntity : class
         {
-            var fieldNames = readerFields.Select(f => f.Name.ToLower()).AsList();
+            var fieldNames = readerFields.Select(f => f.Name.ToLowerInvariant()).AsList();
             var classProperties = PropertyCache
                 .Get<TEntity>()
                 .Where(property => property.PropertyInfo.CanWrite)
