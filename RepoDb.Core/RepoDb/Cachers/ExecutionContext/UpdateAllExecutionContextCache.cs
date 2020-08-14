@@ -4,13 +4,16 @@ using System.Collections.Concurrent;
 namespace RepoDb.Cachers.ExecutionContext
 {
     /// <summary>
-    /// A class that is used to cache the context of the UpdateAll operation.
+    /// A class that is used to cache the execution context of the UpdateAll operation.
     /// </summary>
-    internal static class UpdateAllExecutionContextCache
+    public static class UpdateAllExecutionContextCache
     {
         private static ConcurrentDictionary<int, object> cache =
             new ConcurrentDictionary<int, object>();
 
+        /// <summary>
+        /// Flushes all the cached execution context.
+        /// </summary>
         public static void Flush()
         {
             cache.Clear();
