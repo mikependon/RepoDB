@@ -624,7 +624,6 @@ namespace RepoDb.Reflection
         /// <param name="readerParameterExpression"></param>
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
-        /// <param name="ordinal"></param>
         /// <returns></returns>
         internal static Expression GetNonNullableDbFieldValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,

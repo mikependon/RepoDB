@@ -340,7 +340,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
             int? commandTimeout = null,
@@ -349,8 +349,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
-            return DeleteAsyncInternal<TEntity>(connection: connection,
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
+            return await DeleteAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -380,7 +380,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             return await DeleteAsyncInternal<TEntity>(connection: connection,
                 where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,

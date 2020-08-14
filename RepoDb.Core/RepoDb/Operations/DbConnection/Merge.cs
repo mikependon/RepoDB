@@ -1214,7 +1214,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static async Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,
@@ -1227,7 +1227,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
                 qualifiers = key.AsField().AsEnumerable();
             }
 
@@ -1237,7 +1237,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
+                return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     entity: entity,
                     fields: entity.AsFields(),
@@ -1251,7 +1251,7 @@ namespace RepoDb
             }
             else
             {
-                return UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
+                return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     entity: entity,
                     qualifiers: qualifiers,

@@ -224,7 +224,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             string hints = null,
@@ -234,10 +234,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             var primaryKeys = ExtractPropertyValues<TEntity>(entities, key).AsList();
 
-            return DeleteAllAsyncInternal<TEntity>(connection: connection,
+            return await DeleteAllAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys,
                 hints: hints,
@@ -263,7 +263,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             string hints = null,
             int? commandTimeout = null,
@@ -272,10 +272,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             var primaryKeys = ExtractPropertyValues<TEntity>(entities, key).AsList();
 
-            return DeleteAllAsyncInternal<TEntity>(connection: connection,
+            return await DeleteAllAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 primaryKeys: primaryKeys,
                 hints: hints,
@@ -339,7 +339,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             var hasImplicitTransaction = false;
             var count = primaryKeys?.AsList()?.Count;
             var deletedRows = 0;

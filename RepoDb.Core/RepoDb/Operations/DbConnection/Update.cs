@@ -728,7 +728,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             string hints = null,
             int? commandTimeout = null,
@@ -737,8 +737,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
-            return UpdateAsyncInternal<TEntity>(connection: connection,
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
+            return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup<TEntity>(key, entity),
@@ -772,7 +772,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
