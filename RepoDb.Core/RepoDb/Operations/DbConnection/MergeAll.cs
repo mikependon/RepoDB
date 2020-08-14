@@ -370,8 +370,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                qualifiers = qualifier.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
 
             // Variables needed
@@ -758,8 +758,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                qualifiers = qualifier.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
 
             // Variables needed

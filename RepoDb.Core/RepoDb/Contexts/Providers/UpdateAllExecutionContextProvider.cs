@@ -188,9 +188,9 @@ namespace RepoDb.Contexts.Providers
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var qualifier = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true) ??
+                var key = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true) ??
                     dbFields?.FirstOrDefault(dbField => dbField.IsIdentity == true);
-                qualifiers = qualifier?.AsField().AsEnumerable();
+                qualifiers = key?.AsField().AsEnumerable();
             }
 
             // Filter the actual properties for input fields

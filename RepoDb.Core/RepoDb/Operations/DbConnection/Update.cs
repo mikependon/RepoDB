@@ -267,11 +267,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: ToQueryGroup<TEntity>(qualifier, entity),
+                where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -737,11 +737,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: ToQueryGroup<TEntity>(qualifier, entity),
+                where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

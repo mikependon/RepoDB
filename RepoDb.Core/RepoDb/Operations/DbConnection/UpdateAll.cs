@@ -373,8 +373,8 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                qualifiers = qualifier.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
             return UpdateAllInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
@@ -744,8 +744,8 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                qualifiers = qualifier.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
             return UpdateAllAsyncInternalBase<TEntity>(connection: connection,
                 tableName: tableName,

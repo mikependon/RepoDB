@@ -78,9 +78,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return DeleteInternal<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(qualifier, entity),
+                where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -349,9 +349,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return DeleteAsyncInternal<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(qualifier, entity),
+                where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

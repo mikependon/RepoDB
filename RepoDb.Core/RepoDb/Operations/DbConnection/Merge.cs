@@ -604,8 +604,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
-                qualifiers = qualifier.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
 
             // Variables needed
@@ -1227,8 +1227,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var qualifier = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
-                qualifiers = qualifier.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
 
             // Variables needed
