@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace RepoDb.Reflection
 {
@@ -14,6 +15,8 @@ namespace RepoDb.Reflection
     /// </summary>
     internal static class FunctionFactory
     {
+        #region CompileDataReaderToDataEntityAsync
+
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
         /// </summary>
@@ -37,6 +40,32 @@ namespace RepoDb.Reflection
                 enableValidation);
 
         /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects in an asychronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The raw connection string.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
+        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
+        public static Task<Func<DbDataReader, TEntity>> CompileDataReaderToDataEntityAsync<TEntity>(DbDataReader reader,
+            IDbConnection connection,
+            string connectionString,
+            IDbTransaction transaction,
+            bool enableValidation)
+            where TEntity : class =>
+            Compiler.CompileDataReaderToDataEntityAsync<TEntity>(reader,
+                connection,
+                connectionString,
+                transaction,
+                enableValidation);
+
+        #endregion
+
+        #region CompileDataReaderToExpandoObject
+
+        /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
@@ -54,6 +83,27 @@ namespace RepoDb.Reflection
                 transaction);
 
         /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects in an asynchronous way.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
+        public static Task<Func<DbDataReader, ExpandoObject>> CompileDataReaderToExpandoObjectAsync(DbDataReader reader,
+            string tableName,
+            IDbConnection connection,
+            IDbTransaction transaction) =>
+            Compiler.CompileDataReaderToExpandoObjectAsync(reader,
+                tableName,
+                connection,
+                transaction);
+
+        #endregion
+
+        #region CompileDataEntityDbParameterSetter
+
+        /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
@@ -66,6 +116,10 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting)
             where TEntity : class =>
             Compiler.CompileDataEntityDbParameterSetter<TEntity>(inputFields, outputFields, dbSetting);
+
+        #endregion
+
+        #region CompileDataEntityListDbParameterSetter
 
         /// <summary>
         /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic objects.
@@ -83,6 +137,10 @@ namespace RepoDb.Reflection
             where TEntity : class =>
             Compiler.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
 
+        #endregion
+
+        #region CompileDbCommandToProperty
+
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
         /// </summary>
@@ -99,6 +157,10 @@ namespace RepoDb.Reflection
             where TEntity : class =>
             Compiler.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
 
+        #endregion
+
+        #region CompileDataEntityPropertySetter
+
         /// <summary>
         /// Gets a compiled function that is used to set the data entity object property value.
         /// </summary>
@@ -108,5 +170,7 @@ namespace RepoDb.Reflection
         public static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(Field field)
             where TEntity : class =>
             Compiler.CompileDataEntityPropertySetter<TEntity>(field);
+
+        #endregion
     }
 }

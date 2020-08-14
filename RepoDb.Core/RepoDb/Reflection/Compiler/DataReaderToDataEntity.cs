@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Linq;
 using System.Collections.Generic;
 using RepoDb.Interfaces;
+using System.Threading.Tasks;
 
 namespace RepoDb.Reflection
 {
@@ -38,6 +39,33 @@ namespace RepoDb.Reflection
             return CompileDataReaderToDataEntity<TEntity>(reader, dbFields, connection?.GetDbSetting());
         }
 
+        /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connectionString">The raw connection string.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
+        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
+        public static async Task<Func<DbDataReader, TEntity>> CompileDataReaderToDataEntityAsync<TEntity>(DbDataReader reader,
+            IDbConnection connection,
+            string connectionString,
+            IDbTransaction transaction,
+            bool enableValidation)
+            where TEntity : class
+        {
+            // Expression variables
+            var dbFields = await GetDbFieldsAsync(connection,
+                ClassMappedNameCache.Get<TEntity>(),
+                connectionString,
+                transaction,
+                enableValidation);
+
+            // return the value
+            return CompileDataReaderToDataEntity<TEntity>(reader, dbFields, connection?.GetDbSetting());
+        }
 
         /// <summary>
         /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.

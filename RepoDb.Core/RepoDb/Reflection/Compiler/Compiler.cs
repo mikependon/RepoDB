@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -278,6 +279,35 @@ namespace RepoDb.Reflection
                 {
                     dbConnection.ConnectionString = connectionString;
                     return DbFieldCache.Get(dbConnection, tableName, transaction, enableValidation);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="transaction"></param>
+        /// <param name="enableValidation"></param>
+        /// <returns></returns>
+        internal static async Task<IEnumerable<DbField>> GetDbFieldsAsync(IDbConnection connection,
+            string tableName,
+            string connectionString,
+            IDbTransaction transaction,
+            bool enableValidation)
+        {
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                return await DbFieldCache.GetAsync(connection, tableName, transaction, enableValidation);
+            }
+            else
+            {
+                using (var dbConnection = (DbConnection)Activator.CreateInstance(connection.GetType()))
+                {
+                    dbConnection.ConnectionString = connectionString;
+                    return await DbFieldCache.GetAsync(dbConnection, tableName, transaction, enableValidation);
                 }
             }
         }

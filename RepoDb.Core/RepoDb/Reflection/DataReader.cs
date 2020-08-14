@@ -96,7 +96,7 @@ namespace RepoDb.Reflection
             var list = new List<TEntity>();
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToDataEntityCompiledFunction<TEntity>(reader,
+                var func = await FunctionCache.GetDataReaderToDataEntityCompiledFunctionAsync<TEntity>(reader,
                     connection,
                     connectionString,
                     transaction,
@@ -187,7 +187,7 @@ namespace RepoDb.Reflection
             var list = new List<dynamic>();
             if (reader != null && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
+                var func = await FunctionCache.GetDataReaderToExpandoObjectCompileFunctionAsync(reader,
                     tableName,
                     connection,
                     transaction);
