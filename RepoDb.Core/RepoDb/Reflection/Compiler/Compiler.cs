@@ -570,12 +570,10 @@ namespace RepoDb.Reflection
         /// <param name="readerParameterExpression"></param>
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
-        /// <param name="ordinal"></param>
         /// <returns></returns>
         internal static Expression GetClassPropertyValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
-            DataReaderField readerField,
-            int ordinal)
+            DataReaderField readerField)
         {
             var isNullable = readerField.DbField == null || readerField.DbField?.IsNullable == true;
 
@@ -583,13 +581,13 @@ namespace RepoDb.Reflection
             {
                 // Expression for Nullables
                 return GetNullableDbFieldValueExpression(readerParameterExpression,
-                    classProperty, readerField, ordinal);
+                    classProperty, readerField);
             }
             else
             {
                 // Expression for Non-Nullables
                 return GetNonNullableDbFieldValueExpression(readerParameterExpression,
-                    classProperty, readerField, ordinal);
+                    classProperty, readerField);
             }
         }
 
@@ -599,16 +597,14 @@ namespace RepoDb.Reflection
         /// <param name="readerParameterExpression"></param>
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
-        /// <param name="ordinal"></param>
         /// <returns></returns>
         internal static Expression GetNullableDbFieldValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
-            DataReaderField readerField,
-            int ordinal)
+            DataReaderField readerField)
         {
             // IsDbNull Check
             var isDbNullExpression = Expression.Call(readerParameterExpression,
-                StaticType.DbDataReader.GetMethod("IsDBNull"), Expression.Constant(ordinal));
+                StaticType.DbDataReader.GetMethod("IsDBNull"), Expression.Constant(readerField.Ordinal));
 
             // True Expression
             var trueExpression = GetNullableTrueExpression(classProperty,
@@ -616,7 +612,7 @@ namespace RepoDb.Reflection
 
             // False expression
             var falseExpression = GetNullableFalseExpression(readerParameterExpression,
-                classProperty, readerField, ordinal);
+                classProperty, readerField);
 
             // Set the value
             return Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
@@ -632,8 +628,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression GetNonNullableDbFieldValueExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
-            DataReaderField readerField,
-            int ordinal)
+            DataReaderField readerField)
         {
             var propertyUnderlyingType = Nullable.GetUnderlyingType(classProperty.PropertyInfo.PropertyType);
             var targetType = GetTargetType(classProperty);
@@ -652,7 +647,7 @@ namespace RepoDb.Reflection
             // DbDataReader.Get<Type>()
             var expression = (Expression)Expression.Call(readerParameterExpression,
                 readerGetValueMethod,
-                Expression.Constant(ordinal));
+                Expression.Constant(readerField.Ordinal));
 
             // Convert to Target Type
             if (isConversionNeeded == true)
@@ -735,16 +730,14 @@ namespace RepoDb.Reflection
         /// <param name="readerParameterExpression"></param>
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
-        /// <param name="ordinal"></param>
         /// <returns></returns>
         internal static Expression GetNullableFalseExpression(ParameterExpression readerParameterExpression,
             ClassProperty classProperty,
-            DataReaderField readerField,
-            int ordinal)
+            DataReaderField readerField)
         {
             var propertyUnderlyingType = Nullable.GetUnderlyingType(classProperty.PropertyInfo.PropertyType);
             var targetType = GetTargetType(classProperty);
-            var ordinalExpression = Expression.Constant(ordinal);
+            var ordinalExpression = Expression.Constant(readerField.Ordinal);
             var readerGetValueMethod = GetDbReaderGetValueTargettedMethod(readerField);
             var expression = (Expression)Expression.Call(readerParameterExpression,
                 readerGetValueMethod,
@@ -1117,8 +1110,7 @@ namespace RepoDb.Reflection
 
                 // Get the value expression
                 var readerField = readerFields.First(f => string.Equals(f.Name.AsUnquoted(true, dbSetting), mappedName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
-                var valueExpression = GetClassPropertyValueExpression(readerParameterExpression,
-                    classProperty, readerField, ordinal);
+                var valueExpression = GetClassPropertyValueExpression(readerParameterExpression, classProperty, readerField);
 
                 // Add the bindings
                 memberAssignments.Add(Expression.Bind(classProperty.PropertyInfo, valueExpression));
@@ -1463,7 +1455,7 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting)
         {
             // Get the property value
-            var value = (property.Type == StaticType.PropertyInfo) ?GetObjectInstancePropertyValueExpression(property, entityInstance) :
+            var value = (property.Type == StaticType.PropertyInfo) ? GetObjectInstancePropertyValueExpression(property, entityInstance) :
                 GetEntityInstancePropertyValueExpression(entityInstance, classProperty, dbField);
 
             // Ensure the nullable
