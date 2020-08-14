@@ -228,49 +228,24 @@ namespace RepoDb.Contexts.Providers
             var insertRequest = (InsertRequest)null;
 
             // Create a different kind of requests
-            if (typeof(TEntity).IsClassType() == false)
+            if (batchSize > 1)
             {
-                if (batchSize > 1)
-                {
-                    insertAllRequest = new InsertAllRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        batchSize,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    insertRequest = new InsertRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
+                insertAllRequest = new InsertAllRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    batchSize,
+                    hints,
+                    statementBuilder);
             }
             else
             {
-                if (batchSize > 1)
-                {
-                    insertAllRequest = new InsertAllRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        batchSize,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    insertRequest = new InsertRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        hints,
-                        statementBuilder);
-                }
+                insertRequest = new InsertRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    hints,
+                    statementBuilder);
             }
 
             // Return the value

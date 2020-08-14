@@ -200,29 +200,13 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Identify the requests
-            var mergeRequest = (MergeRequest)null;
-
-            // Create a different kind of requests
-            if (typeof(TEntity).IsClassType() == false)
-            {
-                mergeRequest = new MergeRequest(tableName,
-                    connection,
-                    transaction,
-                    fields,
-                    qualifiers,
-                    hints,
-                    statementBuilder);
-            }
-            else
-            {
-                mergeRequest = new MergeRequest(typeof(TEntity),
-                    connection,
-                    transaction,
-                    fields,
-                    qualifiers,
-                    hints,
-                    statementBuilder);
-            }
+            var mergeRequest = new MergeRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                hints,
+                statementBuilder);
 
             // Return the value
             return new MergeExecutionContext<TEntity>

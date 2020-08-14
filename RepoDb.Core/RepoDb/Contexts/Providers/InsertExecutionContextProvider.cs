@@ -190,27 +190,12 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Identify the requests
-            var insertRequest = (InsertRequest)null;
-
-            // Create a different kind of requests
-            if (typeof(TEntity).IsClassType() == false)
-            {
-                insertRequest = new InsertRequest(tableName,
-                    connection,
-                    transaction,
-                    fields,
-                    hints,
-                    statementBuilder);
-            }
-            else
-            {
-                insertRequest = new InsertRequest(typeof(TEntity),
-                    connection,
-                    transaction,
-                    fields,
-                    hints,
-                    statementBuilder);
-            }
+            var insertRequest = new InsertRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                hints,
+                statementBuilder);
 
             // Return the value
             return new InsertExecutionContext<TEntity>

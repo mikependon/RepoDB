@@ -269,53 +269,26 @@ namespace RepoDb.Contexts.Providers
             var mergeRequest = (MergeRequest)null;
 
             // Create a different kind of requests
-            if (typeof(TEntity).IsClassType() == false)
+            if (batchSize > 1)
             {
-                if (batchSize > 1)
-                {
-                    mergeAllRequest = new MergeAllRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        batchSize,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    mergeRequest = new MergeRequest(tableName,
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        hints,
-                        statementBuilder);
-                }
+                mergeAllRequest = new MergeAllRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    qualifiers,
+                    batchSize,
+                    hints,
+                    statementBuilder);
             }
             else
             {
-                if (batchSize > 1)
-                {
-                    mergeAllRequest = new MergeAllRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        batchSize,
-                        hints,
-                        statementBuilder);
-                }
-                else
-                {
-                    mergeRequest = new MergeRequest(typeof(TEntity),
-                        connection,
-                        transaction,
-                        fields,
-                        qualifiers,
-                        hints,
-                        statementBuilder);
-                }
+                mergeRequest = new MergeRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    qualifiers,
+                    hints,
+                    statementBuilder);
             }
 
             // Return the value

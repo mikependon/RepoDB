@@ -171,29 +171,13 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Identify the requests
-            var updateRequest = (UpdateRequest)null;
-
-            // Create a different kind of requests
-            if (typeof(TEntity).IsClassType() == false)
-            {
-                updateRequest = new UpdateRequest(tableName,
-                    connection,
-                    transaction,
-                    where,
-                    fields,
-                    hints,
-                    statementBuilder);
-            }
-            else
-            {
-                updateRequest = new UpdateRequest(typeof(TEntity),
-                    connection,
-                    transaction,
-                    where,
-                    fields,
-                    hints,
-                    statementBuilder);
-            }
+            var updateRequest = new UpdateRequest(tableName,
+                connection,
+                transaction,
+                where,
+                fields,
+                hints,
+                statementBuilder);
 
             // Return the value
             return new UpdateExecutionContext<TEntity>
