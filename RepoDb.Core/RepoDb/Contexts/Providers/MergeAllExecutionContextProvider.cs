@@ -14,47 +14,50 @@ namespace RepoDb.Contexts.Providers
     /// <summary>
     /// 
     /// </summary>
-    internal static class UpdateAllExecutionContextProvider
+    internal static class MergeAllExecutionContextProvider
     {
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
         /// <param name="entities"></param>
+        /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
+        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static UpdateAllExecutionContext<TEntity> UpdateAllExecutionContext<TEntity>(IDbConnection connection,
-            string tableName,
+        public static MergeAllExecutionContext<TEntity> MergeAllExecutionContext<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
+            string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
             where TEntity : class
         {
             // Get the DB fields
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
             // Returnt the context
-            return UpdateAllExecutionContext<TEntity>(connection,
-                tableName,
+            return MergeAllExecutionContext<TEntity>(connection,
                 entities,
                 dbFields,
+                tableName,
                 qualifiers,
                 batchSize,
                 fields,
                 hints,
                 transaction,
-                statementBuilder);
+                statementBuilder,
+                skipIdentityCheck);
         }
 
         /// <summary>
@@ -62,40 +65,43 @@ namespace RepoDb.Contexts.Providers
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
         /// <param name="entities"></param>
+        /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
+        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static async Task<UpdateAllExecutionContext<TEntity>> UpdateAllExecutionContextAsync<TEntity>(IDbConnection connection,
-            string tableName,
+        public static async Task<MergeAllExecutionContext<TEntity>> MergeAllExecutionContextAsync<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
+            string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
             where TEntity : class
         {
             // Get the DB fields
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
             // Returnt the context
-            return UpdateAllExecutionContext<TEntity>(connection,
-                tableName,
+            return MergeAllExecutionContext<TEntity>(connection,
                 entities,
                 dbFields,
+                tableName,
                 qualifiers,
                 batchSize,
                 fields,
                 hints,
                 transaction,
-                statementBuilder);
+                statementBuilder,
+                skipIdentityCheck);
         }
 
         /// <summary>
@@ -103,38 +109,57 @@ namespace RepoDb.Contexts.Providers
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
+        /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
+        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        private static UpdateAllExecutionContext<TEntity> UpdateAllExecutionContext<TEntity>(IDbConnection connection,
-            string tableName,
+        private static MergeAllExecutionContext<TEntity> MergeAllExecutionContext<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,
+            string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
             where TEntity : class
         {
-            // Variables needed
             var dbSetting = connection.GetDbSetting();
-            var inputFields = new List<DbField>();
+            var identity = (Field)null;
+            var inputFields = (IEnumerable<DbField>)null;
+            var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+
+            // Check the fields
+            if (fields?.Any() != true)
+            {
+                fields = dbFields?.AsFields();
+            }
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var qualifier = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true) ??
-                    dbFields?.FirstOrDefault(dbField => dbField.IsIdentity == true);
-                qualifiers = qualifier?.AsField().AsEnumerable();
+                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
+                qualifiers = primary?.AsField().AsEnumerable();
+            }
+
+            // Set the identity value
+            if (skipIdentityCheck == false)
+            {
+                identity = IdentityCache.Get<TEntity>()?.AsField();
+                if (identity == null && identityDbField != null)
+                {
+                    identity = FieldCache.Get<TEntity>()?.FirstOrDefault(field =>
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+                }
             }
 
             // Filter the actual properties for input fields
@@ -156,12 +181,19 @@ namespace RepoDb.Contexts.Providers
             // Variables for the context
             var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
             var singleEntityFunc = (Action<DbCommand, TEntity>)null;
+            var identitySetterFunc = (Action<TEntity, object>)null;
+
+            // Get if we have not skipped it
+            if (skipIdentityCheck == false && identity != null && typeof(TEntity).IsClassType())
+            {
+                identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
+            }
 
             // Identity which objects to set
             if (batchSize <= 1)
             {
                 singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".UpdateAll"),
+                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                     inputFields?.AsList(),
                     null,
                     dbSetting);
@@ -169,30 +201,76 @@ namespace RepoDb.Contexts.Providers
             else
             {
                 multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".UpdateAll"),
+                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
                     inputFields?.AsList(),
                     null,
                     batchSize,
                     dbSetting);
             }
 
-            // Identity the requests
-            var updateAllRequest = new UpdateAllRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                qualifiers,
-                batchSize,
-                hints,
-                statementBuilder);
+            // Identify the requests
+            var mergeAllRequest = (MergeAllRequest)null;
+            var mergeRequest = (MergeRequest)null;
+
+            // Create a different kind of requests
+            if (typeof(TEntity).IsClassType() == false)
+            {
+                if (batchSize > 1)
+                {
+                    mergeAllRequest = new MergeAllRequest(tableName,
+                        connection,
+                        transaction,
+                        fields,
+                        qualifiers,
+                        batchSize,
+                        hints,
+                        statementBuilder);
+                }
+                else
+                {
+                    mergeRequest = new MergeRequest(tableName,
+                        connection,
+                        transaction,
+                        fields,
+                        qualifiers,
+                        hints,
+                        statementBuilder);
+                }
+            }
+            else
+            {
+                if (batchSize > 1)
+                {
+                    mergeAllRequest = new MergeAllRequest(typeof(TEntity),
+                        connection,
+                        transaction,
+                        fields,
+                        qualifiers,
+                        batchSize,
+                        hints,
+                        statementBuilder);
+                }
+                else
+                {
+                    mergeRequest = new MergeRequest(typeof(TEntity),
+                        connection,
+                        transaction,
+                        fields,
+                        qualifiers,
+                        hints,
+                        statementBuilder);
+                }
+            }
 
             // Return the value
-            return new UpdateAllExecutionContext<TEntity>
+            return new MergeAllExecutionContext<TEntity>
             {
-                CommandText = CommandTextCache.GetUpdateAllText(updateAllRequest),
+                CommandText = batchSize > 1 ? CommandTextCache.GetMergeAllText(mergeAllRequest) : CommandTextCache.GetMergeText(mergeRequest),
                 InputFields = inputFields,
+                BatchSize = batchSize,
                 SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc
+                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
+                IdentityPropertySetterFunc = identitySetterFunc
             };
         }
     }
