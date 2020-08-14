@@ -1127,7 +1127,7 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = UpdateAllExecutionContextProvider.UpdateAllExecutionContext<TEntity>(connection,
+            var context = UpdateAllExecutionContextProvider.Create<TEntity>(connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -1215,7 +1215,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = UpdateAllExecutionContextProvider.UpdateAllExecutionContext<TEntity>(connection,
+                                context = UpdateAllExecutionContextProvider.Create<TEntity>(connection,
                                     tableName,
                                     batchItems,
                                     qualifiers,
@@ -1329,7 +1329,7 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = await UpdateAllExecutionContextProvider.UpdateAllExecutionContextAsync<TEntity>(connection,
+            var context = await UpdateAllExecutionContextProvider.CreateAsync<TEntity>(connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -1417,7 +1417,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = UpdateAllExecutionContextProvider.UpdateAllExecutionContext<TEntity>(connection,
+                                context = UpdateAllExecutionContextProvider.Create<TEntity>(connection,
                                     tableName,
                                     batchItems,
                                     qualifiers,

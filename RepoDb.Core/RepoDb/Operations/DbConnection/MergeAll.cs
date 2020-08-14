@@ -1251,7 +1251,7 @@ namespace RepoDb
             batchSize = Math.Min(batchSize, entities.Count());
 
             // Get the context
-            var context = MergeAllExecutionContextProvider.MergeAllExecutionContext<TEntity>(connection,
+            var context = MergeAllExecutionContextProvider.Create<TEntity>(connection,
                 entities,
                 tableName,
                 qualifiers,
@@ -1350,7 +1350,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = MergeAllExecutionContextProvider.MergeAllExecutionContext<TEntity>(connection,
+                                context = MergeAllExecutionContextProvider.Create<TEntity>(connection,
                                     batchItems,
                                     tableName,
                                     qualifiers,
@@ -1648,7 +1648,7 @@ namespace RepoDb
             batchSize = Math.Min(batchSize, entities.Count());
 
             // Get the context
-            var context = await MergeAllExecutionContextProvider.MergeAllExecutionContextAsync<TEntity>(connection,
+            var context = await MergeAllExecutionContextProvider.CreateAsync<TEntity>(connection,
                 entities,
                 tableName,
                 qualifiers,
@@ -1747,7 +1747,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = await MergeAllExecutionContextProvider.MergeAllExecutionContextAsync<TEntity>(connection,
+                                context = await MergeAllExecutionContextProvider.CreateAsync<TEntity>(connection,
                                     batchItems,
                                     tableName,
                                     qualifiers,

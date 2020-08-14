@@ -1419,7 +1419,7 @@ namespace RepoDb
             where?.IsForUpdate();
 
             // Get the context
-            var context = UpdateExecutionContextProvider.UpdateExecutionContext<TEntity>(connection,
+            var context = UpdateExecutionContextProvider.Create<TEntity>(connection,
                 tableName,
                 where,
                 fields,
@@ -1512,7 +1512,7 @@ namespace RepoDb
             where?.IsForUpdate();
 
             // Get the context
-            var context = await UpdateExecutionContextProvider.UpdateExecutionContextAsync<TEntity>(connection,
+            var context = await UpdateExecutionContextProvider.CreateAsync<TEntity>(connection,
                 tableName,
                 where,
                 fields,

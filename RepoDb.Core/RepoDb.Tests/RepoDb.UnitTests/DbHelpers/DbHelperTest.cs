@@ -454,7 +454,7 @@ namespace RepoDb.UnitTests.DbHelpers
 
             // Act
             connection.Update(ClassMappedNameCache.Get<DbHelperDataEntity>(),
-                new DbHelperDataEntity { Id = 1, Name = "Name" });
+                new { Id = 1, Name = "Name" });
 
             // Assert
             dbHelper.Verify(builder =>

@@ -1,4 +1,5 @@
-﻿using RepoDb.Contexts.Execution;
+﻿using RepoDb.Contexts.Cachers;
+using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -19,35 +20,25 @@ namespace RepoDb.Contexts.Providers
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="where"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="where"></param>
         /// <returns></returns>
-        public static UpdateExecutionContext<TEntity> UpdateExecutionContext<TEntity>(IDbConnection connection,
-            string tableName,
-            QueryGroup where,
+        private static string GetKey<TEntity>(string tableName,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
+            string hints,
+            QueryGroup where)
         {
-            // Get the DB fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Returnt the context
-            return UpdateExecutionContext<TEntity>(connection,
+            return string.Concat(typeof(TEntity).FullName,
+                ";",
                 tableName,
-                where,
-                dbFields,
-                fields,
+                ";",
+                fields?.Select(f => f.Name).Join(","),
+                ";",
                 hints,
-                transaction,
-                statementBuilder);
+                ";",
+                where?.GetHashCode());
         }
 
         /// <summary>
@@ -62,7 +53,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static async Task<UpdateExecutionContext<TEntity>> UpdateExecutionContextAsync<TEntity>(IDbConnection connection,
+        public static UpdateExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields,
@@ -71,11 +62,18 @@ namespace RepoDb.Contexts.Providers
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Get the DB fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var key = GetKey<TEntity>(tableName, fields, hints, where);
 
-            // Return the context
-            return UpdateExecutionContext<TEntity>(connection,
+            // Get from cache
+            var context = UpdateExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
                 tableName,
                 where,
                 dbFields,
@@ -83,6 +81,60 @@ namespace RepoDb.Contexts.Providers
                 hints,
                 transaction,
                 statementBuilder);
+
+            // Add to cache
+            UpdateExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="where"></param>
+        /// <param name="fields"></param>
+        /// <param name="hints"></param>
+        /// <param name="transaction"></param>
+        /// <param name="statementBuilder"></param>
+        /// <returns></returns>
+        public static async Task<UpdateExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+            string tableName,
+            QueryGroup where,
+            IEnumerable<Field> fields,
+            string hints = null,
+            IDbTransaction transaction = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            var key = GetKey<TEntity>(tableName, fields, hints, where);
+
+            // Get from cache
+            var context = UpdateExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
+                tableName,
+                where,
+                dbFields,
+                fields,
+                hints,
+                transaction,
+                statementBuilder);
+
+            // Add to cache
+            UpdateExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
         }
 
         /// <summary>
@@ -98,7 +150,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        private static UpdateExecutionContext<TEntity> UpdateExecutionContext<TEntity>(IDbConnection connection,
+        private static UpdateExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<DbField> dbFields,

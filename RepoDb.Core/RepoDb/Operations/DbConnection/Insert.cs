@@ -608,7 +608,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Get the context
-            var context = InsertExecutionContextProvider.InsertExecutionContext<TEntity>(connection,
+            var context = InsertExecutionContextProvider.Create<TEntity>(connection,
                 tableName,
                 fields,
                 hints,
@@ -714,7 +714,7 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
             // Get the context
-            var context = await InsertExecutionContextProvider.InsertExecutionContextAsync<TEntity>(connection,
+            var context = await InsertExecutionContextProvider.CreateAsync<TEntity>(connection,
                 tableName,
                 fields,
                 hints,

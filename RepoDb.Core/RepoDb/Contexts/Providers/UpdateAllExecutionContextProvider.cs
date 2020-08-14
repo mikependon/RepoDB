@@ -1,4 +1,5 @@
-﻿using RepoDb.Contexts.Execution;
+﻿using RepoDb.Contexts.Cachers;
+using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -20,41 +21,29 @@ namespace RepoDb.Contexts.Providers
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="entities"></param>
         /// <param name="qualifiers"></param>
-        /// <param name="batchSize"></param>
         /// <param name="fields"></param>
+        /// <param name="batchSize"></param>
         /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static UpdateAllExecutionContext<TEntity> UpdateAllExecutionContext<TEntity>(IDbConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
+        private static string GetKey<TEntity>(string tableName,
             IEnumerable<Field> qualifiers,
-            int batchSize,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
+            int batchSize,
+            string hints)
         {
-            // Get the DB fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Returnt the context
-            return UpdateAllExecutionContext<TEntity>(connection,
+            return string.Concat(typeof(TEntity).FullName,
+                ";",
                 tableName,
-                entities,
-                dbFields,
-                qualifiers,
+                ";",
+                qualifiers?.Select(f => f.Name).Join(","),
+                ";",
+                fields?.Select(f => f.Name).Join(","),
+                ";",
                 batchSize,
-                fields,
-                hints,
-                transaction,
-                statementBuilder);
+                ";",
+                hints);
         }
 
         /// <summary>
@@ -71,7 +60,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static async Task<UpdateAllExecutionContext<TEntity>> UpdateAllExecutionContextAsync<TEntity>(IDbConnection connection,
+        public static UpdateAllExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -82,11 +71,18 @@ namespace RepoDb.Contexts.Providers
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Get the DB fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
 
-            // Returnt the context
-            return UpdateAllExecutionContext<TEntity>(connection,
+            // Get from cache
+            var context = UpdateAllExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
                 tableName,
                 entities,
                 dbFields,
@@ -96,6 +92,66 @@ namespace RepoDb.Contexts.Providers
                 hints,
                 transaction,
                 statementBuilder);
+
+            // Add to cache
+            UpdateAllExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="fields"></param>
+        /// <param name="hints"></param>
+        /// <param name="transaction"></param>
+        /// <param name="statementBuilder"></param>
+        /// <returns></returns>
+        public static async Task<UpdateAllExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            IEnumerable<Field> fields,
+            string hints = null,
+            IDbTransaction transaction = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
+
+            // Get from cache
+            var context = UpdateAllExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
+                tableName,
+                entities,
+                dbFields,
+                qualifiers,
+                batchSize,
+                fields,
+                hints,
+                transaction,
+                statementBuilder);
+
+            // Add to cache
+            UpdateAllExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
         }
 
         /// <summary>
@@ -113,7 +169,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        private static UpdateAllExecutionContext<TEntity> UpdateAllExecutionContext<TEntity>(IDbConnection connection,
+        private static UpdateAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,

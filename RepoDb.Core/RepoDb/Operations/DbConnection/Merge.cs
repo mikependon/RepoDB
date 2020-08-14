@@ -1843,7 +1843,7 @@ namespace RepoDb
             }
 
             // Get the context
-            var context = MergeExecutionContextProvider.MergeExecutionContext<TEntity>(connection,
+            var context = MergeExecutionContextProvider.Create<TEntity>(connection,
                 tableName,
                 qualifiers,
                 fields,
@@ -2142,7 +2142,7 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
 
             // Get the context
-            var context = await MergeExecutionContextProvider.MergeExecutionContextAsync<TEntity>(connection,
+            var context = await MergeExecutionContextProvider.CreateAsync<TEntity>(connection,
                 tableName,
                 qualifiers,
                 fields,

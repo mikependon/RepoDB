@@ -454,7 +454,7 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = InsertAllExecutionContextProvider.InsertAllExecutionContext<TEntity>(connection,
+            var context = InsertAllExecutionContextProvider.Create<TEntity>(connection,
                 tableName,
                 batchSize,
                 fields,
@@ -555,7 +555,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextProvider.InsertAllExecutionContext<TEntity>(connection,
+                                context = InsertAllExecutionContextProvider.Create<TEntity>(connection,
                                     tableName,
                                     batchItems.Count,
                                     fields,
@@ -691,7 +691,7 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = InsertAllExecutionContextProvider.InsertAllExecutionContext<TEntity>(connection,
+            var context = InsertAllExecutionContextProvider.Create<TEntity>(connection,
                 tableName,
                 batchSize,
                 fields,
@@ -792,7 +792,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = await InsertAllExecutionContextProvider.InsertAllExecutionContextAsync<TEntity>(connection,
+                                context = await InsertAllExecutionContextProvider.CreateAsync<TEntity>(connection,
                                     tableName,
                                     batchItems.Count,
                                     fields,

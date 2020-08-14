@@ -1,4 +1,5 @@
-﻿using RepoDb.Contexts.Execution;
+﻿using RepoDb.Contexts.Cachers;
+using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -19,38 +20,25 @@ namespace RepoDb.Contexts.Providers
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
-        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static MergeExecutionContext<TEntity> MergeExecutionContext<TEntity>(IDbConnection connection,
-            string tableName,
+        private static string GetKey<TEntity>(string tableName,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
-            where TEntity : class
+            string hints)
         {
-            // Get the DB fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Returnt the context
-            return MergeExecutionContext<TEntity>(connection,
-                dbFields,
+            return string.Concat(typeof(TEntity).FullName,
+                ";",
                 tableName,
-                qualifiers,
-                fields,
-                hints,
-                transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                ";",
+                qualifiers?.Select(f => f.Name).Join(","),
+                ";",
+                fields?.Select(f => f.Name).Join(","),
+                ";",
+                hints);
         }
 
         /// <summary>
@@ -66,7 +54,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static async Task<MergeExecutionContext<TEntity>> MergeExecutionContextAsync<TEntity>(IDbConnection connection,
+        public static MergeExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields,
@@ -76,11 +64,18 @@ namespace RepoDb.Contexts.Providers
             bool skipIdentityCheck = false)
             where TEntity : class
         {
-            // Get the DB fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var key = GetKey<TEntity>(tableName, qualifiers, fields, hints);
 
-            // Returnt the context
-            return MergeExecutionContext<TEntity>(connection,
+            // Get from cache
+            var context = MergeExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
                 qualifiers,
@@ -89,6 +84,63 @@ namespace RepoDb.Contexts.Providers
                 transaction,
                 statementBuilder,
                 skipIdentityCheck);
+
+            // Add to cache
+            MergeExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="fields"></param>
+        /// <param name="hints"></param>
+        /// <param name="transaction"></param>
+        /// <param name="statementBuilder"></param>
+        /// <param name="skipIdentityCheck"></param>
+        /// <returns></returns>
+        public static async Task<MergeExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+            string tableName,
+            IEnumerable<Field> qualifiers,
+            IEnumerable<Field> fields,
+            string hints = null,
+            IDbTransaction transaction = null,
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
+            where TEntity : class
+        {
+            var key = GetKey<TEntity>(tableName, qualifiers, fields, hints);
+
+            // Get from cache
+            var context = MergeExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
+                dbFields,
+                tableName,
+                qualifiers,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
+
+            // Add to cache
+            MergeExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
         }
 
         /// <summary>
@@ -105,7 +157,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        private static MergeExecutionContext<TEntity> MergeExecutionContext<TEntity>(IDbConnection connection,
+        private static MergeExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<DbField> dbFields,
             string tableName,
             IEnumerable<Field> qualifiers,

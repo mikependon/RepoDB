@@ -1,4 +1,5 @@
-﻿using RepoDb.Contexts.Execution;
+﻿using RepoDb.Contexts.Cachers;
+using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -19,35 +20,21 @@ namespace RepoDb.Contexts.Providers
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
-        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static InsertExecutionContext<TEntity> InsertExecutionContext<TEntity>(IDbConnection connection,
-            string tableName,
+        private static string GetKey<TEntity>(string tableName,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
-            where TEntity : class
+            string hints)
         {
-            // Get the DB fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Returnt the context
-            return InsertExecutionContext<TEntity>(connection,
-                dbFields,
+            return string.Concat(typeof(TEntity).FullName,
+                ";",
                 tableName,
-                fields,
-                hints,
-                transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                ";",
+                fields?.Select(f => f.Name).Join(","),
+                ";",
+                hints);
         }
 
         /// <summary>
@@ -62,7 +49,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static async Task<InsertExecutionContext<TEntity>> InsertExecutionContextAsync<TEntity>(IDbConnection connection,
+        public static InsertExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
@@ -71,11 +58,18 @@ namespace RepoDb.Contexts.Providers
             bool skipIdentityCheck = false)
             where TEntity : class
         {
-            // Get the DB fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var key = GetKey<TEntity>(tableName, fields, hints);
 
-            // Returnt the context
-            return InsertExecutionContext<TEntity>(connection,
+            // Get from cache
+            var context = InsertExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
                 fields,
@@ -83,6 +77,60 @@ namespace RepoDb.Contexts.Providers
                 transaction,
                 statementBuilder,
                 skipIdentityCheck);
+
+            // Add to cache
+            InsertExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="hints"></param>
+        /// <param name="transaction"></param>
+        /// <param name="statementBuilder"></param>
+        /// <param name="skipIdentityCheck"></param>
+        /// <returns></returns>
+        public static async Task<InsertExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+            string tableName,
+            IEnumerable<Field> fields,
+            string hints = null,
+            IDbTransaction transaction = null,
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
+            where TEntity : class
+        {
+            var key = GetKey<TEntity>(tableName, fields, hints);
+
+            // Get from cache
+            var context = InsertExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
+                dbFields,
+                tableName,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
+
+            // Add to cache
+            InsertExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
         }
 
         /// <summary>
@@ -98,7 +146,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        private static InsertExecutionContext<TEntity> InsertExecutionContext<TEntity>(IDbConnection connection,
+        private static InsertExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<DbField> dbFields,
             string tableName,
             IEnumerable<Field> fields,

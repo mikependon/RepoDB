@@ -1,4 +1,5 @@
-﻿using RepoDb.Contexts.Execution;
+﻿using RepoDb.Contexts.Cachers;
+using RepoDb.Contexts.Execution;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
@@ -20,44 +21,29 @@ namespace RepoDb.Contexts.Providers
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="entities"></param>
         /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
-        /// <param name="batchSize"></param>
         /// <param name="fields"></param>
+        /// <param name="batchSize"></param>
         /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
-        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static MergeAllExecutionContext<TEntity> MergeAllExecutionContext<TEntity>(IDbConnection connection,
-            IEnumerable<TEntity> entities,
-            string tableName,
+        private static string GetKey<TEntity>(string tableName,
             IEnumerable<Field> qualifiers,
-            int batchSize,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
-            where TEntity : class
+            int batchSize,
+            string hints)
         {
-            // Get the DB fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
-            // Returnt the context
-            return MergeAllExecutionContext<TEntity>(connection,
-                entities,
-                dbFields,
+            return string.Concat(typeof(TEntity).FullName,
+                ";",
                 tableName,
-                qualifiers,
+                ";",
+                qualifiers?.Select(f => f.Name).Join(","),
+                ";",
+                fields?.Select(f => f.Name).Join(","),
+                ";",
                 batchSize,
-                fields,
-                hints,
-                transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                ";",
+                hints);
         }
 
         /// <summary>
@@ -75,7 +61,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        public static async Task<MergeAllExecutionContext<TEntity>> MergeAllExecutionContextAsync<TEntity>(IDbConnection connection,
+        public static MergeAllExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
             string tableName,
             IEnumerable<Field> qualifiers,
@@ -87,11 +73,18 @@ namespace RepoDb.Contexts.Providers
             bool skipIdentityCheck = false)
             where TEntity : class
         {
-            // Get the DB fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
 
-            // Returnt the context
-            return MergeAllExecutionContext<TEntity>(connection,
+            // Get from cache
+            var context = MergeAllExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
                 entities,
                 dbFields,
                 tableName,
@@ -102,6 +95,69 @@ namespace RepoDb.Contexts.Providers
                 transaction,
                 statementBuilder,
                 skipIdentityCheck);
+
+            // Add to cache
+            MergeAllExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="entities"></param>
+        /// <param name="tableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="fields"></param>
+        /// <param name="hints"></param>
+        /// <param name="transaction"></param>
+        /// <param name="statementBuilder"></param>
+        /// <param name="skipIdentityCheck"></param>
+        /// <returns></returns>
+        public static async Task<MergeAllExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+            IEnumerable<TEntity> entities,
+            string tableName,
+            IEnumerable<Field> qualifiers,
+            int batchSize,
+            IEnumerable<Field> fields,
+            string hints = null,
+            IDbTransaction transaction = null,
+            IStatementBuilder statementBuilder = null,
+            bool skipIdentityCheck = false)
+            where TEntity : class
+        {
+            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
+
+            // Get from cache
+            var context = MergeAllExecutionContextCache.Get<TEntity>(key);
+            if (context != null)
+            {
+                return context;
+            }
+
+            // Create
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            context = CreateInternal<TEntity>(connection,
+                entities,
+                dbFields,
+                tableName,
+                qualifiers,
+                batchSize,
+                fields,
+                hints,
+                transaction,
+                statementBuilder,
+                skipIdentityCheck);
+
+            // Add to cache
+            MergeAllExecutionContextCache.Add<TEntity>(key, context);
+
+            // Return
+            return context;
         }
 
         /// <summary>
@@ -120,7 +176,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
-        private static MergeAllExecutionContext<TEntity> MergeAllExecutionContext<TEntity>(IDbConnection connection,
+        private static MergeAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,
             string tableName,
