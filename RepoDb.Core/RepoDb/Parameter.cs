@@ -21,7 +21,7 @@ namespace RepoDb
             bool prependUnderscore)
         {
             // Name is required
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new NullReferenceException(name);
             }

@@ -153,7 +153,7 @@ namespace RepoDb.Requests
             }
 
             // Add the hints
-            if (!string.IsNullOrEmpty(Hints))
+            if (!string.IsNullOrWhiteSpace(Hints))
             {
                 hashCode += Hints.GetHashCode();
             }

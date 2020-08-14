@@ -34,7 +34,7 @@ namespace RepoDb.Reflection
             public static object Parse(Type enumType,
                 string value)
             {
-                if (!string.IsNullOrEmpty(value))
+                if (!string.IsNullOrWhiteSpace(value))
                 {
                     return Enum.Parse(enumType?.GetUnderlyingType(), value, true);
                 }
@@ -268,7 +268,7 @@ namespace RepoDb.Reflection
             IDbTransaction transaction,
             bool enableValidation)
         {
-            if (string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrWhiteSpace(connectionString))
             {
                 return DbFieldCache.Get(connection, tableName, transaction, enableValidation);
             }

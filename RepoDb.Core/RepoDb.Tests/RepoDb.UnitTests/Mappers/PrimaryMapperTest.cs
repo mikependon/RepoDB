@@ -402,7 +402,7 @@ namespace RepoDb.UnitTests.Mappers
             PrimaryMapper.Add<PrimaryMapperTestClass>(propertyName: "  ");
         }
 
-        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnPrimaryMapperViaFieldThatIsEmptySpaces()
         {
             // Setup

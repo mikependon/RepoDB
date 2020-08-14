@@ -211,7 +211,7 @@ namespace RepoDb.Extensions
                 var current = default(string);
                 foreach (var item in splitted)
                 {
-                    if (!string.IsNullOrEmpty(current))
+                    if (!string.IsNullOrWhiteSpace(current))
                     {
                         if (current.StartsWith(dbSetting.OpeningQuote) && item.EndsWith(dbSetting.ClosingQuote))
                         {

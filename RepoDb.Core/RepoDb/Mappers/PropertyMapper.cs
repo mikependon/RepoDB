@@ -335,7 +335,7 @@ namespace RepoDb
         /// <param name="columnName">The column name to be validated.</param>
         private static void ValidateTargetColumnName(string columnName)
         {
-            if (string.IsNullOrEmpty(columnName?.Trim()))
+            if (string.IsNullOrWhiteSpace(columnName))
             {
                 throw new NullReferenceException("The target column name cannot be null or empty.");
             }

@@ -496,7 +496,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder As(string alias)
         {
-            return string.IsNullOrEmpty(alias) ? Append("AS") : Append(string.Concat("AS ", alias));
+            return string.IsNullOrWhiteSpace(alias) ? Append("AS") : Append(string.Concat("AS ", alias));
         }
 
         /// <summary>
@@ -964,7 +964,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder HintsFrom(string hints)
         {
-            return string.IsNullOrEmpty(hints) == false ? Append(hints) : this;
+            return string.IsNullOrWhiteSpace(hints) == false ? Append(hints) : this;
         }
 
         /// <summary>

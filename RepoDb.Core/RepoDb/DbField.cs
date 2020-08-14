@@ -32,7 +32,7 @@ namespace RepoDb
             string databaseType)
         {
             // Name is required
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new NullReferenceException("Name");
             }

@@ -33,7 +33,7 @@ namespace RepoDb
             Type type)
         {
             // Name is required
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new NullReferenceException(name);
             }
@@ -81,7 +81,7 @@ namespace RepoDb
         /// <returns>An enumerable of <see cref="Field"/> object.</returns>
         public static IEnumerable<Field> From(string name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw new NullReferenceException("The field name must be null or empty.");
             }
@@ -99,7 +99,7 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The list of fields must not be null.");
             }
-            if (fields.Any(field => string.IsNullOrEmpty(field?.Trim())))
+            if (fields.Any(field => string.IsNullOrWhiteSpace(field)))
             {
                 throw new NullReferenceException("The field name must be null or empty.");
             }

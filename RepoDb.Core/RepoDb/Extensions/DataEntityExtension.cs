@@ -49,7 +49,7 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            if (string.IsNullOrEmpty(tableAttribute.Schema))
+            if (string.IsNullOrWhiteSpace(tableAttribute.Schema))
             {
                 return tableAttribute.Name;
             }

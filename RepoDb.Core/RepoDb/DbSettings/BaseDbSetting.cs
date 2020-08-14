@@ -122,7 +122,7 @@ namespace RepoDb.DbSettings
             hashCode += AreTableHintsSupported.GetHashCode();
 
             // ClosingQuote
-            if (!string.IsNullOrEmpty(ClosingQuote))
+            if (!string.IsNullOrWhiteSpace(ClosingQuote))
             {
                 hashCode += ClosingQuote.GetHashCode();
             }
@@ -134,7 +134,7 @@ namespace RepoDb.DbSettings
             }
 
             // DefaultSchema
-            if (!string.IsNullOrEmpty(DefaultSchema))
+            if (!string.IsNullOrWhiteSpace(DefaultSchema))
             {
                 hashCode += DefaultSchema.GetHashCode();
             }
@@ -155,13 +155,13 @@ namespace RepoDb.DbSettings
             hashCode += IsUseUpsert.GetHashCode();
 
             // OpeningQuote
-            if (!string.IsNullOrEmpty(OpeningQuote))
+            if (!string.IsNullOrWhiteSpace(OpeningQuote))
             {
                 hashCode += OpeningQuote.GetHashCode();
             }
 
             // ParameterPrefix
-            if (!string.IsNullOrEmpty(ParameterPrefix))
+            if (!string.IsNullOrWhiteSpace(ParameterPrefix))
             {
                 hashCode += ParameterPrefix.GetHashCode();
             }

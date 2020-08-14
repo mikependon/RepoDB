@@ -57,7 +57,7 @@ namespace RepoDb
                     .Join(StringConstant.Period)
                     .GetHashCode();
                 var key = typeof(TEntity).FullName.GetHashCode() + fields.GetHashCode();
-                if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
+                if (string.IsNullOrWhiteSpace(connection?.ConnectionString) == false)
                 {
                     key += connection.ConnectionString.GetHashCode();
                 }
@@ -124,7 +124,7 @@ namespace RepoDb
                 {
                     key += tableName.GetHashCode();
                 }
-                if (string.IsNullOrEmpty(connection?.ConnectionString) == false)
+                if (string.IsNullOrWhiteSpace(connection?.ConnectionString) == false)
                 {
                     key += connection.ConnectionString.GetHashCode();
                 }

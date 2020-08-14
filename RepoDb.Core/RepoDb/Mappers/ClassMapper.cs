@@ -166,7 +166,7 @@ namespace RepoDb
         /// <param name="databaseObjectName">The target database object name.</param>
         private static void Validate(string databaseObjectName)
         {
-            if (string.IsNullOrEmpty(databaseObjectName?.Trim()))
+            if (string.IsNullOrWhiteSpace(databaseObjectName))
             {
                 throw new NullReferenceException("The database object name cannot be null.");
             }

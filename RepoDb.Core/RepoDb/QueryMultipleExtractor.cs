@@ -93,7 +93,7 @@ namespace RepoDb
             key += typeof(TEntity).FullName.GetHashCode();
 
             // Add the connection string hashcode
-            if (!string.IsNullOrEmpty(connectionString))
+            if (!string.IsNullOrWhiteSpace(connectionString))
             {
                 key += connectionString.GetHashCode();
             }

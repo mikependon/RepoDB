@@ -402,7 +402,7 @@ namespace RepoDb.UnitTests.Mappers
             IdentityMapper.Add<IdentityMapperTestClass>(propertyName: "  ");
         }
 
-        [TestMethod, ExpectedException(typeof(PropertyNotFoundException))]
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnIdentityMapperViaFieldThatIsEmptySpaces()
         {
             // Setup

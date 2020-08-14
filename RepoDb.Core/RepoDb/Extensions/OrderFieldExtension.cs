@@ -39,7 +39,7 @@ namespace RepoDb.Extensions
             string alias,
             IDbSetting dbSetting)
         {
-            if (string.IsNullOrEmpty(alias))
+            if (string.IsNullOrWhiteSpace(alias))
             {
                 return string.Concat(orderField.Name.AsField(dbSetting), " ", orderField.GetOrderText());
             }

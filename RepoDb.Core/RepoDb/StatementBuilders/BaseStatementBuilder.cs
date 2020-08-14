@@ -1212,7 +1212,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the table.</param>
         protected void GuardTableName(string tableName)
         {
-            if (string.IsNullOrEmpty(tableName?.Trim()))
+            if (string.IsNullOrWhiteSpace(tableName))
             {
                 throw new NullReferenceException("The name of the table could be null.");
             }
@@ -1248,7 +1248,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The value to be evaluated.</param>
         protected void GuardHints(string hints = null)
         {
-            if (!string.IsNullOrEmpty(hints) && !DbSetting.AreTableHintsSupported)
+            if (!string.IsNullOrWhiteSpace(hints) && !DbSetting.AreTableHintsSupported)
             {
                 throw new NotSupportedException("The table hints are not supported on this database provider statement builder.");
             }

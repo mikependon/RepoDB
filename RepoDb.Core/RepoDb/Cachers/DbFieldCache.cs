@@ -90,13 +90,13 @@ namespace RepoDb
             var result = (IEnumerable<DbField>)null;
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
-            if (!string.IsNullOrEmpty(connection?.Database))
+            if (!string.IsNullOrWhiteSpace(connection?.Database))
             {
                 key += connection.Database.GetHashCode();
             }
 
             // Add the hashcode of the table name
-            if (string.IsNullOrEmpty(tableName) == false)
+            if (string.IsNullOrWhiteSpace(tableName) == false)
             {
                 key += tableName.GetHashCode();
             }
@@ -172,13 +172,13 @@ namespace RepoDb
             var result = (IEnumerable<DbField>)null;
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
-            if (!string.IsNullOrEmpty(connection?.Database))
+            if (!string.IsNullOrWhiteSpace(connection?.Database))
             {
                 key += connection.Database.GetHashCode();
             }
 
             // Add the hashcode of the table name
-            if (string.IsNullOrEmpty(tableName) == false)
+            if (string.IsNullOrWhiteSpace(tableName) == false)
             {
                 key += tableName.GetHashCode();
             }

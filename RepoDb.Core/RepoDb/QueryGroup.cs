@@ -1383,7 +1383,7 @@ namespace RepoDb
             var value = Convert.ToString(expression.Arguments.FirstOrDefault()?.GetValue());
 
             // Make sure it has a value
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrWhiteSpace(value))
             {
                 throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
             }
