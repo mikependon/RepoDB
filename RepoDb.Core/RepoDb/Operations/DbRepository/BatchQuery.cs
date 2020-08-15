@@ -19,6 +19,322 @@ namespace RepoDb
         /// Query the rows from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            object where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            Expression<Func<TEntity, bool>> where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            QueryField where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            IEnumerable<QueryField> where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            QueryGroup where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
@@ -297,6 +613,269 @@ namespace RepoDb
         #endregion
 
         #region BatchQueryAsync<TEntity>
+
+        /// <summary>
+        /// Query the rows from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            object where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            Expression<Func<TEntity, bool>> where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            QueryField where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Query the rows from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            IEnumerable<QueryField> where = null,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.BatchQueryAsync<TEntity>(tableName: tableName,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    where: where,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         /// <summary>
         /// Query the rows from the database by batch in an asynchronous way.
