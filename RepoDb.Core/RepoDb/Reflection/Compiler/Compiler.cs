@@ -51,7 +51,7 @@ namespace RepoDb.Reflection
             }
 
             /// <summary>
-            /// Converts the value using the desired convert method (of type <see cref="MethodInfo"/>). If not given, it will use the <see cref="Convert"/> class.
+            /// Converts the value using the desired convert method (of type <see cref="MethodInfo"/>). If not given, it will use the <see cref="System.Convert"/> class.
             /// </summary>
             /// <param name="sourceType">The source type.</param>
             /// <param name="targetType">The target type.</param>
@@ -528,11 +528,18 @@ namespace RepoDb.Reflection
                 return expression;
             }
 
-            var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", toType.Name),
-                new[] { expression.Type });
+            if (toType.IsAssignableFrom(expression.Type) == false)
+            {
+                var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", toType.Name),
+                    new[] { expression.Type });
 
-            return (methodInfo != null) ? Expression.Call(null, methodInfo, expression) :
-                ConvertExpressionToTypeExpression(expression, toType);
+                if (methodInfo != null)
+                {
+                    return Expression.Call(null, methodInfo, expression);
+                }
+            }
+
+            return ConvertExpressionToTypeExpression(expression, toType);
         }
 
         /// <summary>
