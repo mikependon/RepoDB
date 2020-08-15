@@ -1,9 +1,7 @@
-﻿using RepoDb.Contexts.Execution;
-using RepoDb.Contexts.Providers;
+﻿using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,7 +17,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region InsertAll<TEntity>(TableName)
+        #region InsertAll<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table.
@@ -60,10 +58,6 @@ namespace RepoDb
                 statementBuilder: statementBuilder,
                 skipIdentityCheck: true);
         }
-
-        #endregion
-
-        #region InsertAll<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table.
@@ -136,7 +130,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAll<TEntity>(TableName)
+        #region InsertAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table in an asynchronous way.
@@ -177,10 +171,6 @@ namespace RepoDb
                 statementBuilder: statementBuilder,
                 skipIdentityCheck: true);
         }
-
-        #endregion
-
-        #region InsertAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table in an asynchronous way.

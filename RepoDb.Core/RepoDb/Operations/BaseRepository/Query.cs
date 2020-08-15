@@ -11,13 +11,13 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Query<TEntity>(TableName)
+        #region Query<TEntity>
 
         /// <summary>
         /// Query the existing rows from the table based on a given expression.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -163,14 +163,10 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        #endregion
-
-        #region Query<TEntity>
-
         /// <summary>
         /// Query the existing rows from the table based on a given expression.
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -304,13 +300,13 @@ namespace RepoDb
 
         #endregion
 
-        #region QueryAsync<TEntity>(TableName)
+        #region QueryAsync<TEntity>
 
         /// <summary>
         /// Query the existing rows from the table based on a given expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -456,14 +452,10 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        #endregion
-
-        #region QueryAsync<TEntity>
-
         /// <summary>
         /// Query the existing rows from the table based on a given expression in an asynchronous way.
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>

@@ -16,7 +16,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Query<TEntity>(TableName)
+        #region Query<TEntity>
 
         /// <summary>
         /// Query the existing rows from the table based on a given expression.
@@ -24,7 +24,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
@@ -58,7 +58,7 @@ namespace RepoDb
         {
             return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 fields: fields ?? FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
@@ -288,16 +288,12 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        #endregion
-
-        #region Query<TEntity>
-
         /// <summary>
         /// Query the existing rows from the table based on a given expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -328,7 +324,7 @@ namespace RepoDb
         {
             return QueryInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
@@ -597,7 +593,7 @@ namespace RepoDb
 
         #endregion
 
-        #region QueryAsync<TEntity>(TableName)
+        #region QueryAsync<TEntity>
 
         /// <summary>
         /// Query the existing rows from the table based on a given expression in an asynchronous way.
@@ -605,7 +601,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -638,7 +634,7 @@ namespace RepoDb
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: FieldCache.Get<TEntity>(),
-                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -859,16 +855,12 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        #endregion
-
-        #region QueryAsync<TEntity>
-
         /// <summary>
         /// Query the existing rows from the table based on a given expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -899,7 +891,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
@@ -1175,7 +1167,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
@@ -1208,7 +1200,7 @@ namespace RepoDb
         {
             return Query(connection: connection,
                 tableName: tableName,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                where: WhereOrKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1439,7 +1431,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
@@ -1472,7 +1464,7 @@ namespace RepoDb
         {
             return await QueryAsync(connection: connection,
                 tableName: tableName,
-                where: await WhereOrPrimaryKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,

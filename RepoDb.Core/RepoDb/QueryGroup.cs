@@ -1453,6 +1453,12 @@ namespace RepoDb
             // Type of the object
             var type = obj.GetType();
 
+            // Filter
+            if (type.IsGenericType == false && type != StaticType.Object && type.IsClassType() == false)
+            {
+                return null;
+            }
+
             // Declare variables
             var queryFields = new List<QueryField>();
 

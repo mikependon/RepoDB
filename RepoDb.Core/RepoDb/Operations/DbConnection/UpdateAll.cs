@@ -1,9 +1,7 @@
-﻿using RepoDb.Contexts.Execution;
-using RepoDb.Contexts.Providers;
+﻿using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +18,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region UpdateAll<TEntity>(TableName)
+        #region UpdateAll<TEntity>
 
         /// <summary>
         /// Update the existing rows in the table.
@@ -32,7 +30,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -187,10 +185,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region UpdateAll<TEntity>
 
         /// <summary>
         /// Update the existing rows in the table.
@@ -391,7 +385,7 @@ namespace RepoDb
 
         #endregion
 
-        #region UpdateAllAsync<TEntity>(TableName)
+        #region UpdateAllAsync<TEntity>
 
         /// <summary>
         /// Update the existing rows in the table in an asynchronous way.
@@ -558,10 +552,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region UpdateAllAsync<TEntity>
 
         /// <summary>
         /// Update the existing rows in the table in an asynchronous way.

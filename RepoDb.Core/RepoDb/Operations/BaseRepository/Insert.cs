@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Insert<TEntity>(TableName)
+        #region Insert<TEntity>
 
         /// <summary>
         /// Inserts a new row in the table.
@@ -17,7 +17,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert(string tableName,
             TEntity entity,
@@ -49,10 +49,6 @@ namespace RepoDb
                 hints: hints,
                 transaction: transaction);
         }
-
-        #endregion
-
-        #region Insert<TEntity>
 
         /// <summary>
         /// Inserts a new row in the table.
@@ -89,7 +85,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAsync<TEntity>(TableName)
+        #region InsertAsync<TEntity>
 
         /// <summary>
         /// Inserts a new row in the table in an asynchronous way.
@@ -129,10 +125,6 @@ namespace RepoDb
                 hints: hints,
                 transaction: transaction);
         }
-
-        #endregion
-
-        #region InsertAsync<TEntity>
 
         /// <summary>
         /// Inserts a new row in the table in an asynchronous way.

@@ -16,7 +16,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region BatchQuery<TEntity>(TableName)
+        #region BatchQuery<TEntity>
 
         /// <summary>
         /// Query the rows from the database by batch.
@@ -285,10 +285,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region BatchQuery<TEntity>
 
         /// <summary>
         /// Query the rows from the database by batch.
@@ -581,7 +577,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BatchQueryAsync<TEntity>(TableName)
+        #region BatchQueryAsync<TEntity>
 
         /// <summary>
         /// Query the rows from the database by batch in an asynchronous way.
@@ -850,10 +846,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region BatchQueryAsync<TEntity>
 
         /// <summary>
         /// Query the rows from the database by batch in an asynchronous way.

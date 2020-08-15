@@ -12,7 +12,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
-        #region InsertAll<TEntity>(TableName)
+        #region InsertAll<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table.
@@ -61,10 +61,6 @@ namespace RepoDb
             }
         }
 
-        #endregion
-
-        #region InsertAll<TEntity>
-
         /// <summary>
         /// Insert multiple rows in the table.
         /// </summary>
@@ -108,7 +104,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAllAsync<TEntity>(TableName)
+        #region InsertAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table in an asynchronous way.
@@ -156,10 +152,6 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-
-        #endregion
-
-        #region InsertAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table in an asynchronous way.

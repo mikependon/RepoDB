@@ -11,31 +11,6 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Delete<TEntity>(TableName)
-
-        // TODO: Reenable this, add a checking if it is class for 'whereOrPrimaryKey'
-
-        ///// <summary>
-        ///// Deletes an existing row from the table.
-        ///// </summary>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The data entity object to be deleted.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <returns>The number of rows that has been deleted from the table.</returns>
-        //public int Delete(string tableName,
-        //    TEntity entity,
-        //    string hints = null,
-        //    IDbTransaction transaction = null)
-        //{
-        //    return DbRepository.Delete<TEntity>(tableName: tableName,
-        //        entity: entity,
-        //        hints: hints,
-        //        transaction: transaction);
-        //}
-
-        #endregion
-
         #region Delete<TEntity>
 
         /// <summary>
@@ -57,15 +32,32 @@ namespace RepoDb
         /// <summary>
         /// Delete the rows from the table.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used.</param>
+        /// <typeparam name="TExpressionOrKey">The type of the expression or the key.</typeparam>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int Delete(object primaryKey,
+        public int Delete<TExpressionOrKey>(TExpressionOrKey whereOrPrimaryKey,
             string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Delete<TEntity>(whereOrPrimaryKey: primaryKey,
+            return DbRepository.Delete<TEntity, TExpressionOrKey>(whereOrPrimaryKey: whereOrPrimaryKey,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Delete the rows from the table.
+        /// </summary>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int Delete(object whereOrPrimaryKey,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 hints: hints,
                 transaction: transaction);
         }
@@ -136,29 +128,6 @@ namespace RepoDb
 
         #endregion
 
-        #region Delete<DeleteAsync>(TableName)
-
-        ///// <summary>
-        ///// Deletes an existing row from the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The data entity object to be deleted.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <returns>The number of rows that has been deleted from the table.</returns>
-        //public Task<int> DeleteAsync(string tableName,
-        //    TEntity entity,
-        //    string hints = null,
-        //    IDbTransaction transaction = null)
-        //{
-        //    return DbRepository.DeleteAsync<TEntity>(tableName: tableName,
-        //        entity: entity,
-        //        hints: hints,
-        //        transaction: transaction);
-        //}
-
-        #endregion
-
         #region DeleteAsync<TEntity>
 
         /// <summary>
@@ -180,9 +149,26 @@ namespace RepoDb
         /// <summary>
         /// Delete the rows from the table in an asynchronous way.
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <typeparam name="TExpressionOrKey">The type of the expression or the key.</typeparam>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public Task<int> DeleteAsync<TExpressionOrKey>(TExpressionOrKey whereOrPrimaryKey,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity, TExpressionOrKey>(whereOrPrimaryKey: whereOrPrimaryKey,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Delete the rows from the table in an asynchronous way.
+        /// </summary>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public Task<int> DeleteAsync(object whereOrPrimaryKey,
             string hints = null,

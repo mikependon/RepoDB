@@ -22,7 +22,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -39,7 +39,7 @@ namespace RepoDb
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -221,7 +221,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -238,7 +238,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await ExistsAsyncInternal<TEntity>(connection: connection,
-                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -420,7 +420,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -438,7 +438,7 @@ namespace RepoDb
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
-                where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                where: WhereOrKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -593,7 +593,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -611,7 +611,7 @@ namespace RepoDb
         {
             return await ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
-                where: await WhereOrPrimaryKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

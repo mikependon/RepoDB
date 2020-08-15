@@ -13,163 +13,159 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
-        #region UpdateAll<TEntity>(TableName)
-
-        /// <summary>
-        /// Update the existing rows in the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process.</returns>
-        public int UpdateAll<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.UpdateAll<TEntity>(tableName: tableName,
-                    entities: entities,
-                    batchSize: batchSize,
-                    fields: fields,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Update the existing rows in the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process.</returns>
-        public int UpdateAll<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.UpdateAll<TEntity>(tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    batchSize: batchSize,
-                    fields: fields,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Update the existing rows in the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process.</returns>
-        public int UpdateAll<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.UpdateAll<TEntity>(tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    batchSize: batchSize,
-                    fields: fields,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
         #region UpdateAll<TEntity>
 
         /// <summary>
         /// Update the existing rows in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public int UpdateAll<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.UpdateAll<TEntity>(tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public int UpdateAll<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.UpdateAll<TEntity>(tableName: tableName,
+                    entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public int UpdateAll<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.UpdateAll<TEntity>(tableName: tableName,
+                    entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entities">The list of data entity objects to be used for update.</param>
         /// <param name="batchSize">The batch size of the update operation.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -277,157 +273,6 @@ namespace RepoDb
                 return connection.UpdateAll<TEntity>(entities: entities,
                     qualifiers: qualifiers,
                     batchSize: batchSize,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region UpdateAllAsync<TEntity>(TableName)
-
-        /// <summary>
-        /// Update the existing rows in the table in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAllAsync<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
-                    entities: entities,
-                    batchSize: batchSize,
-                    fields: fields,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Update the existing rows in the table in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAllAsync<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            IEnumerable<Field> qualifiers,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    batchSize: batchSize,
-                    fields: fields,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Update the existing rows in the table in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entities">The list of data entity objects to be used for update.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields.</param>
-        /// <param name="batchSize">The batch size of the update operation.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process.</returns>
-        public async Task<int> UpdateAllAsync<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers,
-            int batchSize = Constant.DefaultBatchOperationSize,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    batchSize: batchSize,
-                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -449,6 +294,153 @@ namespace RepoDb
         #endregion
 
         #region UpdateAllAsync<TEntity>
+
+        /// <summary>
+        /// Update the existing rows in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public async Task<int> UpdateAllAsync<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public async Task<int> UpdateAllAsync<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
+                    entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entities">The list of data entity objects to be used for update.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public async Task<int> UpdateAllAsync<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            Expression<Func<TEntity, object>> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAllAsync<TEntity>(tableName: tableName,
+                    entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         /// <summary>
         /// Update the existing rows in the table in an asynchronous way.

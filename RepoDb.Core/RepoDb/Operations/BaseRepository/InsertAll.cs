@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region InsertAll<TEntity>(TableName)
+        #region InsertAll<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table.
@@ -37,10 +37,6 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        #endregion
-
-        #region InsertAll<TEntity>
-
         /// <summary>
         /// Insert multiple rows in the table.
         /// </summary>
@@ -62,7 +58,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAll<TEntity>(TableName)
+        #region InsertAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table in an asynchronous way.
@@ -88,10 +84,6 @@ namespace RepoDb
                 hints: hints,
                 transaction: transaction);
         }
-
-        #endregion
-
-        #region InsertAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows in the table in an asynchronous way.

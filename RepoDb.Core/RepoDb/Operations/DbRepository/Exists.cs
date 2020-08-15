@@ -19,7 +19,7 @@ namespace RepoDb
         /// Check whether the rows are existing in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
@@ -213,7 +213,7 @@ namespace RepoDb
         /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
@@ -407,7 +407,7 @@ namespace RepoDb
         /// Check whether the rows are existing in the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
@@ -567,7 +567,7 @@ namespace RepoDb
         /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>

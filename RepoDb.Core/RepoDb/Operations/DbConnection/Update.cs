@@ -1,9 +1,7 @@
-﻿using RepoDb.Contexts.Execution;
-using RepoDb.Contexts.Providers;
+﻿using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,7 +17,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Update<TEntity>(TableName)
+        #region Update<TEntity>
 
         /// <summary>
         /// Updates an existing row in the table.
@@ -81,11 +79,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var where = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            var where = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
             if (where == null)
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                where = WhereOrPrimaryKeyToQueryGroup(key, whereOrPrimaryKey);
+                where = WhereOrKeyToQueryGroup(key, whereOrPrimaryKey);
             }
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
@@ -242,10 +240,6 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        #endregion
-
-        #region Update<TEntity>
-
         /// <summary>
         /// Updates an existing row in the table.
         /// </summary>
@@ -306,7 +300,7 @@ namespace RepoDb
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -489,7 +483,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Update<TEntity>(TableName)
+        #region UpdateAsync<TEntity>
 
         /// <summary>
         /// Updates an existing row in the table in an asynchronous way.
@@ -551,11 +545,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var where = WhereOrPrimaryKeyToQueryGroup(whereOrPrimaryKey);
+            var where = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
             if (where == null)
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
-                where = WhereOrPrimaryKeyToQueryGroup(key, whereOrPrimaryKey);
+                where = WhereOrKeyToQueryGroup(key, whereOrPrimaryKey);
             }
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
@@ -712,10 +706,6 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        #endregion
-
-        #region UpdateAsync<TEntity>
-
         /// <summary>
         /// Updates an existing row in the table in an asynchronous way.
         /// </summary>
@@ -776,7 +766,7 @@ namespace RepoDb
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: await WhereOrPrimaryKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1005,7 +995,7 @@ namespace RepoDb
         ///// <param name="connection">The connection object to be used.</param>
         ///// <param name="tableName">The name of the target table to be used.</param>
         ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         ///// <param name="hints">The table hints to be used.</param>
         ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         ///// <param name="transaction">The transaction to be used.</param>
@@ -1218,7 +1208,7 @@ namespace RepoDb
         ///// <param name="connection">The connection object to be used.</param>
         ///// <param name="tableName">The name of the target table to be used.</param>
         ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         ///// <param name="hints">The table hints to be used.</param>
         ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         ///// <param name="transaction">The transaction to be used.</param>

@@ -20,7 +20,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region MergeAll<TEntity>(TableName)
+        #region MergeAll<TEntity>
 
         /// <summary>
         /// Insert multiple rows or update the existing rows in the table.
@@ -187,10 +187,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region MergeAll<TEntity>
 
         /// <summary>
         /// Insert multiple rows or update the existing rows in the table.
@@ -408,7 +404,7 @@ namespace RepoDb
 
         #endregion
 
-        #region MergeAllAsync<TEntity>(TableName)
+        #region MergeAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows or update the existing rows in the table in an asynchronous way.
@@ -575,10 +571,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region MergeAllAsync<TEntity>
 
         /// <summary>
         /// Insert multiple rows or update the existing rows in the table in an asynchronous way.

@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region QueryAll<TEntity>(TableName)
+        #region QueryAll<TEntity>
 
         /// <summary>
         /// Query all the data from the table.
@@ -36,10 +36,6 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        #endregion
-
-        #region QueryAll<TEntity>
-
         /// <summary>
         /// Query all the data from the table.
         /// </summary>
@@ -64,6 +60,30 @@ namespace RepoDb
         #endregion
 
         #region QueryAllAsync<TEntity>
+
+        /// <summary>
+        /// Query all the data from the table in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public Task<IEnumerable<TEntity>> QueryAllAsync(string tableName,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAllAsync<TEntity>(tableName: tableName,
+                orderBy: orderBy,
+                hints: hints,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
 
         /// <summary>
         /// Query all the data from the table in an asynchronous way.

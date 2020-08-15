@@ -12,7 +12,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
-        #region QueryAll<TEntity>(TableName)
+        #region QueryAll<TEntity>
 
         /// <summary>
         /// Query all the data from the table.
@@ -61,10 +61,6 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-    
-        #endregion
-
-        #region QueryAll<TEntity>
 
         /// <summary>
         /// Query all the data from the table.

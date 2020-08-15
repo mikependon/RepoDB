@@ -13,7 +13,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
-        #region Update<TEntity>(TableName)
+        #region Update<TEntity>
 
         /// <summary>
         /// Updates an existing row in the table.
@@ -62,7 +62,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
@@ -275,10 +275,6 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-
-        #endregion
-
-        #region Update<TEntity>
 
         /// <summary>
         /// Updates an existing row in the table.
@@ -323,7 +319,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
@@ -525,7 +521,7 @@ namespace RepoDb
 
         #endregion
 
-        #region UpdateAsync<TEntity>(TableName)
+        #region UpdateAsync<TEntity>
 
         /// <summary>
         /// Updates an existing row in the table in an asynchronous way.
@@ -574,7 +570,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
@@ -787,10 +783,6 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-
-        #endregion
-
-        #region UpdateAsync<TEntity>
 
         /// <summary>
         /// Updates an existing row in the table in an asynchronous way.
@@ -835,7 +827,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
@@ -1083,7 +1075,7 @@ namespace RepoDb
         ///// </summary>
         ///// <param name="tableName">The name of the target table to be used.</param>
         ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         ///// <param name="hints">The table hints to be used.</param>
         ///// <param name="transaction">The transaction to be used.</param>
         ///// <returns>The number of affected rows during the update process..</returns>
@@ -1294,7 +1286,7 @@ namespace RepoDb
         ///// </summary>
         ///// <param name="tableName">The name of the target table to be used.</param>
         ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used.</param>
+        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
         ///// <param name="hints">The table hints to be used.</param>
         ///// <param name="transaction">The transaction to be used.</param>
         ///// <returns>The number of affected rows during the update process..</returns>

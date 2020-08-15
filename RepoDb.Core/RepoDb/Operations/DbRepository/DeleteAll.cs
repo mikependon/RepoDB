@@ -12,52 +12,7 @@ namespace RepoDb
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
-        #region DeleteAll<TEntity>(TableName) (Delete<TEntity>)
-
-        /// <summary>
-        /// Delete the rows from the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="entities">The list of data entity objects to be deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.DeleteAll<TEntity>(tableName: tableName,
-                    entities: entities,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region DeleteAll<TEntity> (Delete<TEntity>)
+        #region DeleteAll<TEntity>
 
         /// <summary>
         /// Delete the rows from the table.
@@ -101,11 +56,12 @@ namespace RepoDb
         /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
+        /// <typeparam name="TKey">The type of the key column.</typeparam>
+        /// <param name="keys">The list of the keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
-		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll<TEntity>(IEnumerable<object> primaryKeys,
+        public int DeleteAll<TEntity, TKey>(IEnumerable<TKey> keys,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -116,7 +72,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.DeleteAll<TEntity>(primaryKeys: primaryKeys,
+                return connection.DeleteAll<TEntity, TKey>(keys: keys,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -135,9 +91,43 @@ namespace RepoDb
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Delete the rows from the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="keys">The list of the keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int DeleteAll<TEntity>(IEnumerable<object> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
 
-        #region DeleteAll<TEntity>
+            try
+            {
+                // Call the method
+                return connection.DeleteAll<TEntity>(keys: keys,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         /// <summary>
         /// Delete all the rows from the table.
@@ -176,52 +166,7 @@ namespace RepoDb
 
         #endregion
 
-        #region DeleteAllAsync<TEntity>(TableName) (DeleteAsync<TEntity>)
-
-        /// <summary>
-        /// Delete the rows from the table in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="entities">The list of data entity objects to be deleted.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(string tableName,
-            IEnumerable<TEntity> entities,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return await connection.DeleteAllAsync<TEntity>(tableName: tableName,
-                    entities: entities,
-                    hints: hints,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        #endregion
-
-        #region DeleteAllAsync<TEntity> (DeleteAsync<TEntity>)
+        #region DeleteAllAsync<TEntity>
 
         /// <summary>
         /// Delete all the rows from the table in an asynchronous way. 
@@ -265,11 +210,12 @@ namespace RepoDb
         /// Delete all the rows from the table in an asynchronous way. 
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
+        /// <typeparam name="TKey">The type of the key column.</typeparam>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> primaryKeys,
+        public async Task<int> DeleteAllAsync<TEntity, TKey>(IEnumerable<TKey> keys,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -280,7 +226,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.DeleteAllAsync<TEntity>(primaryKeys: primaryKeys,
+                return await connection.DeleteAllAsync<TEntity, TKey>(keys: keys,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -299,9 +245,43 @@ namespace RepoDb
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Delete all the rows from the table in an asynchronous way. 
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public async Task<int> DeleteAllAsync<TEntity>(IEnumerable<object> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
 
-        #region DeleteAllAsync<TEntity>
+            try
+            {
+                // Call the method
+                return await connection.DeleteAllAsync<TEntity>(keys: keys,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         /// <summary>
         /// Delete all the rows from the table in an asynchronous way.
@@ -340,20 +320,22 @@ namespace RepoDb
 
         #endregion
 
-        #region DeleteAll(TableName) (Delete(TableName))
+        #region DeleteAll<TEntity>(TableName)
 
         /// <summary>
         /// Delete the rows from the table.
         /// </summary>
-        /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of data entity objects to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public int DeleteAll(string tableName,
-            IEnumerable<object> primaryKeys,
+        public int DeleteAll<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
             string hints = null,
             IDbTransaction transaction = null)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -362,7 +344,218 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.DeleteAll(tableName: tableName,
-                    primaryKeys: primaryKeys,
+                    entities: entities,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Delete the rows from the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TKey">The type of the key column.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int DeleteAll<TEntity, TKey>(string tableName,
+            IEnumerable<TKey> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.DeleteAll<TEntity, TKey>(tableName: tableName,
+                    keys: keys,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Delete the rows from the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int DeleteAll<TEntity>(string tableName,
+            IEnumerable<object> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.DeleteAll<TEntity>(tableName: tableName,
+                    keys: keys,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region DeleteAllAsync<TEntity>(TableName)
+
+        /// <summary>
+        /// Delete the rows from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of data entity objects to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public async Task<int> DeleteAllAsync<TEntity>(string tableName,
+            IEnumerable<TEntity> entities,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.DeleteAllAsync(tableName: tableName,
+                    entities: entities,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Delete the rows from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TKey">The type of the key column.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public async Task<int> DeleteAllAsync<TEntity, TKey>(string tableName,
+            IEnumerable<TKey> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.DeleteAllAsync<TEntity, TKey>(tableName: tableName,
+                    keys: keys,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Delete the rows from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public async Task<int> DeleteAllAsync<TEntity>(string tableName,
+            IEnumerable<object> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.DeleteAllAsync<TEntity>(tableName: tableName,
+                    keys: keys,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -384,6 +577,45 @@ namespace RepoDb
         #endregion
 
         #region DeleteAll(TableName)
+
+        /// <summary>
+        /// Delete the rows from the table.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int DeleteAll(string tableName,
+            IEnumerable<object> keys,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.DeleteAll(tableName: tableName,
+                    keys: keys,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         /// <summary>
         /// Delete all the rows from the table.
@@ -423,18 +655,18 @@ namespace RepoDb
 
         #endregion
 
-        #region DeleteAllAsync(TableName) (DeleteAsync(TableName))
+        #region DeleteAllAsync(TableName)
 
         /// <summary>
-        /// Delete all the rows from the table in an asynchronous way. 
+        /// Delete the rows from the table in an asynchronous way.
         /// </summary>
-        /// <param name="primaryKeys">The list of the primary keys to be deleted.</param>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="keys">The list of the primary keys to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public async Task<int> DeleteAllAsync(string tableName,
-            IEnumerable<object> primaryKeys,
+            IEnumerable<object> keys,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -445,7 +677,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.DeleteAllAsync(tableName: tableName,
-                    primaryKeys: primaryKeys,
+                    keys: keys,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -463,10 +695,6 @@ namespace RepoDb
                 DisposeConnectionForPerCall(connection, transaction);
             }
         }
-
-        #endregion
-
-        #region DeleteAllAsync(TableName)
 
         /// <summary>
         /// Delete all the rows from the table in an asynchronous way.

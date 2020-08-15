@@ -15,7 +15,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region QueryAll<TEntity>(TableName)
+        #region QueryAll<TEntity>
 
         /// <summary>
         /// Query all the data from the table.
@@ -61,10 +61,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region QueryAll<TEntity>
 
         /// <summary>
         /// Query all the data from the table.

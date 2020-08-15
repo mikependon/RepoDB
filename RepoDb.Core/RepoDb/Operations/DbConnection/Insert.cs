@@ -1,14 +1,10 @@
-﻿using RepoDb.Contexts.Execution;
-using RepoDb.Contexts.Providers;
+﻿using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
-using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -18,7 +14,7 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region Insert<TEntity, TResult>(TableName)
+        #region Insert<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new row in the table.
@@ -88,10 +84,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region Insert<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new row in the table.
@@ -190,7 +182,7 @@ namespace RepoDb
 
         #endregion
 
-        #region InsertAsync<TEntity, TResult>(TableName)
+        #region InsertAsync<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new row in the table in an asynchronous way.
@@ -260,10 +252,6 @@ namespace RepoDb
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
-
-        #endregion
-
-        #region InsertAsync<TEntity, TResult>
 
         /// <summary>
         /// Inserts a new row in the table in an asynchronous way.
