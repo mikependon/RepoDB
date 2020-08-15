@@ -145,6 +145,7 @@ namespace RepoDb
             return Parse(typeof(TEntity));
         }
 
+
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
         /// to <see cref="Field"/> object.
@@ -153,6 +154,18 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse<TEntity>(Expression<Func<TEntity, object>> expression)
+            where TEntity : class =>
+            Parse<TEntity, object>(expression);
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
+        /// to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <typeparam name="TResult">The type of the result and the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
+        public static IEnumerable<Field> Parse<TEntity, TResult>(Expression<Func<TEntity, TResult>> expression)
             where TEntity : class
         {
             var result = (IEnumerable<Field>)null;
@@ -175,7 +188,7 @@ namespace RepoDb
             }
             if (result == null)
             {
-                throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+                throw new InvalidExpressionException($"Expression '{expression}' is invalid.");
             }
 
             return result;

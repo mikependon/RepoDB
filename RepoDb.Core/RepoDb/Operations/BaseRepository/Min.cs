@@ -11,7 +11,7 @@ namespace RepoDb
     /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Min<TEntity>
+        #region Min<TEntity, TResult>
 
         /// <summary>
         /// Computes the min value of the target field.
@@ -198,6 +198,196 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.Min<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Field field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Field field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                transaction: transaction,
+                hints: hints);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Field field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Field field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                transaction: transaction,
+                hints: hints);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public TResult Min<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Min<TEntity, TResult>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
@@ -205,7 +395,7 @@ namespace RepoDb
 
         #endregion
 
-        #region MinAsync<TEntity>
+        #region MinAsync<TEntity, TResult>
 
         /// <summary>
         /// Computes the min value of the target field in an asynchronous way.
@@ -392,6 +582,196 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.MinAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Field field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Field field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Field field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Field field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.MinAsync<TEntity, TResult>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
