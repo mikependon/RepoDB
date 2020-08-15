@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <summary>
+    /// <averagemary>
     /// A base object for all entity-based repositories.
-    /// </summary>
+    /// </averagemary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
-        #region Average<TEntity>
+        #region Average<TEntity, TResult>
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -32,9 +32,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -51,9 +51,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -70,9 +70,9 @@ namespace RepoDb
                 hints: hints);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -89,9 +89,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -108,9 +108,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -127,9 +127,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -146,9 +146,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -165,9 +165,9 @@ namespace RepoDb
                 hints: hints);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -184,9 +184,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -198,6 +198,196 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.Average<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Field field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Field field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                transaction: transaction,
+                hints: hints);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Field field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Field field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                transaction: transaction,
+                hints: hints);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult Average<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Average<TEntity, TResult>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
@@ -205,11 +395,11 @@ namespace RepoDb
 
         #endregion
 
-        #region AverageAsync<TEntity>
+        #region AverageAsync<TEntity, TResult>
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -226,9 +416,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -245,9 +435,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -264,9 +454,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -283,9 +473,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -302,9 +492,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -321,9 +511,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -340,9 +530,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -359,9 +549,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -378,9 +568,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -392,6 +582,196 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.AverageAsync<TEntity>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Field field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Field field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Field field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Field field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Field field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            object where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            Expression<Func<TEntity, bool>> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryField where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            IEnumerable<QueryField> where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
+                where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            QueryGroup where = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAsync<TEntity, TResult>(field: field,
                 where: where,
                 hints: hints,
                 transaction: transaction);
