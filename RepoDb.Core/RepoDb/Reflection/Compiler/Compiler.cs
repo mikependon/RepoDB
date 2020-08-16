@@ -1295,17 +1295,8 @@ namespace RepoDb.Reflection
                     Expression.Constant(dbField),
                     ConvertExpressionToTypeExpression(existingValue, StaticType.Object),
                     Expression.Constant(method));
-                existingValue = ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type);
+                //existingValue = ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type);
                 // TODO: Solve the Enum Conflict
-                //if (classProperty.PropertyInfo.PropertyType.IsNullable() == false)
-                //{
-                //    existingValue = ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type);
-                //}
-                //existingValue = Expression.Condition(Expression.NotEqual(Expression.Constant(DBNull.Value), existingValue),
-                //    ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type),
-                //    existingValue);
-                //existingValue = Expression.IfThen(Expression.IsTrue(Expression.NotEqual(Expression.Constant(DBNull.Value), existingValue)),
-                //    ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type));
             }
 
             return existingValue;
