@@ -21,7 +21,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -37,7 +37,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAllInternal<TEntity>(connection: connection,
+            return MinAllInternal<TEntity, object>(connection: connection,
                 field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -51,7 +51,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -67,7 +67,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAllInternal<TEntity>(connection: connection,
+            return MinAllInternal<TEntity, object>(connection: connection,
                 field: Field.Parse<TEntity>(field).First(),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -80,15 +80,78 @@ namespace RepoDb
         /// Computes the min value of the target field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static object MinAllInternal<TEntity>(this IDbConnection connection,
+        public static TResult MinAll<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MinAllInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public static TResult MinAll<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MinAllInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        internal static TResult MinAllInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -107,7 +170,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return MinAllInternalBase(connection: connection,
+            return MinAllInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -124,7 +187,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -140,7 +203,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAllAsyncInternal<TEntity>(connection: connection,
+            return MinAllAsyncInternal<TEntity, object>(connection: connection,
                 field: field,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -154,7 +217,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -170,7 +233,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MinAllAsyncInternal<TEntity>(connection: connection,
+            return MinAllAsyncInternal<TEntity, object>(connection: connection,
                 field: Field.Parse<TEntity>(field).First(),
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -183,15 +246,78 @@ namespace RepoDb
         /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static Task<object> MinAllAsyncInternal<TEntity>(this IDbConnection connection,
+        public static Task<TResult> MinAllAsync<TEntity, TResult>(this IDbConnection connection,
+            Field field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MinAllAsyncInternal<TEntity, TResult>(connection: connection,
+                field: field,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        public static Task<TResult> MinAllAsync<TEntity, TResult>(this IDbConnection connection,
+            Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return MinAllAsyncInternal<TEntity, TResult>(connection: connection,
+                field: Field.Parse<TEntity, TResult>(field).First(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        internal static Task<TResult> MinAllAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             Field field,
             string hints = null,
             int? commandTimeout = null,
@@ -210,7 +336,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return MinAllInternalAsyncBase(connection: connection,
+            return MinAllInternalAsyncBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -227,7 +353,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -243,7 +369,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinAllInternal(connection: connection,
+            return MinAllInternal<object>(connection: connection,
                 tableName: tableName,
                 field: field,
                 hints: hints,
@@ -256,16 +382,49 @@ namespace RepoDb
         /// <summary>
         /// Computes the min value of the target field.
         /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static object MinAllInternal(this IDbConnection connection,
+        public static TResult MinAll<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return MinAllInternal<TResult>(connection: connection,
+                tableName: tableName,
+                field: field,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        internal static TResult MinAllInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -281,12 +440,11 @@ namespace RepoDb
                 field,
                 hints,
                 statementBuilder);
-            var param = (object)null;
 
             // Return the result
-            return MinAllInternalBase(connection: connection,
+            return MinAllInternalBase<TResult>(connection: connection,
                 request: request,
-                param: param,
+                param: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -301,7 +459,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -317,7 +475,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MinAllAsyncInternal(connection: connection,
+            return MinAllAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 field: field,
                 hints: hints,
@@ -330,16 +488,49 @@ namespace RepoDb
         /// <summary>
         /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="field">The field to be maximized.</param>
+        /// <param name="field">The field to be minimized.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static Task<object> MinAllAsyncInternal(this IDbConnection connection,
+        public static Task<TResult> MinAllAsync<TResult>(this IDbConnection connection,
+            string tableName,
+            Field field,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return MinAllAsyncInternal<TResult>(connection: connection,
+                tableName: tableName,
+                field: field,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Computes the min value of the target field in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="field">The field to be minimized.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The min value of the target field.</returns>
+        internal static Task<TResult> MinAllAsyncInternal<TResult>(this IDbConnection connection,
             string tableName,
             Field field,
             string hints = null,
@@ -355,12 +546,11 @@ namespace RepoDb
                 field,
                 hints,
                 statementBuilder);
-            var param = (object)null;
 
             // Return the result
-            return MinAllInternalAsyncBase(connection: connection,
+            return MinAllInternalAsyncBase<TResult>(connection: connection,
                 request: request,
-                param: param,
+                param: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace);
@@ -373,6 +563,7 @@ namespace RepoDb
         /// <summary>
         /// Computes the min value of the target field.
         /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="MinAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
@@ -380,7 +571,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static object MinAllInternalBase(this IDbConnection connection,
+        internal static TResult MinAllInternalBase<TResult>(this IDbConnection connection,
             MinAllRequest request,
             object param,
             int? commandTimeout = null,
@@ -404,7 +595,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return default(int);
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 param = (cancellableTraceLog.Parameter ?? param);
@@ -414,7 +605,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternal(connection: connection,
+            var result = ExecuteScalarInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -440,6 +631,7 @@ namespace RepoDb
         /// <summary>
         /// Computes the min value of the target field in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="MinAllRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
@@ -447,7 +639,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static async Task<object> MinAllInternalAsyncBase(this IDbConnection connection,
+        internal static async Task<TResult> MinAllInternalAsyncBase<TResult>(this IDbConnection connection,
             MinAllRequest request,
             object param,
             int? commandTimeout = null,
@@ -471,7 +663,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return default(int);
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 param = (cancellableTraceLog.Parameter ?? param);
@@ -481,7 +673,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = await ExecuteScalarAsyncInternal(connection: connection,
+            var result = await ExecuteScalarAsyncInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
