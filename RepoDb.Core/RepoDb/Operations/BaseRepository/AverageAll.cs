@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <summary>
+    /// <averagemary>
     /// A base object for all entity-based repositories.
-    /// </summary>
+    /// </averagemary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
         #region AverageAll<TEntity>
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -28,9 +28,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -44,13 +44,47 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TResult>(Field field,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAll<TEntity, TResult>(field: field,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public TResult AverageAll<TResult>(Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAll<TEntity, TResult>(field: field,
+                hints: hints,
+                transaction: transaction);
+        }
+
         #endregion
 
         #region AverageAllAsync<TEntity>
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -64,9 +98,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        /// <summary>
+        /// <averagemary>
         /// Computes the average value of the target field in an asynchronous way.
-        /// </summary>
+        /// </averagemary>
         /// <param name="field">The field to be averaged.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -76,6 +110,40 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.AverageAllAsync<TEntity>(field: field,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAllAsync<TResult>(Field field,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAllAsync<TEntity, TResult>(field: field,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <averagemary>
+        /// Computes the average value of the target field in an asynchronous way.
+        /// </averagemary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="field">The field to be averaged.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The average value of the target field.</returns>
+        public Task<TResult> AverageAllAsync<TResult>(Expression<Func<TEntity, TResult>> field,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.AverageAllAsync<TEntity, TResult>(field: field,
                 hints: hints,
                 transaction: transaction);
         }
