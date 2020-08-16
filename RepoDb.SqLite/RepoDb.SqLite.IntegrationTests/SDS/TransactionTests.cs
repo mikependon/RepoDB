@@ -814,7 +814,7 @@ namespace RepoDb.SqLite.IntegrationTests.SDS
                 }
 
                 // Assert
-                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+                Assert.AreEqual(entities.Count, connection.CountAll<SdsCompleteTable>());
             }
         }
 
@@ -870,7 +870,7 @@ namespace RepoDb.SqLite.IntegrationTests.SDS
                 }
 
                 // Assert
-                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+                Assert.AreEqual(entities.Count, connection.CountAll<SdsCompleteTable>());
             }
         }
 
@@ -1690,7 +1690,7 @@ namespace RepoDb.SqLite.IntegrationTests.SDS
                     connection.MergeAll<SdsCompleteTable>(entities);
 
                     // Assert
-                    Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+                    Assert.AreEqual(entities.Count, connection.CountAll<SdsCompleteTable>());
                 }
 
                 // Complete
@@ -1715,7 +1715,7 @@ namespace RepoDb.SqLite.IntegrationTests.SDS
                     connection.MergeAllAsync<SdsCompleteTable>(entities).Wait();
 
                     // Assert
-                    Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+                    Assert.AreEqual(entities.Count, connection.CountAll<SdsCompleteTable>());
                 }
 
                 // Complete

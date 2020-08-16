@@ -163,6 +163,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new SdsCompleteTable
                 {
+                    Id = i,
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,
@@ -406,6 +407,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new MdsCompleteTable
                 {
+                    Id = i,
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",

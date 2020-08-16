@@ -482,7 +482,7 @@ namespace RepoDb
             return InsertAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: null,
+                fields: Field.Parse(entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

@@ -41,7 +41,7 @@ namespace RepoDb.Reflection
                 }
                 if (enumType.IsNullable())
                 {
-                    var nullable = StaticType.Nullable.MakeGenericType(new[] { enumType });
+                    var nullable = StaticType.Nullable.MakeGenericType(new[] { enumType?.GetUnderlyingType() });
                     return Activator.CreateInstance(nullable);
                 }
                 else
@@ -53,20 +53,18 @@ namespace RepoDb.Reflection
             /// <summary>
             /// Converts the value using the desired convert method (of type <see cref="MethodInfo"/>). If not given, it will use the <see cref="System.Convert"/> class.
             /// </summary>
-            /// <param name="sourceType">The source type.</param>
-            /// <param name="targetType">The target type.</param>
+            /// <param name="dbField">The target <see cref="DbField"/> object.</param>
             /// <param name="value">The value to parse.</param>
             /// <param name="converterMethod">The converter method to be checked and used.</param>
             /// <returns>The converted value value.</returns>
-            public static object Convert(Type sourceType,
-                Type targetType,
+            public static object Convert(DbField dbField,
                 object value,
                 MethodInfo converterMethod)
             {
                 if (value == null)
                 {
-                    return sourceType.IsNullable() ? null :
-                        targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+                    return dbField.IsNullable ? null :
+                        dbField.Type.IsValueType ? Activator.CreateInstance(dbField.Type) : null;
                 }
                 if (converterMethod != null)
                 {
@@ -74,8 +72,8 @@ namespace RepoDb.Reflection
                 }
                 else
                 {
-                    return Converter.DbNullToNull(value) == null ? Activator.CreateInstance(targetType) :
-                        System.Convert.ChangeType(value, targetType);
+                    return Converter.DbNullToNull(value) == null ? Activator.CreateInstance(dbField.Type) :
+                        System.Convert.ChangeType(value, dbField.Type);
                 }
             }
         }
@@ -329,7 +327,7 @@ namespace RepoDb.Reflection
                 {
                     Name = name,
                     Ordinal = ordinal,
-                    Type = reader.GetFieldType(ordinal),
+                    Type = reader.GetFieldType(ordinal) ?? StaticType.Object,
                     DbField = dbFields?.FirstOrDefault(dbField => string.Equals(dbField.Name.AsUnquoted(true, dbSetting), name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase))
                 });
         }
@@ -1224,7 +1222,7 @@ namespace RepoDb.Reflection
                 if (readerField.DbField == null || readerField.DbField?.IsNullable == true)
                 {
                     var isDbNullExpression = GetDbNullExpression(readerParameterExpression, ordinal);
-                    var toType = (readerField.Type?.IsValueType != true) ? readerField.Type : StaticType.Object;
+                    var toType = (readerField.Type?.IsValueType != true) ? (readerField.Type ?? StaticType.Object) : StaticType.Object;
                     valueExpression = Expression.Condition(isDbNullExpression, Expression.Default(toType),
                         ConvertExpressionToTypeExpression(valueExpression, toType));
                 }
@@ -1294,10 +1292,20 @@ namespace RepoDb.Reflection
             else
             {
                 existingValue = Expression.Call(typeof(EnumHelper).GetMethod("Convert"),
-                    Expression.Constant(instanceProperty.PropertyType),
-                    Expression.Constant(dbField.Type),
+                    Expression.Constant(dbField),
                     ConvertExpressionToTypeExpression(existingValue, StaticType.Object),
                     Expression.Constant(method));
+                existingValue = ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type);
+                // TODO: Solve the Enum Conflict
+                //if (classProperty.PropertyInfo.PropertyType.IsNullable() == false)
+                //{
+                //    existingValue = ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type);
+                //}
+                //existingValue = Expression.Condition(Expression.NotEqual(Expression.Constant(DBNull.Value), existingValue),
+                //    ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type),
+                //    existingValue);
+                //existingValue = Expression.IfThen(Expression.IsTrue(Expression.NotEqual(Expression.Constant(DBNull.Value), existingValue)),
+                //    ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type));
             }
 
             return existingValue;

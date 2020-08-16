@@ -48,7 +48,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
 
                 // Assert
-                Assert.AreEqual(1, queryResult.Count());
+                Assert.AreEqual(tables.Count, queryResult.Count());
                 Helper.AssertPropertiesEquality(tables.Last(), queryResult.Last());
             }
         }
@@ -213,7 +213,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
 
                 // Assert
-                Assert.AreEqual(1, queryResult.Count());
+                Assert.AreEqual(tables.Count, queryResult.Count());
                 Helper.AssertPropertiesEquality(tables.Last(), queryResult.Last());
             }
         }
@@ -383,7 +383,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
 
                 // Assert
-                Assert.AreEqual(1, queryResult.Count());
+                Assert.AreEqual(tables.Count, queryResult.Count());
                 Helper.AssertMembersEquality(tables.Last(), queryResult.Last());
             }
         }
@@ -728,7 +728,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
 
                 // Assert
-                Assert.AreEqual(1, queryResult.Count());
+                Assert.AreEqual(tables.Count, queryResult.Count());
                 Helper.AssertMembersEquality(tables.Last(), queryResult.Last());
             }
         }
