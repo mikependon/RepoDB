@@ -640,14 +640,14 @@ namespace RepoDb.IntegrationTests
         public static List<TypeLevelMappedForStringEnumCompleteTable> CreateTypeLevelMappedForStringEnumCompleteTables(int count)
         {
             var tables = new List<TypeLevelMappedForStringEnumCompleteTable>();
+            var values = Enum.GetValues(typeof(Continent)).AsEnumerable<Continent>().AsList();
             for (var i = 0; i < count; i++)
             {
-                var index = i + 1;
                 tables.Add(new TypeLevelMappedForStringEnumCompleteTable
                 {
                     SessionId = Guid.NewGuid(),
-                    ColumnNVarChar = Continent.Asia
-                });
+                    ColumnNVarChar = (Continent)values[new Random().Next(values.Count)]
+                }); ;
             }
             return tables;
         }
@@ -658,10 +658,11 @@ namespace RepoDb.IntegrationTests
         /// <returns>A new created instance of <see cref="TypeLevelMappedForStringEnumCompleteTable"/> object.</returns>
         public static TypeLevelMappedForStringEnumCompleteTable CreateTypeLevelMappedForStringEnumCompleteTable()
         {
+            var values = Enum.GetValues(typeof(Continent)).AsEnumerable<Continent>().AsList();
             return new TypeLevelMappedForStringEnumCompleteTable
             {
                 SessionId = Guid.NewGuid(),
-                ColumnNVarChar = Continent.Asia
+                ColumnNVarChar = (Continent)values[new Random().Next(values.Count)]
             };
         }
 

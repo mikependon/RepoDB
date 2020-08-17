@@ -1270,20 +1270,15 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="existingValue"></param>
-        /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="instanceProperty"></param>
         /// <returns></returns>
         internal static Expression ConvertPropertyValueForEnumHandlingExpression(Expression existingValue,
-            ClassProperty classProperty,
             DbField dbField,
             PropertyInfo instanceProperty)
         {
             var propertyType = instanceProperty.PropertyType.GetUnderlyingType();
-            var dbType = classProperty?.GetDbType() ?? new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
-            var type = new DbTypeToClientTypeResolver().Resolve(dbType.GetValueOrDefault());
-            var method = GetSystemConvertGetTypeMethod(StaticType.Object, type) ??
-                GetSystemConvertGetTypeMethod(StaticType.Object, dbField.Type);
+            var method = GetSystemConvertGetTypeMethod(StaticType.Object, dbField.Type);
 
             if (method == null)
             {
@@ -1295,8 +1290,6 @@ namespace RepoDb.Reflection
                     Expression.Constant(dbField),
                     ConvertExpressionToTypeExpression(existingValue, StaticType.Object),
                     Expression.Constant(method));
-                //existingValue = ConvertExpressionToSystemConvertExpression(existingValue, dbField.Type);
-                // TODO: Solve the Enum Conflict
             }
 
             return existingValue;
@@ -1356,7 +1349,6 @@ namespace RepoDb.Reflection
                 if (propertyType.IsEnum)
                 {
                     value = ConvertPropertyValueForEnumHandlingExpression(value,
-                        classProperty,
                         dbField,
                         instanceProperty);
                 }
@@ -1764,9 +1756,8 @@ namespace RepoDb.Reflection
             var classProperty = (ClassProperty)null;
             var propertyName = fieldDirection.DbField.Name.AsUnquoted(true, dbSetting);
 
-            // TODO: Type.IsClassType()?
             // Set the proper assignments (property)
-            if (entityVariable.Type == StaticType.Object || entityVariable.Type.IsGenericType)
+            if (entityVariable.Type.IsClassType() == false || entityVariable.Type.IsGenericType)
             {
                 var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[]
                 {

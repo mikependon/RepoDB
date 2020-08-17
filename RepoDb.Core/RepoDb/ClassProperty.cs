@@ -52,20 +52,16 @@ namespace RepoDb
         /// Returns the string that represent the current <see cref="ClassProperty"/> object.
         /// </summary>
         /// <returns>The unquoted name.</returns>
-        public override string ToString()
-        {
-            return string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
-        }
+        public override string ToString() =>
+            string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
 
         /// <summary>
         /// Gets the declaring parent type of the current property info. If the class inherits an interface, then this will return 
         /// the derived class type instead (if there is), otherwise the <see cref="PropertyInfo.DeclaringType"/> property.
         /// </summary>
         /// <returns>The declaring type.</returns>
-        public Type GetDeclaringType()
-        {
-            return (DeclaringType ?? PropertyInfo.DeclaringType);
-        }
+        public Type GetDeclaringType() =>
+            (DeclaringType ?? PropertyInfo.DeclaringType);
 
         /*
          * AsField
@@ -300,10 +296,8 @@ namespace RepoDb
         /// Returns the hashcode of the <see cref="PropertyInfo"/> object of this instance.
         /// </summary>
         /// <returns>The hash code value.</returns>
-        public override int GetHashCode()
-        {
-            return GetDeclaringType().FullName.GetHashCode() ^ PropertyInfo.GenerateCustomizedHashCode();
-        }
+        public override int GetHashCode() =>
+            GetDeclaringType().FullName.GetHashCode() ^ PropertyInfo.GenerateCustomizedHashCode();
 
         /// <summary>
         /// Compare the current instance to the other object instance.
@@ -324,10 +318,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="other">The object to be compared.</param>
         /// <returns>True if the two instance is the same.</returns>
-        public bool Equals(ClassProperty other)
-        {
-            return PropertyInfo.Equals(other.PropertyInfo);
-        }
+        public bool Equals(ClassProperty other) =>
+            PropertyInfo.Equals(other.PropertyInfo);
 
 
         /// <summary>

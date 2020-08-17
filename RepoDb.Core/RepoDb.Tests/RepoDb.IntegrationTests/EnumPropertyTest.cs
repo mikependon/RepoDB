@@ -334,7 +334,7 @@ namespace RepoDb.IntegrationTests
                     new { ColumnNVarChar = Continent.Asia });
 
                 // Assert
-                Assert.AreEqual(entities.Count, executeResult.Count());
+                Assert.AreEqual(entities.Where(e => e.ColumnNVarChar == Continent.Asia).Count(), executeResult.Count());
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, executeResult.Where(item => item.SessionId == entity.SessionId)));

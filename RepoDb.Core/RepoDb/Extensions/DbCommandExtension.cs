@@ -17,8 +17,6 @@ namespace RepoDb.Extensions
     {
         #region Privates
 
-        internal static Type bytesType = StaticType.ByteArray;
-        internal static Type dictionaryType = StaticType.Dictionary;
         internal static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
 
         #endregion
@@ -147,23 +145,13 @@ namespace RepoDb.Extensions
                 var type = param.GetType();
 
                 // Check the validity of the type
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == dictionaryType)
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == StaticType.Dictionary)
                 {
                     throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }
 
                 // Variables for properties
-                var properties = (IEnumerable<ClassProperty>)null;
-
-                // Add this check for performance
-                if (type.IsGenericType == true)
-                {
-                    properties = type.GetClassProperties();
-                }
-                else
-                {
-                    properties = PropertyCache.Get(type);
-                }
+                var properties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
 
                 // Skip some properties
                 if (propertiesToSkip != null)
@@ -200,26 +188,25 @@ namespace RepoDb.Extensions
 
                     else
                     {
-                        // Get property db type
-                        dbType = property.GetDbType();
-
-                        // Ensure mapping based on the value type
-                        if (dbType == null && value != null)
+                        // Check for the specialized first
+                        var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
+                        if (propertyType?.IsEnum == true)
                         {
-                            dbType = TypeMapCache.Get(value.GetType().GetUnderlyingType());
+                            dbType = DbType.String;
                         }
-
-                        // Check for specialized
-                        if (dbType == null)
+                        else if (propertyType == StaticType.ByteArray)
                         {
-                            var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
-                            if (propertyType?.IsEnum == true)
+                            dbType = DbType.Binary;
+                        }
+                        else
+                        {
+                            // Get property db type
+                            dbType = property.GetDbType();
+
+                            // Ensure mapping based on the value type
+                            if (dbType == null && value != null)
                             {
-                                dbType = DbType.String;
-                            }
-                            else if (propertyType == bytesType)
-                            {
-                                dbType = DbType.Binary;
+                                dbType = TypeMapCache.Get(value.GetType().GetUnderlyingType());
                             }
                         }
                     }
@@ -306,7 +293,7 @@ namespace RepoDb.Extensions
                             {
                                 dbType = DbType.String;
                             }
-                            else if (valueType == bytesType)
+                            else if (valueType == StaticType.ByteArray)
                             {
                                 dbType = DbType.Binary;
                             }
@@ -466,7 +453,7 @@ namespace RepoDb.Extensions
                     {
                         dbType = DbType.String;
                     }
-                    else if (valueType == bytesType)
+                    else if (valueType == StaticType.ByteArray)
                     {
                         dbType = DbType.Binary;
                     }
