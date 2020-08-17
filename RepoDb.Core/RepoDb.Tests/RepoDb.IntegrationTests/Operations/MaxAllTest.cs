@@ -64,6 +64,45 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMaxAllTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAll<IdentityTable, int?>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllWithHintsTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAll<IdentityTable, int?>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
+            }
+        }
+
         #endregion
 
         #region MaxAllAsync<TEntity>
@@ -104,6 +143,45 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllAsyncTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAllAsync<IdentityTable, int?>(e => e.ColumnInt).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllAsyncWithHintsTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAllAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
             }
         }
 
@@ -152,6 +230,47 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMaxAllTypedResultViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllTypedResultViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
+            }
+        }
+
         #endregion
 
         #region MaxAllAsync(TableName)
@@ -194,6 +313,47 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Max(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllTypedResultTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMaxAllTypedResultTableNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.MaxAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Max(t => t.ColumnInt), result);
             }
         }
 
