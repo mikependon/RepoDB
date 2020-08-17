@@ -26,6 +26,352 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQuery<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (0, 3)
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (9, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (4, 7)
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (5, 2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithWhereForFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithWhereForFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (9, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithWhereForSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (14, 17)
+                Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(17), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithWhereForSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (15, 12)
+                Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionBatchQueryFirstBatchInAscendingOrder()
         {
             // Setup
@@ -376,6 +722,129 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQuery<TEntity>(Extra Fields)
 
         [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithExtraFieldsViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(tableName: ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithExtraFieldsViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(tableName: ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithExtraFieldsViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(tableName: ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithExtraFieldsViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<WithExtraFieldsIdentityTable>(tableName: ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionBatchQueryWithExtraFieldsViaDynamic()
         {
             // Setup
@@ -501,6 +970,352 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region BatchQueryAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (0, 3)
+                Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (9, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (4, 7)
+                Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(7), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (5, 2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForFirstBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForFirstBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt >= 1 && item.ColumnInt <= 10,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (9, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForSecondBatchInAscendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (14, 17)
+                Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(17), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForSecondBatchInDescendingOrder()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 1,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Descending }),
+                    where: item => item.ColumnInt > 10 && item.ColumnInt <= 20,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (15, 12)
+                Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionBatchQueryAsyncFirstBatchInAscendingOrder()
@@ -851,6 +1666,129 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region BatchQueryAsync<TEntity>(Extra Fields)
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (2)
+                Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryField()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var field = new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 3);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: field,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (3, 6)
+                Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: fields,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryGroup()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(20);
+            var fields = new[]
+            {
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.GreaterThan, 10),
+                new QueryField(nameof(IdentityTable.ColumnInt), Operation.LessThanOrEqual, 20)
+            };
+            var queryGroup = new QueryGroup(fields);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: queryGroup,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (10, 13)
+                Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
+                Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaDynamic()
