@@ -64,6 +64,45 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<IdentityTable, int?>(e => e.ColumnInt);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllWithHintsTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<IdentityTable, int?>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
         #endregion
 
         #region SumAllAsync<TEntity>
@@ -104,6 +143,45 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllAsyncTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllAsyncWithHintsTypedResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
             }
         }
 
@@ -152,6 +230,47 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultViaTableNameWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAll<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock);
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
         #endregion
 
         #region SumAllAsync(TableName)
@@ -194,6 +313,47 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultTableNameAsync()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionSumAllTypedResultTableNameAsyncWithHints()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"),
+                    hints: SqlServerTableHints.NoLock).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
             }
         }
 
