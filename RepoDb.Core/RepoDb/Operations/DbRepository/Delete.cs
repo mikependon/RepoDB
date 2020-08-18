@@ -562,12 +562,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The primary key value to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete<T>(string tableName,
-            T whereOrPrimaryKey,
+            T what,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -578,7 +578,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Delete(tableName: tableName,
-                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    what: what,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -601,12 +601,12 @@ namespace RepoDb
         /// Delete the rows from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The primary key value to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public int Delete(string tableName,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -617,7 +617,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Delete(tableName: tableName,
-                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    what: what,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -762,12 +762,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The primary key value to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public async Task<int> DeleteAsync<T>(string tableName,
-            T whereOrPrimaryKey,
+            T what,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -778,7 +778,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.DeleteAsync(tableName: tableName,
-                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    what: what,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -801,12 +801,12 @@ namespace RepoDb
         /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The primary key value to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public async Task<int> DeleteAsync(string tableName,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -817,7 +817,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.DeleteAsync(tableName: tableName,
-                    whereOrPrimaryKey: whereOrPrimaryKey,
+                    what: what,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,

@@ -244,5 +244,94 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region Delete(TableName)
+
+        /// <summary>
+        /// Deletes an existing row from the table.
+        /// </summary>
+        /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int Delete<T>(string tableName,
+            T what,
+            string hints,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<T>(tableName: tableName,
+                what: what,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes an existing row from the table.
+        /// </summary>
+        /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public int Delete(string tableName,
+            object what,
+            string hints,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete(tableName: tableName,
+                what: what,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        #endregion
+
+
+        #region Delete(TableName)
+
+        /// <summary>
+        /// Deletes an existing row from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public Task<int> DeleteAsync<T>(string tableName,
+            T what,
+            string hints,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<T>(tableName: tableName,
+                what: what,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes an existing row from the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of rows that has been deleted from the table.</returns>
+        public Task<int> DeleteAsync(string tableName,
+            object what,
+            string hints,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync(tableName: tableName,
+                what: what,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        #endregion
     }
 }

@@ -485,6 +485,69 @@ namespace RepoDb.IntegrationTests.Operations
         #region Delete(TableName)
 
         [TestMethod]
+        public void TestSqlConnectionDeleteViaTableNameWithPrimaryKeyAsObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)tables.First().Id);
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(9, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteViaTableNameWithPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables.First().Id);
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(9, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteViaTableNameAsEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Delete(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables.First());
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(9, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionDeleteViaTableNameWithoutCondition()
         {
             // Setup
@@ -634,6 +697,69 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region DeleteAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaTableNameWithPrimaryKeyAsObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)tables.First().Id).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(9, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaTableNameWithPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables.First().Id).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(9, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaTableNameAsEntity()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.DeleteAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables.First()).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(9, connection.CountAll<IdentityTable>());
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionDeleteAsyncViaTableNameWithoutCondition()
