@@ -1452,6 +1452,32 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="what"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static async Task<QueryGroup> WhatToQueryGroupAsync<TEntity>(IDbConnection connection,
+            object what,
+            IDbTransaction transaction)
+            where TEntity : class
+        {
+            if (what == null)
+            {
+                return null;
+            }
+            var queryGroup = WhatToQueryGroup(what);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            return WhatToQueryGroup(key, what);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dbField"></param>
         /// <param name="what"></param>

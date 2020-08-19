@@ -17,7 +17,7 @@ namespace RepoDb
         /// Query the existing rows from the table based on a given expression.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -27,7 +27,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
-            object whereOrPrimaryKey = null,
+            object what,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -35,7 +35,38 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(tableName: tableName,
-                whereOrPrimaryKey: whereOrPrimaryKey,
+                what: what,
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query the existing rows from the table based on a given expression.
+        /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> Query<TWhat>(string tableName,
+            TWhat what,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Query<TEntity, TWhat>(tableName: tableName,
+                what: what,
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -57,7 +88,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -87,7 +118,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
-            QueryField where = null,
+            QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -117,7 +148,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -147,7 +178,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -166,7 +197,7 @@ namespace RepoDb
         /// <summary>
         /// Query the existing rows from the table based on a given expression.
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -175,14 +206,42 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query(object whereOrPrimaryKey = null,
+        public IEnumerable<TEntity> Query(object what,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+            return DbRepository.Query<TEntity>(what: what,
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query the existing rows from the table based on a given expression.
+        /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public IEnumerable<TEntity> Query<TWhat>(TWhat what,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Query<TEntity, TWhat>(what: what,
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -202,7 +261,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query(Expression<Func<TEntity, bool>> where = null,
+        public IEnumerable<TEntity> Query(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -229,7 +288,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query(QueryField where = null,
+        public IEnumerable<TEntity> Query(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -256,7 +315,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where = null,
+        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -283,7 +342,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> Query(QueryGroup where = null,
+        public IEnumerable<TEntity> Query(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -306,7 +365,7 @@ namespace RepoDb
         /// Query the existing rows from the table based on a given expression in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -316,7 +375,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
-            object whereOrPrimaryKey = null,
+            object what,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -324,7 +383,38 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
-                whereOrPrimaryKey: whereOrPrimaryKey,
+                what: what,
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query the existing rows from the table based on a given expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public Task<IEnumerable<TEntity>> QueryAsync<TWhat>(string tableName,
+            TWhat what,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAsync<TEntity, TWhat>(tableName: tableName,
+                what: what,
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -346,7 +436,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -376,7 +466,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
-            QueryField where = null,
+            QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -406,7 +496,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -436,7 +526,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -455,7 +545,7 @@ namespace RepoDb
         /// <summary>
         /// Query the existing rows from the table based on a given expression in an asynchronous way.
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -464,14 +554,42 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(object whereOrPrimaryKey = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(object what,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+            return DbRepository.QueryAsync<TEntity>(what: what,
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query the existing rows from the table based on a given expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="top">The number of rows to be returned.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public Task<IEnumerable<TEntity>> QueryAsync<TWhat>(TWhat what,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAsync<TEntity, TWhat>(what: what,
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -491,7 +609,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> where = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -518,7 +636,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(QueryField where = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -545,7 +663,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -572,7 +690,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,

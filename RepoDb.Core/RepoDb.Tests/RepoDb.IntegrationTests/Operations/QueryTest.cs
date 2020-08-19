@@ -89,7 +89,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query<IdentityTable>(whereOrPrimaryKey: null,
+                var result = connection.Query<IdentityTable>(what: null,
                     top: top);
 
                 // Assert
@@ -115,7 +115,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query<IdentityTable>(whereOrPrimaryKey: null,
+                var result = connection.Query<IdentityTable>(what: null,
                     orderBy: orderBy.AsEnumerable());
 
                 // Assert
@@ -138,7 +138,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.Query<IdentityTable>(whereOrPrimaryKey: null,
+                var result = connection.Query<IdentityTable>(what: null,
                     top: top,
                     orderBy: orderBy.AsEnumerable());
 
@@ -1068,7 +1068,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(whereOrPrimaryKey: null,
+                var result = connection.QueryAsync<IdentityTable>(what: null,
                     top: top).Result;
 
                 // Assert
@@ -1094,7 +1094,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(whereOrPrimaryKey: null,
+                var result = connection.QueryAsync<IdentityTable>(what: null,
                     orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
@@ -1117,7 +1117,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(whereOrPrimaryKey: null,
+                var result = connection.QueryAsync<IdentityTable>(what: null,
                     top: top,
                     orderBy: orderBy.AsEnumerable()).Result;
 
@@ -2060,7 +2060,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
-                    whereOrPrimaryKey: null,
+                    what: null,
                     top: top);
 
                 // Assert
@@ -2087,7 +2087,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
-                    whereOrPrimaryKey: null,
+                    what: null,
                     orderBy: orderBy.AsEnumerable());
 
                 // Assert
@@ -2111,7 +2111,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
-                    whereOrPrimaryKey: null,
+                    what: null,
                     top: top,
                     orderBy: orderBy.AsEnumerable());
 
@@ -2523,7 +2523,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    whereOrPrimaryKey: null,
+                    what: null,
                     top: top).Result;
 
                 // Assert
@@ -2550,7 +2550,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    whereOrPrimaryKey: null,
+                    what: null,
                     orderBy: orderBy.AsEnumerable()).Result;
 
                 // Assert
@@ -2574,7 +2574,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    whereOrPrimaryKey: null,
+                    what: null,
                     top: top,
                     orderBy: orderBy.AsEnumerable()).Result;
 
