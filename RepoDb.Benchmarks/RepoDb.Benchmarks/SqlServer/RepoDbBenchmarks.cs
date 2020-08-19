@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,6 +10,7 @@ using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer
 {
+    [Description("RepoDb")]
     public class RepoDbBenchmarks : BaseBenchmark
     {
         [GlobalSetup]
@@ -20,22 +22,18 @@ namespace RepoDb.Benchmarks.SqlServer
             TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
         }
 
-        [Benchmark(Description = "RepoDb: FirstAsync")]
+        [Benchmark]
         public async Task<Person> FirstAsync()
         {
-            IncreaseId();
-
             using IDbConnection connection = await new SqlConnection(DatabaseHelper.ConnectionString).EnsureOpenAsync();
             var person = await connection.QueryAsync<Person>(x => x.Id == CurrentId);
 
             return person.First();
         }
 
-        [Benchmark(Description = "RepoDb: First")]
+        [Benchmark]
         public Person First()
         {
-            IncreaseId();
-
             using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString).EnsureOpen();
 
             return connection.Query<Person>(x => x.Id == CurrentId).First();

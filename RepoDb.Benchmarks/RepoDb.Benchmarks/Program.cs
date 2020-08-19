@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
+using RepoDb.Benchmarks.Configurations;
 
 namespace RepoDb.Benchmarks
 {

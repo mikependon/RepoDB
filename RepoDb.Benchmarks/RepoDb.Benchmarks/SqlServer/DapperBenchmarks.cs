@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -8,19 +9,15 @@ using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer
 {
+    [Description("Dapper 2.0.35")]
     public class DapperBenchmarks : BaseBenchmark
     {
         [GlobalSetup]
-        public void Setup()
-        {
-            BaseSetup();
-        }
+        public void Setup() => BaseSetup();
 
-        [Benchmark(Description = "Dapper 2.0.35: FirstAsync")]
+        [Benchmark]
         public async Task<Person> FirstAsync()
         {
-            IncreaseId();
-
             using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString);
             connection.Open();
 
@@ -28,11 +25,9 @@ namespace RepoDb.Benchmarks.SqlServer
                 new {Id = CurrentId});
         }
 
-        [Benchmark(Description = "Dapper 2.0.35: First")]
+        [Benchmark]
         public Person First()
         {
-            IncreaseId();
-
             using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString);
             connection.Open();
 

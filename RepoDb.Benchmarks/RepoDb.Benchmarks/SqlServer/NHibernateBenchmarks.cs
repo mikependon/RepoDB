@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using NHibernate;
@@ -11,6 +12,7 @@ using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer
 {
+    [Description("NHibernate 5.3.2")]
     public class NHibernateBenchmarks : BaseBenchmark
     {
         private ISessionFactory sessionFactory;
@@ -35,21 +37,17 @@ namespace RepoDb.Benchmarks.SqlServer
             sessionFactory = configuration.BuildSessionFactory();
         }
 
-        [Benchmark(Description = "NHibernate 5.3.1: FirstAsync")]
+        [Benchmark]
         public async Task<Person> FirstAsync()
         {
-            IncreaseId();
-
             using IStatelessSession session = sessionFactory.OpenStatelessSession();
 
             return await session.Query<Person>().FirstAsync(x => x.Id == CurrentId);
         }
 
-        [Benchmark(Description = "NHibernate 5.3.1: First")]
+        [Benchmark]
         public Person First()
         {
-            IncreaseId();
-
             using IStatelessSession session = sessionFactory.OpenStatelessSession();
 
             return session.Query<Person>().First(x => x.Id == CurrentId);
