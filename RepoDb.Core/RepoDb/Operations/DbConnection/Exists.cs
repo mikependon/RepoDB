@@ -22,7 +22,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey = null,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -39,7 +39,38 @@ namespace RepoDb
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
-                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        public static bool Exists<TEntity, TWhat>(this IDbConnection connection,
+            TWhat what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return ExistsInternal<TEntity>(connection: connection,
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -60,67 +91,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return ExistsInternal<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Check whether the rows are existing in the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
-            QueryField where = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return ExistsInternal<TEntity>(connection: connection,
-                where: ToQueryGroup(where),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Check whether the rows are existing in the table.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
-        public static bool Exists<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where = null,
+            Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -150,7 +121,67 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryField where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return ExistsInternal<TEntity>(connection: connection,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        public static bool Exists<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return ExistsInternal<TEntity>(connection: connection,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        public static bool Exists<TEntity>(this IDbConnection connection,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -180,7 +211,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         internal static bool ExistsInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -221,7 +252,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -229,7 +260,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static async Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey = null,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -238,7 +269,38 @@ namespace RepoDb
             where TEntity : class
         {
             return await ExistsAsyncInternal<TEntity>(connection: connection,
-                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        public static async Task<bool> ExistsAsync<TEntity, TWhat>(this IDbConnection connection,
+            TWhat what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return await ExistsAsyncInternal<TEntity>(connection: connection,
+                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -259,7 +321,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
-            Expression<Func<TEntity, bool>> where = null,
+            Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -289,7 +351,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -319,7 +381,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -349,7 +411,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -379,7 +441,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         internal static Task<bool> ExistsAsyncInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where = null,
+            QueryGroup where,
             int? commandTimeout = null,
             string hints = null,
             IDbTransaction transaction = null,
@@ -418,18 +480,19 @@ namespace RepoDb
         /// <summary>
         /// Check whether the rows are existing in the table.
         /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
-        public static bool Exists(this IDbConnection connection,
+        public static bool Exists<TWhat>(this IDbConnection connection,
             string tableName,
-            object whereOrPrimaryKey = null,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -438,7 +501,38 @@ namespace RepoDb
         {
             return ExistsInternal(connection: connection,
                 tableName: tableName,
-                where: WhereOrKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup(connection, tableName, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        public static bool Exists(this IDbConnection connection,
+            string tableName,
+            object what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return ExistsInternal(connection: connection,
+                tableName: tableName,
+                where: WhatToQueryGroup(connection, tableName, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -460,7 +554,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -491,7 +585,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -522,7 +616,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -553,7 +647,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         internal static bool ExistsInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -591,18 +685,19 @@ namespace RepoDb
         /// <summary>
         /// Check whether the rows are existing in the table in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
-        public static async Task<bool> ExistsAsync(this IDbConnection connection,
+        public static async Task<bool> ExistsAsync<TWhat>(this IDbConnection connection,
             string tableName,
-            object whereOrPrimaryKey = null,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -611,7 +706,38 @@ namespace RepoDb
         {
             return await ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
-                where: await WhereOrKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Check whether the rows are existing in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        public static async Task<bool> ExistsAsync(this IDbConnection connection,
+            string tableName,
+            object what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return await ExistsAsyncInternal(connection: connection,
+                tableName: tableName,
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -633,7 +759,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
-            QueryField where = null,
+            QueryField where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -664,7 +790,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
-            IEnumerable<QueryField> where = null,
+            IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -695,7 +821,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -726,7 +852,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
         internal static Task<bool> ExistsAsyncInternal(this IDbConnection connection,
             string tableName,
-            QueryGroup where = null,
+            QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
