@@ -1022,7 +1022,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Exists<TraceEntity>(trace: trace.Object,
-                whereOrPrimaryKey: (object)null);
+                what: (object)null);
 
             // Assert
             trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
@@ -1037,7 +1037,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Exists<TraceEntity>(trace: trace.Object,
-                whereOrPrimaryKey: (object)null);
+                what: (object)null);
 
             // Assert
             trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
@@ -1052,7 +1052,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Exists(ClassMappedNameCache.Get<TraceEntity>(),
-                whereOrPrimaryKey: (object)null,
+                what: (object)null,
                 trace: trace.Object);
 
             // Assert
@@ -1068,7 +1068,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.Exists(ClassMappedNameCache.Get<TraceEntity>(),
-                whereOrPrimaryKey: (object)null,
+                what: (object)null,
                 trace: trace.Object);
 
             // Assert
@@ -1088,7 +1088,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.ExistsAsync<TraceEntity>(trace: trace.Object,
-                whereOrPrimaryKey: (object)null).Wait();
+                what: (object)null).Wait();
 
             // Assert
             trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
@@ -1103,7 +1103,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.ExistsAsync<TraceEntity>(trace: trace.Object,
-                whereOrPrimaryKey: (object)null).Wait();
+                what: (object)null).Wait();
 
             // Assert
             trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
@@ -1118,7 +1118,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                whereOrPrimaryKey: (object)null,
+                what: (object)null,
                 trace: trace.Object).Wait();
 
             // Assert
@@ -1134,7 +1134,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                whereOrPrimaryKey: (object)null,
+                what: (object)null,
                 trace: trace.Object).Wait();
 
             // Assert

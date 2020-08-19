@@ -1188,82 +1188,7 @@ namespace RepoDb
 
         #region Helper Methods
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
-        internal static void ValidateTransactionConnectionObject(this IDbConnection connection,
-            IDbTransaction transaction)
-        {
-            if (transaction != null && transaction.Connection != connection)
-            {
-                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="where"></param>
-        internal static void WhereToCommandParameters(DbCommand command,
-            QueryGroup where)
-        {
-            // Check the presence
-            if (where == null)
-            {
-                return;
-            }
-
-            // Iterate the fields
-            foreach (var queryField in where.GetFields(true))
-            {
-                // Create a parameter
-                var parameter = command
-                    .CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
-
-                // Add to the command object
-                command.Parameters.Add(parameter);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="properties"></param>
-        /// <param name="qualifiers"></param>
-        /// <returns></returns>
-        internal static QueryGroup CreateQueryGroupForUpsert(object entity,
-            IEnumerable<ClassProperty> properties,
-            IEnumerable<Field> qualifiers = null)
-        {
-            var queryFields = new List<QueryField>();
-            foreach (var field in qualifiers)
-            {
-                var property = properties?.FirstOrDefault(
-                    p => string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
-
-                if (property != null)
-                {
-                    queryFields.Add(new QueryField(field, property.PropertyInfo.GetValue(entity)));
-                }
-            }
-            return new QueryGroup(queryFields);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="fields"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
-            TEntity entity)
-            where TEntity : class =>
-            fields ?? ((typeof(TEntity).IsClassType() == false) ? Field.Parse(entity) : FieldCache.Get<TEntity>());
+        #region GetAndGuardPrimaryKeyOrIdentityKey
 
         /// <summary>
         /// 
@@ -1417,20 +1342,245 @@ namespace RepoDb
             return dbField;
         }
 
+        #endregion
+
+        #region WhatToQueryGroup
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="what"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static QueryGroup WhatToQueryGroup<T>(this IDbConnection connection,
+            string tableName,
+            T what,
+            IDbTransaction transaction)
+        {
+            if (what == null)
+            {
+                return null;
+            }
+            var queryGroup = WhatToQueryGroup<T>(what);
+            if (queryGroup == null)
+            {
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                queryGroup = WhatToQueryGroup<T>(key, what);
+            }
+            return queryGroup;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="what"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static async Task<QueryGroup> WhatToQueryGroupAsync<T>(this IDbConnection connection,
+            string tableName,
+            T what,
+            IDbTransaction transaction)
+        {
+            if (what == null)
+            {
+                return null;
+            }
+            var queryGroup = WhatToQueryGroup<T>(what);
+            if (queryGroup == null)
+            {
+                var dbField = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+                queryGroup = WhatToQueryGroup<T>(dbField, what);
+            }
+            return queryGroup;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="what"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        internal static QueryGroup WhatToQueryGroup<T>(string tableName,
+            T what,
+            IEnumerable<DbField> dbFields)
+        {
+            var key = dbFields?.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields?.FirstOrDefault(p => p.IsIdentity == true);
+            if (key == null)
+            {
+                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
+            }
+            else
+            {
+                return WhatToQueryGroup(key, what);
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="entities"></param>
-        /// <param name="property"></param>
+        /// <param name="connection"></param>
+        /// <param name="what"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static IEnumerable<TResult> ExtractPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
-            ClassProperty property)
+        internal static QueryGroup WhatToQueryGroup<TEntity>(IDbConnection connection,
+            object what,
+            IDbTransaction transaction)
             where TEntity : class
         {
-            return ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
+            if (what == null)
+            {
+                return null;
+            }
+            var queryGroup = WhatToQueryGroup(what);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            return WhatToQueryGroup(key, what);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbField"></param>
+        /// <param name="what"></param>
+        /// <returns></returns>
+        internal static QueryGroup WhatToQueryGroup<T>(DbField dbField,
+            T what)
+        {
+            if (what == null)
+            {
+                return null;
+            }
+            var type = typeof(T);
+            var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
+            var property = properties?
+                .FirstOrDefault(p => string.Equals(p.GetMappedName(), dbField.Name, StringComparison.OrdinalIgnoreCase));
+            if (property != null)
+            {
+                return WhatToQueryGroup<T>(property, what);
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(dbField.AsField(), what));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="property"></param>
+        /// <param name="what"></param>
+        /// <returns></returns>
+        internal static QueryGroup WhatToQueryGroup<T>(ClassProperty property,
+            T what)
+        {
+            var type = typeof(T);
+            if (property == null)
+            {
+                throw new KeyFieldNotFoundException($"No primary key and identity key found at the type '{type.FullName}'.");
+            }
+            if (type.IsClassType())
+            {
+                return new QueryGroup(property.PropertyInfo.AsQueryField(what));
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(property.AsField(), what));
+            }
+        }
+
+        // TODO: Rename this method
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="what"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static async Task<QueryGroup> WhereOrKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
+            object what,
+            IDbTransaction transaction)
+            where TEntity : class
+        {
+            if (what == null)
+            {
+                return null;
+            }
+            var queryGroup = WhatToQueryGroup(what);
+            if (queryGroup != null)
+            {
+                return queryGroup;
+            }
+            var field = (await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction))?.AsField();
+            if (field == null)
+            {
+                var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+                field = (dbFields.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields.FirstOrDefault(p => p.IsIdentity == true))?
+                    .AsField();
+            }
+            if (field == null)
+            {
+                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
+            }
+            else
+            {
+                return new QueryGroup(new QueryField(field, what));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="what"></param>
+        /// <returns></returns>
+        internal static QueryGroup WhatToQueryGroup<T>(T what)
+        {
+            if (what == null)
+            {
+                return null;
+            }
+            else if (what is QueryField)
+            {
+                return ToQueryGroup(what as QueryField);
+            }
+            else if (what is IEnumerable<QueryField>)
+            {
+                return ToQueryGroup(what as IEnumerable<QueryField>);
+            }
+            else if (what is QueryGroup)
+            {
+                return what as QueryGroup;
+            }
+            else
+            {
+                var type = typeof(T);
+                if (type.IsGenericType || type == StaticType.Object)
+                {
+                    return QueryGroup.Parse(what);
+                }
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region ToQueryGroup
 
         /// <summary>
         /// 
@@ -1443,7 +1593,8 @@ namespace RepoDb
             {
                 return null;
             }
-            if (where.GetType().IsGenericType)
+            var type = where.GetType();
+            if (type.IsClassType() || type.IsGenericType)
             {
                 return QueryGroup.Parse(where);
             }
@@ -1484,7 +1635,7 @@ namespace RepoDb
             {
                 return null;
             }
-            return new QueryGroup(property.PropertyInfo.AsQueryField(entity));
+            return ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
         }
 
         /// <summary>
@@ -1515,327 +1666,99 @@ namespace RepoDb
             return new QueryGroup(fields);
         }
 
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="what"></param>
         /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(this IDbConnection connection,
-            string tableName,
-            T what,
+        internal static void ValidateTransactionConnectionObject(this IDbConnection connection,
             IDbTransaction transaction)
         {
-            var queryGroup = WhatToQueryGroup<T>(what);
-            if (queryGroup == null)
+            if (transaction != null && transaction.Connection != connection)
             {
-                if (typeof(T).IsClassType())
+                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="where"></param>
+        internal static void WhereToCommandParameters(DbCommand command,
+            QueryGroup where)
+        {
+            // Check the presence
+            if (where == null)
+            {
+                return;
+            }
+
+            // Iterate the fields
+            foreach (var queryField in where.GetFields(true))
+            {
+                // Create a parameter
+                var parameter = command
+                    .CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
+
+                // Add to the command object
+                command.Parameters.Add(parameter);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="properties"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
+        internal static QueryGroup CreateQueryGroupForUpsert(object entity,
+            IEnumerable<ClassProperty> properties,
+            IEnumerable<Field> qualifiers = null)
+        {
+            var queryFields = new List<QueryField>();
+            foreach (var field in qualifiers)
+            {
+                var property = properties?.FirstOrDefault(
+                    p => string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
+
+                if (property != null)
                 {
-                    var dbField = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                    queryGroup = WhatToQueryGroup<T>(dbField, what);
-                }
-                else
-                {
-                    queryGroup = WhereOrKeyToQueryGroup<T>(connection, tableName, what, transaction);
+                    queryFields.Add(new QueryField(field, property.PropertyInfo.GetValue(entity)));
                 }
             }
-            return queryGroup;
+            return new QueryGroup(queryFields);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="what"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static async Task<QueryGroup> WhatToQueryGroupAsync<T>(this IDbConnection connection,
-            string tableName,
-            T what,
-            IDbTransaction transaction)
-        {
-            var queryGroup = WhatToQueryGroup<T>(what);
-            if (queryGroup == null)
-            {
-                if (typeof(T).IsClassType())
-                {
-                    var dbField = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
-                    queryGroup = WhatToQueryGroup<T>(dbField, what);
-                }
-                else
-                {
-                    queryGroup = WhereOrKeyToQueryGroup<T>(connection, tableName, what, transaction);
-                }
-            }
-            return queryGroup;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dbField"></param>
-        /// <param name="what"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(DbField dbField,
-            T what)
-        {
-            var property = PropertyCache
-                .Get(typeof(T))
-                .FirstOrDefault(p => string.Equals(p.GetMappedName(), dbField.Name, StringComparison.OrdinalIgnoreCase));
-            return WhatToQueryGroup<T>(property, what);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="entities"></param>
         /// <param name="property"></param>
-        /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(ClassProperty property,
-            T what)
+        internal static IEnumerable<TResult> ExtractPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
+            ClassProperty property)
+            where TEntity : class
         {
-            var type = typeof(T);
-            if (property == null)
-            {
-                throw new KeyFieldNotFoundException($"No primary key and identity key found at the type '{type.FullName}'.");
-            }
-            return new QueryGroup(property.PropertyInfo.AsQueryField(what));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dbField"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhereOrKeyToQueryGroup<T>(DbField dbField,
-            T whereOrPrimaryKey) =>
-            WhereOrKeyToQueryGroup(dbField.Name, whereOrPrimaryKey);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="fieldName"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhereOrKeyToQueryGroup<T>(string fieldName,
-            T whereOrPrimaryKey) =>
-            new QueryGroup(new QueryField(fieldName, whereOrPrimaryKey));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhereOrKeyToQueryGroup<T>(IDbConnection connection,
-            string tableName,
-            T whereOrPrimaryKey,
-            IDbTransaction transaction)
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            var queryGroup = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
-            if (queryGroup != null)
-            {
-                return queryGroup;
-            }
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            return WhereOrKeyToQueryGroup(tableName, whereOrPrimaryKey, dbFields);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static async Task<QueryGroup> WhereOrKeyToQueryGroupAsync<T>(IDbConnection connection,
-            string tableName,
-            T whereOrPrimaryKey,
-            IDbTransaction transaction)
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            var queryGroup = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
-            if (queryGroup != null)
-            {
-                return queryGroup;
-            }
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
-            return WhereOrKeyToQueryGroup(tableName, whereOrPrimaryKey, dbFields);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <param name="dbFields"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhereOrKeyToQueryGroup<T>(string tableName,
-            T whereOrPrimaryKey,
-            IEnumerable<DbField> dbFields)
-        {
-            var key = dbFields?.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields?.FirstOrDefault(p => p.IsIdentity == true);
-            if (key == null)
-            {
-                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
-            }
-            else
-            {
-                return new QueryGroup(new QueryField(key.AsField(), whereOrPrimaryKey));
-            }
+            return ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <param name="transaction"></param>
+        /// <param name="fields"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        internal static QueryGroup WhereOrKeyToQueryGroup<TEntity>(IDbConnection connection,
-            object whereOrPrimaryKey,
-            IDbTransaction transaction)
-            where TEntity : class
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            var queryGroup = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
-            if (queryGroup != null)
-            {
-                return queryGroup;
-            }
-            var field = PrimaryCache.Get<TEntity>()?.AsField() ?? IdentityCache.Get<TEntity>()?.AsField();
-            if (field == null)
-            {
-                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
-                field = (dbFields.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields.FirstOrDefault(p => p.IsIdentity == true))?
-                    .AsField();
-            }
-            if (field == null)
-            {
-                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
-            }
-            else
-            {
-                return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static async Task<QueryGroup> WhereOrKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
-            object whereOrPrimaryKey,
-            IDbTransaction transaction)
-            where TEntity : class
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            var queryGroup = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
-            if (queryGroup != null)
-            {
-                return queryGroup;
-            }
-            var field = PrimaryCache.Get<TEntity>()?.AsField();
-            if (field == null)
-            {
-                var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
-                field = (dbFields.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields.FirstOrDefault(p => p.IsIdentity == true))?
-                    .AsField();
-            }
-            if (field == null)
-            {
-                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
-            }
-            else
-            {
-                return new QueryGroup(new QueryField(field, whereOrPrimaryKey));
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="whereOrPrimaryKey"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhereOrKeyToQueryGroup<T>(T whereOrPrimaryKey)
-        {
-            if (whereOrPrimaryKey == null)
-            {
-                return null;
-            }
-            var queryGroup = WhatToQueryGroup<T>(whereOrPrimaryKey);
-            if (queryGroup == null)
-            {
-                var type = typeof(T);
-                if (type.IsGenericType || type == StaticType.Object || type.IsClassType())
-                {
-                    queryGroup = QueryGroup.Parse(whereOrPrimaryKey);
-                }
-            }
-            return queryGroup;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="what"></param>
-        /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(T what)
-        {
-            if (what == null)
-            {
-                return null;
-            }
-            else if (what is QueryField)
-            {
-                return ToQueryGroup(what as QueryField);
-            }
-            else if (what is IEnumerable<QueryField>)
-            {
-                return ToQueryGroup(what as IEnumerable<QueryField>);
-            }
-            else if (what is QueryGroup)
-            {
-                return what as QueryGroup;
-            }
-            return null;
-        }
+        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
+            TEntity entity)
+            where TEntity : class =>
+            fields ?? ((typeof(TEntity).IsClassType() == false) ? Field.Parse(entity) : FieldCache.Get<TEntity>());
 
         /// <summary>
         /// 

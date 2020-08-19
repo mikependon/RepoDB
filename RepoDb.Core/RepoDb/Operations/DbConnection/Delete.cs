@@ -52,17 +52,17 @@ namespace RepoDb
         /// Delete the rows from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TExpressionOrKey">The type of the expression or the key.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<TEntity, TExpressionOrKey>(this IDbConnection connection,
-            TExpressionOrKey whereOrPrimaryKey,
+        public static int Delete<TEntity, TWhat>(this IDbConnection connection,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -70,9 +70,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return DeleteInternal<TEntity>(connection: connection,
-                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -85,7 +84,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -93,7 +92,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -101,9 +100,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return DeleteInternal<TEntity>(connection: connection,
-                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -315,17 +313,17 @@ namespace RepoDb
         /// Delete the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <typeparam name="TExpressionOrKey">The type of the expression or the key.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAsync<TEntity, TExpressionOrKey>(this IDbConnection connection,
-            TExpressionOrKey whereOrPrimaryKey,
+        public static async Task<int> DeleteAsync<TEntity, TWhat>(this IDbConnection connection,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -333,9 +331,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             return await DeleteAsyncInternal<TEntity>(connection: connection,
-                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -348,7 +345,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -356,7 +353,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
         public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -364,9 +361,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             return await DeleteAsyncInternal<TEntity>(connection: connection,
-                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -546,19 +542,19 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing row from the table.
         /// </summary>
-        /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
+        /// <typeparam name="TWhat">The type of the data entity, the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="what">The data entity object, the dynamic expression or the key value to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static int Delete<T>(this IDbConnection connection,
+        public static int Delete<TWhat>(this IDbConnection connection,
             string tableName,
-            T what,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -580,7 +576,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="what">The data entity object, the dynamic expression or the key value to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -598,7 +594,7 @@ namespace RepoDb
         {
             return DeleteInternal(connection: connection,
                 tableName: tableName,
-                where: WhereOrKeyToQueryGroup(connection, tableName, what, transaction),
+                where: WhatToQueryGroup(connection, tableName, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -751,19 +747,19 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing row from the table in an asynchronous way.
         /// </summary>
-        /// <typeparam name="T">The type of the dynamic expression or the key.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="what">The data entity object, the dynamic expression or the key value to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAsync<T>(this IDbConnection connection,
+        public static async Task<int> DeleteAsync<TWhat>(this IDbConnection connection,
             string tableName,
-            T what,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -785,7 +781,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="what">The data entity object, dynamic expression or the key of the row to be deleted.</param>
+        /// <param name="what">The data entity object, the dynamic expression or the key value to be deleted.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
