@@ -1528,47 +1528,6 @@ namespace RepoDb
             }
         }
 
-        // TODO: Rename this method
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="what"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static async Task<QueryGroup> WhereOrKeyToQueryGroupAsync<TEntity>(IDbConnection connection,
-            object what,
-            IDbTransaction transaction)
-            where TEntity : class
-        {
-            if (what == null)
-            {
-                return null;
-            }
-            var queryGroup = WhatToQueryGroup(what);
-            if (queryGroup != null)
-            {
-                return queryGroup;
-            }
-            var field = (await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction))?.AsField();
-            if (field == null)
-            {
-                var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
-                field = (dbFields.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields.FirstOrDefault(p => p.IsIdentity == true))?
-                    .AsField();
-            }
-            if (field == null)
-            {
-                throw new PrimaryFieldNotFoundException(string.Format("There is no primary key field found for table '{0}'.", ClassMappedNameCache.Get<TEntity>()));
-            }
-            else
-            {
-                return new QueryGroup(new QueryField(field, what));
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>

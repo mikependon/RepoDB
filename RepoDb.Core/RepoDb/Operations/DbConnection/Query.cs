@@ -1050,7 +1050,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
                 fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
@@ -1101,7 +1101,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
                 fields: FieldCache.Get<TEntity>(),
                 orderBy: orderBy,
                 top: top,
