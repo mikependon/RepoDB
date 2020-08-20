@@ -63,7 +63,7 @@ namespace RepoDb.Extensions
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
         internal static ClassProperty GetMappedProperty(this Type type,
             string mappedName) =>
-            PropertyCache.Get(type).FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
+            PropertyCache.Get(type)?.FirstOrDefault(p => string.Equals(p.GetMappedName(), mappedName, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>
         /// Checks whether the current type has implemented the target interface.

@@ -27,8 +27,8 @@ namespace RepoDb.Reflection
             var typeOfEntity = typeof(TEntity);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
-            var fieldDirections = new List<FieldDirection>();
             var instanceVariable = Expression.Variable(typeOfEntity, "instance");
+            var fieldDirections = new List<FieldDirection>();
             var bodyExpressions = new List<Expression>();
 
             // Field directions
@@ -41,31 +41,16 @@ namespace RepoDb.Reflection
             // Iterate by batch size
             for (var entityIndex = 0; entityIndex < batchSize; entityIndex++)
             {
-                // Get the current instance
-                var entityParameter = GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
-                var entityExpressions = new List<Expression>();
-                var entityVariables = new List<ParameterExpression>();
-
-                // Entity instance
-                entityVariables.Add(instanceVariable);
-                entityExpressions.Add(Expression.Assign(instanceVariable, entityParameter));
-
-                // Iterate the input fields
-                foreach (var fieldDirection in fieldDirections)
-                {
-                    // Add the property block
-                    var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
-                        instanceVariable, fieldDirection, entityIndex, dbSetting);
-
-                    // Add to instance expression
-                    entityExpressions.Add(propertyBlock);
-                }
-
                 // Add to the instance block
-                var instanceBlock = Expression.Block(entityVariables, entityExpressions);
+                var indexDbParameterSetterExpression = GetIndexDbParameterSetterExpression<TEntity>(commandParameterExpression,
+                    entitiesParameterExpression,
+                    instanceVariable,
+                    fieldDirections,
+                    entityIndex,
+                    dbSetting);
 
                 // Add to the body
-                bodyExpressions.Add(instanceBlock);
+                bodyExpressions.Add(indexDbParameterSetterExpression);
             }
 
             // Set the function value

@@ -1837,6 +1837,49 @@ namespace RepoDb.Reflection
                 Expression.Constant(entityIndex));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="entitiesParameterExpression"></param>
+        /// <param name="instanceVariable"></param>
+        /// <param name="fieldDirections"></param>
+        /// <param name="entityIndex"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static Expression GetIndexDbParameterSetterExpression<TEntity>(ParameterExpression commandParameterExpression,
+            ParameterExpression entitiesParameterExpression,
+            ParameterExpression instanceVariable,
+            IEnumerable<FieldDirection> fieldDirections,
+            int entityIndex,
+            IDbSetting dbSetting)
+            where TEntity : class
+        {
+            // Get the current instance
+            var typeOfListEntity = typeof(IList<TEntity>);
+            var entityParameter = GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
+            var entityExpressions = new List<Expression>();
+            var entityVariables = new List<ParameterExpression>();
+
+            // Entity instance
+            entityVariables.Add(instanceVariable);
+            entityExpressions.Add(Expression.Assign(instanceVariable, entityParameter));
+
+            // Iterate the input fields
+            foreach (var fieldDirection in fieldDirections)
+            {
+                // Add the property block
+                var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
+                    instanceVariable, fieldDirection, entityIndex, dbSetting);
+
+                // Add to instance expression
+                entityExpressions.Add(propertyBlock);
+            }
+
+            // Add to the instance block
+            return Expression.Block(entityVariables, entityExpressions);
+        }
         #endregion
     }
 }
