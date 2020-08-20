@@ -69,7 +69,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new MissingFieldsException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by
@@ -368,7 +368,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
+                throw new MissingFieldsException($"The list of fields cannot be null or empty.");
             }
 
             // Check the qualifiers
@@ -406,7 +406,7 @@ namespace RepoDb.StatementBuilders
                 else
                 {
                     // Throw exception, qualifiers are not defined
-                    throw new NullReferenceException($"There are no qualifier field objects found for '{tableName}'.");
+                    throw new MissingQualifierFieldsException($"There are no qualifier fields found for '{tableName}'.");
                 }
             }
 
@@ -525,7 +525,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
+                throw new MissingFieldsException($"The list of fields cannot be null or empty.");
             }
 
             // Check the qualifiers
@@ -563,7 +563,7 @@ namespace RepoDb.StatementBuilders
                 else
                 {
                     // Throw exception, qualifiers are not defined
-                    throw new NullReferenceException($"There are no qualifier field objects found for '{tableName}'.");
+                    throw new MissingQualifierFieldsException($"There are no qualifier fields found for '{tableName}'.");
                 }
             }
 
