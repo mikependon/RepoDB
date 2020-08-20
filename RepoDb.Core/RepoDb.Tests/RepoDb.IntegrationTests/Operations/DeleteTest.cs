@@ -28,6 +28,106 @@ namespace RepoDb.IntegrationTests.Operations
         #region Delete<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionDeleteViaDataEntityViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.Delete<IdentityTable>(item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteViaDataEntityViaPrimaryKeyAsObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.Delete<IdentityTable>((object)item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteViaDataEntityViaPrimaryKeyAsType()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.Delete<IdentityTable, long>(item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteViaDataEntityViaPrimaryKeyAsTypeAsObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.Delete<IdentityTable, object>(item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionDeleteViaDataEntity()
         {
             // Setup
@@ -41,7 +141,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item =>
                 {
                     // Act
-                    var result = connection.Delete(item);
+                    var result = connection.Delete<IdentityTable>(item);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -239,7 +339,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item =>
                 {
                     // Act
-                    var result = connection.Delete(item, hints: SqlServerTableHints.TabLock);
+                    var result = connection.Delete<IdentityTable>(item, hints: SqlServerTableHints.TabLock);
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -253,6 +353,106 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region DeleteAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaDataEntityViaPrimaryKey()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.DeleteAsync<IdentityTable>(item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaDataEntityViaPrimaryKeyAsObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.DeleteAsync<IdentityTable>((object)item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaDataEntityViaPrimaryKeyAsType()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.DeleteAsync<IdentityTable, long>(item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaDataEntityViaPrimaryKeyAsTypeAsObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                tables.ForEach(item =>
+                {
+                    // Act
+                    var result = connection.DeleteAsync<IdentityTable, object>(item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, result);
+                });
+
+                // Assert
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionDeleteAsyncViaDataEntity()
@@ -269,7 +469,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item =>
                 {
                     // Act
-                    var result = connection.DeleteAsync(item).Result;
+                    var result = connection.DeleteAsync<IdentityTable>(item).Result;
 
                     // Assert
                     Assert.AreEqual(1, result);
@@ -469,7 +669,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item =>
                 {
                     // Act
-                    var result = connection.DeleteAsync(item, hints: SqlServerTableHints.TabLock).Result;
+                    var result = connection.DeleteAsync<IdentityTable>(item, hints: SqlServerTableHints.TabLock).Result;
 
                     // Assert
                     Assert.AreEqual(1, result);
