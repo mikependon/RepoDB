@@ -47,15 +47,13 @@ namespace RepoDb.Contexts.Providers
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
-        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
         public static InsertExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             var key = GetKey<TEntity>(tableName, fields, hints);
@@ -75,8 +73,7 @@ namespace RepoDb.Contexts.Providers
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
 
             // Add to cache
             InsertExecutionContextCache.Add<TEntity>(key, context);
@@ -95,15 +92,13 @@ namespace RepoDb.Contexts.Providers
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
-        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
         public static async Task<InsertExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             var key = GetKey<TEntity>(tableName, fields, hints);
@@ -123,8 +118,7 @@ namespace RepoDb.Contexts.Providers
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
 
             // Add to cache
             InsertExecutionContextCache.Add<TEntity>(key, context);
@@ -144,7 +138,6 @@ namespace RepoDb.Contexts.Providers
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
-        /// <param name="skipIdentityCheck"></param>
         /// <returns></returns>
         private static InsertExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<DbField> dbFields,
@@ -152,23 +145,26 @@ namespace RepoDb.Contexts.Providers
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            var typeOfEntity = typeof(TEntity);
             var dbSetting = connection.GetDbSetting();
             var identity = (Field)null;
             var inputFields = (IEnumerable<DbField>)null;
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
             // Set the identity field
-            if (skipIdentityCheck == false)
+            if (typeOfEntity.IsClassType())
             {
                 identity = IdentityCache.Get<TEntity>()?.AsField();
                 if (identity == null && identityDbField != null)
                 {
-                    identity = FieldCache.Get<TEntity>().FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+                    identity = FieldCache
+                        .Get<TEntity>()?
+                        .FirstOrDefault(field =>
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
+                        dbFields?.FirstOrDefault(e => e.IsIdentity == true)?.AsField();
                 }
             }
 
@@ -184,7 +180,7 @@ namespace RepoDb.Contexts.Providers
             var identityPropertySetter = (Action<TEntity, object>)null;
 
             // Get the identity setter
-            if (skipIdentityCheck == false && identity != null)
+            if (typeOfEntity.IsClassType() == true && identity != null)
             {
                 identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
             }

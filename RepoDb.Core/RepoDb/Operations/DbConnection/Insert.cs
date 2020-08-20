@@ -39,7 +39,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternal<object>(connection: connection,
+            return InsertInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
@@ -74,7 +74,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternal<TResult>(connection: connection,
+            return InsertInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
@@ -176,8 +176,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: false);
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -207,7 +206,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAsyncInternal<object>(connection: connection,
+            return InsertAsyncInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
@@ -242,7 +241,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAsyncInternal<TResult>(connection: connection,
+            return InsertAsyncInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
@@ -344,8 +343,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: false);
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -373,7 +371,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertInternal<object>(connection: connection,
+            return InsertInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: Field.Parse(entity),
@@ -406,7 +404,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertInternal<TResult>(connection: connection,
+            return InsertInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: Field.Parse(entity),
@@ -420,6 +418,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new row in the table (certain fields only).
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -431,18 +430,19 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static TResult InsertInternal<TResult>(this IDbConnection connection,
+        internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
             string tableName,
-            object entity,
+            TEntity entity,
             IEnumerable<Field> fields,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
             // Return the result
-            return InsertInternalBase<object, TResult>(connection: connection,
+            return InsertInternalBase<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: fields,
@@ -450,8 +450,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -479,7 +478,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAsyncInternal<object>(connection: connection,
+            return InsertAsyncInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: Field.Parse(entity),
@@ -512,7 +511,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAsyncInternal<TResult>(connection: connection,
+            return InsertAsyncInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: Field.Parse(entity),
@@ -526,6 +525,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new row in the table in an asynchronous way.
         /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
@@ -537,18 +537,19 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static Task<TResult> InsertAsyncInternal<TResult>(this IDbConnection connection,
+        internal static Task<TResult> InsertAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             string tableName,
-            object entity,
+            TEntity entity,
             IEnumerable<Field> fields,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
             // Return the result
-            return InsertAsyncInternalBase<object, TResult>(connection: connection,
+            return InsertAsyncInternalBase<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 fields: fields,
@@ -556,8 +557,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder,
-                skipIdentityCheck: true);
+                statementBuilder: statementBuilder);
         }
 
         #endregion
@@ -578,7 +578,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult InsertInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
@@ -588,8 +587,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Variables needed
@@ -601,8 +599,7 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -681,7 +678,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal async static Task<TResult> InsertAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
@@ -691,8 +687,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Variables needed
@@ -707,8 +702,7 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
