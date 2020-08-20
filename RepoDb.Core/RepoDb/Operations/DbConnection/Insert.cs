@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -42,7 +43,7 @@ namespace RepoDb
             return InsertInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -77,7 +78,7 @@ namespace RepoDb
             return InsertInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -209,7 +210,7 @@ namespace RepoDb
             return InsertAsyncInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -244,7 +245,7 @@ namespace RepoDb
             return InsertAsyncInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: FieldCache.Get<TEntity>() ?? Field.Parse(entity),
+                fields: FieldCache.Get<TEntity>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -374,7 +375,7 @@ namespace RepoDb
             return InsertInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity),
+                fields: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -407,7 +408,7 @@ namespace RepoDb
             return InsertInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity),
+                fields: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -441,11 +442,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
             return InsertInternalBase<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -481,7 +481,7 @@ namespace RepoDb
             return InsertAsyncInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity),
+                fields: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -514,7 +514,7 @@ namespace RepoDb
             return InsertAsyncInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: Field.Parse(entity),
+                fields: null,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -548,11 +548,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
             return InsertAsyncInternalBase<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
