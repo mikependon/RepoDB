@@ -25,7 +25,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be used for update.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -58,10 +58,47 @@ namespace RepoDb
         /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update<TEntity, TWhat>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            TWhat what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return UpdateInternal<TEntity>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: WhatToQueryGroup(connection, tableName, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -71,7 +108,7 @@ namespace RepoDb
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -79,16 +116,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var where = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
-            if (where == null)
-            {
-                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-                where = WhereOrKeyToQueryGroup(key, whereOrPrimaryKey);
-            }
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: where,
+                where: WhatToQueryGroup(connection, tableName, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -160,7 +191,7 @@ namespace RepoDb
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -245,7 +276,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entity">The entity object to be used for update.</param>
+        /// <param name="entity">The data entity object to be used for update.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -277,9 +308,44 @@ namespace RepoDb
         /// Updates an existing row in the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update<TEntity, TWhat>(this IDbConnection connection,
+            TEntity entity,
+            TWhat what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return UpdateInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entity: entity,
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -288,7 +354,7 @@ namespace RepoDb
         /// <returns>The number of affected rows during the update process..</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -296,11 +362,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: WhereOrKeyToQueryGroup<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -524,10 +589,47 @@ namespace RepoDb
         /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static async Task<int> UpdateAsync<TEntity, TWhat>(this IDbConnection connection,
+            string tableName,
+            TEntity entity,
+            TWhat what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return await UpdateAsyncInternal<TEntity>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -537,7 +639,7 @@ namespace RepoDb
         public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
-            object whereOrPrimaryKey,
+            object what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -545,16 +647,10 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var where = WhereOrKeyToQueryGroup(whereOrPrimaryKey);
-            if (where == null)
-            {
-                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
-                where = WhereOrKeyToQueryGroup(key, whereOrPrimaryKey);
-            }
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: where,
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -696,7 +792,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: tableName,
                 entity: entity,
                 where: where,
                 hints: hints,
@@ -743,18 +839,19 @@ namespace RepoDb
         /// Updates an existing row in the table based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
-        /// <param name="whereOrPrimaryKey">The dynamic expression to be used.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process..</returns>
-        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+        public static async Task<int> UpdateAsync<TEntity, TWhat>(this IDbConnection connection,
             TEntity entity,
-            object whereOrPrimaryKey,
+            TWhat what,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -762,11 +859,44 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: await WhereOrKeyToQueryGroupAsync<TEntity>(connection, whereOrPrimaryKey, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates an existing row in the table based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            object what,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return await UpdateAsyncInternal<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entity: entity,
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -834,7 +964,7 @@ namespace RepoDb
             return UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -935,7 +1065,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Return the result
             return UpdateAsyncInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -952,427 +1081,418 @@ namespace RepoDb
 
         #region Update(TableName)
 
-        ///// <summary>
-        ///// Updates an existing row in the table.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static int Update(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    // Variables needed
-        //    var primary = DbFieldCache.Get(connection, tableName, transaction)?.FirstOrDefault(dbField => dbField.IsPrimary);
-        //    var where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+            return UpdateInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(key, entity),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
 
-        //    // Execute the proper method
-        //    return UpdateInternal(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: where,
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder,
-        //        transaction: transaction);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static int Update(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    object whereOrPrimaryKey,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return Update(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: WhereOrPrimaryKeyToQueryGroup(connection, tableName, whereOrPrimaryKey, transaction),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder,
-        //        transaction: transaction);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            QueryField where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static int Update(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    QueryField where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return Update(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: ToQueryGroup(where),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static int Update(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    IEnumerable<QueryField> where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return Update(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: ToQueryGroup(where),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static int Update(this IDbConnection connection,
+            string tableName,
+            object entity,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static int Update(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    QueryGroup where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return UpdateInternal(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: where,
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
-
-        ///// <summary>
-        ///// Updates an existing row in the table.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //internal static int UpdateInternal(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    QueryGroup where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    // Return the result
-        //    return UpdateInternalBase<object>(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: where,
-        //        fields: entity?.AsFields(),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        internal static int UpdateInternal(this IDbConnection connection,
+            string tableName,
+            object entity,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            // Return the result
+            return UpdateInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                fields: entity?.AsFields(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
         #endregion
 
         #region UpdateAsync(TableName)
 
-        ///// <summary>
-        ///// Updates an existing row in the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static async Task<int> UpdateAsync(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    // Variables needed
-        //    var primary = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.FirstOrDefault(dbField => dbField.IsPrimary);
-        //    var where = DataEntityToPrimaryKeyQueryGroup(entity, primary?.Name);
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(key, entity),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
 
-        //    // Execute the proper method
-        //    return await UpdateAsyncInternal(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: where,
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder,
-        //        transaction: transaction);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                transaction: transaction);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="whereOrPrimaryKey">The dynamic expression or the primary/identity key value to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static async Task<int> UpdateAsync(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    object whereOrPrimaryKey,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return await UpdateAsync(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: await WhereOrPrimaryKeyToQueryGroupAsync(connection, tableName, whereOrPrimaryKey, transaction),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder,
-        //        transaction: transaction);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            QueryField where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static Task<int> UpdateAsync(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    QueryField where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return UpdateAsync(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: ToQueryGroup(where),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            IEnumerable<QueryField> where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: ToQueryGroup(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static Task<int> UpdateAsync(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    IEnumerable<QueryField> where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return UpdateAsync(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: ToQueryGroup(where),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        public static Task<int> UpdateAsync(this IDbConnection connection,
+            string tableName,
+            object entity,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateAsyncInternal(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
-        ///// <summary>
-        ///// Updates an existing row in the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //public static Task<int> UpdateAsync(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    QueryGroup where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    return UpdateAsyncInternal(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: where,
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
-
-        ///// <summary>
-        ///// Updates an existing row in the table in an asynchronous way.
-        ///// </summary>
-        ///// <param name="connection">The connection object to be used.</param>
-        ///// <param name="tableName">The name of the target table to be used.</param>
-        ///// <param name="entity">The dynamic object to be used for update.</param>
-        ///// <param name="where">The query expression to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <param name="trace">The trace object to be used.</param>
-        ///// <param name="statementBuilder">The statement builder object to be used.</param>
-        ///// <returns>The number of affected rows during the update process..</returns>
-        //internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
-        //    string tableName,
-        //    object entity,
-        //    QueryGroup where,
-        //    string hints = null,
-        //    int? commandTimeout = null,
-        //    IDbTransaction transaction = null,
-        //    ITrace trace = null,
-        //    IStatementBuilder statementBuilder = null)
-        //{
-        //    // Return the result
-        //    return UpdateAsyncInternalBase<object>(connection: connection,
-        //        tableName: tableName,
-        //        entity: entity,
-        //        where: where,
-        //        fields: entity?.AsFields(),
-        //        hints: hints,
-        //        commandTimeout: commandTimeout,
-        //        transaction: transaction,
-        //        trace: trace,
-        //        statementBuilder: statementBuilder);
-        //}
+        /// <summary>
+        /// Updates an existing row in the table in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
+        /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="where">The query expression to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <returns>The number of affected rows during the update process..</returns>
+        internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
+            string tableName,
+            object entity,
+            QueryGroup where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+        {
+            return UpdateAsyncInternalBase<object>(connection: connection,
+                tableName: tableName,
+                entity: entity,
+                where: where,
+                fields: entity?.AsFields(),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
         #endregion
 

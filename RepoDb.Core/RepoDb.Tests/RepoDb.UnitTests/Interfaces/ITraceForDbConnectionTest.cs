@@ -2907,7 +2907,7 @@ namespace RepoDb.UnitTests.Interfaces
                     Id = 1,
                     Name = "Name"
                 },
-                whereOrPrimaryKey: 1,
+                what: 1,
                 trace: trace.Object);
 
             // Assert
@@ -2928,7 +2928,7 @@ namespace RepoDb.UnitTests.Interfaces
                     Id = 1,
                     Name = "Name"
                 },
-                whereOrPrimaryKey: 1,
+                what: 1,
                 trace: trace.Object);
 
             // Assert
@@ -2999,7 +2999,7 @@ namespace RepoDb.UnitTests.Interfaces
                     Id = 1,
                     Name = "Name"
                 },
-                whereOrPrimaryKey: 1,
+                what: 1,
                 trace: trace.Object).Wait();
 
             // Assert
@@ -3020,7 +3020,7 @@ namespace RepoDb.UnitTests.Interfaces
                     Id = 1,
                     Name = "Name"
                 },
-                whereOrPrimaryKey: 1,
+                what: 1,
                 trace: trace.Object).Wait();
 
             // Assert
