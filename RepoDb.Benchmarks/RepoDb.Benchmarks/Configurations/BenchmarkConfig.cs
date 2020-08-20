@@ -22,8 +22,8 @@ namespace RepoDb.Benchmarks.Configurations
             AddColumn(StatisticColumn.StdDev);
             AddColumn(StatisticColumn.Error);
             AddColumn(BaselineRatioColumn.RatioMean);
-            AddColumn(StatisticColumn.Max);
             AddColumn(StatisticColumn.Min);
+            AddColumn(StatisticColumn.Max);
 
             AddColumnProvider(DefaultColumnProviders.Metrics);
 

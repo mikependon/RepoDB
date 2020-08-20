@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Dialect;
-using NHibernate.Linq;
 using NHibernate.Mapping.ByCode;
+using NHibernate.Transform;
 using RepoDb.Benchmarks.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
@@ -38,19 +37,22 @@ namespace RepoDb.Benchmarks.SqlServer
         }
 
         [Benchmark]
-        public async Task<Person> FirstAsync()
-        {
-            using IStatelessSession session = sessionFactory.OpenStatelessSession();
-
-            return await session.Query<Person>().FirstAsync(x => x.Id == CurrentId);
-        }
-
-        [Benchmark]
-        public Person First()
+        public Person QueryFirst()
         {
             using IStatelessSession session = sessionFactory.OpenStatelessSession();
 
             return session.Query<Person>().First(x => x.Id == CurrentId);
+        }
+
+        [Benchmark]
+        public Person CreateSQLQueryFirst()
+        {
+            using IStatelessSession session = sessionFactory.OpenStatelessSession();
+
+            return session.CreateSQLQuery("select * from Person where Id = :id")
+                .SetInt32("id", CurrentId)
+                .SetResultTransformer(Transformers.AliasToBean<Person>())
+                .List<Person>()[0];
         }
     }
 }
