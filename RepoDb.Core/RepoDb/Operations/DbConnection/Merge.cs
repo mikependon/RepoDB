@@ -42,7 +42,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -78,7 +78,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -114,7 +114,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -150,7 +150,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
@@ -185,7 +185,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -222,7 +222,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -259,7 +259,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -296,7 +296,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
@@ -329,6 +329,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: null,
                 hints: hints,
@@ -362,6 +363,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -395,6 +397,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifiers,
                 hints: hints,
@@ -428,6 +431,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 hints: hints,
@@ -460,6 +464,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: null,
                 hints: hints,
@@ -494,6 +499,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -528,6 +534,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifiers,
                 hints: hints,
@@ -562,6 +569,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 hints: hints,
@@ -577,6 +585,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
 		/// <param name="hints">The table hints to be used.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -586,6 +595,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult MergeInternal<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,
@@ -595,13 +605,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
-                qualifiers = key.AsField().AsEnumerable();
-            }
-
             // Variables needed
             var setting = connection.GetDbSetting();
 
@@ -609,7 +612,7 @@ namespace RepoDb
             if (setting.IsUseUpsert == false)
             {
                 return MergeInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    tableName: tableName,
                     entity: entity,
                     fields: entity.AsFields(),
                     qualifiers: qualifiers,
@@ -660,7 +663,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -696,7 +699,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -732,7 +735,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -768,7 +771,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<TEntity, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
@@ -803,7 +806,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -840,7 +843,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -877,7 +880,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -914,7 +917,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<TEntity, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
@@ -947,6 +950,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: null,
                 hints: hints,
@@ -980,6 +984,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -1013,6 +1018,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifiers,
                 hints: hints,
@@ -1046,6 +1052,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 hints: hints,
@@ -1078,6 +1085,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: null,
                 hints: hints,
@@ -1112,6 +1120,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 hints: hints,
@@ -1146,6 +1155,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: qualifiers,
                 hints: hints,
@@ -1180,6 +1190,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 hints: hints,
@@ -1195,6 +1206,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
+        /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
 		/// <param name="hints">The table hints to be used.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used.</param>
@@ -1204,6 +1216,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static async Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+            string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
             string hints = null,
@@ -1213,13 +1226,6 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
-                qualifiers = key.AsField().AsEnumerable();
-            }
-
             // Variables needed
             var setting = connection.GetDbSetting();
 
@@ -1227,7 +1233,7 @@ namespace RepoDb
             if (setting.IsUseUpsert == false)
             {
                 return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    tableName: tableName,
                     entity: entity,
                     fields: entity.AsFields(),
                     qualifiers: qualifiers,
@@ -1276,7 +1282,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -1310,7 +1316,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1344,7 +1350,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal<object>(connection: connection,
+            return MergeInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -1377,7 +1383,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -1412,7 +1418,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1447,7 +1453,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeInternal<TResult>(connection: connection,
+            return MergeInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -1458,60 +1464,62 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <summary>
-        /// Merges a dynamic object into an existing data in the database.
-        /// </summary>
-        /// <typeparam name="TResult">The target type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static TResult MergeInternal<TResult>(this IDbConnection connection,
-            string tableName,
-            object entity,
-            IEnumerable<Field> qualifiers,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Variables needed
-            var setting = connection.GetDbSetting();
+        ///// <summary>
+        ///// Merges a dynamic object into an existing data in the database.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        ///// <typeparam name="TResult">The target type of the result.</typeparam>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be merged.</param>
+        ///// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        //internal static TResult MergeInternal<TEntity, TResult>(this IDbConnection connection,
+        //    string tableName,
+        //    TEntity entity,
+        //    IEnumerable<Field> qualifiers,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //    where TEntity : class
+        //{
+        //    // Variables needed
+        //    var setting = connection.GetDbSetting();
 
-            // Return the result
-            if (setting.IsUseUpsert == false)
-            {
-                return MergeInternalBase<object, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    fields: entity.AsFields(),
-                    qualifiers: qualifiers,
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
-            }
-            else
-            {
-                return UpsertInternalBase<object, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
-            }
-        }
+        //    // Return the result
+        //    if (setting.IsUseUpsert == false)
+        //    {
+        //        return MergeInternalBase<TEntity, TResult>(connection: connection,
+        //            tableName: tableName,
+        //            entity: entity,
+        //            fields: entity.AsFields(),
+        //            qualifiers: qualifiers,
+        //            hints: hints,
+        //            commandTimeout: commandTimeout,
+        //            transaction: transaction,
+        //            trace: trace,
+        //            statementBuilder: statementBuilder);
+        //    }
+        //    else
+        //    {
+        //        return UpsertInternalBase<object, TResult>(connection: connection,
+        //            tableName: tableName,
+        //            entity: entity,
+        //            qualifiers: qualifiers,
+        //            hints: hints,
+        //            commandTimeout: commandTimeout,
+        //            transaction: transaction,
+        //            trace: trace,
+        //            statementBuilder: statementBuilder);
+        //    }
+        //}
 
         #endregion
 
@@ -1538,7 +1546,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -1572,7 +1580,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1606,7 +1614,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal<object>(connection: connection,
+            return MergeAsyncInternal<object, object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -1639,7 +1647,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: null,
@@ -1674,7 +1682,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
@@ -1709,7 +1717,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return MergeAsyncInternal<TResult>(connection: connection,
+            return MergeAsyncInternal<object, TResult>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 qualifiers: qualifiers,
@@ -1720,60 +1728,60 @@ namespace RepoDb
                 statementBuilder: statementBuilder);
         }
 
-        /// <summary>
-        /// Merges a dynamic object into an existing data in the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TResult">The target type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static async Task<TResult> MergeAsyncInternal<TResult>(this IDbConnection connection,
-            string tableName,
-            object entity,
-            IEnumerable<Field> qualifiers,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Variables needed
-            var setting = connection.GetDbSetting();
+        ///// <summary>
+        ///// Merges a dynamic object into an existing data in the database in an asynchronous way.
+        ///// </summary>
+        ///// <typeparam name="TResult">The target type of the result.</typeparam>
+        ///// <param name="connection">The connection object to be used.</param>
+        ///// <param name="tableName">The name of the target table to be used.</param>
+        ///// <param name="entity">The dynamic object to be merged.</param>
+        ///// <param name="qualifiers">The qualifier <see cref="Field"/> objects to be used.</param>
+        ///// <param name="hints">The table hints to be used.</param>
+        ///// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        ///// <param name="transaction">The transaction to be used.</param>
+        ///// <param name="trace">The trace object to be used.</param>
+        ///// <param name="statementBuilder">The statement builder object to be used.</param>
+        ///// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
+        //internal static async Task<TResult> MergeAsyncInternal<TResult>(this IDbConnection connection,
+        //    string tableName,
+        //    object entity,
+        //    IEnumerable<Field> qualifiers,
+        //    string hints = null,
+        //    int? commandTimeout = null,
+        //    IDbTransaction transaction = null,
+        //    ITrace trace = null,
+        //    IStatementBuilder statementBuilder = null)
+        //{
+        //    // Variables needed
+        //    var setting = connection.GetDbSetting();
 
-            // Return the result
-            if (setting.IsUseUpsert == false)
-            {
-                return await MergeAsyncInternalBase<object, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    fields: entity.AsFields(),
-                    qualifiers: qualifiers,
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
-            }
-            else
-            {
-                return await UpsertAsyncInternalBase<object, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
-            }
-        }
+        //    // Return the result
+        //    if (setting.IsUseUpsert == false)
+        //    {
+        //        return await MergeAsyncInternalBase<object, TResult>(connection: connection,
+        //            tableName: tableName,
+        //            entity: entity,
+        //            fields: entity.AsFields(),
+        //            qualifiers: qualifiers,
+        //            hints: hints,
+        //            commandTimeout: commandTimeout,
+        //            transaction: transaction,
+        //            trace: trace,
+        //            statementBuilder: statementBuilder);
+        //    }
+        //    else
+        //    {
+        //        return await UpsertAsyncInternalBase<object, TResult>(connection: connection,
+        //            tableName: tableName,
+        //            entity: entity,
+        //            qualifiers: qualifiers,
+        //            hints: hints,
+        //            commandTimeout: commandTimeout,
+        //            transaction: transaction,
+        //            trace: trace,
+        //            statementBuilder: statementBuilder);
+        //    }
+        //}
 
         #endregion
 
@@ -1807,23 +1815,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Get the database fields
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                // Get the DB primary
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
-
-                // Throw if there is no primary
-                if (primary == null)
-                {
-                    throw new PrimaryFieldNotFoundException($"There is no primary found for '{tableName}'.");
-                }
-
-                // Set the primary as the qualifier
-                qualifiers = primary.AsField().AsEnumerable();
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                qualifiers = key.AsField().AsEnumerable();
             }
 
             // Get the context
@@ -2119,8 +2115,12 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Get the database fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+                qualifiers = key.AsField().AsEnumerable();
+            }
 
             // Get the context
             var context = await MergeExecutionContextProvider.CreateAsync<TEntity>(connection,

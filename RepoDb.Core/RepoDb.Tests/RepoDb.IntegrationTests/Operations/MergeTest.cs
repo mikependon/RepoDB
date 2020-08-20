@@ -27,7 +27,31 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityForEmptyTableViaEntityTableName()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -50,7 +74,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityForEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -73,7 +97,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifierForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -96,7 +120,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierForEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifierForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -119,7 +143,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifiersForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -143,7 +167,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifiersForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -167,7 +191,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -190,7 +214,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -213,7 +237,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifierWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -236,7 +260,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifierWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -259,7 +283,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifiersWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -283,7 +307,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifiersWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -307,7 +331,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -333,7 +357,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityForNonEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -359,7 +383,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifierForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -385,7 +409,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifierForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -411,7 +435,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifiersForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -438,7 +462,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifiersForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -465,7 +489,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -491,7 +515,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -517,7 +541,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifierWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -543,7 +567,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifierWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -569,7 +593,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityWithQualifiersWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -596,7 +620,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeForNonIdentityWithQualifiersWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -623,7 +647,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeForIdentitySingleEntityForEmptyTableWithHints()
+        public void TestSqlConnectionMergeForIdentityForEmptyTableWithHints()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -703,7 +727,31 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityForEmptyTableViaEntityTableName()
+        {
+            // Setup
+            var item = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.MergeAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    item).Result;
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(item.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -726,7 +774,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -749,7 +797,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifierForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -772,7 +820,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifierForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -795,7 +843,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifiersForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -819,7 +867,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifiersForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -843,7 +891,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -866,7 +914,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -889,7 +937,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifierWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -912,7 +960,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifierWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -935,7 +983,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifiersWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -959,7 +1007,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifiersWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -983,7 +1031,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1009,7 +1057,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -1035,7 +1083,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifierForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1061,7 +1109,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifierForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -1087,7 +1135,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifiersForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1114,7 +1162,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifiersForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -1141,7 +1189,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1167,7 +1215,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -1193,7 +1241,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifierWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1219,7 +1267,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifierWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -1245,7 +1293,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityWithQualifiersWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1272,7 +1320,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForNonIdentityWithQualifiersWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateNonIdentityTable();
@@ -1299,7 +1347,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentitySingleEntityForEmptyTableWithHints()
+        public void TestSqlConnectionMergeAsyncForIdentityForEmptyTableWithHints()
         {
             // Setup
             var item = Helper.CreateIdentityTable();
@@ -1379,7 +1427,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityForEmptyTable()
+        public void TestSqlConnectionMergeViaDynamicTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1387,7 +1435,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -1402,7 +1450,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierForEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1410,7 +1458,30 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+
+                // Assert
+                Assert.AreEqual(item.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)item.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(item, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifierForEmptyTable()
+        {
+            // Setup
+            var item = Helper.CreateDynamicNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
@@ -1426,7 +1497,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifiersForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1434,7 +1505,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
@@ -1450,7 +1521,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1473,7 +1544,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifierWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1497,7 +1568,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifiersWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1521,7 +1592,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1529,10 +1600,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -1547,7 +1618,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifierForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1555,10 +1626,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(nameof(NonIdentityTable.ColumnInt)));
 
                 // Assert
@@ -1574,7 +1645,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifiersForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1582,10 +1653,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) }));
 
                 // Assert
@@ -1601,7 +1672,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1609,7 +1680,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
                 var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
@@ -1627,7 +1698,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifierWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1635,7 +1706,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
                 var mergeResult = connection.Merge<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -1654,7 +1725,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityWithQualifiersWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1689,7 +1760,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), item);
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), item);
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -1704,7 +1775,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeViaTableNameForNonIdentitySingleEntityForEmptyTableWithHints()
+        public void TestSqlConnectionMergeViaTableNameForNonIdentityForEmptyTableWithHints()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1712,7 +1783,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.Merge(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     hints: SqlServerTableHints.TabLock);
 
                 // Assert
@@ -1727,16 +1798,16 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
         public void ThrowExceptionOnSqlConnectionMergeViaTableNameIfThereIsNoKeyField()
         {
             // Setup
-            var item = Helper.CreateDynamicIdentityTable();
+            var item = Helper.CreateDynamicNonKeyedTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Merge(ClassMappedNameCache.Get<IdentityTable>(), (object)item);
+                connection.Merge<object>(ClassMappedNameCache.Get<NonKeyedTable>(), (object)item);
             }
         }
 
@@ -1745,7 +1816,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1753,7 +1824,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -1768,7 +1839,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifierForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1776,7 +1847,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
@@ -1792,7 +1863,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifiersForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1800,7 +1871,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
@@ -1816,7 +1887,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1839,7 +1910,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifierWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1863,7 +1934,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifiersWithTypedResultForEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1887,7 +1958,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1895,10 +1966,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -1913,7 +1984,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifierForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1921,10 +1992,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
 
                 // Assert
@@ -1940,7 +2011,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifiersForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1948,10 +2019,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     Field.From(new[] { nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal) })).Result;
 
                 // Assert
@@ -1967,7 +2038,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -1975,7 +2046,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
                 var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item).Result;
@@ -1993,7 +2064,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifierWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifierWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -2001,7 +2072,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
                 var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -2020,7 +2091,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityWithQualifiersWithTypedResultForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityWithQualifiersWithTypedResultForNonEmptyTable()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -2028,7 +2099,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
+                connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item);
 
                 // Act
                 var mergeResult = connection.MergeAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
@@ -2055,7 +2126,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), item).Result;
 
                 // Assert
                 Assert.AreEqual(item.Id, mergeResult);
@@ -2070,7 +2141,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentitySingleEntityForEmptyTableWithHints()
+        public void TestSqlConnectionMergeAsyncViaTableNameForNonIdentityForEmptyTableWithHints()
         {
             // Setup
             var item = Helper.CreateDynamicNonIdentityTable();
@@ -2078,7 +2149,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var mergeResult = connection.MergeAsync(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
+                var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(), (object)item,
                     hints: SqlServerTableHints.TabLock).Result;
 
                 // Assert
@@ -2102,7 +2173,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAsync(ClassMappedNameCache.Get<IdentityTable>(), (object)item).Wait();
+                connection.MergeAsync(ClassMappedNameCache.Get<NonKeyedTable>(), (object)item).Wait();
             }
         }
 
