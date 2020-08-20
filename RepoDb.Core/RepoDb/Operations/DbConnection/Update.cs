@@ -42,11 +42,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, tableName, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(key, entity),
+                where: ToQueryGroup(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -573,11 +573,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(key, entity),
+                where: ToQueryGroup(key, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

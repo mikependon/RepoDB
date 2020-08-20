@@ -1602,22 +1602,25 @@ namespace RepoDb
             {
                 return null;
             }
-            if (dbField == null)
+            if (dbField != null)
             {
-                throw new KeyFieldNotFoundException($"No primary key and identity key found.");
-            }
-            var type = entity?.GetType();
-            if (type.IsGenericType || type.IsClassType())
-            {
-                var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
-                var property = properties?
-                    .FirstOrDefault(p => string.Equals(p.GetMappedName(), dbField.Name, StringComparison.OrdinalIgnoreCase));
-                if (property != null)
+                var type = entity?.GetType();
+                if (type.IsGenericType || type.IsClassType())
                 {
-                    return new QueryGroup(property.PropertyInfo.AsQueryField(entity));
+                    var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
+                    var property = properties?
+                        .FirstOrDefault(p => string.Equals(p.GetMappedName(), dbField.Name, StringComparison.OrdinalIgnoreCase));
+                    if (property != null)
+                    {
+                        return new QueryGroup(property.PropertyInfo.AsQueryField(entity));
+                    }
+                }
+                else
+                {
+                    return new QueryGroup(new QueryField(dbField.AsField(), entity));
                 }
             }
-            return new QueryGroup(new QueryField(dbField.AsField(), entity));
+            throw new KeyFieldNotFoundException($"No primary key and identity key found.");
         }
 
         /// <summary>
