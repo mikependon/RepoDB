@@ -68,7 +68,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllViaEntityTableNameWithPrimaryKeysAsNormalType()
+        public void TestSqlConnectionDeleteAllViaEntityTableNameWithPrimaryKeysAsType()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -218,7 +218,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithPrimaryKeysAsNormalType()
+        public void TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithPrimaryKeysAsType()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
