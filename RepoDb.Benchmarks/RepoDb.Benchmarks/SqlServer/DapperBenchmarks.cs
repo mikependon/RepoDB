@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Dapper;
 using RepoDb.Benchmarks.Models;
@@ -16,22 +16,31 @@ namespace RepoDb.Benchmarks.SqlServer
         public void Setup() => BaseSetup();
 
         [Benchmark]
-        public async Task<Person> FirstAsync()
+        public Person QueryFirst()
         {
             using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString);
             connection.Open();
 
-            return await connection.QueryFirstOrDefaultAsync<Person>("select * from Person where Id = @Id",
-                new {Id = CurrentId});
+            var param = new
+            {
+                Id = CurrentId
+            };
+
+            return connection.QueryFirst<Person>("select * from Person where Id = @Id", param);
         }
 
         [Benchmark]
-        public Person First()
+        public Person QueryLinqFirst()
         {
             using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString);
             connection.Open();
 
-            return connection.QueryFirstOrDefault<Person>("select * from Person where Id = @Id", new {Id = CurrentId});
+            var param = new
+            {
+                Id = CurrentId
+            };
+
+            return connection.Query<Person>("select * from Person where Id = @Id", param, buffered: true).First();
         }
     }
 }

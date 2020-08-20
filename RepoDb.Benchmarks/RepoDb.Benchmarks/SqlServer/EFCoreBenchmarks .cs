@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Microsoft.EntityFrameworkCore;
 using RepoDb.Benchmarks.Models;
@@ -15,19 +14,27 @@ namespace RepoDb.Benchmarks.SqlServer
         public void Setup() => BaseSetup();
 
         [Benchmark]
-        public async Task<Person> FirstAsync()
-        {
-            await using var context = new EFCoreContext(DatabaseHelper.ConnectionString);
-
-            return await context.Persons.FirstAsync(x => x.Id == CurrentId);
-        }
-
-        [Benchmark]
         public Person First()
         {
             using var context = new EFCoreContext(DatabaseHelper.ConnectionString);
 
             return context.Persons.First(x => x.Id == CurrentId);
+        }
+
+        [Benchmark]
+        public Person NoTrackingFirst()
+        {
+            using var context = new EFCoreContext(DatabaseHelper.ConnectionString);
+
+            return context.Persons.AsNoTracking().First(x => x.Id == CurrentId);
+        }
+
+        [Benchmark]
+        public Person FromSqlRawFirst()
+        {
+            using var context = new EFCoreContext(DatabaseHelper.ConnectionString);
+
+            return context.Persons.FromSqlRaw("select * from Person where Id = {0}", CurrentId).First();
         }
     }
 }
