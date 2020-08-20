@@ -157,15 +157,12 @@ namespace RepoDb.Contexts.Providers
             // Set the identity field
             if (typeOfEntity.IsClassType())
             {
-                identity = IdentityCache.Get<TEntity>()?.AsField();
-                if (identity == null && identityDbField != null)
-                {
-                    identity = FieldCache
+                identity = IdentityCache.Get<TEntity>()?.AsField() ??
+                    FieldCache
                         .Get<TEntity>()?
                         .FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
-                        dbFields?.FirstOrDefault(e => e.IsIdentity == true)?.AsField();
-                }
+                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
+                    identityDbField?.AsField();
             }
 
             // Filter the actual properties for input fields

@@ -1217,7 +1217,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         internal static int MergeAllInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1229,8 +1228,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Variables needed
@@ -1251,8 +1249,7 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1350,8 +1347,7 @@ namespace RepoDb
                                     fields,
                                     hints,
                                     transaction,
-                                    statementBuilder,
-                                    skipIdentityCheck);
+                                    statementBuilder);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -1614,7 +1610,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1626,8 +1621,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Variables needed
@@ -1648,8 +1642,7 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1747,8 +1740,7 @@ namespace RepoDb
                                     fields,
                                     hints,
                                     transaction,
-                                    statementBuilder,
-                                    skipIdentityCheck);
+                                    statementBuilder);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;

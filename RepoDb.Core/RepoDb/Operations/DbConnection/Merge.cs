@@ -617,8 +617,7 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder,
-                    skipIdentityCheck: false);
+                    statementBuilder: statementBuilder);
             }
             else
             {
@@ -1236,8 +1235,7 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder,
-                    skipIdentityCheck: false);
+                    statementBuilder: statementBuilder);
             }
             else
             {
@@ -1499,8 +1497,7 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder,
-                    skipIdentityCheck: true);
+                    statementBuilder: statementBuilder);
             }
             else
             {
@@ -1762,8 +1759,7 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder,
-                    skipIdentityCheck: true);
+                    statementBuilder: statementBuilder);
             }
             else
             {
@@ -1798,7 +1794,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static TResult MergeInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
@@ -1809,8 +1804,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Get the database fields
@@ -1839,8 +1833,7 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -2113,7 +2106,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <param name="skipIdentityCheck">True to skip the identity check.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         internal static async Task<TResult> MergeAsyncInternalBase<TEntity, TResult>(this IDbConnection connection,
             string tableName,
@@ -2124,8 +2116,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null,
-            bool skipIdentityCheck = false)
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Get the database fields
@@ -2138,8 +2129,7 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder,
-                skipIdentityCheck);
+                statementBuilder);
             var sessionId = Guid.Empty;
 
             // Before Execution
