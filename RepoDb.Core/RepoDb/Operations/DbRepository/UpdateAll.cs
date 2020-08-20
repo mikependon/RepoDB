@@ -575,195 +575,291 @@ namespace RepoDb
 
         #region UpdateAll(TableName)
 
-        ///// <summary>
-        ///// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
-        ///// </summary>
-        ///// <param name="tableName">The name of the target table.</param>
-        ///// <param name="entities">The list of dynamic objects to be used for update.</param>
-        ///// <param name="batchSize">The batch size of the update operation.</param>
-        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <returns>The number of affected rows during the update process.</returns>
-        //public int UpdateAll(string tableName,
-        //    IEnumerable<object> entities,
-        //    int batchSize = Constant.DefaultBatchOperationSize,
-        //    IEnumerable<Field> fields = null,
-        //    string hints = null,
-        //    IDbTransaction transaction = null)
-        //{
-        //    // Create a connection
-        //    var connection = (transaction?.Connection ?? CreateConnection());
+        /// <summary>
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of dynamic objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public int UpdateAll(string tableName,
+            IEnumerable<object> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
 
-        //    try
-        //    {
-        //        // Call the method
-        //        return connection.UpdateAll(tableName: tableName,
-        //            entities: entities,
-        //            batchSize: batchSize,
-        //            fields: fields,
-        //            hints: hints,
-        //            commandTimeout: CommandTimeout,
-        //            transaction: transaction,
-        //            trace: Trace,
-        //            statementBuilder: StatementBuilder);
-        //    }
-        //    catch
-        //    {
-        //        // Throw back the error
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        // Dispose the connection
-        //        DisposeConnectionForPerCall(connection, transaction);
-        //    }
-        //}
+            try
+            {
+                // Call the method
+                return connection.UpdateAll(tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
-        ///// <summary>
-        ///// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
-        ///// </summary>
-        ///// <param name="tableName">The name of the target table.</param>
-        ///// <param name="entities">The list of dynamic objects to be used for update.</param>
-        ///// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
-        ///// <param name="batchSize">The batch size of the update operation.</param>
-        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <returns>The number of affected rows during the update process.</returns>
-        //public int UpdateAll(string tableName,
-        //    IEnumerable<object> entities,
-        //    IEnumerable<Field> qualifiers,
-        //    int batchSize = Constant.DefaultBatchOperationSize,
-        //    IEnumerable<Field> fields = null,
-        //    string hints = null,
-        //    IDbTransaction transaction = null)
-        //{
-        //    // Create a connection
-        //    var connection = (transaction?.Connection ?? CreateConnection());
+        /// <summary>
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of dynamic objects to be used for update.</param>
+        /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public int UpdateAll(string tableName,
+            IEnumerable<object> entities,
+            Field qualifier,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
 
-        //    try
-        //    {
-        //        // Call the method
-        //        return connection.UpdateAll(tableName: tableName,
-        //            entities: entities,
-        //            qualifiers: qualifiers,
-        //            batchSize: batchSize,
-        //            fields: fields,
-        //            hints: hints,
-        //            commandTimeout: CommandTimeout,
-        //            transaction: transaction,
-        //            trace: Trace,
-        //            statementBuilder: StatementBuilder);
-        //    }
-        //    catch
-        //    {
-        //        // Throw back the error
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        // Dispose the connection
-        //        DisposeConnectionForPerCall(connection, transaction);
-        //    }
-        //}
+            try
+            {
+                // Call the method
+                return connection.UpdateAll(tableName: tableName,
+                    entities: entities,
+                    qualifier: qualifier,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of dynamic objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public int UpdateAll(string tableName,
+            IEnumerable<object> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.UpdateAll(tableName: tableName,
+                    entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         #endregion
 
         #region UpdateAllAsync(TableName)
 
-        ///// <summary>
-        ///// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
-        ///// </summary>
-        ///// <param name="tableName">The name of the target table.</param>
-        ///// <param name="entities">The list of dynamic objects to be used for update.</param>
-        ///// <param name="batchSize">The batch size of the update operation.</param>
-        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <returns>The number of affected rows during the update process.</returns>
-        //public async Task<int> UpdateAllAsync(string tableName,
-        //    IEnumerable<object> entities,
-        //    int batchSize = Constant.DefaultBatchOperationSize,
-        //    IEnumerable<Field> fields = null,
-        //    string hints = null,
-        //    IDbTransaction transaction = null)
-        //{
-        //    // Create a connection
-        //    var connection = (transaction?.Connection ?? CreateConnection());
+        /// <summary>
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of dynamic objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public async Task<int> UpdateAllAsync(string tableName,
+            IEnumerable<object> entities,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
 
-        //    try
-        //    {
-        //        // Call the method
-        //        return await connection.UpdateAllAsync(tableName: tableName,
-        //            entities: entities,
-        //            batchSize: batchSize,
-        //            fields: fields,
-        //            hints: hints,
-        //            commandTimeout: CommandTimeout,
-        //            transaction: transaction,
-        //            trace: Trace,
-        //            statementBuilder: StatementBuilder);
-        //    }
-        //    catch
-        //    {
-        //        // Throw back the error
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        // Dispose the connection
-        //        DisposeConnectionForPerCall(connection, transaction);
-        //    }
-        //}
+            try
+            {
+                // Call the method
+                return await connection.UpdateAllAsync(tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
-        ///// <summary>
-        ///// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
-        ///// </summary>
-        ///// <param name="tableName">The name of the target table.</param>
-        ///// <param name="entities">The list of dynamic objects to be used for update.</param>
-        ///// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
-        ///// <param name="batchSize">The batch size of the update operation.</param>
-        ///// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        ///// <param name="hints">The table hints to be used.</param>
-        ///// <param name="transaction">The transaction to be used.</param>
-        ///// <returns>The number of affected rows during the update process.</returns>
-        //public async Task<int> UpdateAllAsync(string tableName,
-        //    IEnumerable<object> entities,
-        //    IEnumerable<Field> qualifiers,
-        //    int batchSize = Constant.DefaultBatchOperationSize,
-        //    IEnumerable<Field> fields = null,
-        //    string hints = null,
-        //    IDbTransaction transaction = null)
-        //{
-        //    // Create a connection
-        //    var connection = (transaction?.Connection ?? CreateConnection());
+        /// <summary>
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of dynamic objects to be used for update.</param>
+        /// <param name="qualifier">The qualifier <see cref="Field"/> object to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public async Task<int> UpdateAllAsync(string tableName,
+            IEnumerable<object> entities,
+            Field qualifier,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
 
-        //    try
-        //    {
-        //        // Call the method
-        //        return await connection.UpdateAllAsync(tableName: tableName,
-        //            entities: entities,
-        //            qualifiers: qualifiers,
-        //            batchSize: batchSize,
-        //            fields: fields,
-        //            hints: hints,
-        //            commandTimeout: CommandTimeout,
-        //            transaction: transaction,
-        //            trace: Trace,
-        //            statementBuilder: StatementBuilder);
-        //    }
-        //    catch
-        //    {
-        //        // Throw back the error
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        // Dispose the connection
-        //        DisposeConnectionForPerCall(connection, transaction);
-        //    }
-        //}
+            try
+            {
+                // Call the method
+                return await connection.UpdateAllAsync(tableName: tableName,
+                    entities: entities,
+                    qualifier: qualifier,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Update the existing rows in the table in an asynchronous way. By default, the table fields are used unless the 'fields' argument is defined.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of dynamic objects to be used for update.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects to be used for update.</param>
+        /// <param name="batchSize">The batch size of the update operation.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>The number of affected rows during the update process.</returns>
+        public async Task<int> UpdateAllAsync(string tableName,
+            IEnumerable<object> entities,
+            IEnumerable<Field> qualifiers,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.UpdateAllAsync(tableName: tableName,
+                    entities: entities,
+                    qualifiers: qualifiers,
+                    batchSize: batchSize,
+                    fields: fields,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
 
         #endregion
     }
