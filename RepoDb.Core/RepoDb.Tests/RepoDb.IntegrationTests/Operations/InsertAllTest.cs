@@ -26,6 +26,31 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAll<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllForIdentityTableViaEntityTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllForIdentityTable()
         {
             // Setup
@@ -34,7 +59,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                connection.InsertAll<IdentityTable>(tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -59,7 +84,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables, 1);
+                connection.InsertAll<IdentityTable>(tables, 1);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -84,7 +109,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                connection.InsertAll<NonIdentityTable>(tables);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
@@ -109,7 +134,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables, 1);
+                connection.InsertAll<NonIdentityTable>(tables, 1);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
@@ -134,7 +159,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables, hints: SqlServerTableHints.TabLock);
+                connection.InsertAll<IdentityTable>(tables, hints: SqlServerTableHints.TabLock);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -163,7 +188,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                connection.InsertAll<WithExtraFieldsIdentityTable>(tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -188,7 +213,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables, 1);
+                connection.InsertAll<WithExtraFieldsIdentityTable>(tables, 1);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -209,6 +234,31 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAllAsync<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaEntityTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+
+                // Act
+                var result = connection.QueryAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    var item = result.FirstOrDefault(r => r.Id == table.Id);
+                    Assert.IsNotNull(item);
+                    Helper.AssertPropertiesEquality(table, item);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertAllAsyncForIdentityTable()
         {
             // Setup
@@ -217,7 +267,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables).Wait();
+                connection.InsertAllAsync<IdentityTable>(tables).Wait();
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -242,7 +292,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables, 1).Wait();
+                connection.InsertAllAsync<IdentityTable>(tables, 1).Wait();
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -267,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables).Wait();
+                connection.InsertAllAsync<NonIdentityTable>(tables).Wait();
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
@@ -292,7 +342,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables, 1).Wait();
+                connection.InsertAllAsync<NonIdentityTable>(tables, 1).Wait();
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>();
@@ -317,7 +367,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables, hints: SqlServerTableHints.TabLock).Wait();
+                connection.InsertAllAsync<IdentityTable>(tables, hints: SqlServerTableHints.TabLock).Wait();
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -346,7 +396,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables).Wait();
+                connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables).Wait();
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -371,7 +421,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(tables, 1).Wait();
+                connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables, 1).Wait();
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>();
@@ -390,6 +440,25 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region InsertAll(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllForIdentityTableViaDynamicTableName()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<object>(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Act
+                var result = connection.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionInsertAllForIdentityTableViaTableName()
@@ -594,6 +663,25 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region InsertAllAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaDynamicTableName()
+        {
+            // Setup
+            var tables = Helper.CreateDynamicIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+
+                // Act
+                var result = connection.CountAll<IdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result);
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableName()

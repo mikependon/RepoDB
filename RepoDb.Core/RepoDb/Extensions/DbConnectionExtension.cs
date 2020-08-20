@@ -1809,13 +1809,23 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(TEntity entity)
+            where TEntity : class =>
+            typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
             TEntity entity)
             where TEntity : class =>
-            fields ?? ((typeof(TEntity).IsClassType() == false) ? Field.Parse(entity) : FieldCache.Get<TEntity>());
+            fields ?? (typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>());
 
         /// <summary>
         /// 

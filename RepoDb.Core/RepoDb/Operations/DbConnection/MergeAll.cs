@@ -1,9 +1,7 @@
-﻿using RepoDb.Contexts.Execution;
-using RepoDb.Contexts.Providers;
+﻿using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -54,7 +52,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -96,7 +94,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifier.AsEnumerable(),
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -138,7 +136,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -180,7 +178,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -438,7 +436,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -480,7 +478,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifier.AsEnumerable(),
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -522,7 +520,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -564,7 +562,7 @@ namespace RepoDb
                 entities: entities,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
