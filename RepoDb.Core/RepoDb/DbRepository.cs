@@ -351,7 +351,101 @@ namespace RepoDb
         }
 
         #endregion
-        
+
+        #region ExecuteQuery(Dynamics)
+
+        /// <summary>
+        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the result back to an enumerable list of dynamic objects.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        public IEnumerable<dynamic> ExecuteQuery(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.ExecuteQuery(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryAsync(Dynamics)
+
+        /// <summary>
+        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// converts the result back to an enumerable list of dynamic objects.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>
+        /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// </returns>
+        public async Task<IEnumerable<dynamic>> ExecuteQueryAsync(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.ExecuteQueryAsync(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
         #region ExecuteQuery
 
         /// <summary>
