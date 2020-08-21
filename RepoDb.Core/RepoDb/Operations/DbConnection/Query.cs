@@ -2101,8 +2101,10 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -2221,8 +2223,10 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -2345,8 +2349,10 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
@@ -2470,8 +2476,10 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 

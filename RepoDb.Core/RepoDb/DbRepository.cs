@@ -364,6 +364,9 @@ namespace RepoDb
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -371,6 +374,7 @@ namespace RepoDb
         public IEnumerable<dynamic> ExecuteQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -382,8 +386,10 @@ namespace RepoDb
                 return connection.ExecuteQuery(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cache: Cache);
             }
             catch
             {
@@ -411,6 +417,9 @@ namespace RepoDb
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -418,6 +427,7 @@ namespace RepoDb
         public async Task<IEnumerable<dynamic>> ExecuteQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -429,8 +439,10 @@ namespace RepoDb
                 return await connection.ExecuteQueryAsync(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cache: Cache);
             }
             catch
             {
@@ -459,6 +471,9 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -466,6 +481,7 @@ namespace RepoDb
         public IEnumerable<TEntity> ExecuteQuery<TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -478,8 +494,10 @@ namespace RepoDb
                 return connection.ExecuteQuery<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cache: Cache);
             }
             catch
             {
@@ -508,6 +526,9 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -515,6 +536,7 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -527,8 +549,10 @@ namespace RepoDb
                 return await connection.ExecuteQueryAsync<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cache: Cache);
             }
             catch
             {

@@ -299,8 +299,6 @@ namespace RepoDb
 
         #region ExecuteQuery
 
-        // ExecuteQuery
-
         /// <summary>
         /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
@@ -311,6 +309,9 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -318,11 +319,13 @@ namespace RepoDb
         public IEnumerable<TEntity> ExecuteQuery(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 transaction: transaction);
         }
 
@@ -340,6 +343,9 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -347,11 +353,13 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQueryAsync<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 transaction: transaction);
         }
 

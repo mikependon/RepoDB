@@ -97,8 +97,13 @@ namespace RepoDb
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -106,15 +111,19 @@ namespace RepoDb
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ICache cache = null)
         {
             return ExecuteQueryInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 tableName: null,
                 skipCommandArrayParametersCheck: false);
         }
@@ -130,8 +139,13 @@ namespace RepoDb
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
@@ -139,13 +153,25 @@ namespace RepoDb
         /// </returns>
         internal static IEnumerable<dynamic> ExecuteQueryInternal(this IDbConnection connection,
             string commandText,
-            object param,
-            CommandType? commandType,
-            int? commandTimeout,
-            IDbTransaction transaction,
-            string tableName,
-            bool skipCommandArrayParametersCheck)
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            string tableName = null,
+            bool skipCommandArrayParametersCheck = true)
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<dynamic>(cacheKey, false);
+                if (item != null)
+                {
+                    return item.Value;
+                }
+            }
+
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -178,8 +204,13 @@ namespace RepoDb
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -187,15 +218,19 @@ namespace RepoDb
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ICache cache = null)
         {
             return ExecuteQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 tableName: null,
                 skipCommandArrayParametersCheck: false);
         }
@@ -211,8 +246,13 @@ namespace RepoDb
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
@@ -220,13 +260,25 @@ namespace RepoDb
         /// </returns>
         internal static async Task<IEnumerable<object>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
-            object param,
-            CommandType? commandType,
-            int? commandTimeout,
-            IDbTransaction transaction,
-            string tableName,
-            bool skipCommandArrayParametersCheck)
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            string tableName = null,
+            bool skipCommandArrayParametersCheck = true)
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<dynamic>(cacheKey, false);
+                if (item != null)
+                {
+                    return item.Value;
+                }
+            }
+
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -260,8 +312,13 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -269,16 +326,20 @@ namespace RepoDb
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ICache cache = null)
             where TEntity : class
         {
             return ExecuteQueryInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 skipCommandArrayParametersCheck: false);
         }
 
@@ -294,21 +355,38 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static IEnumerable<TEntity> ExecuteQueryInternal<TEntity>(this IDbConnection connection,
             string commandText,
-            object param,
-            CommandType? commandType,
-            int? commandTimeout,
-            IDbTransaction transaction,
-            bool skipCommandArrayParametersCheck)
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool skipCommandArrayParametersCheck = true)
             where TEntity : class
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<dynamic>(cacheKey, false);
+                if (item != null)
+                {
+                    return item.Value;
+                }
+            }
+
             // Variables needed on this operation
             var connectionString = connection.ConnectionString;
 
@@ -352,8 +430,13 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -361,16 +444,20 @@ namespace RepoDb
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ICache cache = null)
             where TEntity : class
         {
             return ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 skipCommandArrayParametersCheck: false);
         }
 
@@ -386,25 +473,42 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         internal static async Task<IEnumerable<TEntity>> ExecuteQueryAsyncInternal<TEntity>(this IDbConnection connection,
             string commandText,
-            object param,
-            CommandType? commandType,
-            int? commandTimeout,
-            IDbTransaction transaction,
-            bool skipCommandArrayParametersCheck)
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool skipCommandArrayParametersCheck = true)
             where TEntity : class
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<dynamic>(cacheKey, false);
+                if (item != null)
+                {
+                    return item.Value;
+                }
+            }
+
             // Variables needed on this operation
             var connectionString = connection.ConnectionString;
 
-            // Trigger the cache to void reusing the connection
+            // Trigger the cache to avoid reusing the connection
             if (connection.State == ConnectionState.Open || transaction != null)
             {
                 connectionString = null;
