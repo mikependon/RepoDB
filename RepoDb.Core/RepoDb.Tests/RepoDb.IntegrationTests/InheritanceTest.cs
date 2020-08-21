@@ -8,7 +8,7 @@ using RepoDb.IntegrationTests.Setup;
 namespace RepoDb.IntegrationTests
 {
     [TestClass]
-    public class InheritanceTest
+    public class InheritedTest
     {
         [TestInitialize]
         public void Initialize()
@@ -26,7 +26,7 @@ namespace RepoDb.IntegrationTests
         #region Delete
 
         [TestMethod]
-        public void TestSqlConnectionDeleteForInheritanceViaDataEntity()
+        public void TestSqlConnectionDeleteForInheritedViaDataEntity()
         {
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
@@ -46,7 +46,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteForInheritanceViaPrimary()
+        public void TestSqlConnectionDeleteForInheritedViaPrimary()
         {
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
@@ -70,7 +70,7 @@ namespace RepoDb.IntegrationTests
         #region Insert
 
         [TestMethod]
-        public void TestSqlConnectionInsertForInheritance()
+        public void TestSqlConnectionInsertForInherited()
         {
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
@@ -81,10 +81,8 @@ namespace RepoDb.IntegrationTests
                 var insertResult = connection.Insert<InheritedIdentityTable, long>(entity);
 
                 // Assert
-                Assert.AreEqual(entity.Id, insertResult);
                 Assert.IsTrue(insertResult > 0);
-                Assert.IsTrue(entity.Id > 0);
-                Assert.AreEqual(1, connection.CountAll<InheritedIdentityTable>());
+                Assert.AreEqual(entity.Id, insertResult);
             }
         }
 
@@ -93,7 +91,7 @@ namespace RepoDb.IntegrationTests
         #region InsertAll
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllForInheritance()
+        public void TestSqlConnectionInsertAllForInherited()
         {
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
@@ -113,7 +111,120 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult.ElementAt(entities.IndexOf(entity))));
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+            }
+        }
+
+        #endregion
+
+        #region Merge
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForInherited()
+        {
+            // Setup
+            var entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<InheritedIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(entity.Id, mergeResult);
+                Assert.AreEqual(1, connection.CountAll<InheritedIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForInheritedWithNonEmptyTable()
+        {
+            // Setup
+            var entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Merge<InheritedIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(entity.Id, insertResult);
+                Assert.AreEqual(1, connection.CountAll<InheritedIdentityTable>());
+
+                // Setup
+                entity.ColumnBit = false;
+                entity.ColumnDateTime2 = DateTime.UtcNow;
+
+                // Act
+                var mergeResult = connection.Merge<InheritedIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(entity.Id, mergeResult);
+            }
+        }
+
+        #endregion
+
+        #region MergeAll
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForInherited()
+        {
+            // Setup
+            var entities = Helper.CreateInheritedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllRequest = connection.MergeAll<InheritedIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllRequest);
+
+                // Act
+                var queryResult = connection.QueryAll<InheritedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForInheritedWithNonEmptyTables()
+        {
+            // Setup
+            var entities = Helper.CreateInheritedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<InheritedIdentityTable>(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnBit = false;
+                    entity.ColumnDateTime2 = DateTime.UtcNow;
+                });
+
+                // Act
+                var mergeAllResult = connection.MergeAll<InheritedIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<InheritedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
             }
         }
 
@@ -122,7 +233,7 @@ namespace RepoDb.IntegrationTests
         #region Query
 
         [TestMethod]
-        public void TestSqlConnectionQueryForInheritance()
+        public void TestSqlConnectionQueryForInherited()
         {
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
@@ -146,7 +257,7 @@ namespace RepoDb.IntegrationTests
         #region Update
 
         [TestMethod]
-        public void TestSqlConnectionUpdateForInheritanceViaDataEntity()
+        public void TestSqlConnectionUpdateForInheritedViaDataEntity()
         {
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
@@ -176,7 +287,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateForInheritanceViaPrimaryKey()
+        public void TestSqlConnectionUpdateForInheritedViaPrimaryKey()
         {
             // Setup
             var entity = Helper.CreateInheritedIdentityTable();
@@ -210,7 +321,7 @@ namespace RepoDb.IntegrationTests
         #region UpdateAll
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllForInheritance()
+        public void TestSqlConnectionUpdateAllForInherited()
         {
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
@@ -239,7 +350,7 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult.ElementAt(entities.IndexOf(entity))));
+                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
             }
         }
 

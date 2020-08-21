@@ -474,6 +474,52 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region ImmutableIdentityTable
+
+        /// <summary>
+        /// Creates a list of <see cref="ImmutableIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="ImmutableIdentityTable"/> objects.</returns>
+        public static List<ImmutableIdentityTable> CreateImmutableIdentityTables(int count)
+        {
+            var tables = new List<ImmutableIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new ImmutableIdentityTable(0,
+                    Guid.NewGuid(),
+                    true,
+                    EpocDate.AddDays(index),
+                    DateTime.UtcNow,
+                    index,
+                    index,
+                    index,
+                    $"NVARCHAR{index}"));
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="ImmutableIdentityTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="ImmutableIdentityTable"/> object.</returns>
+        public static ImmutableIdentityTable CreateImmutableIdentityTable()
+        {
+            var random = new Random();
+            return new ImmutableIdentityTable(0,
+                Guid.NewGuid(),
+                true,
+                EpocDate,
+                DateTime.UtcNow,
+                Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                random.Next(int.MinValue, int.MaxValue),
+                Guid.NewGuid().ToString());
+        }
+
+        #endregion
+
         #region EnumCompleteTable
 
         /// <summary>
