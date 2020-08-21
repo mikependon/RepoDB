@@ -23,6 +23,50 @@ namespace RepoDb.IntegrationTests
             Database.Cleanup();
         }
 
+        #region Delete
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteForInheritanceViaDataEntity()
+        {
+            // Setup
+            var entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<InheritedIdentityTable>(entity);
+
+                // Act
+                var deleteResult = connection.Delete<InheritedIdentityTable>(entity);
+
+                // Assert
+                Assert.IsTrue(deleteResult > 0);
+                Assert.AreEqual(0, connection.CountAll<InheritedIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteForInheritanceViaPrimary()
+        {
+            // Setup
+            var entity = Helper.CreateInheritedIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<InheritedIdentityTable>(entity);
+
+                // Act
+                var deleteResult = connection.Delete<InheritedIdentityTable>(entity.Id);
+
+                // Assert
+                Assert.IsTrue(deleteResult > 0);
+                Assert.AreEqual(0, connection.CountAll<InheritedIdentityTable>());
+            }
+        }
+
+        #endregion
+
         #region Insert
 
         [TestMethod]
@@ -69,52 +113,7 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity,
-                        queryResult.ElementAt(entities.IndexOf(entity))));
-            }
-        }
-
-        #endregion
-
-        #region Delete
-
-        [TestMethod]
-        public void TestSqlConnectionDeleteForInheritanceViaDataEntity()
-        {
-            // Setup
-            var entity = Helper.CreateInheritedIdentityTable();
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                connection.Insert<InheritedIdentityTable>(entity);
-
-                // Act
-                var deleteResult = connection.Delete<InheritedIdentityTable>(entity);
-
-                // Assert
-                Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, connection.CountAll<InheritedIdentityTable>());
-            }
-        }
-
-        [TestMethod]
-        public void TestSqlConnectionDeleteForInheritanceViaPrimary()
-        {
-            // Setup
-            var entity = Helper.CreateInheritedIdentityTable();
-
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Act
-                connection.Insert<InheritedIdentityTable>(entity);
-
-                // Act
-                var deleteResult = connection.Delete<InheritedIdentityTable>(entity.Id);
-
-                // Assert
-                Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, connection.CountAll<InheritedIdentityTable>());
+                    Helper.AssertPropertiesEquality(entity, queryResult.ElementAt(entities.IndexOf(entity))));
             }
         }
 
@@ -211,7 +210,7 @@ namespace RepoDb.IntegrationTests
         #region UpdateAll
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllForIdentityTableWithDifferentPrimaries()
+        public void TestSqlConnectionUpdateAllForInheritance()
         {
             // Setup
             var entities = Helper.CreateInheritedIdentityTables(10);
@@ -240,8 +239,7 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity,
-                        queryResult.ElementAt(entities.IndexOf(entity))));
+                    Helper.AssertPropertiesEquality(entity, queryResult.ElementAt(entities.IndexOf(entity))));
             }
         }
 
