@@ -83,6 +83,12 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.IsTrue(insertResult > 0);
                 Assert.AreEqual(entity.Id, insertResult);
+
+                // Act
+                var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
 
@@ -133,7 +139,12 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
                 Assert.AreEqual(entity.Id, mergeResult);
-                Assert.AreEqual(1, connection.CountAll<InheritedIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
 
@@ -163,6 +174,12 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
                 Assert.AreEqual(entity.Id, mergeResult);
+
+                // Act
+                var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
 
@@ -278,11 +295,11 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var data = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
+                var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.IsNotNull(data);
-                Helper.AssertPropertiesEquality(entity, data);
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
 
@@ -308,11 +325,11 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var data = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
+                var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.IsNotNull(data);
-                Helper.AssertPropertiesEquality(entity, data);
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
 
