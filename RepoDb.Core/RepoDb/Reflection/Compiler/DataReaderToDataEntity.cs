@@ -87,7 +87,7 @@ namespace RepoDb.Reflection
                 readerFields, dbSetting);
 
             // Throw an error if there are no bindings
-            if (memberBindings.Any() != true)
+            if (memberBindings?.Any() != true)
             {
                 throw new InvalidOperationException($"There are no member bindings found between the resultset of the data reader and the type '{typeof(TEntity).FullName}'.");
             }

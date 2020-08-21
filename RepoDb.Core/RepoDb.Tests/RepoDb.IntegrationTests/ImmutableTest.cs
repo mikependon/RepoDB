@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 
@@ -36,12 +37,14 @@ namespace RepoDb.IntegrationTests
                 // Act
                 connection.Insert<ImmutableIdentityTable>(entity);
 
+                // The ID could not be set back to the entities, so it should be 0
+
                 // Act
                 var deleteResult = connection.Delete<ImmutableIdentityTable>(entity);
 
                 // Assert
-                Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, connection.CountAll<ImmutableIdentityTable>());
+                Assert.IsTrue(deleteResult == 0);
+                Assert.AreEqual(1, connection.CountAll<ImmutableIdentityTable>());
             }
         }
 
@@ -56,12 +59,14 @@ namespace RepoDb.IntegrationTests
                 // Act
                 connection.Insert<ImmutableIdentityTable>(entity);
 
+                // The ID could not be set back to the entities, so it should be 0
+
                 // Act
                 var deleteResult = connection.Delete<ImmutableIdentityTable>(entity.Id);
 
                 // Assert
-                Assert.IsTrue(deleteResult > 0);
-                Assert.AreEqual(0, connection.CountAll<ImmutableIdentityTable>());
+                Assert.IsTrue(deleteResult == 0);
+                Assert.AreEqual(1, connection.CountAll<ImmutableIdentityTable>());
             }
         }
 
@@ -82,7 +87,11 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
-                Assert.AreEqual(entity.Id, insertResult);
+
+                // The ID could not be set back to the entity, so it should be 0
+
+                // Assert
+                Assert.AreEqual(0, entity.Id);
             }
         }
 
@@ -105,13 +114,10 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, insertAllResult);
                 Assert.AreEqual(entities.Count, connection.CountAll<ImmutableIdentityTable>());
 
-                // Act
-                var queryResult = connection.QueryAll<ImmutableIdentityTable>();
+                // The ID could not be set back to the entities, so it should be 0
 
                 // Assert
-                Assert.AreEqual(entities.Count, queryResult.Count());
-                entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+                Assert.IsTrue(entities.All(e => e.Id == 0));
             }
         }
 
@@ -132,8 +138,18 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
-                Assert.AreEqual(entity.Id, mergeResult);
                 Assert.AreEqual(1, connection.CountAll<ImmutableIdentityTable>());
+
+                // The ID could not be set back to the entities, so it should be 0
+
+                // Assert
+                Assert.IsTrue(entity.Id == 0);
+
+                // Act
+                var queryResult = connection.Query<ImmutableIdentityTable>(mergeResult).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
 
@@ -148,21 +164,31 @@ namespace RepoDb.IntegrationTests
                 // Act
                 var insertResult = connection.Merge<ImmutableIdentityTable, long>(entity);
 
-                // Assert
-                Assert.IsTrue(insertResult > 0);
-                Assert.AreEqual(entity.Id, insertResult);
-                Assert.AreEqual(1, connection.CountAll<ImmutableIdentityTable>());
+                // The ID could not be set back to the entities, so it should be 0
 
                 // Setup
-                entity.SetColumnBit(false);
-                entity.SetColumnDateTime2(DateTime.UtcNow);
+                var newEntity = new ImmutableIdentityTable(insertResult,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar);
 
                 // Act
-                var mergeResult = connection.Merge<ImmutableIdentityTable, long>(entity);
+                var mergeResult = connection.Merge<ImmutableIdentityTable, long>(newEntity);
 
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
                 Assert.AreEqual(entity.Id, mergeResult);
+
+                // Act
+                var queryResult = connection.Query<ImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
             }
         }
 
@@ -184,13 +210,18 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
 
+                // The ID could not be set back to the entities, so it should be 0
+
+                // Assert
+                Assert.IsTrue(entities.All(e => e.Id == 0));
+
                 // Act
-                var queryResult = connection.QueryAll<ImmutableIdentityTable>();
+                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
             }
         }
 
@@ -206,25 +237,34 @@ namespace RepoDb.IntegrationTests
                 var insertAllResult = connection.InsertAll<ImmutableIdentityTable>(entities);
 
                 // Setup
-                entities.ForEach(entity =>
-                {
-                    entity.SetColumnBit(false);
-                    entity.SetColumnDateTime2(DateTime.UtcNow);
-                });
+                var newEntities = entities.Select(entity => new ImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar)).AsList();
 
                 // Act
-                var mergeAllResult = connection.MergeAll<ImmutableIdentityTable>(entities);
+                var mergeAllResult = connection.MergeAll<ImmutableIdentityTable>(newEntities);
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
+                // The ID could not be set back to the entities, so it should be 0
+
+                // Assert
+                Assert.IsTrue(entities.All(e => e.Id == 0));
+
                 // Act
-                var queryResult = connection.QueryAll<ImmutableIdentityTable>();
+                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
-                entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+                newEntities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
             }
         }
 
@@ -241,13 +281,12 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert<ImmutableIdentityTable, long>(entity);
+                var insertResult = connection.Insert<ImmutableIdentityTable, long>(entity);
 
                 // Act
-                var queryResult = connection.Query<ImmutableIdentityTable>(entity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableIdentityTable>(insertResult).FirstOrDefault();
 
                 // Assert
-                Assert.IsNotNull(queryResult);
                 Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
@@ -268,21 +307,28 @@ namespace RepoDb.IntegrationTests
                 connection.Insert<ImmutableIdentityTable, long>(entity);
 
                 // Setup
-                entity.SetColumnBit(false);
-                entity.SetColumnDateTime2(DateTime.UtcNow);
+                var newEntity = new ImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar);
 
                 // Act
-                var updateResult = connection.Update<ImmutableIdentityTable>(entity);
+                var updateResult = connection.Update<ImmutableIdentityTable>(newEntity);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var data = connection.Query<ImmutableIdentityTable>(entity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.IsNotNull(data);
-                Helper.AssertPropertiesEquality(entity, data);
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
             }
         }
 
@@ -298,21 +344,28 @@ namespace RepoDb.IntegrationTests
                 connection.Insert<ImmutableIdentityTable, long>(entity);
 
                 // Setup
-                entity.SetColumnBit(false);
-                entity.SetColumnDateTime2(DateTime.UtcNow);
+                var newEntity = new ImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar);
 
                 // Act
-                var updateResult = connection.Update<ImmutableIdentityTable>(entity, entity.Id);
+                var updateResult = connection.Update<ImmutableIdentityTable>(newEntity, newEntity.Id);
 
                 // Assert
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var data = connection.Query<ImmutableIdentityTable>(entity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
 
                 // Assert
-                Assert.IsNotNull(data);
-                Helper.AssertPropertiesEquality(entity, data);
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
             }
         }
 
@@ -332,25 +385,29 @@ namespace RepoDb.IntegrationTests
                 connection.InsertAll<ImmutableIdentityTable>(entities);
 
                 // Setup
-                entities.ForEach(entity =>
-                {
-                    entity.SetColumnBit(false);
-                    entity.SetColumnDateTime2(DateTime.UtcNow);
-                });
+                var newEntities = entities.Select(entity => new ImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar)).AsList();
 
                 // Act
-                var updateAllResult = connection.UpdateAll<ImmutableIdentityTable>(entities);
+                var updateAllResult = connection.UpdateAll<ImmutableIdentityTable>(newEntities);
 
                 // Assert
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = connection.QueryAll<ImmutableIdentityTable>();
+                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
-                entities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult.First(e => e.Id == entity.Id)));
+                newEntities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
             }
         }
 

@@ -29,26 +29,14 @@ namespace RepoDb.IntegrationTests.Models
 
         // Properties
 
-        public long Id { get; private set; }
-        public Guid RowGuid { get; private set; }
-        public bool? ColumnBit { get; private set; }
-        public DateTime? ColumnDateTime { get; private set; }
-        public DateTime? ColumnDateTime2 { get; private set; }
-        public decimal? ColumnDecimal { get; private set; }
-        public double? ColumnFloat { get; private set; }
-        public int? ColumnInt { get; private set; }
-        public string ColumnNVarChar { get; private set; }
-
-        // Backdoor Method
-
-        public void SetColumnBit(bool value)
-        {
-            ColumnBit = value;
-        }
-
-        public void SetColumnDateTime2(DateTime value)
-        {
-            ColumnDateTime2 = value;
-        }
+        public long Id { get; }
+        public Guid RowGuid { get; }
+        public bool? ColumnBit { get; }
+        public DateTime? ColumnDateTime { get; }
+        public DateTime? ColumnDateTime2 { get; }
+        public decimal? ColumnDecimal { get; }
+        public double? ColumnFloat { get; }
+        public int? ColumnInt { get; }
+        public string ColumnNVarChar { get; }
     }
 }

@@ -43,6 +43,12 @@ namespace RepoDb.Reflection
                 return null;
             }
 
+            // Make sure we can write
+            if (property.CanWrite == false)
+            {
+                return null;
+            }
+
             // Variables for type
             var typeOfEntity = typeof(TEntity);
 
