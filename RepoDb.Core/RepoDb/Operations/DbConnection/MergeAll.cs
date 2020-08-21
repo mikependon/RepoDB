@@ -1065,7 +1065,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Guard the parameters
-            GuardMergeAll(entities);
+            ThrowIfNullOrEmpty(entities);
 
             // Validate the batch size
             batchSize = Math.Min(batchSize, entities.Count());
@@ -1458,7 +1458,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Guard the parameters
-            GuardMergeAll(entities);
+            ThrowIfNullOrEmpty(entities);
 
             // Validate the batch size
             batchSize = Math.Min(batchSize, entities.Count());
@@ -1812,28 +1812,6 @@ namespace RepoDb
 
             // Return the result
             return result;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Throws an exception if the entities argument is null or empty.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="entities">The enumerable list of entity objects.</param>
-        private static void GuardMergeAll<TEntity>(IEnumerable<TEntity> entities)
-            where TEntity : class
-        {
-            if (entities == null)
-            {
-                throw new NullReferenceException("The entities must not be null.");
-            }
-            if (entities.Any() == false)
-            {
-                throw new EmptyException("The entities must not be empty.");
-            }
         }
 
         #endregion

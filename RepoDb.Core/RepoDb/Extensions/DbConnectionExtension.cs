@@ -1688,6 +1688,24 @@ namespace RepoDb
         #endregion
 
         /// <summary>
+        /// Throws an exception if the entities argument is null or empty.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="entities">The enumerable list of entity objects.</param>
+        internal static void ThrowIfNullOrEmpty<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class
+        {
+            if (entities == null)
+            {
+                throw new NullReferenceException("The entities must not be null.");
+            }
+            if (entities.Any() == false)
+            {
+                throw new EmptyException("The entities must not be empty.");
+            }
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="connection"></param>
