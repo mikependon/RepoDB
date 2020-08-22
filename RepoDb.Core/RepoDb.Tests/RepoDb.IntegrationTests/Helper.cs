@@ -520,6 +520,56 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region ImmutableWithFewerCtorArgumentsIdentityTable
+
+        /// <summary>
+        /// Creates a list of <see cref="ImmutableWithFewerCtorArgumentsIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="ImmutableWithFewerCtorArgumentsIdentityTable"/> objects.</returns>
+        public static List<ImmutableWithFewerCtorArgumentsIdentityTable> CreateImmutableWithFewerCtorArgumentsIdentityTables(int count)
+        {
+            var tables = new List<ImmutableWithFewerCtorArgumentsIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new ImmutableWithFewerCtorArgumentsIdentityTable(0,
+                    Guid.NewGuid(),
+                    true,
+                    EpocDate.AddDays(index),
+                    DateTime.UtcNow)
+                {
+                    ColumnDecimal = index,
+                    ColumnFloat = index,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="ImmutableWithFewerCtorArgumentsIdentityTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="ImmutableWithFewerCtorArgumentsIdentityTable"/> object.</returns>
+        public static ImmutableWithFewerCtorArgumentsIdentityTable CreateImmutableWithFewerCtorArgumentsIdentityTable()
+        {
+            var random = new Random();
+            return new ImmutableWithFewerCtorArgumentsIdentityTable(0,
+                Guid.NewGuid(),
+                true,
+                EpocDate,
+                DateTime.UtcNow)
+            {
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        #endregion
+
         #region EnumCompleteTable
 
         /// <summary>
