@@ -127,7 +127,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder Average(Field field,
             IDbSetting dbSetting,
@@ -155,7 +155,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder Min(Field field,
             IDbSetting dbSetting,
@@ -183,7 +183,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder Max(Field field,
             IDbSetting dbSetting,
@@ -211,7 +211,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation..</param>
+        /// <param name="convertResolver">The converter that is being used to convert the <see cref="Field"/> object before the aggregation.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder Sum(Field field,
             IDbSetting dbSetting,

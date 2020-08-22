@@ -28,7 +28,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             object what,
             string hints = null,
@@ -59,7 +59,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
             string hints = null,
@@ -89,7 +89,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -119,7 +119,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
@@ -149,7 +149,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -179,7 +179,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -209,7 +209,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static bool ExistsInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -258,7 +258,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static async Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             object what,
             string hints = null,
@@ -289,7 +289,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static async Task<bool> ExistsAsync<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
             string hints = null,
@@ -319,7 +319,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
@@ -349,7 +349,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
@@ -379,7 +379,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
@@ -409,7 +409,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
@@ -439,7 +439,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static Task<bool> ExistsAsyncInternal<TEntity>(this IDbConnection connection,
             QueryGroup where,
             int? commandTimeout = null,
@@ -489,7 +489,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists<TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
@@ -520,7 +520,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
             object what,
@@ -551,7 +551,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
             QueryField where,
@@ -582,7 +582,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
@@ -613,7 +613,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static bool Exists(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -644,7 +644,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static bool ExistsInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -694,7 +694,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static async Task<bool> ExistsAsync<TWhat>(this IDbConnection connection,
             string tableName,
             TWhat what,
@@ -725,7 +725,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static async Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             object what,
@@ -756,7 +756,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             QueryField where,
@@ -787,7 +787,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
@@ -818,7 +818,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         public static Task<bool> ExistsAsync(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -849,7 +849,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static Task<bool> ExistsAsyncInternal(this IDbConnection connection,
             string tableName,
             QueryGroup where,
@@ -896,7 +896,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static bool ExistsInternalBase(this IDbConnection connection,
             ExistsRequest request,
             object param,
@@ -963,7 +963,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
-        /// <returns>A boolean value that indicates whether the rows are existing in the table..</returns>
+        /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
         internal static async Task<bool> ExistsInternalAsyncBase(this IDbConnection connection,
             ExistsRequest request,
             object param,
