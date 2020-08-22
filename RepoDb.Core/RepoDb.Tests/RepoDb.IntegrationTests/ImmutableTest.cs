@@ -164,8 +164,6 @@ namespace RepoDb.IntegrationTests
                 // Act
                 var insertResult = connection.Merge<ImmutableIdentityTable, long>(entity);
 
-                // The ID could not be set back to the entities, so it should be 0
-
                 // Setup
                 var newEntity = new ImmutableIdentityTable(insertResult,
                     entity.RowGuid,
@@ -180,9 +178,11 @@ namespace RepoDb.IntegrationTests
                 // Act
                 var mergeResult = connection.Merge<ImmutableIdentityTable, long>(newEntity);
 
+                // The ID could not be set back to the entities, so it should be 0
+
                 // Assert
                 Assert.IsTrue(mergeResult > 0);
-                Assert.AreEqual(entity.Id, mergeResult);
+                Assert.AreEqual(insertResult, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<ImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
@@ -229,12 +229,12 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionMergeAllForImmutableWithNonEmptyTables()
         {
             // Setup
-            var entities = Helper.CreateImmutableIdentityTables(10);
+            var entities = Helper.CreateIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertAllResult = connection.InsertAll<ImmutableIdentityTable>(entities);
+                var insertAllResult = connection.InsertAll<IdentityTable>(entities);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableIdentityTable(entity.Id,
@@ -253,18 +253,13 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
 
-                // The ID could not be set back to the entities, so it should be 0
-
-                // Assert
-                Assert.IsTrue(entities.All(e => e.Id == 0));
-
                 // Act
-                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
+                var queryResult = connection.QueryAll<IdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 newEntities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
+                    Helper.AssertPropertiesEquality(entity, queryResult[newEntities.IndexOf(entity)]));
             }
         }
 
@@ -299,12 +294,12 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionUpdateForImmutableViaDataEntity()
         {
             // Setup
-            var entity = Helper.CreateImmutableIdentityTable();
+            var entity = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert<ImmutableIdentityTable, long>(entity);
+                connection.Insert<IdentityTable, long>(entity);
 
                 // Setup
                 var newEntity = new ImmutableIdentityTable(entity.Id,
@@ -336,12 +331,12 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionUpdateForImmutableViaPrimaryKey()
         {
             // Setup
-            var entity = Helper.CreateImmutableIdentityTable();
+            var entity = Helper.CreateIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.Insert<ImmutableIdentityTable, long>(entity);
+                connection.Insert<IdentityTable>(entity);
 
                 // Setup
                 var newEntity = new ImmutableIdentityTable(entity.Id,
@@ -377,12 +372,12 @@ namespace RepoDb.IntegrationTests
         public void TestSqlConnectionUpdateAllForImmutable()
         {
             // Setup
-            var entities = Helper.CreateImmutableIdentityTables(10);
+            var entities = Helper.CreateIdentityTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll<ImmutableIdentityTable>(entities);
+                connection.InsertAll<IdentityTable>(entities);
 
                 // Setup
                 var newEntities = entities.Select(entity => new ImmutableIdentityTable(entity.Id,
@@ -407,7 +402,7 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
                 newEntities.ForEach(entity =>
-                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
+                    Helper.AssertPropertiesEquality(entity, queryResult[newEntities.IndexOf(entity)]));
             }
         }
 
