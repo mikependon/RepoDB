@@ -806,7 +806,7 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-        #region ImmutableWithFewerCtorArgumentsIdentityTable
+        #region ImmutableWithWritablePropertiesIdentityTable
 
         #region Delete
 
