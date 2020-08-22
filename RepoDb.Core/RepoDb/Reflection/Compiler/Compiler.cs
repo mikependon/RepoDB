@@ -79,19 +79,9 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        internal struct FieldDirection
-        {
-            public int Index { get; set; }
-            public DbField DbField { get; set; }
-            public ParameterDirection Direction { get; set; }
-        }
-
-        /// <summary>
         /// A class that contains both the instance of <see cref="RepoDb.ClassProperty"/> and <see cref="System.Reflection.ParameterInfo"/> objects.
         /// </summary>
-        internal struct ClassPropertyParameterInfo
+        internal class ClassPropertyParameterInfo
         {
             /// <summary>
             /// Gets the instance of <see cref="RepoDb.ClassProperty"/> object in used.
@@ -109,6 +99,16 @@ namespace RepoDb.Reflection
             /// <returns>The presented string.</returns>
             public override string ToString() =>
                 string.Concat("ClassProperty = ", ClassProperty?.ToString(), ", ParameterInfo = ", ParameterInfo?.ToString());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal struct FieldDirection
+        {
+            public int Index { get; set; }
+            public DbField DbField { get; set; }
+            public ParameterDirection Direction { get; set; }
         }
 
         /// <summary>
@@ -1172,7 +1172,7 @@ namespace RepoDb.Reflection
                 .AsList();
 
             // Get the matches, check the lengths
-            if (parameterInfos?.Count > classProperties?.Count)
+            if (parameterInfos?.Count >= classProperties?.Count)
             {
                 foreach (var parameterInfo in parameterInfos)
                 {
@@ -1186,7 +1186,7 @@ namespace RepoDb.Reflection
                     });
                 }
             }
-            else if (classProperties?.Count > parameterInfos?.Count)
+            else if (classProperties.Any() == true)
             {
                 foreach (var classProperty in classProperties)
                 {
@@ -1201,38 +1201,43 @@ namespace RepoDb.Reflection
                 }
             }
 
-            // Necessary variable
-            var defaultOfClassPropertyParameterInfo = default(ClassPropertyParameterInfo);
-
             // Unmatch within the parameter infos
-            var unmatchParameterInfos = parameterInfos?
-                .Where(parameterInfo => Equals(list.FirstOrDefault(item => item.ParameterInfo == parameterInfo), defaultOfClassPropertyParameterInfo))
-                .Where(parameterInfo => classProperties?.FirstOrDefault(classProperty =>
-                   string.Equals(classProperty.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase)) == null);
-            if (unmatchParameterInfos?.Any() == true)
+            if (parameterInfos?.Any() == true)
             {
-                foreach (var parameterInfo in unmatchParameterInfos)
+                foreach (var parameterInfo in parameterInfos)
                 {
-                    list.Add(new ClassPropertyParameterInfo
+                    var listItem = list.FirstOrDefault(item => item.ParameterInfo == parameterInfo);
+                    if (listItem != null)
                     {
-                        ParameterInfo = parameterInfo
-                    });
+                        continue;
+                    }
+                    var classProperty = classProperties?.FirstOrDefault(property =>
+                       string.Equals(property.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
+                    if (classProperty != null)
+                    {
+                        continue;
+                    }
+                    list.Add(new ClassPropertyParameterInfo { ParameterInfo = parameterInfo });
                 }
             }
 
             // Unmatch within the class properties
-            var unmatchClassProperties = classProperties?
-                .Where(classProperty => Equals(list.FirstOrDefault(item => item.ClassProperty == classProperty), defaultOfClassPropertyParameterInfo))
-                .Where(classProperty => parameterInfos?.FirstOrDefault(parameterInfo =>
-                   string.Equals(parameterInfo.Name, classProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase)) == null);
-            if (unmatchClassProperties?.Any() == true)
+            if (classProperties?.Any() == true)
             {
-                foreach (var classProperty in unmatchClassProperties)
+                foreach (var classProperty in classProperties)
                 {
-                    list.Add(new ClassPropertyParameterInfo
+                    var listItem = list.FirstOrDefault(item => item.ClassProperty == classProperty);
+                    if (listItem != null)
                     {
-                        ClassProperty = classProperty
-                    });
+                        continue;
+                    }
+                    var parameterInfo = parameterInfos?.FirstOrDefault(parameter =>
+                       string.Equals(parameter.Name, classProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase));
+                    if (parameterInfo != null)
+                    {
+                        continue;
+                    }
+                    list.Add(new ClassPropertyParameterInfo { ClassProperty = classProperty });
                 }
             }
 

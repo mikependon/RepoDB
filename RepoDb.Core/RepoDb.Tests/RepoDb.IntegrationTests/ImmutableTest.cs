@@ -805,5 +805,436 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #endregion
+
+        #region ImmutableWithFewerCtorArgumentsIdentityTable
+
+        #region Delete
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteForImmutableWithWritablePropertiesViaDataEntity()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(entity);
+
+                // Act
+                var deleteResult = connection.Delete<ImmutableWithWritablePropertiesIdentityTable>(entity);
+
+                // Assert
+                Assert.IsTrue(deleteResult == 1);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteForImmutableWithWritablePropertiesViaPrimary()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(entity);
+
+                // Act
+                var deleteResult = connection.Delete<ImmutableWithWritablePropertiesIdentityTable>(entity.Id);
+
+                // Assert
+                Assert.IsTrue(deleteResult == 1);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #region Insert
+
+        [TestMethod]
+        public void TestSqlConnectionInsertForImmutableWithWritableProperties()
+        {
+            // Setup
+            var entity = Helper.CreateImmutableWithWritablePropertiesIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<ImmutableWithWritablePropertiesIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(insertResult, entity.Id);
+            }
+        }
+
+        #endregion
+
+        #region InsertAll
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllForImmutableWithWritableProperties()
+        {
+            // Setup
+            var entities = Helper.CreateImmutableWithWritablePropertiesIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<ImmutableWithWritablePropertiesIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, insertAllResult);
+                Assert.AreEqual(entities.Count, connection.CountAll<ImmutableWithWritablePropertiesIdentityTable>());
+
+                // Assert
+                Assert.IsTrue(entities.All(e => e.Id > 0));
+            }
+        }
+
+        #endregion
+
+        #region Merge
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForImmutableWithWritableProperties()
+        {
+            // Setup
+            var entity = Helper.CreateImmutableWithWritablePropertiesIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<ImmutableWithWritablePropertiesIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(1, connection.CountAll<ImmutableWithWritablePropertiesIdentityTable>());
+
+                // Assert
+                Assert.IsTrue(entity.Id == 1);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(mergeResult).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForImmutableWithWritablePropertiesWithNonEmptyTable()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<IdentityTable, long>(entity);
+
+                // Setup
+                var newEntity = new ImmutableWithWritablePropertiesIdentityTable(0,
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+                {
+                    Id = insertResult,
+                    RowGuid = entity.RowGuid,
+                    ColumnBit = false,
+                    ColumnDateTime = entity.ColumnDateTime,
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = entity.ColumnDecimal,
+                    ColumnFloat = entity.ColumnFloat,
+                    ColumnInt = entity.ColumnInt,
+                    ColumnNVarChar = entity.ColumnNVarChar
+                };
+
+                // Act
+                var mergeResult = connection.Merge<ImmutableWithWritablePropertiesIdentityTable, long>(newEntity);
+
+                // The ID could not be set back to the entities, so it should be 0
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(insertResult, mergeResult);
+
+                // Act
+                var queryResult = connection.Query<ImmutableWithWritablePropertiesIdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region MergeAll
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForImmutableWithWritableProperties()
+        {
+            // Setup
+            var entities = Helper.CreateImmutableWithWritablePropertiesIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllRequest = connection.MergeAll<ImmutableWithWritablePropertiesIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllRequest);
+                Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
+
+                // Assert
+                Assert.IsTrue(entities.All(e => e.Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForImmutableWithWritablePropertiesWithNonEmptyTables()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<IdentityTable>(entities);
+
+                // Setup
+                var newEntities = entities.Select(entity => new ImmutableWithWritablePropertiesIdentityTable(0,
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+                {
+                    Id = entity.Id,
+                    RowGuid = entity.RowGuid,
+                    ColumnBit = false,
+                    ColumnDateTime = entity.ColumnDateTime,
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = entity.ColumnDecimal,
+                    ColumnFloat = entity.ColumnFloat,
+                    ColumnInt = entity.ColumnInt,
+                    ColumnNVarChar = entity.ColumnNVarChar
+                }).AsList();
+
+                // Act
+                var mergeAllResult = connection.MergeAll<ImmutableWithWritablePropertiesIdentityTable>(newEntities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllResult);
+                Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                newEntities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[newEntities.IndexOf(entity)]));
+            }
+        }
+
+        #endregion
+
+        #region Query
+
+        [TestMethod]
+        public void TestSqlConnectionQueryForImmutableWithWritableProperties()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<IdentityTable, long>(entity);
+
+                // Act
+                var queryResult = connection.Query<ImmutableWithWritablePropertiesIdentityTable>(insertResult).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region Update
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateForImmutableWithWritablePropertiesViaDataEntity()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable, long>(entity);
+
+                // Setup
+                var newEntity = new ImmutableWithWritablePropertiesIdentityTable(0,
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+                {
+                    Id = entity.Id,
+                    RowGuid = entity.RowGuid,
+                    ColumnBit = false,
+                    ColumnDateTime = entity.ColumnDateTime,
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = entity.ColumnDecimal,
+                    ColumnFloat = entity.ColumnFloat,
+                    ColumnInt = entity.ColumnInt,
+                    ColumnNVarChar = entity.ColumnNVarChar
+                };
+
+                // Act
+                var updateResult = connection.Update<ImmutableWithWritablePropertiesIdentityTable>(newEntity);
+
+                // Assert
+                Assert.IsTrue(updateResult > 0);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateForImmutableWithWritablePropertiesViaPrimaryKey()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(entity);
+
+                // Setup
+                var newEntity = new ImmutableWithWritablePropertiesIdentityTable(0,
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+                {
+                    Id = entity.Id,
+                    RowGuid = entity.RowGuid,
+                    ColumnBit = false,
+                    ColumnDateTime = entity.ColumnDateTime,
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = entity.ColumnDecimal,
+                    ColumnFloat = entity.ColumnFloat,
+                    ColumnInt = entity.ColumnInt,
+                    ColumnNVarChar = entity.ColumnNVarChar
+                };
+
+                // Act
+                var updateResult = connection.Update<ImmutableWithWritablePropertiesIdentityTable>(newEntity, newEntity.Id);
+
+                // Assert
+                Assert.IsTrue(updateResult > 0);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region UpdateAll
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllForImmutableWithWritableProperties()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(entities);
+
+                // Setup
+                var newEntities = entities.Select(entity => new ImmutableWithWritablePropertiesIdentityTable(0,
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)
+                {
+                    Id = entity.Id,
+                    RowGuid = entity.RowGuid,
+                    ColumnBit = false,
+                    ColumnDateTime = entity.ColumnDateTime,
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = entity.ColumnDecimal,
+                    ColumnFloat = entity.ColumnFloat,
+                    ColumnInt = entity.ColumnInt,
+                    ColumnNVarChar = entity.ColumnNVarChar
+                }).AsList();
+
+                // Act
+                var updateAllResult = connection.UpdateAll<ImmutableWithWritablePropertiesIdentityTable>(newEntities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                newEntities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[newEntities.IndexOf(entity)]));
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

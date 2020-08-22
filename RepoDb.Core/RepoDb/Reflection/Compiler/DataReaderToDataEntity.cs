@@ -85,10 +85,10 @@ namespace RepoDb.Reflection
             var readerFields = GetDataReaderFields(reader, dbFields, dbSetting);
             var memberBindings = GetMemberBindingsForDataEntity<TEntity>(readerParameterExpression,
                 readerFields, dbSetting);
-            var memberAssignments = memberBindings
+            var memberAssignments = memberBindings?
                 .Where(item => item.MemberAssignment != null)
                 .Select(item => item.MemberAssignment);
-            var arguments = memberBindings
+            var arguments = memberBindings?
                 .Where(item => item.Argument != null)
                 .Select(item => item.Argument);
             var typeOfEntity = typeof(TEntity);

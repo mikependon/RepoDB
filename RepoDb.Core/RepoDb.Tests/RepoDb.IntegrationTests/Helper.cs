@@ -564,7 +564,75 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
                 ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
                 ColumnInt = random.Next(int.MinValue, int.MaxValue),
-                ColumnNVarChar = Guid.NewGuid().ToString()
+                ColumnNVarChar = $"NVARCHAR-{Guid.NewGuid().ToString()}"
+            };
+        }
+
+        #endregion
+
+        #region ImmutableWithFewerCtorArgumentsIdentityTable
+
+        /// <summary>
+        /// Creates a list of <see cref="ImmutableWithWritablePropertiesIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="ImmutableWithWritablePropertiesIdentityTable"/> objects.</returns>
+        public static List<ImmutableWithWritablePropertiesIdentityTable> CreateImmutableWithWritablePropertiesIdentityTables(int count)
+        {
+            var tables = new List<ImmutableWithWritablePropertiesIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new ImmutableWithWritablePropertiesIdentityTable(0,
+                    Guid.NewGuid(),
+                    true,
+                    EpocDate,
+                    DateTime.UtcNow,
+                    index,
+                    index,
+                    index,
+                    $"NVARCHAR{index}-Ctor")
+                {
+                    Id = 0,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = false,
+                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime2 = DateTime.UtcNow.AddDays(index),
+                    ColumnDecimal = index+1,
+                    ColumnFloat = index + 1,
+                    ColumnInt = index + 1,
+                    ColumnNVarChar = $"NVARCHAR{index}-Property"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="ImmutableWithWritablePropertiesIdentityTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="ImmutableWithWritablePropertiesIdentityTable"/> object.</returns>
+        public static ImmutableWithWritablePropertiesIdentityTable CreateImmutableWithWritablePropertiesIdentityTable()
+        {
+            var random = new Random();
+            return new ImmutableWithWritablePropertiesIdentityTable(0,
+                Guid.NewGuid(),
+                true,
+                EpocDate,
+                DateTime.UtcNow,
+                Convert.ToDecimal(random.Next(100)),
+                Convert.ToSingle(random.Next(100)),
+                random.Next(100),
+                $"NVARCHAR-{Guid.NewGuid()}-Ctor")
+            {
+                Id = 0,
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = false,
+                ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                ColumnDateTime2 = DateTime.UtcNow.AddDays(random.Next(100)),
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = $"NVARCHAR-{Guid.NewGuid()}-Property"
             };
         }
 
