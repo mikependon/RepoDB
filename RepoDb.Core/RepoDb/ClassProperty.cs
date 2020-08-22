@@ -53,7 +53,7 @@ namespace RepoDb
         /// </summary>
         /// <returns>The unquoted name.</returns>
         public override string ToString() =>
-            string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.Name, ")");
+            string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.FullName, ")");
 
         /// <summary>
         /// Gets the declaring parent type of the current property info. If the class inherits an interface, then this will return 

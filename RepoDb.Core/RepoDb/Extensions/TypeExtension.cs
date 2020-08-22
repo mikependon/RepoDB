@@ -11,6 +11,23 @@ namespace RepoDb.Extensions
     public static class TypeExtension
     {
         /// <summary>
+        /// Checks whether the type has a default constructor.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>Returns true if the current type has a default constructor.</returns>
+        public static bool HasDefaultConstructor(this Type type) =>
+            type.GetConstructors()?.FirstOrDefault(item => item.GetParameters()?.Any() == false) != null;
+
+        /// <summary>
+        /// Returns the instance of <see cref="ConstructorInfo"/> with the most argument.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>The instance of <see cref="ConstructorInfo"/> with the most arguments.</returns>
+        public static ConstructorInfo GetConstructorWithMostArguments(this Type type) =>
+            type.GetConstructors()?.Where(item => item.GetParameters().Length > 0)?
+                .OrderByDescending(item => item.GetParameters().Length)?.FirstOrDefault();
+
+        /// <summary>
         /// Checks whether the current type is a class.
         /// </summary>
         /// <param name="type">The current type.</param>

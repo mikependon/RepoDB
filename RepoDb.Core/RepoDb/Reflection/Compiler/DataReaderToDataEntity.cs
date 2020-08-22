@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
+using RepoDb.Extensions;
 
 namespace RepoDb.Reflection
 {
@@ -80,20 +81,40 @@ namespace RepoDb.Reflection
             IDbSetting dbSetting)
             where TEntity : class
         {
-            // Expression variables
             var readerParameterExpression = Expression.Parameter(StaticType.DbDataReader, "reader");
             var readerFields = GetDataReaderFields(reader, dbFields, dbSetting);
             var memberBindings = GetMemberBindingsForDataEntity<TEntity>(readerParameterExpression,
                 readerFields, dbSetting);
+            var memberAssignments = memberBindings
+                .Where(item => item.MemberAssignment != null)
+                .Select(item => item.MemberAssignment);
+            var arguments = memberBindings
+                .Where(item => item.Argument != null)
+                .Select(item => item.Argument);
+            var typeOfEntity = typeof(TEntity);
 
             // Throw an error if there are no bindings
-            if (memberBindings?.Any() != true)
+            if (arguments?.Any() != true && memberAssignments?.Any() != true)
             {
-                throw new InvalidOperationException($"There are no member bindings found between the resultset of the data reader and the type '{typeof(TEntity).FullName}'.");
+                throw new InvalidOperationException($"There are no 'contructor parameter' and/or 'property member' bindings found between the resultset of the data reader and the type '{typeOfEntity.FullName}'.");
             }
 
             // Initialize the members
-            var body = Expression.MemberInit(Expression.New(typeof(TEntity)), memberBindings);
+            var constructorInfo = typeOfEntity
+                .GetConstructors()?
+                .Where(item => item.GetParameters().Length > 0)?
+                .OrderByDescending(item => item.GetParameters().Length)?
+                .FirstOrDefault();
+            var entityExpression = (NewExpression)null;
+            var body = (Expression)null;
+
+            // Check the arguments
+            entityExpression = arguments?.Any() == true ?
+                Expression.New(constructorInfo, arguments) : Expression.New(typeOfEntity);
+
+            // Bind the members
+            body = memberAssignments?.Any() == true ?
+                (Expression)Expression.MemberInit(entityExpression, memberAssignments) : entityExpression;
 
             // Set the function value
             return Expression
