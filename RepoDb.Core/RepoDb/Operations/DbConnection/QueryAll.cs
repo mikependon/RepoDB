@@ -41,7 +41,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -84,7 +84,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -126,7 +126,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -175,7 +175,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -218,7 +218,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -260,7 +260,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -310,7 +310,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -356,7 +356,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -406,7 +406,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -452,7 +452,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -501,7 +501,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -558,11 +558,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
-                cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
+                cacheKey: null, /*cacheKey: cacheKey, */
+                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                cache: cache,
+                cache: null, /* cache: cache */
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -575,7 +575,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result
@@ -610,7 +610,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -667,11 +667,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
-                cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
+                cacheKey: null, /*cacheKey: cacheKey, */
+                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                cache: cache,
+                cache: null, /* cache: cache */
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -684,7 +684,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result
@@ -720,7 +720,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -782,10 +782,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
-                cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
+                cacheKey: null, /*cacheKey: cacheKey, */
+                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: null, /* cache: cache */
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
@@ -799,7 +800,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result
@@ -835,7 +836,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -897,11 +898,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
-                cacheKey: cacheKey,
-                cacheItemExpiration: cacheItemExpiration,
+                cacheKey: null, /*cacheKey: cacheKey, */
+                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                cache: cache,
+                cache: null, /* cache: cache */
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
@@ -915,7 +916,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result

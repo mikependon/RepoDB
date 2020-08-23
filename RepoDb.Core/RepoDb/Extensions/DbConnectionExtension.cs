@@ -113,7 +113,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null)
@@ -160,7 +160,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -170,7 +170,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<dynamic>(cacheKey, false);
+                var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -194,7 +194,7 @@ namespace RepoDb
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -234,7 +234,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null)
@@ -276,12 +276,12 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        internal static async Task<IEnumerable<object>> ExecuteQueryAsyncInternal(this IDbConnection connection,
+        internal static async Task<IEnumerable<dynamic>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -291,7 +291,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<dynamic>(cacheKey, false);
+                var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -315,7 +315,7 @@ namespace RepoDb
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -356,7 +356,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null)
@@ -403,7 +403,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -413,7 +413,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<dynamic>(cacheKey, false);
+                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -447,7 +447,7 @@ namespace RepoDb
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                        cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -488,7 +488,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null)
@@ -535,7 +535,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -545,7 +545,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<dynamic>(cacheKey, false);
+                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -579,7 +579,7 @@ namespace RepoDb
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration, false);
+                        cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
