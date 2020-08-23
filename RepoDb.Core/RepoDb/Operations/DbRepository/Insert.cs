@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -19,11 +20,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert<TEntity>(string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -36,6 +39,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Insert<TEntity>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -61,11 +65,13 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -78,6 +84,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Insert<TEntity, TResult>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -101,10 +108,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert<TEntity>(TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -116,6 +125,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Insert<TEntity>(entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -140,10 +150,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -155,6 +167,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Insert<TEntity, TResult>(entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -183,11 +196,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync<TEntity>(string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -200,6 +215,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAsync<TEntity>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -225,11 +241,13 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<TResult> InsertAsync<TEntity, TResult>(string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -242,6 +260,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAsync<TEntity, TResult>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -265,10 +284,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync<TEntity>(TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -280,6 +301,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.InsertAsync<TEntity>(entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -304,10 +326,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The data entity object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -319,6 +343,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.InsertAsync<TEntity, TResult>(entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -346,11 +371,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert(string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -362,6 +389,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Insert(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -386,11 +414,13 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TResult>(string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -402,6 +432,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Insert<TResult>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -429,11 +460,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync(string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -445,6 +478,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAsync(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -469,11 +503,13 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be inserted.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
         public async Task<TResult> InsertAsync<TResult>(string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -485,6 +521,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.InsertAsync<TResult>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
