@@ -65,6 +65,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -74,6 +75,7 @@ namespace RepoDb
         public static int InsertAll<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -85,6 +87,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 batchSize: batchSize,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -166,7 +169,7 @@ namespace RepoDb
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
-                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -181,6 +184,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entities">The list of data entity objects to be inserted.</param>
         /// <param name="batchSize">The batch size of the insertion.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -190,6 +194,7 @@ namespace RepoDb
         public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -201,6 +206,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 batchSize: batchSize,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -276,7 +282,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllInternal(connection: connection,
+            return InsertAllInternal<object>(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
@@ -317,7 +323,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return InsertAllAsyncInternal(connection: connection,
+            return InsertAllAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
