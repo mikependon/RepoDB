@@ -312,6 +312,7 @@ namespace RepoDb
         /// <param name="cacheKey">
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -320,12 +321,14 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 transaction: transaction);
         }
 
@@ -346,6 +349,7 @@ namespace RepoDb
         /// <param name="cacheKey">
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -354,12 +358,14 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQueryAsync<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 transaction: transaction);
         }
 

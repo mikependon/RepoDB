@@ -558,8 +558,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -664,8 +667,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -776,6 +782,8 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 tableName: tableName,
@@ -889,8 +897,11 @@ namespace RepoDb
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
