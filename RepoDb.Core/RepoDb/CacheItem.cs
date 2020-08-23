@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         public CacheItem(string key,
             T value,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
         {
             if (cacheItemExpiration < 0)
             {
@@ -39,7 +39,7 @@ namespace RepoDb
             Value = value;
             CacheItemExpiration = cacheItemExpiration;
             CreatedDate = DateTime.UtcNow;
-            Expiration = CreatedDate.AddMinutes(cacheItemExpiration);
+            Expiration = CreatedDate.AddMinutes(cacheItemExpiration.GetValueOrDefault());
         }
 
         #region Methods
@@ -79,7 +79,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the expiration in minutes of the cache item.
         /// </summary>
-        public int CacheItemExpiration { get; }
+        public int? CacheItemExpiration { get; }
 
         #endregion
 

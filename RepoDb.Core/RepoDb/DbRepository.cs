@@ -65,7 +65,7 @@ namespace RepoDb
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         public DbRepository(string connectionString,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
             : this(connectionString,
                   null,
                   ConnectionPersistency.PerCall,
@@ -140,7 +140,7 @@ namespace RepoDb
         public DbRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
             : this(connectionString,
                   commandTimeout,
                   ConnectionPersistency.PerCall,
@@ -162,7 +162,7 @@ namespace RepoDb
         public DbRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null)
             : this(connectionString,
                   commandTimeout,
@@ -186,7 +186,7 @@ namespace RepoDb
         public DbRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             : this(connectionString,
@@ -216,7 +216,7 @@ namespace RepoDb
             int? commandTimeout,
             ConnectionPersistency connectionPersistency,
             ICache cache = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
@@ -252,7 +252,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the expiration in minutes of the cache item.
         /// </summary>
-        public int CacheItemExpiration { get; }
+        public int? CacheItemExpiration { get; }
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
@@ -376,7 +376,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -432,7 +432,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -489,7 +489,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -547,7 +547,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
             where TEntity : class
         {

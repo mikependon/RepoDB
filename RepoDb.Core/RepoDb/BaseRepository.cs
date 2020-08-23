@@ -127,7 +127,7 @@ namespace RepoDb
         public BaseRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
             : this(connectionString,
                   commandTimeout,
                   ConnectionPersistency.PerCall,
@@ -148,7 +148,7 @@ namespace RepoDb
         public BaseRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null)
             : this(connectionString,
                   commandTimeout,
@@ -170,7 +170,7 @@ namespace RepoDb
         public BaseRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             : this(connectionString,
@@ -199,7 +199,7 @@ namespace RepoDb
             int? commandTimeout,
             ConnectionPersistency connectionPersistency,
             ICache cache,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
@@ -239,7 +239,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the expiration in minutes of the cache item.
         /// </summary>
-        public int CacheItemExpiration => DbRepository.CacheItemExpiration;
+        public int? CacheItemExpiration => DbRepository.CacheItemExpiration;
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
@@ -321,7 +321,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
@@ -358,7 +358,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQueryAsync<TEntity>(commandText: commandText,
