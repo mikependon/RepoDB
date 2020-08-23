@@ -554,7 +554,8 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
-                var mergeResult = connection.Merge<MappedIdentityTable>(entity, Field.From(new[] { "Id" }));
+                var mergeResult = connection.Merge<MappedIdentityTable>(entity,
+                    qualifiers: Field.From(new[] { "Id" }));
 
                 // Assert
                 Assert.AreEqual(entity.IdMapped, mergeResult);
@@ -993,7 +994,8 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnNVarCharMapped = $"{entity.ColumnNVarCharMapped} (Merged)";
 
                 // Act Update
-                var mergeResult = connection.Merge<MappedCompleteTable>(entity, Field.From(new[] { "SessionId" }));
+                var mergeResult = connection.Merge<MappedCompleteTable>(entity,
+                    qualifiers: Field.From(new[] { "SessionId" }));
 
                 // Assert
                 Assert.AreEqual(entity.SessionIdMapped, mergeResult);
