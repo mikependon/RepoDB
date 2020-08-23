@@ -26,15 +26,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -47,6 +49,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(key, entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -63,16 +66,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity, TWhat>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -84,6 +89,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: WhatToQueryGroup(connection, tableName, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -99,16 +105,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -120,6 +128,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: WhatToQueryGroup(connection, tableName, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -135,16 +144,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -156,6 +167,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -171,16 +183,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -192,6 +206,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -207,16 +222,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -228,6 +245,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -243,16 +261,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -264,6 +284,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -277,14 +298,16 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be used for update.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -297,6 +320,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup<TEntity>(key, entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -312,15 +336,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity, TWhat>(this IDbConnection connection,
             TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -332,6 +358,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -346,15 +373,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -366,6 +395,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -380,15 +410,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -400,6 +432,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -414,15 +447,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -434,6 +469,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -448,15 +484,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -468,6 +506,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -482,15 +521,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -502,6 +543,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: where,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -517,16 +559,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static int UpdateInternal<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -538,7 +582,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
-                fields: entity.AsFields(),
+                fields: GetQualifiedFields<TEntity>(fields, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -557,15 +601,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -578,6 +624,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(key, entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -594,16 +641,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static async Task<int> UpdateAsync<TEntity, TWhat>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -615,6 +664,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -630,16 +680,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -651,6 +703,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -666,16 +719,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -687,6 +742,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -702,16 +758,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -723,6 +781,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -738,16 +797,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -759,6 +820,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -774,16 +836,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -795,6 +859,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -808,14 +873,16 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -828,6 +895,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup<TEntity>(key, entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -843,15 +911,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static async Task<int> UpdateAsync<TEntity, TWhat>(this IDbConnection connection,
             TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -863,6 +933,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -877,15 +948,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -897,6 +970,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -911,15 +985,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -931,6 +1007,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -945,15 +1022,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -965,6 +1044,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -979,15 +1059,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -999,6 +1081,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1013,15 +1096,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1033,6 +1118,7 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
                 where: where,
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1048,16 +1134,18 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static Task<int> UpdateAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1069,7 +1157,7 @@ namespace RepoDb
                 tableName: tableName,
                 entity: entity,
                 where: where,
-                fields: entity.AsFields(),
+                fields: GetQualifiedFields<TEntity>(fields, entity),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1087,15 +1175,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1103,10 +1193,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-            return UpdateInternal(connection: connection,
+            return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(key, entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
@@ -1121,26 +1212,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
             object where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateInternal(connection: connection,
+            return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
@@ -1155,26 +1249,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateInternal(connection: connection,
+            return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1189,26 +1286,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateInternal(connection: connection,
+            return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1223,62 +1323,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static int Update(this IDbConnection connection,
             string tableName,
             object entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateInternal(connection: connection,
+            return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Updates an existing row in the table.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        internal static int UpdateInternal(this IDbConnection connection,
-            string tableName,
-            object entity,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Return the result
-            return UpdateInternalBase<object>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                where: where,
-                fields: entity?.AsFields(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1296,15 +1363,17 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1312,10 +1381,11 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-            return UpdateAsyncInternal(connection: connection,
+            return UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(key, entity),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
@@ -1330,26 +1400,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             object where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateAsyncInternal(connection: connection,
+            return UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 trace: trace,
@@ -1364,26 +1437,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateAsyncInternal(connection: connection,
+            return UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1398,26 +1474,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateAsyncInternal(connection: connection,
+            return UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(where),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1432,61 +1511,29 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public static Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return UpdateAsyncInternal(connection: connection,
+            return UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: where,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Updates an existing row in the table in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table to be used.</param>
-        /// <param name="entity">The dynamic object to be used for update.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
-        internal static Task<int> UpdateAsyncInternal(this IDbConnection connection,
-            string tableName,
-            object entity,
-            QueryGroup where,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return UpdateAsyncInternalBase<object>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                where: where,
-                fields: entity?.AsFields(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1512,7 +1559,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static int UpdateInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,
@@ -1605,7 +1652,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         internal static async Task<int> UpdateAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
             TEntity entity,

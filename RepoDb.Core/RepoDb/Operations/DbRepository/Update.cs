@@ -21,11 +21,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -38,6 +40,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -64,12 +67,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity, TWhat>(string tableName,
             TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -83,6 +88,7 @@ namespace RepoDb
                 return connection.Update<TEntity, TWhat>(tableName: tableName,
                     entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -108,12 +114,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -127,6 +135,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(tableName: tableName,
                     entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -152,12 +161,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -171,6 +182,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -196,12 +208,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -215,6 +229,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -240,12 +255,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -259,6 +276,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -284,12 +302,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -303,6 +323,7 @@ namespace RepoDb
                 return connection.Update<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -326,10 +347,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -341,6 +364,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -366,11 +390,13 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity, TWhat>(TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -383,6 +409,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity, TWhat>(entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -407,11 +434,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -424,6 +453,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -448,11 +478,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -465,6 +497,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -489,11 +522,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -506,6 +541,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -530,11 +566,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -547,6 +585,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -571,11 +610,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -588,6 +629,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -616,11 +658,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(string tableName,
             TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -633,6 +677,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -659,12 +704,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity, TWhat>(string tableName,
             TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -678,6 +725,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity, TWhat>(tableName: tableName,
                     entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -703,12 +751,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(string tableName,
             TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -722,6 +772,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(tableName: tableName,
                     entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -747,12 +798,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(string tableName,
             TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -766,6 +819,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -791,12 +845,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(string tableName,
             TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -810,6 +866,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -835,12 +892,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(string tableName,
             TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -854,6 +913,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -879,12 +939,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(string tableName,
             TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -898,6 +960,7 @@ namespace RepoDb
                 return await connection.UpdateAsync<TEntity>(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -921,10 +984,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -936,6 +1001,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -961,11 +1027,13 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity, TWhat>(TEntity entity,
             TWhat what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -978,6 +1046,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity, TWhat>(entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1002,11 +1071,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             object what,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1019,6 +1090,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     what: what,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1043,11 +1115,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1060,6 +1134,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1084,11 +1159,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1101,6 +1178,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1125,11 +1203,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1142,6 +1222,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1166,11 +1247,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1183,6 +1266,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1210,11 +1294,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1226,6 +1312,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Update(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1250,12 +1337,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
             object entity,
             object where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1268,6 +1357,7 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1292,12 +1382,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
             object entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1310,6 +1402,7 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1334,12 +1427,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
             object entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1352,6 +1447,7 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1376,12 +1472,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
             object entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1394,6 +1492,7 @@ namespace RepoDb
                 return connection.Update(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1421,11 +1520,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1437,6 +1538,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1461,12 +1563,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             object where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1479,6 +1583,7 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1503,12 +1608,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryField where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1521,6 +1628,7 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1545,12 +1653,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1563,6 +1673,7 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
@@ -1587,12 +1698,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of affected rows during the update process..</returns>
+        /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync(string tableName,
             object entity,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -1605,6 +1718,7 @@ namespace RepoDb
                 return await connection.UpdateAsync(tableName: tableName,
                     entity: entity,
                     where: where,
+                    fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
