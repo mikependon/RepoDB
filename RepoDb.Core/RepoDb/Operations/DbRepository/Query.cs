@@ -21,6 +21,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -31,6 +32,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(string tableName,
             object what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -46,6 +48,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Query<TEntity>(tableName,
                     what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -76,6 +79,7 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -86,6 +90,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity, TWhat>(string tableName,
             TWhat what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -101,6 +106,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Query<TEntity, TWhat>(tableName,
                     what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -130,6 +136,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -140,6 +147,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(string tableName,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -155,6 +163,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Query<TEntity>(tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -184,6 +193,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -194,6 +204,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(string tableName,
             QueryField where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -209,6 +220,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Query<TEntity>(tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -238,6 +250,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -248,6 +261,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(string tableName,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -263,6 +277,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Query<TEntity>(tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -292,6 +307,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -302,6 +318,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(string tableName,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -317,6 +334,7 @@ namespace RepoDb
                 // Call the method
                 return connection.Query<TEntity>(tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -345,6 +363,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -354,6 +373,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(object what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -368,6 +388,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Query<TEntity>(what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -397,6 +418,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -406,6 +428,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity, TWhat>(TWhat what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -420,6 +443,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Query<TEntity, TWhat>(what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -448,6 +472,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -457,6 +482,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -471,6 +497,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Query<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -499,6 +526,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -508,6 +536,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryField where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -521,6 +550,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Query<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -549,6 +579,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -558,6 +589,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -572,6 +604,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Query<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -600,6 +633,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -609,6 +643,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryGroup where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -623,6 +658,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.Query<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -656,6 +692,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -666,6 +703,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
             object what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -681,6 +719,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.QueryAsync<TEntity>(tableName: tableName,
                     what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -711,6 +750,7 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -721,6 +761,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity, TWhat>(string tableName,
             TWhat what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -736,6 +777,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.QueryAsync<TEntity, TWhat>(tableName: tableName,
                     what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -765,6 +807,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -775,6 +818,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
             Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -790,6 +834,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.QueryAsync<TEntity>(tableName: tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -819,6 +864,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -829,6 +875,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
             QueryField where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -844,6 +891,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.QueryAsync<TEntity>(tableName: tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -873,6 +921,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -883,6 +932,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
             IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -898,6 +948,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.QueryAsync<TEntity>(tableName: tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -927,6 +978,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -937,6 +989,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(string tableName,
             QueryGroup where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -952,6 +1005,7 @@ namespace RepoDb
                 // Call the method
                 return await connection.QueryAsync<TEntity>(tableName: tableName,
                     where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -980,6 +1034,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -989,6 +1044,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1003,6 +1059,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAsync<TEntity>(what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -1032,6 +1089,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1041,6 +1099,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity, TWhat>(TWhat what,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1055,6 +1114,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAsync<TEntity, TWhat>(what: what,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -1083,6 +1143,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1092,6 +1153,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1106,6 +1168,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAsync<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -1134,6 +1197,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1143,6 +1207,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1157,6 +1222,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAsync<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -1185,6 +1251,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1194,6 +1261,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1208,6 +1276,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAsync<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
@@ -1236,6 +1305,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1245,6 +1315,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1259,6 +1330,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAsync<TEntity>(where: where,
+                    fields: fields,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
