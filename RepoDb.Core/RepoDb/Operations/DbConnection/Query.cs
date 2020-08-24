@@ -2146,29 +2146,47 @@ namespace RepoDb
             // Actual Execution
             if (typeof(TEntity).IsClassType())
             {
-                result = ExecuteQueryInternal<TEntity>(connection: connection,
+                var executeResult = ExecuteQueryInternal<TEntity>(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: cache,
+                    cache: null,
                     skipCommandArrayParametersCheck: true);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Set the result
+                result = executeResult;
             }
             else
             {
-                result = ExecuteQueryInternal(connection: connection,
+                var executeResult = ExecuteQueryInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: cache,
+                    cache: null,
                     skipCommandArrayParametersCheck: true);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Set the result
+                result = executeResult;
             }
 
             // After Execution
@@ -2280,29 +2298,47 @@ namespace RepoDb
             // Actual Execution
             if (typeof(TEntity).IsClassType())
             {
-                result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                var executeResult = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: cache,
+                    cache: null,
                     skipCommandArrayParametersCheck: true);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Set the result
+                result = executeResult;
             }
             else
             {
-                result = await ExecuteQueryAsyncInternal(connection: connection,
+                var executeResult = await ExecuteQueryAsyncInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: cache,
+                    cache: null,
                     skipCommandArrayParametersCheck: true);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Set the result
+                result = executeResult;
             }
 
             // After Execution
