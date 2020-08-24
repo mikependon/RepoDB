@@ -21,7 +21,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -79,7 +79,7 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -136,7 +136,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -193,7 +193,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -250,7 +250,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -307,7 +307,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -363,7 +363,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -418,7 +418,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -472,7 +472,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -526,7 +526,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -579,7 +579,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -633,7 +633,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -692,7 +692,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -750,7 +750,7 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -807,7 +807,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -864,7 +864,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -921,7 +921,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -978,7 +978,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1034,7 +1034,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1089,7 +1089,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1143,7 +1143,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1197,7 +1197,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1251,7 +1251,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1305,7 +1305,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1364,7 +1364,7 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1419,7 +1419,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1474,7 +1474,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1528,7 +1528,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1583,7 +1583,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1643,7 +1643,7 @@ namespace RepoDb
         /// <typeparam name="TWhat">The type of the expression or the key value.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1698,7 +1698,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1753,7 +1753,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1808,7 +1808,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1863,7 +1863,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>

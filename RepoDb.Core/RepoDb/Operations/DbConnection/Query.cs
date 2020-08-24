@@ -1415,7 +1415,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1467,7 +1467,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1519,7 +1519,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1571,7 +1571,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1623,7 +1623,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1675,7 +1675,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1705,7 +1705,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryInternalBase(connection: connection,
+            return QueryInternalBase<object>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,
@@ -1732,7 +1732,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1784,7 +1784,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="what">The dynamic expression or the primary/identity key value to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1836,7 +1836,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1888,7 +1888,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1940,7 +1940,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -1992,7 +1992,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
@@ -2022,7 +2022,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAsyncInternalBase(connection: connection,
+            return QueryAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,
@@ -2048,7 +2048,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
@@ -2171,7 +2171,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="top">The number of rows to be returned.</param>
@@ -2265,262 +2265,6 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: null, /* cache: cache */
-                skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null)
-            {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-            }
-
-            // Result
-            return result;
-        }
-
-        #endregion
-
-        #region QueryInternalBase(TableName)
-
-        /// <summary>
-        /// Query the existing rows from the table based on a given expression.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="top">The number of rows to be returned.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic objects.</returns>
-        internal static IEnumerable<dynamic> QueryInternalBase(this IDbConnection connection,
-            string tableName,
-            QueryGroup where,
-            IEnumerable<Field> fields = null,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Get Cache
-            if (cacheKey != null)
-            {
-                var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false);
-                if (item != null)
-                {
-                    return item.Value;
-                }
-            }
-
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
-            }
-
-            // Variables
-            var commandType = CommandType.Text;
-            var request = new QueryRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                where,
-                orderBy,
-                top,
-                hints,
-                statementBuilder);
-            var commandText = CommandTextCache.GetQueryText(request);
-            var param = (object)null;
-            var sessionId = Guid.Empty;
-
-            // Converts to propery mapped object
-            if (where != null)
-            {
-                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = ExecuteQueryInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                cacheKey: null, /*cacheKey: cacheKey, */
-                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: null, /* cache: cache */
-                tableName: tableName,
-                skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null)
-            {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-            }
-
-            // Result
-            return result;
-        }
-
-        #endregion
-
-        #region QueryAsyncInternalBase(TableName)
-
-        /// <summary>
-        /// Query the existing rows from the table based on a given expression in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="top">The number of rows to be returned.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic objects.</returns>
-        internal static async Task<IEnumerable<dynamic>> QueryAsyncInternalBase(this IDbConnection connection,
-            string tableName,
-            QueryGroup where,
-            IEnumerable<Field> fields = null,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Get Cache
-            if (cacheKey != null)
-            {
-                var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false);
-                if (item != null)
-                {
-                    return item.Value;
-                }
-            }
-
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
-            }
-
-            // Variables
-            var commandType = CommandType.Text;
-            var request = new QueryRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                where,
-                orderBy,
-                top,
-                hints,
-                statementBuilder);
-            var commandText = CommandTextCache.GetQueryText(request);
-            var param = (object)null;
-            var sessionId = Guid.Empty;
-
-            // Converts to propery mapped object
-            if (where != null)
-            {
-                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = await ExecuteQueryAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                cacheKey: null, /*cacheKey: cacheKey, */
-                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: null, /* cache: cache */
-                tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
