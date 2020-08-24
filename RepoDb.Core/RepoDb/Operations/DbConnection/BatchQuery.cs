@@ -5,7 +5,6 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -53,7 +52,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: (QueryGroup)null,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -98,7 +97,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -143,7 +142,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -188,7 +187,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -233,7 +232,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -278,7 +277,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -294,6 +293,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -304,6 +304,7 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -317,7 +318,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: (QueryGroup)null,
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -334,6 +335,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -345,6 +347,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             object where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -358,7 +361,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -375,6 +378,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -386,6 +390,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -399,7 +404,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -416,6 +421,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -427,6 +433,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryField where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -440,7 +447,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -457,6 +464,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -468,6 +476,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -481,7 +490,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -498,6 +507,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -509,6 +519,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -522,7 +533,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -567,7 +578,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -614,7 +625,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: (QueryGroup)null,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -659,7 +670,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -704,7 +715,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -749,7 +760,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -794,7 +805,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -839,7 +850,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: fields ?? FieldCache.Get<TEntity>() ?? Field.Parse(typeof(TEntity)),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -855,6 +866,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -865,6 +877,7 @@ namespace RepoDb
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -878,7 +891,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: (QueryGroup)null,
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -895,6 +908,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -906,6 +920,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             object where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -919,7 +934,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -936,6 +951,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -947,6 +963,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -960,7 +977,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -977,6 +994,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -988,6 +1006,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryField where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1001,7 +1020,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1018,6 +1037,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1029,6 +1049,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<QueryField> where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1042,7 +1063,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: ToQueryGroup(where),
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1059,6 +1080,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="where">The query expression to be used.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1070,6 +1092,7 @@ namespace RepoDb
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
+            IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1082,7 +1105,7 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 where: where,
-                fields: FieldCache.Get<TEntity>(),
+                fields: fields,
                 orderBy: orderBy,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -1128,7 +1151,7 @@ namespace RepoDb
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: fields,
+                fields: GetQualifiedFields<TEntity>(fields),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1382,7 +1405,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternalBase(connection: connection,
+            return BatchQueryInternalBase<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1642,7 +1665,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternalBase(connection: connection,
+            return BatchQueryAsyncInternalBase<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1839,212 +1862,6 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        #endregion
-
-        #region BatchQueryInternalBase(TableName)
-
-        /// <summary>
-        /// Query the rows from the database by batch.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic objects.</returns>
-        internal static IEnumerable<dynamic> BatchQueryInternalBase(this IDbConnection connection,
-            string tableName,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
-            }
-
-            // Variables
-            var commandType = CommandType.Text;
-            var request = new BatchQueryRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                page,
-                rowsPerBatch,
-                orderBy,
-                where,
-                hints,
-                statementBuilder);
-            var commandText = CommandTextCache.GetBatchQueryText(request);
-            var param = (object)null;
-            var sessionId = Guid.Empty;
-
-            // Converts to propery mapped object
-            if (where != null)
-            {
-                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeBatchQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BatchQuery");
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = ExecuteQueryInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                tableName: tableName,
-                skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        #endregion
-
-        #region BatchQueryAsyncInternalBase(TableName)
-
-        /// <summary>
-        /// Query the rows from the database by batch in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic objects.</returns>
-        internal static async Task<IEnumerable<dynamic>> BatchQueryAsyncInternalBase(this IDbConnection connection,
-            string tableName,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            // Check the fields
-            if (fields?.Any() != true)
-            {
-                fields = (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
-            }
-
-            // Variables
-            var commandType = CommandType.Text;
-            var request = new BatchQueryRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                page,
-                rowsPerBatch,
-                orderBy,
-                where,
-                hints,
-                statementBuilder);
-            var commandText = CommandTextCache.GetBatchQueryText(request);
-            var param = (object)null;
-            var sessionId = Guid.Empty;
-
-            // Converts to propery mapped object
-            if (where != null)
-            {
-                param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
-            }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeBatchQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BatchQuery");
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = await ExecuteQueryAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
