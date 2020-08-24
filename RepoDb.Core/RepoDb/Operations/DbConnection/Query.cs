@@ -165,7 +165,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryInternalBase<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -219,7 +219,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryInternalBase<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -273,7 +273,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryInternalBase<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -327,7 +327,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryInternalBase<TEntity>(connection: connection,
+            return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,
@@ -2150,24 +2150,24 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
             else
             {
-                result = ExecuteQueryInternal<TEntity>(connection: connection,
+                result = ExecuteQueryInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
 
@@ -2176,12 +2176,6 @@ namespace RepoDb
             {
                 trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null)
-            {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result
@@ -2290,24 +2284,24 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
             else
             {
-                result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                result = await ExecuteQueryAsyncInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
 
@@ -2316,12 +2310,6 @@ namespace RepoDb
             {
                 trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null)
-            {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result

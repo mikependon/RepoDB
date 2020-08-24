@@ -32,8 +32,7 @@ namespace RepoDb
             : this(fieldName,
                   Operation.Equal,
                   value)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.
@@ -48,8 +47,7 @@ namespace RepoDb
                   operation,
                   value,
                   false)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.
@@ -62,8 +60,7 @@ namespace RepoDb
                   Operation.Equal,
                   value,
                   false)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.
@@ -78,8 +75,7 @@ namespace RepoDb
                   operation,
                   value,
                   false)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.
@@ -96,8 +92,7 @@ namespace RepoDb
                   operation,
                   value,
                   false)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.

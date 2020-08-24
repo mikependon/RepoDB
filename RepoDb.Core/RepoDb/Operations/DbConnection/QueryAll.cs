@@ -597,11 +597,11 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
             else
@@ -610,11 +610,11 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
 
@@ -623,12 +623,6 @@ namespace RepoDb
             {
                 trace.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null)
-            {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result
@@ -725,11 +719,11 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
             else
@@ -738,11 +732,11 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: null, /*cacheKey: cacheKey, */
-                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: null, /* cache: cache */
+                    cache: cache,
                     skipCommandArrayParametersCheck: true);
             }
 
@@ -751,12 +745,6 @@ namespace RepoDb
             {
                 trace.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null)
-            {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Result
