@@ -5,6 +5,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -572,13 +573,18 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Ensure the fields
+            fields = GetQualifiedFields<TEntity>(fields) ??
+                DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
+
+            // Return
             return BatchQueryInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: GetQualifiedFields<TEntity>(fields),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1131,7 +1137,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static Task<IEnumerable<TEntity>> BatchQueryAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> BatchQueryAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
             int page,
             int rowsPerBatch,
@@ -1145,13 +1151,18 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return BatchQueryAsyncInternalBase<TEntity>(connection: connection,
+            // Ensure the fields
+            fields = GetQualifiedFields<TEntity>(fields) ??
+                (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+
+            // Return
+            return await BatchQueryAsyncInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 where: where,
-                fields: GetQualifiedFields<TEntity>(fields),
+                fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1190,7 +1201,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQuery(connection,
+            return BatchQueryInternal<object>(connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1233,7 +1244,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQuery(connection: connection,
+            return BatchQueryInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1276,7 +1287,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQuery(connection: connection,
+            return BatchQueryInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1319,7 +1330,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQuery(connection: connection,
+            return BatchQueryInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1362,50 +1373,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternal(connection: connection,
-                tableName: tableName,
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                where: where,
-                fields: fields,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Query the rows from the database by batch.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic objects.</returns>
-        internal static IEnumerable<dynamic> BatchQueryInternal(this IDbConnection connection,
-            string tableName,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return BatchQueryInternalBase<object>(connection: connection,
+            return BatchQueryInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1450,7 +1418,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsync(connection,
+            return BatchQueryAsyncInternal<object>(connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1493,7 +1461,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsync(connection: connection,
+            return BatchQueryAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1536,7 +1504,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsync(connection: connection,
+            return BatchQueryAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1579,7 +1547,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsync(connection: connection,
+            return BatchQueryAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1622,50 +1590,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternal(connection: connection,
-                tableName: tableName,
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                where: where,
-                fields: fields,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Query the rows from the database by batch in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="page">The page of the batch to be used. This is a zero-based index (the first page is 0).</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be returned.</param>
-        /// <param name="orderBy">The order definition of the fields to be used.</param>
-        /// <param name="where">The query expression to be used.</param>
-        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="trace">The trace object to be used.</param>
-        /// <param name="statementBuilder">The statement builder object to be used.</param>
-        /// <returns>An enumerable list of dynamic objects.</returns>
-        internal static Task<IEnumerable<dynamic>> BatchQueryAsyncInternal(this IDbConnection connection,
-            string tableName,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            QueryGroup where = null,
-            IEnumerable<Field> fields = null,
-            string hints = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-        {
-            return BatchQueryAsyncInternalBase<object>(connection: connection,
+            return BatchQueryAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1756,15 +1681,29 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
+            var result = (object)null;
 
             // Actual Execution
-            var result = ExecuteQueryInternal<TEntity>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                skipCommandArrayParametersCheck: true);
+            if (typeof(TEntity).IsClassType())
+            {
+                result = ExecuteQueryInternal<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    skipCommandArrayParametersCheck: true);
+            }
+            else
+            {
+                result = ExecuteQueryInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    skipCommandArrayParametersCheck: true);
+            }
 
             // After Execution
             if (trace != null)
@@ -1774,7 +1713,7 @@ namespace RepoDb
             }
 
             // Result
-            return result;
+            return result as IEnumerable<TEntity>;
         }
 
         #endregion
@@ -1854,15 +1793,30 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
+            var result = (object)null;
 
             // Actual Execution
-            var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                skipCommandArrayParametersCheck: true);
+            if (typeof(TEntity).IsClassType())
+            {
+                result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    skipCommandArrayParametersCheck: true);
+            }
+            else
+            {
+                result = await ExecuteQueryAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    skipCommandArrayParametersCheck: true);
+            }
+
 
             // After Execution
             if (trace != null)
@@ -1872,7 +1826,7 @@ namespace RepoDb
             }
 
             // Result
-            return result;
+            return result as IEnumerable<TEntity>;
         }
 
         #endregion

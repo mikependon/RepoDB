@@ -693,10 +693,15 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            // Ensure the fields
+            fields = GetQualifiedFields<TEntity>(fields) ??
+                DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
+
+            // Return
             return QueryInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 where: where,
-                fields: GetQualifiedFields<TEntity>(fields),
+                fields: fields,
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -1372,7 +1377,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        internal static Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1388,9 +1393,14 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return QueryAsyncInternalBase<TEntity>(connection: connection,
+            // Ensure the fields
+            fields = GetQualifiedFields<TEntity>(fields) ??
+                (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+
+            // Return
+            return await QueryAsyncInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
-                fields: GetQualifiedFields<TEntity>(fields),
+                fields: fields,
                 where: where,
                 orderBy: orderBy,
                 top: top,
@@ -1705,7 +1715,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryInternalBase<object>(connection: connection,
+            return QueryInternal<object>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,
@@ -2022,7 +2032,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAsyncInternalBase<object>(connection: connection,
+            return QueryAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,
@@ -2131,18 +2141,35 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
+            var result = (object)null;
 
             // Actual Execution
-            var result = ExecuteQueryInternal<TEntity>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                cacheKey: null, /*cacheKey: cacheKey, */
-                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: null, /* cache: cache */
-                skipCommandArrayParametersCheck: true);
+            if (typeof(TEntity).IsClassType())
+            {
+                result = ExecuteQueryInternal<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: null, /*cacheKey: cacheKey, */
+                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: null, /* cache: cache */
+                    skipCommandArrayParametersCheck: true);
+            }
+            else
+            {
+                result = ExecuteQueryInternal<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: null, /*cacheKey: cacheKey, */
+                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: null, /* cache: cache */
+                    skipCommandArrayParametersCheck: true);
+            }
 
             // After Execution
             if (trace != null)
@@ -2158,7 +2185,7 @@ namespace RepoDb
             }
 
             // Result
-            return result;
+            return result as IEnumerable<TEntity>;
         }
 
         #endregion
@@ -2254,18 +2281,35 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
+            var result = (object)null;
 
             // Actual Execution
-            var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                cacheKey: null, /*cacheKey: cacheKey, */
-                cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: null, /* cache: cache */
-                skipCommandArrayParametersCheck: true);
+            if (typeof(TEntity).IsClassType())
+            {
+                result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: null, /*cacheKey: cacheKey, */
+                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: null, /* cache: cache */
+                    skipCommandArrayParametersCheck: true);
+            }
+            else
+            {
+                result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: null, /*cacheKey: cacheKey, */
+                    cacheItemExpiration: null, /* cacheItemExpiration: cacheItemExpiration,*/
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: null, /* cache: cache */
+                    skipCommandArrayParametersCheck: true);
+            }
 
             // After Execution
             if (trace != null)
@@ -2281,7 +2325,7 @@ namespace RepoDb
             }
 
             // Result
-            return result;
+            return result as IEnumerable<TEntity>;
         }
 
         #endregion
