@@ -19,6 +19,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -27,6 +28,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll<TEntity>(string tableName,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -40,6 +42,7 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.QueryAll<TEntity>(tableName: tableName,
+                    fields: fields,
                     orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
@@ -66,6 +69,7 @@ namespace RepoDb
         /// Query all the data from the table.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -73,7 +77,8 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<OrderField> orderBy = null,
+        public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<Field> fields = null, 
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
@@ -85,7 +90,8 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.QueryAll<TEntity>(orderBy: orderBy,
+                return connection.QueryAll<TEntity>(fields: fields,
+                    orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
                     cacheItemExpiration: CacheItemExpiration,
@@ -116,6 +122,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -124,6 +131,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(string tableName,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -137,6 +145,7 @@ namespace RepoDb
             {
                 // Call the method
                 return await connection.QueryAllAsync<TEntity>(tableName: tableName,
+                    fields: fields,
                     orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
@@ -163,6 +172,7 @@ namespace RepoDb
         /// Query all the data from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -170,7 +180,8 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
+        public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<Field> fields = null,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
@@ -182,7 +193,8 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return await connection.QueryAllAsync<TEntity>(orderBy: orderBy,
+                return await connection.QueryAllAsync<TEntity>(fields: fields,
+                    orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
                     cacheItemExpiration: CacheItemExpiration,
@@ -212,7 +224,7 @@ namespace RepoDb
         /// Query all the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -265,7 +277,7 @@ namespace RepoDb
         /// Query all the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="fields">The list of fields to be queried.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">

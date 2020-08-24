@@ -16,6 +16,7 @@ namespace RepoDb
         /// Query all the data from the table.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -24,12 +25,14 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> QueryAll(string tableName,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.QueryAll<TEntity>(tableName: tableName,
+                fields: fields,
                 orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
@@ -39,6 +42,7 @@ namespace RepoDb
         /// <summary>
         /// Query all the data from the table.
         /// </summary>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -46,12 +50,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> QueryAll(IEnumerable<OrderField> orderBy = null,
+        public IEnumerable<TEntity> QueryAll(IEnumerable<Field> fields = null,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAll<TEntity>(orderBy: orderBy,
+            return DbRepository.QueryAll<TEntity>(fields: fields,
+                orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
                 transaction: transaction);
@@ -65,6 +71,7 @@ namespace RepoDb
         /// Query all the data from the table in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -73,12 +80,14 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAllAsync(string tableName,
+            IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.QueryAllAsync<TEntity>(tableName: tableName,
+                fields: fields,
                 orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
@@ -88,6 +97,7 @@ namespace RepoDb
         /// <summary>
         /// Query all the data from the table in an asynchronous way.
         /// </summary>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
@@ -95,12 +105,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public Task<IEnumerable<TEntity>> QueryAllAsync(IEnumerable<OrderField> orderBy = null,
+        public Task<IEnumerable<TEntity>> QueryAllAsync(IEnumerable<Field> fields = null,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAllAsync<TEntity>(orderBy: orderBy,
+            return DbRepository.QueryAllAsync<TEntity>(fields: fields,
+                orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
                 transaction: transaction);
