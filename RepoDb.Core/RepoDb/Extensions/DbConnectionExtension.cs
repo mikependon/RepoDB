@@ -1960,6 +1960,16 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
+        /// <returns></returns>
+        internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
+            where TEntity : class =>
+            fields ?? FieldCache.Get<TEntity>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="fields"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
