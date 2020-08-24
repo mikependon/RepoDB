@@ -29,7 +29,58 @@ namespace RepoDb.IntegrationTests.Operations
         #region Query<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionQueryWithoutCondition()
+        public void TestSqlConnectionQueryWithEntityTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithEntityTableNameAndWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQuery()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -48,6 +99,31 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>((object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
                 });
             }
         }
@@ -469,7 +545,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Query<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionQueryWithExtraFieldsWithoutCondition()
+        public void TestSqlConnectionQueryWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1008,7 +1084,58 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithoutCondition()
+        public void TestSqlConnectionQueryAsyncWithEntityTableName()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithEntityTableNameAndWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1027,6 +1154,31 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var target = tables.First(t => t.Id == item.Id);
                     Helper.AssertPropertiesEquality(target, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>((object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
                 });
             }
         }
@@ -1448,7 +1600,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithExtraFieldsWithoutCondition()
+        public void TestSqlConnectionQueryAsyncWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1987,7 +2139,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Query(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionQueryViaTableNameWithoutCondition()
+        public void TestSqlConnectionQueryViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2019,7 +2171,33 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryViaTableNameWithoutConditionAndWithFewFields()
+        public void TestSqlConnectionQueryViaTableNameWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaTableNameAndWithFewFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2450,7 +2628,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameWithoutCondition()
+        public void TestSqlConnectionQueryAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2482,7 +2660,33 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameWithoutConditionAndWithFewFields()
+        public void TestSqlConnectionQueryAsyncViaTableNameWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                result.AsList().ForEach(item =>
+                {
+                    var target = tables.First(t => t.Id == item.Id);
+                    Assert.AreEqual(target.ColumnNVarChar, item.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaTableNameAndWithFewFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

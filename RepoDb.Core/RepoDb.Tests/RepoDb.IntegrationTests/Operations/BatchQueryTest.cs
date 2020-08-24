@@ -249,6 +249,34 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionBatchQueryViaEntityTableNameWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)),
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (2)
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionBatchQueryViaEntityTableNameViaDynamic()
         {
             // Setup
@@ -591,6 +619,33 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
                 Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)),
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+
+                // Assert (2)
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
             }
         }
 
@@ -1195,6 +1250,34 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)),
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (2)
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaDynamic()
         {
             // Setup
@@ -1537,6 +1620,33 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
                 Helper.AssertPropertiesEquality(tables.ElementAt(12), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionBatchQueryAsyncWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(page: 0,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    where: new { ColumnInt = 3 },
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)),
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+
+                // Assert (2)
+                Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
             }
         }
 
