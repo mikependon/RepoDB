@@ -410,6 +410,54 @@ namespace RepoDb.IntegrationTests.Operations
         #region Insert(TableName)
 
         [TestMethod]
+        public void TestSqlConnectionInsertViaDynamicTableNameAsDynamic()
+        {
+            // Setup
+            var table = Helper.CreateDynamicIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)table);
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertViaDynamicTableNameAsDynamicWithFields()
+        {
+            // Setup
+            var table = Helper.CreateDynamicIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(table.RowGuid, result.RowGuid);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertViaDynamicTableName()
         {
             // Setup
@@ -601,6 +649,54 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region InsertAsync(TableName)
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsDynamic()
+        {
+            // Setup
+            var table = Helper.CreateDynamicIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)table).Result;
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsDynamicWithFields()
+        {
+            // Setup
+            var table = Helper.CreateDynamicIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(table.RowGuid, result.RowGuid);
+                Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionInsertAsyncViaDynamicTableName()
