@@ -51,10 +51,42 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaDataEntityTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = connection.Update<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -81,10 +113,41 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaDataEntityWithFields()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = connection.Update<IdentityTable>(table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -112,10 +175,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -143,10 +206,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -174,10 +237,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -205,10 +268,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -239,10 +302,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -276,10 +339,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -316,10 +379,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -347,10 +410,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -383,10 +446,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -415,10 +478,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -447,10 +510,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -481,10 +544,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -520,10 +583,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -560,10 +623,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -595,10 +658,42 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaDataEntityTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = connection.UpdateAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -625,10 +720,41 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaDataEntityWithFields()
+        {
+            // Setup
+            var table = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                table.ColumnBit = false;
+                table.ColumnInt = table.ColumnInt * 100;
+                table.ColumnDecimal = table.ColumnDecimal * 100;
+
+                // Act
+                var affectedRows = connection.UpdateAsync<IdentityTable>(table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnBit), nameof(IdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Act
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -656,10 +782,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -687,10 +813,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -718,10 +844,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
         [TestMethod]
@@ -748,10 +874,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -782,10 +908,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -821,10 +947,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -861,10 +987,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -892,10 +1018,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -928,10 +1054,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -960,10 +1086,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -992,10 +1118,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1027,10 +1153,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1067,10 +1193,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1108,10 +1234,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1149,6 +1275,36 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionUpdateViaDynamicTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = new
+                {
+                    table.Id,
+                    ColumnBit = false,
+                    ColumnInt = table.ColumnInt * 100,
+                    ColumnDecimal = table.ColumnDecimal * 100
+                };
+
+                // Act
+                var affectedRows = connection.Update<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateViaTableName()
         {
             // Setup
@@ -1171,6 +1327,36 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
                     data);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = new
+                {
+                    table.Id,
+                    ColumnBit = false,
+                    ColumnInt = table.ColumnInt * 100,
+                    ColumnDecimal = table.ColumnDecimal * 100
+                };
+
+                // Act
+                var affectedRows = connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
@@ -1258,10 +1444,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1293,10 +1479,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1333,10 +1519,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1374,10 +1560,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1527,6 +1713,36 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaDynamicTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = new
+                {
+                    table.Id,
+                    ColumnBit = false,
+                    ColumnInt = table.ColumnInt * 100,
+                    ColumnDecimal = table.ColumnDecimal * 100
+                };
+
+                // Act
+                var affectedRows = connection.UpdateAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionUpdateAsyncViaTableName()
         {
             // Setup
@@ -1549,6 +1765,36 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     data).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = new
+                {
+                    table.Id,
+                    ColumnBit = false,
+                    ColumnInt = table.ColumnInt * 100,
+                    ColumnDecimal = table.ColumnDecimal * 100
+                };
+
+                // Act
+                var affectedRows = connection.UpdateAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
@@ -1636,10 +1882,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
-                var result = connection.QueryAll<IdentityTable>()?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(table.Id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1671,10 +1917,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 field.Reset();
-                var result = connection.Query<IdentityTable>(field)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(field)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1711,10 +1957,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 fields.ResetAll();
-                var result = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(fields)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
@@ -1752,10 +1998,10 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 queryGroup.Reset();
-                var result = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
+                var queryResult = connection.Query<IdentityTable>(queryGroup)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality(table, result);
+                Helper.AssertPropertiesEquality(table, queryResult);
             }
         }
 
