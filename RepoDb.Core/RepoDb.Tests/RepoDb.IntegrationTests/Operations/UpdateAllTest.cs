@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAll<NonIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -163,7 +163,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var affectedRows = connection.UpdateAll<NonIdentityTable>(tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -478,7 +478,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var affectedRows = connection.UpdateAllAsync(tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -726,7 +726,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAll<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -815,7 +815,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAll(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1088,7 +1088,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1177,7 +1177,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
