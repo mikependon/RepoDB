@@ -253,7 +253,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
@@ -272,7 +272,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
@@ -291,7 +291,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
@@ -310,7 +310,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
@@ -1533,7 +1533,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThereAreNoFields()
         {
             // Setup
