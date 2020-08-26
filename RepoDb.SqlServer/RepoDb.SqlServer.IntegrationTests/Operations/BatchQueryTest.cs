@@ -117,11 +117,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQuery<CompleteTable>(0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    SqlServerTableHints.NoLock);
+                var result = connection.BatchQuery<CompleteTable>(page: 0,
+                    rowsPerBatch: 3,
+                    orderBy: OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    where: (object)null,
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -222,11 +222,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(0,
-                    3,
-                    OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null,
-                    SqlServerTableHints.NoLock).Result;
+                var result = connection.BatchQueryAsync<CompleteTable>(page: 0,
+                    rowsPerBatch: 3,
+                    orderBy: OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
+                    where: (object)null,
+                    hints: SqlServerTableHints.NoLock).Result;
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));

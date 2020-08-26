@@ -90,7 +90,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = connection.Merge<CompleteTable>(table,
-                    qualifiers);
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
@@ -171,7 +171,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table,
-                    qualifiers).Result;
+                    qualifiers: qualifiers).Result;
 
                 // Assert
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
@@ -259,7 +259,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers);
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
@@ -346,7 +346,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)obj,
-                    qualifiers);
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
@@ -428,7 +428,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers).Result;
+                    qualifiers: qualifiers).Result;
 
                 // Assert
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
@@ -515,7 +515,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)obj,
-                    qualifiers).Result;
+                    qualifiers: qualifiers).Result;
 
                 // Assert
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));

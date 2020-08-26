@@ -253,7 +253,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
@@ -272,7 +272,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
@@ -291,7 +291,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
@@ -1552,7 +1552,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingQualifierFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
@@ -2072,7 +2072,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
@@ -2090,7 +2090,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: null);
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        [TestMethod, ExpectedException(typeof(MissingQualifierFieldsException))]
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
