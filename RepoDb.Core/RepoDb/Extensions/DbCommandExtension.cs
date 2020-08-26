@@ -241,16 +241,19 @@ namespace RepoDb.Extensions
                 var value = kvp.Value;
                 var valueType = (Type)null;
                 var declaringType = entityType;
-                var property = (PropertyInfo)null;
+                var classProperty = (ClassProperty)null;
 
                 // Cast the proper object and identify the properties
                 if (kvp.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)kvp.Value;
+                    var classProperties = PropertyCache.Get(commandParameter.MappedToType);
 
                     // Get the property and value
-                    property = commandParameter.MappedToType.GetProperty(kvp.Key);
-                    declaringType = commandParameter.MappedToType ?? property.DeclaringType;
+                    classProperty = classProperties?
+                        .FirstOrDefault(property =>
+                            string.Equals(property.GetMappedName(), kvp.Key, StringComparison.OrdinalIgnoreCase));
+                    declaringType = commandParameter.MappedToType ?? classProperty.DeclaringType;
                     value = commandParameter.Value;
 
                     // Set the value type
@@ -263,17 +266,16 @@ namespace RepoDb.Extensions
                 }
 
                 // Get the property-level mapping
-                if (property != null)
+                if (classProperty != null)
                 {
                     #region PropertyHandler
 
                     // Check the property handler
-                    var propertyHandler = PropertyHandlerCache.Get<object>(declaringType, property);
+                    var propertyHandler = classProperty.GetPropertyHandler();
                     if (propertyHandler != null)
                     {
                         var setMethod = propertyHandler.GetType().GetMethod("Set");
                         var returnType = setMethod.ReturnType;
-                        var classProperty = PropertyCache.Get(declaringType, property);
                         dbType = clientTypeToDbTypeResolver.Resolve(returnType);
                         value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
                     }
@@ -284,7 +286,7 @@ namespace RepoDb.Extensions
                     {
                         #region DbType
 
-                        dbType = TypeMapCache.Get(property.DeclaringType, property);
+                        dbType = classProperty.GetDbType();
 
                         // Check for the specialized types
                         if (dbType == null)

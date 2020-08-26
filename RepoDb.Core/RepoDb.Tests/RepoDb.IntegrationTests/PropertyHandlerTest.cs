@@ -317,6 +317,30 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region Expression
+
+        [TestMethod]
+        public void TestPropertyHandlerWithWhereConditionViaExpression()
+        {
+            // Setup
+            var model = CreateEntityModelForIntToStringTypes(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<EntityModelForIntToStringType, long>(model);
+
+                // Act
+                var result = connection.Query<EntityModelForIntToStringType>(e => e.IntAsString == model.IntAsString).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(result);
+                Helper.AssertPropertiesEquality(model, result);
+            }
+        }
+
+        #endregion
+
         #region PropertyToClass
 
         [TestMethod]
