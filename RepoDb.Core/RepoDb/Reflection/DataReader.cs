@@ -18,7 +18,7 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
+        /// <param name="connection">The used <see cref="IDbConnection"/> objects.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An array of data entity objects.</returns>
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
@@ -28,7 +28,7 @@ namespace RepoDb.Reflection
             ToEnumerableInternal<TEntity>(reader, connection, null, transaction, true);
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects.
         /// </summary>
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
@@ -37,7 +37,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>An array of data entity objects.</returns>
-        public static IEnumerable<TEntity> ToEnumerableInternal<TEntity>(DbDataReader reader,
+        internal static IEnumerable<TEntity> ToEnumerableInternal<TEntity>(DbDataReader reader,
             IDbConnection connection = null,
             string connectionString = null,
             IDbTransaction transaction = null,
@@ -63,7 +63,7 @@ namespace RepoDb.Reflection
         #region ToEnumerableAsync<TEntity>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
@@ -77,7 +77,7 @@ namespace RepoDb.Reflection
             ToEnumerableInternalAsync<TEntity>(reader, connection, null, transaction, true);
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object in an asynchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
@@ -114,7 +114,7 @@ namespace RepoDb.Reflection
         #region ToEnumerable<dynamic>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
@@ -128,7 +128,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -158,7 +158,7 @@ namespace RepoDb.Reflection
         #region ToEnumerableAsync<dynamic>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object in an asynchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects in an asynchronous way.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
@@ -172,7 +172,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> object in an asynchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects in an asynchronous way.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
