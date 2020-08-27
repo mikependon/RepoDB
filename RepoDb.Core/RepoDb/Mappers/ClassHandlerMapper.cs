@@ -155,6 +155,18 @@ namespace RepoDb
 
         #endregion
 
+        /*
+         * Clear
+         */
+
+        /// <summary>
+        /// Clears all the existing cached <see cref="IClassHandler{TEntity}"/> objects.
+        /// </summary>
+        public static void Clear()
+        {
+            maps.Clear();
+        }
+
         #region Helpers
 
         /// <summary>
