@@ -1,6 +1,5 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb.Attributes
@@ -31,10 +30,13 @@ namespace RepoDb.Attributes
 
         #region Methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="handlerType"></param>
         private void Validate(Type handlerType)
         {
-            var isInterfacedTo = handlerType.IsInterfacedTo(StaticType.IPropertyHandler);
-            if (isInterfacedTo == false)
+            if (handlerType?.IsInterfacedTo(StaticType.IPropertyHandler) != true)
             {
                 throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{StaticType.IPropertyHandler}' interface.");
             }
