@@ -27,7 +27,7 @@ namespace RepoDb
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target class handler.
-        /// Make sure that the default constructor is available for the class handler, otherwise an exception will be thrown.
+        /// Make sure a default constructor is available for the type of class handler, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
@@ -174,7 +174,7 @@ namespace RepoDb
         {
             if (type == null)
             {
-                throw new NullReferenceException("Property handler type.");
+                throw new NullReferenceException("Class handler type.");
             }
         }
 
@@ -184,7 +184,7 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            var isInterfacedTo = type.IsInterfacedTo(StaticType.IPropertyHandler);
+            var isInterfacedTo = type.IsInterfacedTo(StaticType.IClassHandler);
             if (isInterfacedTo == false)
             {
                 throw new InvalidTypeException($"Type '{type.FullName}' must implement the '{StaticType.IPropertyHandler.FullName}' interface.");

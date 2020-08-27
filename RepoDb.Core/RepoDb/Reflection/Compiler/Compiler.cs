@@ -220,6 +220,14 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetClassHandlerGetMethod(object handlerInstance) =>
+            handlerInstance?.GetType().GetMethod("Get");
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
         internal static MethodInfo GetClassHandlerSetMethod(Type type) =>
@@ -230,16 +238,17 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        internal static MethodInfo GetClassHandlerGetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Get");
+        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance) =>
+            GetClassHandlerSetMethod(handlerInstance, null);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="handlerInstance"></param>
+        /// <param name="types"></param>
         /// <returns></returns>
-        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Set");
+        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance, params Type[] types) =>
+            handlerInstance?.GetType().GetMethod("Set", types);
 
         /// <summary>
         /// 
@@ -2052,7 +2061,7 @@ namespace RepoDb.Reflection
         /// <param name="typeOfListEntity"></param>
         /// <param name="entityIndex"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetListEntityIndexerExpression(ParameterExpression entitiesParameterExpression,
+        internal static MethodCallExpression GetListEntityIndexerExpression(Expression entitiesParameterExpression,
             Type typeOfListEntity,
             int entityIndex)
         {
@@ -2067,24 +2076,27 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entitiesParameterExpression"></param>
-        /// <param name="instanceVariable"></param>
         /// <param name="fieldDirections"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static Expression GetIndexDbParameterSetterExpression<TEntity>(ParameterExpression commandParameterExpression,
-            ParameterExpression entitiesParameterExpression,
-            ParameterExpression instanceVariable,
+            Expression entitiesParameterExpression,
             IEnumerable<FieldDirection> fieldDirections,
             int entityIndex,
             IDbSetting dbSetting)
             where TEntity : class
         {
             // Get the current instance
+            var typeOfEntity = typeof(TEntity);
+            var instanceVariable = Expression.Variable(typeOfEntity, "instance");
             var typeOfListEntity = typeof(IList<TEntity>);
-            var entityParameter = GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
+            var entityParameter = (Expression)GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
             var entityExpressions = new List<Expression>();
             var entityVariables = new List<ParameterExpression>();
+
+            // Class handler
+            entityParameter = ConvertValueExpressionToClassHandlerSetExpression<TEntity>(entityParameter);
 
             // Entity instance
             entityVariables.Add(instanceVariable);
@@ -2126,6 +2138,38 @@ namespace RepoDb.Reflection
                     readerParameterExpression);
             }
             return entityExpression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityOrEntitiesExpression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertValueExpressionToClassHandlerSetExpression<TEntity>(Expression entityOrEntitiesExpression)
+            where TEntity : class
+        {
+            var typeOfEntity = typeof(TEntity);
+            var handlerInstance = GetClassHandler(typeOfEntity);
+            if (handlerInstance != null)
+            {
+                var typeOfListEntity = typeof(IList<TEntity>);
+                if (typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type))
+                {
+                    var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfListEntity);
+                    entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
+                        setMethod,
+                        entityOrEntitiesExpression);
+                }
+                else
+                {
+                    var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfEntity);
+                    entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
+                        setMethod,
+                        entityOrEntitiesExpression);
+                }
+            }
+            return entityOrEntitiesExpression;
         }
 
         #endregion

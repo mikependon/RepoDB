@@ -10,7 +10,7 @@ namespace RepoDb.Interfaces
         where TEntity : class
     {
         /// <summary>
-        /// The method that is being invoked when the outbound transformation is triggered (ie: Query).
+        /// The method that is being invoked when the outbound execution is triggered (ie: BatchQuery, ExecuteQuery and Query).
         /// </summary>
         /// <param name="entity">The current instance of data entity object.</param>
         /// <param name="reader">The instance of <see cref="DbDataReader"/> in used to populate the data entity object.</param>
@@ -19,7 +19,7 @@ namespace RepoDb.Interfaces
             DbDataReader reader);
 
         /// <summary>
-        /// The method that is being invoked when the inbound transformation is triggered (ie: Insert, Update, Merge).
+        /// The method that is being invoked when the inbound execution is triggered (ie: Insert, Update and Merge).
         /// </summary>
         /// <param name="entity">The current instance of data entity object.</param>
         /// <returns>The current or the newly created instance data entity object.</returns>

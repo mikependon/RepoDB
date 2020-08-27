@@ -34,7 +34,7 @@ namespace RepoDb.Resolvers
             // Type Level
             if (classHandler == null)
             {
-                classHandler = PropertyHandlerMapper.Get<object>(type);
+                classHandler = ClassHandlerMapper.Get<object>(type);
             }
 
             // Return the value
