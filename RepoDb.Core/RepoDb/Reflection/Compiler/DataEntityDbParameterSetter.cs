@@ -23,14 +23,17 @@ namespace RepoDb.Reflection
         {
             var typeOfEntity = typeof(TEntity);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
+            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
             var dbParameterCollection = Expression.Property(commandParameterExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
-            var fieldDirections = new List<FieldDirection>();
-            var entityParameter = Expression.Parameter(typeOfEntity, "entity");
             var entityVariable = Expression.Variable(typeOfEntity, "entity");
             var entityExpressions = new List<Expression>();
             var entityVariables = new List<ParameterExpression>();
+            var fieldDirections = new List<FieldDirection>();
             var bodyExpressions = new List<Expression>();
+
+            // Class handler
+            var handledEntityParameterExpression = ConvertValueExpressionToClassHandlerSetExpression<TEntity>(entityParameterExpression);
 
             // Field directions
             fieldDirections.AddRange(GetInputFieldDirections(inputFields));
@@ -41,7 +44,7 @@ namespace RepoDb.Reflection
 
             // Entity instance
             entityVariables.Add(entityVariable);
-            entityExpressions.Add(Expression.Assign(entityVariable, entityParameter));
+            entityExpressions.Add(Expression.Assign(entityVariable, handledEntityParameterExpression));
 
             // Iterate the input fields
             foreach (var fieldDirection in fieldDirections)
@@ -62,7 +65,7 @@ namespace RepoDb.Reflection
 
             // Set the function value
             return Expression
-                .Lambda<Action<DbCommand, TEntity>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameter)
+                .Lambda<Action<DbCommand, TEntity>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameterExpression)
                 .Compile();
         }
     }

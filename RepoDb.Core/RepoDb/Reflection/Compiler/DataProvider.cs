@@ -28,7 +28,7 @@ namespace RepoDb.Reflection
             var parameterType = GetSystemSqlServerParameterTypeFromAttribute(attribute);
             var setMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(attribute);
 
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            return Expression.Call(ConvertValueExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
         }
@@ -120,7 +120,7 @@ namespace RepoDb.Reflection
             var parameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(attribute);
             var setMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(attribute);
 
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            return Expression.Call(ConvertValueExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
         }
@@ -212,7 +212,7 @@ namespace RepoDb.Reflection
             var parameterType = GetMySqlParameterTypeFromAttribute(attribute);
             var setMethod = GetMySqlDbTypeFromAttributeSetMethod(attribute);
 
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            return Expression.Call(ConvertValueExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
         }
@@ -304,7 +304,7 @@ namespace RepoDb.Reflection
             var parameterType = GetNpgsqlParameterTypeFromAttribute(attribute);
             var setMethod = GetNpgsqlDbTypeFromAttributeSetMethod(attribute);
 
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            return Expression.Call(ConvertValueExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
         }

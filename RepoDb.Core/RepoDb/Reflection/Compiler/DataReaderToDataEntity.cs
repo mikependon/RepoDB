@@ -104,20 +104,23 @@ namespace RepoDb.Reflection
                 .Where(item => item.GetParameters().Length > 0)?
                 .OrderByDescending(item => item.GetParameters().Length)?
                 .FirstOrDefault();
-            var entityExpression = (NewExpression)null;
-            var body = (Expression)null;
+            var entityExpression = (Expression)null;
 
             // Check the arguments
             entityExpression = arguments?.Any() == true ?
                 Expression.New(constructorInfo, arguments) : Expression.New(typeOfEntity);
 
             // Bind the members
-            body = memberAssignments?.Any() == true ?
-                (Expression)Expression.MemberInit(entityExpression, memberAssignments) : entityExpression;
+            entityExpression = memberAssignments?.Any() == true ?
+                (Expression)Expression.MemberInit((NewExpression)entityExpression, memberAssignments) : entityExpression;
+
+            // Class handler
+            entityExpression = ConvertValueExpressionToClassHandlerGetExpression<TEntity>(entityExpression,
+                readerParameterExpression);
 
             // Set the function value
             return Expression
-                .Lambda<Func<DbDataReader, TEntity>>(body, readerParameterExpression)
+                .Lambda<Func<DbDataReader, TEntity>>(entityExpression, readerParameterExpression)
                 .Compile();
         }
     }

@@ -24,10 +24,8 @@ namespace RepoDb.Reflection
             where TEntity : class
         {
             var typeOfListEntity = typeof(IList<TEntity>);
-            var typeOfEntity = typeof(TEntity);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
-            var instanceVariable = Expression.Variable(typeOfEntity, "instance");
             var fieldDirections = new List<FieldDirection>();
             var bodyExpressions = new List<Expression>();
 
@@ -44,7 +42,6 @@ namespace RepoDb.Reflection
                 // Add to the instance block
                 var indexDbParameterSetterExpression = GetIndexDbParameterSetterExpression<TEntity>(commandParameterExpression,
                     entitiesParameterExpression,
-                    instanceVariable,
                     fieldDirections,
                     entityIndex,
                     dbSetting);

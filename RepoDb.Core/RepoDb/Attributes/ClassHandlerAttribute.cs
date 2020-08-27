@@ -7,13 +7,13 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute that is used to define a handler for the property transformation.
     /// </summary>
-    public class PropertyHandlerAttribute : Attribute
+    public class ClassHandlerAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <see cref="PropertyHandlerAttribute"/> class.
+        /// Creates a new instance of <see cref="ClassHandlerAttribute"/> class.
         /// </summary>
         /// <param name="handlerType">The type of the handler.</param>
-        public PropertyHandlerAttribute(Type handlerType)
+        public ClassHandlerAttribute(Type handlerType)
         {
             Validate(handlerType);
             HandlerType = handlerType;
@@ -36,9 +36,9 @@ namespace RepoDb.Attributes
         /// <param name="handlerType"></param>
         private void Validate(Type handlerType)
         {
-            if (handlerType?.IsInterfacedTo(StaticType.IPropertyHandler) != true)
+            if (handlerType?.IsInterfacedTo(StaticType.IClassHandler) != true)
             {
-                throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{StaticType.IPropertyHandler}' interface.");
+                throw new InvalidTypeException($"Type '{handlerType.FullName}' must implement the '{StaticType.IClassHandler}' interface.");
             }
         }
 

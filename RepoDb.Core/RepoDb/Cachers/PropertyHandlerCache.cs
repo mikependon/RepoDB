@@ -9,7 +9,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to cache the mappings between a class property and a property handler object.
+    /// A class that is being used to cache the mappings between a class property and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
     /// </summary>
     public static class PropertyHandlerCache
     {
@@ -26,20 +26,20 @@ namespace RepoDb
         #region Type Level
 
         /// <summary>
-        /// Type Level: Gets the cached property handler object that is being mapped to a specific .NET CLR type.
+        /// Type Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped to a specific .NET CLR type.
         /// </summary>
         /// <typeparam name="TType">The .NET CLR type.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
-        /// <returns>The mapped property handler object of the .NET CLR type.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the .NET CLR type.</returns>
         public static TPropertyHandler Get<TType, TPropertyHandler>() =>
             Get<TPropertyHandler>(typeof(TType));
 
         /// <summary>
-        /// Type Level: Gets the cached property handler object that is being mapped to a specific .NET CLR type.
+        /// Type Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped to a specific .NET CLR type.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="type">The target .NET CLR type.</param>
-        /// <returns>The mapped property handler object of the .NET CLR type.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the .NET CLR type.</returns>
         public static TPropertyHandler Get<TPropertyHandler>(Type type)
         {
             // Validate
@@ -57,6 +57,11 @@ namespace RepoDb
                 result = Converter.ToType<TPropertyHandler>(value);
                 cache.TryAdd(key, result);
             }
+            else
+            {
+                // Set the result
+                result = Converter.ToType<TPropertyHandler>(value);
+            }
 
             // Return the value
             return result;
@@ -67,57 +72,57 @@ namespace RepoDb
         #region Property Level
 
         /// <summary>
-        /// Property Level: Gets the cached property handler object that is being mapped on a specific class property (via expression).
+        /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific class property (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>The mapped property handler object of the property.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
             Get<TEntity, TPropertyHandler>(ExpressionExtension.GetProperty<TEntity>(expression));
 
         /// <summary>
-        /// Property Level: Gets the cached property handler object that is being mapped on a specific class property (via property name).
+        /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific class property (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
-        /// <returns>The mapped property handler object of the property.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
             where TEntity : class =>
             Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
-        /// Property Level: Gets the cached property handler object that is being mapped on a specific class property (via <see cref="Field"/> object).
+        /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
-        /// <returns>The mapped property handler object of the property.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
             where TEntity : class =>
             Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
 
 
         /// <summary>
-        /// Property Level: Gets the cached property handler object that is being mapped on a specific <see cref="PropertyInfo"/> object.
+        /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        /// <returns>The mapped property handler object of the property.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         internal static TPropertyHandler Get<TEntity, TPropertyHandler>(PropertyInfo propertyInfo)
             where TEntity : class =>
             Get<TPropertyHandler>(typeof(TEntity), propertyInfo);
 
         /// <summary>
-        /// Property Level: Gets the cached property handler object that is being mapped on a specific <see cref="PropertyInfo"/> object.
+        /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        /// <returns>The mapped property handler object of the property.</returns>
+        /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         internal static TPropertyHandler Get<TPropertyHandler>(Type entityType,
             PropertyInfo propertyInfo)
         {
@@ -153,7 +158,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Flushes all the existing cached property mapped names.
+        /// Flushes all the existing cached <see cref="IPropertyHandler{TInput, TResult}"/> objects.
         /// </summary>
         public static void Flush()
         {

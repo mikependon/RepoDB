@@ -127,6 +127,11 @@ namespace RepoDb
         public static Type Guid => typeof(Guid);
 
         /// <summary>
+        /// Gets a type of the <see cref="IClassHandler"/> .NET CLR type.
+        /// </summary>
+        public static Type IClassHandler => typeof(IClassHandler<>);
+
+        /// <summary>
         /// Gets a type of the <see cref="Attributes.IdentityAttribute"/> .NET CLR type.
         /// </summary>
         public static Type IdentityAttribute => typeof(IdentityAttribute);
