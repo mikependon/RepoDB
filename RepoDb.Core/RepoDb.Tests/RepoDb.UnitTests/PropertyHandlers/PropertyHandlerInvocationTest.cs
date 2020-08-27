@@ -3,6 +3,8 @@ using Moq;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
+using System.Data;
+using System.Data.Common;
 
 namespace RepoDb.UnitTests.PropertyHandlers
 {
@@ -25,7 +27,26 @@ namespace RepoDb.UnitTests.PropertyHandlers
 
         #region CustomObjects
 
-        private class PropertyHandlerConnection : CustomDbConnection { }
+        private class PropertyHandlerConnection : CustomDbConnection
+        {
+            protected override DbCommand CreateDbCommand()
+            {
+                return new PropertyHandlerDbCommand();
+            }
+        }
+
+        private class PropertyHandlerDbCommand : CustomDbCommand
+        {
+            protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+            {
+                var reader = new DataEntityDataReader<PropertyHandlerQueryTestClass>(new[]
+                {
+                    new PropertyHandlerQueryTestClass { Id = 1, Name = "John Doe" }
+                });
+                reader.Initialize();
+                return reader;
+            }
+        }
 
         #endregion
 
@@ -34,7 +55,12 @@ namespace RepoDb.UnitTests.PropertyHandlers
         private class PropertyHandlerTestClass
         {
             public int Id { get; set; }
+            public string Name { get; set; }
         }
+
+        private class PropertyHandlerQueryTestClass : PropertyHandlerTestClass { }
+
+        private class PropertyHandlerInsertTestClass : PropertyHandlerTestClass { }
 
         private class PropertyHandlerTestClassForPrimaryKey : PropertyHandlerTestClass { }
 
@@ -49,6 +75,10 @@ namespace RepoDb.UnitTests.PropertyHandlers
         private class PropertyHandlerTestClassForQueryGroup : PropertyHandlerTestClass { }
 
         #endregion
+
+        #region Method
+
+        #region Property Expression
 
         [TestMethod]
         public void TestPropertyHandlerInvocationOnPrimaryKey()
@@ -163,5 +193,59 @@ namespace RepoDb.UnitTests.PropertyHandlers
             // Assert
             propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
         }
+
+        #endregion
+
+        #region Get
+
+        [TestMethod]
+        public void TestPropertyHandlerGetInvocation()
+        {
+            // Prepare
+            var propertyHandler = new Mock<IPropertyHandler<int, int>>();
+            FluentMapper
+                .Entity<PropertyHandlerQueryTestClass>()
+                .PropertyHandler(e => e.Id, propertyHandler.Object);
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                var result = connection.QueryAll<PropertyHandlerQueryTestClass>();
+            }
+
+            // Assert
+            propertyHandler.Verify(c => c.Get(It.IsAny<int>(), It.IsAny<ClassProperty>()), Times.Once);
+        }
+
+        #endregion
+
+        #region Set
+
+        [TestMethod]
+        public void TestPropertyHandlerSetInvocation()
+        {
+            // Prepare
+            var propertyHandler = new Mock<IPropertyHandler<string, string>>();
+            FluentMapper
+                .Entity<PropertyHandlerInsertTestClass>()
+                .PropertyHandler(e => e.Name, propertyHandler.Object);
+
+            // Act
+            using (var connection = new PropertyHandlerConnection())
+            {
+                connection.Insert<PropertyHandlerInsertTestClass>(new PropertyHandlerInsertTestClass
+                {
+                    Id = 1,
+                    Name = "James Smith"
+                });
+            }
+
+            // Assert
+            propertyHandler.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<ClassProperty>()), Times.Once);
+        }
+
+        #endregion
+
+        #endregion
     }
 }
