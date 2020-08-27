@@ -579,20 +579,19 @@ namespace RepoDb
             maps.TryRemove(key, out value);
         }
 
+        #endregion
 
         /*
          * Clear
          */
 
         /// <summary>
-        /// Clears all the existing cached property handlers.
+        /// Clears all the existing cached <see cref="IPropertyHandler{TInput, TResult}"/> objects.
         /// </summary>
         public static void Clear()
         {
             maps.Clear();
         }
-
-        #endregion
 
         #region Helpers
 

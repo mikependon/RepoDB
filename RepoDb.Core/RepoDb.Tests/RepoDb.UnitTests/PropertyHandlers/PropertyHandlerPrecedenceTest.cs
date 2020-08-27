@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         #region Linq Expression
 
         [TestMethod]
-        public void TestPropertyHandlerInvocationOnLinqExpression()
+        public void TestPropertyHandlerPrecedenceOnLinqExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -121,7 +121,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestPropertyHandlerWithAttributeInvocationOnLinqExpression()
+        public void TestPropertyHandlerWithAttributePrecedenceOnLinqExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -144,7 +144,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         #region Dynamic
 
         [TestMethod]
-        public void TestPropertyHandlerInvocationOnDynamicExpression()
+        public void TestPropertyHandlerPrecedenceOnDynamicExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestPropertyHandlerWithAttributeInvocationOnDynamicExpression()
+        public void TestPropertyHandlerWithAttributePrecedenceOnDynamicExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         #region QueryField
 
         [TestMethod]
-        public void TestPropertyHandlerInvocationOnQueryFieldExpression()
+        public void TestPropertyHandlerPrecedenceOnQueryFieldExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -205,7 +205,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestPropertyHandlerWithAttributeInvocationOnQueryFieldExpression()
+        public void TestPropertyHandlerWithAttributePrecedenceOnQueryFieldExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -228,7 +228,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         #region QueryFields
 
         [TestMethod]
-        public void TestPropertyHandlerInvocationOnQueryFieldsExpression()
+        public void TestPropertyHandlerPrecedenceOnQueryFieldsExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -247,7 +247,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestPropertyHandlerWithAttributeInvocationOnQueryFieldsExpression()
+        public void TestPropertyHandlerWithAttributePrecedenceOnQueryFieldsExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -270,7 +270,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         #region GroupGroup
 
         [TestMethod]
-        public void TestPropertyHandlerInvocationOnQueryGroupExpression()
+        public void TestPropertyHandlerPrecedenceOnQueryGroupExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();
@@ -289,7 +289,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         }
 
         [TestMethod]
-        public void TestPropertyHandlerWithAttributeInvocationOnQueryGroupExpression()
+        public void TestPropertyHandlerWithAttributePrecedenceOnQueryGroupExpression()
         {
             // Prepare
             var propertyHandler = new Mock<IPropertyHandler<int, int>>();

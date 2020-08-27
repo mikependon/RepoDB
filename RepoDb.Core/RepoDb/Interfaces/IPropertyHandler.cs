@@ -8,7 +8,7 @@
     public interface IPropertyHandler<TInput, TResult>
     {
         /// <summary>
-        /// The method that is being invoked when the outbound transformation is triggered (ie: Query).
+        /// The method that is being invoked when the outbound transformation is triggered (i.e.: BatchQuery, ExecuteQuery and Query).
         /// </summary>
         /// <param name="input">The input value.</param>
         /// <param name="property">The property in the current execution context.</param>
@@ -17,7 +17,7 @@
             ClassProperty property);
 
         /// <summary>
-        /// The method that is being invoked when the inbound transformation is triggered (ie: Insert, Update, Merge).
+        /// The method that is being invoked when the inbound transformation is triggered (i.e.: Insert, Merge and Update).
         /// </summary>
         /// <param name="input">The input value.</param>
         /// <param name="property">The property in the current execution context.</param>
