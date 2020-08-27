@@ -53,7 +53,6 @@ namespace RepoDb.Reflection
             var typeOfEntity = typeof(TEntity);
 
             // Variables for argument
-            var entityParameter = Expression.Parameter(typeOfEntity, "entity");
             var valueParameter = Expression.Parameter(StaticType.Object, "value");
 
             // Get the converter
@@ -62,9 +61,21 @@ namespace RepoDb.Reflection
                 .GetMethod("ToType", new[] { StaticType.Object })
                 .MakeGenericMethod(targetType.GetUnderlyingType());
 
+            // Conversion (if needed)
+            var valueExpression = ConvertValueExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);
+
+            // Property Handler
+            if (typeOfEntity.IsClassType())
+            {
+                var classProperty = PropertyCache.Get(typeOfEntity, property);
+                valueExpression = ConvertValueExpressionToPropertyHandlerSetExpression(valueExpression,
+                    classProperty, classProperty.PropertyInfo.PropertyType);
+            }
+
             // Assign the value into DataEntity.Property
+            var entityParameter = Expression.Parameter(typeOfEntity, "entity");
             var propertyAssignment = Expression.Call(entityParameter, property.SetMethod,
-                ConvertValueExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType));
+                valueExpression);
 
             // Return function
             return Expression.Lambda<Action<TEntity, object>>(propertyAssignment,

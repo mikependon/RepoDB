@@ -1507,10 +1507,22 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertValueExpressionToPropertyHandlerSetExpression(Expression valueExpression,
             ClassProperty classProperty,
-            DbField dbField)
+            DbField dbField) =>
+            ConvertValueExpressionToPropertyHandlerSetExpression(valueExpression, classProperty, dbField?.Type.GetUnderlyingType());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueExpression"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertValueExpressionToPropertyHandlerSetExpression(Expression valueExpression,
+            ClassProperty classProperty,
+            Type targetType)
         {
             var handlerInstance = classProperty?.GetPropertyHandler() ??
-                PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
+                PropertyHandlerCache.Get<object>(targetType);
 
             if (handlerInstance != null)
             {
