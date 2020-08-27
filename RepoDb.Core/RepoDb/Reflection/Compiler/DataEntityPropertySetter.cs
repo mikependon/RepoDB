@@ -64,7 +64,7 @@ namespace RepoDb.Reflection
 
             // Assign the value into DataEntity.Property
             var propertyAssignment = Expression.Call(entityParameter, property.SetMethod,
-                ConvertExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType));
+                ConvertValueExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType));
 
             // Return function
             return Expression.Lambda<Action<TEntity, object>>(propertyAssignment,
