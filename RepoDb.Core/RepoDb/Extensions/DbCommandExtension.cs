@@ -247,13 +247,10 @@ namespace RepoDb.Extensions
                 if (kvp.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)kvp.Value;
-                    var classProperties = PropertyCache.Get(commandParameter.MappedToType);
 
                     // Get the property and value
-                    classProperty = classProperties?
-                        .FirstOrDefault(property =>
-                            string.Equals(property.GetMappedName(), kvp.Key, StringComparison.OrdinalIgnoreCase));
-                    declaringType = commandParameter.MappedToType ?? classProperty.DeclaringType;
+                    classProperty = PropertyCache.Get(commandParameter.MappedToType, kvp.Key);
+                    declaringType = commandParameter.MappedToType ?? classProperty?.DeclaringType;
                     value = commandParameter.Value;
 
                     // Set the value type
