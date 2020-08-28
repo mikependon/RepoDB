@@ -1,12 +1,13 @@
-[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
-[![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite)](https://www.nuget.org/packages/RepoDb.SqLite)
-[![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
-[![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
+[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
+[![SqLiteHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDB)
+[![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqLite)
+[![SqLiteReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/sqlite)
+[![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
+[![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
 
 # RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
 
-RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is your best alternative ORM to both Dapper and EntityFramework.
 
@@ -17,19 +18,19 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [GitHub Home Page](https://github.com/mikependon/RepoDB) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDb) - for any technical questions.
+- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
 
 ## Dependencies
 
-- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
+- [RepoDB](https://www.nuget.org/packages/RepoDB/) - the core library of RepoDb.
 - [Microsoft.Data.Sqlite.Core](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite.
 
 ## License

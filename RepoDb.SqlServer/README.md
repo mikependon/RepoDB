@@ -1,31 +1,32 @@
-[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
-[![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer)](https://www.nuget.org/packages/RepoDb.SqlServer)
-[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
-[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
+[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
+[![SqlServerHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDB)
+[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
+[![SqlServerReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/sqlserver)
+[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
+[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
 # RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
 
-RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [GitHub Home Page](https://github.com/mikependon/RepoDB) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDb) - for any technical questions.
+- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
 
 ## Dependencies
 
 - [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) - the data provider used for SqlServer.
-- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDb.
+- [RepoDB](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDb.
 
 ## License
 

@@ -1,31 +1,32 @@
-[![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
-[![Home](https://img.shields.io/badge/home-github-important)](https://github.com/mikependon/RepoDb)
-[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql)](https://www.nuget.org/packages/RepoDb.MySql)
-[![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
-[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
+[![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
+[![MySqlHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDB)
+[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySql)
+[![MySqlReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/mysql)
+[![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
+[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
 
 # RepoDb.MySql - a hybrid .NET ORM library for MySQL.
 
-RepoDb is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
+RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
+- [GitHub Home Page](https://github.com/mikependon/RepoDB) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
-- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
-- [StackOverflow](https://stackoverflow.com/search?q=RepoDb) - for any technical questions.
+- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
 
 ## Dependencies
 
 - [MySql.Data](https://www.nuget.org/packages/MySql.Data/) - the data provider used for MySql.
-- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
+- [RepoDB](https://www.nuget.org/packages/RepoDB/) - the core library of RepoDb.
 
 ## License
 
@@ -103,4 +104,4 @@ using (var connection = new MySqlConnection(ConnectionString))
 }
 ```
 
-To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
+To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
