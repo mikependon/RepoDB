@@ -1,6 +1,6 @@
 # The Atomic, Batch and Bulk Operations
 
-RepoDb supports the different set of operations by default. With these operations, you can maximize the different ways of implementation to make your application more performant and efficient.
+RepoDB supports the different set of operations by default. With these operations, you can maximize the different ways of implementation to make your application more performant and efficient.
 
 ## Atomic Operation
 

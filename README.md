@@ -1,17 +1,17 @@
 <p align="center">
 	<a href="http://repodb.net">
-		<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/Icons/RepoDB-64x64.png" height="64px" />
+		<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/Icons/RepoDb-64x64.png" height="64px" />
 	</a>
 </p>
 
 -----------------
 
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?style=flat-square&logo=appveyor&label=sln%20builds)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
-[![Version](https://img.shields.io/nuget/v/RepoDB?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDB)
+[![Version](https://img.shields.io/nuget/v/RepoDb?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb)
 [![Releases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/core)
 [![UnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-yf1cx?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx/build/tests)
 [![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
-[![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDB?style=flat-square&logo=gitter&color=48B293)](https://gitter.im/RepoDB/community)
+[![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?style=flat-square&logo=gitter&color=48B293)](https://gitter.im/RepoDb/community)
 
 # [RepoDB](http://repodb.net) - a hybrid ORM Library for .NET.
 
@@ -25,11 +25,11 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations (i.e.: CRUD). The good thing is, RepoDB also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
 
-If you are to use [RepoDB](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. It is the reason that makes this library the simpliest ORM to use.
+If you are to use [RepoDB](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. It is the reason that makes this library the simpliest ORM to use.
 
-When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after your execution. It is an important use-case that is/may needed by you and/or most developers, and both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations addressed this need.
+When you do the [bulk operations](https://repodb.net/feature/bulkoperations), the generated value of the [identity columns](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/bulk-operation-edge-cases.md#identity-columns) will be set back to the data models, just right after your execution. It is an important use-case that is/may needed by you and/or most developers, and both the [BulkInsert](https://repodb.net/operation/bulkinsert) and [BulkMerge](https://repodb.net/operation/bulkmerge) operations addressed this need.
 
-RepoDB also does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operation), the [batch](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operation) and the [bulk](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operation)). Through this, it is easy for you to establish your repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance of your application.
+RepoDB also does support the different way-of-executions (the [atomic](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#atomic-operation), the [batch](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#batch-operation) and the [bulk](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/atomic-batch-bulk.md#bulk-operation)). Through this, it is easy for you to establish your repository that can process the smallest-to-the-largest datasets without even affecting the efficiency and the performance of your application.
 
 <details>
 <summary><b>Important Attributes</b></summary>
@@ -100,17 +100,19 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## .NET Type Coercion Problem
 
-By default, RepoDB does not do the automatic .NET CLR Type conversion during the transformation of data entity model and the data reader. The coercion will vary on the ADO.NET coercion capability. It is by purpose to strictly notify the developers the design or implementation problem of the data model if being compared to its corresponding database tables/columns. The exception that is being thrown is dependent to what the underlying ADO.NET coercion exception.
+By default, RepoDB does not do the automatic .NET CLR Type conversion during the transformation of the Data Entity Model and the DbDataReader object. The coercion capability is completely dependent to the ADO.NET coercion capability. It is in purpose to strictly notify you (as the library user) the design or the implementation problem of the Data Entity Model if being compared to the corresponding database table column types.
 
-If you wish to have an automatic conversion, simply set the [Converter](https://repodb.net/class/converter) class ConversionProperty to Automatic.
+If you wish to have an automatic conversion, simply set the [Converter.ConversionProperty](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
 
 ```csharp
 RepoDb.Converter.ConversionType = ConversionType.Automatic;
 ```
 
+**Note:** The exception that is being thrown is dependent to what the underlying ADO.NET coercion exception.
+
 ## Library Limitations
 
-It is very important for you and to the community of .NET to learn the things the library is capable and is-not capable of doing, so please spend time reading the [limitation](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/limitations.md) page before using the library.
+It is very important for you and to the community of .NET to learn the things the library is capable and is-not capable of doing, so please spend time reading the [limitation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md) page before using the library.
 
 ## Benchmark
 
@@ -124,7 +126,7 @@ Below is the actual recent official execution [result](https://github.com/FransB
 
 We would like to make RepoDB the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
-To contribute, you can find a [for-grabs](https://github.com/mikependon/RepoDB/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDB/issues/new) for us to look-at and discuss.
+To contribute, you can find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. Your expertise is needed to correct the forms, if needed.
 
@@ -142,21 +144,21 @@ Or, show your support by simply giving a :star: on this project.
 
 Please get in touch with us via:
 
-- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?tab=newest&q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ### Hints
 
-- [Building the Solutions](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Docs/building-the-solutions.md) - let us build your copies.
-- [Coding Standards](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Docs/coding-standards.md) - let us be uniformed.
-- [Issuing a Pull-Request](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Docs/issuing-a-pull-request.md) - let us be aligned and notified.
-- [Reporting an Issue](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Docs/reporting-an-issue.md) - let us be organized for easy tracking and fixing.
+- [Building the Solutions](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/building-the-solutions.md) - let us build your copies.
+- [Coding Standards](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/coding-standards.md) - let us be uniformed.
+- [Issuing a Pull-Request](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/issuing-a-pull-request.md) - let us be aligned and notified.
+- [Reporting an Issue](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Docs/reporting-an-issue.md) - let us be organized for easy tracking and fixing.
 
 ## Credits
 
-Thanks to all the [contributors](https://github.com/mikependon/RepoDB/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
+Thanks to all the [contributors](https://github.com/mikependon/RepoDb/graphs/contributors) of this project, and to [Scott Hanselman](https://www.hanselman.com/) for [Exploring the .NET open source hybrid ORM library RepoDB](https://www.hanselman.com/blog/ExploringTheNETOpenSourceHybridORMLibraryRepoDB.aspx).
 
 And also, thanks to these awesome OSS projects.
 

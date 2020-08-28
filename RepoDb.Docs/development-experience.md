@@ -1,6 +1,6 @@
 ﻿# The Development Experience
 
-If you are to use RepoDb, your development experience will be identical to both Entity Framework and Dapper ORMs. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
+If you are to use RepoDB, your development experience will be identical to both Entity Framework and Dapper ORMs. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
 
 ### Entity Framework
 
@@ -53,9 +53,9 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 }
 ```
 
-### RepoDb
+### RepoDB
 
-If you are to use RepoDb, you just simply open a connection like Dapper, and then, call the operations like Entity Framework.
+If you are to use RepoDB, you just simply open a connection like Dapper, and then, call the operations like Entity Framework.
 
 ```csharp
 using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated Security=SSPI;"))

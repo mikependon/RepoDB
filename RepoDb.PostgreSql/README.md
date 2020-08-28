@@ -1,5 +1,5 @@
 [![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
-[![PostgreSqlHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDB)
+[![PostgreSqlHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
 [![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.PostgreSql)
 [![PostgreSqlReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/postgresql)
 [![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
@@ -13,15 +13,15 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDB) - to learn more about the core library.
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
-- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## Dependencies
 

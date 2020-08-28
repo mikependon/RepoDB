@@ -1,6 +1,6 @@
 # Edge Case on Bulk Operations
 
-It is quite important for us to relay to you the edge-cases that is being addressed by the bulk operations embedded in this library. We strongly believe that the bulk operations in RepoDb library are addressing the use-cases that is mainly not solved by other ORMs.
+It is quite important for us to relay to you the edge-cases that is being addressed by the bulk operations embedded in this library. We strongly believe that the bulk operations in RepoDB library are addressing the use-cases that is mainly not solved by other ORMs.
 
 ## Call Parameters
 
@@ -79,7 +79,7 @@ using (var connection = new SqlConnection("Server=.;Database=TestDB;Integrated S
 
 ## Pseudo-Temporary Table (Physical/Temporary)
 
-In RepoDb, the bulk operations are creating a pseudo-temporary table as a stepping stone for the actual operation. The data is first brought into this pseudo-temporary table via [BulkInsert](https://repodb.net/operation/bulkinsert) operation. After that, the data in the pseudo-temporary table will be promoted towards the actual table. It is happening behind-the-scene when calling the [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) bulk operations.
+In RepoDB, the bulk operations are creating a pseudo-temporary table as a stepping stone for the actual operation. The data is first brought into this pseudo-temporary table via [BulkInsert](https://repodb.net/operation/bulkinsert) operation. After that, the data in the pseudo-temporary table will be promoted towards the actual table. It is happening behind-the-scene when calling the [BulkDelete](https://repodb.net/operation/bulkdelete), [BulkMerge](https://repodb.net/operation/bulkmerge) and [BulkUpdate](https://repodb.net/operation/bulkupdate) bulk operations.
 
 You can leverage the underlying RDBMS capability by specifying whether to use the "temporary" pseudo-temporary table or the "physical" pseudo-temporary table. To do this, simply set the `usePhysicalPseudoTempTable` argument to `true`.
 

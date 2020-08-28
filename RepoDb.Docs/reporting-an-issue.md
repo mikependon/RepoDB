@@ -40,7 +40,7 @@ We are not requiring a strict template. However, in order to minimize the round-
 - **Title** - is prefixed with **[Bug]:** or **[Error]:**.
 - **Description** - must include the following.
 
-	- Name and version of the library (i.e: **RepoDb v1.10.4** or **RepoDb.MySql v1.0.3**)
+	- Name and version of the library (i.e: **RepoDB v1.10.4** or **RepoDb.MySql v1.0.3**)
 	- Table Schema
 	- Class Implemention
 	- Call Stack Exception - a screenshot would suffice.
@@ -74,7 +74,7 @@ See below.
 
 - [Gitter](https://gitter.im/RepoDb/community)
 - [Email](https://repodb.readthedocs.io/en/latest/pages/contact.html)
-- [Twitter](https://twitter.com/home) - notifying the [author](https://twitter.com/mike_pendon) or placing a tag **#RepoDb**.
+- [Twitter](https://twitter.com/home) - notifying the [author](https://twitter.com/mike_pendon) or placing a tag **#RepoDB**.
 
 ### Nice-To-Have
 
@@ -110,11 +110,11 @@ You can contact us via [Gitter](https://gitter.im/RepoDb/community) or [Twitter]
 
 ## StackOverflow
 
-YOu can create a [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) or [bug](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Abug) in [StackOverflow](https://stackoverflow.com/search?q=RepoDb) by tagging **RepoDb**. We are visiting the site from time-to-time.
+YOu can create a [question](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) or [bug](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Abug) in [StackOverflow](https://stackoverflow.com/search?q=RepoDB) by tagging **RepoDB**. We are visiting the site from time-to-time.
 
 **What will we do if there is an issue in StackOverflow?**
 
 - We will answer you directly in StackOverlow.
 - We will not report the issue on our GitHub page.
 
-Please be noted that, the questions or bugs issued at [StackOverflow](https://stackoverflow.com/search?q=RepoDb) is not tracked from our history. We recommend that you file an issue directly to our [GitHub](https://github.com/mikependon/RepoDb/issues) page.
+Please be noted that, the questions or bugs issued at [StackOverflow](https://stackoverflow.com/search?q=RepoDB) is not tracked from our history. We recommend that you file an issue directly to our [GitHub](https://github.com/mikependon/RepoDb/issues) page.

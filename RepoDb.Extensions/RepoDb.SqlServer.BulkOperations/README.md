@@ -1,5 +1,5 @@
 [![SqlServerBulkBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-uai8a?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-uai8a)
-[![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDB)
+[![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
 [![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 [![SqlServerBulkReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/sqlserverbulk)
 [![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
@@ -10,7 +10,7 @@ An extension library that contains the official Bulk Operations of RepoDB for SQ
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDB) - to learn more about the core library.
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Why use Bulk Operations?
@@ -23,20 +23,20 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 
 ## Core Features
 
-- [Special Arguments](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#special-arguments)
-- [Async Methods](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#async-methods)
-- [Caveats](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#caveats)
-- [BulkDelete](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete)
-- [BulkInsert](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert)
-- [BulkMerge](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge)
-- [BulkUpdate](https://github.com/mikependon/RepoDB/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate)
+- [Special Arguments](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#special-arguments)
+- [Async Methods](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#async-methods)
+- [Caveats](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#caveats)
+- [BulkDelete](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete)
+- [BulkInsert](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert)
+- [BulkMerge](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge)
+- [BulkUpdate](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate)
 
 ## Community engagements
 
-- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## License
 

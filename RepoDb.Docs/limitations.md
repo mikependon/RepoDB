@@ -1,6 +1,6 @@
-# RepoDb Limitations
+# RepoDB Limitations
 
-We would like you and the community of .NET to understand the limitations of the library before you decide using it. RepoDb is a micro-ORM that has some advance features built to address the advance use-cases. But, it also has its own limitations that may not work in all use-cases.
+We would like you and the community of .NET to understand the limitations of the library before you decide using it. RepoDB is a micro-ORM that has some advance features built to address the advance use-cases. But, it also has its own limitations that may not work in all use-cases.
 
 **Disclaimer:** This page may not contain all the limitations as the other use-cases is not yet discovered. We will further update this page for any discoveries pertaining to the use-cases that cannot be supported (or impossible to support).
 
@@ -12,7 +12,7 @@ We would like you and the community of .NET to understand the limitations of the
 
 ## Composite Keys
 
-The default support to this will never be implemented as RepoDb tend to sided the other scenario that is forcefully eliminating this use-case. When you do the push operations in RepoDb (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
+The default support to this will never be implemented as RepoDB tend to sided the other scenario that is forcefully eliminating this use-case. When you do the push operations in RepoDB (i.e.: [Insert](https://repodb.net/operation/insert), [Delete](https://repodb.net/operation/delete), [Update](https://repodb.net/operation/update), [Merge](https://repodb.net/operation/merge) and etc), it uses the PK as the qualifiers.
 
 ### Scenario 1 - Insert
 
@@ -49,7 +49,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 **Alternative Solution**
 
-RepoDb will instead ask you to do it this way, targeting the Composite Keys as the qualifiers.
+RepoDB will instead ask you to do it this way, targeting the Composite Keys as the qualifiers.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -92,7 +92,7 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-**Note**: There may be plenty of undiscovered scenarios that makes RepoDb unusable for the use-cases of having a table with Composite Keys.
+**Note**: There may be plenty of undiscovered scenarios that makes RepoDB unusable for the use-cases of having a table with Composite Keys.
 
 ## Computed Columns
 
@@ -100,7 +100,7 @@ Though the computed column is supported in all fluent-based GET operations (i.e.
 
 It is important to take note that all the non fluent-based methods like [Query(TableName)](https://repodb.net/operation/query#targetting-a-table) and [Insert(TableName)](https://repodb.net/operation/insert#targetting-a-table) supports the Computed Columns.
 
-RepoDb is dynamic enough on the property projection, but it does not eliminate the computed columns on its projection. Historically, we have the IgnoreAttribute in placed but has been removed in response to the auto-projection capabilities. Of course, up until being pushed by the community to prove the commonality of this use-case, the support to this may not be delivered. To be specific, please see the example below.
+RepoDB is dynamic enough on the property projection, but it does not eliminate the computed columns on its projection. Historically, we have the IgnoreAttribute in placed but has been removed in response to the auto-projection capabilities. Of course, up until being pushed by the community to prove the commonality of this use-case, the support to this may not be delivered. To be specific, please see the example below.
 
 Supposed you have a class named Person.
 
@@ -131,7 +131,7 @@ CREATE TABLE [dbo].[Person](
 
 Notice, the column Age is a computed column.
 
-As mentioned above, RepoDb will work if you are to use any of the GET operations.
+As mentioned above, RepoDB will work if you are to use any of the GET operations.
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -200,7 +200,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## JOIN Query (Support)
 
-We understand the reality that without having a support to JOIN Query will somehow eliminate the concepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDb as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
+We understand the reality that without having a support to JOIN Query will somehow eliminate the concepts of ORM in the library. The correct term maybe is Object-Mapper (OM) library, rather than Object/Relational Mapper (ORM) library. Though we consider RepoDB as ORM due to the fact of its flexible features. We tend to leave to the users on how will they implement the JOIN Query, on their own perusal.
 
 We see that majority of the problems of the RDBMS data providers are managing the relationships. These includes the constraints, delegations, cascading and many more. To maintain the robustness of the library and put the control to the users when doing the things, we purposely did not supported this feature (for now), up until we have a much better solution ahead of other ORM libraries.
 

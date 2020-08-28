@@ -1,6 +1,6 @@
 # Building the Solutions
 
-In this page, we will guide you on how to build the RepoDb Solutions.
+In this page, we will guide you on how to build the RepoDB Solutions.
 
 - [RepoDb.Core](#building-the-repodbcore)
 - [RepoDb.SqlServer](#building-the-repodbsqlserver)
@@ -148,7 +148,7 @@ Execute the integration tests.
 
 First, install the [SqLite](https://www.sqlite.org/) by downloading the package [here](https://www.sqlite.org/download.html).
 
-> Open the `SQLiteStudio` and create a database named `RepoDb`.
+> Open the `SQLiteStudio` and create a database named `RepoDB`.
 
 #### Building and executing the [RepoDb.SqLite.IntegrationTests](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite/RepoDb.SqLite.IntegrationTests)
 

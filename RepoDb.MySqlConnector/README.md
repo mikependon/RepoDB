@@ -1,5 +1,5 @@
 [![MySqlConnectorBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-7ooj1?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-7ooj1)
-[![MySqlConnectorHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDB)
+[![MySqlConnectorHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
 [![MySqlConnectorVersion](https://img.shields.io/nuget/v/RepoDb.MySqlConnector?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySqlConnector)
 [![MySqlConnectorReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/mysqlconnector)
 [![MySqlConnectorUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-pqvj7?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-pqvj7/build/tests)
@@ -13,20 +13,20 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
-- [GitHub Home Page](https://github.com/mikependon/RepoDB) - to learn more about the core library.
+- [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
 ## Community engagements
 
-- [GitHub](https://github.com/mikependon/RepoDB/issues) - for any issues, requests and problems.
+- [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
-- [Gitter Chat](https://gitter.im/RepoDB/community) - for direct and live Q&A.
+- [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
 ## Dependencies
 
 - [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/) - the data provider used for MySqlConnector.
-- [RepoDB](https://www.nuget.org/packages/RepoDB/) - the core library of RepoDb.
+- [RepoDB](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
 
 ## License
 
