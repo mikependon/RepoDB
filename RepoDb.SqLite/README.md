@@ -31,7 +31,8 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 ## Dependencies
 
 - [RepoDB](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
-- [Microsoft.Data.Sqlite.Core](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite.
+- [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite (Microsoft).
+- [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) - the data provider used for SqLite (SQLite).
 
 ## License
 
