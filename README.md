@@ -100,7 +100,9 @@ Click [here](http://repodb.net/docs#operations) to see all the operations.
 
 ## .NET Type Coercion Problem
 
-By default, RepoDB does not do the automatic .NET CLR Type conversion during the transformation of the Data Entity Model and the DbDataReader object. The coercion capability is completely dependent to the ADO.NET coercion capability. It is in purpose to strictly notify you (as the library user) the design or the implementation problem of the Data Entity Model if being compared to the corresponding database table column types.
+By default, RepoDB does not do the automatic .NET CLR Type conversion during the transformation of the Model and the DbDataReader object. The coercion capability is completely dependent to the ADO.NET coercion capability.
+
+It is in purpose to strictly notify you (as the library user) the design or the implementation problem of the Model if being compared to the corresponding database Table.
 
 If you wish to have an automatic conversion, simply set the [Converter.ConversionProperty](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
 
@@ -108,7 +110,7 @@ If you wish to have an automatic conversion, simply set the [Converter.Conversio
 RepoDb.Converter.ConversionType = ConversionType.Automatic;
 ```
 
-**Note:** The exception that is being thrown is dependent to what the underlying ADO.NET coercion exception.
+**Note:** The exception that is being thrown is dependent to what the underlying ADO.NET coercion exception. If the [Automatic](https://repodb.net/enumeration/conversiontype) conversion is used, the extracted value will always be evaluated and an additional conversion logic will be used (if needed). The conversion logic is through the AOT compilation of [System.Linq.Expression.Convert](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression.convert?view=netcore-3.1) and/or [System.Convert](https://docs.microsoft.com/en-us/dotnet/api/system.convert?view=netcore-3.1).
 
 ## Library Limitations
 
