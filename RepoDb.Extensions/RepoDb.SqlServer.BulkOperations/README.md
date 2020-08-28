@@ -40,7 +40,7 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 
 ## License
 
-[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2019 - Michael Camara Pendon
+[Apache-2.0](http://apache.org/licenses/LICENSE-2.0.html) - Copyright © 2020 - [Michael Camara Pendon](https://twitter.com/mike_pendon)
 
 --------
 
