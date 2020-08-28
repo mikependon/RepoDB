@@ -98,11 +98,11 @@ Whereas the fluent methods below only support the [SQL Server](https://www.nuget
  
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
-## .NET Type Coercion Problem
+## .NET Type Coercion
 
-By default, RepoDB does not do the automatic .NET CLR Type conversion during the transformation of the Model and the DbDataReader object. The coercion capability is completely dependent to the ADO.NET coercion capability.
+By default, RepoDB does not do the automatic .NET CLR Type conversion during the serialization and deserialization process. The coercion support is completely dependent to the ADO.NET coercion capability.
 
-It is in purpose to strictly notify you (as the library user) the design or the implementation problem of the Model if being compared to the corresponding database Table.
+It is in purpose to strictly notify you (as a library user) the design and/or the implementation problem of the Model if being compared to its corresponding database Table.
 
 If you wish to have an automatic conversion, simply set the [Converter.ConversionProperty](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
 
