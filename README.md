@@ -118,7 +118,7 @@ It is very important for you and to the community of .NET to learn the things th
 
 ## Benchmark
 
-The benchmark result shown on this section is the result of the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
 Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
 
@@ -128,7 +128,7 @@ Below is the actual recent official execution [result](https://github.com/FransB
 
 We would like to make RepoDB the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
-To contribute, you can find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Or, you may otherwise create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. Your expertise is needed to correct the forms, if needed.
 
