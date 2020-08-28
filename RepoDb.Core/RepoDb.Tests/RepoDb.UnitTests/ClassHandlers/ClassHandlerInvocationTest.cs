@@ -89,6 +89,10 @@ namespace RepoDb.UnitTests.ClassHandlers
         //        .Entity<ClassHandlerTestClass>()
         //        .ClassHandler(classHandler.Object);
 
+        //    classHandler
+        //        .Setup(e => e.Set(It.IsAny<ClassHandlerTestClass>()))
+        //        .Returns(new ClassHandlerTestClass { Id = 1, Name = "James Smith" });
+
         //    // Act
         //    using (var connection = new ClassHandlerConnection())
         //    {

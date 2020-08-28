@@ -23,12 +23,12 @@ namespace RepoDb.Reflection
         {
             var typeOfEntity = typeof(TEntity);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
-            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
-            var dbParameterCollection = Expression.Property(commandParameterExpression,
+            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entityParameter");
+            var dbParameterCollectionExpression = Expression.Property(commandParameterExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
-            var entityVariable = Expression.Variable(typeOfEntity, "entity");
+            var entityVariableExpression = Expression.Variable(typeOfEntity, "entityVariable");
             var entityExpressions = new List<Expression>();
-            var entityVariables = new List<ParameterExpression>();
+            var entityVariableExpressions = new List<ParameterExpression>();
             var fieldDirections = new List<FieldDirection>();
             var bodyExpressions = new List<Expression>();
 
@@ -40,25 +40,28 @@ namespace RepoDb.Reflection
             fieldDirections.AddRange(GetOutputFieldDirections(outputFields));
 
             // Clear the parameter collection first
-            bodyExpressions.Add(GetDbParameterCollectionClearMethodExpression(dbParameterCollection));
+            bodyExpressions.Add(GetDbParameterCollectionClearMethodExpression(dbParameterCollectionExpression));
 
             // Entity instance
-            entityVariables.Add(entityVariable);
-            entityExpressions.Add(Expression.Assign(entityVariable, handledEntityParameterExpression));
+            entityVariableExpressions.Add(entityVariableExpression);
+            entityExpressions.Add(Expression.Assign(entityVariableExpression, handledEntityParameterExpression));
+
+            // Throw if null
+            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression<TEntity>(entityVariableExpression));
 
             // Iterate the input fields
             foreach (var fieldDirection in fieldDirections)
             {
                 // Add the property block
                 var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
-                    entityVariable, fieldDirection, 0, dbSetting);
+                    entityVariableExpression, fieldDirection, 0, dbSetting);
 
                 // Add to instance expression
                 entityExpressions.Add(propertyBlock);
             }
 
             // Add to the instance block
-            var instanceBlock = Expression.Block(entityVariables, entityExpressions);
+            var instanceBlock = Expression.Block(entityVariableExpressions, entityExpressions);
 
             // Add to the body
             bodyExpressions.Add(instanceBlock);

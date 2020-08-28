@@ -1863,8 +1863,8 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entityIndex"></param>
-        /// <param name="entityInstance"></param>
-        /// <param name="property"></param>
+        /// <param name="entityExpression"></param>
+        /// <param name="propertyExpression"></param>
         /// <param name="dbField"></param>
         /// <param name="classProperty"></param>
         /// <param name="direction"></param>
@@ -1872,125 +1872,125 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression GetParameterAssignmentExpression(ParameterExpression commandParameterExpression,
             int entityIndex,
-            Expression entityInstance,
-            ParameterExpression property,
+            Expression entityExpression,
+            ParameterExpression propertyExpression,
             DbField dbField,
             ClassProperty classProperty,
             ParameterDirection direction,
             IDbSetting dbSetting)
         {
-            var parameterAssignments = new List<Expression>();
-            var parameterVariable = Expression.Variable(StaticType.DbParameter,
+            var parameterAssignmentExpressions = new List<Expression>();
+            var parameterVariableExpression = Expression.Variable(StaticType.DbParameter,
                 string.Concat("parameter", dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric()));
 
             // Variable
             var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression);
-            parameterAssignments.AddIfNotNull(Expression.Assign(parameterVariable, createParameterExpression));
+            parameterAssignmentExpressions.AddIfNotNull(Expression.Assign(parameterVariableExpression, createParameterExpression));
 
             // DbParameter.Name
-            var nameAssignmentExpression = GetDbParameterNameAssignmentExpression(parameterVariable,
+            var nameAssignmentExpression = GetDbParameterNameAssignmentExpression(parameterVariableExpression,
                 dbField,
                 entityIndex,
                 dbSetting);
-            parameterAssignments.AddIfNotNull(nameAssignmentExpression);
+            parameterAssignmentExpressions.AddIfNotNull(nameAssignmentExpression);
 
             // DbParameter.Value
             if (direction != ParameterDirection.Output)
             {
-                var valueAssignmentExpression = GetDbParameterValueAssignmentExpression(parameterVariable,
-                    entityInstance,
-                    property,
+                var valueAssignmentExpression = GetDbParameterValueAssignmentExpression(parameterVariableExpression,
+                    entityExpression,
+                    propertyExpression,
                     classProperty,
                     dbField,
                     dbSetting);
-                parameterAssignments.AddIfNotNull(valueAssignmentExpression);
+                parameterAssignmentExpressions.AddIfNotNull(valueAssignmentExpression);
             }
 
             // DbParameter.DbType
-            var dbTypeAssignmentExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariable,
+            var dbTypeAssignmentExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression,
                 dbField);
-            parameterAssignments.AddIfNotNull(dbTypeAssignmentExpression);
+            parameterAssignmentExpressions.AddIfNotNull(dbTypeAssignmentExpression);
 
             // DbParameter.SqlDbType (System)
-            var systemSqlDbTypeAssignmentExpression = GetDbParameterSystemSqlDbTypeAssignmentExpression(parameterVariable,
+            var systemSqlDbTypeAssignmentExpression = GetDbParameterSystemSqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
-            parameterAssignments.AddIfNotNull(systemSqlDbTypeAssignmentExpression);
+            parameterAssignmentExpressions.AddIfNotNull(systemSqlDbTypeAssignmentExpression);
 
             // DbParameter.SqlDbType (Microsoft)
-            var microsoftSqlDbTypeAssignmentExpression = GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(parameterVariable,
+            var microsoftSqlDbTypeAssignmentExpression = GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
-            parameterAssignments.AddIfNotNull(microsoftSqlDbTypeAssignmentExpression);
+            parameterAssignmentExpressions.AddIfNotNull(microsoftSqlDbTypeAssignmentExpression);
 
             // DbParameter.MySqlDbType
-            var mySqlDbTypeAssignmentExpression = GetDbParameterMySqlDbTypeAssignmentExpression(parameterVariable,
+            var mySqlDbTypeAssignmentExpression = GetDbParameterMySqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
-            parameterAssignments.AddIfNotNull(mySqlDbTypeAssignmentExpression);
+            parameterAssignmentExpressions.AddIfNotNull(mySqlDbTypeAssignmentExpression);
 
             // DbParameter.NpgsqlDbType
-            var npgsqlDbTypeAssignmentExpression = GetDbParameterNpgsqlDbTypeAssignmentExpression(parameterVariable,
+            var npgsqlDbTypeAssignmentExpression = GetDbParameterNpgsqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
-            parameterAssignments.AddIfNotNull(npgsqlDbTypeAssignmentExpression);
+            parameterAssignmentExpressions.AddIfNotNull(npgsqlDbTypeAssignmentExpression);
 
             // DbParameter.Direction
             if (dbSetting.IsDirectionSupported)
             {
-                var directionAssignmentExpression = GetDbParameterDirectionAssignmentExpression(parameterVariable, direction);
-                parameterAssignments.AddIfNotNull(directionAssignmentExpression);
+                var directionAssignmentExpression = GetDbParameterDirectionAssignmentExpression(parameterVariableExpression, direction);
+                parameterAssignmentExpressions.AddIfNotNull(directionAssignmentExpression);
             }
 
             // DbParameter.Size
             if (dbField.Size != null)
             {
-                var sizeAssignmentExpression = GetDbParameterSizeAssignmentExpression(parameterVariable, dbField.Size.Value);
-                parameterAssignments.AddIfNotNull(sizeAssignmentExpression);
+                var sizeAssignmentExpression = GetDbParameterSizeAssignmentExpression(parameterVariableExpression, dbField.Size.Value);
+                parameterAssignmentExpressions.AddIfNotNull(sizeAssignmentExpression);
             }
 
             // DbParameter.Precision
             if (dbField.Precision != null)
             {
-                var precisionAssignmentExpression = GetDbParameterPrecisionAssignmentExpression(parameterVariable, dbField.Precision.Value);
-                parameterAssignments.AddIfNotNull(precisionAssignmentExpression);
+                var precisionAssignmentExpression = GetDbParameterPrecisionAssignmentExpression(parameterVariableExpression, dbField.Precision.Value);
+                parameterAssignmentExpressions.AddIfNotNull(precisionAssignmentExpression);
             }
 
             // DbParameter.Scale
             if (dbField.Scale != null)
             {
-                var scaleAssignmentExpression = GetDbParameterScaleAssignmentExpression(parameterVariable, dbField.Scale.Value);
-                parameterAssignments.AddIfNotNull(scaleAssignmentExpression);
+                var scaleAssignmentExpression = GetDbParameterScaleAssignmentExpression(parameterVariableExpression, dbField.Scale.Value);
+                parameterAssignmentExpressions.AddIfNotNull(scaleAssignmentExpression);
             }
 
             // DbCommand.Parameters.Add
-            var dbParametersAddExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariable);
-            parameterAssignments.AddIfNotNull(dbParametersAddExpression);
+            var dbParametersAddExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariableExpression);
+            parameterAssignmentExpressions.AddIfNotNull(dbParametersAddExpression);
 
             // Return the value
-            return Expression.Block(new[] { parameterVariable }, parameterAssignments);
+            return Expression.Block(new[] { parameterVariableExpression }, parameterAssignmentExpressions);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="commandParameterExpression"></param>
-        /// <param name="entityVariable"></param>
+        /// <param name="entityExpression"></param>
         /// <param name="fieldDirection"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Expression GetPropertyFieldExpression(ParameterExpression commandParameterExpression,
-            ParameterExpression entityVariable,
+            ParameterExpression entityExpression,
             FieldDirection fieldDirection,
             int entityIndex,
             IDbSetting dbSetting)
         {
-            var propertyExpressions = new List<Expression>();
-            var propertyVariables = new List<ParameterExpression>();
-            var propertyVariable = (ParameterExpression)null;
-            var propertyInstance = (Expression)null;
+            var propertyListExpression = new List<Expression>();
+            var propertyVariableListExpression = new List<ParameterExpression>();
+            var propertyVariableExpression = (ParameterExpression)null;
+            var propertyInstanceExpression = (Expression)null;
             var classProperty = (ClassProperty)null;
             var propertyName = fieldDirection.DbField.Name.AsUnquoted(true, dbSetting);
 
             // Set the proper assignments (property)
-            if (entityVariable.Type.IsClassType() == false || entityVariable.Type.IsGenericType)
+            if (entityExpression.Type.IsClassType() == false || entityExpression.Type.IsGenericType)
             {
                 var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[]
                 {
@@ -1998,8 +1998,8 @@ namespace RepoDb.Reflection
                     StaticType.BindingFlags
                 });
                 var objectGetTypeMethod = StaticType.Object.GetMethod("GetType");
-                propertyVariable = Expression.Variable(StaticType.PropertyInfo, string.Concat("property", propertyName));
-                propertyInstance = Expression.Call(Expression.Call(entityVariable, objectGetTypeMethod),
+                propertyVariableExpression = Expression.Variable(StaticType.PropertyInfo, string.Concat("propertyVariable", propertyName));
+                propertyInstanceExpression = Expression.Call(Expression.Call(entityExpression, objectGetTypeMethod),
                     typeGetPropertyMethod, new[]
                     {
                         Expression.Constant(propertyName),
@@ -2008,38 +2008,38 @@ namespace RepoDb.Reflection
             }
             else
             {
-                var entityProperties = PropertyCache.Get(entityVariable.Type);
+                var entityProperties = PropertyCache.Get(entityExpression.Type);
                 classProperty = entityProperties.First(property =>
                     string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
                         propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
 
                 if (classProperty != null)
                 {
-                    propertyVariable = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("property", propertyName));
-                    propertyInstance = Expression.Property(entityVariable, classProperty.PropertyInfo);
+                    propertyVariableExpression = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("propertyVariable", propertyName));
+                    propertyInstanceExpression = Expression.Property(entityExpression, classProperty.PropertyInfo);
                 }
             }
 
             // Add the variables
-            if (propertyVariable != null)
+            if (propertyVariableExpression != null && propertyInstanceExpression != null)
             {
-                propertyVariables.Add(propertyVariable);
-                propertyExpressions.Add(Expression.Assign(propertyVariable, propertyInstance));
+                propertyVariableListExpression.Add(propertyVariableExpression);
+                propertyListExpression.Add(Expression.Assign(propertyVariableExpression, propertyInstanceExpression));
+
+                // Execute the function
+                var parameterAssignment = GetParameterAssignmentExpression(commandParameterExpression,
+                    entityIndex,
+                    entityExpression,
+                    propertyVariableExpression,
+                    fieldDirection.DbField,
+                    classProperty,
+                    fieldDirection.Direction,
+                    dbSetting);
+                propertyListExpression.Add(parameterAssignment);
             }
 
-            // Execute the function
-            var parameterAssignment = GetParameterAssignmentExpression(commandParameterExpression,
-                entityIndex,
-                entityVariable,
-                propertyVariable,
-                fieldDirection.DbField,
-                classProperty,
-                fieldDirection.Direction,
-                dbSetting);
-            propertyExpressions.Add(parameterAssignment);
-
             // Add the property block
-            return Expression.Block(propertyVariables, propertyExpressions);
+            return Expression.Block(propertyVariableListExpression, propertyListExpression);
         }
 
         /// <summary>
@@ -2074,6 +2074,20 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        private static Expression ThrowIfNullAfterClassHandlerExpression<TEntity>(Expression expression)
+        {
+            var typeOfEntity = typeof(TEntity);
+            var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
+            var exception = new NullReferenceException($"Entity of type '{typeOfEntity}' must not be null. If you have defined a class handler, please check the 'Set' method.");
+            return Expression.IfThen(isNullExpression, Expression.Throw(Expression.Constant(exception)));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entitiesParameterExpression"></param>
         /// <param name="fieldDirections"></param>
@@ -2089,7 +2103,7 @@ namespace RepoDb.Reflection
         {
             // Get the current instance
             var typeOfEntity = typeof(TEntity);
-            var instanceVariable = Expression.Variable(typeOfEntity, "instance");
+            var entityVariableExpression = Expression.Variable(typeOfEntity, "instance");
             var typeOfListEntity = typeof(IList<TEntity>);
             var entityParameter = (Expression)GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
             var entityExpressions = new List<Expression>();
@@ -2099,15 +2113,18 @@ namespace RepoDb.Reflection
             entityParameter = ConvertValueExpressionToClassHandlerSetExpression<TEntity>(entityParameter);
 
             // Entity instance
-            entityVariables.Add(instanceVariable);
-            entityExpressions.Add(Expression.Assign(instanceVariable, entityParameter));
+            entityVariables.Add(entityVariableExpression);
+            entityExpressions.Add(Expression.Assign(entityVariableExpression, entityParameter));
+
+            // Throw if null
+            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression<TEntity>(entityVariableExpression));
 
             // Iterate the input fields
             foreach (var fieldDirection in fieldDirections)
             {
                 // Add the property block
                 var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
-                    instanceVariable, fieldDirection, entityIndex, dbSetting);
+                    entityVariableExpression, fieldDirection, entityIndex, dbSetting);
 
                 // Add to instance expression
                 entityExpressions.Add(propertyBlock);
@@ -2128,16 +2145,21 @@ namespace RepoDb.Reflection
             ParameterExpression readerParameterExpression)
             where TEntity : class
         {
-            var handlerInstance = GetClassHandler(typeof(TEntity));
-            if (handlerInstance != null)
+            var typeOfEntity = typeof(TEntity);
+
+            // Check the handler
+            var handlerInstance = GetClassHandler(typeOfEntity);
+            if (handlerInstance == null)
             {
-                var getMethod = GetClassHandlerGetMethod(handlerInstance);
-                entityExpression = Expression.Call(Expression.Constant(handlerInstance),
-                    getMethod,
-                    entityExpression,
-                    readerParameterExpression);
+                return entityExpression;
             }
-            return entityExpression;
+
+            // Call the ClassHandler.Get method
+            var getMethod = GetClassHandlerGetMethod(handlerInstance);
+            return Expression.Call(Expression.Constant(handlerInstance),
+                getMethod,
+                entityExpression,
+                readerParameterExpression);
         }
 
         /// <summary>
@@ -2150,25 +2172,32 @@ namespace RepoDb.Reflection
             where TEntity : class
         {
             var typeOfEntity = typeof(TEntity);
+
+            // Check the handler
             var handlerInstance = GetClassHandler(typeOfEntity);
-            if (handlerInstance != null)
+            if (handlerInstance == null)
             {
-                var typeOfListEntity = typeof(IList<TEntity>);
-                if (typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type))
-                {
-                    var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfListEntity);
-                    entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
-                        setMethod,
-                        entityOrEntitiesExpression);
-                }
-                else
-                {
-                    var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfEntity);
-                    entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
-                        setMethod,
-                        entityOrEntitiesExpression);
-                }
+                return entityOrEntitiesExpression;
             }
+
+            // Call the IClassHandler.Set method
+            var typeOfListEntity = typeof(IList<TEntity>);
+            if (typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type))
+            {
+                var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfListEntity);
+                entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
+                    setMethod,
+                    entityOrEntitiesExpression);
+            }
+            else
+            {
+                var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfEntity);
+                entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
+                    setMethod,
+                    entityOrEntitiesExpression);
+            }
+
+            // Return the block
             return entityOrEntitiesExpression;
         }
 
