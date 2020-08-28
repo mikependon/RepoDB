@@ -1702,6 +1702,7 @@ namespace RepoDb
                     commandType: commandType,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
+                    tableName: tableName,
                     skipCommandArrayParametersCheck: true);
             }
 
@@ -1814,6 +1815,7 @@ namespace RepoDb
                     commandType: commandType,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
+                    tableName: tableName,
                     skipCommandArrayParametersCheck: true);
             }
 

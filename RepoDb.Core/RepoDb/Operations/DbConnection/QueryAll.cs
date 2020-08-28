@@ -615,6 +615,7 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     cache: cache,
+                    tableName: tableName,
                     skipCommandArrayParametersCheck: true);
             }
 
@@ -746,6 +747,7 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     cache: null,
+                    tableName: tableName,
                     skipCommandArrayParametersCheck: true);
 
                 // Set Cache

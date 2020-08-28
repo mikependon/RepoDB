@@ -87,7 +87,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = connection.Merge<SdsCompleteTable>(table,
-                    qualifiers);
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(table.Id, result);
@@ -166,7 +166,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Act
                 var result = connection.MergeAsync<SdsCompleteTable>(table,
-                    qualifiers).Result;
+                    qualifiers: qualifiers).Result;
 
                 // Assert
                 Assert.AreEqual(table.Id, result);
@@ -250,7 +250,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     table,
-                    qualifiers);
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(table.Id, result);
@@ -340,7 +340,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     (object)obj,
-                    qualifiers);
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(table.Id, result);
@@ -418,7 +418,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     table,
-                    qualifiers).Result;
+                    qualifiers: qualifiers).Result;
 
                 // Assert
                 Assert.AreEqual(table.Id, result);
@@ -508,7 +508,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     (object)obj,
-                    qualifiers).Result;
+                    qualifiers: qualifiers).Result;
 
                 // Assert
                 Assert.AreEqual(table.Id, result);
