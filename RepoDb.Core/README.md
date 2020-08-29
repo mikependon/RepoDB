@@ -32,6 +32,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 - [Multiple Query](http://repodb.net/feature/multiplequery)
 - [Property Handlers](http://repodb.net/feature/propertyhandlers)
 - [Repositories](http://repodb.net/feature/repositories)
+- [Targeted Operations](http://repodb.net/feature/targeted)
 - [Tracing](http://repodb.net/feature/tracing)
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
