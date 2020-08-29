@@ -268,10 +268,8 @@ namespace RepoDb
         /// is <see cref="ConnectionPersistency.PerCall"/>, then this will return a new instance of the <see cref="DbConnection"/> object.
         /// </summary>
         /// <returns>An instance of the <see cref="DbConnection"/> object.</returns>
-        public TDbConnection CreateConnection()
-        {
-            return DbRepository.CreateConnection();
-        }
+        public TDbConnection CreateConnection() =>
+            DbRepository.CreateConnection();
 
         /// <summary>
         /// Creates a new instance of the database connection. If the value <see cref="ConnectionPersistency"/> property is <see cref="ConnectionPersistency.Instance"/>, then this will return
@@ -280,20 +278,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="force">Set to true to forcely create a new instance of <see cref="DbConnection"/> object regardless of the persistency.</param>
         /// <returns>An instance of the <see cref="DbConnection"/> object.</returns>
-        public TDbConnection CreateConnection(bool force)
-        {
-            return DbRepository.CreateConnection(force);
-        }
+        public TDbConnection CreateConnection(bool force) =>
+            DbRepository.CreateConnection(force);
 
         /// <summary>
         /// Dispose the current repository instance. It is not necessary to call this method if the value of the <see cref="ConnectionPersistency"/>
         /// property is equals to <see cref="ConnectionPersistency.PerCall"/>. This method only manages the connection persistency for the repositories where the value
         /// of the <see cref="ConnectionPersistency"/> property is equals to <see cref="ConnectionPersistency.Instance"/>.
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() =>
             DbRepository.Dispose();
-        }
 
         #endregion
 

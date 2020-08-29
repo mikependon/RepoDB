@@ -18,9 +18,7 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="type">The .NET CLR type</param>
         /// <returns>The equivalent <see cref="IPropertyHandler{TInput, TResult}"/> object of the .NET CLR type.</returns>
-        public object Resolve(Type type)
-        {
-            return PropertyHandlerMapper.Get<object>(type);
-        }
+        public object Resolve(Type type) =>
+            PropertyHandlerMapper.Get<object>(type);
     }
 }

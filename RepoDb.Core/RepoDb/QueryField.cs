@@ -190,6 +190,49 @@ namespace RepoDb
         #region Static Methods
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private static ClassProperty GetTargetProperty<TEntity>(Field field)
+            where TEntity : class
+        {
+            var properties = PropertyCache.Get<TEntity>();
+
+            // Failing at some point - for base interfaces
+            var property = properties
+                .FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Matches to the actual class properties
+            if (property == null)
+            {
+                property = properties
+                    .FirstOrDefault(p =>
+                        string.Equals(p.PropertyInfo.Name, field.Name, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Return the value
+            return property;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expressionType"></param>
+        /// <returns></returns>
+        internal static Operation GetOperation(ExpressionType expressionType)
+        {
+            var value = default(Operation);
+            if (Enum.TryParse(expressionType.ToString(), out value))
+            {
+                return value;
+            }
+            throw new NotSupportedException($"Operation: Expression '{expressionType}' is currently not supported.");
+        }
+
+        /// <summary>
         /// Parse an instance of <see cref="BinaryExpression"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type</typeparam>
@@ -200,33 +243,21 @@ namespace RepoDb
             // Only support the following expression type
             if (expression.IsExtractable() == false)
             {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
             }
 
-            // Name
+            // Field
             var field = expression.GetField();
-            var properties = PropertyCache.Get<TEntity>();
+            var property = GetTargetProperty<TEntity>(field);
 
-            // Failing at some point - for base interfaces
-            var property = properties
-                .FirstOrDefault(p =>
-                    string.Equals(PropertyMappedNameCache.Get(p.PropertyInfo), field.Name, StringComparison.OrdinalIgnoreCase));
-
-            // Matches to the actual class properties
+            // Check
             if (property == null)
             {
-                property = properties
-                    .FirstOrDefault(p =>
-                        string.Equals(p.PropertyInfo.Name, field.Name, StringComparison.OrdinalIgnoreCase));
-
-                // Reset the field
-                field = property?.AsField();
+                throw new InvalidExpressionException($"Invalid expression '{expression}'. The property {field.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
-
-            // Check the existence
-            if (property == null)
+            else
             {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {field.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                field = property.AsField();
             }
 
             // Value
@@ -237,28 +268,6 @@ namespace RepoDb
 
             // Return the value
             return new QueryField(field, operation, value);
-        }
-
-        // GetOperation
-        internal static Operation GetOperation(ExpressionType expressionType)
-        {
-            switch (expressionType)
-            {
-                case ExpressionType.Equal:
-                    return Operation.Equal;
-                case ExpressionType.NotEqual:
-                    return Operation.NotEqual;
-                case ExpressionType.GreaterThan:
-                    return Operation.GreaterThan;
-                case ExpressionType.GreaterThanOrEqual:
-                    return Operation.GreaterThanOrEqual;
-                case ExpressionType.LessThan:
-                    return Operation.LessThan;
-                case ExpressionType.LessThanOrEqual:
-                    return Operation.LessThanOrEqual;
-                default:
-                    throw new NotSupportedException($"Operation: Expression '{expressionType.ToString()}' is currently not supported.");
-            }
         }
 
         #endregion
@@ -311,20 +320,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="QueryField"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryField other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(QueryField other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="QueryField"/> objects.
@@ -347,10 +352,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryField"/> object.</param>
         /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryField objA, QueryField objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(QueryField objA, QueryField objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

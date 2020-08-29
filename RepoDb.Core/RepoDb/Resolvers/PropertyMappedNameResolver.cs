@@ -19,9 +19,7 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The cached column name mappings of the property.</returns>
-        public string Resolve(PropertyInfo propertyInfo)
-        {
-            return PropertyInfoExtension.GetMappedName(propertyInfo);
-        }
+        public string Resolve(PropertyInfo propertyInfo) =>
+            PropertyInfoExtension.GetMappedName(propertyInfo);
     }
 }

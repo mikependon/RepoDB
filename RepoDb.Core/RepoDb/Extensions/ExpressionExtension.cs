@@ -19,22 +19,22 @@ namespace RepoDb.Extensions
     public static class ExpressionExtension
     {
         private readonly static ExpressionType[] extractableExpressionTypes = new[]
-            {
-                ExpressionType.Equal,
-                ExpressionType.NotEqual,
-                ExpressionType.GreaterThan,
-                ExpressionType.GreaterThanOrEqual,
-                ExpressionType.LessThan,
-                ExpressionType.LessThanOrEqual
-            };
+        {
+            ExpressionType.Equal,
+            ExpressionType.NotEqual,
+            ExpressionType.GreaterThan,
+            ExpressionType.GreaterThanOrEqual,
+            ExpressionType.LessThan,
+            ExpressionType.LessThanOrEqual
+        };
 
         private readonly static ExpressionType[] mathematicalExpressionTypes = new[]
-            {
-                ExpressionType.Add,
-                ExpressionType.Subtract,
-                ExpressionType.Multiply,
-                ExpressionType.Divide
-            };
+        {
+            ExpressionType.Add,
+            ExpressionType.Subtract,
+            ExpressionType.Multiply,
+            ExpressionType.Divide
+        };
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> can be extracted as <see cref="QueryField"/> object.

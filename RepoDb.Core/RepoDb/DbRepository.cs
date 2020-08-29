@@ -37,8 +37,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -54,8 +53,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -73,8 +71,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -90,8 +87,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   trace,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -107,8 +103,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   statementBuilder)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -127,8 +122,7 @@ namespace RepoDb
                   Constant.DefaultCacheItemExpirationInMinutes,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -148,8 +142,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   null,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -171,8 +164,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   trace,
                   null)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -196,8 +188,7 @@ namespace RepoDb
                   cacheItemExpiration,
                   trace,
                   statementBuilder)
-        {
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
@@ -273,18 +264,14 @@ namespace RepoDb
 
         #region Other Methods
 
-        // CreateConnection (TDbConnection)
-
         /// <summary>
         /// Creates a new instance of the database connection. If the value <see cref="ConnectionPersistency"/> property is <see cref="ConnectionPersistency.Instance"/>, then this will return
         /// the <see cref="DbConnection"/> that is being used by the current repository instance. However, if the value of the <see cref="ConnectionPersistency"/>
         /// property is <see cref="ConnectionPersistency.PerCall"/>, then this will return a new instance of the <see cref="DbConnection"/> object.
         /// </summary>
         /// <returns>An instance of the <see cref="DbConnection"/> object.</returns>
-        public TDbConnection CreateConnection()
-        {
-            return CreateConnection(false);
-        }
+        public TDbConnection CreateConnection() =>
+            CreateConnection(false);
 
         /// <summary>
         /// Creates a new instance of the database connection. If the value <see cref="ConnectionPersistency"/> property is <see cref="ConnectionPersistency.Instance"/>, then this will return

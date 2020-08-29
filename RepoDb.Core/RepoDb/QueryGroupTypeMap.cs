@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to hold the <see cref="QueryGroup"/> object type mapping. This class has been introduced
+    /// A class that is used to hold the <see cref="RepoDb.QueryGroup"/> object type mapping. This class has been introduced
     /// to support the needs of the multi-resultsets query operation.
     /// </summary>
     internal class QueryGroupTypeMap
@@ -11,8 +11,8 @@ namespace RepoDb
         /// <summary>
         /// Creates an instance of <see cref="QueryGroupTypeMap"/> class.
         /// </summary>
-        /// <param name="queryGroup">The <see cref="QueryGroup"/> object.</param>
-        /// <param name="type">The type where the <see cref="QueryGroup"/> object is mapped.</param>
+        /// <param name="queryGroup">The <see cref="RepoDb.QueryGroup"/> object.</param>
+        /// <param name="type">The type where the <see cref="RepoDb.QueryGroup"/> object is mapped.</param>
         public QueryGroupTypeMap(QueryGroup queryGroup,
             Type type)
         {
@@ -21,12 +21,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the current <see cref="QueryGroup"/> object.
+        /// Gets the current associated <see cref="RepoDb.QueryGroup"/> object.
         /// </summary>
         public QueryGroup QueryGroup { get; }
 
         /// <summary>
-        /// Gets the type where the current <see cref="QueryGroup"/> is mapped.
+        /// Gets the type where the current <see cref="RepoDb.QueryGroup"/> is mapped.
         /// </summary>
         public Type MappedType { get; }
     }

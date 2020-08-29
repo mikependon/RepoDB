@@ -133,10 +133,8 @@ namespace RepoDb
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(MemberExpression expression,
             Order order)
-            where TEntity : class
-        {
-            return new OrderField(expression.ToMember().Member.Name, order);
-        }
+            where TEntity : class =>
+            new OrderField(expression.ToMember().Member.Name, order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
@@ -148,10 +146,8 @@ namespace RepoDb
         /// <returns>An instance of <see cref="OrderField"/> object.</returns>
         internal static OrderField Parse<TEntity>(BinaryExpression expression,
             Order order)
-            where TEntity : class
-        {
-            return new OrderField(expression.GetName(), order);
-        }
+            where TEntity : class =>
+            new OrderField(expression.GetName(), order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -161,10 +157,8 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Ascending"/> value.</returns>
         public static OrderField Ascending<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class
-        {
-            return Parse<TEntity>(expression, Order.Ascending);
-        }
+            where TEntity : class =>
+            Parse<TEntity>(expression, Order.Ascending);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -174,10 +168,8 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Descending"/> value.</returns>
         public static OrderField Descending<TEntity>(Expression<Func<TEntity, object>> expression)
-            where TEntity : class
-        {
-            return Parse<TEntity>(expression, Order.Descending);
-        }
+            where TEntity : class =>
+            Parse<TEntity>(expression, Order.Descending);
 
         /// <summary>
         /// Parse an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have
@@ -233,20 +225,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="OrderField"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(OrderField other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(OrderField other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="OrderField"/> objects.
@@ -269,10 +257,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="OrderField"/> object.</param>
         /// <param name="objB">The second <see cref="OrderField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(OrderField objA, OrderField objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(OrderField objA, OrderField objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

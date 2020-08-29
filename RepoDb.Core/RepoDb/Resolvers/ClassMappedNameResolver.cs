@@ -19,9 +19,7 @@ namespace RepoDb.Resolvers
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The mapped database object name.</returns>
-        public string Resolve(Type entityType)
-        {
-            return DataEntityExtension.GetMappedName(entityType);
-        }
+        public string Resolve(Type entityType) =>
+            DataEntityExtension.GetMappedName(entityType);
     }
 }

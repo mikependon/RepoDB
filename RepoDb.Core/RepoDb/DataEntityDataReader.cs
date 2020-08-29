@@ -142,10 +142,8 @@ namespace RepoDb
         /// Returns an enumerator that iterates through a collection of data entity objects.
         /// </summary>
         /// <returns>The enumerator object of the current collection.</returns>
-        public override IEnumerator GetEnumerator()
-        {
-            return Entities?.GetEnumerator();
-        }
+        public override IEnumerator GetEnumerator() =>
+            Entities?.GetEnumerator();
 
         /// <summary>
         /// Gets the instance of <see cref="IDbConnection"/> in used.
@@ -209,27 +207,32 @@ namespace RepoDb
         /// <summary>
         /// Gets the value that indicates whether the current reader is closed.
         /// </summary>
-        public override bool IsClosed { get { return isClosed; } }
+        public override bool IsClosed =>
+            isClosed;
 
         /// <summary>
         /// Gets the value that indicates whether the current reader is already disposed.
         /// </summary>
-        public bool IsDisposed { get { return isDisposed; } }
+        public bool IsDisposed =>
+            isDisposed;
 
         /// <summary>
         /// Gets the number of rows affected by the iteration.
         /// </summary>
-        public override int RecordsAffected { get { return recordsAffected; } }
+        public override int RecordsAffected =>
+            recordsAffected;
 
         /// <summary>
         /// Gets the number of properties the data entity object has.
         /// </summary>
-        public override int FieldCount { get { return fieldCount; } }
+        public override int FieldCount =>
+            fieldCount;
 
         /// <summary>
         /// Gets a value that signify whether the current data reader has data entities.
         /// </summary>
-        public override bool HasRows => Entities?.Any() == true;
+        public override bool HasRows =>
+            Entities?.Any() == true;
 
         /// <summary>
         /// Closes the current data reader.

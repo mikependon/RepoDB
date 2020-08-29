@@ -26,10 +26,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
         /// <returns>The converted value.</returns>
-        public static object DbNullToNull(object value)
-        {
-            return ReferenceEquals(DBNull.Value, value) ? null : value;
-        }
+        public static object DbNullToNull(object value) =>
+            ReferenceEquals(DBNull.Value, value) ? null : value;
 
         /// <summary>
         /// Converts a value to a target type if the value is equals to null or <see cref="DBNull.Value"/>.

@@ -111,10 +111,8 @@ namespace RepoDb
         /// Gets the string that represents the instance of this <see cref="DbField"/> object.
         /// </summary>
         /// <returns>The string that represents the instance of this <see cref="DbField"/> object.</returns>
-        public override string ToString()
-        {
-            return string.Concat(Name, ", ", IsPrimary.ToString(), " (", hashCode, ")");
-        }
+        public override string ToString() =>
+            string.Concat(Name, ", ", IsPrimary.ToString(), " (", hashCode, ")");
 
         #endregion
 
@@ -165,20 +163,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="DbField"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(DbField other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(DbField other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="DbField"/> objects.
@@ -201,10 +195,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="DbField"/> object.</param>
         /// <param name="objB">The second <see cref="DbField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(DbField objA, DbField objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(DbField objA, DbField objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

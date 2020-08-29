@@ -5,7 +5,6 @@ using RepoDb.Extensions;
 using System.Linq.Expressions;
 using System.Reflection;
 using RepoDb.Exceptions;
-using System.Net.Http.Headers;
 
 namespace RepoDb
 {
@@ -65,10 +64,9 @@ namespace RepoDb
         /// Stringify the current field object.
         /// </summary>
         /// <returns>The string value equivalent to the name of the field.</returns>
-        public override string ToString()
-        {
-            return string.Concat(Name, ", ", Type?.FullName, " (", hashCode, ")");
-        }
+        public override string ToString() =>
+            string.Concat(Name, ", ", Type?.FullName, " (", hashCode, ")");
+
 
         #endregion
 
@@ -129,10 +127,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse(object obj)
-        {
-            return Parse(obj?.GetType());
-        }
+        public static IEnumerable<Field> Parse(object obj) =>
+            Parse(obj?.GetType());
 
         /// <summary>
         /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
@@ -140,10 +136,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse<TEntity>()
-            where TEntity : class
-        {
-            return Parse(typeof(TEntity));
-        }
+            where TEntity : class =>
+            Parse(typeof(TEntity));
 
 
         /// <summary>
@@ -243,10 +237,8 @@ namespace RepoDb
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>An enumerable list of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> Parse<TEntity>(BinaryExpression expression)
-            where TEntity : class
-        {
-            return (new Field(expression.GetName())).AsEnumerable();
-        }
+            where TEntity : class =>
+            (new Field(expression.GetName())).AsEnumerable();
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="NewExpression"/> and converts the result 
@@ -301,20 +293,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="Field"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(Field other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(Field other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="Field"/> objects.
@@ -337,10 +325,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="Field"/> object.</param>
         /// <param name="objB">The second <see cref="Field"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(Field objA, Field objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(Field objA, Field objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

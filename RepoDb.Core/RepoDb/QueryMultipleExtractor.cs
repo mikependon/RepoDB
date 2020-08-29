@@ -57,10 +57,8 @@ namespace RepoDb
         /// <summary>
         /// Disposes the current instance of <see cref="QueryMultipleExtractor"/>.
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() =>
             reader?.Dispose();
-        }
 
         #region Properties
 
@@ -248,7 +246,6 @@ namespace RepoDb
             // Only if there are record
             if (reader.Read())
             {
-                // TODO: This can be compiled expression using the 'Get<Type>()' method
                 value = Converter.ToType<TResult>(reader[0]);
             }
 
@@ -271,7 +268,6 @@ namespace RepoDb
             // Only if there are record
             if (await reader.ReadAsync())
             {
-                // TODO: This can be compiled expression using the 'Get<Type>()' method
                 value = Converter.ToType<TResult>(reader[0]);
             }
 
@@ -290,43 +286,15 @@ namespace RepoDb
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
         /// </summary>
         /// <returns>An instance of extracted object as value result.</returns>
-        public object Scalar()
-        {
-            var value = (object)null;
-
-            // Only if there are record
-            if (reader.Read())
-            {
-                value = Converter.DbNullToNull(reader.GetValue(0));
-            }
-
-            // Move to next result
-            NextResult();
-
-            // Return the result
-            return value;
-        }
+        public object Scalar() =>
+            Scalar<object>();
 
         /// <summary>
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object in an asynchronous way.
         /// </summary>
         /// <returns>An instance of extracted object as value result.</returns>
-        public async Task<object> ScalarAsync()
-        {
-            var value = (object)null;
-
-            // Only if there are record
-            if (await reader.ReadAsync())
-            {
-                value = Converter.DbNullToNull(reader.GetValue(0));
-            }
-
-            // Move to next result
-            await NextResultAsync();
-
-            // Return the result
-            return value;
-        }
+        public Task<object> ScalarAsync() =>
+            ScalarAsync<object>();
 
         #endregion
 
@@ -338,19 +306,15 @@ namespace RepoDb
         /// Advances the <see cref="DbDataReader"/> object to the next result.
         /// <returns>True if there are more result sets; otherwise false.</returns>
         /// </summary>
-        public bool NextResult()
-        {
-            return (Position = reader.NextResult() ? Position + 1 : -1) >= 0;
-        }
+        public bool NextResult() =>
+            (Position = reader.NextResult() ? Position + 1 : -1) >= 0;
 
         /// <summary>
         /// Advances the <see cref="DbDataReader"/> object to the next result in an asynchronous way.
         /// <returns>True if there are more result sets; otherwise false.</returns>
         /// </summary>
-        public async Task<bool> NextResultAsync()
-        {
-            return (Position = await reader.NextResultAsync() ? Position + 1 : -1) >= 0;
-        }
+        public async Task<bool> NextResultAsync() =>
+            (Position = await reader.NextResultAsync() ? Position + 1 : -1) >= 0;
 
         #endregion
     }

@@ -33,10 +33,8 @@ namespace RepoDb
         public void Add<T>(string key,
             T value,
             int expiration = Constant.DefaultCacheItemExpirationInMinutes,
-            bool throwException = true)
-        {
+            bool throwException = true) =>
             Add(new CacheItem<T>(key, value, expiration), throwException);
-        }
 
         /// <summary>
         /// Adds a cache item value.
@@ -73,10 +71,8 @@ namespace RepoDb
         /// <summary>
         /// Clears the collection of the cache.
         /// </summary>
-        public void Clear()
-        {
+        public void Clear() =>
             cache.Clear();
-        }
 
         /// <summary>
         /// Checks whether the key is present in the collection.
@@ -124,22 +120,18 @@ namespace RepoDb
         /// Gets the enumerator of the cache collection.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator GetEnumerator()
-        {
-            return cache
-                .Where(kvp => (kvp.Value as IExpirable)?.IsExpired() == false)
-                .Select(kvp => kvp.Value)
-                .GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
 
         /// <summary>
         /// Gets the enumerator of the cache collection.
         /// </summary>
         /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerator GetEnumerator() =>
+            cache
+                .Where(kvp => (kvp.Value as IExpirable)?.IsExpired() == false)
+                .Select(kvp => kvp.Value)
+                .GetEnumerator();
 
         /// <summary>
         /// Removes the item from the cache collection.

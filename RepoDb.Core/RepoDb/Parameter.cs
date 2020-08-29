@@ -72,19 +72,15 @@ namespace RepoDb
         /// Set the name of the parameter.
         /// </summary>
         /// <param name="name">The new name.</param>
-        internal void SetName(string name)
-        {
+        internal void SetName(string name) =>
             Name = name;
-        }
 
         /// <summary>
         /// Stringify the current object. Will return the format of <b>Name (Value)</b> text.
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Concat(Name, " (", Value, ")");
-        }
+        public override string ToString() =>
+            string.Concat(Name, " (", Value, ")");
 
         #endregion
 
@@ -115,20 +111,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="Parameter"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(Parameter other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(Parameter other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="Parameter"/> objects.
@@ -151,10 +143,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="Parameter"/> object.</param>
         /// <param name="objB">The second <see cref="Parameter"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(Parameter objA, Parameter objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(Parameter objA, Parameter objB) =>
+            (objA == objB) == false;
 
         #endregion
     }
