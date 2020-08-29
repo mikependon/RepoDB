@@ -8,7 +8,8 @@ We would like you and the community of .NET to understand the limitations of the
 
 - [Composite Keys](#composite-keys)
 - [Computed Columns](#computed-columns)
-- [JOIN Query (Support)](#join-query)
+- [JOIN Query (Support)](#join-query-support)
+- [Cache Invalidation](#cache-invalidation)
 
 ## Composite Keys
 
@@ -334,3 +335,46 @@ using (var connection = new SqlConnection(connectionString).EnsureOpen())
 ```
 
 The good thing to this is controlled by you, and that is a very important case to us.
+
+## Cache Invalidation
+
+Though it is quietly important for the cache to get invalidated at some point in time, we in RepoDB decided not to introduce the additional layer that checks the cache invalidity. The reason is to keep the library as light as possible without it allowing to do some extra validations or any background processes that does the hidden jobs.
+
+By default, the length of the cache item expiration is 180 minutes. It uses the value of [Constant.DefaultCacheItemExpirationInMinutes](https://github.com/mikependon/RepoDb/blob/0c3d4b503a0a7da30b344341cbf6860e98955d9e/RepoDb.Core/RepoDb/Constant.cs#L16) property.
+
+**Example**
+
+Via `DbConnection` object.
+
+```csharp
+var cache = CacheFactory.Create();
+using (var connection = new SqlConnection(connectionString).EnsureOpen())
+{
+	var customers = connection.QueryAll<Customer>(cacheKey: "AllCustomers", cache: cache);
+}
+```
+
+Via `BaseRepository` or `DbRepository` object.
+
+```csharp
+using (var repository = new DbRepository<SqlConnection>(connectionString, cache: CacheFactory.Create()))
+{
+	var customers = repository.QueryAll<Customer>(cacheKey: "AllCustomers");
+}
+```
+
+The returned value of the [QueryAll](https://repodb.net/operation/queryall) operation will be cached to the `cache` argument object for the next 180 minutes. The cache item will not auto validate itself when you and/or somebody had changed the list of customers from the database.
+
+When the cache item has expired, it will again do the wired-up in the database and will retrieve the latest and greatest customer information.
+
+**Alternative Solution**
+
+You have to manually invalidate the cache item by simply removing it from the cache itself.
+
+```csharp
+var cache = CacheFactory.Create(); // Get the instance from the factor
+cache.Remove("AllCustomers");
+```
+
+By explicitly removing it, any of the fetch operations that does pointed to the cache key `AllCustomers` will again retrieve the latest information from the database.
+
