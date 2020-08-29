@@ -99,11 +99,11 @@ Whereas the fluent methods below only support the [SQL Server](https://www.nuget
  
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
-## .NET Type Coercion Problem
+## .NET Type Coercion
 
-By default, RepoDB does not do the automatic .NET CLR Type conversion during the transformation of the Model and the DbDataReader object. The coercion capability is completely dependent to the ADO.NET coercion capability.
+By default, RepoDB does not do the automatic .NET CLR Type conversion during the serialization and deserialization process. The coercion support is completely dependent to the ADO.NET coercion capability.
 
-It is in purpose to strictly notify you (as the library user) the design or the implementation problem of the Model if being compared to the corresponding database Table.
+It is in purpose to strictly notify you (as a library user) the design and/or the implementation problem of the Model if being compared to its corresponding database Table.
 
 If you wish to have an automatic conversion, simply set the [Converter.ConversionProperty](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
 
@@ -119,7 +119,7 @@ It is very important for you and to the community of .NET to learn the things th
 
 ## Benchmark
 
-The benchmark result shown on this section is the result of the community-approved ORM bencher tool (the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool).
+The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
 Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
 
@@ -129,7 +129,7 @@ Below is the actual recent official execution [result](https://github.com/FransB
 
 We would like to make RepoDB the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
-To contribute, you can find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Or, you may otherwise create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. Your expertise is needed to correct the forms, if needed.
 
