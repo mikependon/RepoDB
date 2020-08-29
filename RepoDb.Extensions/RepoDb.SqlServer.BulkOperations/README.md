@@ -23,13 +23,13 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 
 ## Core Features
 
-- [Special Arguments](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#special-arguments)
-- [Async Methods](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#async-methods)
-- [Caveats](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#caveats)
-- [BulkDelete](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkdelete)
-- [BulkInsert](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkinsert)
-- [BulkMerge](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkmerge)
-- [BulkUpdate](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations#bulkupdate)
+- [Special Arguments](#special-arguments)
+- [Async Methods](#async-methods)
+- [Caveats](#caveats)
+- [BulkDelete](#bulkdelete)
+- [BulkInsert](#bulkinsert)
+- [BulkMerge](#bulkmerge)
+- [BulkUpdate](#bulkupdate)
 
 ## Community engagements
 

@@ -26,7 +26,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 ## Dependencies
 
 - [Npgsql](https://www.nuget.org/packages/Npgsql/) - the data provider used for PostgreSql.
-- [RepoDB](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDb.
+- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDB.
 
 ## License
 

@@ -26,7 +26,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 ## Dependencies
 
 - [MySqlConnector](https://www.nuget.org/packages/MySqlConnector/) - the data provider used for MySqlConnector.
-- [RepoDB](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDb.
+- [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDB.
 
 ## License
 

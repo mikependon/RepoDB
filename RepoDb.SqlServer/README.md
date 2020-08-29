@@ -26,7 +26,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 ## Dependencies
 
 - [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient/) - the data provider used for SqlServer.
-- [RepoDB](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDb.
+- [RepoDb](https://www.nuget.org/packages/RepoDb.SqLite/) - the core library of RepoDB.
 
 ## License
 
