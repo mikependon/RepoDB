@@ -21,6 +21,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 - [Batch Operations](http://repodb.net/feature/batchoperations)
 - [Bulk Operations](http://repodb.net/feature/bulkoperations)
 - [Caching](http://repodb.net/feature/caching)
+- [Class Handlers](http://repodb.net/feature/classhandlers)
 - [Class Mapping](http://repodb.net/feature/classmapping)
 - [Dynamics](http://repodb.net/feature/dynamics)
 - [Connection Persistency](http://repodb.net/feature/connectionpersistency)
