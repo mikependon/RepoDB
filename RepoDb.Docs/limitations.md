@@ -10,6 +10,7 @@ We would like you and the community of .NET to understand the limitations of the
 - [Computed Columns](#computed-columns)
 - [JOIN Query (Support)](#join-query-support)
 - [Cache Invalidation](#cache-invalidation)
+- [Advance Query Tree Expression](#advance-query-tree-expression)
 
 ## Composite Keys
 
@@ -378,3 +379,64 @@ cache.Remove("AllCustomers");
 
 By explicitly removing it, any of the fetch operations that does pointed to the cache key `AllCustomers` will again retrieve the latest information from the database.
 
+## Advance Query Tree Expression
+
+RepoDB is only supporting a shallow implementation of the query tree expressions. Also mentioned in the above section, RepoDB does not support JOINs in which many developers usually implements the more deeper logics pertaining to the query tree expressions, specifically when using the Entity Framework.
+
+### Scenario 1 - 2nd Level Deep or Deeper
+
+RepoDB only support first level of deep when using the query tree expression, anything beyond is not supported by RepoDB.
+
+Let us say you have the class models below.
+
+```csharp
+public class Address
+{
+	public int Id { get; set; }
+	public string Street { get; set; }
+	...
+}
+
+public class Customer
+{
+	public int Id { get; set; }
+	public string Name { get; set; }
+	public Address Address { get; set; }
+	...
+}
+```
+
+And you did this.
+
+```csharp
+using (var customer = new SqlConnection(connectionString))
+{
+	var customers = connection.Query<Customer>(e => e.Address.Country == "New York");
+}
+```
+
+### Scenario 2 - Unbound to the Property
+
+Any expression that is unbound to the property will not be supported.
+
+```csharp
+using (var customer = new SqlConnection(connectionString))
+{
+	var customers = connection.Query<Customer>(e => DateTime.UtcNow >= DateTime.UtcNow.Date);
+}
+```
+
+### Scenario 3 - Field to Field Comparisson
+
+Any expression that compares a field to another field.
+
+```csharp
+using (var customer = new SqlConnection(connectionString))
+{
+	var sales = connection.Query<Sale>(e => e.TotalPrice >= (e.Price * e.Quantity));
+}
+```
+
+### Other Expressions
+
+It is also important to take note that the complex first level deep is somewhat not supported. As part of our [disclaimer](https://repodb.net/feature/expressiontrees) in the query expression trees, we therefore highly recommend to always use the [QueryField](https://repodb.net/class/queryfield) or [QueryGroup](https://repodb.net/class/querygroup) objects when composing the complex expression trees.
