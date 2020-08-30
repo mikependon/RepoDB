@@ -151,10 +151,8 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached class mapped names.
         /// </summary>
-        public static void Clear()
-        {
+        public static void Clear() =>
             maps.Clear();
-        }
 
         #endregion
 

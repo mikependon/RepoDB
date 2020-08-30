@@ -591,6 +591,8 @@ namespace RepoDb
         internal static object AsMappedObject(QueryGroupTypeMap[] queryGroupTypeMaps,
             bool fixParameters = true)
         {
+            // TODO: Refactor this
+
             // Create a new instance of ExpandObject
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
 
@@ -1525,20 +1527,16 @@ namespace RepoDb
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="QueryGroup"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryGroup other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(QueryGroup other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="QueryGroup"/> objects.
@@ -1546,7 +1544,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryGroup"/> object.</param>
         /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryGroup objA, QueryGroup objB)
+        public static bool operator ==(QueryGroup objA,
+            QueryGroup objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -1561,10 +1560,9 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryGroup"/> object.</param>
         /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryGroup objA, QueryGroup objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(QueryGroup objA,
+            QueryGroup objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

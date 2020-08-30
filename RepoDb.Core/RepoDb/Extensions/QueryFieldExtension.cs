@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Dynamic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
@@ -35,30 +32,59 @@ namespace RepoDb.Extensions
             }
         }
 
-        // AsField
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsField(this QueryField queryField,
             IDbSetting dbSetting) =>
             queryField.Field.Name.AsField(dbSetting);
 
-        // AsParameter
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsParameter(this QueryField queryField,
             int index,
             IDbSetting dbSetting) =>
             queryField.Parameter.Name.AsParameter(index, dbSetting);
 
-        // AsParameterAsField
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsParameterAsField(this QueryField queryField,
             int index,
             IDbSetting dbSetting) =>
             string.Concat(queryField.AsParameter(index, dbSetting), " AS ", queryField.AsField(dbSetting));
 
-        // AsBetweenParameter
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsBetweenParameter(this QueryField queryField,
             int index,
             IDbSetting dbSetting) =>
             string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_Left AND ", queryField.Parameter.Name.AsParameter(index, dbSetting), "_Right");
 
-        // AsInParameter
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsInParameter(this QueryField queryField,
             int index,
             IDbSetting dbSetting)
@@ -72,7 +98,13 @@ namespace RepoDb.Extensions
             return string.Concat("(", values, ")");
         }
 
-        // AsFieldAndParameter
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsFieldAndParameter(this QueryField queryField,
             int index,
             IDbSetting dbSetting)
@@ -99,11 +131,25 @@ namespace RepoDb.Extensions
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsFieldAndParameterForBetween(this QueryField queryField,
             int index,
             IDbSetting dbSetting) =>
             string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static string AsFieldAndParameterForIn(this QueryField queryField,
             int index,
             IDbSetting dbSetting)
@@ -117,35 +163,6 @@ namespace RepoDb.Extensions
             {
                 return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
             }
-        }
-
-        // AsDbParameter
-        internal static IDbDataParameter AsDbParameter(this QueryField queryField,
-            IDbCommand command) =>
-            AsDbParameter(queryField, command.CreateParameter());
-
-        internal static IDbDataParameter AsDbParameter(this QueryField queryField,
-            IDbDataParameter parameter)
-        {
-            parameter.ParameterName = queryField.Field.Name;
-            parameter.Value = queryField.Parameter.Value ?? DBNull.Value;
-            return parameter;
-        }
-
-        // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<QueryField> queryFields,
-            IDbSetting dbSetting) =>
-            queryFields.Select(field => field.AsFieldAndParameter(0, dbSetting));
-
-        // AsObject
-        internal static object AsObject(this IEnumerable<QueryField> queryFields)
-        {
-            var expandoObject = new ExpandoObject() as IDictionary<string, object>;
-            foreach (var queryField in queryFields)
-            {
-                expandoObject.Add(queryField.Field.Name, queryField.Parameter.Value);
-            }
-            return expandoObject;
         }
     }
 }

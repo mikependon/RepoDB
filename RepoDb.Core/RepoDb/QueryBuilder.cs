@@ -623,7 +623,9 @@ namespace RepoDb
             IDbSetting dbSetting)
             where TEntity : class
         {
-            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName()).AsFields();
+            var fields = PropertyCache
+                .Get<TEntity>()?
+                .Select(property => property.AsField());
             return ParametersAsFieldsFrom(fields, index, dbSetting);
         }
 

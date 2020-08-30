@@ -62,13 +62,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity where to get the mapped name.</param>
         /// <returns>The mapped name for the data entity.</returns>
-        internal static string GetMappedName(Type type)
-        {
-            return type.GetCustomAttribute<MapAttribute>()?.Name ??
-                GetMappedName(type.GetCustomAttribute<TableAttribute>()) ??
-                ClassMapper.Get(type) ??
-                type.Name;
-        }
+        internal static string GetMappedName(Type type) =>
+            type.GetCustomAttribute<MapAttribute>()?.Name ?? GetMappedName(type.GetCustomAttribute<TableAttribute>()) ??
+                ClassMapper.Get(type) ?? type.Name;
 
         /// <summary>
         /// Gets the mapped name of the data entity. This will return the value of <see cref="MapAttribute.Name"/> and/or <see cref="TableAttribute.Name"/> property.

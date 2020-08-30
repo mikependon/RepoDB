@@ -150,20 +150,16 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="MergeAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(MergeAllRequest other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(MergeAllRequest other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="MergeAllRequest"/> objects.
@@ -171,7 +167,8 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="MergeAllRequest"/> object.</param>
         /// <param name="objB">The second <see cref="MergeAllRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(MergeAllRequest objA, MergeAllRequest objB)
+        public static bool operator ==(MergeAllRequest objA,
+            MergeAllRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -186,10 +183,9 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="MergeAllRequest"/> object.</param>
         /// <param name="objB">The second <see cref="MergeAllRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(MergeAllRequest objA, MergeAllRequest objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(MergeAllRequest objA,
+            MergeAllRequest objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

@@ -174,10 +174,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type)
-        {
-            return TypeExtension.GenerateHashCode(type);
-        }
+        private static int GenerateHashCode(Type type) =>
+            TypeExtension.GenerateHashCode(type);
 
         /// <summary>
         /// Throws an exception if null.

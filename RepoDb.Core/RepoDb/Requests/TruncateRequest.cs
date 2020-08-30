@@ -73,20 +73,16 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="TruncateRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(TruncateRequest other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(TruncateRequest other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="TruncateRequest"/> objects.
@@ -94,7 +90,8 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="TruncateRequest"/> object.</param>
         /// <param name="objB">The second <see cref="TruncateRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(TruncateRequest objA, TruncateRequest objB)
+        public static bool operator ==(TruncateRequest objA,
+            TruncateRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -109,10 +106,9 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="TruncateRequest"/> object.</param>
         /// <param name="objB">The second <see cref="TruncateRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(TruncateRequest objA, TruncateRequest objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(TruncateRequest objA,
+            TruncateRequest objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

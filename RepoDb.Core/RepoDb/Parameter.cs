@@ -128,7 +128,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="Parameter"/> object.</param>
         /// <param name="objB">The second <see cref="Parameter"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(Parameter objA, Parameter objB)
+        public static bool operator ==(Parameter objA,
+            Parameter objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -143,7 +144,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="Parameter"/> object.</param>
         /// <param name="objB">The second <see cref="Parameter"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(Parameter objA, Parameter objB) =>
+        public static bool operator !=(Parameter objA,
+            Parameter objB) =>
             (objA == objB) == false;
 
         #endregion

@@ -644,10 +644,8 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached command texts.
         /// </summary>
-        public static void Flush()
-        {
+        public static void Flush() =>
             cache.Clear();
-        }
 
         /// <summary>
         /// Get the actual list of <see cref="Field"/> objects of the table based on the actual list of <see cref="DbField"/> objects.
@@ -749,10 +747,8 @@ namespace RepoDb
         /// <param name="builder">The builder to be checked.</param>
         /// <returns>The instance of available statement builder.</returns>
         private static IStatementBuilder EnsureStatementBuilder(IDbConnection connection,
-            IStatementBuilder builder)
-        {
-            return builder ?? connection.GetStatementBuilder();
-        }
+            IStatementBuilder builder) =>
+            builder ?? connection.GetStatementBuilder();
 
         #endregion
     }

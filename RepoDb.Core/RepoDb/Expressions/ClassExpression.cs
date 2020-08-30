@@ -79,17 +79,25 @@ namespace RepoDb
         /// <returns>The values of the property of the data entities.</returns>
         internal static IEnumerable<TResult> GetEntitiesPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
-            where TEntity : class
-        {
-            return GetPropertyValuesCache<TEntity, TResult>.Do(entities, property);
-        }
+            where TEntity : class =>
+            GetPropertyValuesCache<TEntity, TResult>.Do(entities, property);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         private static class GetPropertyValuesCache<TEntity, TResult>
             where TEntity : class
         {
             private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
                 new ConcurrentDictionary<int, Func<TEntity, TResult>>();
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="property"></param>
+            /// <returns></returns>
             private static Func<TEntity, TResult> GetFunc(ClassProperty property)
             {
                 // Expressions
@@ -110,6 +118,10 @@ namespace RepoDb
                     .Compile();
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="property"></param>
             private static void Guard(ClassProperty property)
             {
                 // Check the presence
@@ -125,6 +137,12 @@ namespace RepoDb
                 }
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="entities"></param>
+            /// <param name="property"></param>
+            /// <returns></returns>
             public static IEnumerable<TResult> Do(IEnumerable<TEntity> entities,
                 ClassProperty property)
             {
@@ -162,16 +180,22 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>The properties of the class.</returns>
         public static IEnumerable<ClassProperty> GetProperties<TEntity>()
-            where TEntity : class
-        {
-            return GetPropertiesCache<TEntity>.Do();
-        }
+            where TEntity : class =>
+            GetPropertiesCache<TEntity>.Do();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         private static class GetPropertiesCache<TEntity>
             where TEntity : class
         {
             private static Func<IEnumerable<ClassProperty>> func;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             private static Func<IEnumerable<ClassProperty>> GetFunc()
             {
                 var body = Expression.Constant(DataEntityExtension.GetProperties<TEntity>());
@@ -180,6 +204,10 @@ namespace RepoDb
                     .Compile();
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public static IEnumerable<ClassProperty> Do()
             {
                 if (func == null)
@@ -206,11 +234,19 @@ namespace RepoDb
             return GetPropertiesValuesCache<TEntity>.Do(obj);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         private static class GetPropertiesValuesCache<TEntity>
             where TEntity : class
         {
             private static Func<TEntity, IEnumerable<PropertyValue>> func;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             private static Func<TEntity, IEnumerable<PropertyValue>> GetFunc()
             {
                 // Expressions
@@ -244,6 +280,11 @@ namespace RepoDb
                     .Compile();
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
             public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
                 if (func == null)

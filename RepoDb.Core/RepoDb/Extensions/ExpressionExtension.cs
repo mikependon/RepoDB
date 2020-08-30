@@ -209,10 +209,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="MemberExpression"/> to be checked.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        public static string GetName(this MemberExpression expression)
-        {
-            return expression.Member.GetMappedName();
-        }
+        public static string GetName(this MemberExpression expression) =>
+            expression.Member.GetMappedName();
 
         #endregion
 
@@ -521,10 +519,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="DefaultExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
-        public static object GetValue(this DefaultExpression expression)
-        {
-            return expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
-        }
+        public static object GetValue(this DefaultExpression expression) =>
+            expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
 
         #endregion
 
