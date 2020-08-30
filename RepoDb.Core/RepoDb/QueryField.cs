@@ -337,7 +337,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryField"/> object.</param>
         /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryField objA, QueryField objB)
+        public static bool operator ==(QueryField objA,
+            QueryField objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -352,7 +353,8 @@ namespace RepoDb
         /// <param name="objA">The first <see cref="QueryField"/> object.</param>
         /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryField objA, QueryField objB) =>
+        public static bool operator !=(QueryField objA,
+            QueryField objB) =>
             (objA == objB) == false;
 
         #endregion

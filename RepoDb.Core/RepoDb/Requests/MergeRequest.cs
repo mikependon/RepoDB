@@ -133,20 +133,16 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="MergeRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(MergeRequest other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(MergeRequest other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="MergeRequest"/> objects.
@@ -169,10 +165,9 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="MergeRequest"/> object.</param>
         /// <param name="objB">The second <see cref="MergeRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(MergeRequest objA, MergeRequest objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(MergeRequest objA,
+            MergeRequest objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

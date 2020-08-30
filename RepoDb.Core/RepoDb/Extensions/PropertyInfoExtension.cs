@@ -15,27 +15,6 @@ namespace RepoDb.Extensions
     public static class PropertyInfoExtension
     {
         /// <summary>
-        /// Returns the value of the property.
-        /// </summary>
-        /// <param name="property">The property where to get the value of the object.</param>
-        /// <param name="obj">The object that contains the defined property.</param>
-        /// <returns>The value of the property.</returns>
-        public static object GetValue(this PropertyInfo property,
-            object obj) =>
-            property.GetValue(obj, null);
-
-        /// <summary>
-        /// Sets a value of the property.
-        /// </summary>
-        /// <param name="property">The property where to set the value of the object.</param>
-        /// <param name="obj">The object that contains the defined property.</param>
-        /// <param name="value">The value to be set for the property.</param>
-        public static void SetValue(this PropertyInfo property,
-            object obj,
-            object value) =>
-            property.SetValue(obj, value, null);
-
-        /// <summary>
         /// Gets a custom attribute defined on the property.
         /// </summary>
         /// <typeparam name="T">The custom attribute that is defined into the property.</typeparam>
@@ -59,16 +38,6 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts an instance of <see cref="PropertyInfo"/> into an enumerable list of <see cref="PropertyInfo"/>.
-        /// </summary>
-        /// <param name="property">The <see cref="PropertyInfo"/> instance to be converted.</param>
-        /// <returns>An enumerable list of <see cref="PropertyInfo"/>.</returns>
-        public static IEnumerable<PropertyInfo> AsEnumerable(this PropertyInfo property)
-        {
-            yield return property;
-        }
-
-        /// <summary>
         /// Gets the mapped name of the propery.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
@@ -81,14 +50,6 @@ namespace RepoDb.Extensions
                 PropertyMapper.Get(property) ??
                 property.Name;
         }
-
-        /// <summary>
-        /// Checks whether the <see cref="PropertyInfo"/> is a primary property.
-        /// </summary>
-        /// <param name="property">The instance of <see cref="PropertyInfo"/> to be checked.</param>
-        /// <returns>A boolean value that holds a value whether the <see cref="PropertyInfo"/> is a primary property.</returns>
-        public static bool IsPrimary(this PropertyInfo property) =>
-            (property.GetCustomAttribute<PrimaryAttribute>() != null);
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a query field object.
@@ -163,65 +124,6 @@ namespace RepoDb.Extensions
             string alias,
             IDbSetting dbSetting) =>
             string.Concat(AsFieldAsString(property, dbSetting), " = ", alias, StringConstant.Period, AsFieldAsString(property, dbSetting));
-
-        /* IEnumerable<PropertyInfo> */
-
-        /// <summary>
-        /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as field).
-        /// </summary>
-        /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>An enumerable array of strings containing the converted values of the given properties (as field).</returns>
-        internal static IEnumerable<string> AsFieldsAsStrings(this IEnumerable<PropertyInfo> properties,
-            IDbSetting dbSetting)
-        {
-            foreach (var property in properties)
-            {
-                yield return property.AsFieldAsString(dbSetting);
-            }
-        }
-
-        /// <summary>
-        /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as parameters).
-        /// </summary>
-        /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters).</returns>
-        internal static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties,
-            IDbSetting dbSetting) =>
-            properties?.Select(property => property.AsParameterAsString(dbSetting));
-
-        /// <summary>
-        /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as parameters as fields).
-        /// </summary>
-        /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters as fields).</returns>
-        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties,
-            IDbSetting dbSetting) =>
-            properties?.Select(property => property.AsParameterAsFieldAsString(dbSetting));
-
-        /// <summary>
-        /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as field and parameters).
-        /// </summary>
-        /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and parameters).</returns>
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties,
-            IDbSetting dbSetting) =>
-            properties?.Select(property => property.AsFieldAndParameterAsString(dbSetting));
-
-        /// <summary>
-        /// Converts an enumerable array of <see cref="PropertyInfo"/> objects into an enumerable array of string (as field and its alias).
-        /// </summary>
-        /// <param name="properties">The enumerable array of properties to be converted.</param>
-        /// <param name="alias">The alias to be used.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and its alias).</returns>
-        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties,
-            string alias,
-            IDbSetting dbSetting) =>
-            properties?.Select(property => property.AsFieldAndAliasField(alias, dbSetting));
 
         /// <summary>
         /// Generates a hashcode of the <see cref="PropertyInfo"/> object based on the parent class name and its own name.

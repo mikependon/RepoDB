@@ -11,14 +11,6 @@ namespace RepoDb.Extensions
     public static class TypeExtension
     {
         /// <summary>
-        /// Checks whether the type has a default constructor.
-        /// </summary>
-        /// <param name="type">The current type.</param>
-        /// <returns>Returns true if the current type has a default constructor.</returns>
-        public static bool HasDefaultConstructor(this Type type) =>
-            type.GetConstructors()?.FirstOrDefault(item => item.GetParameters()?.Any() == false) != null;
-
-        /// <summary>
         /// Returns the instance of <see cref="ConstructorInfo"/> with the most argument.
         /// </summary>
         /// <param name="type">The current type.</param>
@@ -85,28 +77,20 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Checks whether the current type has implemented the target interface.
         /// </summary>
-        /// <typeparam name="T">The type of the interface.</typeparam>
-        /// <param name="type">The current type.</param>
-        /// <returns>True if the current type has implemented the target interface.</returns>
-        public static bool IsInterfacedTo<T>(this Type type) =>
-            IsInterfacedTo(type, typeof(T));
-
-        /// <summary>
-        /// Checks whether the current type has implemented the target interface.
-        /// </summary>
-        /// <param name="type">The current type.</param>
+        /// <param name="currentType">The current type.</param>
         /// <param name="interfaceType">The type of the interface.</param>
         /// <returns>True if the current type has implemented the target interface.</returns>
-        public static bool IsInterfacedTo(this Type type,
+        public static bool IsInterfacedTo(this Type currentType,
             Type interfaceType)
         {
+            // TODO: Refactor this method
             if (interfaceType?.IsInterface != true)
             {
                 throw new ArgumentException("The type of argument 'interfaceType' must be an interface.");
             }
 
             // Variables needed
-            var interfaces = type
+            var interfaces = currentType
                 .GetInterfaces()
                 .Where(e => string.Equals(e.Namespace, interfaceType.Namespace))
                 .AsList();

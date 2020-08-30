@@ -87,10 +87,8 @@ namespace RepoDb
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
         /// <returns>An instance of <see cref="IStatementBuilder"/> defined on the mapping.</returns>
         public static IStatementBuilder Get<TDbConnection>()
-            where TDbConnection : DbConnection
-        {
-            return Get(typeof(TDbConnection));
-        }
+            where TDbConnection : DbConnection =>
+            Get(typeof(TDbConnection));
 
         /// <summary>
         /// Gets the mapped <see cref="IStatementBuilder"/> from the type of <see cref="DbConnection"/>.
@@ -148,10 +146,8 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached <see cref="IStatementBuilder"/> objects.
         /// </summary>
-        public static void Clear()
-        {
+        public static void Clear() =>
             maps.Clear();
-        }
 
         #endregion
 
@@ -162,10 +158,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type)
-        {
-            return TypeExtension.GenerateHashCode(type);
-        }
+        private static int GenerateHashCode(Type type) =>
+            TypeExtension.GenerateHashCode(type);
 
         /// <summary>
         /// Throws an exception if null.

@@ -1808,14 +1808,8 @@ namespace RepoDb
         /// <returns></returns>
         internal static QueryGroup ToQueryGroup<TEntity>(ClassProperty property,
             TEntity entity)
-            where TEntity : class
-        {
-            if (property == null)
-            {
-                return null;
-            }
-            return ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
-        }
+            where TEntity : class =>
+            ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
 
         /// <summary>
         /// 
@@ -1940,10 +1934,8 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<TResult> ExtractPropertyValues<TEntity, TResult>(IEnumerable<TEntity> entities,
             ClassProperty property)
-            where TEntity : class
-        {
-            return ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
-        }
+            where TEntity : class =>
+            ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
 
         /// <summary>
         /// 
@@ -2072,6 +2064,8 @@ namespace RepoDb
             IDbSetting dbSetting,
             ref string commandText)
         {
+            // TODO: Refactor this
+
             if (param == null)
             {
                 return null;
@@ -2209,10 +2203,8 @@ namespace RepoDb
         /// <returns></returns>
         internal static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
             IDbSetting dbSetting,
-            ref string commandText)
-        {
-            return AsCommandArrayParameters(queryGroup.GetFields(true), dbSetting, ref commandText);
-        }
+            ref string commandText) =>
+            AsCommandArrayParameters(queryGroup.GetFields(true), dbSetting, ref commandText);
 
         /// <summary>
         /// 
@@ -2225,6 +2217,8 @@ namespace RepoDb
             IDbSetting dbSetting,
             ref string commandText)
         {
+            // TODO: Refactor this
+
             if (queryFields == null)
             {
                 return null;

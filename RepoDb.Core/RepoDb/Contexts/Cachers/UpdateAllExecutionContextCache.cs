@@ -13,10 +13,8 @@ namespace RepoDb.Contexts.Cachers
         /// <summary>
         /// Flushes all the cached execution context.
         /// </summary>
-        public static void Flush()
-        {
+        public static void Flush() =>
             cache.Clear();
-        }
 
         /// <summary>
         /// 
@@ -26,10 +24,8 @@ namespace RepoDb.Contexts.Cachers
         /// <param name="context"></param>
         internal static void Add<TEntity>(string key,
             UpdateAllExecutionContext<TEntity> context)
-            where TEntity : class
-        {
+            where TEntity : class =>
             cache.TryAdd(key, context);
-        }
 
         /// <summary>
         /// 

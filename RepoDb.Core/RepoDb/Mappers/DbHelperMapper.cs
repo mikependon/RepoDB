@@ -83,10 +83,8 @@ namespace RepoDb
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
         /// <returns>An instance of mapped <see cref="IDbHelper"/></returns>
         public static IDbHelper Get<TDbConnection>()
-            where TDbConnection : DbConnection
-        {
-            return Get(typeof(TDbConnection));
-        }
+            where TDbConnection : DbConnection =>
+            Get(typeof(TDbConnection));
 
         /// <summary>
         /// Gets an existing <see cref="IDbHelper"/> object that is mapped to type <see cref="DbConnection"/>.
@@ -144,10 +142,8 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached <see cref="IDbHelper"/> objects.
         /// </summary>
-        public static void Clear()
-        {
+        public static void Clear() =>
             maps.Clear();
-        }
 
         #endregion
 
@@ -158,10 +154,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type)
-        {
-            return TypeExtension.GenerateHashCode(type);
-        }
+        private static int GenerateHashCode(Type type) =>
+            TypeExtension.GenerateHashCode(type);
 
         /// <summary>
         /// Throws an exception if null.

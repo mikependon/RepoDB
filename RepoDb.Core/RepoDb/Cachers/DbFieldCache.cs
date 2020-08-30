@@ -19,10 +19,8 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached enumerable of <see cref="DbField"/> objects.
         /// </summary>
-        public static void Flush()
-        {
+        public static void Flush() =>
             cache.Clear();
-        }
 
         /// <summary>
         /// Throws an exception of any of the validation needed is failing.

@@ -247,10 +247,8 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached primary properties.
         /// </summary>
-        public static void Clear()
-        {
+        public static void Clear() =>
             maps.Clear();
-        }
 
         #endregion
 
@@ -261,10 +259,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type)
-        {
-            return TypeExtension.GenerateHashCode(type);
-        }
+        private static int GenerateHashCode(Type type) =>
+            TypeExtension.GenerateHashCode(type);
 
         /// <summary>
         /// Gets the instance of <see cref="ClassProperty"/> object from of the data entity based on name.

@@ -308,10 +308,8 @@ namespace RepoDb
         /// <summary>
         /// Clears all the existing cached property mapped names.
         /// </summary>
-        public static void Clear()
-        {
+        public static void Clear() =>
             maps.Clear();
-        }
 
         #endregion
 
@@ -324,10 +322,8 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
         private static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo)
-        {
-            return TypeExtension.GenerateHashCode(entityType, propertyInfo);
-        }
+            PropertyInfo propertyInfo) =>
+            TypeExtension.GenerateHashCode(entityType, propertyInfo);
 
         /// <summary>
         /// Validates the value of the target column name.

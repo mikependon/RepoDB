@@ -108,20 +108,16 @@ namespace RepoDb.Requests
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            return obj?.GetHashCode() == GetHashCode();
-        }
+        public override bool Equals(object obj) =>
+            obj?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the <see cref="MinAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(MinAllRequest other)
-        {
-            return other?.GetHashCode() == GetHashCode();
-        }
+        public bool Equals(MinAllRequest other) =>
+            other?.GetHashCode() == GetHashCode();
 
         /// <summary>
         /// Compares the equality of the two <see cref="MinAllRequest"/> objects.
@@ -129,7 +125,8 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="MinAllRequest"/> object.</param>
         /// <param name="objB">The second <see cref="MinAllRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(MinAllRequest objA, MinAllRequest objB)
+        public static bool operator ==(MinAllRequest objA,
+            MinAllRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -144,10 +141,9 @@ namespace RepoDb.Requests
         /// <param name="objA">The first <see cref="MinAllRequest"/> object.</param>
         /// <param name="objB">The second <see cref="MinAllRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(MinAllRequest objA, MinAllRequest objB)
-        {
-            return (objA == objB) == false;
-        }
+        public static bool operator !=(MinAllRequest objA,
+            MinAllRequest objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

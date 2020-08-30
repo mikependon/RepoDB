@@ -58,20 +58,16 @@ namespace RepoDb
         /// <summary>
         /// Flushes all the existing cached enumerable of <see cref="Field"/> objects.
         /// </summary>
-        public static void Flush()
-        {
+        public static void Flush() =>
             cache.Clear();
-        }
 
         /// <summary>
         /// Generates a hashcode for caching.
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type)
-        {
-            return TypeExtension.GenerateHashCode(type);
-        }
+        private static int GenerateHashCode(Type type) =>
+            TypeExtension.GenerateHashCode(type);
 
         #endregion
     }

@@ -13,11 +13,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The member where to retrieve a name.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        internal static string GetMappedName(this MemberInfo member)
-        {
-            return member.IsPropertyInfo() ?
-                PropertyMappedNameCache.Get(member.ToPropertyInfo()) : member.Name;
-        }
+        internal static string GetMappedName(this MemberInfo member) =>
+            member.IsPropertyInfo() ? PropertyMappedNameCache.Get(member.ToPropertyInfo()) : member.Name;
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberInfo"/> object.

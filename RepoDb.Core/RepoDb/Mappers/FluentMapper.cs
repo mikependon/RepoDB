@@ -11,19 +11,15 @@
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>An instance of <see cref="EntityMapFluentDefinition{TEntity}"/> object.</returns>
         public static EntityMapFluentDefinition<TEntity> Entity<TEntity>()
-            where TEntity : class
-        {
-            return new EntityMapFluentDefinition<TEntity>();
-        }
+            where TEntity : class =>
+            new EntityMapFluentDefinition<TEntity>();
 
         /// <summary>
         /// Defines the target .NET CLR type where to apply the mappings.
         /// </summary>
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <returns>An instance of <see cref="TypeMapFluentDefinition{TType}"/> object.</returns>
-        public static TypeMapFluentDefinition<TType> Type<TType>()
-        {
-            return new TypeMapFluentDefinition<TType>();
-        }
+        public static TypeMapFluentDefinition<TType> Type<TType>() =>
+            new TypeMapFluentDefinition<TType>();
     }
 }
