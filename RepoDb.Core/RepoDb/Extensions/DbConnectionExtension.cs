@@ -1717,7 +1717,7 @@ namespace RepoDb
                 var type = typeof(T);
                 if (type.IsGenericType || type == StaticType.Object)
                 {
-                    return QueryGroup.Parse(what);
+                    return QueryGroup.Parse(what, false);
                 }
             }
             return null;
@@ -1741,7 +1741,7 @@ namespace RepoDb
             var type = where.GetType();
             if (type.IsClassType() || type.IsGenericType)
             {
-                return QueryGroup.Parse(where);
+                return QueryGroup.Parse(where, true);
             }
             else
             {

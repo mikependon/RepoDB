@@ -4,10 +4,7 @@ using System.Linq;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Attributes;
-using RepoDb.Exceptions;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Dynamic;
 using RepoDb.Interfaces;
 
 namespace RepoDb
@@ -16,7 +13,7 @@ namespace RepoDb
     /// A widely-used object for defining the groupings for the query expression. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
-    public class QueryGroup : IEquatable<QueryGroup>
+    public partial class QueryGroup : IEquatable<QueryGroup>
     {
         private bool isFixed = false;
         private int? hashCode = null;
@@ -537,28 +534,8 @@ namespace RepoDb
         /// Sets the value of the <see cref="IsNot"/> property.
         /// </summary>
         /// <param name="value">The <see cref="bool"/> value the defines the <see cref="IsNot"/> property.</param>
-        internal void SetIsNot(bool value)
-        {
+        internal void SetIsNot(bool value) =>
             IsNot = value;
-        }
-
-        /// <summary>
-        /// Force to set the <see cref="isFixed"/> variable to True.
-        /// </summary>
-        private void ForceFix()
-        {
-            // Set the flags of the children
-            if (QueryGroups?.Any() == true)
-            {
-                foreach (var queryGroup in QueryGroups)
-                {
-                    queryGroup.ForceFix();
-                }
-            }
-
-            // Set the flag of the current instance
-            isFixed = true;
-        }
 
         /// <summary>
         /// Fix the names of the parameters in every <see cref="QueryField"/> object of the target list of <see cref="QueryGroup"/>s.
@@ -567,168 +544,88 @@ namespace RepoDb
         /// <returns>An instance of <see cref="QueryGroup"/> object containing all the fields.</returns>
         internal static void FixForQueryMultiple(QueryGroup[] queryGroups)
         {
-            var queryFields = new List<QueryField>();
             for (var i = 0; i < queryGroups.Length; i++)
             {
-                var queryGroup = queryGroups[i];
-                var fields = queryGroup.GetFields(true);
-                foreach (var field in fields)
+                foreach (var field in queryGroups[i].GetFields(true))
                 {
                     field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
-                    queryFields.Add(field);
                 }
             }
         }
 
         /// <summary>
-        /// Converts every <see cref="QueryGroup"/> object of the list of <see cref="QueryGroupTypeMap"/> into an <see cref="object"/> 
-        /// with all the child <see cref="QueryField"/>s as the property/value to that object. The value of every property of the created
-        /// object will be an instance of the <see cref="CommandParameter"/> with the proper type, name and value.
+        /// Forces to set the <see cref="isFixed"/> variable to True.
         /// </summary>
-        /// <param name="queryGroupTypeMaps">The list of <see cref="QueryGroupTypeMap"/> objects to be converted.</param>
-        /// <param name="fixParameters">A boolean value whether to fix the parameter name before converting.</param>
-        /// <returns>An instance of an object that contains all the definition of the converted underlying <see cref="QueryFields"/>s.</returns>
-        internal static object AsMappedObject(QueryGroupTypeMap[] queryGroupTypeMaps,
-            bool fixParameters = true)
+        private void ForceIsFixedVariables()
         {
-            // TODO: Refactor this
-
-            // Create a new instance of ExpandObject
-            var expandObject = new ExpandoObject() as IDictionary<string, object>;
-
-            foreach (var queryGroupTypeMap in queryGroupTypeMaps)
+            if (QueryGroups?.Any() == true)
             {
-                var queryFields = queryGroupTypeMap.QueryGroup.GetFields(true);
-
-                // Identify if there are fields to count
-                if (queryFields.Any() != true)
+                foreach (var queryGroup in QueryGroups)
                 {
-                    return null;
-                }
-
-                // Fix the variables for the parameters
-                if (fixParameters == true)
-                {
-                    queryGroupTypeMap.QueryGroup.Fix();
-                }
-
-                // Iterate all the query fields
-                foreach (var queryField in queryFields)
-                {
-                    #region Between/NotBetween
-
-                    if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
-                    {
-                        var left = string.Concat(queryField.Parameter.Name, "_Left");
-                        var right = string.Concat(queryField.Parameter.Name, "_Right");
-                        var values = new List<object>();
-                        if (queryField.Parameter.Value != null)
-                        {
-                            if (queryField.Parameter.Value is System.Collections.IEnumerable)
-                            {
-                                var items = ((System.Collections.IEnumerable)queryField.Parameter.Value)
-                                    .OfType<object>()
-                                    .AsList();
-                                values.AddRange(items);
-                            }
-                            else
-                            {
-                                values.Add(queryField.Parameter.Value);
-                            }
-                        }
-                        if (!expandObject.ContainsKey(left))
-                        {
-                            var leftValue = values.Count > 0 ? values[0] : null;
-                            if (queryGroupTypeMap.MappedType != null)
-                            {
-                                expandObject.Add(left,
-                                    new CommandParameter(left, leftValue, queryGroupTypeMap.MappedType));
-                            }
-                            else
-                            {
-                                expandObject.Add(left, leftValue);
-                            }
-                        }
-                        if (!expandObject.ContainsKey(right))
-                        {
-                            var rightValue = values.Count > 1 ? values[1] : null;
-                            if (queryGroupTypeMap.MappedType != null)
-                            {
-                                expandObject.Add(right,
-                                    new CommandParameter(right, rightValue, queryGroupTypeMap.MappedType));
-                            }
-                            else
-                            {
-                                expandObject.Add(right, rightValue);
-                            }
-                        }
-                    }
-
-                    #endregion
-
-                    #region In/NotIn
-
-                    else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
-                    {
-                        var values = new List<object>();
-                        if (queryField.Parameter.Value != null)
-                        {
-                            if (queryField.Parameter.Value is System.Collections.IEnumerable)
-                            {
-                                var items = ((System.Collections.IEnumerable)queryField.Parameter.Value)
-                                    .OfType<object>()
-                                    .AsList();
-                                values.AddRange(items);
-                            }
-                            else
-                            {
-                                values.Add(queryField.Parameter.Value);
-                            }
-                        }
-                        for (var i = 0; i < values.Count; i++)
-                        {
-                            var parameterName = string.Concat(queryField.Parameter.Name, "_In_", i);
-                            if (!expandObject.ContainsKey(parameterName))
-                            {
-                                if (queryGroupTypeMap.MappedType != null)
-                                {
-                                    expandObject.Add(parameterName,
-                                        new CommandParameter(parameterName, values[i], queryGroupTypeMap.MappedType));
-                                }
-                                else
-                                {
-                                    expandObject.Add(parameterName, values[i]);
-                                }
-                            }
-                        }
-                    }
-
-                    #endregion
-
-                    #region Other
-
-                    else
-                    {
-                        if (!expandObject.ContainsKey(queryField.Parameter.Name))
-                        {
-                            if (queryGroupTypeMap.MappedType != null)
-                            {
-                                expandObject.Add(queryField.Parameter.Name,
-                                    new CommandParameter(queryField.Parameter.Name, queryField.Parameter.Value, queryGroupTypeMap.MappedType));
-                            }
-                            else
-                            {
-                                expandObject.Add(queryField.Parameter.Name, queryField.Parameter.Value);
-                            }
-                        }
-                    }
-
-                    #endregion
+                    queryGroup.ForceIsFixedVariables();
                 }
             }
+            isFixed = true;
+        }
 
-            // Return the extracted object
-            return (ExpandoObject)expandObject;
+        /// <summary>
+        /// Reset all the query fields.
+        /// </summary>
+        private void ResetQueryFields()
+        {
+            if (QueryFields?.Any() != true)
+            {
+                return;
+            }
+            foreach (var field in QueryFields)
+            {
+                field.Reset();
+            }
+        }
+
+        /// <summary>
+        /// Reset all the query groups.
+        /// </summary>
+        private void ResetQueryGroups()
+        {
+            if (QueryGroups?.Any() != true)
+            {
+                return;
+            }
+            foreach (var group in QueryGroups)
+            {
+                group.Reset();
+            }
+        }
+
+        /// <summary>
+        /// Fix the query fields names.
+        /// </summary>
+        /// <param name="fields"></param>
+        private void FixQueryFields(IEnumerable<QueryField> fields)
+        {
+            var firstList = fields
+                .OrderBy(queryField => queryField.Parameter.Name)
+                .AsList();
+            var secondList = new List<QueryField>(firstList);
+
+            foreach (var firstQueryField in firstList)
+            {
+                for (var fieldIndex = 0; fieldIndex < secondList.Count; fieldIndex++)
+                {
+                    var secondQueryField = secondList[fieldIndex];
+                    if (ReferenceEquals(firstQueryField, secondQueryField))
+                    {
+                        continue;
+                    }
+                    if (firstQueryField.Field.Equals(secondQueryField.Field))
+                    {
+                        var fieldValue = secondQueryField.Parameter;
+                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", fieldIndex));
+                    }
+                }
+                secondList.RemoveAll(qf => qf.Field.Equals(firstQueryField.Field));
+            }
         }
 
         #endregion
@@ -740,29 +637,10 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            // Rest all fields
-            if (QueryFields?.Any() == true)
-            {
-                foreach (var field in QueryFields)
-                {
-                    field.Reset();
-                }
-            }
-
-            // Rest all groups
-            if (QueryGroups?.Any() == true)
-            {
-                foreach (var group in QueryGroups)
-                {
-                    group.Reset();
-                }
-            }
-
-            // Reset the attribute
+            ResetQueryFields();
+            ResetQueryGroups();
             conjuctionTextAttribute = null;
             isFixed = false;
-
-            // Reset the hash code
             hashCode = null;
         }
 
@@ -786,33 +664,11 @@ namespace RepoDb
                 return this;
             }
 
-            // Filter the items
-            var firstList = fields
-                .OrderBy(queryField => queryField.Parameter.Name)
-                .AsList();
-            var secondList = new List<QueryField>(firstList);
+            // Fix the fields
+            FixQueryFields(fields);
 
-            // Iterate and fix the names
-            foreach (var firstQueryField in firstList)
-            {
-                for (var c = 0; c < secondList.Count; c++)
-                {
-                    var secondQueryField = secondList[c];
-                    if (ReferenceEquals(firstQueryField, secondQueryField))
-                    {
-                        continue;
-                    }
-                    if (firstQueryField.Field.Equals(secondQueryField.Field))
-                    {
-                        var fieldValue = secondQueryField.Parameter;
-                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", c));
-                    }
-                }
-                secondList.RemoveAll(qf => qf.Field.Equals(firstQueryField.Field));
-            }
-
-            // Force the fixes
-            ForceFix();
+            // Force the variables
+            ForceIsFixedVariables();
 
             // Return the current instance
             return this;
@@ -821,10 +677,8 @@ namespace RepoDb
         /// <summary>
         /// Make the current instance of <see cref="QueryGroup"/> object to become an expression for 'Update' operations.
         /// </summary>
-        public void IsForUpdate()
-        {
+        public void IsForUpdate() =>
             PrependAnUnderscoreAtTheParameters();
-        }
 
         /// <summary>
         /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Conjunction"/> property value of this instance.
@@ -849,14 +703,12 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A stringified formatted-text of the current instance.</returns>
-        public string GetString(IDbSetting dbSetting)
-        {
-            return GetString(0, dbSetting);
-        }
+        public string GetString(IDbSetting dbSetting) =>
+            GetString(0, dbSetting);
 
         /// <summary>
         /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
-        /// conjuncted by the value of the <see cref="Conjunction"/> property.
+        /// conjuncted by the value of the <see cref="RepoDb.Enumerations.Conjunction"/> property.
         /// </summary>
         /// <param name="index">The parameter index for batch operation.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
@@ -930,550 +782,6 @@ namespace RepoDb
 
             // Return the value
             return queryFields;
-        }
-
-        #endregion
-
-        #region Parse (Expression)
-
-        /// <summary>
-        /// Parses a customized query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The target entity type</typeparam>
-        /// <param name="expression">The expression to be converted to a <see cref="QueryGroup"/> object.</param>
-        /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
-        public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class
-        {
-            // Guard the presense of the expression
-            if (expression == null)
-            {
-                throw new NullReferenceException("Expression cannot be null.");
-            }
-
-            // Parse the expression base on type
-            var parsed = Parse<TEntity>(expression.Body);
-
-            // Throw an unsupported exception if not parsed
-            if (parsed == null)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Return the parsed values
-            return parsed.Fix();
-        }
-
-        private static QueryGroup Parse<TEntity>(Expression expression) where TEntity : class
-        {
-            if (expression.IsLambda())
-            {
-                return Parse<TEntity>(expression.ToLambda().Body);
-            }
-            else if (expression.IsBinary())
-            {
-                return Parse<TEntity>(expression.ToBinary());
-            }
-            else if (expression.IsUnary())
-            {
-                return Parse<TEntity>(expression.ToUnary(), null, expression.NodeType, true);
-            }
-            else if (expression.IsMethodCall())
-            {
-                return Parse<TEntity>(expression.ToMethodCall(), false, true);
-            }
-            return null;
-        }
-
-        private static QueryGroup Parse<TEntity>(BinaryExpression expression)
-            where TEntity : class
-        {
-            var leftQueryGroup = (QueryGroup)null;
-            var rightQueryGroup = (QueryGroup)null;
-            var rightValue = (object)null;
-            var skipRight = false;
-            var isEqualsTo = true;
-
-            /*
-             * LEFT
-             */
-
-            // Get the value in the right
-            if (expression.IsExtractable())
-            {
-                rightValue = expression.Right.GetValue();
-                skipRight = true;
-                if (rightValue is bool)
-                {
-                    isEqualsTo = Equals(rightValue, false) == false;
-                }
-            }
-
-            // Binary
-            if (expression.Left.IsBinary() == true)
-            {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToBinary());
-                leftQueryGroup.SetIsNot(isEqualsTo == false);
-            }
-            // Unary
-            else if (expression.Left.IsUnary() == true)
-            {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), rightValue, expression.NodeType, isEqualsTo);
-            }
-            // MethodCall
-            else if (expression.Left.IsMethodCall())
-            {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToMethodCall(), false, isEqualsTo);
-            }
-            else
-            {
-                // Extractable
-                if (expression.IsExtractable())
-                {
-                    var queryField = QueryField.Parse<TEntity>(expression);
-                    leftQueryGroup = new QueryGroup(queryField);
-                    skipRight = true;
-                }
-            }
-
-            // Identify the node type
-            if (expression.NodeType == ExpressionType.NotEqual)
-            {
-                leftQueryGroup.SetIsNot(leftQueryGroup.IsNot == isEqualsTo);
-            }
-
-            /*
-             * RIGHT
-             */
-
-            if (skipRight == false)
-            {
-                // Binary
-                if (expression.Right.IsBinary() == true)
-                {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToBinary());
-                }
-                // Unary
-                else if (expression.Right.IsUnary() == true)
-                {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToUnary(), null, expression.NodeType, true);
-                }
-                // MethodCall
-                else if (expression.Right.IsMethodCall())
-                {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToMethodCall(), false, true);
-                }
-
-                // Return both of them
-                if (leftQueryGroup != null && rightQueryGroup != null)
-                {
-                    var conjunction = (expression.NodeType == ExpressionType.OrElse) ? Conjunction.Or : Conjunction.And;
-                    return new QueryGroup(new[] { leftQueryGroup, rightQueryGroup }, conjunction);
-                }
-            }
-
-            // Return either one of them
-            return leftQueryGroup ?? rightQueryGroup;
-        }
-
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression,
-            object rightValue,
-            ExpressionType expressionType,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            if (expression.Operand?.IsMember() == true)
-            {
-                return Parse<TEntity>(expression.Operand.ToMember(), rightValue, expressionType, false, true);
-            }
-            else if (expression.Operand?.IsMethodCall() == true)
-            {
-                return Parse<TEntity>(expression.Operand.ToMethodCall(), (expression.NodeType == ExpressionType.Not), isEqualsTo);
-            }
-            return null;
-        }
-
-        private static QueryGroup Parse<TEntity>(MemberExpression expression,
-            object rightValue,
-            ExpressionType expressionType,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            var queryGroup = (QueryGroup)null;
-            var value = rightValue;
-            var isForBoolean = expression.Type == typeof(bool) &&
-                (expressionType == ExpressionType.Not || expressionType == ExpressionType.AndAlso || expressionType == ExpressionType.OrElse);
-            var ignoreIsNot = false;
-
-            // Handle for boolean
-            if (value == null)
-            {
-                if (isForBoolean)
-                {
-                    value = false;
-                    ignoreIsNot = true;
-                }
-                else
-                {
-                    value = expression.GetValue();
-                }
-            }
-
-            // Check if there are values
-            if (value != null)
-            {
-                // Specialized for enum
-                if (expression.Type.IsEnum)
-                {
-                    value = Enum.ToObject(expression.Type, value);
-                }
-
-                // Create a new field
-                var field = (QueryField)null;
-
-                if (isForBoolean)
-                {
-                    field = new QueryField(expression.Member.GetMappedName(),
-                        value);
-                    ignoreIsNot = true;
-                }
-                else
-                {
-                    field = new QueryField(expression.Member.GetMappedName(),
-                        QueryField.GetOperation(expressionType),
-                        value);
-                }
-
-                // Set the query group
-                queryGroup = new QueryGroup(field);
-
-                // Set the query group IsNot property
-                if (ignoreIsNot == false)
-                {
-                    queryGroup.SetIsNot(isEqualsTo == false);
-                }
-            }
-
-            // Return the result
-            return queryGroup;
-        }
-
-        private static QueryGroup Parse<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // Check methods for the 'Like', both 'Array.<All|Any>()'
-            if (expression.Method.Name == "All" || expression.Method.Name == "Any")
-            {
-                return ParseAllOrAnyForArrayOrAnyForList<TEntity>(expression, isNot, isEqualsTo);
-            }
-
-            // Check methods for the 'Like', both 'Array.Contains()' and 'StringProperty.Contains()'
-            else if (expression.Method.Name == "Contains")
-            {
-                if (expression.Object?.IsMember() == true)
-                {
-                    // Cast to proper object
-                    var member = expression.Object.ToMember();
-                    if (member.Type == typeof(string))
-                    {
-                        // Check for the (p => p.Property.Contains("A")) for LIKE
-                        return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
-                    }
-                    else if (member.Type.IsConstructedGenericType == true)
-                    {
-                        // Check for the (p => list.Contains(p.Property)) or (p => (new List<int> { 1, 2 }).Contains(p.Property))
-                        return ParseContainsForArrayOrList<TEntity>(expression, isNot, isEqualsTo);
-                    }
-                }
-                else
-                {
-                    // Check for the (array.Contains(p.Property)) or (new [] { value1, value2 }).Contains(p.Property))
-                    return ParseContainsForArrayOrList<TEntity>(expression, isNot, isEqualsTo);
-                }
-            }
-
-            // Check methods for the 'Like', both 'StringProperty.StartsWith()' and 'StringProperty.EndsWith()'
-            else if (expression.Method.Name == "StartsWith" || expression.Method.Name == "EndsWith")
-            {
-                if (expression.Object?.IsMember() == true)
-                {
-                    if (expression.Object.ToMember().Type == typeof(string))
-                    {
-                        return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
-                    }
-                }
-            }
-
-            // Return null if not supported
-            return null;
-        }
-
-        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
-            {
-                return null;
-            }
-
-            // Get the last property
-            var last = expression
-                .Arguments
-                .LastOrDefault();
-
-            // Make sure the last is a member
-            if (last == null || last?.IsLambda() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure the last is a binary
-            var lambda = last.ToLambda();
-            if (lambda.Body.IsBinary() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure it is a member
-            var binary = lambda.Body.ToBinary();
-            if (binary.Left.IsMember() == false && binary.Right.IsMember() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported. Expression must contain a single condition to any property of type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Make sure it is a property
-            var member = binary.Left.IsMember() ? binary.Left.ToMember().Member : binary.Right.ToMember().Member;
-            if (member.IsPropertyInfo() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure the property is in the entity
-            var property = member.ToPropertyInfo();
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Variables needed for fields
-            var queryFields = new List<QueryField>();
-            var conjunction = Conjunction.And;
-
-            // Support only various methods
-            if (expression.Method.Name == "Any")
-            {
-                conjunction = Conjunction.Or;
-            }
-            else if (expression.Method.Name == "All")
-            {
-                conjunction = Conjunction.And;
-            }
-
-            // Call the method
-            var first = expression.Arguments.First();
-            var values = (object)null;
-
-            // Identify the type of the argument
-            if (first.IsNewArray())
-            {
-                values = first.ToNewArray().GetValue();
-            }
-            else if (first.IsMember())
-            {
-                values = first.ToMember().GetValue();
-            }
-
-            // Values must be an array
-            if (values is System.Collections.IEnumerable)
-            {
-                var operation = QueryField.GetOperation(binary.NodeType);
-                foreach (var value in (System.Collections.IEnumerable)values)
-                {
-                    var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, value);
-                    queryFields.Add(queryField);
-                }
-            }
-
-            // Return the result
-            return new QueryGroup(queryFields, conjunction, (isNot == isEqualsTo));
-        }
-
-        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
-            {
-                return null;
-            }
-
-            // Get the last arg
-            var last = expression
-                .Arguments
-                .LastOrDefault();
-
-            // Make sure the last arg is a member
-            if (last == null || last?.IsMember() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure it is a property info
-            var member = last.ToMember().Member;
-            if (member.IsPropertyInfo() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Get the property
-            var property = member.ToPropertyInfo();
-
-            // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Get the values
-            var values = (object)null;
-
-            // Array/List Separation
-            if (expression.Object == null)
-            {
-                // Expecting an array
-                values = expression.Arguments.First().GetValue();
-            }
-            else
-            {
-                // Expecting a list here
-                values = expression.Object.GetValue();
-            }
-
-            // Add to query fields
-            var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, values);
-
-            // Return the result
-            var queryGroup = new QueryGroup(queryField);
-
-            // Set the IsNot value
-            queryGroup.SetIsNot(isNot == true && isEqualsTo == false);
-
-            // Return the instance
-            return queryGroup;
-        }
-
-        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
-            {
-                return null;
-            }
-
-            // Get the value arg
-            var value = Convert.ToString(expression.Arguments.FirstOrDefault()?.GetValue());
-
-            // Make sure it has a value
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure it is a property info
-            var member = expression.Object.ToMember().Member;
-            if (member.IsPropertyInfo() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Get the property
-            var property = member.ToPropertyInfo();
-
-            // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Add to query fields
-            var operation = (isNot == isEqualsTo) ? Operation.NotLike : Operation.Like;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property),
-                operation,
-                ConvertToLikeableValue(expression.Method.Name, value));
-
-            // Return the result
-            return new QueryGroup(queryField.AsEnumerable());
-        }
-
-        private static string ConvertToLikeableValue(string methodName,
-            string value)
-        {
-            if (methodName == "Contains")
-            {
-                value = value.StartsWith("%") ? value : string.Concat("%", value);
-                value = value.EndsWith("%") ? value : string.Concat(value, "%");
-            }
-            else if (methodName == "StartsWith")
-            {
-                value = value.EndsWith("%") ? value : string.Concat(value, "%");
-            }
-            else if (methodName == "EndsWith")
-            {
-                value = value.StartsWith("%") ? value : string.Concat("%", value);
-            }
-            return value;
-        }
-
-        #endregion
-
-        #region Parse (Dynamics)
-
-        /// <summary>
-        /// Parses a dynamic object and convert back the result to an instance of <see cref="QueryGroup"/> object.
-        /// </summary>
-        /// <param name="obj">The dynamic object to be parsed.</param>
-        /// <returns>An instance of the <see cref="QueryGroup"/> with parsed properties and values.</returns>
-        public static QueryGroup Parse(object obj)
-        {
-            // Check for value
-            if (obj == null)
-            {
-                throw new ArgumentNullException($"Parameter 'obj' cannot be null.");
-            }
-
-            // Type of the object
-            var type = obj.GetType();
-
-            // Filter
-            if (type.IsGenericType == false && type != StaticType.Object && type.IsClassType() == false)
-            {
-                return null;
-            }
-
-            // Declare variables
-            var queryFields = new List<QueryField>();
-
-            // Iterate every property
-            foreach (var property in type.GetProperties())
-            {
-                var value = property.GetValue(obj);
-                var field = new Field(PropertyMappedNameCache.Get(property), property.PropertyType);
-                queryFields.Add(new QueryField(field, value));
-            }
-
-            // Return
-            return queryFields != null ? new QueryGroup(queryFields).Fix() : null;
         }
 
         #endregion
