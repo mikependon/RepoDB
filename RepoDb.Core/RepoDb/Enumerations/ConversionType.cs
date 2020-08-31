@@ -13,6 +13,7 @@ namespace RepoDb.Enumerations
         /// destination .NET CLR type.
         /// </summary>
         Default = 1,
+
         /// <summary>
         /// The data type conversion is not strict. An additional logic from <see cref="Convert"/> object will be used to properly map the <see cref="DbDataReader"/> data type
         /// into its destination .NET CLR type. The operation will only succeed if the data types are convertible.
