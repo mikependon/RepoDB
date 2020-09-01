@@ -196,7 +196,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Property
-            var property = GetProperty(expression);
+            var property = GetProperty<TEntity>(expression);
 
             // Operation
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotEqual : Operation.Equal;
@@ -213,7 +213,7 @@ namespace RepoDb
             }
 
             // Return
-            return new QueryField(PropertyMappedNameCache.Get(property), operation, value).AsEnumerable();
+            return new QueryField(property.GetMappedName(), operation, value).AsEnumerable();
         }
 
         /*
@@ -263,7 +263,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Property
-            var property = GetProperty(expression);
+            var property = GetProperty<TEntity>(expression);
 
             // Value
             if (expression?.Object != null)
@@ -271,18 +271,18 @@ namespace RepoDb
                 if (expression?.Object?.Type == StaticType.String)
                 {
                     var likeable = ConvertToLikeableValue("Contains", Converter.ToType<string>(expression.Arguments.First().GetValue()));
-                    return ToLike(PropertyMappedNameCache.Get(property), likeable, unaryNodeType);
+                    return ToLike(property.GetMappedName(), likeable, unaryNodeType);
                 }
                 else
                 {
                     var enumerable = Converter.ToType<System.Collections.IEnumerable>(expression.Object.GetValue());
-                    return ToIn(PropertyMappedNameCache.Get(property), enumerable, unaryNodeType);
+                    return ToIn(property.GetMappedName(), enumerable, unaryNodeType);
                 }
             }
             else
             {
                 var enumerable = Converter.ToType<System.Collections.IEnumerable>(expression.Arguments.First().GetValue());
-                return ToIn(PropertyMappedNameCache.Get(property), enumerable, unaryNodeType);
+                return ToIn(property.GetMappedName(), enumerable, unaryNodeType);
             }
         }
 
@@ -298,13 +298,13 @@ namespace RepoDb
             where TEntity : class
         {
             // Property
-            var property = GetProperty(expression);
+            var property = GetProperty<TEntity>(expression);
 
             // Values
             var value = Converter.ToType<string>(expression.Arguments.First().GetValue());
 
             // Fields
-            return ToLike(PropertyMappedNameCache.Get(property),
+            return ToLike(property.GetMappedName(),
                 ConvertToLikeableValue(expression.Method.Name, value), unaryNodeType);
         }
 
@@ -320,11 +320,11 @@ namespace RepoDb
             where TEntity : class
         {
             // Property
-            var property = GetProperty(expression);
+            var property = GetProperty<TEntity>(expression);
 
             // Value
             var enumerable = Converter.ToType<System.Collections.IEnumerable>(expression.Arguments.First().GetValue());
-            return ToQueryFields(PropertyMappedNameCache.Get(property), enumerable, unaryNodeType);
+            return ToQueryFields(property.GetMappedName(), enumerable, unaryNodeType);
         }
 
         /// <summary>
@@ -339,11 +339,11 @@ namespace RepoDb
             where TEntity : class
         {
             // Property
-            var property = GetProperty(expression);
+            var property = GetProperty<TEntity>(expression);
 
             // Value
             var enumerable = Converter.ToType<System.Collections.IEnumerable>(expression.Arguments.First().GetValue());
-            return ToQueryFields(PropertyMappedNameCache.Get(property), enumerable, unaryNodeType);
+            return ToQueryFields(property.GetMappedName(), enumerable, unaryNodeType);
         }
 
         #region GetProperty
@@ -353,7 +353,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetProperty(Expression expression)
+        internal static ClassProperty GetProperty<TEntity>(Expression expression)
+            where TEntity : class
         {
             if (expression == null)
             {
@@ -361,21 +362,20 @@ namespace RepoDb
             }
             if (expression.IsLambda())
             {
-                return GetProperty(expression.ToLambda());
+                return GetProperty<TEntity>(expression.ToLambda());
             }
             else if (expression.IsBinary())
             {
-                return GetProperty(expression.ToBinary());
+                return GetProperty<TEntity>(expression.ToBinary());
             }
             else if (expression.IsMethodCall())
             {
-                return GetProperty(expression.ToMethodCall());
+                return GetProperty<TEntity>(expression.ToMethodCall());
             }
             else if (expression.IsMember())
             {
-                return GetProperty(expression.ToMember());
+                return GetProperty<TEntity>(expression.ToMember());
             }
-            //throw new PropertyNotFoundException($"Property is not found from the expression '{expression}'.");
             return null;
         }
 
@@ -384,40 +384,72 @@ namespace RepoDb
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetProperty(LambdaExpression expression) =>
-            GetProperty(expression.ToLambda().Body);
+        internal static ClassProperty GetProperty<TEntity>(LambdaExpression expression)
+            where TEntity : class =>
+            GetProperty<TEntity>(expression.ToLambda().Body);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetProperty(BinaryExpression expression) =>
-            GetProperty(expression.Left) ?? GetProperty(expression.Right);
+        internal static ClassProperty GetProperty<TEntity>(BinaryExpression expression)
+            where TEntity : class =>
+            GetProperty<TEntity>(expression.Left) ?? GetProperty<TEntity>(expression.Right);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetProperty(MemberExpression expression) =>
-            expression.Member.ToPropertyInfo();
+        internal static ClassProperty GetProperty<TEntity>(MethodCallExpression expression)
+            where TEntity : class =>
+            (expression?.Object?.Type == StaticType.String) ?
+            GetProperty<TEntity>(expression.Object.ToMember()) :
+            GetProperty<TEntity>(expression.Arguments.LastOrDefault());
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
-        internal static PropertyInfo GetProperty(MethodCallExpression expression)
+        internal static ClassProperty GetProperty<TEntity>(MemberExpression expression)
+            where TEntity : class =>
+            GetProperty<TEntity>(expression.Member.ToPropertyInfo());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="propertyInfo"></param>
+        /// <returns></returns>
+        internal static ClassProperty GetProperty<TEntity>(PropertyInfo propertyInfo)
+            where TEntity : class
         {
-            if (expression?.Object?.Type == StaticType.String)
+            if (propertyInfo == null)
             {
-                return GetProperty(expression.Object.ToMember());
+                return null;
             }
-            else
+
+            // Variables
+            var properties = PropertyCache.Get<TEntity>();
+            var name = PropertyMappedNameCache.Get(propertyInfo);
+
+            // Failing at some point - for base interfaces
+            var property = properties
+                .FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), name, StringComparison.OrdinalIgnoreCase));
+
+            // Matches to the actual class properties
+            if (property == null)
             {
-                return GetProperty(expression.Arguments.LastOrDefault());
+                property = properties
+                    .FirstOrDefault(p =>
+                        string.Equals(p.PropertyInfo.Name, name, StringComparison.OrdinalIgnoreCase));
             }
+
+            // Return the value
+            return property;
         }
 
         #endregion
