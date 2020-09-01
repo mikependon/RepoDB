@@ -11,6 +11,8 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class DataReader
     {
+        // TODO: Refactor the 'ToEnumerable' to only accepts the DbDataReader and IEnumerable<DbField>
+
         #region ToEnumerable<TEntity>
 
         /// <summary>
