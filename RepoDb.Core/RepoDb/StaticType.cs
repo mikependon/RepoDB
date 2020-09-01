@@ -137,6 +137,11 @@ namespace RepoDb
         public static Type IdentityAttribute => typeof(IdentityAttribute);
 
         /// <summary>
+        /// Gets a type of the <see cref="System.Collections.IEnumerable"/> .NET CLR type.
+        /// </summary>
+        public static Type IEnumerable => typeof(System.Collections.IEnumerable);
+
+        /// <summary>
         /// Gets a type of the <see cref="IDictionary{TKey, TValue}"/> .NET CLR type.
         /// </summary>
         public static Type IDictionary => typeof(IDictionary<,>);

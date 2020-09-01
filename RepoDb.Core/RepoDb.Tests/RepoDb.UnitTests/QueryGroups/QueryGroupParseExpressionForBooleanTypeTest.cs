@@ -78,7 +78,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyBoolean).GetString(m_dbSetting);
-            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+            var expected = "([PropertyBoolean] <> @PropertyBoolean)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString != "A" && !e.PropertyBoolean).GetString(m_dbSetting);
-            var expected = "(([PropertyString] <> @PropertyString) AND ([PropertyBoolean] = @PropertyBoolean))";
+            var expected = "(([PropertyString] <> @PropertyString) AND ([PropertyBoolean] <> @PropertyBoolean))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -100,7 +100,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString != "A" || !e.PropertyBoolean).GetString(m_dbSetting);
-            var expected = "(([PropertyString] <> @PropertyString) OR ([PropertyBoolean] = @PropertyBoolean))";
+            var expected = "(([PropertyString] <> @PropertyString) OR ([PropertyBoolean] <> @PropertyBoolean))";
 
             // Assert
             Assert.AreEqual(expected, actual);

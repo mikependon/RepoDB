@@ -1,5 +1,4 @@
 ﻿using RepoDb.Exceptions;
-using RepoDb.Interfaces;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -77,7 +76,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Left.ToUnary().GetField();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -92,7 +91,11 @@ namespace RepoDb.Extensions
             {
                 return expression.Operand.ToMethodCall().GetField();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            else if (expression.Operand.IsMember())
+            {
+                return expression.Operand.ToMember().GetField();
+            }
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -119,7 +122,7 @@ namespace RepoDb.Extensions
                     }
                 }
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -161,7 +164,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Left.ToUnary().GetName();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -175,7 +178,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Operand.ToMethodCall().GetName();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -191,8 +194,9 @@ namespace RepoDb.Extensions
             }
             else
             {
-                // Contains
-                if (expression.Method.Name == "Contains")
+                if (expression.Method.Name == "Contains" ||
+                    expression.Method.Name == "StartsWith" ||
+                    expression.Method.Name == "EndsWith")
                 {
                     var last = expression.Arguments?.Last();
                     if (last?.IsMember() == true)
@@ -201,7 +205,7 @@ namespace RepoDb.Extensions
                     }
                 }
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -231,7 +235,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Left.ToUnary().GetMemberType();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -245,7 +249,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Operand.ToMethodCall().GetMemberType();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -259,7 +263,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Object.ToMember().GetMemberType();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -278,7 +282,7 @@ namespace RepoDb.Extensions
             {
                 return member.ToFieldInfo().FieldType;
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         #endregion
@@ -340,7 +344,7 @@ namespace RepoDb.Extensions
             {
                 return expression.ToDefault().GetValue();
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -352,7 +356,7 @@ namespace RepoDb.Extensions
         {
             if (IsMathematical(expression))
             {
-                throw new NotSupportedException($"A mathematical expression '{expression.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"A mathematical expression '{expression}' is currently not supported.");
             }
             return expression.Right.GetValue();
         }
@@ -419,10 +423,7 @@ namespace RepoDb.Extensions
             foreach (var item in expression.Initializers)
             {
                 var itemValue = item.Arguments?.FirstOrDefault();
-                if (itemValue != null)
-                {
-                    array.SetValue(itemValue.GetValue(), expression.Initializers.IndexOf(item));
-                }
+                array.SetValue(itemValue?.GetValue(), expression.Initializers.IndexOf(item));
             }
             return array;
         }
@@ -495,7 +496,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                throw new NotSupportedException($"The operation '{expression.NodeType.ToString()}' at expression '{expression.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"The operation '{expression.NodeType}' at expression '{expression}' is currently not supported.");
             }
         }
 
@@ -511,7 +512,7 @@ namespace RepoDb.Extensions
                 case "TypedParameterExpression":
                     return Activator.CreateInstance(expression.Type);
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -763,7 +764,7 @@ namespace RepoDb.Extensions
             {
                 return GetProperty<T>(expression.Body.ToBinary());
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+            throw new InvalidExpressionException($"Expression '{expression}' is not valid.");
         }
 
         /// <summary>
@@ -783,7 +784,7 @@ namespace RepoDb.Extensions
             {
                 return GetProperty<T>(expression.Left.ToUnary());
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+            throw new InvalidExpressionException($"Expression '{expression}' is not valid.");
         }
 
         /// <summary>
@@ -803,7 +804,7 @@ namespace RepoDb.Extensions
             {
                 return GetProperty<T>(expression.Operand.ToBinary());
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+            throw new InvalidExpressionException($"Expression '{expression}' is not valid.");
         }
 
         /// <summary>
@@ -819,7 +820,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Member.ToPropertyInfo();
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is not valid.");
+            throw new InvalidExpressionException($"Expression '{expression}' is not valid.");
         }
 
         #endregion

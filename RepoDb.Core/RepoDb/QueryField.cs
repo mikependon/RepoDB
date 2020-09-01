@@ -13,7 +13,7 @@ namespace RepoDb
     /// A class that is used to define a field expression for the query operations. It holds the instances of field <see cref="RepoDb.Field"/>,
     /// parameter <see cref="RepoDb.Parameter"/> and the target operation <see cref="RepoDb.Enumerations.Operation"/> of the query expression.
     /// </summary>
-    public class QueryField : IEquatable<QueryField>
+    public partial class QueryField : IEquatable<QueryField>
     {
         private const int HASHCODE_ISNULL = 128;
         private const int HASHCODE_ISNOTNULL = 256;
@@ -183,91 +183,6 @@ namespace RepoDb
         public override string ToString()
         {
             return string.Concat(Field.ToString(), " = ", Parameter.ToString());
-        }
-
-        #endregion
-
-        #region Static Methods
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="field"></param>
-        /// <returns></returns>
-        private static ClassProperty GetTargetProperty<TEntity>(Field field)
-            where TEntity : class
-        {
-            var properties = PropertyCache.Get<TEntity>();
-
-            // Failing at some point - for base interfaces
-            var property = properties
-                .FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), field.Name, StringComparison.OrdinalIgnoreCase));
-
-            // Matches to the actual class properties
-            if (property == null)
-            {
-                property = properties
-                    .FirstOrDefault(p =>
-                        string.Equals(p.PropertyInfo.Name, field.Name, StringComparison.OrdinalIgnoreCase));
-            }
-
-            // Return the value
-            return property;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expressionType"></param>
-        /// <returns></returns>
-        internal static Operation GetOperation(ExpressionType expressionType)
-        {
-            var value = default(Operation);
-            if (Enum.TryParse(expressionType.ToString(), out value))
-            {
-                return value;
-            }
-            throw new NotSupportedException($"Operation: Expression '{expressionType}' is currently not supported.");
-        }
-
-        /// <summary>
-        /// Parse an instance of <see cref="BinaryExpression"/> object.
-        /// </summary>
-        /// <typeparam name="TEntity">The target entity type</typeparam>
-        /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be parsed.</param>
-        /// <returns>An instance of <see cref="QueryField"/> object.</returns>
-        internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
-        {
-            // Only support the following expression type
-            if (expression.IsExtractable() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
-            }
-
-            // Field
-            var field = expression.GetField();
-            var property = GetTargetProperty<TEntity>(field);
-
-            // Check
-            if (property == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression}'. The property {field.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-            else
-            {
-                field = property.AsField();
-            }
-
-            // Value
-            var value = expression.GetValue();
-
-            // Operation
-            var operation = GetOperation(expression.NodeType);
-
-            // Return the value
-            return new QueryField(field, operation, value);
         }
 
         #endregion

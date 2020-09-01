@@ -10,13 +10,43 @@ namespace RepoDb
 {
     public partial class QueryGroup
     {
+        /*
+         * Others
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        private static bool IsDirect(BinaryExpression expression) =>
+            (
+                expression.Left.NodeType == ExpressionType.Constant ||
+                expression.Left.NodeType == ExpressionType.Convert ||
+                expression.Left.NodeType == ExpressionType.MemberAccess
+            )
+            &&
+            (
+                expression.Right.NodeType == ExpressionType.Call ||
+                expression.Right.NodeType == ExpressionType.Conditional ||
+                expression.Right.NodeType == ExpressionType.Constant ||
+                expression.Right.NodeType == ExpressionType.Convert ||
+                expression.Right.NodeType == ExpressionType.MemberAccess ||
+                expression.Right.NodeType == ExpressionType.NewArrayInit
+            );
+
+        /*
+         * Expression
+         */
+
         /// <summary>
         /// Parses a customized query expression.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type</typeparam>
         /// <param name="expression">The expression to be converted to a <see cref="QueryGroup"/> object.</param>
         /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
-        public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class
+        public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression)
+            where TEntity : class
         {
             // Guard the presense of the expression
             if (expression == null)
@@ -27,10 +57,15 @@ namespace RepoDb
             // Parse the expression base on type
             var parsed = Parse<TEntity>(expression.Body);
 
+            /*
+             * In order to NOT trigger the 'Equality' comparisson (via overriden GetHashCode()), do not use the '=='
+             * when comparing to NULLs, instead, use the ReferenceEquals method.
+             */
+
             // Throw an unsupported exception if not parsed
-            if (parsed == null)
+            if (ReferenceEquals(parsed, null))
             {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
             }
 
             // Return the parsed values
@@ -56,14 +91,18 @@ namespace RepoDb
             }
             else if (expression.IsUnary())
             {
-                return Parse<TEntity>(expression.ToUnary(), null, expression.NodeType, true);
+                return Parse<TEntity>(expression.ToUnary());
             }
             else if (expression.IsMethodCall())
             {
-                return Parse<TEntity>(expression.ToMethodCall(), false, true);
+                return Parse<TEntity>(expression.ToMethodCall());
             }
             return null;
         }
+
+        /*
+         * Binary
+         */
 
         /// <summary>
         /// 
@@ -74,196 +113,92 @@ namespace RepoDb
         private static QueryGroup Parse<TEntity>(BinaryExpression expression)
             where TEntity : class
         {
-            var leftQueryGroup = (QueryGroup)null;
-            var rightQueryGroup = (QueryGroup)null;
-            var rightValue = (object)null;
-            var skipRight = false;
-            var isEqualsTo = true;
-
-            // TODO: Refactor this
-
-            /*
-             * LEFT
-             */
-
-            // Get the value in the right
-            if (expression.IsExtractable())
+            // Check directness
+            if (IsDirect(expression))
             {
-                rightValue = expression.Right.GetValue();
-                skipRight = true;
-                if (rightValue is bool)
-                {
-                    isEqualsTo = Equals(rightValue, false) == false;
-                }
+                return new QueryGroup(QueryField.Parse<TEntity>(expression));
             }
 
-            // Binary
-            if (expression.Left.IsBinary() == true)
+            // Variables
+            var leftQueryGroup = Parse<TEntity>(expression.Left);
+
+            // IsNot
+            if (expression.Right.Type == StaticType.Boolean && expression.IsExtractable() == true)
             {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToBinary());
-                leftQueryGroup.SetIsNot(isEqualsTo == false);
-            }
-            // Unary
-            else if (expression.Left.IsUnary() == true)
-            {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), rightValue, expression.NodeType, isEqualsTo);
-            }
-            // MethodCall
-            else if (expression.Left.IsMethodCall())
-            {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToMethodCall(), false, isEqualsTo);
+                leftQueryGroup?.SetIsNot((bool)expression.Right.GetValue() != true);
             }
             else
             {
-                // Extractable
-                if (expression.IsExtractable())
-                {
-                    var queryField = QueryField.Parse<TEntity>(expression);
-                    leftQueryGroup = new QueryGroup(queryField);
-                    skipRight = true;
-                }
+                var rightQueryGroup = Parse<TEntity>(expression.Right);
+                return new QueryGroup(new[] { leftQueryGroup, rightQueryGroup }, GetConjunction(expression));
             }
 
-            // Identify the node type
-            if (expression.NodeType == ExpressionType.NotEqual)
-            {
-                leftQueryGroup.SetIsNot(leftQueryGroup.IsNot == isEqualsTo);
-            }
-
-            /*
-             * RIGHT
-             */
-
-            if (skipRight == false)
-            {
-                // Binary
-                if (expression.Right.IsBinary() == true)
-                {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToBinary());
-                }
-                // Unary
-                else if (expression.Right.IsUnary() == true)
-                {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToUnary(), null, expression.NodeType, true);
-                }
-                // MethodCall
-                else if (expression.Right.IsMethodCall())
-                {
-                    rightQueryGroup = Parse<TEntity>(expression.Right.ToMethodCall(), false, true);
-                }
-
-                // Return both of them
-                if (leftQueryGroup != null && rightQueryGroup != null)
-                {
-                    var conjunction = (expression.NodeType == ExpressionType.OrElse) ? Conjunction.Or : Conjunction.And;
-                    return new QueryGroup(new[] { leftQueryGroup, rightQueryGroup }, conjunction);
-                }
-            }
-
-            // Return either one of them
-            return leftQueryGroup ?? rightQueryGroup;
+            // Return
+            return leftQueryGroup;
         }
+
+        /*
+         * Unary
+         */
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
-        /// <param name="rightValue"></param>
-        /// <param name="expressionType"></param>
-        /// <param name="isEqualsTo"></param>
         /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression,
-            object rightValue,
-            ExpressionType expressionType,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            if (expression.Operand?.IsMember() == true)
-            {
-                return Parse<TEntity>(expression.Operand.ToMember(), rightValue, expressionType, false, true);
-            }
-            else if (expression.Operand?.IsMethodCall() == true)
-            {
-                return Parse<TEntity>(expression.Operand.ToMethodCall(), (expression.NodeType == ExpressionType.Not), isEqualsTo);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="expression"></param>
-        /// <param name="rightValue"></param>
-        /// <param name="expressionType"></param>
-        /// <param name="isNot"></param>
-        /// <param name="isEqualsTo"></param>
-        /// <returns></returns>
-        private static QueryGroup Parse<TEntity>(MemberExpression expression,
-            object rightValue,
-            ExpressionType expressionType,
-            bool isNot,
-            bool isEqualsTo)
+        private static QueryGroup Parse<TEntity>(UnaryExpression expression)
             where TEntity : class
         {
             var queryGroup = (QueryGroup)null;
-            var value = rightValue;
-            var isForBoolean = expression.Type == typeof(bool) &&
-                (expressionType == ExpressionType.Not || expressionType == ExpressionType.AndAlso || expressionType == ExpressionType.OrElse);
-            var ignoreIsNot = false;
 
-            // Handle for boolean
-            if (value == null)
+            if (expression.Operand?.IsMember() == true)
             {
-                if (isForBoolean)
-                {
-                    value = false;
-                    ignoreIsNot = true;
-                }
-                else
-                {
-                    value = expression.GetValue();
-                }
+                queryGroup = Parse<TEntity>(expression.Operand.ToMember(), expression.NodeType);
+            }
+            else if (expression.Operand?.IsMethodCall() == true)
+            {
+                queryGroup = Parse<TEntity>(expression.Operand.ToMethodCall(), expression.NodeType);
             }
 
-            // Check if there are values
-            if (value != null)
-            {
-                // Specialized for enum
-                if (expression.Type.IsEnum)
-                {
-                    value = Enum.ToObject(expression.Type, value);
-                }
-
-                // Create a new field
-                var field = (QueryField)null;
-
-                if (isForBoolean)
-                {
-                    field = new QueryField(expression.Member.GetMappedName(),
-                        value);
-                    ignoreIsNot = true;
-                }
-                else
-                {
-                    field = new QueryField(expression.Member.GetMappedName(),
-                        QueryField.GetOperation(expressionType),
-                        value);
-                }
-
-                // Set the query group
-                queryGroup = new QueryGroup(field);
-
-                // Set the query group IsNot property
-                if (ignoreIsNot == false)
-                {
-                    queryGroup.SetIsNot(isEqualsTo == false);
-                }
-            }
-
-            // Return the result
             return queryGroup;
+        }
+
+        /*
+         * Member
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="unaryNodeType"></param>
+        /// <returns></returns>
+        private static QueryGroup Parse<TEntity>(MemberExpression expression,
+            ExpressionType? unaryNodeType = null)
+            where TEntity : class
+        {
+            var queryFields = QueryField.Parse<TEntity>(expression, unaryNodeType);
+            return queryFields != null ? new QueryGroup(queryFields) : null;
+        }
+
+        /*
+         * MethodCall
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        private static QueryGroup Parse<TEntity>(MethodCallExpression expression)
+            where TEntity : class
+        {
+            var unaryNodeType = (expression?.Object?.Type == StaticType.String) ? GetNodeType(expression.Object.ToMember()) :
+                GetNodeType(expression.Arguments.LastOrDefault());
+            return Parse<TEntity>(expression, unaryNodeType);
         }
 
         /// <summary>
@@ -271,320 +206,101 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
-        /// <param name="isNot"></param>
-        /// <param name="isEqualsTo"></param>
+        /// <param name="unaryNodeType"></param>
         /// <returns></returns>
         private static QueryGroup Parse<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
+            ExpressionType? unaryNodeType = null)
             where TEntity : class
         {
-            // Check methods for the 'Like', both 'Array.<All|Any>()'
-            if (expression.Method.Name == "All" || expression.Method.Name == "Any")
-            {
-                return ParseAllOrAnyForArrayOrAnyForList<TEntity>(expression, isNot, isEqualsTo);
-            }
+            var queryFields = QueryField.Parse<TEntity>(expression, unaryNodeType);
+            return queryFields != null ? new QueryGroup(queryFields, GetConjunction(expression)) : null;
+        }
 
-            // Check methods for the 'Like', both 'Array.Contains()' and 'StringProperty.Contains()'
-            else if (expression.Method.Name == "Contains")
-            {
-                if (expression.Object?.IsMember() == true)
-                {
-                    // Cast to proper object
-                    var member = expression.Object.ToMember();
-                    if (member.Type == typeof(string))
-                    {
-                        // Check for the (p => p.Property.Contains("A")) for LIKE
-                        return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
-                    }
-                    else if (member.Type.IsConstructedGenericType == true)
-                    {
-                        // Check for the (p => list.Contains(p.Property)) or (p => (new List<int> { 1, 2 }).Contains(p.Property))
-                        return ParseContainsForArrayOrList<TEntity>(expression, isNot, isEqualsTo);
-                    }
-                }
-                else
-                {
-                    // Check for the (array.Contains(p.Property)) or (new [] { value1, value2 }).Contains(p.Property))
-                    return ParseContainsForArrayOrList<TEntity>(expression, isNot, isEqualsTo);
-                }
-            }
+        #region GetConjunction
 
-            // Check methods for the 'Like', both 'StringProperty.StartsWith()' and 'StringProperty.EndsWith()'
-            else if (expression.Method.Name == "StartsWith" || expression.Method.Name == "EndsWith")
-            {
-                if (expression.Object?.IsMember() == true)
-                {
-                    if (expression.Object.ToMember().Type == typeof(string))
-                    {
-                        return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
-                    }
-                }
-            }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        private static Conjunction GetConjunction(BinaryExpression expression) =>
+            expression.NodeType == ExpressionType.Or || expression.NodeType == ExpressionType.OrElse ?
+            Conjunction.Or : Conjunction.And;
 
-            // Return null if not supported
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        private static Conjunction GetConjunction(MethodCallExpression expression) =>
+            expression.Method.Name == "Any" ? Conjunction.Or : Conjunction.And;
+
+        #endregion
+
+        #region GetNodeType
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static ExpressionType? GetNodeType(Expression expression)
+        {
+            if (expression == null)
+            {
+                return null;
+            }
+            if (expression.IsLambda())
+            {
+                return GetNodeType(expression.ToLambda());
+            }
+            else if (expression.IsBinary())
+            {
+                return GetNodeType(expression.ToBinary());
+            }
+            else if (expression.IsMethodCall())
+            {
+                return GetNodeType(expression.ToMethodCall());
+            }
+            else if (expression.IsMember())
+            {
+                return GetNodeType(expression.ToMember());
+            }
             return null;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
-        /// <param name="isNot"></param>
-        /// <param name="isEqualsTo"></param>
         /// <returns></returns>
-        private static QueryGroup ParseAllOrAnyForArrayOrAnyForList<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // TODO: Refactor this
-
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
-            {
-                return null;
-            }
-
-            // Get the last property
-            var last = expression
-                .Arguments
-                .LastOrDefault();
-
-            // Make sure the last is a member
-            if (last == null || last?.IsLambda() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure the last is a binary
-            var lambda = last.ToLambda();
-            if (lambda.Body.IsBinary() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure it is a member
-            var binary = lambda.Body.ToBinary();
-            if (binary.Left.IsMember() == false && binary.Right.IsMember() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported. Expression must contain a single condition to any property of type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Make sure it is a property
-            var member = binary.Left.IsMember() ? binary.Left.ToMember().Member : binary.Right.ToMember().Member;
-            if (member.IsPropertyInfo() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure the property is in the entity
-            var property = member.ToPropertyInfo();
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Variables needed for fields
-            var queryFields = new List<QueryField>();
-            var conjunction = Conjunction.And;
-
-            // Support only various methods
-            if (expression.Method.Name == "Any")
-            {
-                conjunction = Conjunction.Or;
-            }
-            else if (expression.Method.Name == "All")
-            {
-                conjunction = Conjunction.And;
-            }
-
-            // Call the method
-            var first = expression.Arguments.First();
-            var values = (object)null;
-
-            // Identify the type of the argument
-            if (first.IsNewArray())
-            {
-                values = first.ToNewArray().GetValue();
-            }
-            else if (first.IsMember())
-            {
-                values = first.ToMember().GetValue();
-            }
-
-            // Values must be an array
-            if (values is System.Collections.IEnumerable)
-            {
-                var operation = QueryField.GetOperation(binary.NodeType);
-                foreach (var value in (System.Collections.IEnumerable)values)
-                {
-                    var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, value);
-                    queryFields.Add(queryField);
-                }
-            }
-
-            // Return the result
-            return new QueryGroup(queryFields, conjunction, (isNot == isEqualsTo));
-        }
+        internal static ExpressionType? GetNodeType(LambdaExpression expression) =>
+            GetNodeType(expression.ToLambda().Body);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
-        /// <param name="isNot"></param>
-        /// <param name="isEqualsTo"></param>
         /// <returns></returns>
-        private static QueryGroup ParseContainsForArrayOrList<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // TODO: Refactor this
-
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
-            {
-                return null;
-            }
-
-            // Get the last arg
-            var last = expression
-                .Arguments
-                .LastOrDefault();
-
-            // Make sure the last arg is a member
-            if (last == null || last?.IsMember() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure it is a property info
-            var member = last.ToMember().Member;
-            if (member.IsPropertyInfo() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Get the property
-            var property = member.ToPropertyInfo();
-
-            // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Get the values
-            var values = (object)null;
-
-            // Array/List Separation
-            if (expression.Object == null)
-            {
-                // Expecting an array
-                values = expression.Arguments.First().GetValue();
-            }
-            else
-            {
-                // Expecting a list here
-                values = expression.Object.GetValue();
-            }
-
-            // Add to query fields
-            var operation = (isNot == false && isEqualsTo == true) ? Operation.In : Operation.NotIn;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property), operation, values);
-
-            // Return the result
-            var queryGroup = new QueryGroup(queryField);
-
-            // Set the IsNot value
-            queryGroup.SetIsNot(isNot == true && isEqualsTo == false);
-
-            // Return the instance
-            return queryGroup;
-        }
+        internal static ExpressionType? GetNodeType(BinaryExpression expression) =>
+            expression.NodeType;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="expression"></param>
-        /// <param name="isNot"></param>
-        /// <param name="isEqualsTo"></param>
         /// <returns></returns>
-        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression,
-            bool isNot,
-            bool isEqualsTo)
-            where TEntity : class
-        {
-            // TODO: Refactor this
-
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() != true)
-            {
-                return null;
-            }
-
-            // Get the value arg
-            var value = Convert.ToString(expression.Arguments.FirstOrDefault()?.GetValue());
-
-            // Make sure it has a value
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Make sure it is a property info
-            var member = expression.Object.ToMember().Member;
-            if (member.IsPropertyInfo() == false)
-            {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-
-            // Get the property
-            var property = member.ToPropertyInfo();
-
-            // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => string.Equals(p.PropertyInfo.Name, property.Name, StringComparison.OrdinalIgnoreCase)) == null)
-            {
-                throw new InvalidExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Add to query fields
-            var operation = (isNot == isEqualsTo) ? Operation.NotLike : Operation.Like;
-            var queryField = new QueryField(PropertyMappedNameCache.Get(property),
-                operation,
-                ConvertToLikeableValue(expression.Method.Name, value));
-
-            // Return the result
-            return new QueryGroup(queryField.AsEnumerable());
-        }
+        internal static ExpressionType? GetNodeType(MemberExpression expression) =>
+            expression.NodeType;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="methodName"></param>
-        /// <param name="value"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        private static string ConvertToLikeableValue(string methodName,
-            string value)
-        {
-            if (methodName == "Contains")
-            {
-                value = value.StartsWith("%") ? value : string.Concat("%", value);
-                value = value.EndsWith("%") ? value : string.Concat(value, "%");
-            }
-            else if (methodName == "StartsWith")
-            {
-                value = value.EndsWith("%") ? value : string.Concat(value, "%");
-            }
-            else if (methodName == "EndsWith")
-            {
-                value = value.StartsWith("%") ? value : string.Concat("%", value);
-            }
-            return value;
-        }
+        internal static ExpressionType? GetNodeType(MethodCallExpression expression) =>
+            expression.NodeType;
+
+        #endregion
     }
 }

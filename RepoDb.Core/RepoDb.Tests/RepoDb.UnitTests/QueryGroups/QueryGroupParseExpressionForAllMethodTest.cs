@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(m_dbSetting);
-            var expected = "NOT ([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+            var expected = "([PropertyInt] <> @PropertyInt AND [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -159,7 +159,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(m_dbSetting);
-            var expected = "NOT ([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+            var expected = "([PropertyInt] <> @PropertyInt AND [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -201,7 +201,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(m_dbSetting);
-            var expected = "([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+            var expected = "NOT ([PropertyInt] <> @PropertyInt AND [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -215,7 +215,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString(m_dbSetting);
-            var expected = "NOT ([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+            var expected = "([PropertyInt] <> @PropertyInt AND [PropertyInt] <> @PropertyInt_1)";
 
             // Assert
             Assert.AreEqual(expected, actual);
