@@ -106,7 +106,7 @@ By default, RepoDB does not do the automatic .NET CLR Type conversion during the
 
 It is in purpose to strictly notify you (as a library user) the design and/or the implementation problem of the Model if being compared to its corresponding database Table.
 
-If you wish to have an automatic conversion, simply set the [Converter.ConversionProperty](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
+If you wish to have an automatic conversion, simply set the [Converter.ConversionType](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
 
 ```csharp
 RepoDb.Converter.ConversionType = ConversionType.Automatic;
@@ -130,7 +130,7 @@ Below is the actual recent official execution [result](https://github.com/FransB
 
 We would like to make RepoDB the mainstream hybrid-ORM library for .NET technology. Please help us build and realize the solution.
 
-To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Or, you may otherwise create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
+To contribute, please find a [for-grabs](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3A%22for+grabs%22) item and issue a PR. Otherwise, you may create a [new issue](https://github.com/mikependon/RepoDb/issues/new) for us to look-at and discuss.
 
 If you wish to contribute to the documentation site, it is hosted in the [RepoDb.NET](https://github.com/mikependon/RepoDb.NET) repository. Your expertise is needed to correct the forms, if needed.
 
