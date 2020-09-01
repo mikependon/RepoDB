@@ -123,7 +123,10 @@ namespace RepoDb
             // IsNot
             if (expression.Right.Type == StaticType.Boolean && expression.IsExtractable() == true)
             {
-                leftQueryGroup?.SetIsNot((bool)expression.Right.GetValue() != true);
+                var rightValue = (bool)expression.Right.GetValue();
+                var isNot = (expression.NodeType == ExpressionType.Equal && rightValue == false) ||
+                    (expression.NodeType == ExpressionType.NotEqual && rightValue == true);
+                leftQueryGroup?.SetIsNot(isNot);
             }
             else
             {

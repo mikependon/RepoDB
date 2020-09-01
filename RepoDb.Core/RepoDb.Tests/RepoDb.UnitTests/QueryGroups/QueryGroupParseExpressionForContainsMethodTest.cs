@@ -51,6 +51,20 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
+        public void TestQueryGroupParseExpressionStringContainsNotEqualsTrueAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") != true);
+
+            // Act
+            var actual = parsed.GetString(m_dbSetting);
+            var expected = "NOT ([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void TestQueryGroupParseExpressionNotStringContainsEqualsTrueAtProperty()
         {
             // Setup
@@ -59,6 +73,20 @@ namespace RepoDb.UnitTests
             // Act
             var actual = parsed.GetString(m_dbSetting);
             var expected = "([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionNotStringContainsNotEqualsTrueAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") != true);
+
+            // Act
+            var actual = parsed.GetString(m_dbSetting);
+            var expected = "NOT ([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -79,6 +107,20 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
+        public void TestQueryGroupParseExpressionStringContainsNotEqualsFalseAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") != false);
+
+            // Act
+            var actual = parsed.GetString(m_dbSetting);
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void TestQueryGroupParseExpressionNotStringContainsEqualsFalseAtProperty()
         {
             // Setup
@@ -87,6 +129,20 @@ namespace RepoDb.UnitTests
             // Act
             var actual = parsed.GetString(m_dbSetting);
             var expected = "NOT ([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionNotStringContainsNotEqualsFalseAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") != false);
+
+            // Act
+            var actual = parsed.GetString(m_dbSetting);
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
             Assert.AreEqual(expected, actual);
