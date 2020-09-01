@@ -156,7 +156,8 @@ namespace RepoDb
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDelete(new QueryBuilder(),
                     request.Name,
-                    request.Where);
+                    request.Where,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -178,7 +179,8 @@ namespace RepoDb
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
-                    request.Name);
+                    request.Name,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -230,7 +232,8 @@ namespace RepoDb
                     request.Name,
                     fields,
                     primaryField,
-                    identityField);
+                    identityField,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -259,7 +262,8 @@ namespace RepoDb
                     fields,
                     request.BatchSize,
                     primaryField,
-                    identityField);
+                    identityField,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -337,7 +341,8 @@ namespace RepoDb
                     fields,
                     request.Qualifiers,
                     primaryField,
-                    identityField);
+                    identityField,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -367,7 +372,8 @@ namespace RepoDb
                     request.Qualifiers,
                     request.BatchSize,
                     primaryField,
-                    identityField);
+                    identityField,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -600,7 +606,8 @@ namespace RepoDb
                     fields,
                     request.Where,
                     primaryField,
-                    identityField);
+                    identityField,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -631,7 +638,8 @@ namespace RepoDb
                     request.Qualifiers,
                     request.BatchSize,
                     primaryField,
-                    identityField);
+                    identityField,
+                    request.Hints);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
