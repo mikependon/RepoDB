@@ -400,6 +400,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="NewArrayExpression"/> object.</returns>
         public static object GetValue(this NewArrayExpression expression)
         {
+            // TODO: Optimized this?
             var arrayType = expression.Type.GetElementType();
             var array = Array.CreateInstance(arrayType, (int)expression.Expressions?.Count);
             foreach (var item in expression.Expressions)
@@ -416,6 +417,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ListInitExpression"/> object.</returns>
         public static object GetValue(this ListInitExpression expression)
         {
+            // TODO: Optimized this?
             var arrayType = expression.Type.IsConstructedGenericType ?
                 expression.Type.GetGenericArguments().FirstOrDefault() ?? StaticType.Object :
                 StaticType.Object;
@@ -435,6 +437,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="NewExpression"/> object.</returns>
         public static object GetValue(this NewExpression expression)
         {
+            // TODO: Optimized this?
             if (expression.Arguments?.Any() == true)
             {
                 return Activator.CreateInstance(expression.Constructor.DeclaringType,
@@ -507,6 +510,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ParameterExpression"/> object.</returns>
         public static object GetValue(this ParameterExpression expression)
         {
+            // TODO: Optimized this?
             switch (expression.GetType().Name)
             {
                 case "TypedParameterExpression":
@@ -521,6 +525,7 @@ namespace RepoDb.Extensions
         /// <param name="expression">The instance of <see cref="DefaultExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
         public static object GetValue(this DefaultExpression expression) =>
+            // TODO: Optimized this?
             expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
 
         #endregion
