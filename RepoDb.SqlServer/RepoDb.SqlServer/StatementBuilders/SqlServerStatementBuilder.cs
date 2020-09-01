@@ -438,8 +438,8 @@ namespace RepoDb.StatementBuilders
                 // MERGE T USING S
                 .Merge()
                 .TableNameFrom(tableName, DbSetting)
-                .As("T")
                 .HintsFrom(hints)
+                .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
@@ -606,8 +606,8 @@ namespace RepoDb.StatementBuilders
                 // MERGE T USING S
                 builder.Merge()
                     .TableNameFrom(tableName, DbSetting)
-                    .As("T")
                     .HintsFrom(hints)
+                    .As("T")
                     .Using()
                     .OpenParen()
                     .Select()

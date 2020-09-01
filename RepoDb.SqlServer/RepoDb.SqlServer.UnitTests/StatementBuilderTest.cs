@@ -1467,7 +1467,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: null,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"MERGE [Table] AS T WITH (TABLOCK) " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -1501,7 +1501,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: identityField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"MERGE [Table] AS T WITH (TABLOCK) " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -1510,7 +1510,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
-                $"MERGE [Table] AS T WITH (TABLOCK) " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -1519,7 +1519,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
                 $"OUTPUT INSERTED.[Field1] AS [Result] ; " +
-                $"MERGE [Table] AS T WITH (TABLOCK) " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -2059,7 +2059,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: null,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"MERGE [Table] AS T WITH (TABLOCK) " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
