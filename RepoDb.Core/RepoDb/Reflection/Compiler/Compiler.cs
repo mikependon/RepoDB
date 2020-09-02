@@ -1223,7 +1223,7 @@ namespace RepoDb.Reflection
 
             // Class properties
             var classProperties = PropertyCache
-                .Get(typeOfEntity)
+                .Get(typeOfEntity)?
                 .Where(property => property.PropertyInfo.CanWrite)
                 .Where(property =>
                     readerFieldsName?.FirstOrDefault(field =>
@@ -1245,7 +1245,7 @@ namespace RepoDb.Reflection
                     });
                 }
             }
-            else if (classProperties.Any() == true)
+            else if (classProperties?.Any() == true)
             {
                 foreach (var classProperty in classProperties)
                 {

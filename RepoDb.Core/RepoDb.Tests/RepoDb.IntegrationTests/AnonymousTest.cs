@@ -4,7 +4,6 @@ using RepoDb.IntegrationTests;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.SqlServer.IntegrationTests
@@ -27,7 +26,7 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #region Helpers
 
-        private object CreateIdentityTableTypeDef()
+        private dynamic CreateIdentityTableTypeDef()
         {
             return new
             {
@@ -45,14 +44,15 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #endregion
 
-        [TestMethod]
-        public void TestQueryAllForAnonymous()
-        {
-            var result = TestQueryAllForAnonymous(CreateIdentityTableTypeDef());
-            Assert.IsTrue(result.Any());
-        }
+        #region ExecuteQuery
 
-        private IEnumerable<TAnonymous> TestQueryAllForAnonymous<TAnonymous>(TAnonymous typeDef)
+        #region Sync
+
+        [TestMethod]
+        public void TestExecuteQueryAllForAnonymous() =>
+            TestExecuteQueryAllForAnonymousTrigger(CreateIdentityTableTypeDef());
+
+        private void TestExecuteQueryAllForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
             where TAnonymous : class
         {
             // Setup
@@ -64,8 +64,160 @@ namespace RepoDb.SqlServer.IntegrationTests
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                return connection.QueryAll<TAnonymous>();
+                var result = connection.ExecuteQuery<TAnonymous>("SELECT * FROM [sc].[IdentityTable];");
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
             }
         }
+
+        #endregion
+
+        #region Sync
+
+        [TestMethod]
+        public void TestExecuteQueryAllAsyncForAnonymous() =>
+            TestExecuteQueryAllAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+
+        private void TestExecuteQueryAllAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+            where TAnonymous : class
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var result = connection.ExecuteQueryAsync<TAnonymous>("SELECT * FROM [sc].[IdentityTable];").Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Query
+
+        #region Sync
+
+        [TestMethod]
+        public void TestQueryForAnonymous() =>
+            TestQueryForAnonymousTrigger(CreateIdentityTableTypeDef());
+
+        private void TestQueryForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+            where TAnonymous : class
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var result = connection.Query<TAnonymous>("[sc].[IdentityTable]",
+                    what: (object)null);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+            }
+        }
+
+        #endregion
+
+        #region Sync
+
+        [TestMethod]
+        public void TestQueryAsyncForAnonymous() =>
+            TestQueryAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+
+        private void TestQueryAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+            where TAnonymous : class
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var result = connection.QueryAsync<TAnonymous>("[sc].[IdentityTable]",
+                    what: (object)null).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region QueryAll
+
+        #region Sync
+
+        [TestMethod]
+        public void TestQueryAllForAnonymous() =>
+            TestQueryAllForAnonymousTrigger(CreateIdentityTableTypeDef());
+
+        private void TestQueryAllForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+            where TAnonymous : class
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var result = connection.QueryAll<TAnonymous>("[sc].[IdentityTable]");
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+            }
+        }
+
+        #endregion
+
+        #region Sync
+
+        [TestMethod]
+        public void TestQueryAllAsyncForAnonymous() =>
+            TestQueryAllAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+
+        private void TestQueryAllAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+            where TAnonymous : class
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<TAnonymous>("[sc].[IdentityTable]").Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

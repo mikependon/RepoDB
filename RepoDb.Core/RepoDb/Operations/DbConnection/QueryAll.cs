@@ -591,7 +591,8 @@ namespace RepoDb
             var result = (object)null;
 
             // Actual Execution
-            if (typeof(TEntity).IsClassType())
+            var typeOfTEntity = typeof(TEntity);
+            if (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType)
             {
                 result = ExecuteQueryInternal<TEntity>(connection: connection,
                     commandText: commandText,
@@ -714,7 +715,8 @@ namespace RepoDb
             var result = (object)null;
 
             // Actual Execution
-            if (typeof(TEntity).IsClassType())
+            var typeOfTEntity = typeof(TEntity);
+            if (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType)
             {
                 var executeResult = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                     commandText: commandText,
