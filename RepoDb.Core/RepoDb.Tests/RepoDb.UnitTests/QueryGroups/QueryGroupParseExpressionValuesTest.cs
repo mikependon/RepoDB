@@ -43,6 +43,57 @@ namespace RepoDb.UnitTests
         #region Values
 
         [TestMethod]
+        public void TestQueryGroupParseExpressionValueIntLambdaParameter()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == e.PropertyInt);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 0;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueIntParameter() =>
+            TestQueryGroupParseExpressionValueIntParameterMethod(1);
+
+        public void TestQueryGroupParseExpressionValueIntParameterMethod(int value)
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == value);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 1;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueIntClassParameter() =>
+            TestQueryGroupParseExpressionValueIntClassParameterMethod(new QueryGroupTestExpressionClass
+            {
+                PropertyInt = 1
+            });
+
+        public void TestQueryGroupParseExpressionValueIntClassParameterMethod(QueryGroupTestExpressionClass item)
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == item.PropertyInt);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 1;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void TestQueryGroupParseExpressionValueIntConstant()
         {
             // Setup
@@ -363,6 +414,21 @@ namespace RepoDb.UnitTests
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
             var expected = value;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionValueWithStringConditionalCheckingForNull()
+        {
+            // Setup
+            var value = "ABC";
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == (value == null ? value : "DEF"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "DEF";
 
             // Assert
             Assert.AreEqual(expected, actual);

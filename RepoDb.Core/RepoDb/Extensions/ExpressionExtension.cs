@@ -400,12 +400,11 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="NewArrayExpression"/> object.</returns>
         public static object GetValue(this NewArrayExpression expression)
         {
-            // TODO: Optimized this?
-            var arrayType = expression.Type.GetElementType();
-            var array = Array.CreateInstance(arrayType, (int)expression.Expressions?.Count);
-            foreach (var item in expression.Expressions)
+            var arrayType = expression.Type.HasElementType ? expression.Type.GetElementType() : expression.Type;
+            var array = Array.CreateInstance(arrayType, expression.Expressions.Count);
+            for (var i = 0; i < expression.Expressions.Count; i++)
             {
-                array.SetValue(item.GetValue(), expression.Expressions.IndexOf(item));
+                array.SetValue(expression.Expressions[i].GetValue(), i);
             }
             return array;
         }
@@ -417,17 +416,12 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ListInitExpression"/> object.</returns>
         public static object GetValue(this ListInitExpression expression)
         {
-            // TODO: Optimized this?
-            var arrayType = expression.Type.IsConstructedGenericType ?
-                expression.Type.GetGenericArguments().FirstOrDefault() ?? StaticType.Object :
-                StaticType.Object;
-            var array = Array.CreateInstance(arrayType, (int)expression.Initializers?.Count);
+            var list = Activator.CreateInstance(expression.Type);
             foreach (var item in expression.Initializers)
             {
-                var itemValue = item.Arguments?.FirstOrDefault();
-                array.SetValue(itemValue?.GetValue(), expression.Initializers.IndexOf(item));
+                item.AddMethod.Invoke(list, new[] { item.Arguments?.FirstOrDefault().GetValue() });
             }
-            return array;
+            return list;
         }
 
         /// <summary>
@@ -437,15 +431,14 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="NewExpression"/> object.</returns>
         public static object GetValue(this NewExpression expression)
         {
-            // TODO: Optimized this?
-            if (expression.Arguments?.Any() == true)
+            if (expression.Arguments.Count > 0)
             {
-                return Activator.CreateInstance(expression.Constructor.DeclaringType,
-                    expression.Arguments?.Select(arg => arg.GetValue()));
+                return Activator.CreateInstance(expression.Type,
+                    expression.Arguments.Select(arg => arg.GetValue()));
             }
             else
             {
-                return Activator.CreateInstance(expression.Constructor.DeclaringType);
+                return Activator.CreateInstance(expression.Type);
             }
         }
 
@@ -472,35 +465,32 @@ namespace RepoDb.Extensions
         public static object GetValue(this ConditionalExpression expression)
         {
             var test = expression.Test.GetValue();
-            var ifTrue = expression.IfTrue.GetValue();
+            var trueValue = expression.IfTrue.GetValue();
             if (expression.Test.NodeType == ExpressionType.Equal)
             {
-                return test == ifTrue ? ifTrue : expression.IfFalse.GetValue();
+                return test == trueValue ? trueValue : expression.IfFalse.GetValue();
             }
             else if (expression.Test.NodeType == ExpressionType.NotEqual)
             {
-                return test != ifTrue ? ifTrue : expression.IfFalse.GetValue();
+                return test != trueValue ? trueValue : expression.IfFalse.GetValue();
             }
             else if (expression.Test.NodeType > ExpressionType.GreaterThan)
             {
-                return test?.ToNumber() > ifTrue.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+                return test.ToNumber() > trueValue.ToNumber() ? trueValue : expression.IfFalse.GetValue();
             }
             else if (expression.Test.NodeType > ExpressionType.GreaterThanOrEqual)
             {
-                return test?.ToNumber() >= ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+                return test.ToNumber() >= trueValue?.ToNumber() ? trueValue : expression.IfFalse.GetValue();
             }
             else if (expression.Test.NodeType > ExpressionType.LessThan)
             {
-                return test?.ToNumber() < ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+                return test.ToNumber() < trueValue?.ToNumber() ? trueValue : expression.IfFalse.GetValue();
             }
             else if (expression.Test.NodeType > ExpressionType.LessThanOrEqual)
             {
-                return test?.ToNumber() <= ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+                return test.ToNumber() <= trueValue?.ToNumber() ? trueValue : expression.IfFalse.GetValue();
             }
-            else
-            {
-                throw new NotSupportedException($"The operation '{expression.NodeType}' at expression '{expression}' is currently not supported.");
-            }
+            throw new NotSupportedException($"The operation '{expression.NodeType}' at expression '{expression}' is currently not supported.");
         }
 
         /// <summary>
@@ -510,13 +500,11 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ParameterExpression"/> object.</returns>
         public static object GetValue(this ParameterExpression expression)
         {
-            // TODO: Optimized this?
-            switch (expression.GetType().Name)
+            if (expression.Type.GetConstructors().Any(e => e.GetParameters().Length == 0))
             {
-                case "TypedParameterExpression":
-                    return Activator.CreateInstance(expression.Type);
+                return Activator.CreateInstance(expression.Type);
             }
-            throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
+            throw new InvalidExpressionException($"The default constructor for expression '{expression}' is not found.");
         }
 
         /// <summary>
@@ -525,7 +513,6 @@ namespace RepoDb.Extensions
         /// <param name="expression">The instance of <see cref="DefaultExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
         public static object GetValue(this DefaultExpression expression) =>
-            // TODO: Optimized this?
             expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
 
         #endregion

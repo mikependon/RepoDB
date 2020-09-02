@@ -97,6 +97,19 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // Parameter
+
+        [TestMethod]
+        public void TestQueryGroupParseExpressionForParameterEqual()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == e.PropertyInt)).GetString(m_dbSetting);
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         // ExpectedException
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
