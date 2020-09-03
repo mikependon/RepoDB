@@ -4,6 +4,8 @@ using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Operations
@@ -70,6 +72,75 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var entity = result.FirstOrDefault(item => item.Id == table.Id);
                     Assert.AreEqual(table.ColumnNVarChar, entity.ColumnNVarChar);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaEntityTableNameAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<dynamic>(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => item.Id == table.Id));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaEntityTableNameAsExpandoObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => ((dynamic)item).Id == table.Id));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllViaEntityTableNameAsDictionaryStringObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>());
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => (long)item["Id"] == table.Id));
                 });
             }
         }
@@ -291,6 +362,75 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(table =>
                 {
                     Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => item.Id == table.Id));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaEntityTableNameAsDynamic()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => item.Id == table.Id));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaEntityTableNameAsExpandoObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => ((dynamic)item).Id == table.Id));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncViaEntityTableNameAsDictionaryStringObject()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>()).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(table =>
+                {
+                    Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => (long)item["Id"] == table.Id));
                 });
             }
         }

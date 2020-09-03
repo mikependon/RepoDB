@@ -5,6 +5,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -351,7 +352,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllInternal<object>(connection: connection,
+            return QueryAllInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -397,7 +398,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllInternal<object>(connection: connection,
+            return QueryAllInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -447,7 +448,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllAsyncInternal<object>(connection: connection,
+            return QueryAllAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -493,7 +494,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllAsyncInternal<object>(connection: connection,
+            return QueryAllAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -588,36 +589,23 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (object)null;
 
             // Actual Execution
-            var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType)
+            var result = ExecuteQueryInternal<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: null,
+                skipCommandArrayParametersCheck: true);
+
+            // Set Cache
+            if (cacheKey != null)
             {
-                result = ExecuteQueryInternal<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: cache,
-                    skipCommandArrayParametersCheck: true);
-            }
-            else
-            {
-                result = ExecuteQueryInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: cache,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: true);
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // After Execution
@@ -712,54 +700,23 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (object)null;
 
             // Actual Execution
-            var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType)
+            var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: null,
+                skipCommandArrayParametersCheck: true);
+
+            // Set Cache
+            if (cacheKey != null)
             {
-                var executeResult = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: null,
-                    skipCommandArrayParametersCheck: true);
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the result
-                result = executeResult;
-            }
-            else
-            {
-                var executeResult = await ExecuteQueryAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: null,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: true);
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the result
-                result = executeResult;
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // After Execution
