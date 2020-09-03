@@ -5,6 +5,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -1201,7 +1202,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternal<object>(connection,
+            return BatchQueryInternal<dynamic>(connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1244,7 +1245,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternal<object>(connection: connection,
+            return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1287,7 +1288,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternal<object>(connection: connection,
+            return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1330,7 +1331,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternal<object>(connection: connection,
+            return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1373,7 +1374,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryInternal<object>(connection: connection,
+            return BatchQueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1418,7 +1419,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternal<object>(connection,
+            return BatchQueryAsyncInternal<dynamic>(connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1461,7 +1462,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternal<object>(connection: connection,
+            return BatchQueryAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1504,7 +1505,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternal<object>(connection: connection,
+            return BatchQueryAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1547,7 +1548,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternal<object>(connection: connection,
+            return BatchQueryAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -1590,7 +1591,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return BatchQueryAsyncInternal<object>(connection: connection,
+            return BatchQueryAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 page: page,
                 rowsPerBatch: rowsPerBatch,

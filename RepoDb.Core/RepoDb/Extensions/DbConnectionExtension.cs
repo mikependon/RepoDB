@@ -229,7 +229,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static Task<IEnumerable<object>> ExecuteQueryAsync(this IDbConnection connection,
+        public static Task<IEnumerable<dynamic>> ExecuteQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -1944,8 +1944,17 @@ namespace RepoDb
         /// <param name="entity"></param>
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(TEntity entity)
-            where TEntity : class =>
-            typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>();
+            where TEntity : class
+        {
+            var typeOfEntity = typeof(TEntity);
+            if (typeOfEntity.IsStringObjectDictionary())
+            {
+                return ((IDictionary<string, object>)entity)
+                    .Keys
+                    .Select(key => new Field(key));
+            }
+            return typeOfEntity.IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>();
+        }
 
         /// <summary>
         /// 
@@ -1955,7 +1964,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
             where TEntity : class =>
-            fields ?? FieldCache.Get<TEntity>();
+            fields ?? (typeof(TEntity).IsStringObjectDictionary() == false ? FieldCache.Get<TEntity>() : null);
 
         /// <summary>
         /// 

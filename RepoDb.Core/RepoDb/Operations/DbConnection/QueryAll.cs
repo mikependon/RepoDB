@@ -5,6 +5,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -351,7 +352,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllInternal<object>(connection: connection,
+            return QueryAllInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -397,7 +398,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllInternal<object>(connection: connection,
+            return QueryAllInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -447,7 +448,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllAsyncInternal<object>(connection: connection,
+            return QueryAllAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -493,7 +494,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAllAsyncInternal<object>(connection: connection,
+            return QueryAllAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
@@ -588,37 +589,56 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (object)null;
+            var result = (dynamic)null;
 
             // Actual Execution
             var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType)
+            if (typeOfTEntity.IsStringObjectDictionary() == false && (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType))
             {
-                result = ExecuteQueryInternal<TEntity>(connection: connection,
+                var executeResult = ExecuteQueryInternal<TEntity>(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: cache,
+                    cache: null,
                     skipCommandArrayParametersCheck: true);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Set the result
+                result = executeResult;
             }
             else
             {
-                result = ExecuteQueryInternal(connection: connection,
+                var executeResult = ExecuteQueryInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
-                    cache: cache,
+                    cache: null,
                     tableName: tableName,
                     skipCommandArrayParametersCheck: true);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Set the result
+                result = executeResult;
             }
+
 
             // After Execution
             if (trace != null)
@@ -712,11 +732,11 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (object)null;
+            var result = (dynamic)null;
 
             // Actual Execution
             var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType)
+            if (typeOfTEntity.IsStringObjectDictionary() == false && (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType))
             {
                 var executeResult = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                     commandText: commandText,

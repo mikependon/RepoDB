@@ -5,6 +5,7 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -1715,7 +1716,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryInternal<object>(connection: connection,
+            return QueryInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,
@@ -2032,7 +2033,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            return QueryAsyncInternal<object>(connection: connection,
+            return QueryAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
                 where: where,
                 fields: fields,

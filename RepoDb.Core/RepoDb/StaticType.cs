@@ -147,7 +147,7 @@ namespace RepoDb
         public static Type IDictionary => typeof(IDictionary<,>);
 
         /// <summary>
-        /// Gets a type of the <see cref="System.Collections.IDictionary{String, Object}"/> .NET CLR type.
+        /// Gets a type of the <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair) .NET CLR type.
         /// </summary>
         public static Type IDictionaryStringObject => typeof(IDictionary<string, object>);
 
