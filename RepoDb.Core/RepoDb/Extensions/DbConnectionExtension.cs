@@ -420,39 +420,68 @@ namespace RepoDb
                 }
             }
 
-            // Variables needed on this operation
-            var connectionString = connection.ConnectionString;
+            // Variables
+            var typeOfEntity = typeof(TEntity);
 
-            // Trigger the cache to avoid reusing the connection
-            if (connection.State == ConnectionState.Open || transaction != null)
+            // Identify
+            if (typeOfEntity.IsDictionaryStringObject() == false && (typeOfEntity.IsClassType() || typeOfEntity.IsGenericType))
             {
-                connectionString = null;
-                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-            }
+                // Variables needed on this operation
+                var connectionString = connection.ConnectionString;
 
-            // Execute the actual method
-            using (var command = CreateDbCommandForExecution(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity),
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                using (var reader = command.ExecuteReader())
+                // Trigger the cache to avoid reusing the connection
+                if (connection.State == ConnectionState.Open || transaction != null)
                 {
-                    var result = DataReader.ToEnumerableInternal<TEntity>(reader, connection, connectionString, transaction, false).AsList();
-
-                    // Set Cache
-                    if (cacheKey != null)
-                    {
-                        cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                    }
-
-                    // Return
-                    return result;
+                    connectionString = null;
+                    DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
                 }
+
+                // Execute the actual method
+                using (var command = CreateDbCommandForExecution(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: typeOfEntity,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var result = DataReader.ToEnumerableInternal<TEntity>(reader, connection, connectionString, transaction, false).AsList();
+
+                        // Set Cache
+                        if (cacheKey != null)
+                        {
+                            cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                        }
+
+                        // Return
+                        return result;
+                    }
+                }
+            }
+            else
+            {
+                var result = (IEnumerable<TEntity>)ExecuteQueryInternal(connection: connection,
+                   commandText: commandText,
+                   param: param,
+                   commandType: commandType,
+                   cacheKey: null,
+                   cacheItemExpiration: null,
+                   transaction: transaction,
+                   cache: null,
+                   tableName: null,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Return
+                return result;
             }
         }
 
@@ -552,39 +581,68 @@ namespace RepoDb
                 }
             }
 
-            // Variables needed on this operation
-            var connectionString = connection.ConnectionString;
+            // Variables
+            var typeOfEntity = typeof(TEntity);
 
-            // Trigger the cache to avoid reusing the connection
-            if (connection.State == ConnectionState.Open || transaction != null)
+            // Identify
+            if (typeOfEntity.IsDictionaryStringObject() == false && (typeOfEntity.IsClassType() || typeOfEntity.IsGenericType))
             {
-                connectionString = null;
-                await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-            }
+                // Variables needed on this operation
+                var connectionString = connection.ConnectionString;
 
-            // Execute the actual method
-            using (var command = CreateDbCommandForExecution(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity),
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                using (var reader = await command.ExecuteReaderAsync())
+                // Trigger the cache to avoid reusing the connection
+                if (connection.State == ConnectionState.Open || transaction != null)
                 {
-                    var result = (await DataReader.ToEnumerableInternalAsync<TEntity>(reader, connection, connectionString, transaction, false)).AsList();
-
-                    // Set Cache
-                    if (cacheKey != null)
-                    {
-                        cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                    }
-
-                    // Return
-                    return result;
+                    connectionString = null;
+                    await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
                 }
+
+                // Execute the actual method
+                using (var command = CreateDbCommandForExecution(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: typeOfEntity,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        var result = (await DataReader.ToEnumerableInternalAsync<TEntity>(reader, connection, connectionString, transaction, false)).AsList();
+
+                        // Set Cache
+                        if (cacheKey != null)
+                        {
+                            cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                        }
+
+                        // Return
+                        return result;
+                    }
+                }
+            }
+            else
+            {
+                var result = (IEnumerable<TEntity>)await ExecuteQueryAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: null,
+                    cacheItemExpiration: null,
+                    transaction: transaction,
+                    cache: null,
+                    tableName: null,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Return
+                return result;
             }
         }
 
@@ -1947,7 +2005,7 @@ namespace RepoDb
             where TEntity : class
         {
             var typeOfEntity = typeof(TEntity);
-            if (typeOfEntity.IsStringObjectDictionary())
+            if (typeOfEntity.IsDictionaryStringObject())
             {
                 return ((IDictionary<string, object>)entity)
                     .Keys
@@ -1964,7 +2022,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
             where TEntity : class =>
-            fields ?? (typeof(TEntity).IsStringObjectDictionary() == false ? FieldCache.Get<TEntity>() : null);
+            fields ?? (typeof(TEntity).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null);
 
         /// <summary>
         /// 

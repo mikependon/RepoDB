@@ -32,7 +32,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a class.</returns>
-        public static bool IsStringObjectDictionary(this Type type) =>
+        public static bool IsDictionaryStringObject(this Type type) =>
             type == StaticType.IDictionaryStringObject || type == StaticType.ExpandoObject;
 
         /// <summary>

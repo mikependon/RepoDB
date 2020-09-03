@@ -589,56 +589,24 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (dynamic)null;
 
             // Actual Execution
-            var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsStringObjectDictionary() == false && (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType))
+            var result = ExecuteQueryInternal<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: null,
+                skipCommandArrayParametersCheck: true);
+
+            // Set Cache
+            if (cacheKey != null)
             {
-                var executeResult = ExecuteQueryInternal<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: null,
-                    skipCommandArrayParametersCheck: true);
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the result
-                result = executeResult;
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
-            else
-            {
-                var executeResult = ExecuteQueryInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: null,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: true);
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the result
-                result = executeResult;
-            }
-
 
             // After Execution
             if (trace != null)
@@ -732,54 +700,23 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (dynamic)null;
 
             // Actual Execution
-            var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsStringObjectDictionary() == false && (typeOfTEntity.IsClassType() || typeOfTEntity.IsGenericType))
+            var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: null,
+                skipCommandArrayParametersCheck: true);
+
+            // Set Cache
+            if (cacheKey != null)
             {
-                var executeResult = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: null,
-                    skipCommandArrayParametersCheck: true);
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the result
-                result = executeResult;
-            }
-            else
-            {
-                var executeResult = await ExecuteQueryAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: null,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: true);
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, executeResult, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the result
-                result = executeResult;
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // After Execution
