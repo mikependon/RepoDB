@@ -123,7 +123,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllViaEntityTableNameAsStringObjectDictionary()
+        public void TestSqlConnectionQueryAllViaEntityTableNameAsDictionaryStringObject()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -413,7 +413,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncViaEntityTableNameAsStringObjectDictionary()
+        public void TestSqlConnectionQueryAllAsyncViaEntityTableNameAsDictionaryStringObject()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
