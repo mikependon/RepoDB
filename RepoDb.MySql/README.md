@@ -103,5 +103,3 @@ using (var connection = new MySqlConnection(ConnectionString))
 	var deletedCount = connection.Delete<Customer>(customer);
 }
 ```
-
-To learn more, please visit our [reference implementations](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/Reference%20Implementations.md) page.
