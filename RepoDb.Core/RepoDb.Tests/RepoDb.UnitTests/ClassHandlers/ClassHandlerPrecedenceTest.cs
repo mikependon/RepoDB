@@ -1,13 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
-using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
-using System;
 using System.Data;
 using System.Data.Common;
-using System.Linq.Expressions;
 
 namespace RepoDb.UnitTests.ClassHandlers
 {
