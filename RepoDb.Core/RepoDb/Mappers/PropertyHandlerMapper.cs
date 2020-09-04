@@ -628,8 +628,7 @@ namespace RepoDb
         private static void Guard(Type type)
         {
             GuardPresence(type);
-            var isInterfacedTo = type.IsInterfacedTo(StaticType.IPropertyHandler);
-            if (isInterfacedTo == false)
+            if (type.IsInterfacedTo(StaticType.IPropertyHandler) == false)
             {
                 throw new InvalidTypeException($"Type '{type.FullName}' must implement the '{StaticType.IPropertyHandler.FullName}' interface.");
             }
