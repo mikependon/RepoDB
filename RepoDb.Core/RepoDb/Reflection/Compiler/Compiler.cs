@@ -2154,6 +2154,13 @@ namespace RepoDb.Reflection
                 return entityExpression;
             }
 
+            // Validate
+            var handlerType = handlerInstance.GetType();
+            if (handlerType.IsClassHandlerValidForModel(typeOfEntity) == false)
+            {
+                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for the type '{typeOfEntity.FullName}'.");
+            }
+
             // Call the ClassHandler.Get method
             var getMethod = GetClassHandlerGetMethod(handlerInstance);
             return Expression.Call(Expression.Constant(handlerInstance),
@@ -2178,6 +2185,13 @@ namespace RepoDb.Reflection
             if (handlerInstance == null)
             {
                 return entityOrEntitiesExpression;
+            }
+
+            // Validate
+            var handlerType = handlerInstance.GetType();
+            if (handlerType.IsClassHandlerValidForModel(typeOfEntity) == false)
+            {
+                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for type '{typeOfEntity.FullName}'.");
             }
 
             // Call the IClassHandler.Set method

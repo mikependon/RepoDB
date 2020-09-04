@@ -113,14 +113,35 @@ namespace RepoDb.Extensions
         /// <param name="currentType">The current type.</param>
         /// <param name="interfaceType">The target interface type.</param>
         /// <returns>True if the current type has implemented the target interface.</returns>
-        internal static bool IsInterfacedTo(this Type currentType,
+        public static bool IsInterfacedTo(this Type currentType,
             Type interfaceType)
         {
-            var interfaces = currentType.GetImplementedInterfaces();
-            var targetInterface = interfaces.FirstOrDefault(item =>
-                item.Name == interfaceType.Name && item.Namespace == interfaceType.Namespace);
+            var targetInterface = currentType?
+                .GetImplementedInterfaces()?
+                .FirstOrDefault(item =>
+                    item.Name == interfaceType.Name && item.Namespace == interfaceType.Namespace);
             interfaceType = interfaceType?.MakeGenericTypeFrom(targetInterface);
             return interfaceType.IsAssignableFrom(currentType);
+        }
+
+        /// <summary>
+        /// Checks whether the current class handler type is valid to be used for the target model type.
+        /// </summary>
+        /// <param name="classHandlerType">The current class handler type type.</param>
+        /// <param name="targetModelType">The target model type.</param>
+        /// <returns>True if the current class handler type is valid to be used for the target model type.</returns>
+        internal static bool IsClassHandlerValidForModel(this Type classHandlerType,
+            Type targetModelType)
+        {
+            var targetInterface = classHandlerType?
+                .GetImplementedInterfaces()?
+                .FirstOrDefault(item =>
+                    item.Name == StaticType.IClassHandler.Name && item.Namespace == StaticType.IClassHandler.Namespace);
+            if (targetInterface != null)
+            {
+                return targetInterface.GetGenericArguments()?.FirstOrDefault() == targetModelType;
+            }
+            return false;
         }
 
         #region Helpers
