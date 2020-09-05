@@ -8,6 +8,9 @@ namespace RepoDb.IntegrationTests.Models
     {
         public long Id { get; set; }
         public Guid RowGuid { get; set; }
+        public bool? ColumnBit { get; set; }
+        public DateTime? ColumnDateTime { get; set; }
+        public DateTime? ColumnDateTime2 { get; set; }
 
         public bool Equals(T other)
         {
@@ -30,9 +33,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[sc].[IdentityTable]")]
     public class InheritedIdentityTable : Entity<InheritedIdentityTable>
     {
-        public bool? ColumnBit { get; set; }
-        public DateTime? ColumnDateTime { get; set; }
-        public DateTime? ColumnDateTime2 { get; set; }
         public decimal? ColumnDecimal { get; set; }
         public double? ColumnFloat { get; set; }
         public int? ColumnInt { get; set; }
