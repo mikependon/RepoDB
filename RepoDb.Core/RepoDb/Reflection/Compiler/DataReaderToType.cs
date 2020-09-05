@@ -96,7 +96,7 @@ namespace RepoDb.Reflection
             var typeOfResult = typeof(TResult);
 
             // EntityModel/Class
-            if (typeOfResult.IsClassType() || typeOfResult.IsAnonymousType())
+            if (typeOfResult.IsClassType())
             {
                 return CompileDataReaderToDataEntity<TResult>(reader, dbFields, dbSetting);
             }

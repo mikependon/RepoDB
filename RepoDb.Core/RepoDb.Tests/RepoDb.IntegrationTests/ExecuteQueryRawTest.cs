@@ -399,7 +399,6 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void ThrowExceptionOnSqlConnectionExecuteQueryTypeResultWithMoreColumns()
         {
@@ -409,7 +408,6 @@ namespace RepoDb.IntegrationTests
                 connection.ExecuteQuery<int>("SELECT 1 AS Column1, 2 AS Column2 UNION ALL SELECT 3, 4;").AsList();
             }
         }
-
 
         #endregion
 
