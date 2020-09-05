@@ -1,10 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using RepoDb.IntegrationTests.Models;
 
 namespace RepoDb.IntegrationTests
 {
@@ -105,9 +107,38 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-        #region DbConnection
-
         #region ExecuteQuery
+
+        #region TypeResult
+
+        #region NonNullables
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForLong()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(tables);
+
+                // Act
+                var result = connection.ExecuteQuery<long>("SELECT Id FROM [sc].[IdentityTable];").AsList();
+
+                // Assert
+                tables.ForEach(table =>
+                {
+                    var item = result[tables.IndexOf(table)];
+                    Assert.AreEqual(table.Id, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #endregion
 
         #region NonMapped
 
@@ -877,8 +908,6 @@ namespace RepoDb.IntegrationTests
                 Helper.AssertPropertiesEquality(param, secondResult);
             }
         }
-
-        #endregion
 
         #endregion
 
