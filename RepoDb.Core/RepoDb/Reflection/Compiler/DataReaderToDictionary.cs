@@ -20,7 +20,7 @@ namespace RepoDb.Reflection
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
+        internal static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
@@ -41,7 +41,7 @@ namespace RepoDb.Reflection
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        public static async Task<Func<DbDataReader, ExpandoObject>> CompileDataReaderToExpandoObjectAsync(DbDataReader reader,
+        internal static async Task<Func<DbDataReader, ExpandoObject>> CompileDataReaderToExpandoObjectAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
@@ -62,7 +62,7 @@ namespace RepoDb.Reflection
         /// <param name="tableName"></param>
         /// <param name="connection"></param>
         /// <returns></returns>
-        public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
+        internal static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
             IEnumerable<DbField> dbFields,
             string tableName,
             IDbConnection connection)

@@ -30,7 +30,7 @@ namespace RepoDb.Reflection
             string connectionString,
             IDbTransaction transaction,
             bool enableValidation) =>
-            Compiler.CompileDataReaderToDataEntity<TResult>(reader,
+            Compiler.CompileDataReaderToType<TResult>(reader,
                 connection,
                 connectionString,
                 transaction,
@@ -51,7 +51,7 @@ namespace RepoDb.Reflection
             string connectionString,
             IDbTransaction transaction,
             bool enableValidation) =>
-            Compiler.CompileDataReaderToDataEntityAsync<TResult>(reader,
+            Compiler.CompileDataReaderToTypeAsync<TResult>(reader,
                 connection,
                 connectionString,
                 transaction,

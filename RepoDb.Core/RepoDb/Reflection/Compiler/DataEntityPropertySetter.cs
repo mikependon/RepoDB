@@ -13,7 +13,7 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="field"></param>
         /// <returns></returns>
-        public static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(Field field)
+        internal static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(Field field)
             where TEntity : class
         {
             // Variables for type
@@ -33,7 +33,7 @@ namespace RepoDb.Reflection
         /// <param name="property"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        public static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(PropertyInfo property,
+        internal static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(PropertyInfo property,
             Type targetType)
             where TEntity : class
         {

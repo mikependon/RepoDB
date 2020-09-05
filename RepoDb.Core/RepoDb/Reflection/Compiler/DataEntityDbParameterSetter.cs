@@ -16,7 +16,7 @@ namespace RepoDb.Reflection
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        internal static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             IDbSetting dbSetting)
             where TEntity : class

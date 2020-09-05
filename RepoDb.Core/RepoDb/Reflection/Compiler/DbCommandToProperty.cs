@@ -17,7 +17,7 @@ namespace RepoDb.Reflection
         /// <param name="index"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
+        internal static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
             string parameterName,
             int index,
             IDbSetting dbSetting)

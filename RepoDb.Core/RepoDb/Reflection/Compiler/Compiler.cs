@@ -433,6 +433,16 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="reader"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static IEnumerable<DataReaderField> GetDataReaderFields(DbDataReader reader,
+            IDbSetting dbSetting) =>
+            GetDataReaderFields(reader, null, dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
@@ -904,6 +914,53 @@ namespace RepoDb.Reflection
 
             // Return the value
             return expression;
+        }
+
+        // TODO: Make sure to reuse ConvertValueExpressionToNullableExpression
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valueExpression"></param>
+        /// <param name="targetNullableType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertValueExpressionToNullableExpression(Expression valueExpression,
+            Type targetNullableType)
+        {
+            var underlyingType = Nullable.GetUnderlyingType(valueExpression.Type);
+            if (underlyingType == null || underlyingType != targetNullableType)
+            {
+                var nullableType = StaticType.Nullable.MakeGenericType(targetNullableType);
+                var constructor = nullableType.GetConstructor(new[] { targetNullableType });
+                valueExpression = Expression.New(constructor, valueExpression);
+            }
+            return valueExpression;
+        }
+
+        // TODO: Make sure to reuse ConvertValueExpressionToPropertyHandlerExpression
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="valueExpression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertValueExpressionToPropertyHandlerGetExpression<TResult>(Expression valueExpression)
+        {
+            var typeOfResult = typeof(TResult);
+            var handlerInstance = PropertyHandlerCache.Get<object>(typeOfResult);
+            if (handlerInstance != null)
+            {
+                var getMethod = GetPropertyHandlerGetMethod(handlerInstance);
+                var getParameter = GetPropertyHandlerGetParameter(getMethod);
+                valueExpression = ConvertValueExpressionToTypeExpression(valueExpression, getParameter.ParameterType);
+                valueExpression = Expression.Call(Expression.Constant(handlerInstance), getMethod, new[]
+                {
+                    valueExpression,
+                    Expression.Convert(Expression.Constant(default(ClassProperty)), StaticType.ClassProperty)
+                });
+            }
+            return valueExpression;
         }
 
         /// <summary>
