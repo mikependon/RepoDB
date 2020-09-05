@@ -20,51 +20,48 @@ namespace RepoDb
         #region GetDataReaderToDataEntityCompiledFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="connectionString">The raw connection string.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
-        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityCompiledFunction<TEntity>(DbDataReader reader,
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="reader"></param>
+        /// <param name="connection"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="transaction"></param>
+        /// <param name="enableValidation"></param>
+        /// <returns></returns>
+        internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
             IDbConnection connection,
             string connectionString,
             IDbTransaction transaction,
-            bool enableValidation)
-            where TEntity : class =>
-            DataReaderToDataEntityCache<TEntity>.Get(reader, connection, connectionString, transaction, enableValidation);
-
-        /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of data entity objects in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="connectionString">The raw connection string.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
-        /// <returns>A compiled function that is used to cover the <see cref="DbDataReader"/> object into a list of data entity objects.</returns>
-        internal static Task<Func<DbDataReader, TEntity>> GetDataReaderToDataEntityCompiledFunctionAsync<TEntity>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation)
-            where TEntity : class =>
-            DataReaderToDataEntityCache<TEntity>.GetAsync(reader, connection, connectionString, transaction, enableValidation);
-
-        #region DataReaderToDataEntityCache
+            bool enableValidation) =>
+            DataReaderToTypeCache<TResult>.Get(reader, connection, connectionString, transaction, enableValidation);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        private static class DataReaderToDataEntityCache<TEntity>
-            where TEntity : class
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="reader"></param>
+        /// <param name="connection"></param>
+        /// <param name="connectionString"></param>
+        /// <param name="transaction"></param>
+        /// <param name="enableValidation"></param>
+        /// <returns></returns>
+        internal static Task<Func<DbDataReader, TResult>> GetDataReaderToTypeCompiledFunctionAsync<TResult>(DbDataReader reader,
+            IDbConnection connection,
+            string connectionString,
+            IDbTransaction transaction,
+            bool enableValidation) =>
+            DataReaderToTypeCache<TResult>.GetAsync(reader, connection, connectionString, transaction, enableValidation);
+
+        #region DataReaderToTypeCache
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        private static class DataReaderToTypeCache<TResult>
         {
-            private static ConcurrentDictionary<long, Func<DbDataReader, TEntity>> cache = new ConcurrentDictionary<long, Func<DbDataReader, TEntity>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, TResult>> cache = new ConcurrentDictionary<long, Func<DbDataReader, TResult>>();
 
             /// <summary>
             /// 
@@ -75,17 +72,17 @@ namespace RepoDb
             /// <param name="transaction"></param>
             /// <param name="enableValidation"></param>
             /// <returns></returns>
-            internal static Func<DbDataReader, TEntity> Get(DbDataReader reader,
+            internal static Func<DbDataReader, TResult> Get(DbDataReader reader,
                 IDbConnection connection,
                 string connectionString,
                 IDbTransaction transaction,
                 bool enableValidation)
             {
-                var result = (Func<DbDataReader, TEntity>)null;
+                var result = (Func<DbDataReader, TResult>)null;
                 var key = GetKey(reader, connection);
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.CompileDataReaderToDataEntity<TEntity>(reader, connection, connectionString, transaction, enableValidation);
+                    result = FunctionFactory.CompileDataReaderToDataEntity<TResult>(reader, connection, connectionString, transaction, enableValidation);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -100,17 +97,17 @@ namespace RepoDb
             /// <param name="transaction"></param>
             /// <param name="enableValidation"></param>
             /// <returns></returns>
-            internal static async Task<Func<DbDataReader, TEntity>> GetAsync(DbDataReader reader,
+            internal static async Task<Func<DbDataReader, TResult>> GetAsync(DbDataReader reader,
                 IDbConnection connection,
                 string connectionString,
                 IDbTransaction transaction,
                 bool enableValidation)
             {
-                var result = (Func<DbDataReader, TEntity>)null;
+                var result = (Func<DbDataReader, TResult>)null;
                 var key = GetKey(reader, connection);
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = await FunctionFactory.CompileDataReaderToDataEntityAsync<TEntity>(reader, connection, connectionString, transaction, enableValidation);
+                    result = await FunctionFactory.CompileDataReaderToDataEntityAsync<TResult>(reader, connection, connectionString, transaction, enableValidation);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -129,7 +126,7 @@ namespace RepoDb
                     .Select(reader.GetName)
                     .Join(StringConstant.Period)
                     .GetHashCode();
-                var key = typeof(TEntity).FullName.GetHashCode() + fields.GetHashCode();
+                var key = typeof(TResult).GetHashCode() + fields.GetHashCode();
                 if (string.IsNullOrWhiteSpace(connection?.ConnectionString) == false)
                 {
                     key += connection.ConnectionString.GetHashCode();
@@ -145,13 +142,13 @@ namespace RepoDb
         #region GetDataReaderToExpandoObjectCompileFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
+        /// 
         /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
+        /// <param name="reader"></param>
+        /// <param name="tableName"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
             string tableName,
             IDbConnection connection,
@@ -159,13 +156,13 @@ namespace RepoDb
             DataReaderToExpandoObjectCache.Get(reader, tableName, connection, transaction);
 
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects in an asynchronous way.
+        /// 
         /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
+        /// <param name="reader"></param>
+        /// <param name="tableName"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         internal static Task<Func<DbDataReader, ExpandoObject>> GetDataReaderToExpandoObjectCompileFunctionAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
@@ -261,14 +258,14 @@ namespace RepoDb
         #region GetDataEntityDbParameterSetterCompiledFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity/dynamic objects.</typeparam>
-        /// <param name="cacheKey">The key to the cache.</param>
-        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
-        /// <param name="outputFields">The list of the ouput <see cref="DbField"/> objects to be used.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The compiled function.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="cacheKey"></param>
+        /// <param name="inputFields"></param>
+        /// <param name="outputFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static Action<DbCommand, TEntity> GetDataEntityDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
@@ -321,7 +318,7 @@ namespace RepoDb
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields)
             {
-                var key = (long)cacheKey.GetHashCode();
+                var key = (long)typeof(TEntity).GetHashCode() + cacheKey.GetHashCode();
                 if (inputFields != null)
                 {
                     foreach (var field in inputFields)
@@ -347,15 +344,15 @@ namespace RepoDb
         #region GetDataEntityListDbParameterSetterCompiledFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic objects.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity/dynamic objects.</typeparam>
-        /// <param name="cacheKey">The key to the cache.</param>
-        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects to be used.</param>
-        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects to be used.</param>
-        /// <param name="batchSize">The batch size of the entities to be passed.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The compiled function.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="cacheKey"></param>
+        /// <param name="inputFields"></param>
+        /// <param name="outputFields"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static Action<DbCommand, IList<TEntity>> GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
@@ -413,7 +410,7 @@ namespace RepoDb
                 IEnumerable<DbField> outputFields,
                 int batchSize)
             {
-                var key = (long)cacheKey.GetHashCode() + batchSize.GetHashCode();
+                var key = (long)typeof(TEntity).GetHashCode() + cacheKey.GetHashCode() + batchSize.GetHashCode();
                 if (inputFields?.Any() == true)
                 {
                     foreach (var field in inputFields)
@@ -439,14 +436,14 @@ namespace RepoDb
         #region GetDbCommandToPropertyCompiledFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The target <see cref="Field"/>.</param>
-        /// <param name="parameterName">The name of the parameter.</param>
-        /// <param name="index">The index of the batches.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         internal static Action<TEntity, DbCommand> GetDbCommandToPropertyCompiledFunction<TEntity>(Field field,
             string parameterName,
             int index,
@@ -478,7 +475,7 @@ namespace RepoDb
                 int index,
                 IDbSetting dbSetting)
             {
-                var key = (long)typeof(TEntity).FullName.GetHashCode() + field.GetHashCode() +
+                var key = (long)typeof(TEntity).GetHashCode() + field.GetHashCode() +
                     parameterName.GetHashCode() + index.GetHashCode();
                 var func = (Action<TEntity, DbCommand>)null;
                 if (cache.TryGetValue(key, out func) == false)
@@ -497,11 +494,11 @@ namespace RepoDb
         #region GetDataEntityPropertySetterCompiledFunction
 
         /// <summary>
-        /// Gets a compiled function that is used to set the data entity object property value.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The target <see cref="Field"/>.</param>
-        /// <returns>A compiled function that is used to set the data entity object property value.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <returns></returns>
         internal static Action<TEntity, object> GetDataEntityPropertySetterCompiledFunction<TEntity>(Field field)
             where TEntity : class =>
             DataEntityPropertySetterCache<TEntity>.Get(field);
@@ -524,7 +521,7 @@ namespace RepoDb
             /// <returns></returns>
             internal static Action<TEntity, object> Get(Field field)
             {
-                var key = (long)typeof(TEntity).FullName.GetHashCode() + field.Name.GetHashCode();
+                var key = (long)typeof(TEntity).GetHashCode() + field.Name.GetHashCode();
                 var func = (Action<TEntity, object>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {

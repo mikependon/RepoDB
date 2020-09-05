@@ -13,42 +13,40 @@ namespace RepoDb.Reflection
     {
         // TODO: Refactor the 'ToEnumerable' to only accepts the DbDataReader and IEnumerable<DbField>
 
-        #region ToEnumerable<TEntity>
+        #region ToEnumerable<TResult>
 
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> objects.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An array of data entity objects.</returns>
-        public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader,
+        /// <returns>A list of the target result type.</returns>
+        public static IEnumerable<TResult> ToEnumerable<TResult>(DbDataReader reader,
             IDbConnection connection = null,
-            IDbTransaction transaction = null)
-            where TEntity : class =>
-            ToEnumerableInternal<TEntity>(reader, connection, null, transaction, true);
+            IDbTransaction transaction = null) =>
+            ToEnumerableInternal<TResult>(reader, connection, null, transaction, true);
 
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects.
         /// </summary>
-        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="connectionString">The raw connection string.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
-        /// <returns>An array of data entity objects.</returns>
-        internal static IEnumerable<TEntity> ToEnumerableInternal<TEntity>(DbDataReader reader,
+        /// <returns>A list of the target result type.</returns>
+        internal static IEnumerable<TResult> ToEnumerableInternal<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             string connectionString = null,
             IDbTransaction transaction = null,
             bool enableValidation = true)
-            where TEntity : class
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = FunctionCache.GetDataReaderToDataEntityCompiledFunction<TEntity>(reader,
+                var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
                     connection,
                     connectionString,
                     transaction,
@@ -62,43 +60,41 @@ namespace RepoDb.Reflection
 
         #endregion
 
-        #region ToEnumerableAsync<TEntity>
+        #region ToEnumerableAsync<TResult>
 
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An array of data entity objects.</returns>
-        public static Task<IEnumerable<TEntity>> ToEnumerableAsync<TEntity>(DbDataReader reader,
+        /// <returns>A list of the target result type.</returns>
+        public static Task<IEnumerable<TResult>> ToEnumerableAsync<TResult>(DbDataReader reader,
             IDbConnection connection = null,
-            IDbTransaction transaction = null)
-            where TEntity : class =>
-            ToEnumerableInternalAsync<TEntity>(reader, connection, null, transaction, true);
+            IDbTransaction transaction = null) =>
+            ToEnumerableInternalAsync<TResult>(reader, connection, null, transaction, true);
 
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The data entity type to convert.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="connectionString">The raw connection string.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
-        /// <returns>An array of data entity objects.</returns>
-        internal static async Task<IEnumerable<TEntity>> ToEnumerableInternalAsync<TEntity>(DbDataReader reader,
+        /// <returns>A list of the target result type.</returns>
+        internal static async Task<IEnumerable<TResult>> ToEnumerableInternalAsync<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             string connectionString = null,
             IDbTransaction transaction = null,
             bool enableValidation = true)
-            where TEntity : class
         {
-            var list = new List<TEntity>();
+            var list = new List<TResult>();
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var func = await FunctionCache.GetDataReaderToDataEntityCompiledFunctionAsync<TEntity>(reader,
+                var func = await FunctionCache.GetDataReaderToTypeCompiledFunctionAsync<TResult>(reader,
                     connection,
                     connectionString,
                     transaction,

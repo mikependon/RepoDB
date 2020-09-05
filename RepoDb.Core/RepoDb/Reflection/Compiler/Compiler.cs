@@ -1206,24 +1206,23 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         /// <param name="readerFieldsName"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static IEnumerable<ClassPropertyParameterInfo> GetClassPropertyParameterInfos<TEntity>(IEnumerable<string> readerFieldsName,
+        internal static IEnumerable<ClassPropertyParameterInfo> GetClassPropertyParameterInfos<TResult>(IEnumerable<string> readerFieldsName,
             IDbSetting dbSetting)
-            where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
+            var typeOfResult = typeof(TResult);
             var list = new List<ClassPropertyParameterInfo>();
 
             // Parameter information
-            var constructorInfo = typeOfEntity.GetConstructorWithMostArguments();
+            var constructorInfo = typeOfResult.GetConstructorWithMostArguments();
             var parameterInfos = constructorInfo?.GetParameters().AsList();
 
             // Class properties
             var classProperties = PropertyCache
-                .Get(typeOfEntity)?
+                .Get(typeOfResult)?
                 .Where(property => property.PropertyInfo.CanWrite)
                 .Where(property =>
                     readerFieldsName?.FirstOrDefault(field =>
@@ -1307,19 +1306,18 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Returns the list of the bindings for the entity.
         /// </summary>
-        /// <typeparam name="TEntity">The target entity type.</typeparam>
+        /// <typeparam name="TResult">The target entity type.</typeparam>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
         /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
         /// <param name="dbSetting">The database setting that is being used.</param>
         /// <returns>The enumerable list of <see cref="MemberBinding"/> objects.</returns>
-        internal static IEnumerable<MemberBinding> GetMemberBindingsForDataEntity<TEntity>(ParameterExpression readerParameterExpression,
+        internal static IEnumerable<MemberBinding> GetMemberBindingsForDataEntity<TResult>(ParameterExpression readerParameterExpression,
             IEnumerable<DataReaderField> readerFields,
             IDbSetting dbSetting)
-            where TEntity : class
         {
             // Variables needed
             var readerFieldsName = readerFields.Select(f => f.Name.ToLowerInvariant()).AsList();
-            var classPropertyParameterInfos = GetClassPropertyParameterInfos<TEntity>(readerFieldsName, dbSetting);
+            var classPropertyParameterInfos = GetClassPropertyParameterInfos<TResult>(readerFieldsName, dbSetting);
 
             // Check the presence
             if (classPropertyParameterInfos?.Any() != true)
@@ -2073,51 +2071,50 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static Expression ThrowIfNullAfterClassHandlerExpression<TEntity>(Expression expression)
+        private static Expression ThrowIfNullAfterClassHandlerExpression<TResult>(Expression expression)
         {
-            var typeOfEntity = typeof(TEntity);
+            var typeOfResult = typeof(TResult);
             var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
-            var exception = new NullReferenceException($"Entity of type '{typeOfEntity}' must not be null. If you have defined a class handler, please check the 'Set' method.");
+            var exception = new NullReferenceException($"Entity of type '{typeOfResult}' must not be null. If you have defined a class handler, please check the 'Set' method.");
             return Expression.IfThen(isNullExpression, Expression.Throw(Expression.Constant(exception)));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entitiesParameterExpression"></param>
         /// <param name="fieldDirections"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static Expression GetIndexDbParameterSetterExpression<TEntity>(ParameterExpression commandParameterExpression,
+        private static Expression GetIndexDbParameterSetterExpression<TResult>(ParameterExpression commandParameterExpression,
             Expression entitiesParameterExpression,
             IEnumerable<FieldDirection> fieldDirections,
             int entityIndex,
             IDbSetting dbSetting)
-            where TEntity : class
         {
             // Get the current instance
-            var typeOfEntity = typeof(TEntity);
-            var entityVariableExpression = Expression.Variable(typeOfEntity, "instance");
-            var typeOfListEntity = typeof(IList<TEntity>);
+            var typeOfResult = typeof(TResult);
+            var entityVariableExpression = Expression.Variable(typeOfResult, "instance");
+            var typeOfListEntity = typeof(IList<TResult>);
             var entityParameter = (Expression)GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
             var entityExpressions = new List<Expression>();
             var entityVariables = new List<ParameterExpression>();
 
             // Class handler
-            entityParameter = ConvertValueExpressionToClassHandlerSetExpression<TEntity>(entityParameter);
+            entityParameter = ConvertValueExpressionToClassHandlerSetExpression<TResult>(entityParameter);
 
             // Entity instance
             entityVariables.Add(entityVariableExpression);
             entityExpressions.Add(Expression.Assign(entityVariableExpression, entityParameter));
 
             // Throw if null
-            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression<TEntity>(entityVariableExpression));
+            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression<TResult>(entityVariableExpression));
 
             // Iterate the input fields
             foreach (var fieldDirection in fieldDirections)
@@ -2137,18 +2134,17 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         /// <param name="entityExpression"></param>
         /// <param name="readerParameterExpression"></param>
         /// <returns></returns>
-        internal static Expression ConvertValueExpressionToClassHandlerGetExpression<TEntity>(Expression entityExpression,
+        internal static Expression ConvertValueExpressionToClassHandlerGetExpression<TResult>(Expression entityExpression,
             ParameterExpression readerParameterExpression)
-            where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
+            var typeOfResult = typeof(TResult);
 
             // Check the handler
-            var handlerInstance = GetClassHandler(typeOfEntity);
+            var handlerInstance = GetClassHandler(typeOfResult);
             if (handlerInstance == null)
             {
                 return entityExpression;
@@ -2156,9 +2152,9 @@ namespace RepoDb.Reflection
 
             // Validate
             var handlerType = handlerInstance.GetType();
-            if (handlerType.IsClassHandlerValidForModel(typeOfEntity) == false)
+            if (handlerType.IsClassHandlerValidForModel(typeOfResult) == false)
             {
-                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for the type '{typeOfEntity.FullName}'.");
+                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for the type '{typeOfResult.FullName}'.");
             }
 
             // Call the ClassHandler.Get method
@@ -2172,16 +2168,15 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
         /// <param name="entityOrEntitiesExpression"></param>
         /// <returns></returns>
-        internal static Expression ConvertValueExpressionToClassHandlerSetExpression<TEntity>(Expression entityOrEntitiesExpression)
-            where TEntity : class
+        internal static Expression ConvertValueExpressionToClassHandlerSetExpression<TResult>(Expression entityOrEntitiesExpression)
         {
-            var typeOfEntity = typeof(TEntity);
+            var typeOfResult = typeof(TResult);
 
             // Check the handler
-            var handlerInstance = GetClassHandler(typeOfEntity);
+            var handlerInstance = GetClassHandler(typeOfResult);
             if (handlerInstance == null)
             {
                 return entityOrEntitiesExpression;
@@ -2189,13 +2184,13 @@ namespace RepoDb.Reflection
 
             // Validate
             var handlerType = handlerInstance.GetType();
-            if (handlerType.IsClassHandlerValidForModel(typeOfEntity) == false)
+            if (handlerType.IsClassHandlerValidForModel(typeOfResult) == false)
             {
-                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for type '{typeOfEntity.FullName}'.");
+                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for type '{typeOfResult.FullName}'.");
             }
 
             // Call the IClassHandler.Set method
-            var typeOfListEntity = typeof(IList<TEntity>);
+            var typeOfListEntity = typeof(IList<TResult>);
             if (typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type))
             {
                 var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfListEntity);
@@ -2205,7 +2200,7 @@ namespace RepoDb.Reflection
             }
             else
             {
-                var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfEntity);
+                var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfResult);
                 entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
                     setMethod,
                     entityOrEntitiesExpression);

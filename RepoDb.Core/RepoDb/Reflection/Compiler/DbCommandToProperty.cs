@@ -9,14 +9,14 @@ namespace RepoDb.Reflection
     internal partial class Compiler
     {
         /// <summary>
-        /// Gets a compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The target <see cref="Field"/>.</param>
-        /// <param name="parameterName">The name of the parameter.</param>
-        /// <param name="index">The index of the batches.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>A compiled function that is used to set the data entity object property value based from the value of <see cref="DbCommand"/> parameter object.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         public static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
             string parameterName,
             int index,

@@ -20,12 +20,20 @@ namespace RepoDb.Extensions
                 .OrderByDescending(item => item.GetParameters().Length)?.FirstOrDefault();
 
         /// <summary>
+        /// Checks whether the current type is of type <see cref="object"/>.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>Returns true if the current type is a <see cref="object"/>.</returns>
+        public static bool IsObjectType(this Type type) =>
+            type == StaticType.Object;
+
+        /// <summary>
         /// Checks whether the current type is of type class.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a class.</returns>
         public static bool IsClassType(this Type type) =>
-            type.IsClass && type != StaticType.Object && type != StaticType.String && type.IsGenericType == false;
+            type.IsClass && type.IsObjectType() == false && type != StaticType.String && type.IsGenericType == false;
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).

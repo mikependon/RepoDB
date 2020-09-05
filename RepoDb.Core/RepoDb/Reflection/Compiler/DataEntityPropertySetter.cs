@@ -8,11 +8,11 @@ namespace RepoDb.Reflection
     internal partial class Compiler
     {
         /// <summary>
-        /// Gets a compiled function that is used to set the data entity object property value.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="field">The target <see cref="Field"/>.</param>
-        /// <returns>A compiled function that is used to set the data entity object property value.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <returns></returns>
         public static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(Field field)
             where TEntity : class
         {
@@ -27,12 +27,12 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a compiled function that is used to set the data entity object property value.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="property">The target <see cref="PropertyInfo"/>.</param>
-        /// <param name="targetType">The target .NET CLR type.</param>
-        /// <returns>A compiled function that is used to set the data entity object property value.</returns>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="property"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         public static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(PropertyInfo property,
             Type targetType)
             where TEntity : class
