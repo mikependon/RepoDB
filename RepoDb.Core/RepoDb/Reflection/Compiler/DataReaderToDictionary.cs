@@ -13,14 +13,14 @@ namespace RepoDb.Reflection
     internal partial class Compiler
     {
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
+        /// 
         /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
+        /// <param name="reader"></param>
+        /// <param name="tableName"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
@@ -33,16 +33,15 @@ namespace RepoDb.Reflection
             return CompileDataReaderToExpandoObject(reader, dbFields, tableName, connection);
         }
 
-
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects in an asynchronous way.
+        /// 
         /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static async Task<Func<DbDataReader, ExpandoObject>> CompileDataReaderToExpandoObjectAsync(DbDataReader reader,
+        /// <param name="reader"></param>
+        /// <param name="tableName"></param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        internal static async Task<Func<DbDataReader, ExpandoObject>> CompileDataReaderToExpandoObjectAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
@@ -55,16 +54,15 @@ namespace RepoDb.Reflection
             return CompileDataReaderToExpandoObject(reader, dbFields, tableName, connection);
         }
 
-
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.
+        /// 
         /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="dbFields">The list of the <see cref="DbField"/> objects.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <returns>A compiled function that is used to convert the <see cref="DbDataReader"/> object into a list of dynamic objects.</returns>
-        public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
+        /// <param name="reader"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="tableName"></param>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        internal static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
             IEnumerable<DbField> dbFields,
             string tableName,
             IDbConnection connection)

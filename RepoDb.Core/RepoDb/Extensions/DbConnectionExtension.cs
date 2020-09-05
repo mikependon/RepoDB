@@ -84,7 +84,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQuery(Dynamics)
+        #region ExecuteQuery
 
         /// <summary>
         /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -189,7 +189,10 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = DataReader.ToEnumerable(reader, tableName, connection, transaction).AsList();
+                    var result = DataReader.ToEnumerable(reader,
+                        tableName,
+                        connection,
+                        transaction).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -205,7 +208,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQueryAsync(Dynamics)
+        #region ExecuteQueryAsync
 
         /// <summary>
         /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -310,7 +313,10 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (await DataReader.ToEnumerableAsync(reader, tableName, connection, transaction)).AsList();
+                    var result = (await DataReader.ToEnumerableAsync(reader,
+                        tableName,
+                        connection,
+                        transaction)).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -326,13 +332,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQuery<TEntity>
+        #region ExecuteQuery<TResult>
 
         /// <summary>
         /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of data entity object.
+        /// converts the result back to an enumerable list of the target result type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -349,9 +355,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <returns>
-        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
+        public static IEnumerable<TResult> ExecuteQuery<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -360,9 +366,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null)
-            where TEntity : class
         {
-            return ExecuteQueryInternal<TEntity>(connection: connection,
+            return ExecuteQueryInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -376,9 +381,9 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of data entity object.
+        /// converts the result back to an enumerable list of the target result type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -396,9 +401,9 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
-        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        internal static IEnumerable<TEntity> ExecuteQueryInternal<TEntity>(this IDbConnection connection,
+        internal static IEnumerable<TResult> ExecuteQueryInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -408,12 +413,11 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             bool skipCommandArrayParametersCheck = true)
-            where TEntity : class
         {
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
+                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -421,49 +425,12 @@ namespace RepoDb
             }
 
             // Variables
-            var typeOfEntity = typeof(TEntity);
+            var typeOfResult = typeof(TResult);
 
             // Identify
-            if (typeOfEntity.IsDictionaryStringObject() == false && (typeOfEntity.IsClassType() || typeOfEntity.IsGenericType))
+            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
-                // Variables needed on this operation
-                var connectionString = connection.ConnectionString;
-
-                // Trigger the cache to avoid reusing the connection
-                if (connection.State == ConnectionState.Open || transaction != null)
-                {
-                    connectionString = null;
-                    DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                }
-
-                // Execute the actual method
-                using (var command = CreateDbCommandForExecution(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    entityType: typeOfEntity,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        var result = DataReader.ToEnumerableInternal<TEntity>(reader, connection, connectionString, transaction, false).AsList();
-
-                        // Set Cache
-                        if (cacheKey != null)
-                        {
-                            cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                        }
-
-                        // Return
-                        return result;
-                    }
-                }
-            }
-            else
-            {
-                var result = (IEnumerable<TEntity>)ExecuteQueryInternal(connection: connection,
+                var result = (IEnumerable<TResult>)ExecuteQueryInternal(connection: connection,
                    commandText: commandText,
                    param: param,
                    commandType: commandType,
@@ -483,17 +450,58 @@ namespace RepoDb
                 // Return
                 return result;
             }
+            else
+            {
+                // Variables needed on this operation
+                var connectionString = connection.ConnectionString;
+
+                // Trigger the cache to avoid reusing the connection
+                if (connection.State == ConnectionState.Open || transaction != null)
+                {
+                    connectionString = null;
+                    DbFieldCache.Get(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
+                }
+
+                // Execute the actual method
+                using (var command = CreateDbCommandForExecution(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: typeOfResult,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var result = (IEnumerable<TResult>)DataReader.ToEnumerableInternal<TResult>(reader,
+                            connection,
+                            connectionString,
+                            transaction,
+                            false).AsList();
+
+                        // Set Cache
+                        if (cacheKey != null)
+                        {
+                            cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                        }
+
+                        // Return
+                        return result;
+                    }
+                }
+            }
         }
 
         #endregion
 
-        #region ExecuteQueryAsync<TEntity>
+        #region ExecuteQueryAsync<TResult>
 
         /// <summary>
         /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of data entity object.
+        /// converts the result back to an enumerable list of the target result type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -510,9 +518,9 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <returns>
-        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TResult>> ExecuteQueryAsync<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -521,9 +529,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null)
-            where TEntity : class
         {
-            return ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+            return ExecuteQueryAsyncInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -537,9 +544,9 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of data entity object.
+        /// converts the result back to an enumerable list of the target result type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
         /// <param name="param">
@@ -557,9 +564,9 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
         /// <returns>
-        /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
+        /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        internal static async Task<IEnumerable<TEntity>> ExecuteQueryAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -569,12 +576,11 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             bool skipCommandArrayParametersCheck = true)
-            where TEntity : class
         {
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
+                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -582,49 +588,12 @@ namespace RepoDb
             }
 
             // Variables
-            var typeOfEntity = typeof(TEntity);
+            var typeOfResult = typeof(TResult);
 
             // Identify
-            if (typeOfEntity.IsDictionaryStringObject() == false && (typeOfEntity.IsClassType() || typeOfEntity.IsGenericType))
+            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
-                // Variables needed on this operation
-                var connectionString = connection.ConnectionString;
-
-                // Trigger the cache to avoid reusing the connection
-                if (connection.State == ConnectionState.Open || transaction != null)
-                {
-                    connectionString = null;
-                    await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                }
-
-                // Execute the actual method
-                using (var command = CreateDbCommandForExecution(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    entityType: typeOfEntity,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-                {
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        var result = (await DataReader.ToEnumerableInternalAsync<TEntity>(reader, connection, connectionString, transaction, false)).AsList();
-
-                        // Set Cache
-                        if (cacheKey != null)
-                        {
-                            cache?.Add(cacheKey, (IEnumerable<TEntity>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                        }
-
-                        // Return
-                        return result;
-                    }
-                }
-            }
-            else
-            {
-                var result = (IEnumerable<TEntity>)await ExecuteQueryAsyncInternal(connection: connection,
+                var result = (IEnumerable<TResult>)await ExecuteQueryAsyncInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
@@ -643,6 +612,47 @@ namespace RepoDb
 
                 // Return
                 return result;
+            }
+            else
+            {
+                // Variables needed on this operation
+                var connectionString = connection.ConnectionString;
+
+                // Trigger the cache to avoid reusing the connection
+                if (connection.State == ConnectionState.Open || transaction != null)
+                {
+                    connectionString = null;
+                    await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
+                }
+
+                // Execute the actual method
+                using (var command = CreateDbCommandForExecution(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: typeOfResult,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                {
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        var result = (IEnumerable<TResult>)(await DataReader.ToEnumerableInternalAsync<TResult>(reader,
+                            connection,
+                            connectionString,
+                            transaction,
+                            false)).AsList();
+
+                        // Set Cache
+                        if (cacheKey != null)
+                        {
+                            cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                        }
+
+                        // Return
+                        return result;
+                    }
+                }
             }
         }
 
@@ -1902,7 +1912,7 @@ namespace RepoDb
         /// <summary>
         /// Throws an exception if the entities argument is null or empty.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the result.</typeparam>
         /// <param name="entities">The enumerable list of entity objects.</param>
         internal static void ThrowIfNullOrEmpty<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class

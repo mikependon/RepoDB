@@ -19,11 +19,10 @@ namespace RepoDb
         /// <summary>
         /// Gets the cached database object name of the data entity type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="T">The type of the target type.</typeparam>
         /// <returns>The cached mapped name of the data entity.</returns>
-        public static string Get<TEntity>()
-            where TEntity : class =>
-            Get(typeof(TEntity));
+        public static string Get<T>() =>
+            Get(typeof(T));
 
         /// <summary>
         /// Gets the cached database object name of the data entity type.

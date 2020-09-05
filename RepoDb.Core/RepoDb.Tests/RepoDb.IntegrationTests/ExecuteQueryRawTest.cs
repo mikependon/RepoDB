@@ -1,20 +1,35 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using RepoDb.Interfaces;
 
 namespace RepoDb.IntegrationTests
 {
     [TestClass]
     public class ExecuteQueryRawTest
     {
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            FluentMapper.Type<DateTime>().DbType(DbType.DateTime2, true);
+            FluentMapper.Type<uint>().PropertyHandler<IntPropertyHandler>(true);
+        }
+
+        [ClassCleanup]
+        public static void ClassCleaup()
+        {
+            TypeMapCache.Flush();
+            PropertyHandlerCache.Flush();
+        }
+
         [TestInitialize]
         public void Initialize()
         {
-            TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
             Database.Initialize();
             Cleanup();
         }
@@ -24,6 +39,23 @@ namespace RepoDb.IntegrationTests
         {
             Database.Cleanup();
         }
+
+        #region PropertyHandler
+
+        private class IntPropertyHandler : IPropertyHandler<uint, uint>
+        {
+            public uint Get(uint input, ClassProperty property)
+            {
+                return (uint)(input * 2);
+            }
+
+            public uint Set(uint input, ClassProperty property)
+            {
+                return input;
+            }
+        }
+
+        #endregion
 
         #region Classes
 
@@ -105,9 +137,269 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-        #region DbConnection
-
         #region ExecuteQuery
+
+        #region TypeResult
+
+        #region PropertyHandler
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForPropertyHandler()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<uint>("SELECT CONVERT(INT, 1) AS Value UNION ALL SELECT 2;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual((uint)2, result[0]);
+                Assert.AreEqual((uint)4, result[1]);
+            }
+        }
+
+        #endregion
+
+        #region NonNullables
+
+        // String
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<string>("SELECT 'ABC' AS Value UNION ALL SELECT 'DEF';").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual("ABC", result[0]);
+                Assert.AreEqual("DEF", result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForStringWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<string>("SELECT CONVERT(NVARCHAR, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(default(string), item));
+            }
+        }
+
+        // Guid
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForGuid()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var value = Guid.NewGuid();
+
+                // Act
+                var result = connection.ExecuteQuery<Guid>("SELECT @Value UNION ALL SELECT @Value;",
+                    new { value }).AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(value, item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForGuidWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Guid>("SELECT CONVERT(UNIQUEIDENTIFIER, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(default(Guid), item));
+            }
+        }
+
+        // Long
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForLong()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<long>("SELECT CONVERT(BIGINT, 100) AS Value UNION ALL SELECT 200;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(100, result[0]);
+                Assert.AreEqual(200, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForLongWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<long>("SELECT CONVERT(BIGINT, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(default(long), item));
+            }
+        }
+
+        // DateTime
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForDateTime()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var value = DateTime.UtcNow.Date.AddDays(-new Random().Next(100));
+
+                // Act
+                var result = connection.ExecuteQuery<DateTime>("SELECT @Value AS Value UNION ALL SELECT @Value;",
+                    new { value }).AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(value, item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForDateTimeWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<DateTime>("SELECT CONVERT(DATETIME, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(default(DateTime), item));
+            }
+        }
+
+        #endregion
+
+        #region Nullables
+
+        // Guid
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableGuid()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var value = Guid.NewGuid();
+
+                // Act
+                var result = connection.ExecuteQuery<Guid?>("SELECT @Value UNION ALL SELECT @Value;",
+                    new { value }).AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.AreEqual(value, item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableGuidWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Guid?>("SELECT CONVERT(UNIQUEIDENTIFIER, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.IsNull(item));
+            }
+        }
+
+        // Long
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableLong()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<long?>("SELECT CONVERT(BIGINT, 100) AS Value UNION ALL SELECT 200;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(100, result[0]);
+                Assert.AreEqual(200, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableLongWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<long?>("SELECT CONVERT(BIGINT, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.IsNull(item));
+            }
+        }
+
+        // DateTime
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableDateTime()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var value1 = DateTime.UtcNow.Date.AddDays(-100);
+                var value2 = DateTime.UtcNow.Date.AddDays(-50);
+
+                // Act
+                var result = connection.ExecuteQuery<DateTime?>("SELECT @Value1 AS Value UNION ALL SELECT @Value2;",
+                    new { value1, value2 }).AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(value1, result[0]);
+                Assert.AreEqual(value2, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableDateTimeWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<DateTime?>("SELECT CONVERT(DATETIME, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                result.ForEach(item => Assert.IsNull(item));
+            }
+        }
+
+        #endregion
+
+        #endregion
 
         #region NonMapped
 
@@ -877,8 +1169,6 @@ namespace RepoDb.IntegrationTests
                 Helper.AssertPropertiesEquality(param, secondResult);
             }
         }
-
-        #endregion
 
         #endregion
 

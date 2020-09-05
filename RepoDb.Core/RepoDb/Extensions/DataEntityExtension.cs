@@ -12,8 +12,6 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DataEntityExtension
     {
-        // GetProperties
-
         /// <summary>
         /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity type as <see cref="ClassProperty"/> objects.
         /// </summary>
@@ -27,6 +25,8 @@ namespace RepoDb.Extensions
             }
         }
 
+        // TODO: Remove the filter in the 'TEntity'
+
         /// <summary>
         /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity type as <see cref="ClassProperty"/> objects.
         /// </summary>
@@ -35,8 +35,6 @@ namespace RepoDb.Extensions
         public static IEnumerable<ClassProperty> GetProperties<TEntity>()
             where TEntity : class =>
             GetProperties(typeof(TEntity));
-
-        // GetMappedName
 
         /// <summary>
         /// Gets the mapped name of the data entity from the <see cref="TableAttribute"/> object.
@@ -72,13 +70,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
         /// <returns>The mapped name for the data entity.</returns>
-        public static string GetMappedName<TEntity>()
-            where TEntity : class =>
+        public static string GetMappedName<TEntity>() =>
             GetMappedName(typeof(TEntity));
-
-        /*
-         * GetSchema
-         */
 
         /// <summary>
         /// Gets the actual schema of the table from the database.
@@ -107,10 +100,6 @@ namespace RepoDb.Extensions
             // Return the unquoted
             return dbSetting.DefaultSchema;
         }
-
-        /*
-         * GetTableName
-         */
 
         /// <summary>
         /// Gets the actual name of the table from the database.

@@ -9,14 +9,14 @@ namespace RepoDb.Reflection
     internal partial class Compiler
     {
         /// <summary>
-        /// Gets a compiled function that is used to set the <see cref="DbParameter"/> objects of the <see cref="DbCommand"/> object based from the values of the data entity/dynamic object.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity objects.</typeparam>
-        /// <param name="inputFields">The list of the input <see cref="DbField"/> objects.</param>
-        /// <param name="outputFields">The list of the output <see cref="DbField"/> objects.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The compiled function.</returns>
-        public static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="inputFields"></param>
+        /// <param name="outputFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             IDbSetting dbSetting)
             where TEntity : class
