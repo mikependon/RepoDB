@@ -1022,7 +1022,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
             DataReaderField readerField,
             Type propertyType) =>
-            ConvertExpressionWithAutomaticConversion(expression, propertyType, readerField.Type);
+            ConvertExpressionWithAutomaticConversion(expression, readerField.Type, propertyType);
 
         /// <summary>
         /// 
@@ -1522,12 +1522,12 @@ namespace RepoDb.Reflection
             var expression = (Expression)Expression.Property(entityExpression, instanceProperty);
 
             // Must be opposite (for setters)
-            var fieldType = instanceProperty.PropertyType.GetUnderlyingType();
-            var propertyType = dbField.Type?.GetUnderlyingType();
+            var fromType = instanceProperty.PropertyType.GetUnderlyingType();
+            var toType = dbField.Type?.GetUnderlyingType();
 
             // Handle the auto conversion
             expression = ConvertExpressionWithAutomaticConversion(expression,
-                propertyType, fieldType);
+                fromType, toType);
 
             // Return the value
             return expression;
