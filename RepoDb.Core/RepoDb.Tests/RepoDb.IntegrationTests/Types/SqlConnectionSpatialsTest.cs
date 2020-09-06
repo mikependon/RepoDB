@@ -2,7 +2,7 @@
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Types.Spatials
