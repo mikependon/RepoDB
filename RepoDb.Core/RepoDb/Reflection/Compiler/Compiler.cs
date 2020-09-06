@@ -689,6 +689,8 @@ namespace RepoDb.Reflection
             Type toType) =>
             (expression.Type != toType) ? Expression.Convert(expression, toType) : expression;
 
+        // TODO: Can we use the method 'ConvertExpressionToEnumExpressionForString' instead?
+
         /// <summary>
         /// 
         /// </summary>
@@ -699,28 +701,89 @@ namespace RepoDb.Reflection
             DataReaderField readerField) =>
             ConvertExpressionToEnumExpression(expression, readerField, readerField.Type, readerField.Type);
 
+        // TODO: Can we use the method 'ConvertExpressionToEnumExpressionForString' instead?
         /// <summary>
         /// 
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="readerField"></param>
-        /// <param name="parameterOrPropertyType"></param>
-        /// <param name="targetType"></param>
+        /// <param name="fromType"></param>
+        /// <param name="toEnumType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToEnumExpression(Expression expression,
             DataReaderField readerField,
-            Type parameterOrPropertyType,
-            Type targetType)
+            Type fromType,
+            Type toEnumType)
         {
             if (readerField.Type == StaticType.String)
             {
-                return ConvertExpressionToStringToEnumExpression(expression, parameterOrPropertyType, targetType);
+                return ConvertExpressionToStringToEnumExpression(expression, fromType, toEnumType);
             }
             else
             {
-                expression = ConvertExpressionToTypeToEnumExpression(expression, readerField.Type, targetType);
-                return ConvertExpressionToTypeExpression(expression, targetType);
+                expression = ConvertExpressionToTypeToEnumExpression(expression, readerField.Type, toEnumType);
+                return ConvertExpressionToTypeExpression(expression, toEnumType);
             }
+        }
+
+        // TODO: Can we use the method 'ConvertExpressionToEnumExpressionForString' instead?
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="fromType"></param>
+        /// <param name="toEnumType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToEnumExpression(Expression expression,
+            Type fromType,
+            Type toEnumType) =>
+            (fromType == StaticType.String) ? ConvertExpressionToEnumExpressionForString(expression, toEnumType) :
+            ConvertExpressionToEnumExpressionForNonString(expression, toEnumType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="toEnumType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToEnumExpressionForString(Expression expression,
+            Type toEnumType)
+        {
+            var method = StaticType.Enum.GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
+            if (method == null)
+            {
+                throw new InvalidOperationException($"There is no enum 'Parse' method found between '{toEnumType.FullName}' and '{StaticType.String.FullName}'.");
+            }
+            var parameters = new Expression[]
+            {
+                Expression.Constant(toEnumType),
+                expression,
+                Expression.Constant(true)
+            };
+            return Expression.Call(method, parameters);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="toEnumType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToEnumExpressionForNonString(Expression expression,
+            Type toEnumType)
+        {
+            var method = StaticType.Enum.GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
+            if (method == null)
+            {
+                throw new InvalidOperationException($"There is no enum 'GetName' method found between '{toEnumType.FullName}' and '{StaticType.String.FullName}'.");
+            }
+            var parameters = new Expression[]
+            {
+                Expression.Constant(toEnumType),
+                ConvertExpressionToTypeExpression( expression, StaticType.Object)
+            };
+            return ConvertExpressionToEnumExpressionForString(Expression.Call(method, parameters), toEnumType);
         }
 
         #endregion
@@ -942,7 +1005,7 @@ namespace RepoDb.Reflection
             {
                 var nullableType = StaticType.Nullable.MakeGenericType(targetNullableType);
                 var constructor = nullableType.GetConstructor(new[] { targetNullableType });
-                expression = Expression.New(constructor, expression);
+                expression = Expression.New(constructor, ConvertExpressionToTypeExpression(expression, targetNullableType));
             }
             return expression;
         }
@@ -1022,7 +1085,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
             DataReaderField readerField,
             Type propertyType) =>
-            ConvertExpressionWithAutomaticConversion(expression, propertyType, readerField.Type);
+            ConvertExpressionWithAutomaticConversion(expression, readerField.Type, propertyType);
 
         /// <summary>
         /// 
@@ -1522,12 +1585,12 @@ namespace RepoDb.Reflection
             var expression = (Expression)Expression.Property(entityExpression, instanceProperty);
 
             // Must be opposite (for setters)
-            var fieldType = instanceProperty.PropertyType.GetUnderlyingType();
-            var propertyType = dbField.Type?.GetUnderlyingType();
+            var fromType = instanceProperty.PropertyType.GetUnderlyingType();
+            var toType = dbField.Type?.GetUnderlyingType();
 
             // Handle the auto conversion
             expression = ConvertExpressionWithAutomaticConversion(expression,
-                propertyType, fieldType);
+                fromType, toType);
 
             // Return the value
             return expression;
@@ -2064,7 +2127,7 @@ namespace RepoDb.Reflection
             else
             {
                 var entityProperties = PropertyCache.Get(entityExpression.Type);
-                classProperty = entityProperties.First(property =>
+                classProperty = entityProperties.FirstOrDefault(property =>
                     string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
                         propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
 

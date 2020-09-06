@@ -145,7 +145,7 @@ namespace RepoDb.Extensions
                 var type = param.GetType();
 
                 // Check the validity of the type
-                if (type.IsAnonymousType() && type.GetGenericTypeDefinition() == StaticType.Dictionary)
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == StaticType.Dictionary)
                 {
                     throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
                 }

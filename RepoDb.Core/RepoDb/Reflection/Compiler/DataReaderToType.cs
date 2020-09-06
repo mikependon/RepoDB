@@ -139,6 +139,12 @@ namespace RepoDb.Reflection
             var isDbNullExpression = GetDbNullExpression(readerParameterExpression, readerField.Ordinal);
             var underlyingType = typeOfResult.GetUnderlyingType();
 
+            // Enumerations
+            if (underlyingType.IsEnum)
+            {
+                valueExpression = ConvertExpressionToEnumExpression(valueExpression, readerField.Type, underlyingType);
+            }
+
             // Automatic
             if (Converter.ConversionType == ConversionType.Automatic)
             {
