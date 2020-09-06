@@ -25,7 +25,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction"></param>
         /// <param name="enableValidation"></param>
         /// <returns></returns>
-        public static Func<DbDataReader, TResult> CompileDataReaderToDataEntity<TResult>(DbDataReader reader,
+        public static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
             IDbConnection connection,
             string connectionString,
             IDbTransaction transaction,
@@ -46,7 +46,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction"></param>
         /// <param name="enableValidation"></param>
         /// <returns></returns>
-        public static Task<Func<DbDataReader, TResult>> CompileDataReaderToDataEntityAsync<TResult>(DbDataReader reader,
+        public static Task<Func<DbDataReader, TResult>> CompileDataReaderToTypeAsync<TResult>(DbDataReader reader,
             IDbConnection connection,
             string connectionString,
             IDbTransaction transaction,

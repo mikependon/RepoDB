@@ -40,7 +40,7 @@ namespace RepoDb.IntegrationTests
             Database.Cleanup();
         }
 
-        #region PropertyHandler
+        #region PropertyHandlers
 
         private class IntPropertyHandler : IPropertyHandler<uint, uint>
         {
@@ -53,6 +53,16 @@ namespace RepoDb.IntegrationTests
             {
                 return input;
             }
+        }
+
+        #endregion
+
+        #region Enums
+
+        private enum Gender
+        {
+            Male = 1,
+            Female = 2
         }
 
         #endregion
@@ -157,6 +167,108 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual((uint)4, result[1]);
             }
         }
+
+        #endregion
+
+        #region Enums
+
+        #region String
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForEnumFromString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Gender>("SELECT 'Male' AS Value UNION ALL SELECT 'Female';").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(Gender.Male, result[0]);
+                Assert.AreEqual(Gender.Female, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Gender?>("SELECT 'Male' AS Value UNION ALL SELECT 'Female';").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(Gender.Male, result[0]);
+                Assert.AreEqual(Gender.Female, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromStringWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Gender?>("SELECT CONVERT(NVARCHAR, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.IsNull(result[0]);
+                Assert.IsNull(result[1]);
+            }
+        }
+
+        #endregion
+
+        #region NonString
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForEnumFromNonString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Gender>("SELECT 1 AS Value UNION ALL SELECT 2;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(Gender.Male, result[0]);
+                Assert.AreEqual(Gender.Female, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromNonString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Gender?>("SELECT 1 AS Value UNION ALL SELECT 2;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.AreEqual(Gender.Male, result[0]);
+                Assert.AreEqual(Gender.Female, result[1]);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryTypeResultForNullableEnumFromNonStringWithNullResults()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<Gender?>("SELECT CONVERT(INT, NULL) AS Value UNION ALL SELECT NULL;").AsList();
+
+                // Assert
+                Assert.AreEqual(2, result.Count);
+                Assert.IsNull(result[0]);
+                Assert.IsNull(result[1]);
+            }
+        }
+
+        #endregion
 
         #endregion
 

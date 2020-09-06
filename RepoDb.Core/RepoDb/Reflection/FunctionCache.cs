@@ -105,7 +105,7 @@ namespace RepoDb
                 var key = GetKey(reader, connection);
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.CompileDataReaderToDataEntity<TResult>(reader, connection, connectionString, transaction, enableValidation);
+                    result = FunctionFactory.CompileDataReaderToType<TResult>(reader, connection, connectionString, transaction, enableValidation);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -130,7 +130,7 @@ namespace RepoDb
                 var key = GetKey(reader, connection);
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = await FunctionFactory.CompileDataReaderToDataEntityAsync<TResult>(reader, connection, connectionString, transaction, enableValidation);
+                    result = await FunctionFactory.CompileDataReaderToTypeAsync<TResult>(reader, connection, connectionString, transaction, enableValidation);
                     cache.TryAdd(key, result);
                 }
                 return result;

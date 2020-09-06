@@ -33,12 +33,6 @@ namespace RepoDb.IntegrationTests
         #region StringToType
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryConversionFromStringToEnum()
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromStringToString()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
@@ -158,12 +152,6 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #region IntToType
-
-        [TestMethod]
-        public void TestSqlConnectionExecuteQueryConversionFromIntToEnum()
-        {
-            throw new NotImplementedException();
-        }
 
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromIntToInt()
