@@ -34,7 +34,7 @@ namespace RepoDb
             var type = obj.GetType();
 
             // Filter the type
-            if (type.IsGenericType == false && type != StaticType.Object && type.IsClassType() == false)
+            if (type.IsClassType() == false)
             {
                 if (throwException == true)
                 {

@@ -8,6 +8,7 @@ using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using System.Reflection;
 using RepoDb.Extensions;
+using RepoDb.Enumerations;
 
 namespace RepoDb.Reflection
 {
@@ -96,7 +97,7 @@ namespace RepoDb.Reflection
             var typeOfResult = typeof(TResult);
 
             // EntityModel/Class
-            if (typeOfResult.IsClassType() || typeOfResult.IsAnonymousType())
+            if (typeOfResult.IsClassType())
             {
                 return CompileDataReaderToDataEntity<TResult>(reader, dbFields, dbSetting);
             }
@@ -136,21 +137,26 @@ namespace RepoDb.Reflection
             var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
                 readerGetValueMethod, readerField.Ordinal);
             var isDbNullExpression = GetDbNullExpression(readerParameterExpression, readerField.Ordinal);
+            var underlyingType = typeOfResult.GetUnderlyingType();
 
             // Automatic
+            if (Converter.ConversionType == ConversionType.Automatic)
+            {
+                valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, readerField.Type, underlyingType);
+            }
 
             // Type Nullable
             if (Nullable.GetUnderlyingType(typeOfResult) != null)
             {
-                valueExpression = ConvertValueExpressionToNullableExpression(valueExpression, typeOfResult.GetUnderlyingType());
+                valueExpression = ConvertExpressionToNullableExpression(valueExpression, underlyingType);
             }
 
             // IsDbNull Check
             valueExpression = Expression.Condition(isDbNullExpression, Expression.Default(typeOfResult),
-                ConvertValueExpressionToTypeExpression(valueExpression, typeOfResult));
+                ConvertExpressionToTypeExpression(valueExpression, typeOfResult));
 
             // Type Handler
-            valueExpression = ConvertValueExpressionToPropertyHandlerGetExpression<TResult>(valueExpression);
+            valueExpression = ConvertExpressionToPropertyHandlerGetExpression<TResult>(valueExpression);
 
             // Set the function value
             return Expression
@@ -205,7 +211,7 @@ namespace RepoDb.Reflection
                 (Expression)Expression.MemberInit((NewExpression)entityExpression, memberAssignments) : entityExpression;
 
             // Class handler
-            entityExpression = ConvertValueExpressionToClassHandlerGetExpression<TResult>(entityExpression,
+            entityExpression = ConvertExpressionToClassHandlerGetExpression<TResult>(entityExpression,
                 readerParameterExpression);
 
             // Set the function value

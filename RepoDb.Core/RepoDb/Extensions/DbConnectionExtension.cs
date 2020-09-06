@@ -1783,7 +1783,7 @@ namespace RepoDb
             else
             {
                 var type = typeof(T);
-                if (type.IsGenericType || type == StaticType.Object)
+                if (type.IsAnonymousType() || type == StaticType.Object)
                 {
                     return QueryGroup.Parse(what, false);
                 }
@@ -1807,7 +1807,7 @@ namespace RepoDb
                 return null;
             }
             var type = where.GetType();
-            if (type.IsClassType() || type.IsGenericType)
+            if (type.IsClassType())
             {
                 return QueryGroup.Parse(where, true);
             }
@@ -1833,7 +1833,7 @@ namespace RepoDb
             if (dbField != null)
             {
                 var type = entity?.GetType();
-                if (type.IsGenericType || type.IsClassType())
+                if (type.IsClassType())
                 {
                     var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
                     var property = properties?

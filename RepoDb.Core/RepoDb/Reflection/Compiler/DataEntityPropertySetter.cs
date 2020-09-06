@@ -62,13 +62,13 @@ namespace RepoDb.Reflection
                 .MakeGenericMethod(targetType.GetUnderlyingType());
 
             // Conversion (if needed)
-            var valueExpression = ConvertValueExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);
+            var valueExpression = ConvertExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);
 
             // Property Handler
             if (typeOfEntity.IsClassType())
             {
                 var classProperty = PropertyCache.Get(typeOfEntity, property);
-                valueExpression = ConvertValueExpressionToPropertyHandlerSetExpression(valueExpression,
+                valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
                     classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
             }
 

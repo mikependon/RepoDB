@@ -33,7 +33,9 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a class.</returns>
         public static bool IsClassType(this Type type) =>
-            type.IsClass && type.IsObjectType() == false && type != StaticType.String && type.IsGenericType == false;
+            type.IsClass && type != StaticType.String && type.IsObjectType() == false;
+
+        // TODO: Make sure that the IsAnonymousType method is property used
 
         /// <summary>
         /// Checks whether the current type is of type class.

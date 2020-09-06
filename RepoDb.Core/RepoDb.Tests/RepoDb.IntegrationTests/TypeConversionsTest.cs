@@ -28,6 +28,407 @@ namespace RepoDb.IntegrationTests
             Converter.ConversionType = ConversionType.Default;
         }
 
+        #region TypedResult
+
+        #region StringToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToEnum()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT 'ABC' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual("ABC", data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToBigint()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<long>("SELECT '100' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(100, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToInt()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<int>("SELECT '100' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(100, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToDouble()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<double>("SELECT '100' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(100, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToGuid()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Guid>("SELECT 'DE415ED3-24CB-4090-985B-0C76809578C8' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Guid.Parse("DE415ED3-24CB-4090-985B-0C76809578C8"), data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToDateTime()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<DateTime>("SELECT '1970-01-01' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToBit()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<bool>("SELECT 'true' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(true, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToDecimal()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<decimal>("SELECT '100.05' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((decimal)100.05, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromStringToFloat()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<float>("SELECT '100.05' AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((float)100.05, data);
+            }
+        }
+
+        #endregion
+
+        #region IntToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromIntToEnum()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromIntToInt()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<int>("SELECT CONVERT(INT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(10, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromIntToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(INT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual("10", data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromIntToLong()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<long>("SELECT CONVERT(INT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(10, data);
+            }
+        }
+
+        #endregion
+
+        #region BigIntToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromBigIntToLong()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<long>("SELECT CONVERT(BIGINT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((long)10, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromBigIntToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(BIGINT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual("10", data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromBigIntToInt()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<int>("SELECT CONVERT(BIGINT, 10) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(10, data);
+            }
+        }
+
+        #endregion
+
+        #region DecimalToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromDecimalToDecimal()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<decimal>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((decimal)100.05, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromDecimalToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual("100.05", data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromDecimalToFloat()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<float>("SELECT CONVERT(DECIMAL(18,2), 100.05) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((float)100.05, data);
+            }
+        }
+
+        #endregion
+
+        #region RealToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromRealToFloat()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<float>("SELECT CONVERT(REAL, 100.05) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((float)100.05, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromRealToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(REAL, 100.05) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual("100.05", data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromRealToDecimal()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<decimal>("SELECT CONVERT(REAL, 100.05) AS Value;").First();
+
+                // Assert
+                Assert.AreEqual((decimal)100.05, data);
+            }
+        }
+
+        #endregion
+
+        #region DateTimeToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromDateTimeToDateTime()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<DateTime>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(DateTime.Parse("1970-01-01"), data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromDateTimeToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
+
+                // Assert
+                Assert.AreEqual("1/1/1970 12:00:00 AM", data);
+            }
+        }
+
+        #endregion
+
+        #region UniqueIdentifierToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromUniqueIdentifierToGuid()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<Guid>("SELECT CONVERT(UNIQUEIDENTIFIER, 'DE415ED3-24CB-4090-985B-0C76809578C8') AS Value;").First();
+
+                // Assert
+                Assert.AreEqual(Guid.Parse("DE415ED3-24CB-4090-985B-0C76809578C8"), data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromUniqueIdentifierToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(UNIQUEIDENTIFIER, 'DE415ED3-24CB-4090-985B-0C76809578C8') AS Value;").First();
+
+                // Assert
+                Assert.IsTrue(string.Equals("DE415ED3-24CB-4090-985B-0C76809578C8", data, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        #endregion
+
+        #region BitToType
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromBitToBoolean()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<bool>("SELECT CONVERT(BIT, 1) AS Value;").First();
+
+                // Assert
+                Assert.IsTrue(data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryConversionFromBitToString()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<string>("SELECT CONVERT(BIT, 1) AS Value;").First();
+
+                // Assert
+                Assert.IsTrue(string.Equals("true", data, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Query
+
         #region StringToBigIntClass
 
         [Map("CompleteTable")]
@@ -39,7 +440,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToBigInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToBigInt()
         {
             // Setup
             var entity = new StringToBigIntClass
@@ -84,7 +485,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToBit()
         {
             // Setup
             var entity = new StringToBitClass
@@ -119,7 +520,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDecimal()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToDecimal()
         {
             // Setup
             var entity = new StringToDecimalClass
@@ -154,7 +555,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToFloat()
         {
             // Setup
             var entity = new StringToFloatClass
@@ -189,7 +590,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToInt()
         {
             // Setup
             var entity = new StringToIntClass
@@ -224,7 +625,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToMoney()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToMoney()
         {
             // Setup
             var entity = new StringToMoneyClass
@@ -259,7 +660,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToNumeric()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToNumeric()
         {
             // Setup
             var entity = new StringToNumericClass
@@ -294,7 +695,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToReal()
         {
             // Setup
             var entity = new StringToRealClass
@@ -329,7 +730,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToSmallInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToSmallInt()
         {
             // Setup
             var entity = new StringToSmallIntClass
@@ -364,7 +765,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToSmallMoney()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToSmallMoney()
         {
             // Setup
             var entity = new StringToSmallMoneyClass
@@ -399,7 +800,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDate()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToDate()
         {
             // Setup
             var entity = new StringToDateClass
@@ -434,7 +835,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateTime()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToDateTime()
         {
             // Setup
             var entity = new StringToDateTimeClass
@@ -469,7 +870,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateTime2()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToDateTime2()
         {
             // Setup
             var entity = new StringToDateTime2Class
@@ -504,7 +905,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToUniqueIdentifier()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToUniqueIdentifier()
         {
             // Setup
             var entity = new StringToUniqueIdentifierClass
@@ -539,7 +940,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromUniqueIdentifierToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromUniqueIdentifierToString()
         {
             // Setup
             var entity = new UniqueIdentifierToStringClass
@@ -574,7 +975,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromStringToString()
         {
             // Setup
             var entity = new BitToStringClass
@@ -609,7 +1010,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDateTimeToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromDateTimeToString()
         {
             // Setup
             var entity = new DateTimeToStringClass
@@ -644,7 +1045,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToString()
         {
             // Setup
             var entity = new IntToStringClass
@@ -679,7 +1080,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToBigInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToBigInt()
         {
             // Setup
             var entity = new IntToBigIntClass
@@ -714,7 +1115,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToSmallInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToSmallInt()
         {
             // Setup
             var entity = new IntToSmallIntClass
@@ -749,7 +1150,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToDecimal()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToDecimal()
         {
             // Setup
             var entity = new IntToDecimalClass
@@ -784,7 +1185,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToFloat()
         {
             // Setup
             var entity = new IntToFloatClass
@@ -819,7 +1220,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToReal()
         {
             // Setup
             var entity = new IntToRealClass
@@ -854,7 +1255,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromIntToBit()
         {
             // Setup
             var entity = new IntToBitClass
@@ -889,7 +1290,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToString()
         {
             // Setup
             var entity = new BigIntToStringClass
@@ -924,7 +1325,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToInt()
         {
             // Setup
             var entity = new BigIntToIntClass
@@ -959,7 +1360,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToSmallInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToSmallInt()
         {
             // Setup
             var entity = new BigIntToSmallIntClass
@@ -994,7 +1395,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToDecimal()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToDecimal()
         {
             // Setup
             var entity = new BigIntToDecimalClass
@@ -1029,7 +1430,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToFloat()
         {
             // Setup
             var entity = new BigIntToFloatClass
@@ -1064,7 +1465,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToReal()
         {
             // Setup
             var entity = new BigIntToRealClass
@@ -1099,7 +1500,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromBigIntToBit()
         {
             // Setup
             var entity = new BigIntToBitClass
@@ -1134,7 +1535,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToString()
         {
             // Setup
             var entity = new SmallIntToStringClass
@@ -1169,7 +1570,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToInt()
         {
             // Setup
             var entity = new SmallIntToIntClass
@@ -1204,7 +1605,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToBigInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToBigInt()
         {
             // Setup
             var entity = new SmallIntToBigIntClass
@@ -1239,7 +1640,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToDecimal()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToDecimal()
         {
             // Setup
             var entity = new SmallIntToDecimalClass
@@ -1274,7 +1675,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToFloat()
         {
             // Setup
             var entity = new SmallIntToFloatClass
@@ -1309,7 +1710,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToReal()
         {
             // Setup
             var entity = new SmallIntToRealClass
@@ -1344,7 +1745,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromSmallIntToBit()
         {
             // Setup
             var entity = new SmallIntToBitClass
@@ -1379,7 +1780,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToString()
         {
             // Setup
             var entity = new DecimalToStringClass
@@ -1414,7 +1815,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToInt()
         {
             // Setup
             var entity = new DecimalToIntClass
@@ -1449,7 +1850,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToBigInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToBigInt()
         {
             // Setup
             var entity = new DecimalToBigIntClass
@@ -1484,7 +1885,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToSmallInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToSmallInt()
         {
             // Setup
             var entity = new DecimalToSmallIntClass
@@ -1519,7 +1920,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToFloat()
         {
             // Setup
             var entity = new DecimalToFloatClass
@@ -1554,7 +1955,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToReal()
         {
             // Setup
             var entity = new DecimalToRealClass
@@ -1589,7 +1990,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromDecimalToBit()
         {
             // Setup
             var entity = new DecimalToBitClass
@@ -1624,7 +2025,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToString()
         {
             // Setup
             var entity = new DoubleToStringClass
@@ -1659,7 +2060,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToDecimal()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToDecimal()
         {
             // Setup
             var entity = new DoubleToDecimalClass
@@ -1694,7 +2095,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToBigInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToBigInt()
         {
             // Setup
             var entity = new DoubleToBigIntClass
@@ -1729,7 +2130,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToInt()
         {
             // Setup
             var entity = new DoubleToIntClass
@@ -1764,7 +2165,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToSmallInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToSmallInt()
         {
             // Setup
             var entity = new DoubleToSmallIntClass
@@ -1799,7 +2200,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToFloat()
         {
             // Setup
             var entity = new DoubleToFloatClass
@@ -1834,7 +2235,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToReal()
         {
             // Setup
             var entity = new DoubleToRealClass
@@ -1869,7 +2270,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromDoubleToBit()
         {
             // Setup
             var entity = new DoubleToBitClass
@@ -1904,7 +2305,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToString()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToString()
         {
             // Setup
             var entity = new FloatToStringClass
@@ -1939,7 +2340,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToDecimal()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToDecimal()
         {
             // Setup
             var entity = new FloatToDecimalClass
@@ -1974,7 +2375,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToBigInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToBigInt()
         {
             // Setup
             var entity = new FloatToBigIntClass
@@ -2009,7 +2410,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToInt()
         {
             // Setup
             var entity = new FloatToIntClass
@@ -2044,7 +2445,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToSmallInt()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToSmallInt()
         {
             // Setup
             var entity = new FloatToSmallIntClass
@@ -2079,7 +2480,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToFloat()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToFloat()
         {
             // Setup
             var entity = new FloatToFloatClass
@@ -2114,7 +2515,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToReal()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToReal()
         {
             // Setup
             var entity = new FloatToRealClass
@@ -2149,7 +2550,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToBit()
+        public void TestSqlConnectionInsertAndQueryConversionFromFloatToBit()
         {
             // Setup
             var entity = new FloatToBitClass
@@ -2170,6 +2571,8 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, data.ColumnBit);
             }
         }
+
+        #endregion
 
         #endregion
     }

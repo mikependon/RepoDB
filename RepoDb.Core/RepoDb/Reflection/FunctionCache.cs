@@ -17,6 +17,29 @@ namespace RepoDb
     /// </summary>
     internal static class FunctionCache
     {
+        #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        private static long GetReaderFieldsHashCode(DbDataReader reader)
+        {
+            if (reader == null)
+            {
+                return 0;
+            }
+            var hashCode = (long)0;
+            for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
+            {
+                hashCode += reader.GetName(ordinal).GetHashCode() + reader.GetFieldType(ordinal).GetHashCode();
+            }
+            return hashCode;
+        }
+
+        #endregion
+
         #region GetDataReaderToDataEntityCompiledFunction
 
         /// <summary>
@@ -120,19 +143,9 @@ namespace RepoDb
             /// <param name="connection"></param>
             /// <returns></returns>
             private static long GetKey(DbDataReader reader,
-                IDbConnection connection)
-            {
-                var fields = Enumerable.Range(0, reader.FieldCount)
-                    .Select(reader.GetName)
-                    .Join(StringConstant.Period)
-                    .GetHashCode();
-                var key = typeof(TResult).GetHashCode() + fields.GetHashCode();
-                if (string.IsNullOrWhiteSpace(connection?.ConnectionString) == false)
-                {
-                    key += connection.ConnectionString.GetHashCode();
-                }
-                return key;
-            }
+                IDbConnection connection) =>
+                GetReaderFieldsHashCode(reader) + typeof(TResult).GetHashCode() +
+                   (connection?.ConnectionString?.GetHashCode()).GetValueOrDefault();
         }
 
         #endregion
@@ -233,22 +246,9 @@ namespace RepoDb
             /// <returns></returns>
             private static long GetKey(DbDataReader reader,
                 string tableName,
-                IDbConnection connection)
-            {
-                var key = (long)Enumerable.Range(0, reader.FieldCount)
-                    .Select(reader.GetName)
-                    .Join(StringConstant.Period)
-                    .GetHashCode();
-                if (tableName != null)
-                {
-                    key += tableName.GetHashCode();
-                }
-                if (string.IsNullOrWhiteSpace(connection?.ConnectionString) == false)
-                {
-                    key += connection.ConnectionString.GetHashCode();
-                }
-                return key;
-            }
+                IDbConnection connection) =>
+                GetReaderFieldsHashCode(reader) + (tableName?.GetHashCode()).GetValueOrDefault() +
+                    (connection?.ConnectionString?.GetHashCode()).GetValueOrDefault();
         }
 
         #endregion
@@ -410,7 +410,8 @@ namespace RepoDb
                 IEnumerable<DbField> outputFields,
                 int batchSize)
             {
-                var key = (long)typeof(TEntity).GetHashCode() + cacheKey.GetHashCode() + batchSize.GetHashCode();
+                var key = (long)typeof(TEntity).GetHashCode() + batchSize.GetHashCode() +
+                    (cacheKey?.GetHashCode()).GetValueOrDefault();
                 if (inputFields?.Any() == true)
                 {
                     foreach (var field in inputFields)
