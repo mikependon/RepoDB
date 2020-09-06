@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="ClassMappingTest.cs" />
     <Compile Remove="Operations\BaseRepositoryOperationsTest.cs" />
     <Compile Remove="Operations\DbRepositoryOperationsTest.cs" />
     <Compile Remove="Operations\SqlConnectionOperationsTest.cs" />
