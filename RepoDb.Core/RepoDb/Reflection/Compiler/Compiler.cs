@@ -2127,7 +2127,7 @@ namespace RepoDb.Reflection
             else
             {
                 var entityProperties = PropertyCache.Get(entityExpression.Type);
-                classProperty = entityProperties.First(property =>
+                classProperty = entityProperties.FirstOrDefault(property =>
                     string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
                         propertyName.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
 
