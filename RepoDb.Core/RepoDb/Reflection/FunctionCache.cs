@@ -33,7 +33,8 @@ namespace RepoDb
             var hashCode = (long)0;
             for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
             {
-                hashCode += reader.GetName(ordinal).GetHashCode() + reader.GetFieldType(ordinal).GetHashCode();
+                // The spatial data type is null.
+                hashCode += reader.GetName(ordinal).GetHashCode() + (reader.GetFieldType(ordinal)?.GetHashCode()).GetValueOrDefault();
             }
             return hashCode;
         }
@@ -162,7 +163,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
+        internal static Func<DbDataReader, dynamic> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction) =>
@@ -176,7 +177,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static Task<Func<DbDataReader, ExpandoObject>> GetDataReaderToExpandoObjectCompileFunctionAsync(DbDataReader reader,
+        internal static Task<Func<DbDataReader, dynamic>> GetDataReaderToExpandoObjectCompileFunctionAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction) =>
@@ -189,7 +190,7 @@ namespace RepoDb
         /// </summary>
         private static class DataReaderToExpandoObjectCache
         {
-            private static ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>> cache = new ConcurrentDictionary<long, Func<DbDataReader, ExpandoObject>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, dynamic>> cache = new ConcurrentDictionary<long, Func<DbDataReader, dynamic>>();
 
             /// <summary>
             /// 
@@ -199,12 +200,12 @@ namespace RepoDb
             /// <param name="connection"></param>
             /// <param name="transaction"></param>
             /// <returns></returns>
-            internal static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader,
+            internal static Func<DbDataReader, dynamic> Get(DbDataReader reader,
                 string tableName,
                 IDbConnection connection,
                 IDbTransaction transaction)
             {
-                var result = (Func<DbDataReader, ExpandoObject>)null;
+                var result = (Func<DbDataReader, dynamic>)null;
                 var key = GetKey(reader, tableName, connection);
                 if (cache.TryGetValue(key, out result) == false)
                 {
@@ -222,12 +223,12 @@ namespace RepoDb
             /// <param name="connection"></param>
             /// <param name="transaction"></param>
             /// <returns></returns>
-            internal static async Task<Func<DbDataReader, ExpandoObject>> GetAsync(DbDataReader reader,
+            internal static async Task<Func<DbDataReader, dynamic>> GetAsync(DbDataReader reader,
                 string tableName,
                 IDbConnection connection,
                 IDbTransaction transaction)
             {
-                var result = (Func<DbDataReader, ExpandoObject>)null;
+                var result = (Func<DbDataReader, dynamic>)null;
                 var key = GetKey(reader, tableName, connection);
                 if (cache.TryGetValue(key, out result) == false)
                 {

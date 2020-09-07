@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace RepoDb.Reflection
@@ -112,13 +111,13 @@ namespace RepoDb.Reflection
         #region ToEnumerable<dynamic>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        public static IEnumerable<ExpandoObject> ToEnumerable(DbDataReader reader,
+        /// <returns>An array of dynamic objects.</returns>
+        public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null)
         {
@@ -126,14 +125,14 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of dynamic objects.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        internal static IEnumerable<ExpandoObject> ToEnumerable(DbDataReader reader,
+        /// <returns>An array of dynamic objects.</returns>
+        internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
@@ -156,13 +155,13 @@ namespace RepoDb.Reflection
         #region ToEnumerableAsync<dynamic>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects in an asynchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of dynamic objects in an asynchronous way.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        public static Task<IEnumerable<ExpandoObject>> ToEnumerableAsync(DbDataReader reader,
+        /// <returns>An array of dynamic objects.</returns>
+        public static Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null)
         {
@@ -170,19 +169,19 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of <see cref="ExpandoObject"/> objects in an asynchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of dynamic objects in an asynchronous way.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>An array of <see cref="ExpandoObject"/> objects.</returns>
-        internal static async Task<IEnumerable<ExpandoObject>> ToEnumerableAsync(DbDataReader reader,
+        /// <returns>An array of dynamic objects.</returns>
+        internal static async Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
             IDbTransaction transaction)
         {
-            var list = new List<ExpandoObject>();
+            var list = new List<dynamic>();
             if (reader != null && reader.HasRows)
             {
                 var func = await FunctionCache.GetDataReaderToExpandoObjectCompileFunctionAsync(reader,

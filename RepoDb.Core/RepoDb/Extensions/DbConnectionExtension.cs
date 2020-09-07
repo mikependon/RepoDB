@@ -430,7 +430,7 @@ namespace RepoDb
             // Identify
             if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
-                var result = (IEnumerable<TResult>)ExecuteQueryInternal(connection: connection,
+                var result = ExecuteQueryInternal(connection: connection,
                    commandText: commandText,
                    param: param,
                    commandType: commandType,
@@ -439,7 +439,7 @@ namespace RepoDb
                    transaction: transaction,
                    cache: null,
                    tableName: null,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).OfTargetType<dynamic, TResult>();
 
                 // Set Cache
                 if (cacheKey != null)
@@ -593,7 +593,7 @@ namespace RepoDb
             // Identify
             if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
-                var result = (IEnumerable<TResult>)await ExecuteQueryAsyncInternal(connection: connection,
+                var result = (await ExecuteQueryAsyncInternal(connection: connection,
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
@@ -602,7 +602,7 @@ namespace RepoDb
                     transaction: transaction,
                     cache: null,
                     tableName: null,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).OfTargetType<dynamic, TResult>();
 
                 // Set Cache
                 if (cacheKey != null)
