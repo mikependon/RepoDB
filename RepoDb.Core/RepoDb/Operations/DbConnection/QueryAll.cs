@@ -616,7 +616,7 @@ namespace RepoDb
             }
 
             // Result
-            return result as IEnumerable<TEntity>;
+            return result;
         }
 
         #endregion
@@ -727,7 +727,7 @@ namespace RepoDb
             }
 
             // Result
-            return result as IEnumerable<TEntity>;
+            return result;
         }
 
         #endregion

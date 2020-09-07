@@ -42,6 +42,16 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// Converts the <see cref="IEnumerable{T}"/> object into a target <see cref="IEnumerable{T}"/> object via <see cref="Enumerable.OfType{TResult}(System.Collections.IEnumerable)"/> method.
+        /// </summary>
+        /// <typeparam name="SourceType">The sorrce type.</typeparam>
+        /// <typeparam name="TargetType">The target type.</typeparam>
+        /// <param name="value">The actual enumerable instance.</param>
+        /// <returns>The converted <see cref="IEnumerable{T}"/> object.</returns>
+        public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) =>
+            value is IEnumerable<TargetType> ? (IEnumerable<TargetType>)value : value.OfType<TargetType>();
+
+        /// <summary>
         /// Converts the <see cref="IEnumerable{T}"/> object into a <see cref="IList{T}"/> object.
         /// </summary>
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
