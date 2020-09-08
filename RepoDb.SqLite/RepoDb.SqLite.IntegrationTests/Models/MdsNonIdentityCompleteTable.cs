@@ -11,7 +11,7 @@ namespace RepoDb.SqLite.IntegrationTests.Models
         public String ColumnChar { get; set; }
         public String ColumnDate { get; set; }
         public String ColumnDateTime { get; set; }
-        public Int64? ColumnDecimal { get; set; }
+        public String ColumnDecimal { get; set; }
         public Double? ColumnDouble { get; set; }
         public Int64? ColumnInteger { get; set; }
         public Int64? ColumnInt { get; set; }
