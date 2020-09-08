@@ -140,7 +140,7 @@ namespace RepoDb
         /// <param name="type">The .NET CLR type where the mapping is to be removed.</param>
         public static void Remove(Type type)
         {
-            var key = type.FullName.GetHashCode();
+            var key = type.GetHashCode();
             var value = (DbType?)null;
 
             // Try get the value

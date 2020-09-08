@@ -53,7 +53,7 @@ namespace RepoDb
         /// </summary>
         /// <returns>The unquoted name.</returns>
         public override string ToString() =>
-            string.Concat(GetMappedName(), " (", PropertyInfo.PropertyType.FullName, ")");
+            string.Concat("ClassProperty :: ", GetMappedName(), " (", PropertyInfo.PropertyType.FullName, ")");
 
         /// <summary>
         /// Gets the declaring parent type of the current property info. If the class inherits an interface, then this will return 
@@ -297,7 +297,7 @@ namespace RepoDb
         /// </summary>
         /// <returns>The hash code value.</returns>
         public override int GetHashCode() =>
-            GetDeclaringType().FullName.GetHashCode() ^ PropertyInfo.GenerateCustomizedHashCode();
+            GetDeclaringType().GetHashCode() ^ PropertyInfo.GenerateCustomizedHashCode();
 
         /// <summary>
         /// Compare the current instance to the other object instance.

@@ -523,7 +523,7 @@ namespace RepoDb
             /// <returns></returns>
             internal static Action<TEntity, object> Get(Field field)
             {
-                var key = (long)typeof(TEntity).GetHashCode() + field.Name.GetHashCode();
+                var key = (long)typeof(TEntity).GetHashCode() + field.GetHashCode();
                 var func = (Action<TEntity, object>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {

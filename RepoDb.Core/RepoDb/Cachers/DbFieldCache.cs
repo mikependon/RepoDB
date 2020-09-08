@@ -84,7 +84,7 @@ namespace RepoDb
             where TDbConnection : IDbConnection
         {
             var type = connection.GetType();
-            var key = (long)type.FullName.GetHashCode();
+            var key = (long)type.GetHashCode();
             var result = (IEnumerable<DbField>)null;
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
@@ -166,7 +166,7 @@ namespace RepoDb
             where TDbConnection : IDbConnection
         {
             var type = connection.GetType();
-            var key = (long)type.FullName.GetHashCode();
+            var key = (long)type.GetHashCode();
             var result = (IEnumerable<DbField>)null;
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
