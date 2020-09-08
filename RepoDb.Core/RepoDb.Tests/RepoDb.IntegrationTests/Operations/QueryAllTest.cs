@@ -29,6 +29,27 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAll<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionQueryAllWithEntityTableNameWithTypeResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAll<string>(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                Assert.IsTrue(result.All(e => string.IsNullOrEmpty(e) == false));
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionQueryAllViaEntityTableName()
         {
             // Setup
@@ -294,6 +315,27 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region QueryAllAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAllAsyncWithEntityTableNameWithTypeResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAllAsync<string>(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                Assert.IsTrue(result.All(e => string.IsNullOrEmpty(e) == false));
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionQueryAllAsyncViaEntityTableName()

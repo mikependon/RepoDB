@@ -31,6 +31,28 @@ namespace RepoDb.IntegrationTests.Operations
         #region Query<TEntity>
 
         [TestMethod]
+        public void TestSqlConnectionQueryWithEntityTableNameWithTypeResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<string>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                Assert.IsTrue(result.All(e => string.IsNullOrEmpty(e) == false));
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionQueryWithEntityTableName()
         {
             // Setup
@@ -1162,6 +1184,28 @@ namespace RepoDb.IntegrationTests.Operations
         #endregion
 
         #region QueryAsync<TEntity>
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithEntityTableNameWithTypeResult()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<string>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null,
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                Assert.IsTrue(result.All(e => string.IsNullOrEmpty(e) == false));
+            }
+        }
 
         [TestMethod]
         public void TestSqlConnectionQueryAsyncWithEntityTableName()

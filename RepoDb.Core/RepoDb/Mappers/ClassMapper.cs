@@ -65,7 +65,7 @@ namespace RepoDb
             Validate(databaseObjectName);
 
             // Variables
-            var key = entityType.FullName.GetHashCode();
+            var key = entityType.GetHashCode();
             var value = (string)null;
 
             // Try get the cache
@@ -110,7 +110,7 @@ namespace RepoDb
         public static string Get(Type entityType)
         {
             var value = (string)null;
-            var key = entityType.FullName.GetHashCode();
+            var key = entityType.GetHashCode();
 
             // Try get the value
             maps.TryGetValue(key, out value);
@@ -137,7 +137,7 @@ namespace RepoDb
         /// <param name="entityType">The type of the data entity.</param>
         public static void Remove(Type entityType)
         {
-            var key = entityType.FullName.GetHashCode();
+            var key = entityType.GetHashCode();
             var value = (string)null;
 
             // Try get the value

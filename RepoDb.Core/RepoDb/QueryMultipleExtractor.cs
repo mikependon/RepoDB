@@ -85,10 +85,10 @@ namespace RepoDb
         /// <returns>The key to the cache.</returns>
         private int GetDbFieldGetCallsCacheKey<TEntity>()
         {
-            var key = connection.GetType().FullName.GetHashCode();
+            var key = connection.GetType().GetHashCode();
 
             // Add the entity type hash code
-            key += typeof(TEntity).FullName.GetHashCode();
+            key += typeof(TEntity).GetHashCode();
 
             // Add the connection string hashcode
             if (!string.IsNullOrWhiteSpace(connectionString))

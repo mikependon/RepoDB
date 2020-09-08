@@ -132,9 +132,9 @@ namespace RepoDb.Extensions
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateCustomizedHashCode(this PropertyInfo property)
         {
-            return (property.DeclaringType.FullName.GetHashCode() ^
-                property.Name.GetHashCode() ^
-                property.PropertyType.FullName.GetHashCode());
+            return (property.DeclaringType.GetHashCode() ^
+                property.GetHashCode() ^
+                property.PropertyType.GetHashCode());
         }
 
         /// <summary>

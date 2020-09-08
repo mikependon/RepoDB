@@ -394,6 +394,17 @@ namespace RepoDb
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
             ThrowNullReferenceException(propertyHandler, "PropertyHandler");
 
+            /*
+             * Note: The reflected type of the property info if explored via expression is different, therefore, we
+             * need to manually extract it.
+             */
+
+            // Extract
+            if (propertyInfo != null)
+            {
+                propertyInfo = PropertyCache.Get(entityType, propertyInfo.AsField()).PropertyInfo ?? propertyInfo;
+            }
+
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
             var value = (object)null;
