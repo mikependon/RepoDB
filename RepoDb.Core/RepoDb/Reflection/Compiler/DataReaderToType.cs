@@ -133,40 +133,13 @@ namespace RepoDb.Reflection
             // Variables
             var readerParameterExpression = Expression.Parameter(StaticType.DbDataReader, "reader");
             var readerField = GetDataReaderFields(reader, dbSetting).First();
-            var readerGetValueMethod = GetDbReaderGetValueOrDefaultMethod(readerField);
-            var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
-                readerGetValueMethod, readerField.Ordinal);
-            var isDbNullExpression = GetDbNullExpression(readerParameterExpression, readerField.Ordinal);
-            var underlyingType = typeOfResult.GetUnderlyingType();
+            var classPropertyParameterInfo = new ClassPropertyParameterInfo { TargetType = typeOfResult };
+            var expression = GetClassPropertyParameterInfoValueExpression(readerParameterExpression,
+                classPropertyParameterInfo, readerField);
 
-            // Enumerations
-            if (underlyingType.IsEnum)
-            {
-                valueExpression = ConvertExpressionToEnumExpression(valueExpression, readerField.Type, underlyingType);
-            }
-
-            // Automatic
-            if (Converter.ConversionType == ConversionType.Automatic)
-            {
-                valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, readerField.Type, underlyingType);
-            }
-
-            // Type Nullable
-            if (Nullable.GetUnderlyingType(typeOfResult) != null)
-            {
-                valueExpression = ConvertExpressionToNullableExpression(valueExpression, underlyingType);
-            }
-
-            // IsDbNull Check
-            valueExpression = Expression.Condition(isDbNullExpression, Expression.Default(typeOfResult),
-                ConvertExpressionToTypeExpression(valueExpression, typeOfResult));
-
-            // Type Handler
-            valueExpression = ConvertExpressionToPropertyHandlerGetExpression<TResult>(valueExpression);
-
-            // Set the function value
+            // Return
             return Expression
-                .Lambda<Func<DbDataReader, TResult>>(valueExpression, readerParameterExpression)
+                .Lambda<Func<DbDataReader, TResult>>(expression, readerParameterExpression)
                 .Compile();
         }
 
@@ -186,12 +159,8 @@ namespace RepoDb.Reflection
             var readerFields = GetDataReaderFields(reader, dbFields, dbSetting);
             var memberBindings = GetMemberBindingsForDataEntity<TResult>(readerParameterExpression,
                 readerFields, dbSetting);
-            var memberAssignments = memberBindings?
-                .Where(item => item.MemberAssignment != null)
-                .Select(item => item.MemberAssignment);
-            var arguments = memberBindings?
-                .Where(item => item.Argument != null)
-                .Select(item => item.Argument);
+            var memberAssignments = memberBindings?.Where(item => item.MemberAssignment != null).Select(item => item.MemberAssignment);
+            var arguments = memberBindings?.Where(item => item.Argument != null).Select(item => item.Argument);
             var typeOfResult = typeof(TResult);
 
             // Throw an error if there are no bindings
@@ -201,11 +170,7 @@ namespace RepoDb.Reflection
             }
 
             // Initialize the members
-            var constructorInfo = typeOfResult
-                .GetConstructors()?
-                .Where(item => item.GetParameters().Length > 0)?
-                .OrderByDescending(item => item.GetParameters().Length)?
-                .FirstOrDefault();
+            var constructorInfo = typeOfResult.GetConstructorWithMostArguments();
             var entityExpression = (Expression)null;
 
             // Check the arguments

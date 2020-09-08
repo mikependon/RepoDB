@@ -250,7 +250,6 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.Query<EnumCompleteTableWithPropertyHandler>(insertResult).First();
 
                 // Assert
-
                 Helper.AssertPropertiesEquality(entity, queryResult);
             }
         }
