@@ -1367,8 +1367,16 @@ namespace RepoDb.Reflection
             // Handling
             if (Converter.ConversionType == ConversionType.Automatic)
             {
-                expression = ConvertExpressionWithAutomaticConversion(expression,
-                    classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), targetType?.GetUnderlyingType());
+                try
+                {
+                    expression = ConvertExpressionWithAutomaticConversion(expression,
+                        classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), targetType?.GetUnderlyingType());
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Compiler.Entity/Object.Property: Failed to automatically convert the value expression for " +
+                        $"property '{classProperty.GetMappedName()} ({classProperty.PropertyInfo.PropertyType.FullName})'. {classProperty}", ex);
+                }
             }
 
             /*
@@ -1379,13 +1387,29 @@ namespace RepoDb.Reflection
             // Enum Handling
             if (classProperty.PropertyInfo.PropertyType.GetUnderlyingType().IsEnum == true)
             {
-                expression = ConvertEnumExpressionToTypeExpression(expression,
-                    classProperty.PropertyInfo.PropertyType, targetType?.GetUnderlyingType());
+                try
+                {
+                    expression = ConvertEnumExpressionToTypeExpression(expression,
+                        classProperty.PropertyInfo.PropertyType, targetType?.GetUnderlyingType());
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Compiler.Entity/Object.Property: Failed to convert the value expression from " +
+                        $"enumeration '{classProperty.PropertyInfo.PropertyType.FullName}' to type '{targetType?.GetUnderlyingType()}'. {classProperty}", ex);
+                }
             }
 
             // Property Handler
-            expression = ConvertExpressionToPropertyHandlerSetExpression(expression, classProperty,
-                dbField?.Type.GetUnderlyingType());
+            try
+            {
+                expression = ConvertExpressionToPropertyHandlerSetExpression(expression, classProperty,
+                    dbField?.Type.GetUnderlyingType());
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Compiler.Entity/Object.Property: Failed to convert the value expression for property handler '{handlerInstance?.GetType()}'. " +
+                    $"{classProperty}", ex);
+            }
 
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
