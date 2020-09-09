@@ -27,6 +27,8 @@ namespace RepoDb.Reflection
         /// </summary>
         internal class ClassPropertyParameterInfo
         {
+            private string descriptiveContextString = null;
+
             /// <summary>
             /// Gets the instance of <see cref="RepoDb.ClassProperty"/> object in used.
             /// </summary>
@@ -48,6 +50,36 @@ namespace RepoDb.Reflection
             /// <returns></returns>
             public Type GetTargetType() =>
                 TargetType ?? ParameterInfo?.ParameterType ?? ClassProperty?.PropertyInfo?.PropertyType;
+
+            /// <summary>
+            /// Gets the descriptive context string for error messaging.
+            /// </summary>
+            /// <returns></returns>
+            internal string GetDescriptiveContextString()
+            {
+                if (descriptiveContextString != null)
+                {
+                    return descriptiveContextString;
+                }
+
+                // Variable
+                var message = $"Context :: TargetType: {GetTargetType()} ";
+
+                // ParameterInfo
+                if (ParameterInfo != null)
+                {
+                    message = string.Concat(descriptiveContextString, $"Parameter: {ParameterInfo.Name} ({ParameterInfo.ParameterType}) ");
+                }
+
+                // ClassProperty
+                if (ClassProperty?.PropertyInfo != null)
+                {
+                    message = string.Concat(descriptiveContextString, $"PropertyInfo: {ClassProperty.PropertyInfo.Name} ({ClassProperty.PropertyInfo.PropertyType}), DeclaringType: {ClassProperty.DeclaringType} ");
+                }
+
+                // Return
+                return (descriptiveContextString = message.Trim());
+            }
 
             /// <summary>
             /// Returns the string that represents this object.
@@ -230,6 +262,14 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static ParameterInfo GetPropertyHandlerGetParameter(MethodInfo getMethod) =>
             getMethod?.GetParameters()?.First();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static ParameterInfo GetPropertyHandlerSetParameter(object handlerInstance) =>
+            GetPropertyHandlerSetParameter(GetPropertyHandlerSetMethod(handlerInstance));
 
         /// <summary>
         /// 
@@ -542,9 +582,63 @@ namespace RepoDb.Reflection
             var parameters = new Expression[]
             {
                 Expression.Constant(toEnumType),
-                ConvertExpressionToTypeExpression( expression, StaticType.Object)
+                ConvertExpressionToTypeExpression(expression, StaticType.Object)
             };
             return ConvertExpressionToEnumExpressionForString(Expression.Call(method, parameters), toEnumType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="enumType"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertEnumExpressionToTypeExpression(Expression expression,
+            Type enumType,
+            Type toType) =>
+            (toType.GetUnderlyingType() == StaticType.String) ?
+                ConvertEnumExpressionToTypeExpressionForString(expression, enumType) :
+                    ConvertEnumExpressionToTypeExpressionForNonString(expression, toType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertEnumExpressionToTypeExpressionForString(Expression expression,
+            Type enumType)
+        {
+            var method = typeof(Enum).GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
+            if (method == null)
+            {
+                throw new InvalidOperationException($"There is no enum 'GetName' method found between '{enumType.FullName}' and '{StaticType.String.FullName}'.");
+            }
+            var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
+            var parameters = new Expression[]
+            {
+                Expression.Constant(enumType.GetUnderlyingType()),
+                ConvertExpressionToTypeExpression(expression, StaticType.Object)
+            };
+            var trueExpression = Expression.Convert(Expression.Constant(null), StaticType.String);
+            var falseExpression = ConvertExpressionToTypeExpression(Expression.Call(method, parameters), StaticType.String);
+            return Expression.Condition(isNullExpression, trueExpression, falseExpression);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertEnumExpressionToTypeExpressionForNonString(Expression expression,
+            Type toType)
+        {
+            var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
+            var trueExpression = GetNullableTypeExpression(toType);
+            var falseExpression = ConvertExpressionToTypeExpression(expression, toType);
+            return Expression.Condition(isNullExpression, trueExpression, ConvertExpressionToNullableExpression(falseExpression, toType));
         }
 
         /// <summary>
@@ -609,7 +703,6 @@ namespace RepoDb.Reflection
             }
 
             // Variables Needed
-            var targetType = classPropertyParameterInfo.GetTargetType();
             var getMethod = GetPropertyHandlerGetMethod(handlerInstance);
             var getParameter = GetPropertyHandlerGetParameter(getMethod);
 
@@ -824,7 +917,7 @@ namespace RepoDb.Reflection
             // Check the target type nullability
             if (Nullable.GetUnderlyingType(targetType) != null)
             {
-                valueExpression = GetNullableOrDefaultTypeExpression(targetType.GetUnderlyingType());
+                valueExpression = GetNullableTypeExpression(targetType.GetUnderlyingType());
             }
             else
             {
@@ -833,10 +926,26 @@ namespace RepoDb.Reflection
 
             // Property Handler
             var handlerInstance = GetHandlerInstance(classPropertyParameterInfo, readerField);
-            valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, handlerInstance, classPropertyParameterInfo);
+            try
+            {
+                valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, handlerInstance, classPropertyParameterInfo);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.TrueExpression: Failed to convert the value expression for property handler '{handlerInstance?.GetType()}'. " +
+                    $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+            }
 
             // Align the type
-            valueExpression = ConvertExpressionToTypeExpression(valueExpression, classPropertyParameterInfoType);
+            try
+            {
+                valueExpression = ConvertExpressionToTypeExpression(valueExpression, classPropertyParameterInfoType);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.TrueExpression: Failed to convert the value expression into its destination .NET CLR Type '{classPropertyParameterInfoType.FullName}'. " +
+                    $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+            }
 
             // Return
             return valueExpression;
@@ -863,23 +972,55 @@ namespace RepoDb.Reflection
             // Automatic
             if (Converter.ConversionType == ConversionType.Automatic || targetType.GetUnderlyingType() == StaticType.TimeSpan)
             {
-                valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, readerField.Type, targetType.GetUnderlyingType());
+                try
+                {
+                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, readerField.Type, targetType.GetUnderlyingType());
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to automatically convert the value expression. " +
+                        $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+                }
             }
             else
             {
                 // Enumerations
                 if (targetType.GetUnderlyingType().IsEnum)
                 {
-                    valueExpression = ConvertExpressionToEnumExpression(valueExpression, readerField.Type, targetType.GetUnderlyingType());
+                    try
+                    {
+                        valueExpression = ConvertExpressionToEnumExpression(valueExpression, readerField.Type, targetType.GetUnderlyingType());
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to convert the value expression into enum type '{targetType.GetUnderlyingType()}'. " +
+                            $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+                    }
                 }
             }
 
             // Property Handler
             var handlerInstance = GetHandlerInstance(classPropertyParameterInfo, readerField);
-            valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, handlerInstance, classPropertyParameterInfo);
+            try
+            {
+                valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, handlerInstance, classPropertyParameterInfo);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to convert the value expression for property handler '{handlerInstance?.GetType()}'. " +
+                    $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+            }
 
             // Align the type
-            valueExpression = ConvertExpressionToTypeExpression(valueExpression, classPropertyParameterInfoType);
+            try
+            {
+                valueExpression = ConvertExpressionToTypeExpression(valueExpression, classPropertyParameterInfoType);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to convert the value expression into its destination .NET CLR Type '{classPropertyParameterInfoType.FullName}'. " +
+                    $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+            }
 
             // Return
             return valueExpression;
@@ -890,7 +1031,7 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        internal static Expression GetNullableOrDefaultTypeExpression(Type targetType) =>
+        internal static Expression GetNullableTypeExpression(Type targetType) =>
             Expression.New(StaticType.Nullable.MakeGenericType(targetType));
 
         /// <summary>
@@ -1154,7 +1295,8 @@ namespace RepoDb.Reflection
             var expression = (Expression)Expression.Property(entityExpression, classProperty.PropertyInfo);
 
             // Target type
-            var targetType = dbField.Type; // Add the SetParameter.ParameterType
+            var handlerInstance = classProperty.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
+            var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
 
             // Handling
             if (Converter.ConversionType == ConversionType.Automatic)
@@ -1163,7 +1305,17 @@ namespace RepoDb.Reflection
                     classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), targetType?.GetUnderlyingType());
             }
 
-            // TODO: Where is the Enum handler???
+            /*
+             * Note: The other data provider can coerce the Enum into its destination data type in the DB by default,
+             *       except for PostgreSQL. The code written below is only to address the issue for this specific provider.
+             */
+
+            // Enum Handling
+            if (classProperty.PropertyInfo.PropertyType.GetUnderlyingType().IsEnum == true)
+            {
+                expression = ConvertEnumExpressionToTypeExpression(expression,
+                    classProperty.PropertyInfo.PropertyType, targetType?.GetUnderlyingType());
+            }
 
             // Property Handler
             expression = ConvertExpressionToPropertyHandlerSetExpression(expression, classProperty,
