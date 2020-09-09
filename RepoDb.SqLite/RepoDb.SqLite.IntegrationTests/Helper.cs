@@ -473,7 +473,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnChar = "C",
                     ColumnDate = EpocDate,
                     ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
+                    ColumnDecimal = Convert.ToInt64(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
                     ColumnInteger = (long)i,
@@ -501,7 +501,7 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnChar = char.Parse("C").ToString();
             table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
             table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
+            table.ColumnDecimal = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
             table.ColumnInt = Randomizer.Next(1000000);
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
@@ -595,7 +595,7 @@ namespace RepoDb.SqLite.IntegrationTests
                     ColumnChar = "C",
                     ColumnDate = EpocDate,
                     ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    ColumnDecimal = Convert.ToDecimal(i),
+                    ColumnDecimal = Convert.ToInt64(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnInt = i,
                     ColumnInteger = i,
@@ -623,7 +623,7 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnChar = char.Parse("C").ToString();
             table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
             table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToDecimal(Randomizer.Next(1000000));
+            table.ColumnDecimal = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
             table.ColumnInt = Randomizer.Next(1000000);
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));

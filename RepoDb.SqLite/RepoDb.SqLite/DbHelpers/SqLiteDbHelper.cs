@@ -18,6 +18,7 @@ namespace RepoDb.DbHelpers
         /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
         /// </summary>
         /// <param name="dbTypeResolver">The type resolver to be used.</param>
+        /// <param name="dbSetting">The instance of the <see cref="IDbSetting"/> object to be used.</param>
         public SqLiteDbHelper(IDbSetting dbSetting,
             IResolver<string, Type> dbTypeResolver)
         {

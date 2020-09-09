@@ -312,7 +312,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<MdsCompleteTable>(result);
+                var queryResult = connection.Query<MdsCompleteTable>(result,
+                    fields: Field.Parse<MdsCompleteTable>(e => new { e.Id, e.ColumnInt }));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
@@ -346,7 +347,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<MdsCompleteTable>(result);
+                var queryResult = connection.Query<MdsCompleteTable>(result,
+                    fields: Field.Parse<MdsCompleteTable>(e => new { e.Id, e.ColumnInt }));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
@@ -480,7 +482,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<MdsCompleteTable>(result);
+                var queryResult = connection.Query<MdsCompleteTable>(result,
+                    fields: Field.Parse<MdsCompleteTable>(e => new { e.Id, e.ColumnInt }));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
@@ -514,7 +517,8 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<MdsCompleteTable>(result);
+                var queryResult = connection.Query<MdsCompleteTable>(result,
+                    fields: Field.Parse<MdsCompleteTable>(e => new { e.Id, e.ColumnInt }));
 
                 // Assert
                 Assert.IsTrue(queryResult.Count() > 0);
