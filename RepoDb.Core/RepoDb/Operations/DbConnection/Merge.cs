@@ -675,7 +675,7 @@ namespace RepoDb
             else
             {
                 return UpsertInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    tableName: tableName,
                     entity: entity,
                     qualifiers: qualifiers,
                     fields: GetQualifiedFields<TEntity>(fields, entity),
@@ -1347,7 +1347,7 @@ namespace RepoDb
             else
             {
                 return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    tableName: tableName,
                     entity: entity,
                     qualifiers: qualifiers,
                     fields: GetQualifiedFields<TEntity>(fields, entity),

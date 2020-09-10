@@ -92,7 +92,7 @@ namespace RepoDb.SqLite.UnitTests
             var setting = DbSettingMapper.Get<SQLiteConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsUseUpsert);
+            Assert.IsTrue(setting.IsUseUpsert);
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace RepoDb.SqLite.UnitTests
             var setting = DbSettingMapper.Get<SqliteConnection>();
 
             // Assert
-            Assert.IsFalse(setting.IsUseUpsert);
+            Assert.IsTrue(setting.IsUseUpsert);
         }
 
         [TestMethod]

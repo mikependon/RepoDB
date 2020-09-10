@@ -66,6 +66,18 @@ namespace RepoDb.SqLite.IntegrationTests
                 }
                 else
                 {
+                    if (value1.GetType() != value2.GetType())
+                    {
+                        var method = typeof(Convert).GetMethod($"To{value1.GetType().Name}", new[] { value2.GetType() });
+                        if (method != null)
+                        {
+                            value2 = method.Invoke(null, new[] { value2 });
+                        }
+                        else
+                        {
+                            value2 = Convert.ChangeType(value2, value1.GetType());
+                        }
+                    }
                     Assert.AreEqual(value1, value2,
                         $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                 }
@@ -142,7 +154,19 @@ namespace RepoDb.SqLite.IntegrationTests
                         {
                             value1 = DateTime.Parse(value1?.ToString());
                         }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
+                        if (value1.GetType() != value2.GetType())
+                        {
+                            var method = typeof(Convert).GetMethod($"To{value1.GetType().Name}", new[] { value2.GetType() });
+                            if (method != null)
+                            {
+                                value2 = method.Invoke(null, new[] { value2 });
+                            }
+                            else
+                            {
+                                value2 = Convert.ChangeType(value2, value1.GetType());
+                            }
+                        }
+                        Assert.AreEqual(value1, value2,
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
                 }
@@ -163,7 +187,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new SdsCompleteTable
                 {
-                    Id = i,
+                    Id = (i + 1),
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,
@@ -204,10 +228,10 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Randomizer.Next(1000000);
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
+            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
         /// <summary>
@@ -263,10 +287,10 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
+            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
         #endregion
@@ -326,10 +350,10 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Randomizer.Next(1000000);
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
+            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
         /// <summary>
@@ -385,10 +409,10 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
+            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
         #endregion
@@ -407,7 +431,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new MdsCompleteTable
                 {
-                    Id = i,
+                    Id = (i + 1),
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",
@@ -448,10 +472,10 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Randomizer.Next(1000000);
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
+            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
         /// <summary>
@@ -490,27 +514,32 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="MdsCompleteTable"/> instance represented asy dynamic.
+        /// Update the properties of <see cref="MdsCompleteTable"/> instance represented as dynamics.
         /// </summary>
         /// <param name="table">The instance to be updated.</param>
-        public static void UpdateMdsCompleteTableAsDynamicProperties(dynamic table)
+        /// <returns>The modified dynamic record.</returns>
+        public static dynamic UpdateMdsCompleteTableAsDynamicProperties(dynamic table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = "true";
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
-            table.ColumnInt = Randomizer.Next(1000000);
-            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            return new
+            {
+                table.Id,
+                ColumnBigInt = long.MaxValue,
+                ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString()),
+                ColumnBoolean = "true",
+                ColumnChar = char.Parse("C").ToString(),
+                ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date,
+                ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                ColumnDecimal = Convert.ToInt64(Randomizer.Next(1000000)),
+                ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000)),
+                ColumnInt = Randomizer.Next(1000000),
+                ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000)),
+                ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000)),
+                ColumnReal = Convert.ToSingle(Randomizer.Next(1000000)),
+                ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}",
+                ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}",
+                ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}"
+            };
         }
 
         #endregion
@@ -529,7 +558,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new MdsNonIdentityCompleteTable
                 {
-                    Id = (long)(i + 1),
+                    Id = (i + 1),
                     ColumnBigInt = (long)i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",
@@ -570,10 +599,10 @@ namespace RepoDb.SqLite.IntegrationTests
             table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
             table.ColumnNumeric = Randomizer.Next(1000000);
             table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}";
+            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}";
             table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).ToString(DATE_FORMAT);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}";
         }
 
         /// <summary>
@@ -615,24 +644,29 @@ namespace RepoDb.SqLite.IntegrationTests
         /// Update the properties of <see cref="MdsNonIdentityCompleteTable"/> instance represented asy dynamic.
         /// </summary>
         /// <param name="table">The instance to be updated.</param>
-        public static void UpdateMdsNonIdentityCompleteTableAsDynamicProperties(dynamic table)
+        /// <returns>The modified dynamic record.</returns>
+        public static dynamic UpdateMdsNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
-            table.ColumnBigInt = long.MaxValue;
-            table.ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
-            table.ColumnBoolean = "true";
-            table.ColumnChar = char.Parse("C").ToString();
-            table.ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
-            table.ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnDecimal = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000));
-            table.ColumnInt = Randomizer.Next(1000000);
-            table.ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000));
-            table.ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000));
-            table.ColumnReal = Convert.ToSingle(Randomizer.Next(1000000));
-            table.ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid().ToString()}";
-            table.ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            table.ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid().ToString()}";
+            return new
+            {
+                table.Id,
+                ColumnBigInt = long.MaxValue,
+                ColumnBlob = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString()),
+                ColumnBoolean = "true",
+                ColumnChar = char.Parse("C").ToString(),
+                ColumnDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date,
+                ColumnDateTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                ColumnDecimal = Convert.ToInt64(Randomizer.Next(1000000)),
+                ColumnDouble = Convert.ToDouble(Randomizer.Next(1000000)),
+                ColumnInt = Randomizer.Next(1000000),
+                ColumnInteger = Convert.ToInt64(Randomizer.Next(1000000)),
+                ColumnNumeric = Convert.ToDecimal(Randomizer.Next(1000000)),
+                ColumnReal = Convert.ToSingle(Randomizer.Next(1000000)),
+                ColumnString = $"{table.ColumnString} - Updated with {Guid.NewGuid()}",
+                ColumnText = $"{table.ColumnText} - Updated with {Guid.NewGuid()}",
+                ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}"
+            };
         }
 
         #endregion
