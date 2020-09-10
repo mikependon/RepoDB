@@ -178,17 +178,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetSystemConvertGetTypeMethod(Type fromType,
             Type toType) =>
-            GetSystemConvertGetTypeMethod(fromType, toType.Name);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fromType"></param>
-        /// <param name="toTypeName"></param>
-        /// <returns></returns>
-        internal static MethodInfo GetSystemConvertGetTypeMethod(Type fromType,
-            string toTypeName) =>
-            StaticType.Convert.GetMethod(string.Concat("To", toTypeName), new[] { fromType });
+            StaticType.Convert.GetMethod(string.Concat("To", toType.GetUnderlyingType().Name),
+                new[] { fromType.GetUnderlyingType() });
 
         /// <summary>
         /// 
@@ -278,15 +269,6 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static ParameterInfo GetPropertyHandlerSetParameter(MethodInfo setMethod) =>
             setMethod?.GetParameters()?.First();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="classPropertyParameterInfo"></param>
-        /// <returns></returns>
-        internal static Type GetTargetType(ClassPropertyParameterInfo classPropertyParameterInfo) =>
-            (classPropertyParameterInfo.ParameterInfo?.ParameterType ??
-                classPropertyParameterInfo.ClassProperty?.PropertyInfo.PropertyType)?.GetUnderlyingType();
 
         /// <summary>
         /// 
@@ -402,31 +384,13 @@ namespace RepoDb.Reflection
                 return null;
             }
             var value = classProperty.GetPropertyHandler();
-
             if (value == null && readerField?.Type != null)
             {
                 value = PropertyHandlerCache
                     .Get<object>(readerField.Type.GetUnderlyingType());
             }
-
             return value;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="readerField"></param>
-        /// <returns></returns>
-        internal static MethodInfo GetNonTimeSpanReaderGetValueMethod(DataReaderField readerField) =>
-            (readerField?.Type == StaticType.TimeSpan) ? null : GetDbReaderGetValueMethod(readerField);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="readerField"></param>
-        /// <returns></returns>
-        internal static MethodInfo GetNonSingleReaderGetValueMethod(DataReaderField readerField) =>
-            (readerField?.Type == StaticType.Single) ? null : GetDbReaderGetValueMethod(readerField);
 
         /// <summary>
         /// 
@@ -503,18 +467,14 @@ namespace RepoDb.Reflection
             {
                 return expression;
             }
-
             if (toType.IsAssignableFrom(expression.Type) == false)
             {
-                var methodInfo = StaticType.Convert.GetMethod(string.Concat("To", toType.Name),
-                    new[] { expression.Type });
-
+                var methodInfo = GetSystemConvertGetTypeMethod(expression.Type, toType);
                 if (methodInfo != null)
                 {
                     return Expression.Call(methodInfo, expression);
                 }
             }
-
             return ConvertExpressionToTypeExpression(expression, toType);
         }
 
@@ -665,7 +625,6 @@ namespace RepoDb.Reflection
             {
                 falseExpression = ConvertEnumExpressionToTypeExpressionForString(expression, enumType);
                 falseExpression = ConvertExpressionToSystemConvertExpression(falseExpression, toType);
-                //falseExpression = ConvertExpressionToTypeExpression(expression, toType);
             }
 
             // Nullable
@@ -1243,18 +1202,26 @@ namespace RepoDb.Reflection
                 var expression = GetClassPropertyParameterInfoValueExpression(readerParameterExpression,
                     classPropertyParameterInfo, readerField);
 
-                // Member values
-                var memberAssignment = classPropertyParameterInfo.ClassProperty != null ?
-                    Expression.Bind(classPropertyParameterInfo.ClassProperty.PropertyInfo, expression) : null;
-                var argument = classPropertyParameterInfo.ParameterInfo != null ? expression : null;
-
-                // Add the bindings
-                memberBindings.Add(new MemberBinding
+                try
                 {
-                    ClassProperty = classPropertyParameterInfo.ClassProperty,
-                    MemberAssignment = memberAssignment,
-                    Argument = argument
-                });
+                    // Member values
+                    var memberAssignment = classPropertyParameterInfo.ClassProperty != null ?
+                        Expression.Bind(classPropertyParameterInfo.ClassProperty.PropertyInfo, expression) : null;
+                    var argument = classPropertyParameterInfo.ParameterInfo != null ? expression : null;
+
+                    // Add the bindings
+                    memberBindings.Add(new MemberBinding
+                    {
+                        ClassProperty = classPropertyParameterInfo.ClassProperty,
+                        MemberAssignment = memberAssignment,
+                        Argument = argument
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Compiler.MemberBinding: Failed to bind the value expression into a property/ctor-argument. " +
+                        $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+                }
             }
 
             // Return the value

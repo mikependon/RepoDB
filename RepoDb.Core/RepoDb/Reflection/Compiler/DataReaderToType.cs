@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using RepoDb.Extensions;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 
 namespace RepoDb.Reflection
 {
@@ -173,17 +174,24 @@ namespace RepoDb.Reflection
             var constructorInfo = typeOfResult.GetConstructorWithMostArguments();
             var entityExpression = (Expression)null;
 
-            // Check the arguments
-            entityExpression = arguments?.Any() == true ?
-                Expression.New(constructorInfo, arguments) : Expression.New(typeOfResult);
+            try
+            {
+                // Constructor arguments
+                entityExpression = arguments?.Any() == true ?
+                    Expression.New(constructorInfo, arguments) : Expression.New(typeOfResult);
 
-            // Bind the members
-            entityExpression = memberAssignments?.Any() == true ?
-                (Expression)Expression.MemberInit((NewExpression)entityExpression, memberAssignments) : entityExpression;
+                // Bind the members
+                entityExpression = memberAssignments?.Any() == true ?
+                    Expression.MemberInit((NewExpression)entityExpression, memberAssignments) : entityExpression;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Compiler: Failed to initialize the member properties or the constructor arguments.", ex);
+            }
 
             // Class handler
             entityExpression = ConvertExpressionToClassHandlerGetExpression<TResult>(entityExpression,
-                readerParameterExpression);
+                    readerParameterExpression);
 
             // Set the function value
             return Expression
