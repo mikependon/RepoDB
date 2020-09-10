@@ -656,6 +656,7 @@ namespace RepoDb.StatementBuilders
                 .Truncate()
                 .Table()
                 .TableNameFrom(tableName, DbSetting)
+                .WriteText("RESTART IDENTITY")
                 .End();
 
             // Return the query
