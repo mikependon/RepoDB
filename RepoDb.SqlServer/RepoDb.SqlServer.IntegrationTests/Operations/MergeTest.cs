@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
@@ -28,7 +28,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeForIdentityForEmptyTable()
+        public void TestSqlConnectionMergeForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -37,16 +37,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeForIdentityForNonEmptyTable()
+        public void TestSqlConnectionMergeForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -60,19 +60,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = connection.Merge<CompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlConnectionMergeForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -93,13 +93,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     qualifiers: qualifiers);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
@@ -109,7 +109,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncForIdentityForEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -118,16 +118,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncForIdentityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -141,19 +141,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -174,13 +174,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     qualifiers: qualifiers).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
@@ -194,7 +194,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeViaTableNameForIdentityForEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -204,16 +204,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlConnectionMergeViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -228,19 +228,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlConnectionMergeViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -262,19 +262,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     qualifiers: qualifiers);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestSqlConnectionMergeAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -286,56 +286,49 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.UpdateCompleteTableProperties(table);
+
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)obj);
+                    table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlConnectionMergeAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -343,20 +336,23 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.UpdateCompleteTableProperties(table);
+
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)obj,
+                    table,
                     qualifiers: qualifiers);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
@@ -365,7 +361,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -375,16 +371,16 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table).Result;
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -399,19 +395,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -431,19 +427,19 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     qualifiers: qualifiers).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public void TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -455,56 +451,49 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.AreEqual(1, queryResult?.Count());
-                Helper.AssertMembersEquality(table, queryResult.First());
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public void TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.UpdateCompleteTableProperties(table);
+
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)obj).Result;
+                    table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public void TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
-            var obj = new
-            {
-                table.Id,
-                ColumnInt = int.MaxValue
-            };
             var qualifiers = new[]
             {
                 new Field("Id", typeof(long))
@@ -512,20 +501,23 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
+                // Setup
+                Helper.UpdateCompleteTableProperties(table);
+
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)obj,
+                    table,
                     qualifiers: qualifiers).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, Convert.ToInt64(result));
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
-                Assert.IsTrue(queryResult.Count() > 0);
-                Assert.AreEqual(obj.ColumnInt, queryResult.First().ColumnInt);
+                Helper.AssertPropertiesEquality(table, queryResult.First());
             }
         }
 
