@@ -42,6 +42,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var result = connection.Insert<MdsCompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.IsTrue(table.Id > 0);
 
@@ -69,6 +70,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var result = connection.Insert<MdsNonIdentityCompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -99,6 +101,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var result = connection.InsertAsync<MdsCompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.IsTrue(table.Id > 0);
 
@@ -126,6 +129,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var result = connection.InsertAsync<MdsNonIdentityCompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -161,6 +165,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -188,6 +193,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -215,6 +221,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -242,6 +249,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -273,6 +281,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -300,6 +309,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -327,6 +337,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -354,6 +365,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act

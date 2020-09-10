@@ -315,258 +315,258 @@ namespace RepoDb.SqLite.UnitTests
 
         #region CreateMerge
 
-        [TestMethod]
-        public void TestSdsSqLiteStatementBuilderCreateMerge()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod]
+        //public void TestSdsSqLiteStatementBuilderCreateMerge()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestSdsSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod]
+        //public void TestSdsSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id"),
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestSdsSqLiteStatementBuilderCreateMergeWithIdentity()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod]
+        //public void TestSdsSqLiteStatementBuilderCreateMergeWithIdentity()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereIsNoPrimary()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereIsNoPrimary()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreNoFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreNoFields()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreHints()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(NotSupportedException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeIfThereAreHints()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null,
-                "WhatEver");
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null,
+        //        "WhatEver");
+        //}
 
         #endregion
 
         #region CreateMergeAll
 
-        [TestMethod]
-        public void TestSdsSqLiteStatementBuilderCreateMergeAll()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod]
+        //public void TestSdsSqLiteStatementBuilderCreateMergeAll()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestSdsSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod]
+        //public void TestSdsSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id"),
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestSdsSqLiteStatementBuilderCreateMergeAllWithIdentity()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod]
+        //public void TestSdsSqLiteStatementBuilderCreateMergeAllWithIdentity()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS INT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_1) AS INT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_2) AS INT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS INT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_1) AS INT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_2) AS INT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereIsNoPrimary()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereIsNoPrimary()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreNoFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreNoFields()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreHints()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SQLiteConnection>();
+        //[TestMethod, ExpectedException(typeof(NotSupportedException))]
+        //public void ThrowExceptionOnSqLiteStatementBuilderCreateMergeAllIfThereAreHints()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null,
-                "WhatEver");
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null,
+        //        "WhatEver");
+        //}
 
         #endregion
 
@@ -1086,258 +1086,258 @@ namespace RepoDb.SqLite.UnitTests
 
         #region CreateMerge
 
-        [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateMerge()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod]
+        //public void TestMdsSqLiteStatementBuilderCreateMerge()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod]
+        //public void TestMdsSqLiteStatementBuilderCreateMergeWithPrimaryAsQualifier()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id"),
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateMergeWithIdentity()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod]
+        //public void TestMdsSqLiteStatementBuilderCreateMergeWithIdentity()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereIsNoPrimary()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereIsNoPrimary()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereAreNoFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereAreNoFields()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereAreHints()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(NotSupportedException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeIfThereAreHints()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null,
-                "WhatEver");
-        }
+        //    // Act
+        //    builder.CreateMerge(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null,
+        //        "WhatEver");
+        //}
 
         #endregion
 
         #region CreateMergeAll
 
-        [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateMergeAll()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod]
+        //public void TestMdsSqLiteStatementBuilderCreateMergeAll()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod]
+        //public void TestMdsSqLiteStatementBuilderCreateMergeAllWithPrimaryAsQualifier()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id"),
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(@Id AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(@Id_1 AS BIGINT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(@Id_2 AS BIGINT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateMergeAllWithIdentity()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod]
+        //public void TestMdsSqLiteStatementBuilderCreateMergeAllWithIdentity()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS INT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_1) AS INT) AS [Result] ; " +
-                "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_2) AS INT) AS [Result] ;";
+        //    // Act
+        //    var query = builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+        //    var expected = "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id, @Name, @Address ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id) AS INT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_1) AS INT) AS [Result] ; " +
+        //        "INSERT OR REPLACE INTO [Table] ( [Id], [Name], [Address] ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT CAST(COALESCE(last_insert_rowid(), @Id_2) AS INT) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, query);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, query);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereIsNoPrimary()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereIsNoPrimary()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereAreNoFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(PrimaryFieldNotFoundException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereAreNoFields()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                3,
-                null,
-                null);
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        null,
+        //        3,
+        //        null,
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null);
+        //}
 
-        [TestMethod, ExpectedException(typeof(NotSupportedException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereAreHints()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+        //[TestMethod, ExpectedException(typeof(NotSupportedException))]
+        //public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateMergeAllIfThereAreHints()
+        //{
+        //    // Setup
+        //    var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null,
-                "WhatEver");
-        }
+        //    // Act
+        //    builder.CreateMergeAll(new QueryBuilder(),
+        //        "Table",
+        //        Field.From("Id", "Name", "Address"),
+        //        Field.From("Id", "Name"),
+        //        3,
+        //        new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+        //        null,
+        //        "WhatEver");
+        //}
 
         #endregion
 

@@ -28,9 +28,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         #region Sync
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertForIdentity()
+        public void TestSQLiteConnectionInsertForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -42,6 +42,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var result = connection.Insert<SdsCompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.IsTrue(table.Id > 0);
 
@@ -55,9 +56,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertForNonIdentity()
+        public void TestSQLiteConnectionInsertForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -69,6 +70,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var result = connection.Insert<SdsNonIdentityCompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -85,9 +87,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAsyncForIdentity()
+        public void TestSQLiteConnectionInsertAsyncForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -99,6 +101,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var result = connection.InsertAsync<SdsCompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.IsTrue(table.Id > 0);
 
@@ -112,9 +115,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAsyncForNonIdentity()
+        public void TestSQLiteConnectionInsertAsyncForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -126,6 +129,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var result = connection.InsertAsync<SdsNonIdentityCompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -146,9 +150,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         #region Sync
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertViaTableNameForIdentity()
+        public void TestSQLiteConnectionInsertViaTableNameForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -161,6 +165,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -173,9 +178,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertViaTableNameAsDynamicForIdentity()
+        public void TestSQLiteConnectionInsertViaTableNameAsDynamicForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -188,6 +193,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -200,9 +206,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertViaTableNameForNonIdentity()
+        public void TestSQLiteConnectionInsertViaTableNameForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -215,6 +221,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -227,9 +234,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertViaTableNameAsDynamicForNonIdentity()
+        public void TestSQLiteConnectionInsertViaTableNameAsDynamicForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -242,6 +249,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -258,9 +266,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertViaTableNameAsyncForIdentity()
+        public void TestSQLiteConnectionInsertViaTableNameAsyncForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -273,6 +281,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -285,9 +294,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAsyncViaTableNameAsDynamicForIdentity()
+        public void TestSQLiteConnectionInsertAsyncViaTableNameAsDynamicForIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -300,6 +309,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -312,9 +322,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertViaTableNameAsyncForNonIdentity()
+        public void TestSQLiteConnectionInsertViaTableNameAsyncForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -327,6 +337,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -339,9 +350,9 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAsyncViaTableNameAsDynamicForNonIdentity()
+        public void TestSQLiteConnectionInsertAsyncViaTableNameAsDynamicForNonIdentity()
         {
-            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
                 // Create the tables
                 Database.CreateSdsTables(connection);
@@ -354,6 +365,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act

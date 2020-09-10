@@ -27,12 +27,12 @@ namespace RepoDb.Resolvers
             ColumnChar : System.String
             ColumnDate : System.String
             ColumnDateTime : System.String
-            ColumnDecimal : System.String
+            ColumnDecimal : System.String / System.Int64 (if has value)
             ColumnDouble : System.Double
             ColumnInteger : System.Int64
             ColumnInt : System.Int64
             ColumnNone : System.String
-            ColumnNumeric : System.String
+            ColumnNumeric : System.String / System.Int64 (if has value)
             ColumnReal : System.Double
             ColumnString : System.String
             ColumnText : System.String

@@ -27,7 +27,7 @@
             IsExecuteReaderDisposable = isExecuteReaderDisposable;
             IsMultiStatementExecutable = true;
             IsPreparable = true;
-            IsUseUpsert = false;
+            IsUseUpsert = true;
             OpeningQuote = "[";
             ParameterPrefix = "@";
         }

@@ -798,7 +798,7 @@ namespace RepoDb
             else
             {
                 return UpsertAllAsyncInternalBase<TEntity>(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
+                    tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
@@ -1387,10 +1387,9 @@ namespace RepoDb
                 // Ensure to open the connection
                 connection.EnsureOpen();
 
-
+                // Create a transaction
                 if (hasTransaction == false)
                 {
-                    // Create a transaction
                     transaction = connection.BeginTransaction();
                 }
 
@@ -1783,10 +1782,9 @@ namespace RepoDb
                 // Ensure to open the connection
                 await connection.EnsureOpenAsync();
 
-
+                // Create a transaction
                 if (hasTransaction == false)
                 {
-                    // Create a transaction
                     transaction = connection.BeginTransaction();
                 }
 
