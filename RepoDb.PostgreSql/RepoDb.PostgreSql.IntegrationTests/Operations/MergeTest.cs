@@ -37,7 +37,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.Merge<CompleteTable>(table);
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -61,10 +61,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -94,10 +94,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -118,7 +118,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             {
                 // Act
                 var result = connection.MergeAsync<CompleteTable>(table).Result;
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -142,10 +142,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -175,10 +175,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -204,7 +204,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
                     table);
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -229,10 +229,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -263,10 +263,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -290,7 +290,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -314,10 +314,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -346,10 +346,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -371,7 +371,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Act
                 var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table).Result;
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -396,10 +396,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -428,10 +428,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -455,7 +455,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -479,10 +479,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
@@ -511,10 +511,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
-                Assert.AreEqual(table.Id, Convert.ToInt64(result));
+                Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<CompleteTable>(Convert.ToInt64(result));
+                var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());

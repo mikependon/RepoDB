@@ -49,8 +49,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         {
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
-                connection.DeleteAll<CompleteTable>();
-                connection.DeleteAll<NonIdentityCompleteTable>();
+                connection.Truncate<CompleteTable>();
+                connection.Truncate<NonIdentityCompleteTable>();
             }
         }
 

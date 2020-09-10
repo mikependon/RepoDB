@@ -47,8 +47,8 @@ namespace RepoDb.MySql.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                connection.DeleteAll<CompleteTable>();
-                connection.DeleteAll<NonIdentityCompleteTable>();
+                connection.Truncate<CompleteTable>();
+                connection.Truncate<NonIdentityCompleteTable>();
             }
         }
 

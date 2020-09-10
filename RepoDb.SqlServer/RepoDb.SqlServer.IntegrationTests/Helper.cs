@@ -170,7 +170,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                     ColumnDateTime2 = now,
                     ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2)),
                     ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnFloat = Convert.ToSingle(i),
+                    ColumnFloat = Convert.ToDouble(i),
                     //ColumnGeography = (object)null,
                     //ColumnGeometry = (object)null,
                     //ColumnHierarchyId = (object)null,
@@ -218,7 +218,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             table.ColumnDateTime2 = now;
             table.ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2));
             table.ColumnDecimal = Convert.ToDecimal(2);
-            table.ColumnFloat = Convert.ToSingle(2);
+            table.ColumnFloat = Convert.ToDouble(2);
             //table.ColumnGeography = (object)null;
             //table.ColumnGeometry = (object)null;
             //table.ColumnHierarchyId = (object)null;
@@ -270,7 +270,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                     ColumnDateTime2 = now,
                     ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2)),
                     ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnFloat = Convert.ToSingle(i),
+                    ColumnFloat = Convert.ToDouble(i),
                     //ColumnGeography = (object)null,
                     //ColumnGeometry = (object)null,
                     //ColumnHierarchyId = (object)null,
@@ -318,7 +318,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             table.ColumnDateTime2 = now;
             table.ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2));
             table.ColumnDecimal = Convert.ToDecimal(2);
-            table.ColumnFloat = Convert.ToSingle(2);
+            table.ColumnFloat = Convert.ToDouble(2);
             table.ColumnGeography = (object)null;
             table.ColumnGeometry = (object)null;
             table.ColumnHierarchyId = (object)null;
@@ -374,7 +374,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                     ColumnDateTime2 = now,
                     ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2)),
                     ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnFloat = Convert.ToSingle(i),
+                    ColumnFloat = Convert.ToDouble(i),
                     //ColumnGeography = (object)null,
                     //ColumnGeometry = (object)null,
                     //ColumnHierarchyId = (object)null,
@@ -422,7 +422,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             table.ColumnDateTime2 = now;
             table.ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2));
             table.ColumnDecimal = Convert.ToDecimal(2);
-            table.ColumnFloat = Convert.ToSingle(2);
+            table.ColumnFloat = Convert.ToDouble(2);
             //table.ColumnGeography = (object)null;
             //table.ColumnGeometry = (object)null;
             //table.ColumnHierarchyId = (object)null;
@@ -474,7 +474,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                     ColumnDateTime2 = now,
                     ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2)),
                     ColumnDecimal = Convert.ToDecimal(i),
-                    ColumnFloat = Convert.ToSingle(i),
+                    ColumnFloat = Convert.ToDouble(i),
                     //ColumnGeography = (object)null,
                     //ColumnGeometry = (object)null,
                     //ColumnHierarchyId = (object)null,
@@ -522,7 +522,7 @@ namespace RepoDb.SqlServer.IntegrationTests
             table.ColumnDateTime2 = now;
             table.ColumnDateTimeOffset = new DateTimeOffset(now.Date).ToOffset(TimeSpan.FromHours(2));
             table.ColumnDecimal = Convert.ToDecimal(2);
-            table.ColumnFloat = Convert.ToSingle(2);
+            table.ColumnFloat = Convert.ToDouble(2);
             table.ColumnGeography = (object)null;
             table.ColumnGeometry = (object)null;
             table.ColumnHierarchyId = (object)null;
