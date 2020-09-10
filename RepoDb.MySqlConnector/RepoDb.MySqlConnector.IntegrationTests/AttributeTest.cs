@@ -1,15 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
-using RepoDb.MySql.IntegrationTests.Setup;
+using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 
-namespace RepoDb.MySql.IntegrationTests
+namespace RepoDb.MySqlConnector.IntegrationTests
 {
     [TestClass]
     public class AttributeTest
@@ -34,16 +34,16 @@ namespace RepoDb.MySql.IntegrationTests
         {
             public int Id { get; set; }
 
-            [MySqlTypeMap(MySqlDbType.Blob)]
+            [MySqlConnectorTypeMap(MySqlDbType.Blob)]
             public byte[] ColumnBlob { get; set; }
 
-            [MySqlTypeMap(MySqlDbType.Int64)]
+            [MySqlConnectorTypeMap(MySqlDbType.Int64)]
             public long ColumnBigInt { get; set; }
 
-            [MySqlTypeMap(MySqlDbType.DateTime)]
+            [MySqlConnectorTypeMap(MySqlDbType.DateTime)]
             public DateTime ColumnDateTime2 { get; set; }
 
-            [MySqlTypeMap(MySqlDbType.VarChar)]
+            [MySqlConnectorTypeMap(MySqlDbType.VarChar)]
             public string ColumnVarChar { get; set; }
         }
 
