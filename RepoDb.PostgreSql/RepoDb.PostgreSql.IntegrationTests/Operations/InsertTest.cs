@@ -39,6 +39,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.Insert<CompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.IsTrue(table.Id > 0);
 
@@ -63,6 +64,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.Insert<NonIdentityCompleteTable>(table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -90,6 +92,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.InsertAsync<CompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
                 Assert.IsTrue(table.Id > 0);
 
@@ -114,6 +117,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 var result = connection.InsertAsync<NonIdentityCompleteTable>(table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -146,6 +150,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -170,6 +175,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -194,6 +200,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -218,6 +225,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table);
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
@@ -246,6 +254,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -270,6 +279,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -294,6 +304,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
@@ -318,6 +329,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     (object)table).Result;
 
                 // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
 
                 // Act
