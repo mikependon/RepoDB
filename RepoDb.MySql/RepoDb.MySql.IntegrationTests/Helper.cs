@@ -183,7 +183,7 @@ namespace RepoDb.MySql.IntegrationTests
                     //ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}"),
                     //ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{i}"),
                     //ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{i}"),
-                    ColumnBigint = i,
+                    ColumnBigint = Convert.ToInt64(i),
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnFloat = Convert.ToSingle(i),
@@ -200,7 +200,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = 1
+                    ColumnBit = (UInt64)1
                 });
             }
             return tables;
@@ -238,7 +238,7 @@ namespace RepoDb.MySql.IntegrationTests
             //table.ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{1}");
             //table.ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{1}");
             //table.ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{1}");
-            table.ColumnBigint = 1;
+            table.ColumnBigint = Convert.ToInt64(1);
             table.ColumnDecimal = Convert.ToDecimal(1);
             table.ColumnDouble = Convert.ToDouble(1);
             table.ColumnFloat = Convert.ToSingle(1);
@@ -297,7 +297,7 @@ namespace RepoDb.MySql.IntegrationTests
                     //ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}"),
                     //ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{i}"),
                     //ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{i}"),
-                    ColumnBigint = i,
+                    ColumnBigint = Convert.ToInt64(i),
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnFloat = Convert.ToSingle(i),
@@ -314,7 +314,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = 1
+                    ColumnBit = (UInt64)1
                 });
             }
             return tables;
@@ -352,7 +352,7 @@ namespace RepoDb.MySql.IntegrationTests
             //table.ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{1}");
             //table.ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{1}");
             //table.ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{1}");
-            table.ColumnBigint = 1;
+            table.ColumnBigint = Convert.ToInt64(1);
             table.ColumnDecimal = Convert.ToDecimal(1);
             table.ColumnDouble = Convert.ToDouble(1);
             table.ColumnFloat = Convert.ToSingle(1);
@@ -415,7 +415,7 @@ namespace RepoDb.MySql.IntegrationTests
                     //ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}"),
                     //ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{i}"),
                     //ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{i}"),
-                    ColumnBigint = i,
+                    ColumnBigint = Convert.ToInt64(i),
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnFloat = Convert.ToSingle(i),
@@ -432,7 +432,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = 1
+                    ColumnBit = (UInt64)1
                 });
             }
             return tables;
@@ -470,7 +470,7 @@ namespace RepoDb.MySql.IntegrationTests
             //table.ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{1}");
             //table.ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{1}");
             //table.ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{1}");
-            table.ColumnBigint = 1;
+            table.ColumnBigint = Convert.ToInt64(1);
             table.ColumnDecimal = Convert.ToDecimal(1);
             table.ColumnDouble = Convert.ToDouble(1);
             table.ColumnFloat = Convert.ToSingle(1);
@@ -529,7 +529,7 @@ namespace RepoDb.MySql.IntegrationTests
                     //ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}"),
                     //ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{i}"),
                     //ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{i}"),
-                    ColumnBigint = i,
+                    ColumnBigint = Convert.ToInt64(i),
                     ColumnDecimal = Convert.ToDecimal(i),
                     ColumnDouble = Convert.ToDouble(i),
                     ColumnFloat = Convert.ToSingle(i),
@@ -546,7 +546,7 @@ namespace RepoDb.MySql.IntegrationTests
                     ColumnMediumText = $"ColumnMediumText:{i}",
                     ColumnText = $"ColumText:{i}",
                     ColumnTinyText = $"ColumnTinyText:{i}",
-                    ColumnBit = 1
+                    ColumnBit = (UInt64)1
                 });
             }
             return tables;
@@ -584,7 +584,7 @@ namespace RepoDb.MySql.IntegrationTests
             //table.ColumnMultiPolygon = Encoding.Default.GetBytes($"ColumnMultiPolygon:{1}");
             //table.ColumnPoint = Encoding.Default.GetBytes($"ColumnPoint:{1}");
             //table.ColumnPolygon = Encoding.Default.GetBytes($"ColumnPolygon:{1}");
-            table.ColumnBigint = 1;
+            table.ColumnBigint = Convert.ToInt64(1);
             table.ColumnDecimal = Convert.ToDecimal(1);
             table.ColumnDouble = Convert.ToDouble(1);
             table.ColumnFloat = Convert.ToSingle(1);

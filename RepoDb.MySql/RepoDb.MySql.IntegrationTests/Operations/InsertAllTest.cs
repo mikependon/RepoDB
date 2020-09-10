@@ -38,17 +38,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.InsertAll<CompleteTable>(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
                 Assert.IsTrue(tables.All(table => table.Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertPropertiesEquality(table, queryResult.First(item => item.Id == table.Id));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -64,16 +62,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.InsertAll<NonIdentityCompleteTable>(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertPropertiesEquality(table, queryResult.First(item => item.Id == table.Id));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -93,17 +89,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.InsertAllAsync<CompleteTable>(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
                 Assert.IsTrue(tables.All(table => table.Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertPropertiesEquality(table, queryResult.First(item => item.Id == table.Id));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -119,16 +113,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 var result = connection.InsertAllAsync<NonIdentityCompleteTable>(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertPropertiesEquality(table, queryResult.First(item => item.Id == table.Id));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -153,16 +145,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -179,16 +169,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -205,16 +193,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -231,16 +217,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -261,16 +245,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -287,16 +269,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -313,16 +293,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt(tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
@@ -339,16 +317,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                     tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count(), result);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
 
                 // Act
                 var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
 
                 // Assert
-                tables.ForEach(table =>
-                {
-                    Helper.AssertMembersEquality(table, queryResult.ElementAt((int)tables.IndexOf(table)));
-                });
+                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
             }
         }
 
