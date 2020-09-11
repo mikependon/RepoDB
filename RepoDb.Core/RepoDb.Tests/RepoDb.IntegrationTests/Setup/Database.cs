@@ -35,6 +35,9 @@ namespace RepoDb.IntegrationTests.Setup
             // Create the schemas
             CreateSchemas();
 
+            // Create the types
+            CreateTypes();
+
             // Create the tables
             CreateTables();
 
@@ -78,6 +81,14 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
+        /// Create the necessary types for testing.
+        /// </summary>
+        public static void CreateTypes()
+        {
+            CreateIdentityTableType();
+        }
+
+        /// <summary>
         /// Create the necessary tables for testing.
         /// </summary>
         public static void CreateTables()
@@ -100,6 +111,7 @@ namespace RepoDb.IntegrationTests.Setup
             CreateGetIdentityTableByIdStoredProcedure();
             CreateMultiplyStoredProcedure();
             CreateGetDatabaseDateTimeStoredProcedure();
+            CreateIdentityTableTypeStoredProcedure();
         }
 
         /// <summary>
@@ -136,7 +148,36 @@ namespace RepoDb.IntegrationTests.Setup
                     connection.ExecuteNonQuery("CREATE SCHEMA [sc];");
                 }
             }
+        }
 
+        #endregion
+
+        #region CreateTypes
+
+        /// <summary>
+        /// Creates the 'IdentityTableType' type.
+        /// </summary>
+        public static void CreateIdentityTableType()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[types] WHERE name = 'IdentityTableType';");
+                if (exists == null)
+                {
+                    connection.ExecuteNonQuery(@"CREATE TYPE IdentityTableType AS TABLE
+                        (
+                            [Id] BIGINT NOT NULL,
+                            [RowGuid] UNIQUEIDENTIFIER NOT NULL,
+		                    [ColumnBit] BIT NULL,
+		                    [ColumnDateTime] DATETIME NULL,
+		                    [ColumnDateTime2] DATETIME2(7) NULL,
+		                    [ColumnDecimal] DECIMAL(18, 2) NULL,
+		                    [ColumnFloat] FLOAT NULL,
+		                    [ColumnInt] INT NULL,
+		                    [ColumnNVarChar] NVARCHAR(MAX) NULL
+                        );");
+                }
+            }
         }
 
         #endregion
@@ -436,6 +477,49 @@ namespace RepoDb.IntegrationTests.Setup
 	                    AS
                         BEGIN
                             SELECT @Value1 * @Value2 AS [Value];
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates the 'IdentityTableType' type.
+        /// </summary>
+        public static void CreateIdentityTableTypeStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_identity_table_type';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_identity_table_type]
+                        (
+                            @Table IdentityTableType READONLY
+                        )
+	                    AS
+                        BEGIN
+                            INSERT INTO [sc].[IdentityTable]
+                            (
+                                [RowGuid],
+                                [ColumnBit],
+                                [ColumnDateTime],
+                                [ColumnDateTime2],
+                                [ColumnDecimal],
+                                [ColumnFloat],
+                                [ColumnInt],
+                                [ColumnNVarChar]
+                            )
+                            OUTPUT INSERTED.*
+                            SELECT [RowGuid],
+                                [ColumnBit],
+                                [ColumnDateTime],
+                                [ColumnDateTime2],
+                                [ColumnDecimal],
+                                [ColumnFloat],
+                                [ColumnInt],
+                                [ColumnNVarChar]
+                            FROM @Table;
                         END";
                     connection.ExecuteNonQuery(commandText);
                 }
