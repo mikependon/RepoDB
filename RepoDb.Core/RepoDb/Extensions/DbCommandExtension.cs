@@ -49,6 +49,17 @@ namespace RepoDb.Extensions
                 parameter.DbType = dbType.Value;
             }
 
+            // TVP
+            if (value is DataTable)
+            {
+                var property = parameter.GetType().GetProperty("TypeName");
+                if (property != null)
+                {
+                    var table = ((DataTable)value);
+                    property.SetValue(parameter, table.TableName);
+                }
+            }
+
             // Return the parameter
             return parameter;
         }
