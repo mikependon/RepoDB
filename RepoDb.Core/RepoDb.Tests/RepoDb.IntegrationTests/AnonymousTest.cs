@@ -49,10 +49,10 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Sync
 
         [TestMethod]
-        public void TestExecuteQueryAllForAnonymous() =>
-            TestExecuteQueryAllForAnonymousTrigger(CreateIdentityTableTypeDef());
+        public void TestExecuteQueryForAnonymous() =>
+            TestExecuteQueryForAnonymousTrigger(CreateIdentityTableTypeDef());
 
-        private void TestExecuteQueryAllForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+        private void TestExecuteQueryForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
             where TAnonymous : class
         {
             // Setup
@@ -73,13 +73,13 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #endregion
 
-        #region Sync
+        #region Async
 
         [TestMethod]
-        public void TestExecuteQueryAllAsyncForAnonymous() =>
-            TestExecuteQueryAllAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+        public void TestExecuteQueryAsyncForAnonymous() =>
+            TestExecuteQueryAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
 
-        private void TestExecuteQueryAllAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+        private void TestExecuteQueryAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
             where TAnonymous : class
         {
             // Setup
@@ -132,7 +132,7 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #endregion
 
-        #region Sync
+        #region Async
 
         [TestMethod]
         public void TestQueryAsyncForAnonymous() =>
@@ -191,7 +191,7 @@ namespace RepoDb.SqlServer.IntegrationTests
 
         #endregion
 
-        #region Sync
+        #region Async
 
         [TestMethod]
         public void TestQueryAllAsyncForAnonymous() =>
