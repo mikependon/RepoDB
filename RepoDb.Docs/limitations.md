@@ -162,6 +162,17 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
+Or, like below.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var id = connection.Insert<Person>(person, fields: Field.From("Id", "Name", "DateOfBirth"));
+}
+```
+
+In which the computed columns must/are eliminated from the `fields` argument. Please note that you can always extract the list of the fields of the entity model via `FieldCache.Get<T>` method.
+
 Or, create a dedicated model for GET operations that has a computed column in it and a dedicated model for PUSH operations that has no computed column in it.
 
 ```csharp
