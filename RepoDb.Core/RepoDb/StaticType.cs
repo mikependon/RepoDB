@@ -62,6 +62,11 @@ namespace RepoDb
         public static Type Converter => typeof(Converter);
 
         /// <summary>
+        /// Gets a type of the <see cref="System.Data.DataTable"/> .NET CLR type.
+        /// </summary>
+        public static Type DataTable => typeof(System.Data.DataTable);
+
+        /// <summary>
         /// Gets a type of the <see cref="System.DateTime"/> .NET CLR type.
         /// </summary>
         public static Type DateTime => typeof(DateTime);

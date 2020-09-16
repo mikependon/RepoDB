@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace RepoDb.Extensions
     {
         #region Privates
 
-        internal static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
+        private static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
 
         #endregion
 
@@ -50,18 +51,31 @@ namespace RepoDb.Extensions
             }
 
             // TVP
-            if (value is DataTable)
-            {
-                var property = parameter.GetType().GetProperty("TypeName");
-                if (property != null)
-                {
-                    var table = ((DataTable)value);
-                    property.SetValue(parameter, table.TableName);
-                }
-            }
+            EnsureTableValueParameter(parameter);
 
             // Return the parameter
             return parameter;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        private static void EnsureTableValueParameter(IDbDataParameter parameter)
+        {
+            if (parameter == null || parameter.Value is DataTable == false)
+            {
+                return;
+            }
+
+            var property = parameter.GetType().GetProperty("TypeName");
+            if (property == null)
+            {
+                return;
+            }
+
+            var table = ((DataTable)parameter.Value);
+            property.SetValue(parameter, table.TableName);
         }
 
         /// <summary>
@@ -79,12 +93,26 @@ namespace RepoDb.Extensions
             var dbSetting = command.Connection.GetDbSetting();
             foreach (var commandArrayParameter in commandArrayParameters)
             {
-                var values = commandArrayParameter.Values.AsArray();
-                for (var i = 0; i < values.Length; i++)
-                {
-                    var name = string.Concat(commandArrayParameter.ParameterName, i).AsParameter(dbSetting);
-                    command.Parameters.Add(command.CreateParameter(name, values[i], null));
-                }
+                CreateParametersFromArray(command, commandArrayParameter, dbSetting);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="commandArrayParameter"></param>
+        /// <param name="dbSetting"></param>
+        private static void CreateParametersFromArray(this IDbCommand command,
+            CommandArrayParameter commandArrayParameter,
+            IDbSetting dbSetting)
+        {
+            var values = commandArrayParameter.Values.AsArray();
+
+            for (var i = 0; i < values.Length; i++)
+            {
+                var name = string.Concat(commandArrayParameter.ParameterName, i).AsParameter(dbSetting);
+                command.Parameters.Add(command.CreateParameter(name, values[i], null));
             }
         }
 
@@ -120,124 +148,137 @@ namespace RepoDb.Extensions
             IEnumerable<string> propertiesToSkip,
             Type entityType)
         {
-            // Check for presence
+            // Check
             if (param == null)
             {
                 return;
             }
 
-            // Supporting the IDictionary<string, object>
+            // IDictionary<string, object>
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
                 CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip, entityType);
             }
 
-            // Supporting the QueryField
+            // QueryField
             else if (param is QueryField)
             {
                 CreateParameters(command, (QueryField)param, propertiesToSkip, entityType);
             }
 
-            // Supporting the IEnumerable<QueryField>
+            // IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
                 CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, entityType);
             }
 
-            // Supporting the QueryGroup
+            // QueryGroup
             else if (param is QueryGroup)
             {
                 CreateParameters(command, (QueryGroup)param, propertiesToSkip, entityType);
             }
 
-            // Otherwise, iterate the properties
+            // Other
             else
             {
-                var type = param.GetType();
-
-                // Check the validity of the type
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == StaticType.Dictionary)
-                {
-                    throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
-                }
-
-                // Variables for properties
-                var properties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
-
-                // Skip some properties
-                if (propertiesToSkip != null)
-                {
-                    properties = properties?
-                        .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
-                            StringComparer.OrdinalIgnoreCase) == false);
-                }
-
-                // Iterate the properties
-                foreach (var property in properties)
-                {
-                    // Get the property vaues
-                    var name = property.GetMappedName();
-                    var value = property.PropertyInfo.GetValue(param);
-                    var dbType = (DbType?)null;
-
-                    #region PropertyHandler
-
-                    // Check the property handler
-                    var propertyHandler = property.GetPropertyHandler();
-                    if (propertyHandler != null)
-                    {
-                        var setMethod = propertyHandler.GetType().GetMethod("Set");
-                        var returnType = setMethod.ReturnType;
-                        var classProperty = PropertyCache.Get(property.GetDeclaringType(), property.PropertyInfo);
-                        dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-                        value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
-                    }
-
-                    #endregion
-
-                    #region DbType
-
-                    else
-                    {
-                        // Check for the specialized first
-                        var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
-                        if (propertyType?.IsEnum == true)
-                        {
-                            dbType = DbType.String;
-                        }
-                        else if (propertyType == StaticType.ByteArray)
-                        {
-                            dbType = DbType.Binary;
-                        }
-                        else
-                        {
-                            // Get property db type
-                            dbType = property.GetDbType();
-
-                            // Ensure mapping based on the value type
-                            if (dbType == null && value != null)
-                            {
-                                dbType = TypeMapCache.Get(value.GetType().GetUnderlyingType());
-                            }
-                        }
-                    }
-
-                    #endregion
-
-                    // Add the new parameter
-                    command.Parameters.Add(command.CreateParameter(name, value, dbType));
-                }
+                CreateParametersInternal(command, param, propertiesToSkip);
             }
         }
 
         /// <summary>
-        /// Create the command parameters from the <see cref="IDictionary{TKey, TValue}"/> object.
+        /// 
         /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="entityType">The type of the data entity.</param>
-        internal static void CreateParameters(this IDbCommand command,
+        /// <param name="command"></param>
+        /// <param name="param"></param>
+        /// <param name="propertiesToSkip"></param>
+        private static void CreateParametersInternal(IDbCommand command,
+            object param,
+            IEnumerable<string> propertiesToSkip)
+        {
+            var type = param.GetType();
+
+            // Check the validity of the type
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == StaticType.Dictionary)
+            {
+                throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
+            }
+
+            // Variables for properties
+            var properties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
+
+            // Skip some properties
+            if (propertiesToSkip != null)
+            {
+                properties = properties?
+                    .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
+                        StringComparer.OrdinalIgnoreCase) == false);
+            }
+
+            // Iterate the properties
+            foreach (var property in properties)
+            {
+                // Get the property vaues
+                var name = property.GetMappedName();
+                var value = property.PropertyInfo.GetValue(param);
+                var dbType = (DbType?)null;
+
+                #region PropertyHandler
+
+                // Check the property handler
+                var propertyHandler = property.GetPropertyHandler();
+                if (propertyHandler != null)
+                {
+                    var setMethod = propertyHandler.GetType().GetMethod("Set");
+                    var returnType = setMethod.ReturnType;
+                    var classProperty = PropertyCache.Get(property.GetDeclaringType(), property.PropertyInfo);
+                    dbType = clientTypeToDbTypeResolver.Resolve(returnType);
+                    value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
+                }
+
+                #endregion
+
+                #region DbType
+
+                else
+                {
+                    // Check for the specialized first
+                    var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
+                    if (propertyType?.IsEnum == true)
+                    {
+                        dbType = DbType.String;
+                    }
+                    else if (propertyType == StaticType.ByteArray)
+                    {
+                        dbType = DbType.Binary;
+                    }
+                    else
+                    {
+                        // Get property db type
+                        dbType = property.GetDbType();
+
+                        // Ensure mapping based on the value type
+                        if (dbType == null && value != null)
+                        {
+                            dbType = TypeMapCache.Get(value.GetType().GetUnderlyingType());
+                        }
+                    }
+                }
+
+                #endregion
+
+                // Add the new parameter
+                command.Parameters.Add(command.CreateParameter(name, value, dbType));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="dictionary"></param>
+        /// <param name="propertiesToSkip"></param>
+        /// <param name="entityType"></param>
+        private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
             IEnumerable<string> propertiesToSkip,
             Type entityType)
@@ -319,25 +360,25 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Create the command parameters from the <see cref="QueryGroup"/> object.
+        /// 
         /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="queryGroup">The value of the <see cref="QueryGroup"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="entityType">The type of the data entity.</param>
-        internal static void CreateParameters(this IDbCommand command,
+        /// <param name="command"></param>
+        /// <param name="queryGroup"></param>
+        /// <param name="propertiesToSkip"></param>
+        /// <param name="entityType"></param>
+        internal static void CreateParameters(IDbCommand command,
             QueryGroup queryGroup,
             IEnumerable<string> propertiesToSkip,
             Type entityType) =>
             CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType);
 
         /// <summary>
-        /// Create the command parameters from the list of <see cref="QueryField"/> objects.
+        /// 
         /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="command"></param>
+        /// <param name="queryFields"></param>
+        /// <param name="propertiesToSkip"></param>
+        /// <param name="entityType"></param>
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
             IEnumerable<string> propertiesToSkip,
@@ -366,56 +407,13 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Creates a command parameter from the <see cref="QueryField"/> with <see cref="Operation.In"/>.
+        /// 
         /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        internal static void CreateParametersForInOperation(this IDbCommand command,
-            QueryField queryField)
-        {
-            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
-                        .OfType<object>()
-                        .AsList();
-            if (values.Any() == true)
-            {
-                for (var i = 0; i < values.Count; i++)
-                {
-                    var name = string.Concat(queryField.Parameter.Name, "_In_", i);
-                    command.Parameters.Add(CreateParameter(command, name, values[i], null));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates a command parameter from the <see cref="QueryField"/> with <see cref="Operation.In"/>.
-        /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        internal static void CreateParametersForBetweenOperation(this IDbCommand command,
-            QueryField queryField)
-        {
-            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
-                        .OfType<object>()
-                        .AsList();
-            if (values?.Count == 2)
-            {
-                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), values[0], null));
-                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), values[1], null));
-            }
-            else
-            {
-                throw new InvalidParameterException("The values for 'Between' and 'NotBetween' operations must be 2.");
-            }
-        }
-
-        /// <summary>
-        /// Creates a command parameter from the <see cref="QueryField"/> object.
-        /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="queryField">The value of <see cref="QueryField"/> object.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="entityType">The type of the data entity.</param>
-        internal static void CreateParameters(this IDbCommand command,
+        /// <param name="command"></param>
+        /// <param name="queryField"></param>
+        /// <param name="propertiesToSkip"></param>
+        /// <param name="entityType"></param>
+        private static void CreateParameters(this IDbCommand command,
             QueryField queryField,
             IEnumerable<string> propertiesToSkip,
             Type entityType)
@@ -474,6 +472,49 @@ namespace RepoDb.Extensions
 
             // Create the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="queryField"></param>
+        private static void CreateParametersForInOperation(this IDbCommand command,
+            QueryField queryField)
+        {
+            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
+                        .OfType<object>()
+                        .AsList();
+            if (values.Any() == true)
+            {
+                for (var i = 0; i < values.Count; i++)
+                {
+                    var name = string.Concat(queryField.Parameter.Name, "_In_", i);
+                    command.Parameters.Add(CreateParameter(command, name, values[i], null));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="queryField"></param>
+        private static void CreateParametersForBetweenOperation(this IDbCommand command,
+            QueryField queryField)
+        {
+            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
+                        .OfType<object>()
+                        .AsList();
+            if (values?.Count == 2)
+            {
+                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), values[0], null));
+                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), values[1], null));
+            }
+            else
+            {
+                throw new InvalidParameterException("The values for 'Between' and 'NotBetween' operations must be 2.");
+            }
         }
 
         #endregion

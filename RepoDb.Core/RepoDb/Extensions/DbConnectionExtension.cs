@@ -19,6 +19,19 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
+        #region SubClasses
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal class CommandArrayParametersText
+        {
+            public string CommandText { get; set; }
+            public IList<CommandArrayParameter> CommandArrayParameters { get; } = new List<CommandArrayParameter>();
+        }
+
+        #endregion
+
         #region Other Methods
 
         /// <summary>
@@ -430,65 +443,163 @@ namespace RepoDb
             // Identify
             if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
-                var result = ExecuteQueryInternal(connection: connection,
+                return ExecuteQueryInternalForDictionaryStringObject<TResult>(connection: connection,
                    commandText: commandText,
                    param: param,
                    commandType: commandType,
-                   cacheKey: null,
-                   cacheItemExpiration: null,
+                   cacheKey: cacheKey,
+                   cacheItemExpiration: cacheItemExpiration,
+                   commandTimeout: commandTimeout,
                    transaction: transaction,
-                   cache: null,
-                   tableName: null,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).OfTargetType<dynamic, TResult>();
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Return
-                return result;
+                   cache: cache,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
             else
             {
-                // Variables needed on this operation
-                var connectionString = connection.ConnectionString;
+                return ExecuteQueryInternalForType<TResult>(connection: connection,
+                   commandText: commandText,
+                   param: param,
+                   commandType: commandType,
+                   cacheKey: cacheKey,
+                   cacheItemExpiration: cacheItemExpiration,
+                   commandTimeout: commandTimeout,
+                   transaction: transaction,
+                   cache: cache,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            }
+        }
 
-                // Trigger the cache to avoid reusing the connection
-                if (connection.State == ConnectionState.Open || transaction != null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
+        private static IEnumerable<TResult> ExecuteQueryInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool skipCommandArrayParametersCheck = true)
+        {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                if (item != null)
                 {
-                    connectionString = null;
-                    DbFieldCache.Get(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
+                    return item.Value;
                 }
+            }
 
-                // Execute the actual method
-                using (var command = CreateDbCommandForExecution(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    entityType: typeOfResult,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+            // Call
+            var result = ExecuteQueryInternal(connection: connection,
+               commandText: commandText,
+               param: param,
+               commandType: commandType,
+               cacheKey: null,
+               cacheItemExpiration: null,
+               commandTimeout: commandTimeout,
+               transaction: transaction,
+               cache: null,
+               tableName: null,
+               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).OfTargetType<dynamic, TResult>();
+
+            // Set Cache
+            if (cacheKey != null)
+            {
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+            }
+
+            // Return
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
+        private static IEnumerable<TResult> ExecuteQueryInternalForType<TResult>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool skipCommandArrayParametersCheck = true)
+        {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                if (item != null)
                 {
-                    using (var reader = command.ExecuteReader())
+                    return item.Value;
+                }
+            }
+
+            // Variables needed on this operation
+            var connectionString = connection.ConnectionString;
+
+            // Trigger the cache to avoid reusing the connection
+            if (connection.State == ConnectionState.Open || transaction != null)
+            {
+                connectionString = null;
+                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
+            }
+
+            // Execute the actual method
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: typeof(TResult),
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = (IEnumerable<TResult>)DataReader.ToEnumerableInternal<TResult>(reader,
+                        connection,
+                        connectionString,
+                        transaction,
+                        false).AsList();
+
+                    // Set Cache
+                    if (cacheKey != null)
                     {
-                        var result = (IEnumerable<TResult>)DataReader.ToEnumerableInternal<TResult>(reader,
-                            connection,
-                            connectionString,
-                            transaction,
-                            false).AsList();
-
-                        // Set Cache
-                        if (cacheKey != null)
-                        {
-                            cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-                        }
-
-                        // Return
-                        return result;
+                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
+
+                    // Return
+                    return result;
                 }
             }
         }
@@ -566,7 +677,75 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        internal static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
+        internal static Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool skipCommandArrayParametersCheck = true)
+        {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                if (item != null)
+                {
+                    return Task.FromResult(item.Value);
+                }
+            }
+
+            // Variables
+            var typeOfResult = typeof(TResult);
+
+            // Identify
+            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
+            {
+                return ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(connection: connection,
+                   commandText: commandText,
+                   param: param,
+                   commandType: commandType,
+                   cacheKey: cacheKey,
+                   cacheItemExpiration: cacheItemExpiration,
+                   commandTimeout: commandTimeout,
+                   transaction: transaction,
+                   cache: cache,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            }
+            else
+            {
+                return ExecuteQueryAsyncInternalForType<TResult>(connection: connection,
+                   commandText: commandText,
+                   param: param,
+                   commandType: commandType,
+                   cacheKey: cacheKey,
+                   cacheItemExpiration: cacheItemExpiration,
+                   commandTimeout: commandTimeout,
+                   transaction: transaction,
+                   cache: cache,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -587,71 +766,101 @@ namespace RepoDb
                 }
             }
 
-            // Variables
-            var typeOfResult = typeof(TResult);
+            // Call
+            var result = (await ExecuteQueryAsyncInternal(connection: connection,
+               commandText: commandText,
+               param: param,
+               commandType: commandType,
+               cacheKey: null,
+               cacheItemExpiration: null,
+               commandTimeout: commandTimeout,
+               transaction: transaction,
+               cache: null,
+               tableName: null,
+               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).OfTargetType<dynamic, TResult>();
 
-            // Identify
-            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
+            // Set Cache
+            if (cacheKey != null)
             {
-                var result = (await ExecuteQueryAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: null,
-                    cacheItemExpiration: null,
-                    transaction: transaction,
-                    cache: null,
-                    tableName: null,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).OfTargetType<dynamic, TResult>();
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Return
-                return result;
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
-            else
+
+            // Return
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForType<TResult>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool skipCommandArrayParametersCheck = true)
+        {
+            // Get Cache
+            if (cacheKey != null)
             {
-                // Variables needed on this operation
-                var connectionString = connection.ConnectionString;
-
-                // Trigger the cache to avoid reusing the connection
-                if (connection.State == ConnectionState.Open || transaction != null)
+                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                if (item != null)
                 {
-                    connectionString = null;
-                    await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
+                    return item.Value;
                 }
+            }
 
-                // Execute the actual method
-                using (var command = CreateDbCommandForExecution(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    entityType: typeOfResult,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+            // Variables needed on this operation
+            var connectionString = connection.ConnectionString;
+
+            // Trigger the cache to avoid reusing the connection
+            if (connection.State == ConnectionState.Open || transaction != null)
+            {
+                connectionString = null;
+                await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
+            }
+
+            // Execute the actual method
+            using (var command = CreateDbCommandForExecution(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: typeof(TResult),
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    var result = (IEnumerable<TResult>)(await DataReader.ToEnumerableInternalAsync<TResult>(reader,
+                        connection,
+                        connectionString,
+                        transaction,
+                        false)).AsList();
+
+                    // Set Cache
+                    if (cacheKey != null)
                     {
-                        var result = (IEnumerable<TResult>)(await DataReader.ToEnumerableInternalAsync<TResult>(reader,
-                            connection,
-                            connectionString,
-                            transaction,
-                            false)).AsList();
-
-                        // Set Cache
-                        if (cacheKey != null)
-                        {
-                            cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-                        }
-
-                        // Return
-                        return result;
+                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
+
+                    // Return
+                    return result;
                 }
             }
         }
@@ -2067,28 +2276,35 @@ namespace RepoDb
             Type entityType = null,
             bool skipCommandArrayParametersCheck = true)
         {
-            // Check Transaction
+            // Validate
             ValidateTransactionConnectionObject(connection, transaction);
 
-            // Process the array parameters
-            var commandArrayParameters = (IEnumerable<CommandArrayParameter>)null;
-
-            // Check the array parameters
-            if (skipCommandArrayParametersCheck == false)
+            // Parameters
+            var commandArrayParametersText = (CommandArrayParametersText)null;
+            if (param != null && skipCommandArrayParametersCheck == false)
             {
-                commandArrayParameters = AsCommandArrayParameters(param, DbSettingMapper.Get(connection.GetType()), ref commandText);
+                commandArrayParametersText = GetCommandArrayParametersText(commandText,
+                   param,
+                   DbSettingMapper.Get(connection.GetType()));
             }
 
-            // Command object initialization
-            var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
+            // Create command
+            var command = connection
+                .EnsureOpen()
+                .CreateCommand(commandArrayParametersText?.CommandText ?? commandText, commandType, commandTimeout, transaction);
 
             // Add the parameters
-            command.CreateParameters(param, commandArrayParameters?.Select(cap => cap.ParameterName), entityType);
-
-            // Identify target statement, for now, only support array with single parameters
-            if (commandArrayParameters != null)
+            if (commandArrayParametersText != null)
             {
-                command.CreateParametersFromArray(commandArrayParameters);
+                command.CreateParametersFromArray(commandArrayParametersText.CommandArrayParameters);
+            }
+
+            // Add the parameters
+            if (param != null)
+            {
+                command.CreateParameters(param,
+                    commandArrayParametersText?.CommandArrayParameters?.Select(cap => cap.ParameterName),
+                    entityType);
             }
 
             // Return the command
@@ -2128,303 +2344,392 @@ namespace RepoDb
             return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
         }
 
-        #region AsCommandArrayParameters
+        #region GetCommandArrayParameters
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <param name="dbSetting"></param>
-        /// <param name="commandText"></param>
         /// <returns></returns>
-        internal static IList<CommandArrayParameter> AsCommandArrayParameters(object param,
-            IDbSetting dbSetting,
-            ref string commandText)
+        internal static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+            object param,
+            IDbSetting dbSetting)
         {
-            // TODO: Refactor this
-
             if (param == null)
             {
                 return null;
             }
 
-            // Declare return values
-            var commandArrayParameters = (IList<CommandArrayParameter>)null;
-
-            // Return if any of this
+            // ExpandoObject
             if (param is ExpandoObject || param is System.Collections.IDictionary)
             {
                 if (param is IDictionary<string, object>)
                 {
-                    return AsCommandArrayParameters((IDictionary<string, object>)param, dbSetting, ref commandText);
+                    return GetCommandArrayParametersText(commandText, (IDictionary<string, object>)param, dbSetting);
                 }
             }
+
+            // QueryField
             else if (param is QueryField)
             {
-                return AsCommandArrayParameters((QueryField)param, dbSetting, ref commandText);
+                return GetCommandArrayParametersText(commandText, (QueryField)param, dbSetting);
             }
+
+            // QueryFields
             else if (param is IEnumerable<QueryField>)
             {
-                return AsCommandArrayParameters((IEnumerable<QueryField>)param, dbSetting, ref commandText);
+                return GetCommandArrayParametersText(commandText, (IEnumerable<QueryField>)param, dbSetting);
             }
+
+            // QueryGroup
             else if (param is QueryGroup)
             {
-                return AsCommandArrayParameters((QueryGroup)param, dbSetting, ref commandText);
+                return GetCommandArrayParametersText(commandText, (QueryGroup)param, dbSetting);
             }
+
+            // Others
             else
             {
-                // Iterate the properties
-                foreach (var property in param.GetType().GetProperties())
-                {
-                    if (property.PropertyType.IsArray == false)
-                    {
-                        // String is an enumerable
-                        if (property.PropertyType == StaticType.String)
-                        {
-                            continue;
-                        }
-
-                        // Get the value
-                        var value = property.GetValue(param);
-
-                        // Skip if it is not an enumerable
-                        if ((value is System.Collections.IEnumerable) == false)
-                        {
-                            continue;
-                        }
-                    }
-
-                    // Initialize the array if it not yet initialized
-                    if (commandArrayParameters == null)
-                    {
-                        commandArrayParameters = new List<CommandArrayParameter>();
-                    }
-
-                    // Replace the target parameters
-                    var items = ((System.Collections.IEnumerable)property.GetValue(param))
-                        .OfType<object>();
-                    var parameter = AsCommandArrayParameter(property.Name, items,
-                        dbSetting,
-                        ref commandText);
-                    commandArrayParameters.Add(parameter);
-                }
+                return GetCommandArrayParametersTextInternal(commandText, param, dbSetting);
             }
 
-            // Return the values
-            return commandArrayParameters;
+            // Return
+            return null;
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static CommandArrayParametersText GetCommandArrayParametersTextInternal(string commandText,
+            object param,
+            IDbSetting dbSetting)
+        {
+            if (param == null)
+            {
+                return null;
+            }
+
+            // Variables
+            var commandArrayParametersText = (CommandArrayParametersText)null;
+
+            // CommandArrayParameters
+            foreach (var property in param.GetType().GetProperties())
+            {
+                if (property.PropertyType == StaticType.String ||
+                    StaticType.IEnumerable.IsAssignableFrom(property.PropertyType) == false)
+                {
+                    continue;
+                }
+
+                // Get
+                var commandArrayParameter = GetCommandArrayParameter(
+                    property.Name,
+                    property.GetValue(param));
+
+                // Skip
+                if (commandArrayParameter == null)
+                {
+                    continue;
+                }
+
+                // Create
+                if (commandArrayParametersText == null)
+                {
+                    commandArrayParametersText = new CommandArrayParametersText();
+                }
+
+                // CommandText
+                commandText = GetRawSqlText(commandText,
+                    property.Name,
+                    commandArrayParameter.Values,
+                    dbSetting);
+
+                // Add
+                commandArrayParametersText.CommandArrayParameters.Add(commandArrayParameter);
+            }
+
+            // CommandText
+            if (commandArrayParametersText != null)
+            {
+                commandArrayParametersText.CommandText = commandText;
+            }
+
+            // Return
+            return commandArrayParametersText;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandText"></param>
         /// <param name="dictionary"></param>
         /// <param name="dbSetting"></param>
-        /// <param name="commandText"></param>
         /// <returns></returns>
-        internal static IList<CommandArrayParameter> AsCommandArrayParameters(IDictionary<string, object> dictionary,
-            IDbSetting dbSetting,
-            ref string commandText)
+        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+            IDictionary<string, object> dictionary,
+            IDbSetting dbSetting)
         {
             if (dictionary == null)
             {
                 return null;
             }
 
-            // Declare return values
-            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+            // Variables
+            var commandArrayParametersText = (CommandArrayParametersText)null;
 
-            // Iterate the properties
+            // CommandArrayParameters
             foreach (var kvp in dictionary)
             {
-                // Get type of the value
-                var type = kvp.Value?.GetType();
+                // Get
+                var commandArrayParameter = GetCommandArrayParameter(
+                    kvp.Key,
+                    kvp.Value);
 
-                // String is an enumerable
-                if (type == StaticType.String)
+                // Skip
+                if (commandArrayParameter == null)
                 {
                     continue;
                 }
 
-                // Skip if it is not an enumerable
-                if ((kvp.Value is System.Collections.IEnumerable) == false)
+                // Create
+                if (commandArrayParametersText == null)
                 {
-                    continue;
+                    commandArrayParametersText = new CommandArrayParametersText();
                 }
 
-                // Initialize the array if it not yet initialized
-                if (commandArrayParameters == null)
-                {
-                    commandArrayParameters = new List<CommandArrayParameter>();
-                }
+                // CommandText
+                commandText = GetRawSqlText(commandText,
+                    kvp.Key,
+                    commandArrayParameter.Values,
+                    dbSetting);
 
-                // Replace the target parameters
-                var items = ((System.Collections.IEnumerable)kvp.Value)
-                    .OfType<object>();
-                var parameter = AsCommandArrayParameter(kvp.Key,
-                    items,
-                    dbSetting,
-                    ref commandText);
-                commandArrayParameters.Add(parameter);
+                // Add
+                commandArrayParametersText.CommandArrayParameters.Add(commandArrayParameter);
             }
 
-            // Return the values
-            return commandArrayParameters;
+            // CommandText
+            if (commandArrayParametersText != null)
+            {
+                commandArrayParametersText.CommandText = commandText;
+            }
+
+            // Return
+            return commandArrayParametersText;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="queryGroup"></param>
-        /// <param name="dbSetting"></param>
         /// <param name="commandText"></param>
-        /// <returns></returns>
-        internal static IList<CommandArrayParameter> AsCommandArrayParameters(QueryGroup queryGroup,
-            IDbSetting dbSetting,
-            ref string commandText) =>
-            AsCommandArrayParameters(queryGroup.GetFields(true), dbSetting, ref commandText);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="queryFields"></param>
-        /// <param name="dbSetting"></param>
-        /// <param name="commandText"></param>
-        /// <returns></returns>
-        internal static IList<CommandArrayParameter> AsCommandArrayParameters(IEnumerable<QueryField> queryFields,
-            IDbSetting dbSetting,
-            ref string commandText)
-        {
-            // TODO: Refactor this
-
-            if (queryFields == null)
-            {
-                return null;
-            }
-
-            // Declare return values
-            var commandArrayParameters = (IList<CommandArrayParameter>)null;
-
-            // Iterate the properties
-            foreach (var field in queryFields)
-            {
-                // Get type of the value
-                var type = field.Parameter.Value?.GetType();
-
-                // String is an enumerable
-                if (type == StaticType.String)
-                {
-                    continue;
-                }
-
-                // Skip if it is not an enumerable
-                if ((field.Parameter.Value is System.Collections.IEnumerable) == false)
-                {
-                    continue;
-                }
-
-                // Check the IN operation parameters
-                if (field.Operation == Operation.In || field.Operation == Operation.NotIn)
-                {
-                    if (commandText.IndexOf(string.Concat(field.Parameter.Name, "_In_")) > 0)
-                    {
-                        continue;
-                    }
-                }
-
-                // Check the BETWEEN operation parameters
-                else if (field.Operation == Operation.Between || field.Operation == Operation.NotBetween)
-                {
-                    if (commandText.IndexOf(string.Concat(field.Parameter.Name, "_Left")) > 0)
-                    {
-                        continue;
-                    }
-                }
-
-                // Initialize the array if it not yet initialized
-                if (commandArrayParameters == null)
-                {
-                    commandArrayParameters = new List<CommandArrayParameter>();
-                }
-
-                // Replace the target parameters
-                var items = ((System.Collections.IEnumerable)field.Parameter.Value)
-                    .OfType<object>();
-                var parameter = AsCommandArrayParameter(field.Field.Name,
-                    items,
-                    dbSetting,
-                    ref commandText);
-                commandArrayParameters.Add(parameter);
-            }
-
-            // Return the values
-            return commandArrayParameters;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="queryField"></param>
         /// <param name="dbSetting"></param>
-        /// <param name="commandText"></param>
         /// <returns></returns>
-        internal static IList<CommandArrayParameter> AsCommandArrayParameters(QueryField queryField,
-            IDbSetting dbSetting,
-            ref string commandText)
+        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+            QueryField queryField,
+            IDbSetting dbSetting)
         {
             if (queryField == null)
             {
                 return null;
             }
 
-            // Get type of the value
-            var type = queryField.Parameter.Value?.GetType();
-
-            // String is an enumerable
-            if (type == StaticType.String)
+            // Skip
+            if (IsPreConstructed(commandText, queryField))
             {
-                return default;
+                return null;
             }
 
-            // Skip if it is not an enumerable
-            if ((queryField.Parameter.Value is System.Collections.IEnumerable) == false)
+            // Get
+            var commandArrayParameter = GetCommandArrayParameter(
+                queryField.Field.Name,
+                queryField.Parameter.Value);
+
+            // Check
+            if (commandArrayParameter == null)
             {
-                return default;
+                return null;
             }
 
-            // Initialize the array if it not yet initialized
-            var commandArrayParameters = new List<CommandArrayParameter>();
+            // Create
+            var commandArrayParametersText = new CommandArrayParametersText
+            {
+                CommandText = GetRawSqlText(commandText, queryField.Field.Name,
+                    commandArrayParameter.Values, dbSetting)
+            };
 
-            // Replace the target parameters
-            var items = ((System.Collections.IEnumerable)queryField.Parameter.Value)
-                .OfType<object>();
-            var parameter = AsCommandArrayParameter(queryField.Field.Name,
-                items,
-                dbSetting,
-                ref commandText);
-            commandArrayParameters.Add(parameter);
+            // CommandArrayParameters
+            commandArrayParametersText.CommandArrayParameters.Add(commandArrayParameter);
 
-            // Return the values
-            return commandArrayParameters;
+            // Return
+            return commandArrayParametersText;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="commandText"></param>
+        /// <param name="queryFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+            IEnumerable<QueryField> queryFields,
+            IDbSetting dbSetting)
+        {
+            if (queryFields == null)
+            {
+                return null;
+            }
+
+            // Variables
+            var commandArrayParametersText = (CommandArrayParametersText)null;
+
+            // CommandArrayParameters
+            foreach (var queryField in queryFields)
+            {
+                // Skip
+                if (IsPreConstructed(commandText, queryField))
+                {
+                    continue;
+                }
+
+                // Get
+                var commandArrayParameter = GetCommandArrayParameter(
+                    queryField.Field.Name,
+                    queryField.Parameter.Value);
+
+                // Skip
+                if (commandArrayParameter == null)
+                {
+                    continue;
+                }
+
+                // Create
+                if (commandArrayParametersText == null)
+                {
+                    commandArrayParametersText = new CommandArrayParametersText();
+                }
+
+                // CommandText
+                commandText = GetRawSqlText(commandText,
+                    queryField.Field.Name,
+                    commandArrayParameter.Values,
+                    dbSetting);
+
+                // Add
+                commandArrayParametersText.CommandArrayParameters.Add(commandArrayParameter);
+            }
+
+            // CommandText
+            if (commandArrayParametersText != null)
+            {
+                commandArrayParametersText.CommandText = commandText;
+            }
+
+            // Return
+            return commandArrayParametersText;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandText"></param>
+        /// <param name="queryGroup"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static CommandArrayParametersText GetCommandArrayParametersText(string commandText,
+            QueryGroup queryGroup,
+            IDbSetting dbSetting) =>
+            GetCommandArrayParametersText(commandText, queryGroup.GetFields(true), dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static CommandArrayParameter GetCommandArrayParameter(string parameterName,
+            object value)
+        {
+            if (value == null || value is string || value is System.Collections.IEnumerable == false)
+            {
+                return null;
+            }
+
+            // Values
+            var values = (System.Collections.IEnumerable)value;
+
+            // Return
+            return new CommandArrayParameter(parameterName, values.OfType<object>());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandText"></param>
+        /// <param name="parameterName"></param>
         /// <param name="values"></param>
         /// <param name="dbSetting"></param>
-        /// <param name="commandText"></param>
         /// <returns></returns>
-        internal static CommandArrayParameter AsCommandArrayParameter(string name,
-            IEnumerable<object> values,
-            IDbSetting dbSetting,
-            ref string commandText)
+        internal static string GetRawSqlText(string commandText,
+            string parameterName,
+            System.Collections.IEnumerable values,
+            IDbSetting dbSetting)
         {
-            // Convert to raw sql
-            commandText = ToRawSqlWithArrayParams(commandText, name, values, dbSetting);
+            if (commandText.IndexOf(parameterName) < 0)
+            {
+                return commandText;
+            }
 
-            // Add to the list
-            return new CommandArrayParameter(name, values);
+            // Items
+            var items = values is IEnumerable<object> ? (IEnumerable<object>)values : values.OfType<object>();
+            if (items.Any() != true)
+            {
+                return commandText;
+            }
+
+            // Get the variables needed
+            var parameters = items.Select((value, index) =>
+                string.Concat(parameterName, index).AsParameter(dbSetting));
+
+            // Replace the target parameter
+            return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandText"></param>
+        /// <param name="queryField"></param>
+        /// <returns></returns>
+        private static bool IsPreConstructed(string commandText,
+            QueryField queryField)
+        {
+            // Check the IN operation parameters
+            if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
+            {
+                if (commandText.IndexOf(string.Concat(queryField.Parameter.Name, "_In_")) > 0)
+                {
+                    return true;
+                }
+            }
+
+            // Check the BETWEEN operation parameters
+            else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
+            {
+                if (commandText.IndexOf(string.Concat(queryField.Parameter.Name, "_Left")) > 0)
+                {
+                    return true;
+                }
+            }
+
+            // Return
+            return false;
         }
 
         #endregion
