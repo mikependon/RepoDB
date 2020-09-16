@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> objects.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of the target result type.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         public static IEnumerable<TResult> ToEnumerable<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null) =>
@@ -37,6 +39,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A list of the target result type.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         internal static IEnumerable<TResult> ToEnumerableInternal<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             string connectionString = null,
@@ -69,6 +72,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of the target result type.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         public static Task<IEnumerable<TResult>> ToEnumerableAsync<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null) =>
@@ -84,6 +88,7 @@ namespace RepoDb.Reflection
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A list of the target result type.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         internal static async Task<IEnumerable<TResult>> ToEnumerableInternalAsync<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             string connectionString = null,
@@ -117,6 +122,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An array of dynamic objects.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null)
@@ -132,6 +138,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An array of dynamic objects.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         internal static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
             string tableName,
             IDbConnection connection,
@@ -161,6 +168,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An array of dynamic objects.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         public static Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null)
@@ -176,6 +184,7 @@ namespace RepoDb.Reflection
         /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>An array of dynamic objects.</returns>
+        [Obsolete("This method is up for change and will soon to be refactored.")]
         internal static async Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
             string tableName,
             IDbConnection connection,
