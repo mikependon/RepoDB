@@ -117,7 +117,7 @@ namespace RepoDb
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> Get(Type entityType)
         {
-            if (entityType.IsClassType() == false)
+            if (entityType?.IsClassType() != true)
             {
                 return null;
             }
