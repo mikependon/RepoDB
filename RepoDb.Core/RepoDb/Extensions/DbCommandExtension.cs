@@ -22,6 +22,19 @@ namespace RepoDb.Extensions
 
         #endregion
 
+        #region SubClasses
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class PropertyHandlerSetReturnDefinition
+        {
+            public object Value { get; set; }
+            public Type ReturnType { get; set; }
+        }
+
+        #endregion
+
         #region CreateParameters
 
         /// <summary>
@@ -50,7 +63,7 @@ namespace RepoDb.Extensions
                 parameter.DbType = dbType.Value;
             }
 
-            // TVP
+            // Table-Valued Parameter
             EnsureTableValueParameter(parameter);
 
             // Return the parameter
@@ -197,76 +210,52 @@ namespace RepoDb.Extensions
         {
             var type = param.GetType();
 
-            // Check the validity of the type
+            // Check
             if (type.IsGenericType && type.GetGenericTypeDefinition() == StaticType.Dictionary)
             {
                 throw new InvalidParameterException("The supported type of dictionary object must be of type IDictionary<string, object>.");
             }
 
-            // Variables for properties
-            var properties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
+            // Variables
+            var classProperties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
 
-            // Skip some properties
+            // Skip
             if (propertiesToSkip != null)
             {
-                properties = properties?
+                classProperties = classProperties?
                     .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
                         StringComparer.OrdinalIgnoreCase) == false);
             }
 
-            // Iterate the properties
-            foreach (var property in properties)
+            // Iterate
+            foreach (var classProperty in classProperties)
             {
-                // Get the property vaues
-                var name = property.GetMappedName();
-                var value = property.PropertyInfo.GetValue(param);
+                var name = classProperty.GetMappedName();
+                var value = classProperty.PropertyInfo.GetValue(param);
+                var returnType = (Type)null;
                 var dbType = (DbType?)null;
 
-                #region PropertyHandler
-
-                // Check the property handler
-                var propertyHandler = property.GetPropertyHandler();
-                if (propertyHandler != null)
+                // Propertyhandler
+                var definition = InvokePropertyHandlerSetMethod(classProperty.GetPropertyHandler(), value, classProperty);
+                if (definition != null)
                 {
-                    var setMethod = propertyHandler.GetType().GetMethod("Set");
-                    var returnType = setMethod.ReturnType;
-                    var classProperty = PropertyCache.Get(property.GetDeclaringType(), property.PropertyInfo);
-                    dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-                    value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
+                    returnType = definition.ReturnType;
+                    value = definition.Value;
                 }
 
-                #endregion
-
-                #region DbType
-
+                // DbType
+                if (returnType != null)
+                {
+                    dbType = clientTypeToDbTypeResolver.Resolve(returnType);
+                }
                 else
                 {
-                    // Check for the specialized first
-                    var propertyType = property.PropertyInfo.PropertyType.GetUnderlyingType();
-                    if (propertyType?.IsEnum == true)
-                    {
-                        dbType = DbType.String;
-                    }
-                    else if (propertyType == StaticType.ByteArray)
-                    {
-                        dbType = DbType.Binary;
-                    }
-                    else
-                    {
-                        // Get property db type
-                        dbType = property.GetDbType();
-
-                        // Ensure mapping based on the value type
-                        if (dbType == null && value != null)
-                        {
-                            dbType = TypeMapCache.Get(value.GetType().GetUnderlyingType());
-                        }
-                    }
+                    dbType = GetSpecializedDbType(classProperty.PropertyInfo.PropertyType.GetUnderlyingType()) ??
+                        classProperty.GetDbType() ??
+                        value?.GetType()?.GetDbType();
                 }
 
-                #endregion
-
-                // Add the new parameter
+                // Add the parameter
                 command.Parameters.Add(command.CreateParameter(name, value, dbType));
             }
         }
@@ -283,75 +272,49 @@ namespace RepoDb.Extensions
             IEnumerable<string> propertiesToSkip,
             Type entityType)
         {
-            // Variables needed
-            var kvps = dictionary.Where(kvp => propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
+            var kvps = dictionary.Where(kvp =>
+                propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
 
             // Iterate the key value pairs
             foreach (var kvp in kvps)
             {
                 var dbType = (DbType?)null;
                 var value = kvp.Value;
-                var valueType = (Type)null;
-                var declaringType = entityType;
                 var classProperty = (ClassProperty)null;
+                var valueType = (Type)null;
+                var returnType = (Type)null;
 
-                // Cast the proper object and identify the properties
+                // CommandParameter
                 if (kvp.Value is CommandParameter)
                 {
                     var commandParameter = (CommandParameter)kvp.Value;
-
-                    // Get the property and value
                     classProperty = PropertyCache.Get(commandParameter.MappedToType, kvp.Key);
-                    declaringType = commandParameter.MappedToType ?? classProperty?.DeclaringType;
                     value = commandParameter.Value;
-
-                    // Set the value type
                     valueType = value?.GetType()?.GetUnderlyingType();
                 }
                 else
                 {
-                    // In this area, it could be a 'dynamic' object
                     valueType = kvp.Value?.GetType()?.GetUnderlyingType();
                 }
 
-                // Get the property-level mapping
-                if (classProperty != null)
+                // Propertyhandler
+                var propertyHandler = classProperty?.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(valueType);
+                var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
+                if (definition != null)
                 {
-                    #region PropertyHandler
+                    returnType = definition.ReturnType;
+                    value = definition.Value;
+                }
 
-                    // Check the property handler
-                    var propertyHandler = classProperty.GetPropertyHandler();
-                    if (propertyHandler != null)
-                    {
-                        var setMethod = propertyHandler.GetType().GetMethod("Set");
-                        var returnType = setMethod.ReturnType;
-                        dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-                        value = setMethod.Invoke(propertyHandler, new[] { value, classProperty });
-                    }
-
-                    #endregion
-
-                    else
-                    {
-                        #region DbType
-
-                        dbType = classProperty.GetDbType();
-
-                        // Check for the specialized types
-                        if (dbType == null)
-                        {
-                            if (valueType?.IsEnum == true)
-                            {
-                                dbType = DbType.String;
-                            }
-                            else if (valueType == StaticType.ByteArray)
-                            {
-                                dbType = DbType.Binary;
-                            }
-                        }
-
-                        #endregion
-                    }
+                // DbType
+                if (returnType != null)
+                {
+                    dbType = clientTypeToDbTypeResolver.Resolve(returnType);
+                }
+                else
+                {
+                    dbType = GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
+                        classProperty?.GetDbType();
                 }
 
                 // Add the parameter
@@ -418,59 +381,41 @@ namespace RepoDb.Extensions
             IEnumerable<string> propertiesToSkip,
             Type entityType)
         {
-            // Exclude those to be skipped
+            // Skip
             if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
             {
                 return;
             }
 
-            // Get the values
+            // Variables
             var value = queryField.Parameter.Value;
             var valueType = value?.GetType()?.GetUnderlyingType();
+            var returnType = (Type)null;
             var dbType = (DbType?)null;
 
-            #region PropertyHandler
-
-            // Check the property handler
-            var typeHandler = PropertyHandlerCache.Get<object>(valueType);
-            if (typeHandler != null)
+            // PropertyHandler
+            var classProperty = PropertyCache.Get(entityType, queryField.Field);
+            var propertyHandler = classProperty?.GetPropertyHandler<object>() ?? PropertyHandlerCache.Get<object>(valueType);
+            var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
+            if (definition != null)
             {
-                var classProperty = (ClassProperty)null;
-                var setMethod = typeHandler.GetType().GetMethod("Set");
-                var returnType = setMethod.ReturnType;
-                if (entityType != null)
-                {
-                    classProperty = PropertyCache.Get(entityType, queryField.Field);
-                }
-                dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-                value = setMethod.Invoke(typeHandler, new[] { value, classProperty });
+                returnType = definition.ReturnType;
+                value = definition.Value;
             }
 
-            #endregion
-
-            #region DbType
-
+            // DbType
+            if (returnType != null)
+            {
+                dbType = clientTypeToDbTypeResolver.Resolve(returnType);
+            }
             else
             {
-                dbType = TypeMapCache.Get(valueType);
-
-                // Check for the specialized types
-                if (dbType == null)
-                {
-                    if (valueType?.IsEnum == true)
-                    {
-                        dbType = DbType.String;
-                    }
-                    else if (valueType == StaticType.ByteArray)
-                    {
-                        dbType = DbType.Binary;
-                    }
-                }
+                dbType = GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
+                    classProperty?.GetDbType() ??
+                    value?.GetType()?.GetDbType();
             }
 
-            #endregion
-
-            // Create the parameter
+            // Add the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
         }
 
@@ -515,6 +460,55 @@ namespace RepoDb.Extensions
             {
                 throw new InvalidParameterException("The values for 'Between' and 'NotBetween' operations must be 2.");
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyHandler"></param>
+        /// <param name="value"></param>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        private static PropertyHandlerSetReturnDefinition InvokePropertyHandlerSetMethod(object propertyHandler,
+            object value,
+            ClassProperty classProperty)
+        {
+            if (propertyHandler == null)
+            {
+                return null;
+            }
+
+            var setMethod = propertyHandler.GetType().GetMethod("Set");
+            return new PropertyHandlerSetReturnDefinition
+            {
+                ReturnType = setMethod.ReturnType,
+                Value = setMethod.Invoke(propertyHandler, new[] { value, classProperty })
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static DbType? GetSpecializedDbType(Type type)
+        {
+            if (type == null)
+            {
+                return null;
+            }
+
+            if (type.IsEnum == true)
+            {
+                // TODO: Why String?
+                return DbType.String;
+            }
+            else if (type == StaticType.ByteArray)
+            {
+                return DbType.Binary;
+            }
+
+            return null;
         }
 
         #endregion

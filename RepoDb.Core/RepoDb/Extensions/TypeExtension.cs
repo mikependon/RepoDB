@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 
@@ -10,6 +11,14 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class TypeExtension
     {
+        /// <summary>
+        /// Gets the corresponding <see cref="DbType"/> object.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <returns>The instance of the <see cref="DbType"/> object.</returns>
+        public static DbType? GetDbType(this Type type) =>
+            type != null ? TypeMapCache.Get(type.GetUnderlyingType()) : null;
+
         /// <summary>
         /// Returns the instance of <see cref="ConstructorInfo"/> with the most argument.
         /// </summary>
