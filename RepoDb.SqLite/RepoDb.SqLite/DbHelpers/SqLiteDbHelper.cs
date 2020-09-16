@@ -95,7 +95,7 @@ namespace RepoDb.DbHelpers
             {
                 foreach (var field in fields)
                 {
-                    if (field.ToUpper().Contains("AUTOINCREMENT"))
+                    if (field.ToUpper().Contains("AUTOINCREMENT") || field.ToUpper().Contains("INTEGER PRIMARY KEY"))
                     {
                         return field.Substring(0, field.IndexOf(" "));
                     }

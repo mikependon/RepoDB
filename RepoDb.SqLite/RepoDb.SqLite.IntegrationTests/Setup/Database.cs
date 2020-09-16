@@ -196,7 +196,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [SdsNonIdentityCompleteTable] 
                     (
-                        Id INTEGER PRIMARY KEY
+                        Id BIGINT PRIMARY KEY
                         , ColumnBigInt BIGINT
                         , ColumnBlob BLOB
                         , ColumnBoolean BOOLEAN
@@ -342,7 +342,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
             {
                 connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS [MdsNonIdentityCompleteTable] 
                     (
-                        Id INTEGER PRIMARY KEY
+                        Id BIGINT PRIMARY KEY
                         , ColumnBigInt BIGINT
                         , ColumnBlob BLOB
                         , ColumnBoolean BOOLEAN
