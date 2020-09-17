@@ -924,7 +924,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public Guid ColumnNVarChar { get; set; }
+            public Guid? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -994,7 +994,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public DateTime ColumnNVarChar { get; set; }
+            public DateTime? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -1029,7 +1029,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnNVarChar { get; set; }
+            public int? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -1064,7 +1064,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnBigInt { get; set; }
+            public int? ColumnBigInt { get; set; }
         }
 
         [TestMethod]
@@ -1099,7 +1099,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnSmallInt { get; set; }
+            public int? ColumnSmallInt { get; set; }
         }
 
         [TestMethod]
@@ -1134,7 +1134,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnDecimal { get; set; }
+            public int? ColumnDecimal { get; set; }
         }
 
         [TestMethod]
@@ -1169,7 +1169,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnFloat { get; set; }
+            public int? ColumnFloat { get; set; }
         }
 
         [TestMethod]
@@ -1204,7 +1204,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnReal { get; set; }
+            public int? ColumnReal { get; set; }
         }
 
         [TestMethod]
@@ -1239,7 +1239,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public int ColumnBit { get; set; }
+            public int? ColumnBit { get; set; }
         }
 
         [TestMethod]
@@ -1274,7 +1274,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnNVarChar { get; set; }
+            public long? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -1309,7 +1309,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnInt { get; set; }
+            public long? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -1344,7 +1344,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnSmallInt { get; set; }
+            public long? ColumnSmallInt { get; set; }
         }
 
         [TestMethod]
@@ -1379,7 +1379,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnDecimal { get; set; }
+            public long? ColumnDecimal { get; set; }
         }
 
         [TestMethod]
@@ -1414,7 +1414,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnFloat { get; set; }
+            public long? ColumnFloat { get; set; }
         }
 
         [TestMethod]
@@ -1449,7 +1449,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnReal { get; set; }
+            public long? ColumnReal { get; set; }
         }
 
         [TestMethod]
@@ -1484,7 +1484,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public long ColumnBit { get; set; }
+            public long? ColumnBit { get; set; }
         }
 
         [TestMethod]
@@ -1519,7 +1519,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnNVarChar { get; set; }
+            public short? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -1554,7 +1554,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnInt { get; set; }
+            public short? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -1589,7 +1589,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnBigInt { get; set; }
+            public short? ColumnBigInt { get; set; }
         }
 
         [TestMethod]
@@ -1624,7 +1624,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnDecimal { get; set; }
+            public short? ColumnDecimal { get; set; }
         }
 
         [TestMethod]
@@ -1659,7 +1659,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnFloat { get; set; }
+            public short? ColumnFloat { get; set; }
         }
 
         [TestMethod]
@@ -1694,7 +1694,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnReal { get; set; }
+            public short? ColumnReal { get; set; }
         }
 
         [TestMethod]
@@ -1729,7 +1729,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public short ColumnBit { get; set; }
+            public short? ColumnBit { get; set; }
         }
 
         [TestMethod]
@@ -1764,7 +1764,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnNVarChar { get; set; }
+            public decimal? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -1799,7 +1799,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnInt { get; set; }
+            public decimal? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -1834,7 +1834,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnBigInt { get; set; }
+            public decimal? ColumnBigInt { get; set; }
         }
 
         [TestMethod]
@@ -1869,7 +1869,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnSmallInt { get; set; }
+            public decimal? ColumnSmallInt { get; set; }
         }
 
         [TestMethod]
@@ -1904,7 +1904,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnFloat { get; set; }
+            public decimal? ColumnFloat { get; set; }
         }
 
         [TestMethod]
@@ -1939,7 +1939,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnReal { get; set; }
+            public decimal? ColumnReal { get; set; }
         }
 
         [TestMethod]
@@ -1974,7 +1974,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public decimal ColumnBit { get; set; }
+            public decimal? ColumnBit { get; set; }
         }
 
         [TestMethod]
@@ -2009,7 +2009,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnNVarChar { get; set; }
+            public double? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -2044,7 +2044,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnDecimal { get; set; }
+            public double? ColumnDecimal { get; set; }
         }
 
         [TestMethod]
@@ -2079,7 +2079,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnBigInt { get; set; }
+            public double? ColumnBigInt { get; set; }
         }
 
         [TestMethod]
@@ -2114,7 +2114,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnInt { get; set; }
+            public double? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -2149,7 +2149,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnInt { get; set; }
+            public double? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -2184,7 +2184,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnFloat { get; set; }
+            public double? ColumnFloat { get; set; }
         }
 
         [TestMethod]
@@ -2219,7 +2219,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnReal { get; set; }
+            public double? ColumnReal { get; set; }
         }
 
         [TestMethod]
@@ -2241,7 +2241,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<DoubleToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal, 2));
+                Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal.Value, 2));
             }
         }
 
@@ -2254,7 +2254,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnBit { get; set; }
+            public double? ColumnBit { get; set; }
         }
 
         [TestMethod]
@@ -2289,7 +2289,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public float ColumnNVarChar { get; set; }
+            public float? ColumnNVarChar { get; set; }
         }
 
         [TestMethod]
@@ -2324,7 +2324,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnDecimal { get; set; }
+            public double? ColumnDecimal { get; set; }
         }
 
         [TestMethod]
@@ -2359,7 +2359,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnBigInt { get; set; }
+            public double? ColumnBigInt { get; set; }
         }
 
         [TestMethod]
@@ -2394,7 +2394,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnInt { get; set; }
+            public double? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -2429,7 +2429,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnInt { get; set; }
+            public double? ColumnInt { get; set; }
         }
 
         [TestMethod]
@@ -2464,7 +2464,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnFloat { get; set; }
+            public double? ColumnFloat { get; set; }
         }
 
         [TestMethod]
@@ -2499,7 +2499,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnReal { get; set; }
+            public double? ColumnReal { get; set; }
         }
 
         [TestMethod]
@@ -2521,7 +2521,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<FloatToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal, 2));
+                Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal.Value, 2));
             }
         }
 
@@ -2534,7 +2534,7 @@ namespace RepoDb.IntegrationTests
         {
             [Primary]
             public Guid SessionId { get; set; }
-            public double ColumnBit { get; set; }
+            public double? ColumnBit { get; set; }
         }
 
         [TestMethod]
