@@ -443,6 +443,36 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
+        internal static Expression ConvertExpressionToNullableGetValueOrDefaultExpression(Expression expression)
+        {
+            if (Nullable.GetUnderlyingType(expression.Type) != null)
+            {
+                var underlyingType = expression.Type.GetUnderlyingType();
+                var method = expression.Type.GetMethod("GetValueOrDefault", new Type[] { underlyingType });
+                return Expression.Call(expression, method, Expression.Default(underlyingType));
+            }
+            return expression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToNullableValueExpression(Expression expression)
+        {
+            if (Nullable.GetUnderlyingType(expression.Type) != null)
+            {
+                Expression.Call(expression, expression.Type.GetProperty("Value").GetMethod, expression);
+            }
+            return expression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         internal static Expression ConvertExpressionToGuidToStringExpression(Expression expression) =>
             Expression.Call(expression, StaticType.Guid.GetMethod("ToString", new Type[0]));
 
@@ -463,7 +493,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToSystemConvertExpression(Expression expression,
             Type toType)
         {
-            if (expression.Type == toType)
+            if (expression.Type.GetUnderlyingType() == toType)
             {
                 return expression;
             }
@@ -472,6 +502,7 @@ namespace RepoDb.Reflection
                 var methodInfo = GetSystemConvertGetTypeMethod(expression.Type, toType);
                 if (methodInfo != null)
                 {
+                    expression = ConvertExpressionToNullableGetValueOrDefaultExpression(expression);
                     return Expression.Call(methodInfo, expression);
                 }
             }
@@ -747,24 +778,31 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toType"></param>
-        /// <param name="fromType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
-            Type fromType,
             Type toType)
         {
+            var fromType = expression.Type.GetUnderlyingType();
+
+            // Guid to String
             if (fromType == StaticType.Guid && toType == StaticType.String)
             {
                 expression = ConvertExpressionToGuidToStringExpression(expression);
             }
+
+            // String to Guid
             else if (fromType == StaticType.String && toType == StaticType.Guid)
             {
                 expression = ConvertExpressionToStringToGuidExpression(expression);
             }
+
+            // Others
             else
             {
                 expression = ConvertExpressionToSystemConvertExpression(expression, toType);
             }
+
+            // Return
             return expression;
         }
 
@@ -999,7 +1037,7 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, readerField.Type, targetType.GetUnderlyingType());
+                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, targetType.GetUnderlyingType());
                 }
                 catch (Exception ex)
                 {
@@ -1336,8 +1374,7 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    expression = ConvertExpressionWithAutomaticConversion(expression,
-                        classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), targetType?.GetUnderlyingType());
+                    expression = ConvertExpressionWithAutomaticConversion(expression, targetType?.GetUnderlyingType());
                 }
                 catch (Exception ex)
                 {
