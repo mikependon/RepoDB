@@ -24,6 +24,51 @@ namespace RepoDb.IntegrationTests
             Database.Cleanup();
         }
 
+        #region Helper
+
+        private ImmutableIdentityTable ToImmutableIdentityTable(IdentityTable entity)
+        {
+            return new ImmutableIdentityTable(entity.Id,
+                entity.RowGuid,
+                entity.ColumnBit,
+                entity.ColumnDateTime,
+                entity.ColumnDateTime2,
+                entity.ColumnDecimal,
+                entity.ColumnFloat,
+                entity.ColumnInt,
+                entity.ColumnNVarChar);
+        }
+
+        private ImmutableWithWritablePropertiesIdentityTable ToImmutableWithWritablePropertiesIdentityTable(IdentityTable entity)
+        {
+            return new ImmutableWithWritablePropertiesIdentityTable(entity.Id,
+                entity.RowGuid,
+                entity.ColumnBit,
+                entity.ColumnDateTime,
+                entity.ColumnDateTime2,
+                entity.ColumnDecimal,
+                entity.ColumnFloat,
+                entity.ColumnInt,
+                entity.ColumnNVarChar);
+        }
+
+        private ImmutableWithFewerCtorArgumentsIdentityTable ToImmutableWithFewerCtorArgumentsIdentityTable(IdentityTable entity)
+        {
+            return new ImmutableWithFewerCtorArgumentsIdentityTable(entity.Id,
+                entity.RowGuid,
+                entity.ColumnBit,
+                entity.ColumnDateTime,
+                entity.ColumnDateTime2)
+            {
+                ColumnDecimal = entity.ColumnDecimal,
+                ColumnFloat = entity.ColumnFloat,
+                ColumnInt = entity.ColumnInt,
+                ColumnNVarChar = entity.ColumnNVarChar
+            };
+        }
+
+        #endregion
+
         #region ImmutableIdentityTable
 
         #region Delete
@@ -40,7 +85,8 @@ namespace RepoDb.IntegrationTests
                 connection.Insert<IdentityTable>(entity);
 
                 // Act
-                var deleteResult = connection.Delete<ImmutableIdentityTable>(entity);
+                var deleteResult = connection.Delete<ImmutableIdentityTable>(
+                    ToImmutableIdentityTable(entity));
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
@@ -426,7 +472,8 @@ namespace RepoDb.IntegrationTests
                 connection.Insert<IdentityTable>(entity);
 
                 // Act
-                var deleteResult = connection.Delete<ImmutableWithFewerCtorArgumentsIdentityTable>(entity);
+                var deleteResult = connection.Delete<ImmutableWithFewerCtorArgumentsIdentityTable>(
+                    ToImmutableWithFewerCtorArgumentsIdentityTable(entity));
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);
@@ -822,7 +869,8 @@ namespace RepoDb.IntegrationTests
                 connection.Insert<IdentityTable>(entity);
 
                 // Act
-                var deleteResult = connection.Delete<ImmutableWithWritablePropertiesIdentityTable>(entity);
+                var deleteResult = connection.Delete<ImmutableWithWritablePropertiesIdentityTable>(
+                    ToImmutableWithWritablePropertiesIdentityTable(entity));
 
                 // Assert
                 Assert.IsTrue(deleteResult == 1);

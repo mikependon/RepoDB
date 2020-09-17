@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -170,7 +169,7 @@ namespace RepoDb.Extensions
             // IDictionary<string, object>
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip, entityType);
+                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip);
             }
 
             // QueryField
@@ -266,11 +265,9 @@ namespace RepoDb.Extensions
         /// <param name="command"></param>
         /// <param name="dictionary"></param>
         /// <param name="propertiesToSkip"></param>
-        /// <param name="entityType"></param>
         private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
-            IEnumerable<string> propertiesToSkip,
-            Type entityType)
+            IEnumerable<string> propertiesToSkip)
         {
             var kvps = dictionary.Where(kvp =>
                 propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
@@ -278,11 +275,9 @@ namespace RepoDb.Extensions
             // Iterate the key value pairs
             foreach (var kvp in kvps)
             {
-                var dbType = (DbType?)null;
                 var value = kvp.Value;
                 var classProperty = (ClassProperty)null;
                 var valueType = (Type)null;
-                var returnType = (Type)null;
 
                 // CommandParameter
                 if (kvp.Value is CommandParameter)
@@ -302,20 +297,15 @@ namespace RepoDb.Extensions
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
-                    returnType = definition.ReturnType;
+                    valueType = definition.ReturnType;
                     value = definition.Value;
                 }
 
                 // DbType
-                if (returnType != null)
-                {
-                    dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-                }
-                else
-                {
-                    dbType = GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
-                        classProperty?.GetDbType();
-                }
+                var dbType = clientTypeToDbTypeResolver.Resolve(valueType) ??
+                    GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
+                    classProperty?.GetDbType() ??
+                    value?.GetType()?.GetDbType();
 
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(kvp.Key, value, dbType));
@@ -390,8 +380,6 @@ namespace RepoDb.Extensions
             // Variables
             var value = queryField.Parameter.Value;
             var valueType = value?.GetType()?.GetUnderlyingType();
-            var returnType = (Type)null;
-            var dbType = (DbType?)null;
 
             // PropertyHandler
             var classProperty = PropertyCache.Get(entityType, queryField.Field);
@@ -399,21 +387,15 @@ namespace RepoDb.Extensions
             var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
             if (definition != null)
             {
-                returnType = definition.ReturnType;
+                valueType = definition.ReturnType;
                 value = definition.Value;
             }
 
             // DbType
-            if (returnType != null)
-            {
-                dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-            }
-            else
-            {
-                dbType = GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
-                    classProperty?.GetDbType() ??
-                    value?.GetType()?.GetDbType();
-            }
+            var dbType = clientTypeToDbTypeResolver.Resolve(valueType) ??
+                GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
+                classProperty?.GetDbType() ??
+                value?.GetType()?.GetDbType();
 
             // Add the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
