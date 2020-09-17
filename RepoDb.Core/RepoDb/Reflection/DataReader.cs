@@ -16,7 +16,7 @@ namespace RepoDb.Reflection
         #region ToEnumerable<TResult>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity object.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
