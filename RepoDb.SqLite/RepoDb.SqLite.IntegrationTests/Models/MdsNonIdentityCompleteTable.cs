@@ -4,7 +4,7 @@ namespace RepoDb.SqLite.IntegrationTests.Models
 {
     public class MdsNonIdentityCompleteTable
     {
-        public Int64? Id { get; set; }
+        public string Id { get; set; }
         public Int64? ColumnBigInt { get; set; }
         public Byte[] ColumnBlob { get; set; }
         public String ColumnBoolean { get; set; }

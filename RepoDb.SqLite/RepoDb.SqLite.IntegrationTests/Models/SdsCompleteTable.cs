@@ -4,7 +4,7 @@ namespace RepoDb.SqLite.IntegrationTests.Models
 {
     public class SdsCompleteTable
     {
-        public Int32 Id { get; set; }
+        public Int64 Id { get; set; }
         public Int64? ColumnBigInt { get; set; }
         public Byte[] ColumnBlob { get; set; }
         public Boolean? ColumnBoolean { get; set; }
