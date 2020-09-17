@@ -338,7 +338,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.IsTrue(Convert.ToInt64(result) > 0);
+                Assert.AreEqual(table.Id, result);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);

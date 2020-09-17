@@ -95,7 +95,7 @@ namespace RepoDb.DbHelpers
             {
                 foreach (var field in fields)
                 {
-                    if (field.ToUpper().Contains("AUTOINCREMENT") || field.ToUpper().Contains("INTEGER PRIMARY KEY"))
+                    if (IsIdentity(field))
                     {
                         return field.Substring(0, field.IndexOf(" "));
                     }
@@ -105,6 +105,17 @@ namespace RepoDb.DbHelpers
             // Return null
             return null;
         }
+
+        /// <summary>
+        /// Returns true if the field is an identity based on the definition from link (https://sqlite.org/autoinc.html).
+        /// </summary>
+        /// <param name="field">The field to identify.</param>
+        /// <returns>True if the field is an identity.</returns>
+        private bool IsIdentity(string field) =>
+            field.ToUpper().Contains("AUTOINCREMENT") ||
+            field.ToUpper().Contains("INTEGER PRIMARY KEY") ||
+            (field.ToUpper().Contains("INTEGER") && field.ToUpper().Contains("PRIMARY KEY")) ||
+            (field.ToUpper().Contains("INTEGER") && field.ToUpper().Contains("PRIMARY") && field.ToUpper().Contains("KEY"));
 
         /// <summary>
         /// Parses the table sql and return the list of the fields.
