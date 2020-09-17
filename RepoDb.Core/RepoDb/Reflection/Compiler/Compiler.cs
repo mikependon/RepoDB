@@ -474,7 +474,7 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToGuidToStringExpression(Expression expression) =>
-            Expression.Call(expression, StaticType.Guid.GetMethod("ToString", new Type[0]));
+            Expression.Call(ConvertExpressionToNullableGetValueOrDefaultExpression(expression), StaticType.Guid.GetMethod("ToString", new Type[0]));
 
         /// <summary>
         /// 
@@ -482,7 +482,7 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToStringToGuidExpression(Expression expression) =>
-            Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), expression);
+            Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
 
         /// <summary>
         /// 
