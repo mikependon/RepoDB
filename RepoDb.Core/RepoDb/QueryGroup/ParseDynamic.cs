@@ -31,7 +31,7 @@ namespace RepoDb
             }
 
             // Type of the object
-            var type = obj.GetType();
+            var type = obj.GetType().GetUnderlyingType();
 
             // Filter the type
             if (type.IsClassType() == false)

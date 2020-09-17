@@ -1991,7 +1991,7 @@ namespace RepoDb
             }
             else
             {
-                var type = typeof(T);
+                var type = typeof(T).GetUnderlyingType();
                 if (type.IsAnonymousType() || type == StaticType.Object)
                 {
                     return QueryGroup.Parse(what, false);
