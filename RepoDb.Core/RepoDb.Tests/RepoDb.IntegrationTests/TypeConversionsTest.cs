@@ -1751,7 +1751,7 @@ namespace RepoDb.IntegrationTests
                 var data = connection.Query<SmallIntToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
-                Assert.AreEqual(1, data.ColumnBit);
+                Assert.AreEqual((short)1, data.ColumnBit);
             }
         }
 
