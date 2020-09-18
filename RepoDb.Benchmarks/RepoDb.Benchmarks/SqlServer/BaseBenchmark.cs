@@ -1,5 +1,4 @@
-﻿using System;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer
@@ -11,7 +10,13 @@ namespace RepoDb.Benchmarks.SqlServer
 
         protected int CurrentId;
 
-        protected void BaseSetup() => DatabaseHelper.Initialize(ElementsCount);
+        protected void BaseSetup()
+        {
+            DatabaseHelper.Initialize(ElementsCount);
+            Bootstrap();
+        }
+
+        public abstract void Bootstrap();
 
         [GlobalCleanup]
         public void Cleanup() => DatabaseHelper.Cleanup();

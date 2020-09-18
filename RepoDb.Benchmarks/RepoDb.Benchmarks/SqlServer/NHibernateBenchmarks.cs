@@ -36,6 +36,11 @@ namespace RepoDb.Benchmarks.SqlServer
             sessionFactory = configuration.BuildSessionFactory();
         }
 
+        public override void Bootstrap()
+        {
+            // The compilation is explicity added at the Setup() method
+        }
+
         [Benchmark]
         public Person QueryFirst()
         {
