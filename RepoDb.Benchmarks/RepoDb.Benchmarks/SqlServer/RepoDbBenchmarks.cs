@@ -9,16 +9,23 @@ using RepoDb.Benchmarks.SqlServer.Setup;
 
 namespace RepoDb.Benchmarks.SqlServer
 {
-    [Description("RepoDb")]
+    [Description("RepoDB")]
     public class RepoDbBenchmarks : BaseBenchmark
     {
         [GlobalSetup]
         public void Setup()
         {
-            BaseSetup();
-
             SqlServerBootstrap.Initialize();
             TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
+            BaseSetup();
+        }
+
+        public override void Bootstrap()
+        {
+            using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString).EnsureOpen();
+
+            connection.Query<Person>(x => x.Id == CurrentId);
+            connection.QueryAll<Person>();
         }
 
         [Benchmark]

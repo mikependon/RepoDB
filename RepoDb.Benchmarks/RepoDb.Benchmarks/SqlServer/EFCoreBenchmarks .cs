@@ -13,6 +13,15 @@ namespace RepoDb.Benchmarks.SqlServer
         [GlobalSetup]
         public void Setup() => BaseSetup();
 
+        public override void Bootstrap()
+        {
+            using var context = new EFCoreContext(DatabaseHelper.ConnectionString);
+
+            context.Persons.FirstOrDefault();
+            context.Persons.AsNoTracking().FirstOrDefault();
+            context.Persons.FromSqlRaw("select * from Person").FirstOrDefault();
+        }
+
         [Benchmark]
         public Person First()
         {

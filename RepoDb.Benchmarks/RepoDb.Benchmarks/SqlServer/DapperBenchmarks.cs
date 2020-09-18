@@ -15,6 +15,14 @@ namespace RepoDb.Benchmarks.SqlServer
         [GlobalSetup]
         public void Setup() => BaseSetup();
 
+        public override void Bootstrap()
+        {
+            using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString);
+            connection.Open();
+
+            connection.QueryFirstOrDefault<Person>("select * from Person");
+        }
+
         [Benchmark]
         public Person QueryFirst()
         {
