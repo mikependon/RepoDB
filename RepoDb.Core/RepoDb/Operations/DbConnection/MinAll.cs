@@ -336,7 +336,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return MinAllInternalAsyncBase<TResult>(connection: connection,
+            return MinAllAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -548,7 +548,7 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            return MinAllInternalAsyncBase<TResult>(connection: connection,
+            return MinAllAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: null,
                 commandTimeout: commandTimeout,
@@ -639,7 +639,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static async Task<TResult> MinAllInternalAsyncBase<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> MinAllAsyncInternalBase<TResult>(this IDbConnection connection,
             MinAllRequest request,
             object param,
             int? commandTimeout = null,

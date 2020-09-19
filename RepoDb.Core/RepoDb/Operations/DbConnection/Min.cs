@@ -1159,7 +1159,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinInternalAsyncBase<object>(connection: connection,
+            return MinAsyncInternalBase<object>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -1548,7 +1548,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinInternalAsyncBase<TResult>(connection: connection,
+            return MinAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2113,7 +2113,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinInternalAsyncBase<object>(connection: connection,
+            return MinAsyncInternalBase<object>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2302,7 +2302,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return MinInternalAsyncBase<TResult>(connection: connection,
+            return MinAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2391,7 +2391,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The min value of the target field.</returns>
-        internal static async Task<TResult> MinInternalAsyncBase<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> MinAsyncInternalBase<TResult>(this IDbConnection connection,
             MinRequest request,
             object param,
             int? commandTimeout = null,

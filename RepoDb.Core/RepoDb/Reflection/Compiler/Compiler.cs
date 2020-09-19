@@ -217,6 +217,26 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetDbCommandCreateParameterMethod() =>
+            StaticType.DbCommandExtension.GetMethod("CreateParameter", new[]
+            {
+                StaticType.IDbCommand,
+                StaticType.String,
+                StaticType.Object,
+                StaticType.DbTypeNullable
+            });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetDbParameterCollectionAddMethod() =>
+            StaticType.DbParameterCollection.GetMethod("Add");
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerSetMethod(object handlerInstance) =>

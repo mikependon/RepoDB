@@ -847,7 +847,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (IEnumerable<TResult>)(await DataReader.ToEnumerableInternalAsync<TResult>(reader,
+                    var result = (IEnumerable<TResult>)(await DataReader.ToEnumerableAsyncInternal<TResult>(reader,
                         connection,
                         connectionString,
                         transaction,
@@ -2007,18 +2007,18 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="where"></param>
+        /// <param name="obj"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(object where)
+        internal static QueryGroup ToQueryGroup(object obj)
         {
-            if (where == null)
+            if (obj == null)
             {
                 return null;
             }
-            var type = where.GetType();
+            var type = obj.GetType();
             if (type.IsClassType())
             {
-                return QueryGroup.Parse(where, true);
+                return QueryGroup.Parse(obj, true);
             }
             else
             {
@@ -2091,29 +2091,29 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="field"></param>
+        /// <param name="queryField"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(QueryField field)
+        internal static QueryGroup ToQueryGroup(QueryField queryField)
         {
-            if (field == null)
+            if (queryField == null)
             {
                 return null;
             }
-            return new QueryGroup(field);
+            return new QueryGroup(queryField);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fields"></param>
+        /// <param name="queryFields"></param>
         /// <returns></returns>
-        internal static QueryGroup ToQueryGroup(IEnumerable<QueryField> fields)
+        internal static QueryGroup ToQueryGroup(IEnumerable<QueryField> queryFields)
         {
-            if (fields == null)
+            if (queryFields == null)
             {
                 return null;
             }
-            return new QueryGroup(fields);
+            return new QueryGroup(queryFields);
         }
 
         #endregion
@@ -2279,7 +2279,24 @@ namespace RepoDb
             // Validate
             ValidateTransactionConnectionObject(connection, transaction);
 
-            // Parameters
+            // Command
+            var command = connection
+                .EnsureOpen()
+                .CreateCommand(commandText, commandType, commandTimeout, transaction);
+
+            // Func
+            if (param != null)
+            {
+                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param?.GetType());
+                if (func != null)
+                {
+                    var cmd = (DbCommand)command;
+                    func(cmd, param);
+                    return cmd;
+                }
+            }
+
+            // ArrayParameters
             var commandArrayParametersText = (CommandArrayParametersText)null;
             if (param != null && skipCommandArrayParametersCheck == false)
             {
@@ -2288,18 +2305,17 @@ namespace RepoDb
                    DbSettingMapper.Get(connection.GetType()));
             }
 
-            // Create command
-            var command = connection
-                .EnsureOpen()
-                .CreateCommand(commandArrayParametersText?.CommandText ?? commandText, commandType, commandTimeout, transaction);
-
-            // Add the parameters
+            // Check
             if (commandArrayParametersText != null)
             {
+                // CommandText
+                command.CommandText = commandArrayParametersText.CommandText;
+
+                // Array parameters
                 command.CreateParametersFromArray(commandArrayParametersText.CommandArrayParameters);
             }
 
-            // Add the parameters
+            // Normal parameters
             if (param != null)
             {
                 command.CreateParameters(param,

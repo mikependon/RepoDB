@@ -1,4 +1,5 @@
 ﻿using RepoDb.Attributes;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System.Data;
 using System.Reflection;
@@ -35,6 +36,20 @@ namespace RepoDb.Resolvers
             if (dbType == null)
             {
                 dbType = TypeMapper.Get(propertyInfo.DeclaringType, propertyInfo);
+            }
+
+            // Specialized
+            if (dbType == null)
+            {
+                var underlyingType = propertyInfo.PropertyType.GetUnderlyingType();
+                if (underlyingType.IsEnum == true)
+                {
+                    dbType = DbType.String;
+                }
+                else if (underlyingType == StaticType.ByteArray)
+                {
+                    dbType = DbType.Binary;
+                }
             }
 
             // Type Level

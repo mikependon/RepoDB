@@ -465,7 +465,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return ExistsInternalAsyncBase(connection: connection,
+            return ExistsAsyncInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -875,7 +875,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return ExistsInternalAsyncBase(connection: connection,
+            return ExistsAsyncInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -964,7 +964,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>A boolean value that indicates whether the rows are existing in the table.</returns>
-        internal static async Task<bool> ExistsInternalAsyncBase(this IDbConnection connection,
+        internal static async Task<bool> ExistsAsyncInternalBase(this IDbConnection connection,
             ExistsRequest request,
             object param,
             int? commandTimeout = null,

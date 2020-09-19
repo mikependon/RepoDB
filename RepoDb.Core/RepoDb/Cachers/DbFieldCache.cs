@@ -148,7 +148,7 @@ namespace RepoDb
             string tableName,
             IDbTransaction transaction,
             bool enableValidation) =>
-            GetInternalAsync(connection, tableName, transaction, enableValidation);
+            GetAsyncInternal(connection, tableName, transaction, enableValidation);
 
         /// <summary>
         /// Gets the cached field definitions of the entity in an asychronous way.
@@ -159,7 +159,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static async Task<IEnumerable<DbField>> GetInternalAsync<TDbConnection>(TDbConnection connection,
+        internal static async Task<IEnumerable<DbField>> GetAsyncInternal<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             bool enableValidation)

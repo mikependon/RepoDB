@@ -168,5 +168,17 @@ namespace RepoDb.Reflection
             Compiler.CompileDataEntityPropertySetter<TEntity>(field);
 
         #endregion
+
+        #region GetPlainTypeToDbParametersCompiledFunction
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type) =>
+            Compiler.GetPlainTypeToDbParametersCompiledFunction(type);
+
+        #endregion
     }
 }
