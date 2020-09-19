@@ -1159,7 +1159,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return SumInternalAsyncBase<object>(connection: connection,
+            return SumAsyncInternalBase<object>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -1548,7 +1548,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return SumInternalAsyncBase<TResult>(connection: connection,
+            return SumAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2113,7 +2113,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return SumInternalAsyncBase<object>(connection: connection,
+            return SumAsyncInternalBase<object>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2302,7 +2302,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return SumInternalAsyncBase<TResult>(connection: connection,
+            return SumAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -2391,7 +2391,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The sum value of the target field.</returns>
-        internal static async Task<TResult> SumInternalAsyncBase<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> SumAsyncInternalBase<TResult>(this IDbConnection connection,
             SumRequest request,
             object param,
             int? commandTimeout = null,

@@ -336,7 +336,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return MaxAllInternalAsyncBase<TResult>(connection: connection,
+            return MaxAllAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -548,7 +548,7 @@ namespace RepoDb
                 statementBuilder);
 
             // Return the result
-            return MaxAllInternalAsyncBase<TResult>(connection: connection,
+            return MaxAllAsyncInternalBase<TResult>(connection: connection,
                 request: request,
                 param: null,
                 commandTimeout: commandTimeout,
@@ -639,7 +639,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The max value of the target field.</returns>
-        internal static async Task<TResult> MaxAllInternalAsyncBase<TResult>(this IDbConnection connection,
+        internal static async Task<TResult> MaxAllAsyncInternalBase<TResult>(this IDbConnection connection,
             MaxAllRequest request,
             object param,
             int? commandTimeout = null,

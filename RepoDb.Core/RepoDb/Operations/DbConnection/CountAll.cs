@@ -136,7 +136,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return CountAllInternalAsyncBase(connection: connection,
+            return CountAllAsyncInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -272,7 +272,7 @@ namespace RepoDb
             var param = (object)null;
 
             // Return the result
-            return CountAllInternalAsyncBase(connection: connection,
+            return CountAllAsyncInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -361,7 +361,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        internal static async Task<long> CountAllInternalAsyncBase(this IDbConnection connection,
+        internal static async Task<long> CountAllAsyncInternalBase(this IDbConnection connection,
             CountAllRequest request,
             object param,
             int? commandTimeout = null,

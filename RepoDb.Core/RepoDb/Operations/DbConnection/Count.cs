@@ -403,7 +403,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return CountAsyncInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -749,7 +749,7 @@ namespace RepoDb
             }
 
             // Return the result
-            return CountInternalAsyncBase(connection: connection,
+            return CountAsyncInternalBase(connection: connection,
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
@@ -838,7 +838,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
-        internal static async Task<long> CountInternalAsyncBase(this IDbConnection connection,
+        internal static async Task<long> CountAsyncInternalBase(this IDbConnection connection,
             CountRequest request,
             object param,
             int? commandTimeout = null,
