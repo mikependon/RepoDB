@@ -76,7 +76,7 @@ namespace RepoDb.Reflection
         public static Task<IEnumerable<TResult>> ToEnumerableAsync<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             IDbTransaction transaction = null) =>
-            ToEnumerableInternalAsync<TResult>(reader, connection, null, transaction, true);
+            ToEnumerableAsyncInternal<TResult>(reader, connection, null, transaction, true);
 
         /// <summary>
         /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in an asynchronous way.
@@ -89,7 +89,7 @@ namespace RepoDb.Reflection
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>A list of the target result type.</returns>
         [Obsolete("This method is up for change and will soon to be refactored.")]
-        internal static async Task<IEnumerable<TResult>> ToEnumerableInternalAsync<TResult>(DbDataReader reader,
+        internal static async Task<IEnumerable<TResult>> ToEnumerableAsyncInternal<TResult>(DbDataReader reader,
             IDbConnection connection = null,
             string connectionString = null,
             IDbTransaction transaction = null,
