@@ -1,10 +1,12 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Types;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Reflection;
@@ -82,6 +84,11 @@ namespace RepoDb
         public static Type DbCommand => typeof(DbCommand);
 
         /// <summary>
+        /// Gets a type of the <see cref="Extensions.DbCommandExtension"/> .NET CLR type.
+        /// </summary>
+        public static Type DbCommandExtension => typeof(DbCommandExtension);
+
+        /// <summary>
         /// Gets a type of the <see cref="System.Data.Common.DbConnection"/> .NET CLR type.
         /// </summary>
         public static Type DbConnection => typeof(DbConnection);
@@ -100,6 +107,11 @@ namespace RepoDb
         /// Gets a type of the <see cref="System.Data.Common.DbParameterCollection"/> .NET CLR type.
         /// </summary>
         public static Type DbParameterCollection => typeof(DbParameterCollection);
+
+        /// <summary>
+        /// Gets a type of the <see cref="System.Data.DbType"/> (array) .NET CLR type.
+        /// </summary>
+        public static Type DbType => typeof(DbType);
 
         /// <summary>
         /// Gets a type of the <see cref="decimal"/> .NET CLR type.
@@ -135,6 +147,16 @@ namespace RepoDb
         /// Gets a type of the <see cref="IClassHandler"/> .NET CLR type.
         /// </summary>
         public static Type IClassHandler => typeof(IClassHandler<>);
+
+        /// <summary>
+        /// Gets a type of the <see cref="System.Data.IDbCommand"/> .NET CLR type.
+        /// </summary>
+        public static Type IDbCommand => typeof(IDbCommand);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Nullable{T}"/> (of type <see cref="DbType"/>) .NET CLR type.
+        /// </summary>
+        public static Type DbTypeNullable => typeof(Nullable<DbType>);
 
         /// <summary>
         /// Gets a type of the <see cref="Attributes.IdentityAttribute"/> .NET CLR type.
@@ -220,6 +242,16 @@ namespace RepoDb
         /// Gets a type of the <see cref="List{T}"/> (of <see cref="RepoDb.PropertyValue"/>) .NET CLR type.
         /// </summary>
         public static Type PropertyValueList => typeof(List<PropertyValue>);
+
+        /// <summary>
+        /// Gets a type of the <see cref="RepoDb.QueryField"/> .NET CLR type.
+        /// </summary>
+        public static Type QueryField => typeof(QueryField);
+
+        /// <summary>
+        /// Gets a type of the <see cref="RepoDb.QueryGroup"/> .NET CLR type.
+        /// </summary>
+        public static Type QueryGroup => typeof(QueryGroup);
 
         /// <summary>
         /// Gets a type of the <see cref="float"/> .NET CLR type.

@@ -42,9 +42,10 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a class.</returns>
         public static bool IsClassType(this Type type) =>
-            type.IsClass && type != StaticType.String && type.IsObjectType() == false;
-
-        // TODO: Make sure that the IsAnonymousType method is property used
+            type.IsClass &&
+            type != StaticType.String &&
+            type.IsObjectType() == false &&
+            StaticType.IEnumerable.IsAssignableFrom(type) != true;
 
         /// <summary>
         /// Checks whether the current type is of type class.
@@ -71,12 +72,40 @@ namespace RepoDb.Extensions
             Nullable.GetUnderlyingType(type) != null;
 
         /// <summary>
+        /// Checks whether the current type is a plain class type.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>Returns true if the current type is a plain class type.</returns>
+        internal static bool IsPlainType(this Type type) =>
+            (IsClassType(type) || IsAnonymousType(type)) &&
+            IsQueryObjectType(type) != true &&
+            IsDictionaryStringObject(type) == false &&
+            GetEnumerableClassProperties(type).Any() != true;
+
+        /// <summary>
+        /// Checks whether the curren type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.
+        /// </summary>
+        /// <param name="type">The curren type.</param>
+        /// <returns>Returns true if the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.</returns>
+        internal static bool IsQueryObjectType(this Type type) =>
+            type == StaticType.QueryField || type == StaticType.QueryGroup;
+
+        /// <summary>
         /// Converts all properties of the type into an array of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>A list of <see cref="Field"/> objects.</returns>
         internal static IEnumerable<Field> AsFields(this Type type) =>
             PropertyCache.Get(type).AsFields();
+
+        /// <summary>
+        /// Gets the list of enumerable <see cref="ClassProperty"/> objects of the type.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>The list of the enumerable <see cref="ClassProperty"/> objects.</returns>
+        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
+            PropertyCache.Get(type).Where(classProperty =>
+                StaticType.IEnumerable.IsAssignableFrom(classProperty.PropertyInfo.PropertyType));
 
         /// <summary>
         /// Converts all properties of the type into an array of <see cref="ClassProperty"/> objects.

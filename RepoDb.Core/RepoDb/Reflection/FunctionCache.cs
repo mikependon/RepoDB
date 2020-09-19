@@ -537,5 +537,53 @@ namespace RepoDb
         #endregion
 
         #endregion
+
+        #region GetPlainTypeToDbParametersCompiledFunction
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type) =>
+            PlainTypeToDbParametersCompiledFunctionCache.Get(type);
+
+        #region PlainTypeToDbParametersCompiledFunctionCache
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static class PlainTypeToDbParametersCompiledFunctionCache
+        {
+            private static ConcurrentDictionary<long, Action<DbCommand, object>> cache = new ConcurrentDictionary<long, Action<DbCommand, object>>();
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="type"></param>
+            /// <returns></returns>
+            internal static Action<DbCommand, object> Get(Type type)
+            {
+                if (type == null)
+                {
+                    return null;
+                }
+                var key = type.GetHashCode();
+                var func = (Action<DbCommand, object>)null;
+                if (cache.TryGetValue(key, out func) == false)
+                {
+                    if (type.IsPlainType())
+                    {
+                        func = FunctionFactory.GetPlainTypeToDbParametersCompiledFunction(type);
+                    }
+                    cache.TryAdd(key, func);
+                }
+                return func;
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

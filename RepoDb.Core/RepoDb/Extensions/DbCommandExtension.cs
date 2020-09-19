@@ -34,7 +34,7 @@ namespace RepoDb.Extensions
 
         #endregion
 
-        #region CreateParameters
+        #region CreateParameter
 
         /// <summary>
         /// Creates a parameter for a command object.
@@ -249,8 +249,7 @@ namespace RepoDb.Extensions
                 }
                 else
                 {
-                    dbType = GetSpecializedDbType(classProperty.PropertyInfo.PropertyType.GetUnderlyingType()) ??
-                        classProperty.GetDbType() ??
+                    dbType = classProperty.GetDbType() ??
                         value?.GetType()?.GetDbType();
                 }
 
@@ -303,7 +302,6 @@ namespace RepoDb.Extensions
 
                 // DbType
                 var dbType = clientTypeToDbTypeResolver.Resolve(valueType) ??
-                    GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
                     classProperty?.GetDbType() ??
                     value?.GetType()?.GetDbType();
 
@@ -393,7 +391,6 @@ namespace RepoDb.Extensions
 
             // DbType
             var dbType = clientTypeToDbTypeResolver.Resolve(valueType) ??
-                GetSpecializedDbType(classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType()) ??
                 classProperty?.GetDbType() ??
                 value?.GetType()?.GetDbType();
 
@@ -466,31 +463,6 @@ namespace RepoDb.Extensions
                 ReturnType = setMethod.ReturnType,
                 Value = setMethod.Invoke(propertyHandler, new[] { value, classProperty })
             };
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static DbType? GetSpecializedDbType(Type type)
-        {
-            if (type == null)
-            {
-                return null;
-            }
-
-            if (type.IsEnum == true)
-            {
-                // TODO: Why String?
-                return DbType.String;
-            }
-            else if (type == StaticType.ByteArray)
-            {
-                return DbType.Binary;
-            }
-
-            return null;
         }
 
         #endregion
