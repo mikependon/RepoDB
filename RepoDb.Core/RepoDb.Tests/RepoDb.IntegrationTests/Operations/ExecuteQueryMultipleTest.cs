@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -1151,5 +1152,80 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region ExecuteQueryMultipe.Extract (Multiple Type)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForMultipleTypes()
+        {
+            // Setup
+            var identityTables = Helper.CreateIdentityTables(10).AsList();
+            var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(identityTables);
+                connection.InsertAll(nonIdentityTables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT * FROM [sc].[IdentityTable];
+                    SELECT * FROM [dbo].[NonIdentityTable];"))
+                {
+                    // Act
+                    var identityTablesResult = result.Extract<IdentityTable>();
+                    var nonIdentityTablesResult = result.Extract<NonIdentityTable>();
+
+                    // Assert
+                    Assert.AreEqual(identityTables.Count, identityTablesResult.Count());
+                    Assert.AreEqual(nonIdentityTables.Count, nonIdentityTablesResult.Count());
+
+                    // Assert
+                    identityTables.ForEach(table =>
+                        Helper.AssertPropertiesEquality(table, identityTablesResult.First(e => e.Id == table.Id)));
+                    nonIdentityTables.ForEach(table =>
+                        Helper.AssertPropertiesEquality(table, nonIdentityTablesResult.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultipeAsync.Extract (Multiple Type)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForMultipleTypes()
+        {
+            // Setup
+            var identityTables = Helper.CreateIdentityTables(10).AsList();
+            var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(identityTables);
+                connection.InsertAll(nonIdentityTables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [sc].[IdentityTable];
+                    SELECT * FROM [dbo].[NonIdentityTable];").Result)
+                {
+                    // Act
+                    var identityTablesResult = result.ExtractAsync<IdentityTable>().Result;
+                    var nonIdentityTablesResult = result.ExtractAsync<NonIdentityTable>().Result;
+
+                    // Assert
+                    Assert.AreEqual(identityTables.Count, identityTablesResult.Count());
+                    Assert.AreEqual(nonIdentityTables.Count, nonIdentityTablesResult.Count());
+
+                    // Assert
+                    identityTables.ForEach(table =>
+                        Helper.AssertPropertiesEquality(table, identityTablesResult.First(e => e.Id == table.Id)));
+                    nonIdentityTables.ForEach(table =>
+                        Helper.AssertPropertiesEquality(table, nonIdentityTablesResult.First(e => e.Id == table.Id)));
+                }
+            }
+        }
+
+        #endregion
     }
 }
