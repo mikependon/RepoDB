@@ -43,7 +43,6 @@ namespace RepoDb.Extensions
         /// <returns>Returns true if the current type is a class.</returns>
         public static bool IsClassType(this Type type) =>
             type.IsClass &&
-            type != StaticType.String &&
             type.IsObjectType() == false &&
             StaticType.IEnumerable.IsAssignableFrom(type) != true;
 
@@ -70,6 +69,14 @@ namespace RepoDb.Extensions
         /// <returns>Returns true if the current type is wrapped within <see cref="Nullable{T}"/> object.</returns>
         public static bool IsNullable(this Type type) =>
             Nullable.GetUnderlyingType(type) != null;
+
+        /// <summary>
+        /// Checks whether the current type is a common .NET CLR type.
+        /// </summary>
+        /// <param name="type">The current type.</param>
+        /// <returns>Returns true if the current type is a common .NET CLR type.</returns>
+        internal static bool IsCommonType(this Type type) =>
+            (StaticType.String == type || (type?.IsClassType() != true && type?.IsAnonymousType() != true));
 
         /// <summary>
         /// Checks whether the current type is a plain class type.
