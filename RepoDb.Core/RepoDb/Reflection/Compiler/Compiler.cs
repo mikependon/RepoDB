@@ -1143,75 +1143,29 @@ namespace RepoDb.Reflection
                         string.Equals(field.AsUnquoted(true, dbSetting), property.GetMappedName().AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
-            // Get the matches, check the lengths
-            if (parameterInfos?.Count >= classProperties?.Count)
+            // ParameterInfos
+            parameterInfos?.ForEach(parameterInfo =>
             {
-                foreach (var parameterInfo in parameterInfos)
+                var classProperty = classProperties?.
+                    FirstOrDefault(item =>
+                        string.Equals(item.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
+                list.Add(new ClassPropertyParameterInfo
                 {
-                    var classProperty = classProperties?.
-                        FirstOrDefault(item =>
-                            string.Equals(item.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
-                    list.Add(new ClassPropertyParameterInfo
-                    {
-                        ClassProperty = classProperty,
-                        ParameterInfo = parameterInfo
-                    });
-                }
-            }
-            else if (classProperties?.Any() == true)
-            {
-                foreach (var classProperty in classProperties)
-                {
-                    var parameterInfo = parameterInfos?.
-                        FirstOrDefault(item =>
-                            string.Equals(item.Name, classProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase));
-                    list.Add(new ClassPropertyParameterInfo
-                    {
-                        ClassProperty = classProperty,
-                        ParameterInfo = parameterInfo
-                    });
-                }
-            }
+                    ClassProperty = classProperty,
+                    ParameterInfo = parameterInfo
+                });
+            });
 
-            // Unmatch within the parameter infos
-            if (parameterInfos?.Any() == true)
+            // ClassProperties
+            classProperties.ForEach(classProperty =>
             {
-                foreach (var parameterInfo in parameterInfos)
+                var listItem = list.FirstOrDefault(item => item.ClassProperty == classProperty);
+                if (listItem != null)
                 {
-                    var listItem = list.FirstOrDefault(item => item.ParameterInfo == parameterInfo);
-                    if (listItem != null)
-                    {
-                        continue;
-                    }
-                    var classProperty = classProperties?.FirstOrDefault(property =>
-                       string.Equals(property.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
-                    if (classProperty != null)
-                    {
-                        continue;
-                    }
-                    list.Add(new ClassPropertyParameterInfo { ParameterInfo = parameterInfo });
+                    return;
                 }
-            }
-
-            // Unmatch within the class properties
-            if (classProperties?.Any() == true)
-            {
-                foreach (var classProperty in classProperties)
-                {
-                    var listItem = list.FirstOrDefault(item => item.ClassProperty == classProperty);
-                    if (listItem != null)
-                    {
-                        continue;
-                    }
-                    var parameterInfo = parameterInfos?.FirstOrDefault(parameter =>
-                       string.Equals(parameter.Name, classProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase));
-                    if (parameterInfo != null)
-                    {
-                        continue;
-                    }
-                    list.Add(new ClassPropertyParameterInfo { ClassProperty = classProperty });
-                }
-            }
+                list.Add(new ClassPropertyParameterInfo { ClassProperty = classProperty });
+            });
 
             // Return the list
             return list;
