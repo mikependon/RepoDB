@@ -305,18 +305,12 @@ namespace RepoDb.Reflection
             IDbTransaction transaction,
             bool enableValidation)
         {
-            if (string.IsNullOrWhiteSpace(connectionString))
+            // If the connection is open, probably, there is already an open DbDataReader object
+            if (connection.State != ConnectionState.Open)
             {
                 return DbFieldCache.Get(connection, tableName, transaction, enableValidation);
             }
-            else
-            {
-                using (var dbConnection = (DbConnection)Activator.CreateInstance(connection.GetType()))
-                {
-                    dbConnection.ConnectionString = connectionString;
-                    return DbFieldCache.Get(dbConnection, tableName, transaction, enableValidation);
-                }
-            }
+            return null;
         }
 
         /// <summary>
@@ -334,18 +328,12 @@ namespace RepoDb.Reflection
             IDbTransaction transaction,
             bool enableValidation)
         {
-            if (string.IsNullOrWhiteSpace(connectionString))
+            // If the connection is open, probably, there is already an open DbDataReader object
+            if (connection.State != ConnectionState.Open)
             {
                 return await DbFieldCache.GetAsync(connection, tableName, transaction, enableValidation);
             }
-            else
-            {
-                using (var dbConnection = (DbConnection)Activator.CreateInstance(connection.GetType()))
-                {
-                    dbConnection.ConnectionString = connectionString;
-                    return await DbFieldCache.GetAsync(dbConnection, tableName, transaction, enableValidation);
-                }
-            }
+            return null;
         }
 
         /// <summary>
