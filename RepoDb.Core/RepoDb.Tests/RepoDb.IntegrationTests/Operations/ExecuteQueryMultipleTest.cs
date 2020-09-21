@@ -1161,7 +1161,7 @@ namespace RepoDb.IntegrationTests.Operations
             var identityTables = Helper.CreateIdentityTables(10).AsList();
             var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 connection.InsertAll(identityTables);
@@ -1199,7 +1199,7 @@ namespace RepoDb.IntegrationTests.Operations
             var identityTables = Helper.CreateIdentityTables(10).AsList();
             var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act
                 connection.InsertAll(identityTables);
