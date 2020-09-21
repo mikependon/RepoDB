@@ -38,11 +38,8 @@ namespace RepoDb.Reflection
             // Check the type
             if (typeOfResult.IsClassType())
             {
-                dbFields = GetDbFields(connection,
-                    ClassMappedNameCache.Get<TResult>(),
-                    connectionString,
-                    transaction,
-                    enableValidation);
+                dbFields = GetDbFields(connection, ClassMappedNameCache.Get<TResult>(),
+                    connectionString, transaction, enableValidation);
             }
 
             // return the value
@@ -72,11 +69,8 @@ namespace RepoDb.Reflection
             // Check the type
             if (typeOfResult.IsClassType())
             {
-                dbFields = await GetDbFieldsAsync(connection,
-                    ClassMappedNameCache.Get<TResult>(),
-                    connectionString,
-                    transaction,
-                    enableValidation);
+                dbFields = await GetDbFieldsAsync(connection, ClassMappedNameCache.Get<TResult>(),
+                    connectionString, transaction, enableValidation);
             }
 
             // return the value

@@ -85,6 +85,7 @@ namespace RepoDb
         /// <returns>The key to the cache.</returns>
         private int GetDbFieldGetCallsCacheKey<TEntity>()
         {
+            // If the connection is open, probably, there is already an open DbDataReader object
             var key = connection.GetType().GetHashCode();
 
             // Add the entity type hash code
@@ -108,6 +109,13 @@ namespace RepoDb
         private void EnsureSingleCallForDbFieldCacheGet<TEntity>(IDbTransaction transaction)
             where TEntity : class
         {
+            // If the connection is open, probably, there is already an open DbDataReader object
+            if (connection.State == ConnectionState.Open)
+            {
+                return;
+            }
+
+            // Variables
             var key = GetDbFieldGetCallsCacheKey<TEntity>();
             var dbFields = (IEnumerable<DbField>)null;
 
@@ -117,8 +125,8 @@ namespace RepoDb
                 using (var connection = (IDbConnection)Activator.CreateInstance(this.connection.GetType(), new object[] { connectionString }))
                 {
                     dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                    cache.TryAdd(key, dbFields);
                 }
+                cache.TryAdd(key, dbFields);
             }
         }
 
@@ -130,6 +138,12 @@ namespace RepoDb
         private async Task EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(IDbTransaction transaction)
             where TEntity : class
         {
+            if (connection.State == ConnectionState.Open)
+            {
+                return;
+            }
+
+            // Variables
             var key = GetDbFieldGetCallsCacheKey<TEntity>();
             var dbFields = (IEnumerable<DbField>)null;
 
@@ -139,8 +153,8 @@ namespace RepoDb
                 using (var connection = (IDbConnection)Activator.CreateInstance(this.connection.GetType(), new object[] { connectionString }))
                 {
                     dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                    cache.TryAdd(key, dbFields);
                 }
+                cache.TryAdd(key, dbFields);
             }
         }
 
