@@ -5,8 +5,6 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -1682,31 +1680,19 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (object)null;
 
             // Actual Execution
-            var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsClassType())
-            {
-                result = ExecuteQueryInternal<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    skipCommandArrayParametersCheck: true);
-            }
-            else
-            {
-                result = ExecuteQueryInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: true);
-            }
+            var result = ExecuteQueryInternal<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: null,
+                tableName: tableName,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)
@@ -1796,32 +1782,19 @@ namespace RepoDb
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
-            var result = (object)null;
 
             // Actual Execution
-            var typeOfTEntity = typeof(TEntity);
-            if (typeOfTEntity.IsClassType())
-            {
-                result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    skipCommandArrayParametersCheck: true);
-            }
-            else
-            {
-                result = await ExecuteQueryAsyncInternal(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: true);
-            }
-
+            var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: null,
+                tableName: tableName,
+                skipCommandArrayParametersCheck: true);
 
             // After Execution
             if (trace != null)

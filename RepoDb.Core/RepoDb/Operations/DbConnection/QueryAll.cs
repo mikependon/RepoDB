@@ -5,8 +5,6 @@ using RepoDb.Requests;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -600,6 +598,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: null,
+                tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
             // Set Cache
@@ -711,6 +710,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: null,
+                tableName: tableName,
                 skipCommandArrayParametersCheck: true);
 
             // Set Cache
