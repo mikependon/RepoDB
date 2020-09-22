@@ -6,77 +6,12 @@ using System.Linq;
 using System.Collections.Generic;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
-using System.Reflection;
 using RepoDb.Extensions;
-using RepoDb.Enumerations;
-using RepoDb.Exceptions;
 
 namespace RepoDb.Reflection
 {
     internal partial class Compiler
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="reader"></param>
-        /// <param name="connection"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
-        /// <returns></returns>
-        internal static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation)
-        {
-            // Expression variables
-            var typeOfResult = typeof(TResult);
-            var dbFields = (IEnumerable<DbField>)null;
-
-            // Check the type
-            if (typeOfResult.IsClassType())
-            {
-                dbFields = GetDbFields(connection, ClassMappedNameCache.Get<TResult>(),
-                    connectionString, transaction, enableValidation);
-            }
-
-            // return the value
-            return CompileDataReaderToType<TResult>(reader, dbFields, connection?.GetDbSetting());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="reader"></param>
-        /// <param name="connection"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
-        /// <returns></returns>
-        internal static async Task<Func<DbDataReader, TResult>> CompileDataReaderToTypeAsync<TResult>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation)
-        {
-            // Expression variables
-            var typeOfResult = typeof(TResult);
-            var dbFields = (IEnumerable<DbField>)null;
-
-            // Check the type
-            if (typeOfResult.IsClassType())
-            {
-                dbFields = await GetDbFieldsAsync(connection, ClassMappedNameCache.Get<TResult>(),
-                    connectionString, transaction, enableValidation);
-            }
-
-            // return the value
-            return CompileDataReaderToType<TResult>(reader, dbFields, connection?.GetDbSetting());
-        }
-
         /// <summary>
         /// 
         /// </summary>

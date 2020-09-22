@@ -109,10 +109,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -125,7 +125,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -138,7 +138,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2);
             var maps = new[]
             {
@@ -179,14 +179,19 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
             }
 
@@ -317,10 +322,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -333,7 +338,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -346,7 +351,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -359,7 +364,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
             var maps = new[]
             {
@@ -401,18 +406,24 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
             }
 
@@ -569,10 +580,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -585,7 +596,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -598,7 +609,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -611,7 +622,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -624,7 +635,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
             var maps = new[]
             {
@@ -667,22 +678,29 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
             }
 
@@ -863,10 +881,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -879,7 +897,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -892,7 +910,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -905,7 +923,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -918,7 +936,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // T5 Variables
+            // T5
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
@@ -931,7 +949,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
             var maps = new[]
             {
@@ -975,26 +993,34 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fifth result
+                // T5
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
             }
 
@@ -1199,10 +1225,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -1215,7 +1241,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -1228,7 +1254,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -1241,7 +1267,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -1254,7 +1280,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // T5 Variables
+            // T5
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
@@ -1267,7 +1293,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
-            // T6 Variables
+            // T6
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
@@ -1280,7 +1306,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
             var maps = new[]
             {
@@ -1325,30 +1351,39 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fifth result
+                // T5
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the sixth result
+                // T6
                 reader?.NextResult();
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
                     item1, item2, item3, item4, item5, item6);
             }
@@ -1578,10 +1613,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -1594,7 +1629,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -1607,7 +1642,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -1620,7 +1655,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -1633,7 +1668,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // T5 Variables
+            // T5
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
@@ -1646,7 +1681,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
-            // T6 Variables
+            // T6
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
@@ -1659,7 +1694,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
-            // T7 Variables
+            // T7
             var request7 = new QueryMultipleRequest(7,
                 typeof(T7),
                 connection,
@@ -1672,7 +1707,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
             var maps = new[]
             {
@@ -1718,34 +1753,44 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, connection)?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
-                reader?.NextResult();
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, connection)?.AsList();
+                // T1
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T2
                 reader?.NextResult();
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T3
                 reader?.NextResult();
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fifth result
+                // T4
                 reader?.NextResult();
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the sixth result
+                // T5
                 reader?.NextResult();
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T6
+                reader?.NextResult();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
                 // Extract the seventh result
                 reader?.NextResult();
-                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, connection)?.AsList();
+                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>(), transaction);
+                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
                     item1, item2, item3, item4, item5, item6, item7);
             }
@@ -1857,10 +1902,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -1873,7 +1918,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -1886,7 +1931,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2);
             var maps = new[]
             {
@@ -1927,14 +1972,19 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = (await DataReader.ToEnumerableAsync<T1>((DbDataReader)reader, connection))?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = (await DataReader.ToEnumerableAsync<T2>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
             }
 
@@ -2065,10 +2115,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -2081,7 +2131,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -2094,7 +2144,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -2107,7 +2157,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
             var maps = new[]
             {
@@ -2149,18 +2199,24 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = (await DataReader.ToEnumerableAsync<T1>((DbDataReader)reader, connection))?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = (await DataReader.ToEnumerableAsync<T2>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = (await DataReader.ToEnumerableAsync<T3>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
             }
 
@@ -2317,10 +2373,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -2333,7 +2389,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -2346,7 +2402,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -2359,7 +2415,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -2372,7 +2428,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
             var maps = new[]
             {
@@ -2415,22 +2471,29 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = (await DataReader.ToEnumerableAsync<T1>((DbDataReader)reader, connection))?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = (await DataReader.ToEnumerableAsync<T2>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = (await DataReader.ToEnumerableAsync<T3>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = (await DataReader.ToEnumerableAsync<T4>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
             }
 
@@ -2611,10 +2674,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -2627,7 +2690,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -2640,7 +2703,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -2653,7 +2716,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -2666,7 +2729,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // T5 Variables
+            // T5
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
@@ -2679,7 +2742,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
             var maps = new[]
             {
@@ -2723,26 +2786,34 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = (await DataReader.ToEnumerableAsync<T1>((DbDataReader)reader, connection))?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = (await DataReader.ToEnumerableAsync<T2>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = (await DataReader.ToEnumerableAsync<T3>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = (await DataReader.ToEnumerableAsync<T4>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fifth result
+                // T5
                 reader?.NextResult();
-                var item5 = (await DataReader.ToEnumerableAsync<T5>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
             }
 
@@ -2947,10 +3018,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -2963,7 +3034,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -2976,7 +3047,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -2989,7 +3060,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -3002,7 +3073,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // T5 Variables
+            // T5
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
@@ -3015,7 +3086,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
-            // T6 Variables
+            // T6
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
@@ -3028,7 +3099,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
             var maps = new[]
             {
@@ -3073,30 +3144,39 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = (await DataReader.ToEnumerableAsync<T1>((DbDataReader)reader, connection))?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = (await DataReader.ToEnumerableAsync<T2>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = (await DataReader.ToEnumerableAsync<T3>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = (await DataReader.ToEnumerableAsync<T4>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fifth result
+                // T5
                 reader?.NextResult();
-                var item5 = (await DataReader.ToEnumerableAsync<T5>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the sixth result
+                // T6
                 reader?.NextResult();
-                var item6 = (await DataReader.ToEnumerableAsync<T6>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction);
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
                     item1, item2, item3, item4, item5, item6);
             }
@@ -3326,10 +3406,10 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
 
-            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            // Fix
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
 
-            // T1 Variables
+            // T1
             var request1 = new QueryMultipleRequest(1,
                 typeof(T1),
                 connection,
@@ -3342,7 +3422,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
-            // T2 Variables
+            // T2
             var request2 = new QueryMultipleRequest(2,
                 typeof(T2),
                 connection,
@@ -3355,7 +3435,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
-            // T3 Variables
+            // T3
             var request3 = new QueryMultipleRequest(3,
                 typeof(T3),
                 connection,
@@ -3368,7 +3448,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
-            // T4 Variables
+            // T4
             var request4 = new QueryMultipleRequest(4,
                 typeof(T4),
                 connection,
@@ -3381,7 +3461,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
-            // T5 Variables
+            // T5
             var request5 = new QueryMultipleRequest(5,
                 typeof(T5),
                 connection,
@@ -3394,7 +3474,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
-            // T6 Variables
+            // T6
             var request6 = new QueryMultipleRequest(6,
                 typeof(T6),
                 connection,
@@ -3407,7 +3487,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
-            // T7 Variables
+            // T7
             var request7 = new QueryMultipleRequest(7,
                 typeof(T7),
                 connection,
@@ -3420,7 +3500,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
-            // Shared objects for all types
+            // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
             var maps = new[]
             {
@@ -3466,34 +3546,44 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: true))
             {
-                // Extract the first result
-                var item1 = (await DataReader.ToEnumerableAsync<T1>((DbDataReader)reader, connection))?.AsList();
+                var dbSetting = connection.GetDbSetting();
+                var dbFields = (IEnumerable<DbField>)null;
 
-                // Extract the second result
+                // T1
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+
+                // T2
                 reader?.NextResult();
-                var item2 = (await DataReader.ToEnumerableAsync<T2>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the third result
+                // T3
                 reader?.NextResult();
-                var item3 = (await DataReader.ToEnumerableAsync<T3>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fourth result
+                // T4
                 reader?.NextResult();
-                var item4 = (await DataReader.ToEnumerableAsync<T4>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the fifth result
+                // T5
                 reader?.NextResult();
-                var item5 = (await DataReader.ToEnumerableAsync<T5>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the sixth result
+                // T6
                 reader?.NextResult();
-                var item6 = (await DataReader.ToEnumerableAsync<T6>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction);
+                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Extract the seventh result
+                // T7
                 reader?.NextResult();
-                var item7 = (await DataReader.ToEnumerableAsync<T7>((DbDataReader)reader, connection))?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction);
+                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
 
-                // Set the result instance
+                // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
                     item1, item2, item3, item4, item5, item6, item7);
             }

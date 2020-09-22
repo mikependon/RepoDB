@@ -1,10 +1,8 @@
 ﻿using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Dynamic;
-using System.Threading.Tasks;
 
 namespace RepoDb.Reflection
 {
@@ -13,49 +11,20 @@ namespace RepoDb.Reflection
     /// </summary>
     internal static class FunctionFactory
     {
-        #region CompileDataReaderToDataEntityAsync
+        #region CompileDataReaderToType
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="reader"></param>
-        /// <param name="connection"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
+        /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
+        /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         public static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation) =>
-            Compiler.CompileDataReaderToType<TResult>(reader,
-                connection,
-                connectionString,
-                transaction,
-                enableValidation);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="reader"></param>
-        /// <param name="connection"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
-        /// <returns></returns>
-        public static Task<Func<DbDataReader, TResult>> CompileDataReaderToTypeAsync<TResult>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation) =>
-            Compiler.CompileDataReaderToTypeAsync<TResult>(reader,
-                connection,
-                connectionString,
-                transaction,
-                enableValidation);
+            IEnumerable<DbField> dbFields = null,
+            IDbSetting dbSetting = null) =>
+            Compiler.CompileDataReaderToType<TResult>(reader, dbFields, dbSetting);
 
         #endregion
 
@@ -65,35 +34,13 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        /// <param name="tableName"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
-            string tableName,
-            IDbConnection connection,
-            IDbTransaction transaction) =>
-            Compiler.CompileDataReaderToExpandoObject(reader,
-                tableName,
-                connection,
-                transaction);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="tableName"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public static Task<Func<DbDataReader, ExpandoObject>> CompileDataReaderToExpandoObjectAsync(DbDataReader reader,
-            string tableName,
-            IDbConnection connection,
-            IDbTransaction transaction) =>
-            Compiler.CompileDataReaderToExpandoObjectAsync(reader,
-                tableName,
-                connection,
-                transaction);
+            IEnumerable<DbField> dbFields = null,
+            IDbSetting dbSetting = null) =>
+            Compiler.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
 
         #endregion
 
@@ -109,7 +56,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         public static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting = null)
             where TEntity : class =>
             Compiler.CompileDataEntityDbParameterSetter<TEntity>(inputFields, outputFields, dbSetting);
 
@@ -129,7 +76,7 @@ namespace RepoDb.Reflection
         public static Action<DbCommand, IList<TEntity>> CompileDataEntityListDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting = null)
             where TEntity : class =>
             Compiler.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
 
@@ -149,7 +96,7 @@ namespace RepoDb.Reflection
         public static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
             string parameterName,
             int index,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting = null)
             where TEntity : class =>
             Compiler.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
 

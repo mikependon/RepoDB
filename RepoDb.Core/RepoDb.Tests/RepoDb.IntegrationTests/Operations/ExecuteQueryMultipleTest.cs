@@ -191,6 +191,46 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractWithoutParametersAndWithManualNextResultCall()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.Extract<IdentityTable>(false);
+                        result.NextResult();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Extract<dynamic>
@@ -351,6 +391,46 @@ namespace RepoDb.IntegrationTests.Operations
                     // Assert
                     Assert.AreEqual(1, value3.Count());
                     Helper.AssertMembersEquality(tables.Where(t => t.Id == value3.First().Id).First(), (ExpandoObject)value3.First());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractAsDynamicWithoutParametersAndWithManualNextResultCall()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.Extract(false);
+                        result.NextResult();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
                 }
             }
         }
@@ -524,6 +604,46 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractAsyncWithoutParametersAndWithManualNextResultCall()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.ExtractAsync<IdentityTable>(false).Result;
+                        result.NextResultAsync().Wait();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region ExtractAsync<dynamic>
@@ -688,6 +808,46 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithoutParametersAndWithManualNextResultCall()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                    SELECT TOP 2 * FROM [sc].[IdentityTable];
+                    SELECT TOP 3 * FROM [sc].[IdentityTable];
+                    SELECT TOP 4 * FROM [sc].[IdentityTable];
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act
+                        var items = result.ExtractAsync(false).Result;
+                        result.NextResultAsync().Wait();
+
+                        // Assert
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert
+                        for (var c = 0; c < index; c++)
+                        {
+                            Helper.AssertMembersEquality(tables.ElementAt(c), (ExpandoObject)items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #endregion
@@ -805,6 +965,39 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithoutParametersAndWithManualNextResultCall()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';"))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>(false);
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    result.NextResult();
+                    var value2 = result.Scalar<int>(false);
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    result.NextResult();
+                    var value3 = result.Scalar<string>(false);
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
         #endregion
 
         #region Scalar<object>
@@ -914,6 +1107,39 @@ namespace RepoDb.IntegrationTests.Operations
                     var value3 = result.Scalar();
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarWithoutParametersAndWithManualNextResultCall()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';"))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar(false);
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    result.NextResult();
+                    var value2 = result.Scalar(false);
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    result.NextResult();
+                    var value3 = result.Scalar(false);
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
                 }
             }
         }
@@ -1035,6 +1261,39 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithoutParametersAndWithManualNextResultCall()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';").Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>(false);
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    result.NextResult();
+                    var value2 = result.Scalar<int>(false);
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    result.NextResult();
+                    var value3 = result.Scalar<string>(false);
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
         #endregion
 
         #region ScalarAsync<object>
@@ -1144,6 +1403,39 @@ namespace RepoDb.IntegrationTests.Operations
                     var value3 = result.ScalarAsync().Result;
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithoutParametersAndWithManualNextResultCall()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';").Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.ScalarAsync(false).Result;
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    result.NextResultAsync().Wait();
+                    var value2 = result.ScalarAsync(false).Result;
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    result.NextResultAsync().Wait();
+                    var value3 = result.ScalarAsync(false).Result;
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
                 }
             }
         }

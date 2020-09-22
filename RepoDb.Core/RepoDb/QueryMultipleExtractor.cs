@@ -1,9 +1,7 @@
 using RepoDb.Extensions;
 using RepoDb.Reflection;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
@@ -14,43 +12,20 @@ namespace RepoDb
     /// </summary>
     public sealed class QueryMultipleExtractor : IDisposable
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<DbField>> cache = new ConcurrentDictionary<int, IEnumerable<DbField>>();
+        /*
+         * TODO: The extraction within this class does not use the DbFieldCache.Get() operation, therefore,
+         *       we are not passing the values to the DataReader.ToEnumerable() method.
+         */
+
         private DbDataReader reader = null;
-        private IDbConnection connection = null;
-        private IDbTransaction transaction = null;
-        private string connectionString = null;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
-        internal QueryMultipleExtractor(DbDataReader reader,
-            IDbConnection connection,
-            IDbTransaction transaction)
-            : this(reader,
-                  connection,
-                  transaction,
-                  connection.ConnectionString)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
-        /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
-        /// <param name="connection">The used <see cref="IDbConnection"/> object.</param>
-        /// <param name="transaction">The used <see cref="IDbTransaction"/> object.</param>
-        /// <param name="connectionString">The unaltered connetion string used by the connection object.</param>
-        internal QueryMultipleExtractor(DbDataReader reader,
-            IDbConnection connection,
-            IDbTransaction transaction,
-            string connectionString)
+        internal QueryMultipleExtractor(DbDataReader reader)
         {
             this.reader = reader;
-            this.connection = connection;
-            this.transaction = transaction;
-            this.connectionString = connectionString;
             Position = 0;
         }
 
@@ -69,97 +44,6 @@ namespace RepoDb
 
         #endregion
 
-        #region Methods
-
-        // TODO: Revisits whether "without" creating a new instance of connection object is possible
-        //       This line of code is a dead-end, I could not even refactor due to the feature of this class (multiple extracting).
-        //       Reason why we need to recreate a new connection object is to let us open a new DbDataReader directly to the database
-        //       where the current connection is connected. The variable 'reader' is an already opened DbDataReader object which
-        //       prevents us of doing so.
-
-
-        /// <summary>
-        /// Returns the usable cache key when calling the <see cref="DbField"/> operations.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
-        /// <returns>The key to the cache.</returns>
-        private int GetDbFieldGetCallsCacheKey<TEntity>()
-        {
-            // If the connection is open, probably, there is already an open DbDataReader object
-            var key = connection.GetType().GetHashCode();
-
-            // Add the entity type hash code
-            key += typeof(TEntity).GetHashCode();
-
-            // Add the connection string hashcode
-            if (!string.IsNullOrWhiteSpace(connectionString))
-            {
-                key += connectionString.GetHashCode();
-            }
-
-            // Return the reusable key
-            return key;
-        }
-
-        /// <summary>
-        /// Ensures that the <see cref="DbFieldCache.Get(IDbConnection, string, IDbTransaction)"/> method is being called one.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        private void EnsureSingleCallForDbFieldCacheGet<TEntity>(IDbTransaction transaction)
-            where TEntity : class
-        {
-            // If the connection is open, probably, there is already an open DbDataReader object
-            if (connection.State == ConnectionState.Open)
-            {
-                return;
-            }
-
-            // Variables
-            var key = GetDbFieldGetCallsCacheKey<TEntity>();
-            var dbFields = (IEnumerable<DbField>)null;
-
-            // Try get the value
-            if (cache.TryGetValue(key, out dbFields) == false)
-            {
-                using (var connection = (IDbConnection)Activator.CreateInstance(this.connection.GetType(), new object[] { connectionString }))
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                }
-                cache.TryAdd(key, dbFields);
-            }
-        }
-
-        /// <summary>
-        /// Ensures that the <see cref="DbFieldCache.GetAsync(IDbConnection, string, IDbTransaction)"/> method is being called one.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the entity to check.</typeparam>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        private async Task EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(IDbTransaction transaction)
-            where TEntity : class
-        {
-            if (connection.State == ConnectionState.Open)
-            {
-                return;
-            }
-
-            // Variables
-            var key = GetDbFieldGetCallsCacheKey<TEntity>();
-            var dbFields = (IEnumerable<DbField>)null;
-
-            // Try get the value
-            if (cache.TryGetValue(key, out dbFields) == false)
-            {
-                using (var connection = (IDbConnection)Activator.CreateInstance(this.connection.GetType(), new object[] { connectionString }))
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TEntity>(), transaction, false);
-                }
-                cache.TryAdd(key, dbFields);
-            }
-        }
-
-        #endregion
-
         #region Extract
 
         #region Extract<TEntity>
@@ -168,20 +52,16 @@ namespace RepoDb
         /// Extract the <see cref="DbDataReader"/> object into an enumerable of data entity objects.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public IEnumerable<TEntity> Extract<TEntity>()
+        public IEnumerable<TEntity> Extract<TEntity>(bool isMoveToNextResult = true)
             where TEntity : class
         {
-            // Call the cache first to avoid reusing multiple data readers
-            EnsureSingleCallForDbFieldCacheGet<TEntity>(transaction);
-
-            // Get the result
-            var result = DataReader.ToEnumerable<TEntity>(reader, connection, transaction).AsList();
-
-            // Move to next result
-            NextResult();
-
-            // Return the result
+            var result = DataReader.ToEnumerable<TEntity>(reader).AsList();
+            if (isMoveToNextResult)
+            {
+                NextResult();
+            }
             return result;
         }
 
@@ -189,20 +69,16 @@ namespace RepoDb
         /// Extract the <see cref="DbDataReader"/> object into an enumerable of data entity objects in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity to be extracted.</typeparam>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>()
+        public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
             where TEntity : class
         {
-            // Call the cache first to avoid reusing multiple data readers
-            await EnsureSingleCallForDbFieldCacheGeAsync<TEntity>(transaction);
-
-            // Get the result
-            var result = await DataReader.ToEnumerableAsync<TEntity>(reader, connection, transaction);
-
-            // Move to next result
-            await NextResultAsync();
-
-            // Return the result
+            var result = DataReader.ToEnumerable<TEntity>(reader).AsList();
+            if (isMoveToNextResult)
+            {
+                await NextResultAsync();
+            }
             return result;
         }
 
@@ -213,30 +89,30 @@ namespace RepoDb
         /// <summary>
         /// Extract the <see cref="DbDataReader"/> object into an enumerable of dynamic objects.
         /// </summary>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public IEnumerable<dynamic> Extract()
+        public IEnumerable<dynamic> Extract(bool isMoveToNextResult = true)
         {
-            var result = DataReader.ToEnumerable(reader, null, connection, transaction).AsList();
-
-            // Move to next result
-            NextResult();
-
-            // Return the result
+            var result = DataReader.ToEnumerable(reader).AsList();
+            if (isMoveToNextResult)
+            {
+                NextResult();
+            }
             return result;
         }
 
         /// <summary>
         /// Extract the <see cref="DbDataReader"/> object into an enumerable of dynamic objects in an asynchronous way.
         /// </summary>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
-        public async Task<IEnumerable<dynamic>> ExtractAsync()
+        public async Task<IEnumerable<dynamic>> ExtractAsync(bool isMoveToNextResult = true)
         {
-            var result = await DataReader.ToEnumerableAsync(reader, null, connection, transaction);
-
-            // Move to next result
-            await NextResultAsync();
-
-            // Return the result
+            var result = DataReader.ToEnumerable(reader).AsList();
+            if (isMoveToNextResult)
+            {
+                await NextResultAsync();
+            }
             return result;
         }
 
@@ -252,21 +128,19 @@ namespace RepoDb
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An instance of extracted object as value result.</returns>
-        public TResult Scalar<TResult>()
+        public TResult Scalar<TResult>(bool isMoveToNextResult = true)
         {
             var value = default(TResult);
-
-            // Only if there are record
             if (reader.Read())
             {
                 value = Converter.ToType<TResult>(reader[0]);
             }
-
-            // Move to next result
-            NextResult();
-
-            // Return the result
+            if (isMoveToNextResult)
+            {
+                NextResult();
+            }
             return value;
         }
 
@@ -274,21 +148,19 @@ namespace RepoDb
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object in an asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An instance of extracted object as value result.</returns>
-        public async Task<TResult> ScalarAsync<TResult>()
+        public async Task<TResult> ScalarAsync<TResult>(bool isMoveToNextResult = true)
         {
             var value = default(TResult);
-
-            // Only if there are record
             if (await reader.ReadAsync())
             {
                 value = Converter.ToType<TResult>(reader[0]);
             }
-
-            // Move to next result
-            await NextResultAsync();
-
-            // Return the result
+            if (isMoveToNextResult)
+            {
+                await NextResultAsync();
+            }
             return value;
         }
 
@@ -299,16 +171,18 @@ namespace RepoDb
         /// <summary>
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
         /// </summary>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An instance of extracted object as value result.</returns>
-        public object Scalar() =>
-            Scalar<object>();
+        public object Scalar(bool isMoveToNextResult = true) =>
+            Scalar<object>(isMoveToNextResult);
 
         /// <summary>
         /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object in an asynchronous way.
         /// </summary>
+        /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An instance of extracted object as value result.</returns>
-        public Task<object> ScalarAsync() =>
-            ScalarAsync<object>();
+        public Task<object> ScalarAsync(bool isMoveToNextResult = true) =>
+            ScalarAsync<object>(isMoveToNextResult);
 
         #endregion
 

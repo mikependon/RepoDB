@@ -4,11 +4,8 @@ using RepoDb.Reflection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RepoDb
 {
@@ -48,34 +45,13 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="reader"></param>
-        /// <param name="connection"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
+        /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
+        /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation) =>
-            DataReaderToTypeCache<TResult>.Get(reader, connection, connectionString, transaction, enableValidation);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="reader"></param>
-        /// <param name="connection"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
-        /// <returns></returns>
-        internal static Task<Func<DbDataReader, TResult>> GetDataReaderToTypeCompiledFunctionAsync<TResult>(DbDataReader reader,
-            IDbConnection connection,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation) =>
-            DataReaderToTypeCache<TResult>.GetAsync(reader, connection, connectionString, transaction, enableValidation);
+            IEnumerable<DbField> dbFields = null,
+            IDbSetting dbSetting = null) =>
+            DataReaderToTypeCache<TResult>.Get(reader, dbFields, dbSetting);
 
         #region DataReaderToTypeCache
 
@@ -91,22 +67,18 @@ namespace RepoDb
             /// 
             /// </summary>
             /// <param name="reader"></param>
-            /// <param name="connection"></param>
-            /// <param name="connectionString"></param>
-            /// <param name="transaction"></param>
-            /// <param name="enableValidation"></param>
+            /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
+            /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
             /// <returns></returns>
             internal static Func<DbDataReader, TResult> Get(DbDataReader reader,
-                IDbConnection connection,
-                string connectionString,
-                IDbTransaction transaction,
-                bool enableValidation)
+                IEnumerable<DbField> dbFields = null,
+                IDbSetting dbSetting = null)
             {
                 var result = (Func<DbDataReader, TResult>)null;
-                var key = GetKey(reader, connection);
+                var key = GetKey(reader);
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.CompileDataReaderToType<TResult>(reader, connection, connectionString, transaction, enableValidation);
+                    result = FunctionFactory.CompileDataReaderToType<TResult>(reader, dbFields, dbSetting);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -116,37 +88,9 @@ namespace RepoDb
             /// 
             /// </summary>
             /// <param name="reader"></param>
-            /// <param name="connection"></param>
-            /// <param name="connectionString"></param>
-            /// <param name="transaction"></param>
-            /// <param name="enableValidation"></param>
             /// <returns></returns>
-            internal static async Task<Func<DbDataReader, TResult>> GetAsync(DbDataReader reader,
-                IDbConnection connection,
-                string connectionString,
-                IDbTransaction transaction,
-                bool enableValidation)
-            {
-                var result = (Func<DbDataReader, TResult>)null;
-                var key = GetKey(reader, connection);
-                if (cache.TryGetValue(key, out result) == false)
-                {
-                    result = await FunctionFactory.CompileDataReaderToTypeAsync<TResult>(reader, connection, connectionString, transaction, enableValidation);
-                    cache.TryAdd(key, result);
-                }
-                return result;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="reader"></param>
-            /// <param name="connection"></param>
-            /// <returns></returns>
-            private static long GetKey(DbDataReader reader,
-                IDbConnection connection) =>
-                GetReaderFieldsHashCode(reader) + typeof(TResult).GetHashCode() +
-                   (connection?.ConnectionString?.GetHashCode()).GetValueOrDefault();
+            private static long GetKey(DbDataReader reader) =>
+                GetReaderFieldsHashCode(reader) + typeof(TResult).GetHashCode();
         }
 
         #endregion
@@ -159,29 +103,13 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        /// <param name="tableName"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, dynamic> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
-            string tableName,
-            IDbConnection connection,
-            IDbTransaction transaction) =>
-            DataReaderToExpandoObjectCache.Get(reader, tableName, connection, transaction);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <param name="tableName"></param>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static Task<Func<DbDataReader, dynamic>> GetDataReaderToExpandoObjectCompileFunctionAsync(DbDataReader reader,
-            string tableName,
-            IDbConnection connection,
-            IDbTransaction transaction) =>
-            DataReaderToExpandoObjectCache.GetAsync(reader, tableName, connection, transaction);
+            IEnumerable<DbField> dbFields = null,
+            IDbSetting dbSetting = null) =>
+            DataReaderToExpandoObjectCache.Get(reader, dbFields, dbSetting);
 
         #region DataReaderToExpandoObjectCache
 
@@ -196,20 +124,18 @@ namespace RepoDb
             /// 
             /// </summary>
             /// <param name="reader"></param>
-            /// <param name="tableName"></param>
-            /// <param name="connection"></param>
-            /// <param name="transaction"></param>
+            /// <param name="dbFields"></param>
+            /// <param name="dbSetting"></param>
             /// <returns></returns>
             internal static Func<DbDataReader, dynamic> Get(DbDataReader reader,
-                string tableName,
-                IDbConnection connection,
-                IDbTransaction transaction)
+                IEnumerable<DbField> dbFields = null,
+                IDbSetting dbSetting = null)
             {
                 var result = (Func<DbDataReader, dynamic>)null;
-                var key = GetKey(reader, tableName, connection);
+                var key = GetKey(reader);
                 if (cache.TryGetValue(key, out result) == false)
                 {
-                    result = FunctionFactory.CompileDataReaderToExpandoObject(reader, tableName, connection, transaction);
+                    result = FunctionFactory.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
                     cache.TryAdd(key, result);
                 }
                 return result;
@@ -219,37 +145,9 @@ namespace RepoDb
             /// 
             /// </summary>
             /// <param name="reader"></param>
-            /// <param name="tableName"></param>
-            /// <param name="connection"></param>
-            /// <param name="transaction"></param>
             /// <returns></returns>
-            internal static async Task<Func<DbDataReader, dynamic>> GetAsync(DbDataReader reader,
-                string tableName,
-                IDbConnection connection,
-                IDbTransaction transaction)
-            {
-                var result = (Func<DbDataReader, dynamic>)null;
-                var key = GetKey(reader, tableName, connection);
-                if (cache.TryGetValue(key, out result) == false)
-                {
-                    result = await FunctionFactory.CompileDataReaderToExpandoObjectAsync(reader, tableName, connection, transaction);
-                    cache.TryAdd(key, result);
-                }
-                return result;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="reader"></param>
-            /// <param name="tableName"></param>
-            /// <param name="connection"></param>
-            /// <returns></returns>
-            private static long GetKey(DbDataReader reader,
-                string tableName,
-                IDbConnection connection) =>
-                GetReaderFieldsHashCode(reader) + (tableName?.GetHashCode()).GetValueOrDefault() +
-                    (connection?.ConnectionString?.GetHashCode()).GetValueOrDefault();
+            private static long GetKey(DbDataReader reader) =>
+                GetReaderFieldsHashCode(reader);
         }
 
         #endregion
@@ -270,7 +168,7 @@ namespace RepoDb
         internal static Action<DbCommand, TEntity> GetDataEntityDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting = null)
             where TEntity : class =>
             DataEntityDbParameterSetterCache<TEntity>.Get(cacheKey, inputFields, outputFields, dbSetting);
 
@@ -296,7 +194,7 @@ namespace RepoDb
             internal static Action<DbCommand, TEntity> Get(string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
-                IDbSetting dbSetting)
+                IDbSetting dbSetting = null)
             {
                 var func = (Action<DbCommand, TEntity>)null;
                 var key = GetKey(cacheKey, inputFields, outputFields);
@@ -358,7 +256,7 @@ namespace RepoDb
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting = null)
             where TEntity : class =>
             DataEntityListDbParameterSetterCache<TEntity>.Get(cacheKey, inputFields, outputFields, batchSize, dbSetting);
 
@@ -386,7 +284,7 @@ namespace RepoDb
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 int batchSize,
-                IDbSetting dbSetting)
+                IDbSetting dbSetting = null)
             {
                 var func = (Action<DbCommand, IList<TEntity>>)null;
                 var key = GetKey(cacheKey, inputFields, outputFields, batchSize);
@@ -449,7 +347,7 @@ namespace RepoDb
         internal static Action<TEntity, DbCommand> GetDbCommandToPropertyCompiledFunction<TEntity>(Field field,
             string parameterName,
             int index,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting = null)
             where TEntity : class =>
             DbCommandToPropertyCache<TEntity>.Get(field, parameterName, index, dbSetting);
 
@@ -475,7 +373,7 @@ namespace RepoDb
             internal static Action<TEntity, DbCommand> Get(Field field,
                 string parameterName,
                 int index,
-                IDbSetting dbSetting)
+                IDbSetting dbSetting = null)
             {
                 var key = (long)typeof(TEntity).GetHashCode() + field.GetHashCode() +
                     parameterName.GetHashCode() + index.GetHashCode();

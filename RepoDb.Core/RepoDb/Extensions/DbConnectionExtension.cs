@@ -145,29 +145,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of dynamic objects.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>
-        /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
-        /// </returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="tableName"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static IEnumerable<dynamic> ExecuteQueryInternal(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -200,17 +191,17 @@ namespace RepoDb
                 entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var fields = !string.IsNullOrWhiteSpace(tableName) ?
+                    DbFieldCache.Get(connection, tableName, transaction, false) : null;
+
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = DataReader.ToEnumerable(reader,
-                        tableName,
-                        connection,
-                        transaction).AsList();
+                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, fields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -269,29 +260,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of dynamic objects.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <see cref="IDbCommand.CommandText"/> property.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>
-        /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
-        /// </returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="tableName"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static async Task<IEnumerable<dynamic>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -324,17 +306,17 @@ namespace RepoDb
                 entityType: null,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var fields = !string.IsNullOrWhiteSpace(tableName) ?
+                    await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (await DataReader.ToEnumerableAsync(reader,
-                        tableName,
-                        connection,
-                        transaction)).AsList();
+                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, fields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -389,33 +371,26 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                tableName: ClassMappedNameCache.Get<TResult>(),
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of the target result type.
+        /// 
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>
-        /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
-        /// </returns>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="tableName"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static IEnumerable<TResult> ExecuteQueryInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -425,6 +400,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -452,6 +428,7 @@ namespace RepoDb
                    commandTimeout: commandTimeout,
                    transaction: transaction,
                    cache: cache,
+                   tableName: tableName,
                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
             else
@@ -465,6 +442,7 @@ namespace RepoDb
                    commandTimeout: commandTimeout,
                    transaction: transaction,
                    cache: cache,
+                   tableName: tableName,
                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
         }
@@ -482,6 +460,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+        /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static IEnumerable<TResult> ExecuteQueryInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
@@ -493,6 +472,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -515,7 +495,7 @@ namespace RepoDb
                commandTimeout: commandTimeout,
                transaction: transaction,
                cache: null,
-               tableName: null,
+               tableName: tableName,
                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).OfTargetType<dynamic, TResult>();
 
             // Set Cache
@@ -541,6 +521,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+        /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static IEnumerable<TResult> ExecuteQueryInternalForType<TResult>(this IDbConnection connection,
@@ -552,6 +533,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -564,16 +546,6 @@ namespace RepoDb
                 }
             }
 
-            // Variables needed on this operation
-            var connectionString = connection.ConnectionString;
-
-            // Trigger the cache to avoid reusing the connection
-            if (connection.State == ConnectionState.Open || transaction != null)
-            {
-                connectionString = null;
-                DbFieldCache.Get(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
-            }
-
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -584,13 +556,13 @@ namespace RepoDb
                 entityType: typeof(TResult),
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var fields = !string.IsNullOrWhiteSpace(tableName) ?
+                    DbFieldCache.Get(connection, tableName, transaction, false) : null;
+
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = (IEnumerable<TResult>)DataReader.ToEnumerableInternal<TResult>(reader,
-                        connection,
-                        connectionString,
-                        transaction,
-                        false).AsList();
+                    var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader,
+                        fields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -650,33 +622,26 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                tableName: ClassMappedNameCache.Get<TResult>(),
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// converts the result back to an enumerable list of the target result type.
+        /// 
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cache">The cache object to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>
-        /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
-        /// </returns>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="tableName"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -686,6 +651,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -713,6 +679,7 @@ namespace RepoDb
                    commandTimeout: commandTimeout,
                    transaction: transaction,
                    cache: cache,
+                   tableName: tableName,
                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
             else
@@ -726,6 +693,7 @@ namespace RepoDb
                    commandTimeout: commandTimeout,
                    transaction: transaction,
                    cache: cache,
+                   tableName: tableName,
                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
         }
@@ -743,6 +711,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+        /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
@@ -754,6 +723,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -776,7 +746,7 @@ namespace RepoDb
                commandTimeout: commandTimeout,
                transaction: transaction,
                cache: null,
-               tableName: null,
+               tableName: tableName,
                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).OfTargetType<dynamic, TResult>();
 
             // Set Cache
@@ -802,6 +772,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+        /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForType<TResult>(this IDbConnection connection,
@@ -813,6 +784,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
@@ -825,16 +797,6 @@ namespace RepoDb
                 }
             }
 
-            // Variables needed on this operation
-            var connectionString = connection.ConnectionString;
-
-            // Trigger the cache to avoid reusing the connection
-            if (connection.State == ConnectionState.Open || transaction != null)
-            {
-                connectionString = null;
-                await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<TResult>(), transaction, false);
-            }
-
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
@@ -845,13 +807,13 @@ namespace RepoDb
                 entityType: typeof(TResult),
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var fields = !string.IsNullOrWhiteSpace(tableName) ?
+                    await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (IEnumerable<TResult>)(await DataReader.ToEnumerableAsyncInternal<TResult>(reader,
-                        connection,
-                        connectionString,
-                        transaction,
-                        false)).AsList();
+                    var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader, fields,
+                        connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -889,10 +851,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            // Variables needed on this operation
-            var connectionString = connection.ConnectionString;
-
-            // Read the result
+            // Call
             var reader = ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -901,8 +860,8 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: false);
 
-            // Create an extractor class
-            return new QueryMultipleExtractor((DbDataReader)reader, connection, transaction, connectionString);
+            // Return
+            return new QueryMultipleExtractor((DbDataReader)reader);
         }
 
         /// <summary>
@@ -925,10 +884,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            // Variables needed on this operation
-            var connectionString = connection.ConnectionString;
-
-            // Read the result
+            // Call
             var reader = await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -937,8 +893,8 @@ namespace RepoDb
                 transaction: transaction,
                 skipCommandArrayParametersCheck: false);
 
-            // Create an extractor class
-            return new QueryMultipleExtractor((DbDataReader)reader, connection, transaction, connectionString);
+            // Return
+            return new QueryMultipleExtractor((DbDataReader)reader);
         }
 
         #endregion
