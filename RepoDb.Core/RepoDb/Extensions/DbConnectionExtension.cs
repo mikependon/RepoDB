@@ -315,7 +315,7 @@ namespace RepoDb
             }
 
             // Execute the actual method
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -836,7 +836,7 @@ namespace RepoDb
             }
 
             // Execute the actual method
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1088,7 +1088,7 @@ namespace RepoDb
         {
             // Variables
             var setting = connection.GetDbSetting();
-            var command = CreateDbCommandForExecution(connection: connection,
+            var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1244,7 +1244,7 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1384,7 +1384,7 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1526,7 +1526,7 @@ namespace RepoDb
             IDbTransaction transaction,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -2258,6 +2258,41 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="commandText"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="values"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static string ToRawSqlWithArrayParams(string commandText,
+            string parameterName,
+            IEnumerable<object> values,
+            IDbSetting dbSetting)
+        {
+            // Check for the defined parameter
+            if (commandText.IndexOf(parameterName) < 0)
+            {
+                return commandText;
+            }
+
+            // Return if there is no values
+            if (values?.Any() != true)
+            {
+                return commandText;
+            }
+
+            // Get the variables needed
+            var parameters = values.Select((value, index) =>
+                string.Concat(parameterName, index).AsParameter(dbSetting));
+
+            // Replace the target parameter
+            return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
+        }
+
+        #region CreateDbCommandForExecution
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
         /// <param name="param"></param>
@@ -2279,9 +2314,81 @@ namespace RepoDb
             // Validate
             ValidateTransactionConnectionObject(connection, transaction);
 
+            // Open
+            connection.EnsureOpen();
+
+            // Call
+            return CreateDbCommandForExecutionInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: entityType,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
+        internal static async Task<DbCommand> CreateDbCommandForExecutionAsync(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            Type entityType = null,
+            bool skipCommandArrayParametersCheck = true)
+        {
+            // Validate
+            ValidateTransactionConnectionObject(connection, transaction);
+
+            // Open
+            await connection.EnsureOpenAsync();
+
+            // Call
+            return CreateDbCommandForExecutionInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: entityType,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
+        private static DbCommand CreateDbCommandForExecutionInternal(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            Type entityType = null,
+            bool skipCommandArrayParametersCheck = true)
+        {
             // Command
             var command = connection
-                .EnsureOpen()
                 .CreateCommand(commandText, commandType, commandTimeout, transaction);
 
             // Func
@@ -2327,38 +2434,7 @@ namespace RepoDb
             return (DbCommand)command;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="commandText"></param>
-        /// <param name="parameterName"></param>
-        /// <param name="values"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        internal static string ToRawSqlWithArrayParams(string commandText,
-            string parameterName,
-            IEnumerable<object> values,
-            IDbSetting dbSetting)
-        {
-            // Check for the defined parameter
-            if (commandText.IndexOf(parameterName) < 0)
-            {
-                return commandText;
-            }
-
-            // Return if there is no values
-            if (values?.Any() != true)
-            {
-                return commandText;
-            }
-
-            // Get the variables needed
-            var parameters = values.Select((value, index) =>
-                string.Concat(parameterName, index).AsParameter(dbSetting));
-
-            // Replace the target parameter
-            return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
-        }
+        #endregion
 
         #region GetCommandArrayParameters
 
