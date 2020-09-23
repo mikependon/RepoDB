@@ -1039,9 +1039,14 @@ namespace RepoDb.Reflection
             var readerGetValueMethod = GetDbReaderGetValueOrDefaultMethod(readerField);
             var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
                 readerGetValueMethod, readerField.Ordinal);
+            var isAutomatic = Converter.ConversionType == ConversionType.Automatic ||
+                targetType.GetUnderlyingType() == StaticType.TimeSpan ||
+                /* SQLite: Guid to String -- enforce automatic conversion for the Primary/Identity fields */
+                readerField.DbField?.IsPrimary == true ||
+                readerField.DbField?.IsIdentity == true;
 
             // Automatic
-            if (Converter.ConversionType == ConversionType.Automatic || targetType.GetUnderlyingType() == StaticType.TimeSpan)
+            if (isAutomatic)
             {
                 try
                 {
