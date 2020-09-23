@@ -1039,14 +1039,13 @@ namespace RepoDb.Reflection
             var readerGetValueMethod = GetDbReaderGetValueOrDefaultMethod(readerField);
             var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
                 readerGetValueMethod, readerField.Ordinal);
-            var isAutomatic = Converter.ConversionType == ConversionType.Automatic ||
+            var isAutomaticConversion = Converter.ConversionType == ConversionType.Automatic ||
                 targetType.GetUnderlyingType() == StaticType.TimeSpan ||
-                /* SQLite: Guid to String -- enforce automatic conversion for the Primary/Identity fields */
-                readerField.DbField?.IsPrimary == true ||
-                readerField.DbField?.IsIdentity == true;
+                /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */
+                readerField.DbField?.IsPrimary == true || readerField.DbField?.IsIdentity == true;
 
-            // Automatic
-            if (isAutomatic)
+            // Auto-conversion
+            if (isAutomaticConversion == true)
             {
                 try
                 {
@@ -1336,8 +1335,8 @@ namespace RepoDb.Reflection
             var handlerInstance = classProperty.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
             var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
 
-            // Handling
-            if (Converter.ConversionType == ConversionType.Automatic)
+            // Auto-conversion Handling
+            if (Converter.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
             {
                 try
                 {
