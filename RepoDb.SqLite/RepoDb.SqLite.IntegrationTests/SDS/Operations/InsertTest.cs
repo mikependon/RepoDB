@@ -71,7 +71,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);
@@ -130,7 +130,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);
@@ -222,7 +222,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);
@@ -250,7 +250,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);
@@ -338,7 +338,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);
@@ -366,7 +366,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsNonIdentityCompleteTable>());
-                Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(table.Id.ToString(), result?.ToString(), true);
 
                 // Act
                 var queryResult = connection.Query<SdsNonIdentityCompleteTable>(result);
