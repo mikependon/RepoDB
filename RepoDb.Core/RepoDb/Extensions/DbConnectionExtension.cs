@@ -181,6 +181,10 @@ namespace RepoDb
                 }
             }
 
+            // DB Fields
+            var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
+                DbFieldCache.Get(connection, tableName, transaction, false) : null;
+
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -189,14 +193,12 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 entityType: null,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                var fields = !string.IsNullOrWhiteSpace(tableName) ?
-                    DbFieldCache.Get(connection, tableName, transaction, false) : null;
-
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, fields, connection.GetDbSetting()).AsList();
+                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -296,6 +298,10 @@ namespace RepoDb
                 }
             }
 
+            // DB Fields
+            var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
+                await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
@@ -304,14 +310,12 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 entityType: null,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                var fields = !string.IsNullOrWhiteSpace(tableName) ?
-                    await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
-
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, fields, connection.GetDbSetting()).AsList();
+                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -546,6 +550,10 @@ namespace RepoDb
                 }
             }
 
+            // DB Fields
+            var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
+                DbFieldCache.Get(connection, tableName, transaction, false) : null;
+
             // Execute the actual method
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
@@ -554,15 +562,13 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 entityType: typeof(TResult),
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                var fields = !string.IsNullOrWhiteSpace(tableName) ?
-                    DbFieldCache.Get(connection, tableName, transaction, false) : null;
-
                 using (var reader = command.ExecuteReader())
                 {
                     var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader,
-                        fields, connection.GetDbSetting()).AsList();
+                        dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -797,6 +803,10 @@ namespace RepoDb
                 }
             }
 
+            // DB Fields
+            var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
+                await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
@@ -805,14 +815,12 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 entityType: typeof(TResult),
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                var fields = !string.IsNullOrWhiteSpace(tableName) ?
-                    await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
-
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader, fields,
+                    var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader, dbFields,
                         connection.GetDbSetting()).AsList();
 
                     // Set Cache
@@ -2256,6 +2264,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         internal static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
@@ -2265,6 +2274,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
+            IEnumerable<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -2281,6 +2291,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
         }
 
@@ -2294,6 +2305,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         internal static async Task<DbCommand> CreateDbCommandForExecutionAsync(this IDbConnection connection,
@@ -2303,6 +2315,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
+            IEnumerable<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -2319,6 +2332,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
         }
 
@@ -2332,6 +2346,7 @@ namespace RepoDb
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
         private static DbCommand CreateDbCommandForExecutionInternal(this IDbConnection connection,
@@ -2341,6 +2356,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
+            IEnumerable<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Command
@@ -2350,7 +2366,7 @@ namespace RepoDb
             // Func
             if (param != null)
             {
-                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param?.GetType());
+                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param?.GetType(), dbFields);
                 if (func != null)
                 {
                     var cmd = (DbCommand)command;
@@ -2383,7 +2399,8 @@ namespace RepoDb
             {
                 command.CreateParameters(param,
                     commandArrayParametersText?.CommandArrayParameters?.Select(cap => cap.ParameterName),
-                    entityType);
+                    entityType,
+                    dbFields);
             }
 
             // Return the command
