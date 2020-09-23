@@ -1617,7 +1617,8 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Add the fields from the query group
-                WhereToCommandParameters(command, where);
+                WhereToCommandParameters(command, where, entity?.GetType(),
+                    DbFieldCache.Get(connection, tableName, transaction));
 
                 // Actual Execution
                 result = command.ExecuteNonQuery();
@@ -1710,7 +1711,8 @@ namespace RepoDb
                 context.ParametersSetterFunc(command, entity);
 
                 // Add the fields from the query group
-                WhereToCommandParameters(command, where);
+                WhereToCommandParameters(command, where, entity?.GetType(),
+                    await DbFieldCache.GetAsync(connection, tableName, transaction));
 
                 // Actual Execution
                 result = await command.ExecuteNonQueryAsync();

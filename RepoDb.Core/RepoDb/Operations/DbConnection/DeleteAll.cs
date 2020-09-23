@@ -953,6 +953,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: request.Type,
+                dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
@@ -1017,6 +1019,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: request.Type,
+                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true),
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
