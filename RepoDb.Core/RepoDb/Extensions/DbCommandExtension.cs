@@ -4,7 +4,6 @@ using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
@@ -244,15 +243,16 @@ namespace RepoDb.Extensions
                 var definition = InvokePropertyHandlerSetMethod(classProperty.GetPropertyHandler(), value, classProperty);
                 if (definition != null)
                 {
-                    returnType = definition.ReturnType;
+                    returnType = definition.ReturnType.GetUnderlyingType();
                     value = definition.Value;
                 }
 
                 // Automatic
-                if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                if (IsAutomaticConversion(dbField))
                 {
-                    returnType = dbField.Type.GetUnderlyingType();
-                    value = AutomaticConvert(value, classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), returnType);
+                    var underlyingType = dbField.Type.GetUnderlyingType();
+                    value = AutomaticConvert(value, classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), underlyingType);
+                    returnType = underlyingType;
                 }
 
                 // DbType
@@ -312,12 +312,12 @@ namespace RepoDb.Extensions
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
-                    valueType = definition.ReturnType;
+                    valueType = definition.ReturnType.GetUnderlyingType();
                     value = definition.Value;
                 }
 
                 // Automatic
-                if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                if (IsAutomaticConversion(dbField))
                 {
                     var dbFieldType = dbField.Type.GetUnderlyingType();
                     value = AutomaticConvert(value, valueType, dbFieldType);
@@ -346,8 +346,14 @@ namespace RepoDb.Extensions
             QueryGroup queryGroup,
             IEnumerable<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null) =>
-            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType);
+            IEnumerable<DbField> dbFields = null)
+        {
+            if (queryGroup == null)
+            {
+                return;
+            }
+            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType, dbFields);
+        }
 
         /// <summary>
         /// 
@@ -363,6 +369,11 @@ namespace RepoDb.Extensions
             Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
+            if (queryFields == null)
+            {
+                return;
+            }
+
             // Filter the query fields
             var filteredQueryFields = queryFields
                 .Where(qf => propertiesToSkip?.Contains(qf.Field.Name, StringComparer.OrdinalIgnoreCase) != true);
@@ -370,14 +381,14 @@ namespace RepoDb.Extensions
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
             {
-                var dbField = GetDbField(queryField.Field.Name, dbFields);
-
                 if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
+                    var dbField = GetDbField(queryField.Field.Name, dbFields);
                     CreateParametersForInOperation(command, queryField, dbField);
                 }
                 else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
+                    var dbField = GetDbField(queryField.Field.Name, dbFields);
                     CreateParametersForBetweenOperation(command, queryField, dbField);
                 }
                 else
@@ -401,6 +412,11 @@ namespace RepoDb.Extensions
             Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
+            if (queryField == null)
+            {
+                return;
+            }
+
             // Skip
             if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
             {
@@ -418,15 +434,16 @@ namespace RepoDb.Extensions
             var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
             if (definition != null)
             {
-                valueType = definition.ReturnType;
+                valueType = definition.ReturnType.GetUnderlyingType();
                 value = definition.Value;
             }
 
             // Automatic
-            if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+            if (IsAutomaticConversion(dbField))
             {
-                valueType = dbField.Type.GetUnderlyingType();
-                value = AutomaticConvert(value, classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), valueType);
+                var underlyingType = dbField.Type.GetUnderlyingType();
+                value = AutomaticConvert(value, classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType(), underlyingType);
+                valueType = underlyingType;
             }
 
             // DbType
@@ -448,6 +465,10 @@ namespace RepoDb.Extensions
             QueryField queryField,
             DbField dbField = null)
         {
+            if (queryField == null)
+            {
+                return;
+            }
             var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
                         .OfType<object>()
                         .AsList();
@@ -459,11 +480,21 @@ namespace RepoDb.Extensions
                     var value = values[i];
                     var valueType = value?.GetType()?.GetUnderlyingType();
 
-                    // Automatic
-                    if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                    // Propertyhandler
+                    var properyHandler = PropertyHandlerCache.Get<object>(valueType);
+                    var definition = InvokePropertyHandlerSetMethod(properyHandler, value, null);
+                    if (definition != null)
                     {
-                        valueType = dbField.Type.GetUnderlyingType();
-                        value = AutomaticConvert(value, value?.GetType(), valueType);
+                        valueType = definition.ReturnType.GetUnderlyingType();
+                        value = definition.Value;
+                    }
+
+                    // Automatic
+                    if (IsAutomaticConversion(dbField))
+                    {
+                        var underlyingType = dbField.Type.GetUnderlyingType();
+                        value = AutomaticConvert(value, value?.GetType()?.GetUnderlyingType(), underlyingType);
+                        valueType = underlyingType;
                     }
 
                     // DbType
@@ -485,6 +516,10 @@ namespace RepoDb.Extensions
             QueryField queryField,
             DbField dbField = null)
         {
+            if (queryField == null)
+            {
+                return;
+            }
             var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
                         .OfType<object>()
                         .AsList();
@@ -495,8 +530,26 @@ namespace RepoDb.Extensions
                 var leftValueType = leftValue?.GetType()?.GetUnderlyingType();
                 var rightValueType = leftValue?.GetType()?.GetUnderlyingType();
 
+                // Propertyhandler (Left)
+                var leftPropertyHandler = PropertyHandlerCache.Get<object>(leftValueType);
+                var leftdefinition = InvokePropertyHandlerSetMethod(leftPropertyHandler, leftValue, null);
+                if (leftdefinition != null)
+                {
+                    leftValueType = leftdefinition.ReturnType.GetUnderlyingType();
+                    leftValue = leftdefinition.Value;
+                }
+
+                // Propertyhandler (Right)
+                var rightPropertyHandler = PropertyHandlerCache.Get<object>(leftValueType);
+                var rightDefinition = InvokePropertyHandlerSetMethod(rightPropertyHandler, leftValue, null);
+                if (rightDefinition != null)
+                {
+                    rightValueType = rightDefinition.ReturnType.GetUnderlyingType();
+                    rightValue = rightDefinition.Value;
+                }
+
                 // Automatic
-                if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                if (IsAutomaticConversion(dbField))
                 {
                     leftValueType = dbField.Type.GetUnderlyingType();
                     rightValueType = leftValueType;
@@ -519,6 +572,19 @@ namespace RepoDb.Extensions
                 throw new InvalidParameterException("The values for 'Between' and 'NotBetween' operations must be 2.");
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        private static bool IsAutomaticConversion(DbField dbField) =>
+            (
+                Converter.ConversionType == ConversionType.Automatic ||
+                dbField?.IsPrimary == true ||
+                dbField?.IsIdentity == true
+            ) &&
+            dbField?.Type != null;
 
         /// <summary>
         /// 
@@ -579,6 +645,10 @@ namespace RepoDb.Extensions
             Type fromType,
             Type targetType)
         {
+            if (fromType == null || targetType == null || fromType == targetType)
+            {
+                return value;
+            }
             if (fromType == StaticType.String && targetType == StaticType.Guid)
             {
                 return AutomaticConvertStringToGuid(value);

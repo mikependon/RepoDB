@@ -866,6 +866,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
 
             // Return
@@ -899,6 +901,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
 
             // Return
@@ -936,30 +940,32 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// returns the instance of the data reader.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Variables
@@ -970,7 +976,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             var hasError = false;
 
@@ -1024,30 +1031,32 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
-        /// returns the instance of the data reader.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static async Task<IDataReader> ExecuteReaderAsyncInternal(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Variables
@@ -1058,7 +1067,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             var hasError = false;
 
@@ -1112,30 +1122,32 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected rows during the execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static int ExecuteNonQueryInternal(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -1144,7 +1156,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return command.ExecuteNonQuery();
@@ -1182,30 +1195,32 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
-        /// returns the number of affected rows during the execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static async Task<int> ExecuteNonQueryAsyncInternal(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -1214,7 +1229,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return await command.ExecuteNonQueryAsync();
@@ -1252,30 +1268,32 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static object ExecuteScalarInternal(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -1284,7 +1302,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.DbNullToNull(command.ExecuteScalar());
@@ -1322,30 +1341,32 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static async Task<object> ExecuteScalarAsyncInternal(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -1354,7 +1375,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.DbNullToNull(await command.ExecuteScalarAsync());
@@ -1393,30 +1415,33 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static TResult ExecuteScalarInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -1425,7 +1450,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.ToType<TResult>(command.ExecuteScalar());
@@ -1464,30 +1490,33 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: false);
         }
 
         /// <summary>
-        /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="commandText">The command text to be used.</param>
-        /// <param name="param">
-        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
-        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
-        /// </param>
-        /// <param name="commandType">The command type to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="skipCommandArrayParametersCheck">True to skip the checking of the array parameters.</param>
-        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <returns></returns>
         internal static async Task<TResult> ExecuteScalarAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param,
             CommandType? commandType,
             int? commandTimeout,
             IDbTransaction transaction,
+            Type entityType,
+            IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -1496,7 +1525,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                entityType: null,
+                entityType: entityType,
+                dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
                 return Converter.ToType<TResult>(await command.ExecuteScalarAsync());
@@ -2119,26 +2149,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="command"></param>
         /// <param name="where"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         internal static void WhereToCommandParameters(DbCommand command,
-            QueryGroup where)
-        {
-            // Check the presence
-            if (where == null)
-            {
-                return;
-            }
-
-            // Iterate the fields
-            foreach (var queryField in where.GetFields(true))
-            {
-                // Create a parameter
-                var parameter = command
-                    .CreateParameter(queryField.Parameter.Name, queryField.Parameter.Value, null);
-
-                // Add to the command object
-                command.Parameters.Add(parameter);
-            }
-        }
+            QueryGroup where,
+            Type entityType,
+            IEnumerable<DbField> dbFields) =>
+            DbCommandExtension.CreateParameters(command, where, null, entityType, dbFields);
 
         /// <summary>
         /// 
