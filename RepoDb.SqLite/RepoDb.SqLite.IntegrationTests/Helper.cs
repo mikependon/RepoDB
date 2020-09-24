@@ -314,7 +314,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new SdsNonIdentityCompleteTable
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     ColumnBigInt = (long)i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,
@@ -373,7 +373,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = true,
@@ -568,7 +568,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new MdsNonIdentityCompleteTable
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     ColumnBigInt = (long)i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",
@@ -632,7 +632,7 @@ namespace RepoDb.SqLite.IntegrationTests
             {
                 tables.Add(new
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     ColumnBigInt = i,
                     ColumnBlob = Encoding.Default.GetBytes($"ColumnBlob:{i}"),
                     ColumnBoolean = "true",

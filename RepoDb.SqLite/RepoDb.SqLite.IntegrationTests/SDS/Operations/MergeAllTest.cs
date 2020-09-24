@@ -172,7 +172,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -343,7 +343,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -605,7 +605,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -689,7 +689,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
                 tables.ForEach(table => Helper.UpdateSdsNonIdentityCompleteTableProperties(table));
 
@@ -946,7 +946,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -1030,7 +1030,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
                 tables.ForEach(table => Helper.UpdateSdsNonIdentityCompleteTableProperties(table));
 

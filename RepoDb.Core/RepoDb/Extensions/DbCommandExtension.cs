@@ -91,10 +91,10 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Creates a parameter for a command object.
+        /// 
         /// </summary>
-        /// <param name="command">The command object instance to be used.</param>
-        /// <param name="commandArrayParameters">The list of <see cref="CommandArrayParameter"/> to be used for replacement.</param>
+        /// <param name="command"></param>
+        /// <param name="commandArrayParameters"></param>
         internal static void CreateParametersFromArray(this IDbCommand command,
             IEnumerable<CommandArrayParameter> commandArrayParameters)
         {
@@ -146,19 +146,21 @@ namespace RepoDb.Extensions
         public static void CreateParameters(this IDbCommand command,
             object param,
             Type entityType) =>
-            CreateParameters(command, param, null, entityType);
+            CreateParameters(command, param, null, entityType, null);
 
         /// <summary>
-        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// 
         /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="param">The object to be used when creating the parameters.</param>
-        /// <param name="propertiesToSkip">The list of the properties to be skipped.</param>
-        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="command"></param>
+        /// <param name="param"></param>
+        /// <param name="propertiesToSkip"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         internal static void CreateParameters(this IDbCommand command,
             object param,
             IEnumerable<string> propertiesToSkip,
-            Type entityType)
+            Type entityType,
+            IEnumerable<DbField> dbFields = null)
         {
             // Check
             if (param == null)
@@ -169,31 +171,31 @@ namespace RepoDb.Extensions
             // IDictionary<string, object>
             if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip);
+                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip, dbFields);
             }
 
             // QueryField
             else if (param is QueryField)
             {
-                CreateParameters(command, (QueryField)param, propertiesToSkip, entityType);
+                CreateParameters(command, (QueryField)param, propertiesToSkip, entityType, dbFields);
             }
 
             // IEnumerable<QueryField>
             else if (param is IEnumerable<QueryField>)
             {
-                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, entityType);
+                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, entityType, dbFields);
             }
 
             // QueryGroup
             else if (param is QueryGroup)
             {
-                CreateParameters(command, (QueryGroup)param, propertiesToSkip, entityType);
+                CreateParameters(command, (QueryGroup)param, propertiesToSkip, entityType, dbFields);
             }
 
             // Other
             else
             {
-                CreateParametersInternal(command, param, propertiesToSkip);
+                CreateParametersInternal(command, param, propertiesToSkip, dbFields);
             }
         }
 
@@ -203,9 +205,11 @@ namespace RepoDb.Extensions
         /// <param name="command"></param>
         /// <param name="param"></param>
         /// <param name="propertiesToSkip"></param>
+        /// <param name="dbFields"></param>
         private static void CreateParametersInternal(IDbCommand command,
             object param,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            IEnumerable<DbField> dbFields = null)
         {
             var type = param.GetType();
 
@@ -230,6 +234,7 @@ namespace RepoDb.Extensions
             foreach (var classProperty in classProperties)
             {
                 var name = classProperty.GetMappedName();
+                var dbField = GetDbField(name, dbFields);
                 var value = classProperty.PropertyInfo.GetValue(param);
                 var returnType = (Type)null;
                 var dbType = (DbType?)null;
@@ -238,8 +243,16 @@ namespace RepoDb.Extensions
                 var definition = InvokePropertyHandlerSetMethod(classProperty.GetPropertyHandler(), value, classProperty);
                 if (definition != null)
                 {
-                    returnType = definition.ReturnType;
+                    returnType = definition.ReturnType.GetUnderlyingType();
                     value = definition.Value;
+                }
+
+                // Automatic
+                if (IsAutomaticConversion(dbField))
+                {
+                    var underlyingType = dbField.Type.GetUnderlyingType();
+                    value = AutomaticConvert(value, classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), underlyingType);
+                    returnType = underlyingType;
                 }
 
                 // DbType
@@ -264,9 +277,11 @@ namespace RepoDb.Extensions
         /// <param name="command"></param>
         /// <param name="dictionary"></param>
         /// <param name="propertiesToSkip"></param>
+        /// <param name="dbFields"></param>
         private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
-            IEnumerable<string> propertiesToSkip)
+            IEnumerable<string> propertiesToSkip,
+            IEnumerable<DbField> dbFields = null)
         {
             var kvps = dictionary.Where(kvp =>
                 propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
@@ -274,6 +289,7 @@ namespace RepoDb.Extensions
             // Iterate the key value pairs
             foreach (var kvp in kvps)
             {
+                var dbField = GetDbField(kvp.Key, dbFields);
                 var value = kvp.Value;
                 var classProperty = (ClassProperty)null;
                 var valueType = (Type)null;
@@ -296,8 +312,16 @@ namespace RepoDb.Extensions
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
-                    valueType = definition.ReturnType;
+                    valueType = definition.ReturnType.GetUnderlyingType();
                     value = definition.Value;
+                }
+
+                // Automatic
+                if (IsAutomaticConversion(dbField))
+                {
+                    var dbFieldType = dbField.Type.GetUnderlyingType();
+                    value = AutomaticConvert(value, valueType, dbFieldType);
+                    valueType = dbFieldType;
                 }
 
                 // DbType
@@ -317,11 +341,19 @@ namespace RepoDb.Extensions
         /// <param name="queryGroup"></param>
         /// <param name="propertiesToSkip"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         internal static void CreateParameters(IDbCommand command,
             QueryGroup queryGroup,
             IEnumerable<string> propertiesToSkip,
-            Type entityType) =>
-            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType);
+            Type entityType,
+            IEnumerable<DbField> dbFields = null)
+        {
+            if (queryGroup == null)
+            {
+                return;
+            }
+            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType, dbFields);
+        }
 
         /// <summary>
         /// 
@@ -330,11 +362,18 @@ namespace RepoDb.Extensions
         /// <param name="queryFields"></param>
         /// <param name="propertiesToSkip"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
             IEnumerable<string> propertiesToSkip,
-            Type entityType)
+            Type entityType,
+            IEnumerable<DbField> dbFields = null)
         {
+            if (queryFields == null)
+            {
+                return;
+            }
+
             // Filter the query fields
             var filteredQueryFields = queryFields
                 .Where(qf => propertiesToSkip?.Contains(qf.Field.Name, StringComparer.OrdinalIgnoreCase) != true);
@@ -344,15 +383,17 @@ namespace RepoDb.Extensions
             {
                 if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    CreateParametersForInOperation(command, queryField);
+                    var dbField = GetDbField(queryField.Field.Name, dbFields);
+                    CreateParametersForInOperation(command, queryField, dbField);
                 }
                 else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    CreateParametersForBetweenOperation(command, queryField);
+                    var dbField = GetDbField(queryField.Field.Name, dbFields);
+                    CreateParametersForBetweenOperation(command, queryField, dbField);
                 }
                 else
                 {
-                    CreateParameters(command, queryField, null, entityType);
+                    CreateParameters(command, queryField, null, entityType, dbFields);
                 }
             }
         }
@@ -364,11 +405,18 @@ namespace RepoDb.Extensions
         /// <param name="queryField"></param>
         /// <param name="propertiesToSkip"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         private static void CreateParameters(this IDbCommand command,
             QueryField queryField,
             IEnumerable<string> propertiesToSkip,
-            Type entityType)
+            Type entityType,
+            IEnumerable<DbField> dbFields = null)
         {
+            if (queryField == null)
+            {
+                return;
+            }
+
             // Skip
             if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
             {
@@ -376,6 +424,7 @@ namespace RepoDb.Extensions
             }
 
             // Variables
+            var dbField = GetDbField(queryField.Field.Name, dbFields);
             var value = queryField.Parameter.Value;
             var valueType = value?.GetType()?.GetUnderlyingType();
 
@@ -385,8 +434,16 @@ namespace RepoDb.Extensions
             var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
             if (definition != null)
             {
-                valueType = definition.ReturnType;
+                valueType = definition.ReturnType.GetUnderlyingType();
                 value = definition.Value;
+            }
+
+            // Automatic
+            if (IsAutomaticConversion(dbField))
+            {
+                var underlyingType = dbField.Type.GetUnderlyingType();
+                value = AutomaticConvert(value, classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType(), underlyingType);
+                valueType = underlyingType;
             }
 
             // DbType
@@ -403,9 +460,15 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryField"></param>
+        /// <param name="dbField"></param>
         private static void CreateParametersForInOperation(this IDbCommand command,
-            QueryField queryField)
+            QueryField queryField,
+            DbField dbField = null)
         {
+            if (queryField == null)
+            {
+                return;
+            }
             var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
                         .OfType<object>()
                         .AsList();
@@ -414,7 +477,31 @@ namespace RepoDb.Extensions
                 for (var i = 0; i < values.Count; i++)
                 {
                     var name = string.Concat(queryField.Parameter.Name, "_In_", i);
-                    command.Parameters.Add(CreateParameter(command, name, values[i], null));
+                    var value = values[i];
+                    var valueType = value?.GetType()?.GetUnderlyingType();
+
+                    // Propertyhandler
+                    var properyHandler = PropertyHandlerCache.Get<object>(valueType);
+                    var definition = InvokePropertyHandlerSetMethod(properyHandler, value, null);
+                    if (definition != null)
+                    {
+                        valueType = definition.ReturnType.GetUnderlyingType();
+                        value = definition.Value;
+                    }
+
+                    // Automatic
+                    if (IsAutomaticConversion(dbField))
+                    {
+                        var underlyingType = dbField.Type.GetUnderlyingType();
+                        value = AutomaticConvert(value, value?.GetType()?.GetUnderlyingType(), underlyingType);
+                        valueType = underlyingType;
+                    }
+
+                    // DbType
+                    var dbType = clientTypeToDbTypeResolver.Resolve(valueType);
+
+                    // Create
+                    command.Parameters.Add(CreateParameter(command, name, values[i], dbType));
                 }
             }
         }
@@ -424,16 +511,61 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryField"></param>
+        /// <param name="dbField"></param>
         private static void CreateParametersForBetweenOperation(this IDbCommand command,
-            QueryField queryField)
+            QueryField queryField,
+            DbField dbField = null)
         {
+            if (queryField == null)
+            {
+                return;
+            }
             var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
                         .OfType<object>()
                         .AsList();
             if (values?.Count == 2)
             {
-                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), values[0], null));
-                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), values[1], null));
+                var leftValue = values[0];
+                var rightValue = values[1];
+                var leftValueType = leftValue?.GetType()?.GetUnderlyingType();
+                var rightValueType = leftValue?.GetType()?.GetUnderlyingType();
+
+                // Propertyhandler (Left)
+                var leftPropertyHandler = PropertyHandlerCache.Get<object>(leftValueType);
+                var leftdefinition = InvokePropertyHandlerSetMethod(leftPropertyHandler, leftValue, null);
+                if (leftdefinition != null)
+                {
+                    leftValueType = leftdefinition.ReturnType.GetUnderlyingType();
+                    leftValue = leftdefinition.Value;
+                }
+
+                // Propertyhandler (Right)
+                var rightPropertyHandler = PropertyHandlerCache.Get<object>(leftValueType);
+                var rightDefinition = InvokePropertyHandlerSetMethod(rightPropertyHandler, leftValue, null);
+                if (rightDefinition != null)
+                {
+                    rightValueType = rightDefinition.ReturnType.GetUnderlyingType();
+                    rightValue = rightDefinition.Value;
+                }
+
+                // Automatic
+                if (IsAutomaticConversion(dbField))
+                {
+                    leftValueType = dbField.Type.GetUnderlyingType();
+                    rightValueType = leftValueType;
+                    leftValue = AutomaticConvert(leftValue, leftValue?.GetType(), leftValueType);
+                    rightValue = AutomaticConvert(rightValue, leftValue?.GetType(), rightValueType);
+                }
+
+                // DbType
+                var leftDbType = clientTypeToDbTypeResolver.Resolve(leftValueType);
+                var rightDbType = clientTypeToDbTypeResolver.Resolve(rightValueType);
+
+                // Add
+                command.Parameters.Add(
+                    CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), leftValue, leftDbType));
+                command.Parameters.Add(
+                    CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), rightValue, rightDbType));
             }
             else
             {
@@ -444,10 +576,47 @@ namespace RepoDb.Extensions
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        private static bool IsAutomaticConversion(DbField dbField) =>
+            (
+                Converter.ConversionType == ConversionType.Automatic ||
+                dbField?.IsPrimary == true ||
+                dbField?.IsIdentity == true
+            ) &&
+            dbField?.Type != null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static DbField GetDbField(string fieldName,
+            IEnumerable<DbField> dbFields)
+        {
+            if (string.IsNullOrWhiteSpace(fieldName))
+            {
+                return null;
+            }
+            if (fieldName.Contains("_In_"))
+            {
+                return dbFields?.FirstOrDefault(df =>
+                    fieldName.StartsWith(df.Name, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                return dbFields?.FirstOrDefault(df =>
+                    string.Equals(df.Name, fieldName, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="propertyHandler"></param>
         /// <param name="value"></param>
         /// <param name="classProperty"></param>
-        /// <returns></returns>
         private static PropertyHandlerSetReturnDefinition InvokePropertyHandlerSetMethod(object propertyHandler,
             object value,
             ClassProperty classProperty)
@@ -463,6 +632,67 @@ namespace RepoDb.Extensions
                 ReturnType = setMethod.ReturnType,
                 Value = setMethod.Invoke(propertyHandler, new[] { value, classProperty })
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="fromType"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        private static object AutomaticConvert(object value,
+            Type fromType,
+            Type targetType)
+        {
+            if (fromType == null || targetType == null || fromType == targetType)
+            {
+                return value;
+            }
+            if (fromType == StaticType.String && targetType == StaticType.Guid)
+            {
+                return AutomaticConvertStringToGuid(value);
+            }
+            else if (fromType == StaticType.Guid && targetType == StaticType.String)
+            {
+                return AutomaticConvertGuidToString(value);
+            }
+            else
+            {
+                var method = StaticType.Convert.GetMethod(string.Concat("To", targetType.Name), new[] { fromType });
+                if (method != null)
+                {
+                    value = method.Invoke(null, new[] { value });
+                }
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object AutomaticConvertStringToGuid(object value)
+        {
+            if (value != null)
+            {
+                value = StaticType.Guid
+                    .GetMethod("Parse", new[] { StaticType.String })
+                    .Invoke(null, new[] { value });
+
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object AutomaticConvertGuidToString(object value)
+        {
+            return value?.ToString();
         }
 
         #endregion

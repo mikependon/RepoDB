@@ -99,7 +99,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 using (var reader = connection.ExecuteReader("SELECT * FROM [MdsCompleteTable];"))
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader, connection).AsList();
+                    var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -119,7 +119,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 using (var reader = connection.ExecuteReader("SELECT *, 'MDS' AS MDS  FROM [MdsCompleteTable];"))
                 {
                     // Act
-                    var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));
@@ -202,7 +202,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];").Result)
                 {
                     // Act
-                    var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader, connection).AsList();
+                    var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertPropertiesEquality(table, result.First(e => e.Id == table.Id)));
@@ -222,7 +222,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 using (var reader = connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];").Result)
                 {
                     // Act
-                    var result = DataReader.ToEnumerable((DbDataReader)reader, connection).AsList();
+                    var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();
 
                     // Assert
                     tables.AsList().ForEach(table => Helper.AssertMembersEquality(table, result.First(e => e.Id == table.Id)));

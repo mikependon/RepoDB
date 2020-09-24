@@ -87,7 +87,9 @@ namespace RepoDb.DbHelpers
         {
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
-            var sql = connection.ExecuteScalar<string>(commandText, new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) });
+            var sql = connection.ExecuteScalar<string>(commandText: commandText,
+                param: new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) },
+                transaction: transaction);
             var fields = ParseTableFieldsFromSql(sql);
 
             // Iterate the fields

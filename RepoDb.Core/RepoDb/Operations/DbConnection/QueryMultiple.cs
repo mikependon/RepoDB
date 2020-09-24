@@ -177,6 +177,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -404,6 +406,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -676,6 +680,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -991,6 +997,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -1349,6 +1357,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -1751,6 +1761,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -1970,6 +1982,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -2197,6 +2211,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -2469,6 +2485,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -2784,6 +2802,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -3142,6 +3162,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
@@ -3544,6 +3566,8 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                entityType: null,
+                dbFields: null,
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();

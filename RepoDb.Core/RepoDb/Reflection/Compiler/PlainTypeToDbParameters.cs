@@ -1,6 +1,9 @@
-﻿using System;
+﻿using RepoDb.Enumerations;
+using RepoDb.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace RepoDb.Reflection
@@ -11,8 +14,10 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="type"></param>
+        /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type)
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type,
+            IEnumerable<DbField> dbFields = null)
         {
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entity");
@@ -23,12 +28,20 @@ namespace RepoDb.Reflection
             // Iterate
             foreach (var classProperty in PropertyCache.Get(type))
             {
-                // Value
+                var dbField = dbFields?.FirstOrDefault(df =>
+                    string.Equals(df.Name, classProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
                 var valueExpression = (Expression)Expression.Property(entityExpression, classProperty.PropertyInfo);
 
                 // PropertyHandler
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
                     classProperty, classProperty.PropertyInfo.PropertyType);
+
+                // Automatic
+                if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                {
+                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression,
+                        dbField.Type.GetUnderlyingType());
+                }
 
                 // DbType
                 var dbType = classProperty.GetDbType();

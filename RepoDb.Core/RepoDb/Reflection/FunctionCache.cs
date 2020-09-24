@@ -442,9 +442,11 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="type"></param>
+        /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type) =>
-            PlainTypeToDbParametersCompiledFunctionCache.Get(type);
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type,
+            IEnumerable<DbField> dbFields = null) =>
+            PlainTypeToDbParametersCompiledFunctionCache.Get(type, dbFields);
 
         #region PlainTypeToDbParametersCompiledFunctionCache
 
@@ -459,8 +461,10 @@ namespace RepoDb
             /// 
             /// </summary>
             /// <param name="type"></param>
+            /// <param name="dbFields"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, object> Get(Type type)
+            internal static Action<DbCommand, object> Get(Type type,
+            IEnumerable<DbField> dbFields = null)
             {
                 if (type == null)
                 {
@@ -472,7 +476,7 @@ namespace RepoDb
                 {
                     if (type.IsPlainType())
                     {
-                        func = FunctionFactory.GetPlainTypeToDbParametersCompiledFunction(type);
+                        func = FunctionFactory.GetPlainTypeToDbParametersCompiledFunction(type, dbFields);
                     }
                     cache.TryAdd(key, func);
                 }
