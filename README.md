@@ -21,6 +21,18 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDB into the community of .NET.
 
+## Latest News
+
+We are announcing the GA of [RepoDB v1.12.0](https://www.nuget.org/packages/RepoDb/1.12.0), one of the biggest release of this library. In this release, we covered the support to [F#](https://fsharp.org/), [Class Handler](https://repodb.net/feature/classhandlers), Advanced and New Enhanced Compiler, [Typed Results](https://repodb.net/operation/executequery#typed-result) and many more.
+
+<p align="center">
+	<a href="https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html">
+		<img src="https://github.com/mikependon/RepoDb.Raw/blob/master/Blogs/RepoDB%20v1.12.0.png" height="320px" />
+	</a>
+</p>
+
+Read more from our official blog [release notes](https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html) and/or in the official Github [release](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0).
+
 ## Benefits/Advantages
 
 Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations (i.e.: CRUD). The good thing is, RepoDB also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
