@@ -25,13 +25,13 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 We are announcing the GA of [RepoDB v1.12.0](https://www.nuget.org/packages/RepoDb/1.12.0), one of the biggest release of this library. In this release, we covered the support to [F#](https://fsharp.org/), [Class Handler](https://repodb.net/feature/classhandlers), Advanced and New Enhanced Compiler, [Typed Results](https://repodb.net/operation/executequery#typed-result) and many more.
 
-<p align="center">
+<p align="left">
 	<a href="https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html">
-		<img src="https://github.com/mikependon/RepoDb.Raw/blob/master/Blogs/RepoDB%20v1.12.0.png" height="320px" />
+		<img src="https://github.com/mikependon/RepoDb.Raw/blob/master/Blogs/RepoDB%20v1.12.0.png" height="280px" />
 	</a>
 </p>
 
-Read more from our official blog [release notes](https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html) and/or in the official Github [release](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0).
+Read more from our official blog [release notes](https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html) and/or in the official Github [release](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0) page.
 
 ## Benefits/Advantages
 
