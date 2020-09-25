@@ -2011,7 +2011,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqlConnectionAsyncMergeAllIfThereIsNoKeyField()
         {
             // Setup
@@ -2024,7 +2024,7 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfThereIsNoKeyFieldAtTheTable()
         {
             // Setup
