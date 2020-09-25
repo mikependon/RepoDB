@@ -735,7 +735,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        internal static Task<int> UpdateAllAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<int> UpdateAllAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -750,10 +750,10 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
                 qualifiers = key.AsField().AsEnumerable();
             }
-            return UpdateAllAsyncInternalBase<TEntity>(connection: connection,
+            return await UpdateAllAsyncInternalBase<TEntity>(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 batchSize: batchSize,
@@ -1343,7 +1343,7 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = UpdateAllExecutionContextProvider.Create<TEntity>(connection,
+                                context = await UpdateAllExecutionContextProvider.CreateAsync<TEntity>(connection,
                                     tableName,
                                     batchItems,
                                     qualifiers,

@@ -609,7 +609,7 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = InsertAllExecutionContextProvider.Create<TEntity>(connection,
+            var context = await InsertAllExecutionContextProvider.CreateAsync<TEntity>(connection,
                 tableName,
                 batchSize,
                 fields,

@@ -845,7 +845,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
             var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
@@ -856,7 +856,7 @@ namespace RepoDb
                 // Creates a transaction (if needed)
                 if (transaction == null && count > ParameterBatchCount)
                 {
-                    transaction = connection.EnsureOpen().BeginTransaction();
+                    transaction = (await connection.EnsureOpenAsync()).BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 

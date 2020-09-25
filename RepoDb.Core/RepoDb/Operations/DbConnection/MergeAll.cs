@@ -757,7 +757,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
-        internal static Task<int> MergeAllAsyncInternal<TEntity>(this IDbConnection connection,
+        internal static async Task<int> MergeAllAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
@@ -773,7 +773,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
                 qualifiers = key.AsField().AsEnumerable();
             }
 
@@ -783,7 +783,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return MergeAllAsyncInternalBase<TEntity>(connection: connection,
+                return await MergeAllAsyncInternalBase<TEntity>(connection: connection,
                     tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
@@ -797,7 +797,7 @@ namespace RepoDb
             }
             else
             {
-                return UpsertAllAsyncInternalBase<TEntity>(connection: connection,
+                return await UpsertAllAsyncInternalBase<TEntity>(connection: connection,
                     tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
