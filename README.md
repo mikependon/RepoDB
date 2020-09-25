@@ -130,6 +130,18 @@ RepoDb.Converter.ConversionType = ConversionType.Automatic;
 
 It is very important for you and to the community of .NET to learn the things the library is capable and is-not capable of doing, so please spend time reading the [limitation](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/limitations.md) page before using the library.
 
+## Referencing Recommendation
+
+Though .NET itself is auto-resolving the references by default, but we strongly recommend that you always explicitly reference the [RepoDb](https://www.nuget.org/packages/RepoDb) core library. The rationale behind this recommendation is that, the [RepoDb](https://www.nuget.org/packages/RepoDb) core library is a fast-moving package in which all the alpha, beta, hotfix and/or even actual releases could happen without affecting the extesion libraries.
+
+Please note that we are releasing an actual next released-version if the changes are having minimal impact but is important for the other users.
+
+You can always target the version when installing the library, even it is on a semantic release.
+
+```csharp
+> Package-Install RepoDb -version 1.x.x-betaX
+```
+
 ## Benchmark
 
 The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
