@@ -176,10 +176,19 @@ namespace RepoDb.Reflection
         /// <param name="fromType"></param>
         /// <param name="toType"></param>
         /// <returns></returns>
-        internal static MethodInfo GetSystemConvertGetTypeMethod(Type fromType,
+        internal static MethodInfo GetSystemConvertToTypeMethod(Type fromType,
             Type toType) =>
             StaticType.Convert.GetMethod(string.Concat("To", toType.GetUnderlyingType().Name),
                 new[] { fromType.GetUnderlyingType() });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="conversionType"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetSystemConvertChangeTypeMethod(Type conversionType) =>
+            StaticType.Convert.GetMethod("ChangeType",
+                new[] { StaticType.Object, conversionType.GetUnderlyingType() });
 
         /// <summary>
         /// 
@@ -566,16 +575,34 @@ namespace RepoDb.Reflection
             {
                 return expression;
             }
-            if (toType.IsAssignableFrom(expression.Type) == false)
+
+            // Identify
+            if (toType.IsAssignableFrom(expression.Type))
             {
-                var methodInfo = GetSystemConvertGetTypeMethod(expression.Type, toType);
-                if (methodInfo != null)
-                {
-                    expression = ConvertExpressionToNullableGetValueOrDefaultExpression(expression);
-                    return Expression.Call(methodInfo, expression);
-                }
+                return ConvertExpressionToTypeExpression(expression, toType);
             }
-            return ConvertExpressionToTypeExpression(expression, toType);
+
+            // Convert.To<Type>()
+            var methodInfo = GetSystemConvertToTypeMethod(expression.Type, toType);
+            if (methodInfo != null)
+            {
+                return Expression.Call(methodInfo, ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
+            }
+
+            // Convert.ChangeType
+            methodInfo = GetSystemConvertChangeTypeMethod(toType);
+            if (methodInfo != null)
+            {
+                expression = ConvertExpressionToNullableGetValueOrDefaultExpression(expression);
+                return Expression.Call(methodInfo, new Expression[]
+                {
+                    ConvertExpressionToTypeExpression(expression, StaticType.Object),
+                    Expression.Constant(toType.GetUnderlyingType())
+                });
+            }
+
+            // Return
+            return expression;
         }
 
         /// <summary>
