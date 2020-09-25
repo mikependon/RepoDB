@@ -27,7 +27,7 @@ We are announcing the GA of [RepoDB v1.12.0](https://www.nuget.org/packages/Repo
 
 <p align="left">
 	<a href="https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html">
-		<img src="https://github.com/mikependon/RepoDb.Raw/blob/master/Blogs/RepoDB%20v1.12.0.png" height="280px" />
+		<img src="https://github.com/mikependon/RepoDb.Raw/blob/master/Blogs/RepoDB%20v1.12.0.png" height="240px" />
 	</a>
 </p>
 
@@ -134,7 +134,7 @@ It is very important for you and to the community of .NET to learn the things th
 
 The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
-Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200721_netcore31.txt).
+Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200924_netcore31.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
