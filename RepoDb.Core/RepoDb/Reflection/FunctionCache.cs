@@ -31,7 +31,8 @@ namespace RepoDb
             for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
             {
                 // The spatial data type is null.
-                hashCode += reader.GetName(ordinal).GetHashCode() + (reader.GetFieldType(ordinal)?.GetHashCode()).GetValueOrDefault();
+                hashCode += string.Concat(reader.GetName(ordinal), "-", ordinal).GetHashCode() +
+                    (reader.GetFieldType(ordinal)?.GetHashCode()).GetValueOrDefault();
             }
             return hashCode;
         }
