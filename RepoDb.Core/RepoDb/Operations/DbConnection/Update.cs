@@ -1370,7 +1370,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
-        public static Task<int> UpdateAsync(this IDbConnection connection,
+        public static async Task<int> UpdateAsync(this IDbConnection connection,
             string tableName,
             object entity,
             IEnumerable<Field> fields = null,
@@ -1380,8 +1380,8 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
-            return UpdateAsyncInternal<object>(connection: connection,
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+            return await UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
                 where: ToQueryGroup(key, entity),

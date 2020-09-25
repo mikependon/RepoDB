@@ -332,7 +332,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await DeleteAsyncInternal<TEntity>(connection: connection,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -362,7 +362,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await DeleteAsyncInternal<TEntity>(connection: connection,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
