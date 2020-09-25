@@ -7,6 +7,24 @@ namespace RepoDb.Reflection
 {
     internal partial class Compiler
     {
+        #region Helper
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariable"></param>
+        /// <param name="parameterType"></param>
+        /// <returns></returns>
+        private static Expression GetIsParameterTypeEqualsExpression(ParameterExpression parameterVariable,
+            Type parameterType)
+        {
+            var method = StaticType.DbParameter.GetMethod("GetType");
+            var typeExpression = Expression.Call(parameterVariable, method);
+            return Expression.Equal(typeExpression, Expression.Constant(parameterType));
+        }
+
+        #endregion
+
         #region SqlServer (System)
 
         /// <summary>
@@ -15,7 +33,7 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterSystemSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+        internal static Expression GetDbParameterSystemSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
             ClassProperty classProperty)
         {
             var attribute = GetSystemSqlServerTypeMapAttribute(classProperty);
@@ -27,10 +45,12 @@ namespace RepoDb.Reflection
             var dbType = GetSystemSqlServerDbTypeFromAttribute(attribute);
             var parameterType = GetSystemSqlServerParameterTypeFromAttribute(attribute);
             var setMethod = GetSystemSqlServerDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            var test = GetIsParameterTypeEqualsExpression(parameterVariable, parameterType);
+            var trueExpression = Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
+
+            return Expression.IfThen(test, trueExpression);
         }
 
         /// <summary>
@@ -107,7 +127,7 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+        internal static Expression GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
             ClassProperty classProperty)
         {
             var attribute = GetMicrosoftSqlServerTypeMapAttribute(classProperty);
@@ -119,10 +139,12 @@ namespace RepoDb.Reflection
             var dbType = GetMicrosoftSqlServerDbTypeFromAttribute(attribute);
             var parameterType = GetMicrosoftSqlServerParameterTypeFromAttribute(attribute);
             var setMethod = GetMicrosoftSqlServerDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            var test = GetIsParameterTypeEqualsExpression(parameterVariable, parameterType);
+            var trueExpression = Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
+
+            return Expression.IfThen(test, trueExpression);
         }
 
         /// <summary>
@@ -199,7 +221,7 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterMySqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+        internal static Expression GetDbParameterMySqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
             ClassProperty classProperty)
         {
             var attribute = GetMySqlDbTypeTypeMapAttribute(classProperty);
@@ -211,10 +233,12 @@ namespace RepoDb.Reflection
             var dbType = GetMySqlDbTypeFromAttribute(attribute);
             var parameterType = GetMySqlParameterTypeFromAttribute(attribute);
             var setMethod = GetMySqlDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            var test = GetIsParameterTypeEqualsExpression(parameterVariable, parameterType);
+            var trueExpression = Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
+
+            return Expression.IfThen(test, trueExpression);
         }
 
         /// <summary>
@@ -291,7 +315,7 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterNpgsqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
+        internal static Expression GetDbParameterNpgsqlDbTypeAssignmentExpression(ParameterExpression parameterVariable,
             ClassProperty classProperty)
         {
             var attribute = GetNpgsqlDbTypeTypeMapAttribute(classProperty);
@@ -303,10 +327,12 @@ namespace RepoDb.Reflection
             var dbType = GetNpgsqlDbTypeFromAttribute(attribute);
             var parameterType = GetNpgsqlParameterTypeFromAttribute(attribute);
             var setMethod = GetNpgsqlDbTypeFromAttributeSetMethod(attribute);
-
-            return Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
+            var test = GetIsParameterTypeEqualsExpression(parameterVariable, parameterType);
+            var trueExpression = Expression.Call(ConvertExpressionToTypeExpression(parameterVariable, parameterType),
                 setMethod,
                 Expression.Constant(dbType));
+
+            return Expression.IfThen(test, trueExpression);
         }
 
         /// <summary>
