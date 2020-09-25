@@ -112,7 +112,7 @@ Whereas the fluent methods below only support the [SQL Server](https://www.nuget
  
 Click [here](http://repodb.net/docs#operations) to see all the operations.
 
-## Referencing Recommendation
+## Package Referencing
 
 Though, by default, .NET is auto-resolving the references, but we strongly recommend that you always explicitly reference the [RepoDb](https://www.nuget.org/packages/RepoDb) core library. The rationale behind this is that, the [RepoDb](https://www.nuget.org/packages/RepoDb) core library is a fast-moving package in which all the alpha/beta releases, hotfixes and/or even the actual releases could happen without affecting the extesion libraries.
 
@@ -121,7 +121,7 @@ Please note that we are releasing an actual next released-version if the changes
 You can always target the version when installing the library, even it is on a semantic release.
 
 ```csharp
-> Package-Install RepoDb -version 1.x.x-betaX
+> Install-Package RepoDb -version 1.x.x-betaX
 ```
 
 ## .NET Type Coercion
