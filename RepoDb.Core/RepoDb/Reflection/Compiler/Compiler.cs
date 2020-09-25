@@ -449,6 +449,34 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        internal static PropertyInfo GetTimeSpanTicksProperty() =>
+            StaticType.TimeSpan.GetProperty("Ticks");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetTimeSpanTicksPropertyGetMethod() =>
+            GetTimeSpanTicksProperty().GetMethod;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static PropertyInfo GetDateTimeTimeOfDayProperty() =>
+            StaticType.DateTime.GetProperty("TimeOfDay");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetDateTimeTimeOfDayPropertyGetMethod() =>
+            GetDateTimeTimeOfDayProperty().GetMethod;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToNullableGetValueOrDefaultExpression(Expression expression)
@@ -491,6 +519,39 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToStringToGuidExpression(Expression expression) =>
             Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToTimeSpanToDateTimeExpression(Expression expression) =>
+            Expression.New(StaticType.DateTime.GetConstructor(new[] { StaticType.Int64 }),
+                ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToTimeSpanTicksExpression(expression)));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateTimeToTimeSpanExpression(Expression expression) =>
+            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateTimeTimeOfDayExpression(expression));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToTimeSpanTicksExpression(Expression expression) =>
+            Expression.Call(expression, GetTimeSpanTicksPropertyGetMethod());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateTimeTimeOfDayExpression(Expression expression) =>
+            Expression.Call(expression, GetDateTimeTimeOfDayPropertyGetMethod());
 
         /// <summary>
         /// 
@@ -802,6 +863,18 @@ namespace RepoDb.Reflection
             else if (fromType == StaticType.String && toType == StaticType.Guid)
             {
                 expression = ConvertExpressionToStringToGuidExpression(expression);
+            }
+
+            // TimeSpan to DateTime
+            else if (fromType == StaticType.TimeSpan && toType == StaticType.DateTime)
+            {
+                expression = ConvertExpressionToTimeSpanToDateTimeExpression(expression);
+            }
+
+            // DateTime to TimeSpan
+            else if (fromType == StaticType.DateTime && toType == StaticType.TimeSpan)
+            {
+                expression = ConvertExpressionToDateTimeToTimeSpanExpression(expression);
             }
 
             // Others
