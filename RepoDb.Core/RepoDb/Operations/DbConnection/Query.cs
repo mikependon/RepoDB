@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -1271,6 +1272,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
@@ -1284,7 +1286,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null) where TEntity : class
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default) where TEntity : class
         {
             return QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -1299,7 +1302,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1375,6 +1379,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1389,7 +1394,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Ensure the fields
@@ -1410,7 +1416,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -2196,6 +2203,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> QueryAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -2210,7 +2218,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Get Cache
@@ -2274,7 +2283,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: null,
                 tableName: tableName,
-                skipCommandArrayParametersCheck: true);
+                skipCommandArrayParametersCheck: true,
+                cancellationToken: cancellationToken);
 
             // Set Cache
             if (cacheKey != null)

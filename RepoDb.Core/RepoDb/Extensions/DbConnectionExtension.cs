@@ -10,6 +10,7 @@ using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -85,12 +86,13 @@ namespace RepoDb
         /// Ensures the connection object is open in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection to be opened.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>The instance of the current connection object.</returns>
-        public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection)
+        public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection, CancellationToken cancellationToken = default)
         {
             if (connection.State != ConnectionState.Open)
             {
-                await ((DbConnection)connection).OpenAsync();
+                await ((DbConnection)connection).OpenAsync(cancellationToken);
             }
             return connection;
         }
@@ -275,6 +277,7 @@ namespace RepoDb
         /// <param name="cache"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns></returns>
         internal static async Task<IEnumerable<dynamic>> ExecuteQueryAsyncInternal(this IDbConnection connection,
             string commandText,
@@ -286,7 +289,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             string tableName = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            CancellationToken cancellationToken = default)
         {
             // Get Cache
             if (cacheKey != null)
@@ -300,7 +304,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+                await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
 
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -311,9 +315,10 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: null,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck,
+                cancellationToken: cancellationToken))
             {
-                using (var reader = await command.ExecuteReaderAsync())
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
@@ -647,6 +652,7 @@ namespace RepoDb
         /// <param name="cache"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns></returns>
         internal static Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
@@ -658,7 +664,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             string tableName = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            CancellationToken cancellationToken = default)
         {
             // Get Cache
             if (cacheKey != null)
@@ -686,7 +693,8 @@ namespace RepoDb
                    transaction: transaction,
                    cache: cache,
                    tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck,
+                   cancellationToken: cancellationToken);
             }
             else
             {
@@ -700,7 +708,8 @@ namespace RepoDb
                    transaction: transaction,
                    cache: cache,
                    tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck,
+                   cancellationToken: cancellationToken);
             }
         }
 
@@ -719,6 +728,7 @@ namespace RepoDb
         /// <param name="cache"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns></returns>
         private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(this IDbConnection connection,
             string commandText,
@@ -730,7 +740,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             string tableName = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            CancellationToken cancellationToken = default)
         {
             // Get Cache
             if (cacheKey != null)
@@ -753,7 +764,8 @@ namespace RepoDb
                transaction: transaction,
                cache: null,
                tableName: tableName,
-               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).OfTargetType<dynamic, TResult>();
+               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck,
+               cancellationToken: cancellationToken)).OfTargetType<dynamic, TResult>();
 
             // Set Cache
             if (cacheKey != null)
@@ -780,6 +792,7 @@ namespace RepoDb
         /// <param name="cache"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns></returns>
         private static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternalForType<TResult>(this IDbConnection connection,
             string commandText,
@@ -791,7 +804,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             string tableName = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            CancellationToken cancellationToken = default)
         {
             // Get Cache
             if (cacheKey != null)
@@ -805,7 +819,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+                await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
 
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -816,9 +830,10 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: typeof(TResult),
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck,
+                cancellationToken: cancellationToken))
             {
-                using (var reader = await command.ExecuteReaderAsync())
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader, dbFields,
                         connection.GetDbSetting()).AsList();
@@ -2324,6 +2339,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns></returns>
         internal static async Task<DbCommand> CreateDbCommandForExecutionAsync(this IDbConnection connection,
             string commandText,
@@ -2333,13 +2349,14 @@ namespace RepoDb
             IDbTransaction transaction = null,
             Type entityType = null,
             IEnumerable<DbField> dbFields = null,
-            bool skipCommandArrayParametersCheck = true)
+            bool skipCommandArrayParametersCheck = true,
+            CancellationToken cancellationToken = default)
         {
             // Validate
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Open
-            await connection.EnsureOpenAsync();
+            await connection.EnsureOpenAsync(cancellationToken);
 
             // Call
             return CreateDbCommandForExecutionInternal(connection: connection,

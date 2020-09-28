@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb.Interfaces
@@ -34,10 +35,12 @@ namespace RepoDb.Interfaces
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null);
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default);
 
         #endregion
 
