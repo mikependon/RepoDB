@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -642,6 +643,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
             int page,
@@ -649,7 +651,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -667,7 +670,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -693,6 +697,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
             int page,
@@ -701,7 +706,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -720,7 +726,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -746,6 +753,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
             int page,
@@ -754,7 +762,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
 
@@ -774,7 +783,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -800,6 +810,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
             int page,
@@ -808,7 +819,8 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -827,7 +839,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -853,6 +866,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(string tableName,
             int page,
@@ -861,7 +875,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -880,7 +895,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -904,13 +920,15 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -927,7 +945,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -952,6 +971,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
@@ -959,7 +979,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -978,7 +999,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1003,6 +1025,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
@@ -1010,7 +1033,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -1029,7 +1053,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1054,6 +1079,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
@@ -1061,7 +1087,8 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -1080,7 +1107,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1105,6 +1133,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
@@ -1112,8 +1141,9 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
-        where TEntity : class
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1131,7 +1161,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1156,6 +1187,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
@@ -1163,7 +1195,8 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -1182,7 +1215,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1466,6 +1500,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> BatchQueryAsync(string tableName,
             int page,
@@ -1473,7 +1508,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1490,7 +1526,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1515,6 +1552,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> BatchQueryAsync(string tableName,
             int page,
@@ -1523,7 +1561,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1542,7 +1581,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1567,6 +1607,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> BatchQueryAsync(string tableName,
             int page,
@@ -1575,7 +1616,8 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1594,7 +1636,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1619,6 +1662,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> BatchQueryAsync(string tableName,
             int page,
@@ -1627,7 +1671,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1646,7 +1691,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1671,6 +1717,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public async Task<IEnumerable<dynamic>> BatchQueryAsync(string tableName,
             int page,
@@ -1679,7 +1726,8 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1698,7 +1746,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
