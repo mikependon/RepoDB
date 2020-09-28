@@ -3,6 +3,7 @@ using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -23,10 +24,13 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
-        internal QueryMultipleExtractor(DbDataReader reader)
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        internal QueryMultipleExtractor(DbDataReader reader,
+            CancellationToken cancellationToken = default)
         {
             this.reader = reader;
             Position = 0;
+            CancellationToken = cancellationToken;
         }
 
         /// <summary>
@@ -41,6 +45,11 @@ namespace RepoDb
         /// Gets the position of the <see cref="DbDataReader"/>.
         /// </summary>
         public int Position { get; private set; }
+
+        /// <summary>
+        /// Gets the instance of the <see cref="CancellationToken"/> currently in used.
+        /// </summary>
+        public CancellationToken CancellationToken { get; private set; }
 
         #endregion
 
@@ -74,7 +83,7 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
             where TEntity : class
         {
-            var result = DataReader.ToEnumerable<TEntity>(reader).AsList();
+            var result = (await DataReader.ToEnumerableAsync<TEntity>(reader, cancellationToken: CancellationToken)).AsList();
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
@@ -108,7 +117,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<dynamic>> ExtractAsync(bool isMoveToNextResult = true)
         {
-            var result = DataReader.ToEnumerable(reader).AsList();
+            var result = (await DataReader.ToEnumerableAsync(reader, cancellationToken: CancellationToken)).AsList();
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
@@ -153,7 +162,7 @@ namespace RepoDb
         public async Task<TResult> ScalarAsync<TResult>(bool isMoveToNextResult = true)
         {
             var value = default(TResult);
-            if (await reader.ReadAsync())
+            if (await reader.ReadAsync(CancellationToken))
             {
                 value = Converter.ToType<TResult>(reader[0]);
             }
@@ -202,7 +211,7 @@ namespace RepoDb
         /// <returns>True if there are more result sets; otherwise false.</returns>
         /// </summary>
         public async Task<bool> NextResultAsync() =>
-            (Position = await reader.NextResultAsync() ? Position + 1 : -1) >= 0;
+            (Position = await reader.NextResultAsync(CancellationToken) ? Position + 1 : -1) >= 0;
 
         #endregion
     }
