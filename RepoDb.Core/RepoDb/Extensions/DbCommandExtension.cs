@@ -237,10 +237,10 @@ namespace RepoDb.Extensions
                 var dbField = GetDbField(name, dbFields);
                 var value = classProperty.PropertyInfo.GetValue(param);
                 var returnType = (Type)null;
-                var dbType = (DbType?)null;
 
                 // Propertyhandler
-                var definition = InvokePropertyHandlerSetMethod(classProperty.GetPropertyHandler(), value, classProperty);
+                var propertyHandler = GetProperyHandler(classProperty, value?.GetType());
+                var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
                     returnType = definition.ReturnType.GetUnderlyingType();
@@ -256,15 +256,9 @@ namespace RepoDb.Extensions
                 }
 
                 // DbType
-                if (returnType != null)
-                {
-                    dbType = clientTypeToDbTypeResolver.Resolve(returnType);
-                }
-                else
-                {
-                    dbType = classProperty.GetDbType() ??
-                        value?.GetType()?.GetDbType();
-                }
+                var dbType = (returnType != null ? clientTypeToDbTypeResolver.Resolve(returnType) : null) ??
+                    classProperty.GetDbType() ??
+                    value?.GetType()?.GetDbType();
 
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(name, value, dbType));
@@ -308,7 +302,7 @@ namespace RepoDb.Extensions
                 }
 
                 // Propertyhandler
-                var propertyHandler = classProperty?.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(valueType);
+                var propertyHandler = GetProperyHandler(classProperty, valueType);
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
@@ -325,7 +319,7 @@ namespace RepoDb.Extensions
                 }
 
                 // DbType
-                var dbType = clientTypeToDbTypeResolver.Resolve(valueType) ??
+                var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                     classProperty?.GetDbType() ??
                     value?.GetType()?.GetDbType();
 
@@ -430,7 +424,7 @@ namespace RepoDb.Extensions
 
             // PropertyHandler
             var classProperty = PropertyCache.Get(entityType, queryField.Field);
-            var propertyHandler = classProperty?.GetPropertyHandler<object>() ?? PropertyHandlerCache.Get<object>(valueType);
+            var propertyHandler = GetProperyHandler(classProperty, valueType);
             var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
             if (definition != null)
             {
@@ -447,7 +441,7 @@ namespace RepoDb.Extensions
             }
 
             // DbType
-            var dbType = clientTypeToDbTypeResolver.Resolve(valueType) ??
+            var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                 classProperty?.GetDbType() ??
                 value?.GetType()?.GetDbType();
 
@@ -481,7 +475,7 @@ namespace RepoDb.Extensions
                     var valueType = value?.GetType()?.GetUnderlyingType();
 
                     // Propertyhandler
-                    var properyHandler = PropertyHandlerCache.Get<object>(valueType);
+                    var properyHandler = GetProperyHandler(null, valueType);
                     var definition = InvokePropertyHandlerSetMethod(properyHandler, value, null);
                     if (definition != null)
                     {
@@ -498,7 +492,7 @@ namespace RepoDb.Extensions
                     }
 
                     // DbType
-                    var dbType = clientTypeToDbTypeResolver.Resolve(valueType);
+                    var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null);
 
                     // Create
                     command.Parameters.Add(CreateParameter(command, name, values[i], dbType));
@@ -528,10 +522,10 @@ namespace RepoDb.Extensions
                 var leftValue = values[0];
                 var rightValue = values[1];
                 var leftValueType = leftValue?.GetType()?.GetUnderlyingType();
-                var rightValueType = leftValue?.GetType()?.GetUnderlyingType();
+                var rightValueType = rightValue?.GetType()?.GetUnderlyingType();
 
                 // Propertyhandler (Left)
-                var leftPropertyHandler = PropertyHandlerCache.Get<object>(leftValueType);
+                var leftPropertyHandler = GetProperyHandler(null, leftValueType);
                 var leftdefinition = InvokePropertyHandlerSetMethod(leftPropertyHandler, leftValue, null);
                 if (leftdefinition != null)
                 {
@@ -540,8 +534,8 @@ namespace RepoDb.Extensions
                 }
 
                 // Propertyhandler (Right)
-                var rightPropertyHandler = PropertyHandlerCache.Get<object>(leftValueType);
-                var rightDefinition = InvokePropertyHandlerSetMethod(rightPropertyHandler, leftValue, null);
+                var rightPropertyHandler = GetProperyHandler(null, rightValueType);
+                var rightDefinition = InvokePropertyHandlerSetMethod(rightPropertyHandler, rightValue, null);
                 if (rightDefinition != null)
                 {
                     rightValueType = rightDefinition.ReturnType.GetUnderlyingType();
@@ -558,8 +552,8 @@ namespace RepoDb.Extensions
                 }
 
                 // DbType
-                var leftDbType = clientTypeToDbTypeResolver.Resolve(leftValueType);
-                var rightDbType = clientTypeToDbTypeResolver.Resolve(rightValueType);
+                var leftDbType = (leftValueType != null ? clientTypeToDbTypeResolver.Resolve(leftValueType) : null);
+                var rightDbType = (rightValueType != null ? clientTypeToDbTypeResolver.Resolve(rightValueType) : null);
 
                 // Add
                 command.Parameters.Add(
@@ -693,6 +687,23 @@ namespace RepoDb.Extensions
         private static object AutomaticConvertGuidToString(object value)
         {
             return value?.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classProperty"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        private static object GetProperyHandler(ClassProperty classProperty,
+            Type targetType)
+        {
+            var propertyHandler = classProperty?.GetPropertyHandler();
+            if (propertyHandler == null && targetType != null)
+            {
+                propertyHandler = PropertyHandlerCache.Get<object>(targetType);
+            }
+            return propertyHandler;
         }
 
         #endregion
