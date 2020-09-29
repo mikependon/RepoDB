@@ -198,7 +198,7 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = (IEnumerable<dynamic>)DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
+                    var result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting());
 
                     // Set Cache
                     if (cacheKey != null)
@@ -315,12 +315,12 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting())).AsList();
+                    var result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting());
 
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -567,8 +567,8 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = (IEnumerable<TResult>)DataReader.ToEnumerable<TResult>(reader,
-                        dbFields, connection.GetDbSetting()).AsList();
+                    var result = DataReader.ToEnumerable<TResult>(reader,
+                        dbFields, connection.GetDbSetting());
 
                     // Set Cache
                     if (cacheKey != null)
@@ -820,13 +820,13 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    var result = (await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
-                        connection.GetDbSetting())).AsList();
+                    var result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
+                        connection.GetDbSetting());
 
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
