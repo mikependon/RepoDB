@@ -1652,29 +1652,44 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
-        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThereIsNoKeyField()
+        public void ThrowExceptionOnSqlConnectionUpdateIfThereIsNoKeyField()
         {
+            // Setup
+            var data = Helper.CreateNonKeyedTable();
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                var data = new
-                {
-                    ColumnInt = 1,
-                    ColumnDecimal = 2
-                };
-                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
+                // Act
+                connection.Update<NonKeyedTable>(data);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfThereIsNoKeyField()
+        {
+            // Setup
+            var data = Helper.CreateDynamicNonKeyedTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), (object)data);
             }
         }
 
         [TestMethod, ExpectedException(typeof(EmptyException))]
         public void ThrowExceptionOnSqlConnectionUpdateViaTableNameIfTheFieldsAreNotFound()
         {
+            // Setup
+            var data = new
+            {
+                Id = 1,
+                AnyField = 1
+            };
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                var data = new
-                {
-                    Id = 1,
-                    AnyField = 1
-                };
+                // Act
                 connection.Update(ClassMappedNameCache.Get<NonIdentityTable>(), data);
             }
         }

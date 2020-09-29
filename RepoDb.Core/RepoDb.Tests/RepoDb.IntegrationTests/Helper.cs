@@ -598,7 +598,7 @@ namespace RepoDb.IntegrationTests
                     ColumnBit = false,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow.AddDays(index),
-                    ColumnDecimal = index+1,
+                    ColumnDecimal = index + 1,
                     ColumnFloat = index + 1,
                     ColumnInt = index + 1,
                     ColumnNVarChar = $"NVARCHAR{index}-Property"
@@ -901,6 +901,42 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region NonKeyedTable
+
+        /// <summary>
+        /// Creates a list of <see cref="NonKeyedTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="NonKeyedTable"/> objects.</returns>
+        public static IEnumerable<NonKeyedTable> CreateNonKeyedTables(int count = 10)
+        {
+            for (var index = 0; index < count; index++)
+            {
+                yield return new NonKeyedTable
+                {
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="NonKeyedTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="NonKeyedTable"/> object.</returns>
+        public static NonKeyedTable CreateNonKeyedTable()
+        {
+            return new NonKeyedTable
+            {
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnInt = new Random().Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        #endregion
+
         #region Dynamics
 
         #region IdentityTable
@@ -983,53 +1019,6 @@ namespace RepoDb.IntegrationTests
             return new Tuple<List<dynamic>, IEnumerable<Field>>(tables, fields);
         }
 
-        /// <summary>
-        /// Creates a list of dynamic objects for [sc].[IdentityTable] without an identity.
-        /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of dynamic objects.</returns>
-        public static List<dynamic> CreateDynamicIdentityTablesWithoutIdentity(int count)
-        {
-            var tables = new List<dynamic>();
-            for (var i = 0; i < count; i++)
-            {
-                var index = i + 1;
-                tables.Add(new
-                {
-                    RowGuid = Guid.NewGuid(),
-                    ColumnBit = true,
-                    ColumnDateTime = EpocDate.AddDays(index),
-                    ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = Convert.ToDecimal(index),
-                    ColumnFloat = Convert.ToDouble(index),
-                    ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
-                });
-            }
-            return tables;
-        }
-
-        /// <summary>
-        /// Creates a list of dynamic objects for [dbo].[NonKeyedTable] table.
-        /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of dynamic objects.</returns>
-        public static List<dynamic> CreateDynamicNonKeyedTables(int count)
-        {
-            var tables = new List<dynamic>();
-            for (var i = 0; i < count; i++)
-            {
-                var index = i + 1;
-                tables.Add(new
-                {
-                    ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
-                });
-            }
-            return tables;
-        }
-
         #endregion
 
         #region NonIdentityTable
@@ -1107,6 +1096,45 @@ namespace RepoDb.IntegrationTests
                 });
             }
             return new Tuple<List<dynamic>, IEnumerable<Field>>(tables, fields);
+        }
+
+        #endregion
+
+        #region NonKeyedTable
+
+        /// <summary>
+        /// Creates a list of dynamic objects for [dbo].[NonKeyedTable] table.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of dynamic objects.</returns>
+        public static List<dynamic> CreateDynamicNonKeyedTables(int count)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnInt = index,
+                    ColumnNVarChar = $"NVARCHAR{index}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of dynamic object for [dbo].[NonKeyedTable] table.
+        /// </summary>
+        /// <returns>An instance of dynamic object.</returns>
+        public static dynamic CreateDynamicNonKeyedTable()
+        {
+            return new
+            {
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnInt = new Random().Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
         }
 
         #endregion

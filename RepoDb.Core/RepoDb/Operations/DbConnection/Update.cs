@@ -44,7 +44,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
+                entity?.GetType() ?? typeof(TEntity));
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -619,7 +620,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
+                entity?.GetType() ?? typeof(TEntity));
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -1192,7 +1194,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, entity?.GetType());
             return UpdateInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -1380,7 +1382,7 @@ namespace RepoDb
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, entity?.GetType());
             return await UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,

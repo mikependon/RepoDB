@@ -74,7 +74,7 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
             where TEntity : class
         {
-            var result = DataReader.ToEnumerable<TEntity>(reader).AsList();
+            var result = (await DataReader.ToEnumerableAsync<TEntity>(reader)).AsList();
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
@@ -108,7 +108,7 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<dynamic>> ExtractAsync(bool isMoveToNextResult = true)
         {
-            var result = DataReader.ToEnumerable(reader).AsList();
+            var result = (await DataReader.ToEnumerableAsync(reader)).AsList();
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
