@@ -198,12 +198,12 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting());
+                    var result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -320,7 +320,7 @@ namespace RepoDb
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -567,13 +567,12 @@ namespace RepoDb
             {
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = DataReader.ToEnumerable<TResult>(reader,
-                        dbFields, connection.GetDbSetting());
+                    var result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
@@ -826,7 +825,7 @@ namespace RepoDb
                     // Set Cache
                     if (cacheKey != null)
                     {
-                        cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                        cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
 
                     // Return
