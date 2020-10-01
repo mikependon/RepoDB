@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -82,19 +83,22 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         public static Task<int> TruncateAsync<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return TruncateAsyncInternal<TEntity>(connection: connection,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -106,12 +110,14 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         internal static Task<int> TruncateAsyncInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Variables
@@ -125,7 +131,8 @@ namespace RepoDb
                 request: request,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -201,20 +208,23 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         public static Task<int> TruncateAsync(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return TruncateAsyncInternal(connection: connection,
                 tableName: tableName,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -226,13 +236,15 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         internal static Task<int> TruncateAsyncInternal(this IDbConnection connection,
             string tableName,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var request = new TruncateRequest(tableName,
@@ -245,7 +257,8 @@ namespace RepoDb
                 request: request,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace);
+                trace: trace,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -325,12 +338,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         internal static async Task<int> TruncateAsyncInternalBase(this IDbConnection connection,
             TruncateRequest request,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ITrace trace = null)
+            ITrace trace = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var commandType = CommandType.Text;
@@ -363,6 +378,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true),
                 skipCommandArrayParametersCheck: true);

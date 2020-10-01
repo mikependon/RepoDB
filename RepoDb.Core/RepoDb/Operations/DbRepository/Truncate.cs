@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -84,8 +85,9 @@ namespace RepoDb
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
-        public async Task<int> TruncateAsync<TEntity>()
+        public async Task<int> TruncateAsync<TEntity>(CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -97,7 +99,8 @@ namespace RepoDb
                 return await connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
                     transaction: null,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -116,8 +119,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
-        public async Task<int> TruncateAsync<TEntity>(IDbTransaction transaction = null)
+        public async Task<int> TruncateAsync<TEntity>(IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -129,7 +134,8 @@ namespace RepoDb
                 return await connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -219,8 +225,10 @@ namespace RepoDb
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
-        public async Task<int> TruncateAsync(string tableName)
+        public async Task<int> TruncateAsync(string tableName,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = CreateConnection();
@@ -232,7 +240,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: null,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -251,9 +260,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         public async Task<int> TruncateAsync(string tableName,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = CreateConnection();
@@ -265,7 +276,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
