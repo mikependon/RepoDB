@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -78,20 +79,23 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAllAsync(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAllAsync<TEntity>(tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -104,18 +108,21 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAllAsync(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAllAsync<TEntity>(fields: fields,
                 orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion

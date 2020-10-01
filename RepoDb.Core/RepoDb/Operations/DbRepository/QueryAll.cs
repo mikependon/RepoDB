@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -77,7 +78,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<Field> fields = null, 
+        public IEnumerable<TEntity> QueryAll<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
@@ -129,13 +130,15 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -154,7 +157,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: Cache,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -179,12 +183,14 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<TEntity>> QueryAllAsync<TEntity>(IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -202,7 +208,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: Cache,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -284,13 +291,15 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public async Task<IEnumerable<dynamic>> QueryAllAsync(string tableName,
             IEnumerable<Field> fields = null,
             IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -308,7 +317,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: Cache,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
