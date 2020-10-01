@@ -114,6 +114,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task<UpdateAllExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
             string tableName,
