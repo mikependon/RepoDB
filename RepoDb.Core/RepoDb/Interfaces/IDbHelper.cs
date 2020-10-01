@@ -60,9 +60,11 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
         Task<object> GetScopeIdentityAsync(IDbConnection connection,
-            IDbTransaction transaction = null);
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default);
 
         #endregion
     }

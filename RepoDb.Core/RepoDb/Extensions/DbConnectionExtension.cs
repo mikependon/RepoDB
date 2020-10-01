@@ -310,7 +310,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+                await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
 
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -827,7 +827,7 @@ namespace RepoDb
 
             // DB Fields
             var dbFields = !string.IsNullOrWhiteSpace(tableName) ?
-                await DbFieldCache.GetAsync(connection, tableName, transaction, false) : null;
+                await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
 
             // Execute the actual method
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -52,7 +53,8 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.InsertAllAsync<TEntity>(entities: entities,
                 batchSize: batchSize,

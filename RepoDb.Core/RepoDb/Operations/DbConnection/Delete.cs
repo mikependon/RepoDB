@@ -1115,7 +1115,7 @@ namespace RepoDb
                 transaction: transaction,
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
-                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true),
+                dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
                 skipCommandArrayParametersCheck: true);
 
             // After Execution

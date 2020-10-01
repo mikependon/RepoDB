@@ -131,11 +131,13 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
         public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction) =>
-            GetAsync(connection, tableName, transaction, true);
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default) =>
+            GetAsync(connection, tableName, transaction, true, cancellationToken);
 
         /// <summary>
         /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name in an asynchronous way.
@@ -144,7 +146,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
         public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
             string tableName,
@@ -161,7 +163,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
         internal static async Task<IEnumerable<DbField>> GetAsyncInternal<TDbConnection>(TDbConnection connection,
             string tableName,

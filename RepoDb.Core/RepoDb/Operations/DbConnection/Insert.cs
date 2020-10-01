@@ -732,7 +732,7 @@ namespace RepoDb
                 // Get explicity if needed
                 if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
-                    result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
+                    result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction, cancellationToken));
                 }
 
                 // Set the return value

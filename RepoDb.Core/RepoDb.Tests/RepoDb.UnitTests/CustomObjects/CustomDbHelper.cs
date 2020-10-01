@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb.UnitTests.CustomObjects
@@ -23,7 +24,8 @@ namespace RepoDb.UnitTests.CustomObjects
 
         public Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult<IEnumerable<DbField>>(new[]
             {
@@ -39,7 +41,8 @@ namespace RepoDb.UnitTests.CustomObjects
         }
 
         public Task<object> GetScopeIdentityAsync(IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult((object)0);
         }

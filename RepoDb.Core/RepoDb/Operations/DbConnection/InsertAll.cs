@@ -696,7 +696,7 @@ namespace RepoDb
                             // Get explicity if needed
                             if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
-                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction));
+                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction, cancellationToken));
                             }
 
                             // Set the return value

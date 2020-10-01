@@ -302,52 +302,6 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
-        /// <returns></returns>
-        internal static IEnumerable<DbField> GetDbFields(IDbConnection connection,
-            string tableName,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation)
-        {
-            // If the connection is open, probably, there is already an open DbDataReader object
-            if (connection.State != ConnectionState.Open)
-            {
-                return DbFieldCache.Get(connection, tableName, transaction, enableValidation);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="connectionString"></param>
-        /// <param name="transaction"></param>
-        /// <param name="enableValidation"></param>
-        /// <returns></returns>
-        internal static async Task<IEnumerable<DbField>> GetDbFieldsAsync(IDbConnection connection,
-            string tableName,
-            string connectionString,
-            IDbTransaction transaction,
-            bool enableValidation)
-        {
-            // If the connection is open, probably, there is already an open DbDataReader object
-            if (connection.State != ConnectionState.Open)
-            {
-                return await DbFieldCache.GetAsync(connection, tableName, transaction, enableValidation);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="reader"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
