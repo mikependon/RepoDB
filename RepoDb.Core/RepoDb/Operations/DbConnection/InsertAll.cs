@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -152,6 +153,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
         public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -162,7 +164,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return InsertAllAsyncInternal(connection: connection,
@@ -174,7 +177,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -190,6 +194,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
         public static Task<int> InsertAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
@@ -199,7 +204,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return InsertAllAsyncInternal<TEntity>(connection: connection,
@@ -211,7 +217,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -228,6 +235,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
         internal static Task<int> InsertAllAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
@@ -238,7 +246,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return InsertAllAsyncInternalBase<TEntity>(connection: connection,
@@ -250,7 +259,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -311,6 +321,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
         public static Task<int> InsertAllAsync(this IDbConnection connection,
             string tableName,
@@ -321,7 +332,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return InsertAllAsyncInternal<object>(connection: connection,
                 tableName: tableName,
@@ -332,7 +344,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -586,6 +599,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of inserted rows in the table.</returns>
         internal static async Task<int> InsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -596,7 +610,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Variables needed
@@ -648,7 +663,7 @@ namespace RepoDb
             try
             {
                 // Ensure the connection is open
-                await connection.EnsureOpenAsync();
+                await connection.EnsureOpenAsync(cancellationToken);
 
                 if (hasTransaction == false)
                 {
@@ -675,7 +690,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync());
+                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
 
                             // Get explicity if needed
                             if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
@@ -740,18 +755,18 @@ namespace RepoDb
                             // Actual Execution
                             if (context.IdentityPropertySetterFunc == null)
                             {
-                                result += await command.ExecuteNonQueryAsync();
+                                result += await command.ExecuteNonQueryAsync(cancellationToken);
                             }
                             else
                             {
-                                using (var reader = await command.ExecuteReaderAsync())
+                                using (var reader = (DbDataReader)await command.ExecuteReaderAsync(cancellationToken))
                                 {
                                     var index = 0;
 
                                     // Get the results
                                     do
                                     {
-                                        if (await reader.ReadAsync())
+                                        if (await reader.ReadAsync(cancellationToken))
                                         {
                                             var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
@@ -759,7 +774,7 @@ namespace RepoDb
                                         }
                                         index++;
                                     }
-                                    while (await reader.NextResultAsync());
+                                    while (await reader.NextResultAsync(cancellationToken));
                                 }
                             }
                         }
