@@ -210,6 +210,8 @@ namespace RepoDb.DbHelpers
             return connection.ExecuteScalar("SELECT COALESCE(SCOPE_IDENTITY(), @@IDENTITY);");
         }
 
+        // TODO: Ensure the cancellation token is passed from the caller
+
         /// <summary>
         /// Gets the newly generated identity from the database in an asychronous way.
         /// </summary>

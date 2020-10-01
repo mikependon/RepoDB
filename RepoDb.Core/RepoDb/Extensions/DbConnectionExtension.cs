@@ -82,16 +82,20 @@ namespace RepoDb
             return connection;
         }
 
+        // TODO: Ensure that the cancellation token is passed from the caller
+
         /// <summary>
         /// Ensures the connection object is open in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection to be opened.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The instance of the current connection object.</returns>
-        public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection)
+        public static async Task<IDbConnection> EnsureOpenAsync(this IDbConnection connection,
+            CancellationToken cancellationToken = default)
         {
             if (connection.State != ConnectionState.Open)
             {
-                await ((DbConnection)connection).OpenAsync();
+                await ((DbConnection)connection).OpenAsync(cancellationToken);
             }
             return connection;
         }
