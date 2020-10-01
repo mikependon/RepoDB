@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb.Contexts.Providers
@@ -100,8 +101,6 @@ namespace RepoDb.Contexts.Providers
             return context;
         }
 
-        // TODO: Ensure the cancellation token support
-
         /// <summary>
         /// 
         /// </summary>
@@ -124,7 +123,8 @@ namespace RepoDb.Contexts.Providers
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
@@ -137,7 +137,7 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             context = CreateInternal<TEntity>(connection,
                 tableName,
                 entities,
