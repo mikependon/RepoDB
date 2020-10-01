@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -176,16 +177,19 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -197,18 +201,21 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync<TWhat>(TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity, TWhat>(entity: entity,
                 what: what,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -219,18 +226,21 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
                 what: what,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -241,18 +251,21 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -263,18 +276,21 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -285,18 +301,21 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -307,18 +326,21 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public Task<int> UpdateAsync(TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
