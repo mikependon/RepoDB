@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -171,7 +172,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -186,12 +187,12 @@ namespace RepoDb
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
 
                 // T2
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -400,7 +401,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -415,17 +416,17 @@ namespace RepoDb
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
 
                 // T2
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
 
                 // T3
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -674,7 +675,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -689,22 +690,22 @@ namespace RepoDb
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
 
                 // T2
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
 
                 // T3
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
 
                 // T4
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -991,7 +992,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1006,27 +1007,27 @@ namespace RepoDb
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
 
                 // T2
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
 
                 // T3
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
 
                 // T4
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
 
                 // T5
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -1351,7 +1352,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1366,32 +1367,32 @@ namespace RepoDb
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
 
                 // T2
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
 
                 // T3
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
 
                 // T4
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
 
                 // T5
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
 
                 // T6
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -1755,7 +1756,7 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
-            using (var reader = ExecuteReaderInternal(connection: connection,
+            using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1770,37 +1771,37 @@ namespace RepoDb
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
 
                 // T2
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
 
                 // T3
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
 
                 // T4
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
 
                 // T5
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
 
                 // T6
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
 
                 // Extract the seventh result
                 reader?.NextResult();
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>(), transaction);
-                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                var item7 = DataReader.ToEnumerable<T7>(reader, dbFields, dbSetting)?.AsList();
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
@@ -1844,6 +1845,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
@@ -1857,7 +1859,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
         {
@@ -1873,7 +1876,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1894,6 +1898,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<T1, T2>(this IDbConnection connection,
             QueryGroup where1,
@@ -1907,7 +1912,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
         {
@@ -1976,12 +1982,13 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
-            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -1990,13 +1997,13 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T2
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -2040,6 +2047,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
@@ -2057,7 +2065,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2078,7 +2087,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -2104,6 +2114,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsyncInternal<T1, T2, T3>(this IDbConnection connection,
             QueryGroup where1,
@@ -2121,7 +2132,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2205,12 +2217,13 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
-            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -2219,18 +2232,18 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T2
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T3
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -2279,6 +2292,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
             QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
@@ -2301,7 +2315,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2327,7 +2342,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -2358,6 +2374,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
             QueryMultipleAsyncInternal<T1, T2, T3, T4>(this IDbConnection connection,
@@ -2380,7 +2397,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2479,12 +2497,13 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
-            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -2493,23 +2512,23 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T2
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T3
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T4
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -2563,6 +2582,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
@@ -2589,7 +2609,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2620,7 +2641,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -2656,6 +2678,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
             QueryMultipleAsyncInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
@@ -2682,7 +2705,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2796,12 +2820,13 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
-            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -2810,28 +2835,28 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T2
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T3
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T4
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T5
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
+                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -2890,6 +2915,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
@@ -2920,7 +2946,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2956,7 +2983,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -2997,6 +3025,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
             QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
@@ -3027,7 +3056,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3156,12 +3186,13 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
-            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -3170,33 +3201,33 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T2
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T3
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T4
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T5
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
+                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T6
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
+                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -3261,6 +3292,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
@@ -3295,7 +3327,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3336,7 +3369,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -3382,6 +3416,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
             QueryMultipleAsyncInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
@@ -3416,7 +3451,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3560,12 +3596,13 @@ namespace RepoDb
 
             // Actual Execution
             var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
-            using (var reader = await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -3574,38 +3611,38 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T2
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T3
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T4
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T5
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
+                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T6
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                var item6 = DataReader.ToEnumerable<T6>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
+                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken);
 
                 // T7
-                reader?.NextResult();
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction);
-                var item7 = DataReader.ToEnumerable<T7>((DbDataReader)reader, dbFields, dbSetting)?.AsList();
+                await reader.NextResultAsync(cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction, true, cancellationToken);
+                var item7 = await DataReader.ToEnumerableAsync<T7>(reader, dbFields, dbSetting, cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
