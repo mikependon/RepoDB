@@ -630,7 +630,8 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder);
+                statementBuilder,
+                cancellationToken);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -730,7 +731,8 @@ namespace RepoDb
                                     fields,
                                     hints,
                                     transaction,
-                                    statementBuilder);
+                                    statementBuilder,
+                                    cancellationToken);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
