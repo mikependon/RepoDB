@@ -2188,7 +2188,8 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder);
+                statementBuilder,
+                cancellationToken);
             var sessionId = Guid.Empty;
 
             // Before Execution
