@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -110,6 +111,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
@@ -120,7 +122,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return repository.DbRepository.BulkMergeAsync<TEntity>(entities: entities,
@@ -131,7 +134,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -149,6 +153,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
@@ -160,7 +165,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return repository.DbRepository.BulkMergeAsync<TEntity>(tableName: tableName,
@@ -172,7 +178,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
