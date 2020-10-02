@@ -409,7 +409,7 @@ namespace RepoDb
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
-                await reader.InitializeAsync();
+                await reader.InitializeAsync(cancellationToken);
                 return await BulkDeleteAsyncInternal(connection: connection,
                     tableName: ClassMappedNameCache.Get<TEntity>(),
                     reader: reader,
@@ -458,7 +458,7 @@ namespace RepoDb
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
-                await reader.InitializeAsync();
+                await reader.InitializeAsync(cancellationToken);
                 return await BulkDeleteAsyncInternal(connection: connection,
                     tableName: tableName,
                     reader: reader,
