@@ -5,6 +5,7 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,9 +47,9 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// Returns the command text that is being used to extract schema definitions.
+        /// 
         /// </summary>
-        /// <returns>The command text.</returns>
+        /// <returns></returns>
         private string GetCommandText()
         {
             return $@"SELECT COLUMN_NAME AS ColumnName
@@ -67,9 +68,9 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Get the list of type names for all blob-types for MySql.
+        /// 
         /// </summary>
-        /// <returns>The list of column type names.</returns>
+        /// <returns></returns>
         private IEnumerable<string> GetBlobTypes()
         {
             return new[]
@@ -87,11 +88,11 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Converts the <see cref="IDataReader"/> object into <see cref="DbField"/> object.
+        /// 
         /// </summary>
-        /// <param name="reader">The instance of <see cref="IDataReader"/> object.</param>
-        /// <returns>The instance of converted <see cref="DbField"/> object.</returns>
-        private DbField ReaderToDbField(IDataReader reader)
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        private DbField ReaderToDbField(DbDataReader reader)
         {
             var columnType = reader.GetString(4);
             var excluded = GetBlobTypes();
@@ -113,6 +114,38 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
                 reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
                 reader.GetString(8));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
+            CancellationToken cancellationToken = default)
+        {
+            var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken);
+            var excluded = GetBlobTypes();
+            var size = (int?)null;
+            if (excluded.Contains(columnType.ToLowerInvariant()))
+            {
+                size = null;
+            }
+            else
+            {
+                size = await reader.IsDBNullAsync(5, cancellationToken) ? (int?)null :
+                    await reader.GetFieldValueAsync<int>(5, cancellationToken);
+            }
+            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(1, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(2, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(1, cancellationToken),
+                DbTypeResolver.Resolve(columnType),
+                size,
+                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken)).ToString()),
+                await reader.GetFieldValueAsync<string>(8, cancellationToken));
         }
 
         #endregion
@@ -141,7 +174,7 @@ namespace RepoDb.DbHelpers
             };
 
             // Iterate and extract
-            using (var reader = connection.ExecuteReader(commandText, param, transaction: transaction))
+            using (var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
 
@@ -162,7 +195,7 @@ namespace RepoDb.DbHelpers
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
@@ -180,14 +213,15 @@ namespace RepoDb.DbHelpers
             };
 
             // Iterate and extract
-            using (var reader = await connection.ExecuteReaderAsync(commandText, param, transaction: transaction))
+            using (var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
+                cancellationToken: cancellationToken))
             {
                 var dbFields = new List<DbField>();
 
                 // Iterate the list of the fields
-                while (reader.Read())
+                while (await reader.ReadAsync(cancellationToken))
                 {
-                    dbFields.Add(ReaderToDbField(reader));
+                    dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
                 }
 
                 // Return the list of fields
@@ -208,7 +242,7 @@ namespace RepoDb.DbHelpers
         public object GetScopeIdentity(IDbConnection connection,
             IDbTransaction transaction = null)
         {
-            return connection.ExecuteScalar("SELECT LAST_INSERT_ID();");
+            return connection.ExecuteScalar("SELECT LAST_INSERT_ID();", transaction: transaction);
         }
 
         /// <summary>
@@ -216,11 +250,14 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
         public async Task<object> GetScopeIdentityAsync(IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
-            return await connection.ExecuteScalarAsync("SELECT LAST_INSERT_ID();");
+            return await connection.ExecuteScalarAsync("SELECT LAST_INSERT_ID();", transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
