@@ -7,6 +7,7 @@ using System.Collections;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace RepoDb
 {
@@ -100,7 +101,8 @@ namespace RepoDb
         /// <summary>
         /// Initializes the current instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
-        public async Task InitializeAsync()
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             if (IsInitialized)
             {
@@ -109,7 +111,7 @@ namespace RepoDb
             var dbFields = (IEnumerable<DbField>)null;
             if (Connection != null)
             {
-                dbFields = await DbFieldCache.GetAsync(Connection, ClassMappedNameCache.Get<TEntity>(), Transaction);
+                dbFields = await DbFieldCache.GetAsync(Connection, ClassMappedNameCache.Get<TEntity>(), Transaction, cancellationToken);
             }
             InitializeInternal(dbFields);
         }
