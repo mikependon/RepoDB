@@ -6,6 +6,7 @@ using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using System.Dynamic;
+using System.Threading;
 
 namespace RepoDb
 {
@@ -412,6 +413,7 @@ namespace RepoDb
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -420,7 +422,8 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -435,7 +438,8 @@ namespace RepoDb
                     cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
-                    cache: Cache);
+                    cache: Cache,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -527,6 +531,7 @@ namespace RepoDb
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>
         /// An enumerable list of data entity objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -535,7 +540,8 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -551,7 +557,8 @@ namespace RepoDb
                     cacheItemExpiration: cacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
-                    cache: Cache);
+                    cache: Cache,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -625,11 +632,13 @@ namespace RepoDb
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public async Task<int> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -641,7 +650,8 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -715,11 +725,13 @@ namespace RepoDb
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public async Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -731,7 +743,8 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -807,11 +820,13 @@ namespace RepoDb
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public async Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -823,7 +838,8 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
