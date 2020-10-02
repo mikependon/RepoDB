@@ -317,7 +317,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
             var keys = ExtractPropertyValues<TEntity, object>(entities, key).AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
@@ -405,7 +405,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete all the rows from the table in an asynchronous way. It uses the <see cref="DeleteAsync{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete all the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -427,7 +427,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
             var keys = ExtractPropertyValues<TEntity, object>(entities, key)?.AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
@@ -442,7 +442,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete all the rows from the table in an asynchronous way. It uses the <see cref="DeleteAsync{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete all the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TKey">The type of the key column.</typeparam>
@@ -477,7 +477,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete all the rows from the table in an asynchronous way. It uses the <see cref="DeleteAsync{TEntity}(IDbConnection, QueryGroup, string, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation as the underlying operation.
+        /// Delete all the rows from the table in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -881,7 +881,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
             var dbSetting = connection.GetDbSetting();
             var hasImplicitTransaction = false;
             var count = keys?.AsList()?.Count;
@@ -892,7 +892,7 @@ namespace RepoDb
                 // Creates a transaction (if needed)
                 if (transaction == null && count > ParameterBatchCount)
                 {
-                    transaction = (await connection.EnsureOpenAsync()).BeginTransaction();
+                    transaction = (await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
                     hasImplicitTransaction = true;
                 }
 

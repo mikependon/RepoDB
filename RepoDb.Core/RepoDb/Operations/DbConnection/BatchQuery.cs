@@ -1191,7 +1191,7 @@ namespace RepoDb
         {
             // Ensure the fields
             fields = GetQualifiedFields<TEntity>(fields) ??
-                (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+                (await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken))?.AsFields();
 
             // Return
             return await BatchQueryAsyncInternalBase<TEntity>(connection: connection,

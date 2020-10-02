@@ -1365,7 +1365,7 @@ namespace RepoDb
                             var list = entities.AsList();
                             while (await reader.ReadAsync(cancellationToken))
                             {
-                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
+                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
                                 var entity = list[result];
                                 func(entity, value);
                                 result++;
@@ -1467,7 +1467,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -1678,7 +1678,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);

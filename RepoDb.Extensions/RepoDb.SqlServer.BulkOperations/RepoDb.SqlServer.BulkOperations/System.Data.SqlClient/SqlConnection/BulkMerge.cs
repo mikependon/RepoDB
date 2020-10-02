@@ -1348,7 +1348,7 @@ namespace RepoDb
                    dbFields: filteredDbFields,
                    mappings: mappings,
                    options: options,
-                   hints: null,
+                   hints: hints,
                    bulkCopyTimeout: bulkCopyTimeout,
                    batchSize: batchSize,
                    isReturnIdentity: false,
@@ -1384,9 +1384,9 @@ namespace RepoDb
                     {
                         var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                         var list = entities.AsList();
-                        while (await reader.ReadAsync())
+                        while (await reader.ReadAsync(cancellationToken))
                         {
-                            var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
+                            var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
                             var entity = list[result];
                             func(entity, value);
                             result++;
@@ -1566,7 +1566,7 @@ namespace RepoDb
                     dbFields: filteredDbFields,
                     mappings: mappings,
                     options: options,
-                    hints: null,
+                    hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: false,
@@ -1756,7 +1756,7 @@ namespace RepoDb
                     dbFields: filteredDbFields,
                     mappings: mappings,
                     options: options,
-                    hints: null,
+                    hints: hints,
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     isReturnIdentity: false,
@@ -1798,7 +1798,7 @@ namespace RepoDb
                 {
                     using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                     {
-                        while (await reader.ReadAsync())
+                        while (await reader.ReadAsync(cancellationToken))
                         {
                             var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0, cancellationToken)));
                             dataTable.Rows[result][column] = value;

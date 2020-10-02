@@ -683,7 +683,7 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Get the database fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
 
             // Get the context
             var context = await InsertExecutionContextProvider.CreateAsync<TEntity>(connection,

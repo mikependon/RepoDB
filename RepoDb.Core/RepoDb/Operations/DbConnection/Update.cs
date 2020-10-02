@@ -622,7 +622,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -669,7 +669,7 @@ namespace RepoDb
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -711,7 +711,7 @@ namespace RepoDb
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -914,7 +914,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
@@ -959,7 +959,7 @@ namespace RepoDb
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -999,7 +999,7 @@ namespace RepoDb
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entity: entity,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -1428,7 +1428,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
             return await UpdateAsyncInternal<object>(connection: connection,
                 tableName: tableName,
                 entity: entity,

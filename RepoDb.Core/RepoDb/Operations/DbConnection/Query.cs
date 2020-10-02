@@ -761,7 +761,7 @@ namespace RepoDb
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -819,7 +819,7 @@ namespace RepoDb
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -1101,7 +1101,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1157,7 +1157,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1434,7 +1434,7 @@ namespace RepoDb
         {
             // Ensure the fields
             fields = GetQualifiedFields<TEntity>(fields) ??
-                (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+                (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.AsFields();
 
             // Return
             return await QueryAsyncInternalBase<TEntity>(connection: connection,
@@ -1816,7 +1816,7 @@ namespace RepoDb
         {
             return await QueryAsync(connection: connection,
                 tableName: tableName,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1871,7 +1871,7 @@ namespace RepoDb
         {
             return await QueryAsync(connection: connection,
                 tableName: tableName,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,

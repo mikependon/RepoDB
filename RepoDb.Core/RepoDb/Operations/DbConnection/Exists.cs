@@ -272,7 +272,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await ExistsAsyncInternal<TEntity>(connection: connection,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -306,7 +306,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await ExistsAsyncInternal<TEntity>(connection: connection,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -730,7 +730,7 @@ namespace RepoDb
         {
             return await ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -764,7 +764,7 @@ namespace RepoDb
         {
             return await ExistsAsyncInternal(connection: connection,
                 tableName: tableName,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

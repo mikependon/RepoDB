@@ -777,7 +777,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
                 qualifiers = key.AsField().AsEnumerable();
             }
             return await UpdateAllAsyncInternalBase<TEntity>(connection: connection,

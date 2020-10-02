@@ -82,8 +82,6 @@ namespace RepoDb
             return connection;
         }
 
-        // TODO: Ensure that the cancellation token is passed from the caller
-
         /// <summary>
         /// Ensures the connection object is open in an asynchronous way.
         /// </summary>
@@ -319,6 +317,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
@@ -836,6 +835,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: typeof(TResult),
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
@@ -1096,6 +1096,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
@@ -1263,6 +1264,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
@@ -1414,6 +1416,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
@@ -1569,6 +1572,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
@@ -1705,11 +1709,13 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellation"></param>
         /// <returns></returns>
         internal static Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            CancellationToken cancellation = default)
             where TEntity : class =>
-            GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction, cancellation);
 
         /// <summary>
         /// 
@@ -1718,16 +1724,18 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             var property = PrimaryCache.Get<TEntity>() ?? IdentityCache.Get<TEntity>();
             if (property == null)
             {
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
                 property = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(dbFields);
             }
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
@@ -1791,12 +1799,14 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<DbField> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default)
         {
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
         }
@@ -1856,11 +1866,13 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="what"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<QueryGroup> WhatToQueryGroupAsync<T>(this IDbConnection connection,
             string tableName,
             T what,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default)
         {
             if (what == null)
             {
@@ -1869,7 +1881,7 @@ namespace RepoDb
             var queryGroup = WhatToQueryGroup<T>(what);
             if (queryGroup == null)
             {
-                var dbField = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+                var dbField = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
                 queryGroup = WhatToQueryGroup<T>(dbField, what);
             }
             return queryGroup;
@@ -1931,10 +1943,12 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="what"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<QueryGroup> WhatToQueryGroupAsync<TEntity>(IDbConnection connection,
             object what,
-            IDbTransaction transaction)
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             if (what == null)
@@ -1946,7 +1960,7 @@ namespace RepoDb
             {
                 return queryGroup;
             }
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction, cancellationToken);
             return WhatToQueryGroup(key, what);
         }
 
@@ -2365,6 +2379,7 @@ namespace RepoDb
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -2375,6 +2390,7 @@ namespace RepoDb
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default,
             Type entityType = null,
             IEnumerable<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
@@ -2383,7 +2399,7 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Open
-            await connection.EnsureOpenAsync();
+            await connection.EnsureOpenAsync(cancellationToken);
 
             // Call
             return CreateDbCommandForExecutionInternal(connection: connection,

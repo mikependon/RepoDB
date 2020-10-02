@@ -800,7 +800,7 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction);
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
                 qualifiers = key.AsField().AsEnumerable();
             }
 
@@ -1676,7 +1676,7 @@ namespace RepoDb
                                     var index = 0;
                                     do
                                     {
-                                        if (await reader.ReadAsync())
+                                        if (await reader.ReadAsync(cancellationToken))
                                         {
                                             var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
@@ -1762,7 +1762,7 @@ namespace RepoDb
             // Variables needed
             var type = entities?.First()?.GetType() ?? typeof(TEntity);
             var isObjectType = typeof(TEntity) == StaticType.Object;
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
