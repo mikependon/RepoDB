@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -354,6 +355,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             IEnumerable<object> primaryKeys,
@@ -361,7 +363,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkDeleteAsyncInternal(connection: connection,
@@ -371,7 +374,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -388,6 +392,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
@@ -398,7 +403,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
@@ -414,7 +420,8 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
         }
 
@@ -433,6 +440,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             string tableName,
@@ -444,7 +452,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             using (var reader = new DataEntityDataReader<TEntity>(entities))
@@ -460,7 +469,8 @@ namespace RepoDb
                     bulkCopyTimeout: bulkCopyTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
         }
 
@@ -478,6 +488,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
@@ -488,7 +499,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkDeleteAsyncInternal(connection: connection,
@@ -501,7 +513,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -519,6 +532,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
@@ -530,7 +544,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkDeleteAsyncInternal(connection: connection,
@@ -544,7 +559,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -562,6 +578,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
@@ -570,7 +587,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkDeleteAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -579,7 +597,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -596,6 +615,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
@@ -607,7 +627,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkDeleteAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -619,7 +640,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -637,6 +659,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
@@ -649,7 +672,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkDeleteAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -662,7 +686,8 @@ namespace RepoDb
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -1212,6 +1237,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkDeleteAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1220,7 +1246,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1231,7 +1258,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1254,7 +1281,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
@@ -1273,7 +1300,7 @@ namespace RepoDb
                     tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Do the bulk insertion first
                 using (var dataTable = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
@@ -1289,14 +1316,15 @@ namespace RepoDb
                         options: options,
                         bulkCopyTimeout: bulkCopyTimeout,
                         batchSize: batchSize,
-                        transaction: transaction);
+                        transaction: transaction,
+                        cancellationToken: cancellationToken);
                 }
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Delete the actual delete
                 sql = GetBulkDeleteSqlText(tableName,
@@ -1304,11 +1332,11 @@ namespace RepoDb
                     primaryOrIdentityField.AsEnumerable(),
                     hints,
                     dbSetting);
-                result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
                 if (hasTransaction == false)
@@ -1354,6 +1382,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkDeleteAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1365,7 +1394,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1376,7 +1406,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1399,7 +1429,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -1449,7 +1479,7 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
                 if (options == null && identityDbField?.IsIdentity == true &&
@@ -1471,24 +1501,25 @@ namespace RepoDb
                         fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // Do the bulk insertion first
-                await BulkInsertAsyncInternal(connection,
-                    tempTableName,
-                    reader,
-                    filteredDbFields,
-                    mappings,
-                    options,
-                    null,
+                await BulkInsertAsyncInternal(connection: connection,
+                    tableName: tempTableName,
+                    reader: reader,
+                    dbFields: filteredDbFields,
+                    mappings: mappings,
+                    options: options,
+                    hints: null,
                     bulkCopyTimeout,
                     batchSize,
-                    false,
-                    false,
-                    transaction);
+                    isReturnIdentity: false,
+                    usePhysicalPseudoTempTable: false,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Delete the actual delete
                 sql = GetBulkDeleteSqlText(tableName,
@@ -1496,11 +1527,11 @@ namespace RepoDb
                     qualifiers,
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
                 if (hasTransaction == false)
@@ -1547,6 +1578,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkDeleteAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1559,7 +1591,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1570,7 +1603,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1593,7 +1626,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
@@ -1643,7 +1676,7 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
                 if (options == null && identityDbField?.IsIdentity == true &&
@@ -1665,25 +1698,26 @@ namespace RepoDb
                         fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // Do the bulk insertion first
-                await BulkInsertAsyncInternal(connection,
-                    tempTableName,
-                    dataTable,
-                    rowState,
-                    filteredDbFields,
-                    mappings,
-                    options,
-                    null,
+                await BulkInsertAsyncInternal(connection: connection,
+                    tableName: tempTableName,
+                    dataTable: dataTable,
+                    rowState: rowState,
+                    dbFields: filteredDbFields,
+                    mappings: mappings,
+                    options: options,
+                    hints: null,
                     bulkCopyTimeout,
                     batchSize,
-                    false,
-                    false,
-                    transaction);
+                    isReturnIdentity: false,
+                    usePhysicalPseudoTempTable: false,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Delete the actual delete
                 sql = GetBulkDeleteSqlText(tableName,
@@ -1691,11 +1725,11 @@ namespace RepoDb
                     qualifiers,
                     hints,
                     dbSetting);
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
                 if (hasTransaction == false)
