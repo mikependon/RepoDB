@@ -85,9 +85,9 @@ namespace RepoDb.DbHelpers
             CancellationToken cancellationToken = default)
         {
             return new DbField(await reader.GetFieldValueAsync<string>(1, cancellationToken),
-                await reader.IsDBNullAsync(5, cancellationToken) ? false : reader.GetBoolean(5),
+                await reader.IsDBNullAsync(5, cancellationToken) ? false : Convert.ToBoolean(await reader.GetFieldValueAsync<long>(5, cancellationToken)),
                 string.Equals(await reader.GetFieldValueAsync<string>(1, cancellationToken), identityFieldName, StringComparison.OrdinalIgnoreCase),
-                await reader.IsDBNullAsync(3, cancellationToken) ? true : await reader.GetFieldValueAsync<bool>(3, cancellationToken) == false,
+                await reader.IsDBNullAsync(3, cancellationToken) ? true : Convert.ToBoolean(await reader.GetFieldValueAsync<long>(3, cancellationToken)) == false,
                 await reader.IsDBNullAsync(2, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(2, cancellationToken)),
                 null,
                 null,
