@@ -13,7 +13,8 @@ namespace RepoDb.IntegrationTests.Models
         public Direction? ColumnNVarChar { get; set; }
         public Direction? ColumnInt { get; set; }
         public Direction? ColumnBigInt { get; set; }
-        public Direction? ColumnSmallInt { get; set; }
+        // Force to make this non-nullable
+        public Direction ColumnSmallInt { get; set; }
     }
 
     [Map("[dbo].[CompleteTable]")]

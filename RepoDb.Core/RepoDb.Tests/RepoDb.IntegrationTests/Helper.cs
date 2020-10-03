@@ -682,7 +682,7 @@ namespace RepoDb.IntegrationTests
                     ColumnNVarChar = null,
                     ColumnInt = null,
                     ColumnBigInt = null,
-                    ColumnSmallInt = null,
+                    ColumnSmallInt = Direction.None,
                 });
             }
             return tables;
@@ -718,7 +718,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = null,
                 ColumnInt = null,
                 ColumnBigInt = null,
-                ColumnSmallInt = null
+                ColumnSmallInt = Direction.None
             };
         }
 

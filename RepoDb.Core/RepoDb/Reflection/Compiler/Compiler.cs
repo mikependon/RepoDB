@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -632,20 +631,14 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="enumType"></param>
         /// <param name="toType"></param>
         /// <returns></returns>
         internal static Expression ConvertEnumExpressionToTypeExpression(Expression expression,
-            Type enumType,
             Type toType)
         {
-            if (toType.GetUnderlyingType() == StaticType.String)
+            if (toType.GetUnderlyingType() == StaticType.String || toType.GetUnderlyingType() == StaticType.Boolean)
             {
-                return ConvertEnumExpressionToTypeExpressionForString(expression, enumType);
-            }
-            else if (toType.GetUnderlyingType() == StaticType.Boolean)
-            {
-                return ConvertEnumExpressionToTypeExpressionForBoolean(expression, enumType, toType);
+                return ConvertEnumExpressionToTypeExpressionForString(expression);
             }
             else
             {
@@ -657,65 +650,37 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="enumType"></param>
         /// <returns></returns>
-        internal static Expression ConvertEnumExpressionToTypeExpressionForString(Expression expression,
-            Type enumType)
+        internal static Expression ConvertEnumExpressionToTypeExpressionForString(Expression expression)
         {
             var method = typeof(Enum).GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
-            if (method == null)
-            {
-                throw new InvalidOperationException($"There is no enum 'GetName' method found between '{enumType.FullName}' and '{StaticType.String.FullName}'.");
-            }
 
             // Variables
-            var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
+            var isNullExpression = (Expression)null;
+            var trueExpression = (Expression)null;
+            var falseExpression = (Expression)null;
 
-            // True
-            var trueExpression = Expression.Convert(Expression.Constant(null), StaticType.String);
+            // Ensure (Ref/Nullable)
+            if (expression.Type.IsNullable())
+            {
+                // Check
+                isNullExpression = Expression.Equal(Expression.Constant(null), expression);
+
+                // True
+                trueExpression = Expression.Convert(Expression.Constant(null), StaticType.String);
+            }
 
             // False
             var parameters = new Expression[]
             {
-                Expression.Constant(enumType.GetUnderlyingType()),
+                Expression.Constant(expression.Type.GetUnderlyingType()),
                 ConvertExpressionToTypeExpression(expression, StaticType.Object)
             };
-            var falseExpression = ConvertExpressionToTypeExpression(Expression.Call(method, parameters), StaticType.String);
+            falseExpression = ConvertExpressionToTypeExpression(Expression.Call(method, parameters), StaticType.String);
 
             // Call and return
-            return Expression.Condition(isNullExpression, trueExpression, falseExpression);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="enumType"></param>
-        /// <param name="toType"></param>
-        /// <returns></returns>
-        internal static Expression ConvertEnumExpressionToTypeExpressionForBoolean(Expression expression,
-            Type enumType,
-            Type toType)
-        {
-            var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
-            var trueExpression = GetNullableTypeExpression(toType);
-            var falseExpression = expression;
-
-            // Casting
-            if (expression.Type.GetUnderlyingType() != toType.GetUnderlyingType())
-            {
-                falseExpression = ConvertEnumExpressionToTypeExpressionForString(expression, enumType);
-                falseExpression = ConvertExpressionToSystemConvertExpression(falseExpression, toType);
-            }
-
-            // Nullable
-            if (Nullable.GetUnderlyingType(falseExpression.Type) == null)
-            {
-                falseExpression = ConvertExpressionToNullableExpression(falseExpression, toType);
-            }
-
-            // Return
-            return Expression.Condition(isNullExpression, trueExpression, falseExpression);
+            return isNullExpression == null ? falseExpression :
+                Expression.Condition(isNullExpression, trueExpression, falseExpression);
         }
 
         /// <summary>
@@ -727,9 +692,16 @@ namespace RepoDb.Reflection
         internal static Expression ConvertEnumExpressionToTypeExpressionForNonString(Expression expression,
             Type toType)
         {
-            var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
-            var trueExpression = GetNullableTypeExpression(toType);
+            var isNullExpression = (Expression)null;
+            var trueExpression = (Expression)null;
             var falseExpression = expression;
+
+            // Ensure (Ref/Nullable)
+            if (expression.Type.IsNullable())
+            {
+                isNullExpression = Expression.Equal(Expression.Constant(null), expression);
+                trueExpression = GetNullableTypeExpression(toType);
+            }
 
             // Casting
             if (expression.Type.GetUnderlyingType() != toType.GetUnderlyingType())
@@ -738,13 +710,14 @@ namespace RepoDb.Reflection
             }
 
             // Nullable
-            if (Nullable.GetUnderlyingType(falseExpression.Type) == null)
+            if (expression.Type.IsNullable())
             {
                 falseExpression = ConvertExpressionToNullableExpression(falseExpression, toType);
             }
 
             // Return
-            return Expression.Condition(isNullExpression, trueExpression, falseExpression);
+            return isNullExpression == null ? falseExpression :
+                Expression.Condition(isNullExpression, trueExpression, falseExpression);
         }
 
         /// <summary>
@@ -1413,8 +1386,7 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    expression = ConvertEnumExpressionToTypeExpression(expression,
-                        classProperty.PropertyInfo.PropertyType, targetType?.GetUnderlyingType());
+                    expression = ConvertEnumExpressionToTypeExpression(expression, targetType?.GetUnderlyingType());
                 }
                 catch (Exception ex)
                 {

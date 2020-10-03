@@ -706,7 +706,7 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnBit = null;
                 entity.ColumnInt = null;
                 entity.ColumnNVarChar = null;
-                entity.ColumnSmallInt = null;
+                entity.ColumnSmallInt = Direction.None;
 
                 // Act
                 var mergeResult = connection.Merge(entity);
@@ -923,7 +923,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnBit = null;
                     entity.ColumnInt = null;
                     entity.ColumnNVarChar = null;
-                    entity.ColumnSmallInt = null;
+                    entity.ColumnSmallInt = Direction.None;
                 });
 
                 // Act
@@ -1166,7 +1166,7 @@ namespace RepoDb.IntegrationTests
                 entity.ColumnBit = null;
                 entity.ColumnInt = null;
                 entity.ColumnNVarChar = null;
-                entity.ColumnSmallInt = null;
+                entity.ColumnSmallInt = Direction.None;
 
                 // Act
                 var updateResult = connection.Update(entity);
@@ -1295,7 +1295,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnBit = null;
                     entity.ColumnInt = null;
                     entity.ColumnNVarChar = null;
-                    entity.ColumnSmallInt = null;
+                    entity.ColumnSmallInt = Direction.None;
                 });
 
                 // Act
